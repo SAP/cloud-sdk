@@ -189,7 +189,7 @@ module.exports = {
           showLastUpdateTime: true,
           editUrl:
           // TODO: this link does not work
-          'https://github.com/SAP/cloud-sdk/edit/documentation',
+          'https://github.com/SAP/cloud-sdk/edit/main',
           routeBasePath: 'docs'
         },
         theme: {
