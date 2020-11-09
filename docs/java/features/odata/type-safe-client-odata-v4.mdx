@@ -269,8 +269,9 @@ The Cloud SDK supports different strategies for updating entities which differ i
 
 <TabItem value="modify">
 
-The default strategy is the *modifying entity update strategy* which attempts to modify only the necessary entity fields in the remote system. It issues a PATCH request and includes
-the changed fields in the request payload. Hence, fields whose values remain unchanged are not sent to the target system. 
+The default strategy is the *modifying entity update strategy* which attempts to modify only the necessary entity fields in the remote system. 
+It issues a PATCH request and includes only the fields in the request payload whose values were changed by its setter method.
+Hence, fields whose values remain unchanged are not sent to the target system. 
 Calling the method `includingFields(fields ...)` instructs the Cloud SDK to add the mentioned fields explicitly in the update request.
 This is useful for backend systems which require some unchanged fields in the request payload for given reasons.
 
@@ -289,8 +290,8 @@ service.updateBusinessPartner(partner)
 
 <TabItem value="replace">
 
-The *replacing entity update strategy* attempts to replace the full entity in the remote system. It issues a PUT request and submits
-all fields in the update request, regardless of any field changes.
+The *replacing entity update strategy* attempts to replace the full entity in the remote system.
+It issues a PUT request and submits all fields in the update request, regardless of any field changes.
 
 This update strategy can be explicitly chosen invoking the method `replacingEntity()` while building the update request.
 
@@ -305,8 +306,8 @@ service.updateBusinessPartner(partner)
 </Tabs>
 
 :::note
-It depends on the capabilities of the OData API in the remote system which update strategies are supported in an end-to-end scenario.
-For example, there are cases where OData APIs do not support PUT requests.
+It depends on the capabilities of the specific OData service in the remote system which update strategies are supported in an end-to-end scenario.
+For example, there are cases where OData services do not support PUT requests.
 :::
 
 
