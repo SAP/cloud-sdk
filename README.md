@@ -1,17 +1,22 @@
-# SAP Cloud SDK documentation portal
+# SAP Cloud SDK documentation and support portal
 
-This repository contains the sources for the [SAP Cloud SDK Documentation](https://sap.github.io/cloud-sdk/).
+This repository contains:
+
+- Sources for the [SAP Cloud SDK Documentation](https://sap.github.io/cloud-sdk/)
+- Cloud SDK for Java [Support Issues](https://github.com/SAP/cloud-sdk/issues)
+
+For the [Support](https://github.com/SAP/cloud-sdk-js/issues) on Cloud SDK for JavaScript us this [repository](https://github.com/SAP/cloud-sdk-js).
 
 ## Looking for the SAP Cloud SDK for JavaScript / TypeScript?
 It has moved [here](https://github.com/SAP/cloud-sdk-js).
 
-## How to obtain support
-If you encounter issues in the documentation portal open an issue [here](https://github.com/SAP/cloud-sdk-js/issues/new/choose). For issues with the SAP Cloud SDK itself please open issues under the following links:
-* [SAP Cloud SDK for Java](https://stackoverflow.com/questions/tagged/sap-cloud-sdk)
+## Getting Support
+* [SAP Cloud SDK for Java](https://github.com/SAP/cloud-sdk/issues)
 * [SAP Cloud SDK for JavaScript / TypeScript](https://github.com/SAP/cloud-sdk-js/issues/new/choose)
+* [Documentation portal](https://github.com/SAP/cloud-sdk/issues)
 
 ## Contributing
-Feel free to contribute to our documentation. Check out our [contribution guide](./CONTRIBUTING.md) and follow our [code of conduct](./CODE_OF_CONDUCT.md).
+Feel free to contribute to the Cloud SDK documentation. Check out our [contribution guide](./CONTRIBUTING.md) and follow our [code of conduct](./CODE_OF_CONDUCT.md).
 
 ## License
 
