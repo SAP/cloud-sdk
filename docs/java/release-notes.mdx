@@ -33,11 +33,13 @@ We highly recommend regularly updating to the latest SDK version. It will help y
 
 ### Compatibility Notes
 
+- OData requests do no longer send the query parameter `$format=json` by default. Instead the `Accept` header is set to `application/json` by default.
+
+The following changes apply to experimental functionality of the SAP Cloud SDK:
 - The SCP service "Hyperledger Fabric on SAP Cloud Platform" is deprecated, the corresponding Maven dependency `com.sap.cloud.sdk.services:scp-blockchain` gets deprecated too. Use the dependency [`com.sap.cloud.sdk.serices:blockchain-client-fabric`](https://mvnrepository.com/artifact/com.sap.cloud.sdk.services/blockchain-client-fabric) instead.
 - The method `setResponseFormat()` in the class [`ODataRequestGeneric`](https://help.sap.com/doc/f08906c8d31640d583a106325f6a8184/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odata/client/request/ODataRequestGeneric.html) is no longer available. You can still configure the `Accept` header via the method [`addHeaderIfAbsent()`](https://help.sap.com/doc/f08906c8d31640d583a106325f6a8184/1.0/en-US/com/sap/cloud/sdk/datamodel/odata/client/request/ODataRequestGeneric.html#addHeaderIfAbsent-java.lang.String-java.lang.String-).
   Example: `request.addHeaderIfAbsent(HttpHeaders.ACCEPT, "application/xml")`.
 - The enum `com.sap.cloud.sdk.datamodel.odata.client.request.ODataFormat` is no longer public.
-- OData reqeusts do no longer send the query parameter `$format=json` by default. Instead the `Accept` header is set to `application/json` by default.  
 
 ### New Functionality
 
@@ -132,13 +134,13 @@ The internal protected methods `getHeadersForRequestOnly` and `getHeadersForRequ
 The internal interface `CsrfTokenRetriever` defines another `retrieveCsrfToken` method with additional `headers` parameter to be passed in the HTTP request.
 
 
-## New Functionality
+### New Functionality
 
 Blockchain Business Services update:
 
 - It is now possible to send, receive, and validate notarizations. Sending a document will automatically also send its notarizations if the visibility configuration is set to include notarizations.
 
-## Improvements
+### Improvements
 
 - In case a `DefaultErpHttpDestination` decorates an on-premise `HttpDestination` and the destination configuration
  lacks a `sap-client` property, an information message is logged to raise awareness for potential authentication issues.
