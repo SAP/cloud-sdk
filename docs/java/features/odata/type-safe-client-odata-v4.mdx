@@ -15,6 +15,8 @@ keywords:
 - generate
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
 ## Build and execute OData Requests with the typed OData client
@@ -258,6 +260,55 @@ As per the OData specification, either all operations or none within the same ch
 Function Imports / Functions & Actions
 
 -->
+
+## Entity Update Strategies
+
+The Cloud SDK supports different strategies for updating entities which differ in the HTTP method and the payload of the update request.
+
+<Tabs groupId="updateStrategy" defaultValue="modify" values={[ { label: 'Modify Entity (default)', value: 'modify', }, { label: 'Replace Entity', value: 'replace', }, ]}>
+
+<TabItem value="modify">
+
+The default strategy is the *modifying entity update strategy* which attempts to modify only the necessary entity fields in the remote system. It issues a PATCH request and includes
+the changed fields in the request payload. Hence, fields whose values remain unchanged are not sent to the target system. 
+Calling the method `includingFields(fields ...)` instructs the Cloud SDK to add the mentioned fields explicitly in the update request.
+This is useful for backend systems which require some unchanged fields in the request payload for given reasons.
+
+This update strategy can be explicitly chosen invoking the method `modifyingEntity()` while building the update request.
+
+```java
+service.updateBusinessPartner(partner)
+    //method call optional, since active by default
+    .modifyingEntity()
+    //add the Business Partner Full Name explicitly to the update request
+    .includingFields(BusinessPartner.BUSINESS_PARTNER_FULL_NAME)
+    .executeRequest(destination);
+```
+
+</TabItem>
+
+<TabItem value="replace">
+
+The *replacing entity update strategy* attempts to replace the full entity in the remote system. It issues a PUT request and submits
+all fields in the update request, regardless of any field changes.
+
+This update strategy can be explicitly chosen invoking the method `replacingEntity()` while building the update request.
+
+```java
+service.updateBusinessPartner(partner)
+    .replacingEntity()
+    .executeRequest(destination);
+```
+
+</TabItem>
+
+</Tabs>
+
+:::note
+It depends on the capabilities of the OData API in the remote system which update strategies are supported in an end-to-end scenario.
+For example, there are cases where OData APIs do not support PUT requests.
+:::
+
 
 ## Error Handling
 
