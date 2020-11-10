@@ -5,22 +5,23 @@ This differs from the whole batch request itself, where the order is defined.
 Therefore the requests within a changeset should not depend on each other.
 If the execution of any of the requests within a changeset fails, the whole changeset will be reflected as an error in the response and will not be applied, much like a database transaction.
 
-Change request cannot be passed to a batch request directly.
-They have to be combined in a changset, which in turn an be passed to the batch request.
+Change requests cannot be passed to a batch request directly.
+They have to be combined in a changset, which in turn can be passed to the batch request.
 Once a batch request is executed it returns a list of `BatchResponse`s.
-Those contain the raw response information of each subrequest, the subresponse of a changeset request can either be `WriteResponses` or an `ErrorResponse`.
+Those contain the raw response information of each subrequest.
+The subresponse of a changeset request can either be `WriteResponses` or an `ErrorResponse`.
 To determine if a request was successful use `.isSuccess()`.
 
-Successful requests can be cast to `WriteResponses` which contains all subresponses for the changeset request.
-Those reponses can be accessed by `.responses` and have the type `WriteResponse`.
-Each `WriteResponse` contains the HTTP code and can contain the raw body and the constructor of the entity that was parsed from the response, depending on whether there was a response.
-Create requests typically do not return a response.
-In order to work with an instance of an entity given in a `WriteResponse`, you can use the `.as` method, that allows you to transform the raw data into an instance of the given constructor.
-Note that the response cannot exist, so you should only call this method if you know that there is data.
+Successful requests should be cast to `WriteResponses` which contains all subresponses for the changeset request.
+Those responses can be accessed by `.responses` and have the type `WriteResponse`.
+Each `WriteResponse` contains the HTTP code and can contain the raw body and the constructor of the entity that was parsed from the response, depending on whether there was a body in the response.
+Create and delete requests typically do not have a response body.
+In order to work with an instance of an entity given in a `WriteResponse`, you can use the `.as` method, that allows you to transform the raw string body into an instance of the given constructor.
+Note that the response may not exist, so you should only call this method if you know that there is data.
 Typically the HTTP code is a good indicator for this (`201 No Content` probably won't have content).
 If you are working with TypeScript you will have to tell the compiler, that the `.as!` method can be used here by adding a `!`.
 Also note, that retrieve responses can be [`ErrorResponse`s](#error-handling).
-Therefore, it is crutial to check responses for success, before casting them to `WriteResponses`.
+Therefore, it is crucial to check responses for success, before casting them to `WriteResponses`.
 
 In the example below, a list of addresses is mapped to [UpdateRequestBuilder](#update-request-builder)s.
 These change requests are combined to one `changeset`, which is passed to the `batch` request and executed against a destination.
