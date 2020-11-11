@@ -1,28 +1,31 @@
-import React from 'react';
+import React from 'react'
 import BatchIntroContent from './batch-intro.mdx'
-import ChangeSetContent from './change-set.mdx'
-import CombineChangeSetRetrieveContent from './combine-change-retrieve.mdx'
-import MultiChangeSetsContent from './multiple-change-sets.mdx'
+import ChangeSetContent from './changeset.mdx'
+import CombiningRequestsContent from './combining-requests.mdx'
+import SerializationContent from './serialization.mdx'
 import RetrieveRequestsContent from './retrieve-request.mdx'
+import ConfigureSerializationContent from './configure-serialization.mdx'
 
-export function BatchIntro(){
+export function BatchIntro () {
   return <BatchIntroContent/>
 }
 
-export function ChangeSet() {
-  return<ChangeSetContent/>
+export function ChangeSet () {
+  return <ChangeSetContent/>
 }
 
-export function CombineChangeSetRetrieve(){
-  return <CombineChangeSetRetrieveContent/>
+export function CombiningRequests () {
+  return <CombiningRequestsContent/>
 }
 
-export function MultiChangeSets(){
-  return <MultiChangeSetsContent/>
+export function ConfigureSerialization () {
+  return <ConfigureSerializationContent/>
 }
 
-export function RetrieveRequests(){
+export function RetrieveRequests () {
   return <RetrieveRequestsContent/>
 }
 
-
+export function Serialization () {
+  return <SerializationContent/>
+}
