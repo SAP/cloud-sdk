@@ -9,7 +9,7 @@ Change requests cannot be passed to a batch request directly.
 They have to be combined in a changset, which in turn can be passed to the batch request.
 Once a batch request is executed it returns a list of `BatchResponse`s.
 Those contain the raw response information of each subrequest.
-The subresponse of a changeset request can either be `WriteResponses` or an `ErrorResponse`.
+The response to a changeset request can either be a collection of the subresponses to the subrequests of the changeset of type `WriteResponses` or an `ErrorResponse`.
 To determine if a request was successful use `.isSuccess()`.
 
 Successful requests should be cast to `WriteResponses` which contains all subresponses for the changeset request.
