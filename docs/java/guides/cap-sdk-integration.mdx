@@ -16,7 +16,9 @@ keywords:
 image:
 ---
 
-This document outlines how you integrate the SAP Cloud SDK into an application based on the [SAP Cloud Application Programming Model](https://cap.cloud.sap/docs/) (referred to as *CAP* in the remainder).
+This document outlines how you integrate the SAP Cloud SDK into an application based on the [SAP Cloud Application Programming Model](https://cap.cloud.sap/docs/) (referred to as CAP in the remainder).
+
+T
 
 :::success Check out the tutorial as well
 While this document provides a general overview on this topic, we have published a practical [tutorial on SAP Developers](https://developers.sap.com/tutorials/cloudsdk-integrate-cap.html) which illustrates all steps on a comprehensive example. 
@@ -68,13 +70,28 @@ Note that the `version` tags can be omitted, as the Cloud SDK BOM you added befo
 That is, you only need to increase the version of the BOM and all modules get updated automatically.
 :::
 
+:::note 
+The two mentioned dependencies are modules which cover a broad range of possible Cloud SDK use cases.
+You may choose a more fine-grained selection of Cloud SDK dependencies according to your specific use case.
+:::
+
+
 ### Add the Integration Dependency
-In order to integrate the tenant and user concepts between CAP and the Cloud SDK, we'll add a respective integration dependency to the POM file under the `srv` directory.
+If your app uses multitenancy features and/or a protected backend, we have to integrate the tenant and user concepts of CAP and the Cloud SDK.
+We'll add a respective integration dependency to the POM file under the `srv` directory (same place as the previous step).
 ```xml
 <dependency>
   <groupId>com.sap.cds</groupId>
   <artifactId>cds-integration-cloud-sdk</artifactId>
 </dependency> 
+```
+
+### Enable the Component Scan for Cloud SDK Package
+Let the Spring component scan crawl the Cloud SDK package. 
+We'll annotate the Spring Boot application class which is annotated with `@SpringBootApplication` as follows.
+```java
+@ComponentScan({"com.sap.cloud.sdk"})
+@ServletComponentScan({"com.sap.cloud.sdk"})
 ```
 
 :::success Integration finished
