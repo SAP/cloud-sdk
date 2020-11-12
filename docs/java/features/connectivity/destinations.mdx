@@ -224,6 +224,12 @@ Maintain the destination configuration via the environment variable `destination
 See the example value above for reference.
 
 #### Destinations with Proxy Type "OnPremise"
+We have to perform configuration steps which tell the SAP Cloud SDK how to access the SCP destination service and connectivity service.
+
+:::note Network Availability of Target System
+If your localhost resides in the same network zone as the target system, then there is no need to access the target system via the SCP connectivity service.
+Then, you can create a destination via the environment variable `destinations` and skip all following steps hereafter.
+:::
 
 ##### Maintain VCAP_SERVICES
 How to create the `VCAP_SERVICES` representation depends on whether the Cloud Application Programming (CAP) Model is used.
@@ -239,21 +245,46 @@ Copy the value of that environment variable from your app which is deployed to S
 
 <TabItem value ="true">
 
-Create the file `default-env.json` in your project's root and supply the `VCAP_SERVICES` value as follows:
+Create the file `default-env.json` in your project's root and supply the `VCAP_SERVICES` value you copied beforehand so that th file looks similar to the following shortened example:
 ```json
 {
   "VCAP_SERVICES": {
-    "destination": [
-            ...
-    ],
     "connectivity": [
-            ...
+      {
+        "label": "connectivity",
+        "plan": "lite",
+        "name": "my-connectivity",
+        "instance_name": "my-connectivity",
+        "credentials": {
+          ...
+        }
+      }
     ],
     "xsuaa": [
-            ...
+      {
+        "label": "xsuaa",
+        "plan": "space",
+        "name": "my-xsuaa",
+        "instance_name": "my-xsuaa",
+        "credentials": {
+          ...
+        }
+      }
+    ],
+    "destination": [
+      {
+        "label": "destination",
+        "plan": "lite",
+        "name": "my-destination",
+        "instance_name": "my-destination",
+        "credentials": {
+          ...
+        }
+      }
     ]
   }
 }
+   
 
 ```
 Furthermore, add the dependency `com.sap.cds:cds-integration-cloud-sdk` to your POM file:
