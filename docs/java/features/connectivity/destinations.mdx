@@ -14,6 +14,9 @@ keywords:
 - connectivity
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 The SAP Cloud SDK offers some basic functionality that helps with connecting to other systems and services like S/4HANA Cloud. The SDK introduces the general concept of a `Destination` which holds basic information about how to connect to such a system. That could for instance be a `url`, a user name, and password for basic authentication or some custom headers.
 
 This concept is integrated with the [Destination Service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html) that is available on SAP Cloud Platform. If the application has a service binding to this service in place the SDK will provide access to these destinations.
@@ -171,3 +174,155 @@ final DestinationOptions options =
                .build();
 ```
 You can similarly use other retrieval options.
+
+## Configure HTTP Destinations for Local Deployment
+
+When testing your app on localhost instead of SCP you require some configuration steps to make the destination retrieval work.
+
+:::note HTTP Destinations
+This section refers to the maintenance of HTTP destinations.
+Refer to the documentation about [BAPI/RFC communication](../bapi-and-rfc/overview.mdx) concerning the maintenance of RFC destinations for local deployment.
+:::
+
+:::note Works for SAP Business Application Studio too
+The configuration procedures outlined here work too when you launch your app "locally" inside SAP Business Application Studio.
+It does not matter that the app does not run on your own machine.
+:::
+
+In order to better understand the configuration steps, we'll outline shortly how destination retrieval works when running your app on SCP.
+Thereafter we'll outline the configuration procedures in detail.
+
+
+### Background: Destination Retrieval on SCP
+By default the SAP Cloud SDK uses a set of so-called destination loaders in a given order when searching for a destination via the `DestinationAccessor` API:
+```java
+DestinationAccessor.tryGetDestination("MyDestination");
+```
+
+#### Environment Variable
+The first destination loader attempts to find the requested destination in the environment variable `destinations`. Here is an example value:
+```json
+[{"type": "HTTP","name": "MyDestination","proxyType": "Internet","description": "This destination rocks!","authentication": "BasicAuthentication","url": "https://URL","user": "USER","password": "PASSWORD"}]
+```
+:::tip Multiple Destinations
+You can configure multiple destinations with that approach. 
+Note that the value of the environment variable is a JSON array, so you can add further entries into it.
+:::
+
+#### SCP Destination Service
+If the previous lookup was not successful, the next destination loaders examine the environment variable `VCAP_SERVICES` to see if the SCP destination service is bound.
+If so, the Cloud SDK queries the SCP destination service for the destination configuration as per the requested destination name.
+
+#### SCP Connectivity Service
+In case the destination is of proxy type `OnPremise`, the SDK performs an additional query to the SCP connectivity service to obtain further proxy information and an authorization token.
+
+
+### Configuration Procedure for Localhost
+
+#### Destinations with Proxy Type "Internet"
+Maintain the destination configuration via the environment variable `destinations`. 
+See the example value above for reference.
+
+#### Destinations with Proxy Type "OnPremise"
+We have to perform configuration steps which tell the SAP Cloud SDK how to access the SCP destination service and connectivity service.
+
+:::note Are your client and server located on the same Network?
+If your localhost (client) resides in the same network zone as the target system (server) you can access it directly. Configuration of SCP connectivity services is not needed. All you have to do is creating a destination via environment variable `destinations`.
+:::
+
+##### Maintain VCAP_SERVICES
+How to create the `VCAP_SERVICES` representation depends on whether the Cloud Application Programming (CAP) Model is used.
+
+<Tabs groupId="isCapUsed" defaultValue="true" values={[ { label: 'CAP is used', value: 'true', }, { label: 'CAP is not used', value: 'false', }]}>
+
+<TabItem value="false">
+
+Create the `VCAP_SERVIES` environment variable on the shell or on the operating system level.
+Copy the value of that environment variable from your app which is deployed to SCP. 
+
+</TabItem>
+
+<TabItem value ="true">
+
+Create the file `default-env.json` in your project's root and supply the `VCAP_SERVICES` value you copied beforehand so that th file looks similar to the following shortened example:
+```json
+{
+  "VCAP_SERVICES": {
+    "connectivity": [
+      {
+        "label": "connectivity",
+        "plan": "lite",
+        "name": "my-connectivity",
+        "instance_name": "my-connectivity",
+        "credentials": {
+          ...
+        }
+      }
+    ],
+    "xsuaa": [
+      {
+        "label": "xsuaa",
+        "plan": "space",
+        "name": "my-xsuaa",
+        "instance_name": "my-xsuaa",
+        "credentials": {
+          ...
+        }
+      }
+    ],
+    "destination": [
+      {
+        "label": "destination",
+        "plan": "lite",
+        "name": "my-destination",
+        "instance_name": "my-destination",
+        "credentials": {
+          ...
+        }
+      }
+    ]
+  }
+}
+   
+
+```
+Furthermore, add the dependency `com.sap.cds:cds-integration-cloud-sdk` to your POM file:
+```xml
+<dependency>
+  <groupId>com.sap.cds</groupId>
+  <artifactId>cds-integration-cloud-sdk</artifactId>
+</dependency> 
+```
+</TabItem>
+
+</Tabs>
+
+##### Enable Access to SCP Connectivity Service
+The SCP connectivity service builds the connection between SCP and the on-premise network.
+That is why it has strong built-in restrictions which allow it only to be called from within SCP.
+If you would call the connectivity service from your own machine, you would encounter a connection timeout.
+We'll therefore apply port forwarding via SSH to simulate that your localhost plays the cloud app.
+
+- Deploy your app to the SCP once.
+- Enable SSH access to your app container with the `cf` CLI:
+```bash
+cf enable-ssh app-name
+cf restart app-name
+```
+- Inspect the value of the entry `connectivity` of your `VCAP_SERVICES` and take note of the values of the fields
+  - `credentials.onpremise_proxy_port` 
+  - `credentials.onpremise_proxy_host`
+
+:::note
+We'll refer to these values as *proxy-port* and *proxy-host* hereafter.
+:::
+- Create an SSH session to your app container with the following command and let the session opened:
+```bash
+cf ssh app-name -L proxy-port:proxy-host:proxy-port
+```
+- Replace the value of the field `VCAP_SERVICES.connectivity.credentials.onpremise_proxy_host` in your `default-env.json`
+with `localhost`.
+
+:::success Ready
+Now your local setup is ready to consume an on-premise HTTP destination.
+:::
