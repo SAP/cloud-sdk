@@ -2,7 +2,7 @@ module.exports = {
   someSidebar: {
     // Dzen: ['dzen/getting-started', 'dzen/how-to-write-documentation'],
     Overview: [
-      'overview/about',
+      'overview/overview-cloud-sdk',
       'overview/getting-started',
       'overview/benefits',
       'overview/who-uses-sap-cloud-sdk',

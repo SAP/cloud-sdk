@@ -45,30 +45,15 @@ const features = [
         </a>
       </>
     )
-  },
-  {
-    title: <>SAP Cloud SDK for continuous delivery</>,
-    link: 'docs/devops/getting-started',
-    imageUrl:
-      'https://help.sap.com/doc/6c02295dfa8f47cf9c08a19f2e172901/1.0/en-US/logo-for-cd.svg',
-    badge: <LicenseBadge />,
-    description: (
-      <>
-	SAP Cloud SDK provides a ready-to-use Jenkins Pipeline-as-Code that assures a high level of quality on process as well as code level. High quality is achieved by a set of standard and SDK-specific quality checks.<br />
-        <a href='docs/devops/getting-started'>
-          Get started with best CI/CD practices
-        </a>
-      </>
-    )
   }
 ]
 
 function Feature ({ imageUrl, link, title, description, badge }) {
   const imgUrl = useBaseUrl(imageUrl)
   return (
-    <div className={classnames('col col--4', styles.feature)}>
+    <div className={classnames('col', styles.feature)}>
       {imgUrl && (
-        <div className='text--center'>
+        <div className='text--left'>
           <a href={link}>
             <img className={styles.featureImage} src={imgUrl} alt={title} />
           </a>
@@ -103,7 +88,7 @@ function Home () {
               </span>
             </Link>
           </div>
-     </div>*/}
+     </div> */}
       <header className={classnames('hero hero--primary', styles.heroBanner)}>
         <div className='container'>
           <h1 className='hero__title'>{siteConfig.title}</h1>

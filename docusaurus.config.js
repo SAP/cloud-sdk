@@ -41,7 +41,7 @@ module.exports = {
       },
       items: [
         {
-          to: 'docs/overview/about',
+          to: 'docs/overview/overview-cloud-sdk',
           label: 'Docs',
           position: 'left'
         },
@@ -103,7 +103,7 @@ module.exports = {
           items: [
             {
               label: 'SAP Cloud SDK overview',
-              to: 'docs/overview/about'
+              to: 'docs/overview/overview-cloud-sdk'
             },
             {
               label: 'Cloud SDK for Java',
