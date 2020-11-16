@@ -195,8 +195,6 @@ module.exports = {
     'Related projects': [
       'related-projects/cloud-application-model',
       'related-projects/sap-xsuaa-security-library-for-javascript-and-java'
-      //   'related-projects/sap-cloud-for-realestate',
-      //   'related-projects/sap-s4-hana',
     ]
   }
 }
