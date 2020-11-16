@@ -2,7 +2,7 @@
 name: Documentation issue
 about: Issues and questions about the SAP Cloud SDK documentation.
 title: ''
-labels: documentation
+labels: ''
 assignees: ''
 
 ---
