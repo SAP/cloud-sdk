@@ -108,19 +108,6 @@ module.exports = {
           'java/guides/tutorial-overview-sdk-java',
           'java/guides/sap-cloud-sdk-linux-how-to',
           'java/guides/cap-sdk-integration'
-          //       'java/how-to/test-odata-service',
-          //       'java/how-to/build-client-for-cap',
-          //       'java/how-to/cap-with-client-sdk',
-          //       'java/how-to/generate-open-api-client',
-          //       'java/how-to/workflow-api',
-          //       'java/how-to/s4hana-api',
-          //       'java/how-to/business-logging',
-          //       'java/how-to/sap-graph',
-          //       'java/how-to/xsuaa-broker',
-          //       'java/how-to/sdk-with-mocked-xsuaa',
-          //       'java/how-to/jwt-handling',
-          //       'java/how-to/app-router',
-          //       'java/how-to/configure-ide'
         ]
       },
       {
@@ -138,7 +125,7 @@ module.exports = {
       'java/frequently-asked-questions'
     ],
     JavaScript: [
-      'js/introduction',
+      'js/overview-cloud-sdk-for-javascript',
       'js/getting-started',
       {
         type: 'category',
@@ -189,8 +176,6 @@ module.exports = {
       'js/release-notes-sap-cloud-sdk-for-javascript-and-typescript',
       'js/frequently-asked-questions'
     ],
-    'Continuous Delivery': ['devops/getting-started'],
-    // Support: ['support/support'],
     Community: ['community/community-call'],
     'Related projects': [
       'related-projects/cloud-application-model',

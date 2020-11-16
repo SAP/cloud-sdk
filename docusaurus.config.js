@@ -59,7 +59,7 @@ module.exports = {
             },
             {
               label: ' GitHub Java',
-              href: 'https://github.wdf.sap.corp/MA/sdk/issues/new/choose'
+              href: 'https://github.com/SAP/cloud-sdk/issues/new?assignees=&labels=Java&template=sap-cloud-sdk-for-java-issue.md&title='
             }
           ]
         },
