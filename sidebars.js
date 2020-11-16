@@ -75,7 +75,7 @@ module.exports = {
                 type: 'category',
                 label: 'Extension library',
                 items: [
-                  'java/features/extensions/extension-library/curconv/sap-currency-conversion-extension-library-for-cloud-sdk-for-java',
+                  'java/features/extensions/extension-library/curconv/sap-currency-conversion-extension-library-for-cloud-sdk-for-java'
                   // 'java/features/extensions/extension-library/blockchain/sap-blockchain-extension-library-for-cloud-sdk-for-java',
                 ]
               }
@@ -107,7 +107,7 @@ module.exports = {
           'java/guides/logging-overview',
           'java/guides/tutorial-overview-sdk-java',
           'java/guides/sap-cloud-sdk-linux-how-to',
-          "java/guides/cap-sdk-integration",
+          'java/guides/cap-sdk-integration'
           //       'java/how-to/test-odata-service',
           //       'java/how-to/build-client-for-cap',
           //       'java/how-to/cap-with-client-sdk',
@@ -182,7 +182,7 @@ module.exports = {
         type: 'category',
         label: 'Video Tutorials',
         items: [
-          'js/video/demo-of-cloud-sdk-for-javascript-with-cloud-alm-and-cap',
+          'js/video/demo-of-cloud-sdk-for-javascript-with-cloud-alm-and-cap'
         ]
       },
       'js/api',
@@ -197,6 +197,6 @@ module.exports = {
       'related-projects/sap-xsuaa-security-library-for-javascript-and-java'
       //   'related-projects/sap-cloud-for-realestate',
       //   'related-projects/sap-s4-hana',
-    ],
+    ]
   }
 }
