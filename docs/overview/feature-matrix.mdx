@@ -20,13 +20,24 @@ There's no full feature parity between Java and JavaScript/Typescript SDKs. This
 
 ## Pre-generated type-safe client libraries for S/4HANA
 
+:::tip Different packaging strategy between SDKs
+- SDK for Java has separate maven modules for S/4HANA Cloud & S/4HANA On-premise. Those are in turn split into modules containing OData v2 and OData v4 services. We also ship an aggregating module if you want to add all the S/4HANA client libraries to you dependencies. A Java `Class` represents one OData service in S/4HANA.
+- SDK for JavaScript/Typescript ships one client library NPM package per S/4HANA service. Packages for S/4HANA Cloud always contain the latest APIs. Packages for S/4HANA On-Premise have `-op-` in their name and contain all the versions of respective service's APIs where the latest version exported as default. A `Class` here represents an `Entity` in `OData` terms, while package represents a service. SDK for JS/TS doesn't ship any aggregator packages.
+:::
+
+
+|                    | Java    | Maven Central                                                                                                                                                            | JS/TS   | NPMJS                                                                         |
+|--------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|-------------------------------------------------------------------------------|
+| S/4HANA Cloud      | &check; | [OData v2](https://search.maven.org/search?q=a:s4hana-api-odata) <br/> [OData v4](https://search.maven.org/search?q=a:s4hana-api-odata-v4)                               | &check; | [List of packages](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm*)    |
+| S/4HANA On-premise | &check; | [OData v2](https://search.maven.org/search?q=a:s4hana-api-odata-onpremise-2020) <br/> [OData v4](https://search.maven.org/search?q=a:s4hana-api-odata-v4-onpremise-2020) | &check; | [List of packages](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-op*) |
+
+## OData code generator
 
 
 
 
-## CLI ##
+## CLI
 
-## Typed OData Client ##
 
 ## Cloud Abstractions ##
 
