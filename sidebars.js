@@ -12,7 +12,7 @@ module.exports = {
       // 'overview/what-is-new'
     ],
     Java: [
-      'java/introduction',
+      'java/overview-cloud-sdk-for-java',
       'java/getting-started',
       {
         type: 'category',
