@@ -78,7 +78,7 @@ module.exports = {
                 'docs/js/release-notes-sap-cloud-sdk-for-javascript-and-typescript'
             },
             {
-              label: 'Continuous Delivery (Deprecated)',
+              label: 'Continuous Delivery',
               href: 'https://github.com/SAP/cloud-s4-sdk-pipeline/releases'
             }
           ]
