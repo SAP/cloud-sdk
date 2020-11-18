@@ -76,10 +76,6 @@ module.exports = {
               label: 'JavaScript',
               to:
                 'docs/js/release-notes-sap-cloud-sdk-for-javascript-and-typescript'
-            },
-            {
-              label: 'Continuous Delivery',
-              href: 'https://github.com/SAP/cloud-s4-sdk-pipeline/releases'
             }
           ]
         },
@@ -114,17 +110,13 @@ module.exports = {
               to: 'docs/js/getting-started'
             },
             {
-              label: 'Cloud SDK for CI/CD',
-              to: 'docs/devops/getting-started'
-            },
-            {
               label: 'Cloud SDK Tutorials',
               href: 'https://developers.sap.com/tutorial-navigator.html?tag=products:technology-platform/sap-cloud-sdk/sap-cloud-sdk'
             }
           ]
         },
         {
-          title: 'Community',
+          title: 'Additional resources',
           items: [
             {
               label: 'Stack Overflow',
@@ -142,19 +134,6 @@ module.exports = {
               label: 'Cloud SDK on SAP Help',
               href:
                 'https://help.sap.com/viewer/product/SAP_CLOUD_SDK/1.0/en-US?task=discover_task'
-            }
-          ]
-        },
-        {
-          title: 'Social',
-          items: [
-            {
-              label: 'Blog',
-              href: 'https://https://blogs.sap.com/'
-            },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/SAP/cloud-sdk'
             }
           ]
         },
