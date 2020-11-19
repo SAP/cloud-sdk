@@ -73,11 +73,19 @@ module.exports = {
                 'docs/java/release-notes-sap-cloud-sdk-for-java'
             },
             {
-              label: 'JavaScript',
-              to:
-                'docs/js/release-notes-sap-cloud-sdk-for-javascript-and-typescript'
+              label: 'JS/TS Core',
+              to: 'https://github.com/SAP/cloud-sdk-js/releases'
+            },
+            {
+              label: 'JS/TS Client Libraries',
+              to: 'docs/js/release-notes-sap-cloud-sdk-for-javascript-and-typescript'
             }
           ]
+        },
+        {
+          label: 'Maven Central',
+          href: 'https://search.maven.org/search?q=g:com.sap.cloud.sdk*',
+          position: 'left'
         },
         {
           href: 'https://api.sap.com/',
@@ -150,7 +158,7 @@ module.exports = {
             },
             {
               label: 'Cloud SDK for Java',
-              href: 'https://search.maven.org/search?q=g:com.sap.cloud.sdk'
+              href: 'https://search.maven.org/search?q=g:com.sap.cloud.sdk*'
             }
           ]
         }
