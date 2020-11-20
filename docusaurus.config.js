@@ -69,8 +69,7 @@ module.exports = {
           items: [
             {
               label: 'Java',
-              to:
-                'docs/java/release-notes-sap-cloud-sdk-for-java'
+              to: 'docs/java/release-notes-sap-cloud-sdk-for-java'
             },
             {
               label: 'JS/TS Core',
@@ -88,14 +87,22 @@ module.exports = {
           position: 'left'
         },
         {
-          href: 'https://api.sap.com/',
-          label: 'SAP API Hub',
-          position: 'right'
-        },
-        {
-          href: 'https://github.com/SAP/cloud-sdk',
-          label: 'GitHub',
-          position: 'right'
+          label: 'NPMJS',
+          position: 'left',
+          items: [
+            {
+              label: 'Core Modules',
+              href: 'https://www.npmjs.com/search?q=sap-cloud-sdk*'
+            },
+            {
+              label: 'S/4HANA Cloud',
+              href: 'https://www.npmjs.com/search?q=sap%2Fsap-cloud-vdm*'
+            },
+            {
+              label: 'S/4HANA On-Premis',
+              href: 'https://www.npmjs.com/search?q=sap%2Fsap-cloud-op*'
+            }
+          ]
         }
       ]
     },
