@@ -40,7 +40,7 @@ BusinessPartner.requestBuilder()
   .top(5)
   .execute(yourDestination);
 ```
-where `yourDestination` is a [`Destination` object](pathname:///api/1.28.1/interfaces/sap_cloud_sdk_core.destination).
+where `yourDestination` is a [`Destination` object](pathname:///api/1.32./interfaces/sap_cloud_sdk_core.destination).
 In principle, you could create a destination object yourself or read it from somewhere and then pass it to the `execute()` method.
 However, this would not be very flexible and convenient as discussed above.
 The SDK provides some help for this problem.
@@ -103,10 +103,28 @@ Currently two services types are supported out of the box `business-logging` and
 
 ### Destination Service ###
 
-This is the normal case in a productive environment.
-In order to access the destination service, the SDK will first fetch an access token from the XSUAA service.
-This token is used to make a call to the destination service returning the destinations.
+In a productive environment you will use a [Destination service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html) to retrieve destinations.
+
+#### Authentication and JWT retrieval
+
+In order to access the destination service, the SDK will first fetch an access token from the XSUAA service via one of supported authentication flows:
+
+- `PrincipalPropagation`
+- `NoAuthentication`
+- `BasicAuthentication`
+- `OAuth2SAMLBearerAssertion`
+- `OAuth2ClientCredentials`
+- `ClientCertificateAuthentication`
+
+::: note
+`OAuth2UserTokenExchange` is currently not supported. We're working on it.
+:::
+
+The token retrieved from XSUAA service is used to make a call to the destination service and receive the destinations.
 For a simple service this would be the end of the story.
+
+#### Multi-tenancy
+
 However, the destination service is special in a way that it is a `tenant aware serive`.
 Such services make it possible to build multi tenant applications.
 So what defines a tenant aware service?
