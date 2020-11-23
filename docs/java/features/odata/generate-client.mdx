@@ -166,8 +166,8 @@ Adapt the `<inputDirectory>` to point to the location of your service definition
 Now maven will run the generator within the `process-sources` phase which is executed before compile.
 Also the `<compileScope>` option instructs maven to add the generated code as sources for the compile phase.
 
-:::note
-Please note that if you use the generator for services other than SAP S/4HANA services, you need to add the parameter `defaultBasePath` to the configuration section, which should provide the base path to the exposed API (e.g _odata/v4/_).
+:::caution
+In most cases you will have to override the generated service path in the code. By default the generator will use the `namespace` value of the `<schema>` tag as service name. The URL path will be build as `default-base-path` + `service-name`. If your service definition does not contain this value or the value does not match what is needed in the URL then you need to override the service path in the code. Use the `.withServicePath("/path/to/my/service")` option on the service class.
 :::
 
 ### Using the CLI
@@ -188,6 +188,10 @@ Please note that if you use the generator for services other than SAP S/4HANA se
 1. Run `java -jar odata-generator-cli.jar -i /path/to/input/folder -o /path/to/output/folder`. You can also specify the parameter `-p "my.package.name"` to choose the package name and `-b "/my/path"` to choose the base path. A full list of parameters is [available here](#available-parameters).
 
 1. Put the generated Java source files from the output folder into your project that is using the SAP Cloud SDK so that they are picked up by Java. For example, move them to the `application/src/main/java` folder.
+
+:::caution
+In most cases you will have to override the generated service path in the code. By default the generator will use the `namespace` value of the `<schema>` tag as service name. The URL path will be build as `default-base-path` + `service-name`. If your service definition does not contain this value or the value does not match what is needed in the URL then you need to override the service path in the code. Use the `.withServicePath("/path/to/my/service")` option on the service class.
+:::
 
 
 ### Invoke the generator programmatically
@@ -240,6 +244,11 @@ Please note that if you use the generator for services other than SAP S/4HANA se
 This should give you the generated classes in the desired folder. You can now proceed with using them to build requests.
 
 In case you run into issues with the above process: Double check your service and file names, check that the folders are setup correctly and that the service name mappings meet your expectations.
+
+
+:::caution
+In most cases you will have to override the generated service path in the code. By default the generator will use the `namespace` value of the `<schema>` tag as service name. The URL path will be build as `default-base-path` + `service-name`. If your service definition does not contain this value or the value does not match what is needed in the URL then you need to override the service path in the code. Use the `.withServicePath("/path/to/my/service")` option on the service class.
+:::
 
 ## Available Parameters
 
