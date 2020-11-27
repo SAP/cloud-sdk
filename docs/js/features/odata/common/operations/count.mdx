@@ -1,1 +1,16 @@
-Not yet available.
+The method `count()` allows you to get the number of elements in a collection.
+It is only available for  `getAll()` request and is added before the request execution:
+
+```ts
+BusinessPartner.requestBuilder().count().getAll();
+```
+The return type of count requests is a `Promise<number>`.
+You can combine the `count()` with filter conditions:
+
+```ts
+BusinessPartner.requestBuilder().filter(BusinessPartner.FIRST_NAME.equals('firstName')).count().getAll();
+```
+
+Note that we currently do not support the usage of count within a filter condition as described in the [OData v4 specifiation](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_AddressingtheCountofaCollection).
+
+
