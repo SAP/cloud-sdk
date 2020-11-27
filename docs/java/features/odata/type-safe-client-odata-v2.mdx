@@ -551,6 +551,35 @@ POST /ODataService/API_BUSINESS_PARTNER/A_BusinessPartner(123)/to_BusinessPartne
 
 </Tabs>
 
+
+## Server-Driven Paging
+
+OData service operators may decide to enable server-driven pagination to limit the amount of data that is fetched and sent over the network to the client, in case generic query options yield huge amounts of data. By splitting the result-set into sequential pages of entities, the data can be requested incrementally. This reduces initial network load and improves overall response times. If the payload of an OData response contains a link including a `$skiptoken`, then it indicates a next page to the result-set.
+
+In comparison the OData consumer may use query options `$top` and `$skip` (client-driven paging) to read partial data from the result-set. But relying on a consistent state while browsing through the data can be problematic. Between individual requests another user could delete or add an item. This would result in an inconsistent aggregation of data.
+
+By default the SAP Cloud SDK automatically resolves all pages of a result-set if server-driven paging is encountered. For the API consumer it is not necessary to parse the next link and instantiate follow-up requests to aggregate the full result-set. In case memory efficiency and response time is the priority, then the advanced API provides additional means to manually iterate through the internal pages. While accessing the following methods, the internal HTTP requests are executed lazily:
+
+```java
+Iterable<List<BusinessPartner>> iterablePagesOfEntities = service
+  .getAllBusinessPartner()
+  .iteratingPages()
+  .executeRequest( destination );
+
+Iterable<BusinessPartner> iterableEntities = service
+  .getAllBusinessPartner()
+  .iteratingEntities()
+  .executeRequest(destination);
+  
+Stream<BusinessPartner> streamingEntities = service
+  .getAllBusinessPartner()
+  .streamingEntities()
+  .executeRequest(destination);
+```
+
+The request builder allows for setting the optional parameter for preferred page size. Please note that the OData service may not be obliged to respect this setting.
+
+
 ## Switch to improved OData v2 type-safe client
 
 - For any operation type, replace a call to `execute` with `executeRequest`.
