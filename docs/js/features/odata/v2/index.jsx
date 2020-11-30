@@ -1,6 +1,6 @@
-import React from 'react';
+import React from 'react'
 import SelectContent from './select.mdx'
 
-export function Select(){
+export function Select () {
   return <SelectContent/>
 }

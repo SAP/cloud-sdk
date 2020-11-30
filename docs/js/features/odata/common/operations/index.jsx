@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import CountContent from './count.mdx'
 import CreateContent from './create.mdx'
 import CreateAsChildOfContent from './create-as-child-of.mdx'
@@ -8,36 +8,34 @@ import GetAllContent from './get-all.mdx'
 import GetByKeyContent from './get-by-key.mdx'
 import UpdateContent from './update.mdx'
 
-export function Count(){
+export function Count () {
   return <CountContent/>
 }
 
-export function Create() {
-  return<CreateContent/>
+export function Create () {
+  return <CreateContent/>
 }
 
-export function CreateAsChildOf(){
+export function CreateAsChildOf () {
   return <CreateAsChildOfContent/>
 }
 
-export function DeepCreate(){
+export function DeepCreate () {
   return <DeepCreateContent/>
 }
 
-export function Delete(){
+export function Delete () {
   return <DeleteContent/>
 }
 
-export function GetAll(){
+export function GetAll () {
   return <GetAllContent/>
 }
 
-export function GetByKey(){
+export function GetByKey () {
   return <GetByKeyContent/>
 }
 
-export function Update(){
+export function Update () {
   return <UpdateContent/>
 }
-
-
