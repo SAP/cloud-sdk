@@ -4,6 +4,9 @@ import FilterOneToManyContent from './filter-one-to-many.mdx'
 import FilterParentChildContent from './filter-parent-child.mdx'
 import SelectContent from './select.mdx'
 import SubqueriesInExpandContent from './subqueries-in-expand.mdx'
+import FunctionImportKnownIssuesContent from './function-import-known-issues.mdx'
+import ActionImportContent from './action-import.mdx'
+import ActionImportKnownIssuesContent from './action-import-known-issues.mdx'
 
 export function ExpandSelect () {
   return <ExpandSelectContent/>
@@ -23,4 +26,16 @@ export function Select () {
 
 export function SubqueriesInExpand () {
   return <SubqueriesInExpandContent/>
+}
+
+export function FunctionImportKnownIssues(){
+  return <FunctionImportKnownIssuesContent/>
+}
+
+export function ActionImport(){
+  return <ActionImportContent/>
+}
+
+export function ActionImportKnownIssues(){
+  return <ActionImportKnownIssuesContent/>
 }
