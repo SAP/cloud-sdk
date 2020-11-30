@@ -392,7 +392,15 @@ OData service operators may decide to enable server-driven pagination to limit t
 
 In comparison the OData consumer may use query options `$top` and `$skip` (client-driven paging) to read partial data from the result-set. But relying on a consistent state while browsing through the data can be problematic. Between individual requests another user could delete or add an item. This would result in an inconsistent aggregation of data.
 
-By default the SAP Cloud SDK automatically resolves all pages of a result-set if server-driven paging is encountered. For the API consumer it is not necessary to parse the next link and instantiate follow-up requests to aggregate the full result-set. In case memory efficiency and response time is the priority, then the advanced API provides additional means to manually iterate through the internal pages. While accessing the following methods, the internal HTTP requests are executed lazily:
+By default the SAP Cloud SDK automatically resolves all pages of a result-set if server-driven paging is encountered. For the API consumer it is not necessary to parse the next link and instantiate follow-up requests to aggregate the full result-set.
+
+```java
+List<BusinessPartner> iterablePagesOfEntities = service
+  .getAllBusinessPartner()
+  .execute( destination );
+```
+
+In case memory efficiency and response time of the consuming application becomes a priority, then the advanced API provides additional means to manually iterate through the internal pages. While accessing the following methods, the internal HTTP requests are executed lazily:
 
 ```java
 Iterable<List<BusinessPartner>> iterablePagesOfEntities = service
