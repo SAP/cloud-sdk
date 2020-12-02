@@ -60,6 +60,10 @@ module.exports = {
             {
               label: ' GitHub Java',
               href: 'https://github.com/SAP/cloud-sdk/issues/new?assignees=&labels=Java&template=sap-cloud-sdk-for-java-issue.md&title='
+            },
+            {
+              label: 'Support Details',
+              to: 'docs/overview/get-support'
             }
           ]
         },
