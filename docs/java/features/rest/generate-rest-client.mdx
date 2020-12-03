@@ -1,0 +1,78 @@
+---
+id: generate-rest-client
+title: Generate a typed REST client for Java
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Generate typed REST Client
+description: This article describes how to leverage the REST client generator to obtain Java classes from a service definition. These classes can then be used to build type-safe REST requests.
+keywords:
+- sap
+- cloud
+- sdk
+- rest
+- java
+- VDM
+- generate
+---
+
+## Generate a typed REST client with the REST Generator ##
+
+Cloud SDK provides a rest generator maven plugin which can be used to generate Java classes from the metadata of an OpenApi REST Service.
+The generated Java classes need the following dependencies to be present in your project:
+
+
+```xml
+<dependency>
+	<groupId>com.sap.cloud.sdk.datamodel</groupId>
+	<artifactId>rest-core</artifactId>
+</dependency>
+<dependency>
+	<groupId>io.swagger</groupId>
+	<artifactId>swagger-annotations</artifactId>
+</dependency>
+```
+
+## Using the REST generator maven plugin ##
+
+The maven plugin script should be added to the `application/pom.xml` file of your project: 
+
+```xml
+<plugin>
+	<groupId>com.sap.cloud.sdk.datamodel</groupId>
+	<artifactId>rest-generator-maven-plugin</artifactId>
+    <executions>
+		<execution>
+			<goals>
+				<goal>generate</goal>
+			</goals>
+			<phase>generate-sources</phase>
+		</execution>
+	</executions>
+	<configuration>
+   		<inputSpec>${project.basedir}sample.yaml</inputSpec>
+		<outputDirectory>${project.basedir}/restvdm</outputDirectory>
+        <apiPackage>com.mycompany.restvdm.sample.api.</apiPackage>
+		<modelPackage>com.mycompany.restvdm.sample.model</modelPackage>
+		<apiMaturity>released</apiMaturity>
+		<logLevel>info</logLevel>
+	</configuration>
+</plugin>
+```
+
+The maven will run the generator within the `process-sources` phase which is executed before compile. 
+The complete list of available parameters with their description is as follows:
+
+| Parameter                  | Default     |Required | Description                                                                                                         |
+|:---------------------------|:----------: |:-------:|:--------------------------------------------------------------------------------------------------------------------|
+| `<compileScope>`           | `NONE`      | No      | Adds the generated sources to the compile or test phase. Respective values are `COMPILE` and `TEST_COMPILE`                                                             |
+| `<inputSpec>`              | -           | Yes     | Location of the OpenApi metadata file                                                                               |
+| `<outputDirectory>`        | -           | Yes     | Output directory for generated sources                                                                              |
+| `<apiPackage>`             | -           | Yes     | Package name for the generated API classes                                                                          |
+| `<modelPackage>`           | -           | Yes     | Package name for the generated Model classes                                                                        |
+| `<apiMaturity>`            | `released`  | No      | Defines the maturity of the REST API for which java classes are generated. Possible values are `released` and `beta`|
+| `<logLevel>`               | `info`      | No      | Defines the log level of the REST Generator. Possible values are `info` and `debug`                                 |
+| `<project>`                | `${project}`| No      | Project reference to add generated classed to the set of compiled classes                                           |
+
+:::note
+Please note that a single execution of maven plugin corresponds to generating sources for a single metadata file. Hence, in order to generate sources for multiple OpenAPI Specifications you need to create multiple executions each corresponding to a particular metadata file.
+:::
