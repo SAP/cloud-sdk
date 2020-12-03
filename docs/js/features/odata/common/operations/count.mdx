@@ -1,1 +1,27 @@
-Not yet available.
+The method `count()` allows you to get the number of elements in a collection.
+It is only available for  `getAll()` requests and is added before the request execution:
+
+```ts
+BusinessPartner.requestBuilder().getAll().count();
+```
+
+The return type of count requests is a `Promise<number>`.
+You can combine the `count()` with filter conditions.
+To get the number of business partners with first name `John` execute the following request:
+
+```ts
+BusinessPartner.requestBuilder().filter(BusinessPartner.FIRST_NAME.equals('John')).count().getAll();
+```
+
+As defined in the OData spec `count` is not affected by `top`, `skip`, and `orderBy`.
+:::note `top()` and `skip()` are ignored for count
+If you include these methods in a count request they will be ignored by the SDK.
+So these three requests:
+
+```
+BusinessPartner.requestBuilder().top(5).getAll().count();
+BusinessPartner.requestBuilder().skip(5).getAll().count();
+BusinessPartner.requestBuilder().getAll().count();
+```
+
+will all return the same value.
