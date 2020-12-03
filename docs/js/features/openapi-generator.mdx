@@ -1,0 +1,94 @@
+---
+title: Use the OpenApi generator to generate typesafe clients
+sidebar_label: OpenApi generator
+description: This article describes how generate a client from the a service definition and how to use the client.
+keywords:
+- sap
+- cloud
+- sdk
+- OpenApi
+- rest
+- connectivity
+- JavaScript
+- TypeScript
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl'
+
+## What is the OpenApi generator and what does it offer for you
+
+The OpenApi generator is a command line tool to generate client from an [OpenApi specification](https://swagger.io/specification/).
+OpenApi specifications are the defacto standard to define RESTful webservice in a language-agnostic way comparable to the `edmx` service definition for [OData clients](./odata/overview.mdx).
+As you would expect there exists already a [openapi-generator](https://github.com/OpenAPITools/openapi-generator) which offers the generation for a big number of languages.
+So why do we provide an extra generator in the SDK?
+
+The reason we provided an extra generator based on the open source one is that we wanted to include the [connectivity layer](./connectivity) we have in the SDK also for REST APIs and not only for OData.
+So the same [destination lookup](./connectivity/destination), [on-premise connectivity](./connectivity/on-premise) and [proxy handling](./connectivity/proxy) applies to the OpenApi client.
+
+This is achieved in the following way.
+We use the open source generator to create a [axios client](https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/typescript-axios.md).
+Then we replace the axios client with our [http client](./connectivity/generic-http-client) which is also based on axios.
+In addition we als wrap the paths and operation with a API layer with similar names as in the OData case but we will come to this [section](How to use the Client) but first we have to generate a client.
+
+## How to generate a Client
+
+The first thing is to install the generator via:
+```
+npm i @sap-cloud-sdk/XXX -g
+```
+
+Then you can generate a client via:
+
+```
+sap-cloud-sdk-XXX generate-XXX -i directoryWithOpenApiFiles -o outputDirectory
+```
+
+For additional options use the `--help` option on the command.
+
+## How to use the Client
+
+We tried to make the OpenApi client to be similar to the one for OData.
+What methods are available in the client strongly depends on the service definition.
+Let's investigate how the specification of our  [test service](XXX) relates to a generated client.
+
+The test service is simple and has three paths: `/entities`, `/entities/{entityId}` and `entities/count`.
+Let's first focus on the `GET` operation which is present for all three paths.
+The central entry point to execute methods is the `TestServiceApi` object which provides all methods:
+
+```ts
+import {
+   TestServiceApi
+} from './outputDirectory/test-service';
+
+const allTestEntities = await TestServiceApi.getAllEntities().execute(myDestination);
+```
+
+The type of `allTestEntities` is a `AxiosResponse<TestEntity[]>` and `myDestination` is the destination object explained in the [connectivity guide](./connectivity/destination).
+The name of the `API` object is derived from the OpenApi specification file which was called `test-service.json` in our case.
+If you want to get an entity by ID you use the corresponding method:
+
+```ts
+import {
+   TestServiceApi
+} from './outputDirectory/test-service';
+
+const myEntity = await TestServiceApi.getEntityByKey('myId').execute(myDestination);
+```
+
+Note that the result of this request is also typed as `AxiosResponse<TestEntity[]>`  which is due the type definition in the [specification file](XXX) which is `array`.
+If the type would be object it would be `AxiosResponse<TestEntity>`.
+So always keep in mind that the generated client can only be as good as your specification file.
+To complete the `GET` methods let's count some entities:
+
+```ts
+import {
+   TestServiceApi
+} from './outputDirectory/test-service';
+
+const numberOfEntities = await TestServiceApi.countEntities().execute(myDestination);
+```
+
+where the response is typed as `AxiosResponse<number>`.
+
+
+
