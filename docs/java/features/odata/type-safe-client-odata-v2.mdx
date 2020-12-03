@@ -330,14 +330,28 @@ To achieve a different order with `and` as the top level statement one would nes
 
 <!-- TODO: Explain filters on complex types and navigational properties -->
 
-The [OData v2 standard](https://www.odata.org/documentation/odata-version-2-0/uri-conventions/) allows for a limited range of filter expressions compared to OData v4. A detailed list of what is available in the SDK can be obtained from [the Javadoc](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/datamodel/odata/helper/package-summary.html). The functionality can also be discovered through the fluent API.
+Please, check what filter options are supported by [OData v2 standard](https://www.odata.org/documentation/odata-version-2-0/uri-conventions/). Search for: **4.5. Filter System Query Option ($filter)** after navigation to the link.
+
+The SDK currently has support for the following filtering functions in OData v2 client:
+
+| Filter name           | Filter function | Example ODava v2 query string                |
+|-----------------------|-----------------|----------------------------------------------|
+| Equals                | `eq`            | /Suppliers?$filter=Address/City eq 'Redmond' |
+| No Equals             | `ne`            | /Suppliers?$filter=Address/City ne 'London'  |
+| Less than             | `lt`            | /Products?$filter=Price lt 20                |
+| Greater than          | `gt`            | /Products?$filter=Price gt 20                |
+| Greater than or equal | `ge`            | /Products?$filter=Price ge 10                |
+| Less than or equal    | `le`            | /Products?$filter=Price le 100               |
+
+
+For more details check our [API documentation](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/datamodel/odata/helper/package-summary.html) or use `autocomplete` function of your IDE to see available methods of the provided Fluent API.
 
 <!--
 ### Count ###
 -->
 
-### Batch Requests 
-Batch requests allow wrapping multiple OData requests into one single batch call. Thereby we reduce the number of roundtrips to the remote server. Refer to the [official OData V2 spec](https://www.odata.org/documentation/odata-version-2-0/batch-processing/) 
+### Batch Requests
+Batch requests allow wrapping multiple OData requests into one single batch call. Thereby we reduce the number of roundtrips to the remote server. Refer to the [official OData V2 spec](https://www.odata.org/documentation/odata-version-2-0/batch-processing/)
 for further reference about batch requests, their semantics and the request/response format.
 
 #### Execute Batch Request
@@ -360,7 +374,7 @@ final BatchResponse result =
 ```
 
 #### Access Batch Response
-Use the method `get` to access the individual change set responses by index. 
+Use the method `get` to access the individual change set responses by index.
 ```java
 final Try<BatchResponseChangeSet> changeSetTry = result.get(0);
 ```
@@ -400,7 +414,7 @@ The Cloud SDK supports different strategies for updating entities which differ i
 
 The default strategy is the *modifying entity update strategy* which attempts to modify only the necessary entity fields in the remote system.
 It issues a PATCH request and includes only the fields in the request payload whose values were changed by its setter method.
-Hence, fields whose values remain unchanged are not sent to the target system. 
+Hence, fields whose values remain unchanged are not sent to the target system.
 Calling the method `includingFields(fields ...)` instructs the Cloud SDK to add the mentioned fields explicitly in the update request.
 This is useful for backend systems which require some unchanged fields in the request payload for given reasons.
 
@@ -419,7 +433,7 @@ service.updateBusinessPartner(partner)
 
 <TabItem value="replace">
 
-The *replacing entity update strategy* attempts to replace the full entity in the remote system. 
+The *replacing entity update strategy* attempts to replace the full entity in the remote system.
 It issues a PUT request and submits all fields in the update request, regardless of any field changes.
 
 This update strategy can be explicitly chosen invoking the method `replacingEntity()` while building the update request.
@@ -477,7 +491,7 @@ catch( ODataServiceErrorException e ) {
     // handle failures in deserialization
 } catch( ODataResponseException e ) {
     // handle all other errors originating from handling the HTTP response
-} 
+}
 ```
 
 </TabItem>
@@ -580,7 +594,7 @@ Iterable<BusinessPartner> iterableEntities = service
   .getAllBusinessPartner()
   .iteratingEntities()
   .executeRequest(destination);
-  
+
 Stream<BusinessPartner> streamingEntities = service
   .getAllBusinessPartner()
   .streamingEntities()
