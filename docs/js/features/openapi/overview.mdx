@@ -15,14 +15,18 @@ keywords:
 
 import useBaseUrl from '@docusaurus/useBaseUrl'
 
+:::note
+The OpenApi generator is in beta state.
+:::
+
 ## What is the OpenApi generator and what does it offer for you
 
 The OpenApi generator is a command line tool to generate clients from an [OpenApi specification](https://swagger.io/specification/).
 OpenApi specifications are the defacto standard to define RESTful webservice in a language-agnostic way comparable to the `edmx` service definition for [OData clients](../odata/overview.mdx).
-As you would expect there exists already a [openapi-generator](https://github.com/OpenAPITools/openapi-generator) which offers client generator for a big number of languages.
+As you would expect an [openapi-generator](https://github.com/OpenAPITools/openapi-generator) which offers client generation for a big number of languages already exists.
 So why do we provide an extra generator in the SDK?
 
-The reason we provided an extra generator based on the open source one is that we wanted to include the connectivity layer of the SDK also for REST APIs and not only for OData.
+The reason we provided an extra generator based on the existing one is that we wanted to include the connectivity layer of the SDK for other REST APIs as well and not only for OData.
 So the same [destination lookup](../connectivity/destination), [on-premise connectivity](../connectivity/on-premise) and [proxy handling](../connectivity/proxy) applies to the OpenApi clients.
 
 This is achieved in the following way.
@@ -33,3 +37,4 @@ In addition we wrap the paths and operations with an API layer to have similar n
 
 If you are interested in using an OpenApi client in your project the next steps to do are to generate a client and to use it in your project.
 You find information on the generation of client [here](./generate-openapi-client) and details on the usage of the client [here](./execute-openapi-request).
+

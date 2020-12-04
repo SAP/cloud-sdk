@@ -15,7 +15,7 @@ keywords:
 
 import useBaseUrl from '@docusaurus/useBaseUrl'
 
-## Generate a Client via the CLI
+## Generate a client via the CLI
 
 Many SAP systems like SAP S/4HANA, Concur and Sap Cloud Platform provide REST APIs to the user.
 A common way to specify these services is via [OpenApi](../overview) specification files.
@@ -24,26 +24,26 @@ An example how such a files looks like can be found [here](https://github.com/SA
 
 Run this command to install the OpenApi generator globally:
 ```
-npm i @sap-cloud-sdk/XXX -g
+npm i @sap-cloud-sdk/openapi-generator -g
 ```
 
 Then you can generate an OpenApi client via:
 
 ```
-sap-cloud-sdk-XXX generate-XXX -i directoryWithOpenApiFiles -o outputDirectory
+generate-openapi-client -i directoryWithOpenApiFiles -o outputDirectory
 ```
 
 The `directoryWithOpenApiFiles` points to the directory containing your specification file and `outputDirectory` to the target folder wheere generated client will be saved.
 For additional options on the command use the `--help` flag.
 
-## Generate a Client Programmatically
+## Generate a client programmatically
 
 The generator can also be execute programmatically in JavaScript code directly.
-In the [generator package](XXX) the a method `generateClients` is exported.
+In the [generator package](https://github.com/SAP/cloud-sdk-js/tree/main/packages/openapi-generator) the a method `generateClients` is exported.
 This method takes the same options as the command line tool and generates OpenApi clients:
 
 ```ts
-import { generateClients } from '@sap-cloud-sdk/XXX'
+import { generateClients } from '@sap-cloud-sdk/openapi-generator'
 
 const generatorOptions = {
   inputDir: 'directoryWithOpenApiFiles';

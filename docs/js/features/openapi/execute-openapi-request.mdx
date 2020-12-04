@@ -28,7 +28,7 @@ The central entry point to execute methods is the `TestServiceApi` object which 
 The name of the `API` object derives from the OpenApi specification file name.
 In this example it is called `test-service.json`.
 
-### Get Operation without Parameters
+### Get operation without parameters
 
 The root path `/entites` in combination with the operation `GET` will get all entities.
 The SDK uses the `operationId` value of the spec file to name the method if possible.
@@ -44,7 +44,7 @@ const allTestEntities = await TestServiceApi.getAllEntities().execute(myDestinat
 
 The type of `allTestEntities` is  `Promise<TestEntity[]>` and `myDestination` is the destination object explained in the [connectivity guide](./connectivity/destination).
 
-### Get Operation with Parameter
+### Get operation with parameter
 
 The path `/entities/{entityId}` has a parameter of type `string` and it will return the entity by the given key.
 The `operationId` is `getEntityByKey` and the path parameter is passed as an argument:
@@ -59,7 +59,7 @@ const myEntity = await TestServiceApi.getEntityByKey('myId').execute(myDestinati
 
 Note that the result of this request is also typed as `Promise<TestEntity>`.
 
-### Get Operations with longer Paths
+### Get operations with longer paths
 
 The path `root/someThing` will get `someThing` from the root entity.
 In our example we have a `entities/count` which will return the number of entities and is named `countEntities`:
@@ -74,7 +74,7 @@ const numberOfEntities = await TestServiceApi.countEntities().execute(myDestinat
 
 where the type of the response is `Promise<number>`.
 
-### Post Operations
+### Post operations
 
 For the `entities` path the operation `POST` is also allowed.
 This corresponds to the creation of new entities.
