@@ -19,7 +19,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 In the [Executing a request using a generated OData client](../odata/execute-odata-request.mdx) section, we explained how to make OData requests using the generated OData client.
 This client is the highest layer of convenience and type-safety for the user.
 Below the OData client uses the Generic HTTP client of the SDK.
-For the final HTTP calls we have decided to use the Axios library.
+For the final HTTP calls we have decided to use the `axios` library.
 
 <img
   alt="The layers of HTTP clients in the SDK."
@@ -45,9 +45,9 @@ The client handles connectivity related issues such as:
 - [web proxies](../connectivity/proxy.mdx).
 
 In the end, all information from the destination, connectivity service and proxy configuration ends up in header-fields and [proxy-agents](https://www.npmjs.com/package/proxy-agent).
-The information goes one level down to the Axios client.
+The information goes one level down to the `axios` client.
 
-**Axios HTTP Client:** Is a widely used open source [HTTP client for node](https://www.npmjs.com/package/axios).
+**`axios` HTTP Client:** Is a widely used open source [HTTP client for node](https://www.npmjs.com/package/axios).
 This client executes the actual HTTP requests in the end.
 
 ## How to use it
@@ -87,7 +87,7 @@ The values you give in the request config [will be merged](https://github.com/SA
 }
 ```
 
-For keys which exist for both object the value from the custom requestion config will be used.
+For keys which exist for both object the value from the custom request config will be used.
 For example, a request config with `authorization` headers will overwrite the authorization header information from the destination.
 
 ## When to use it

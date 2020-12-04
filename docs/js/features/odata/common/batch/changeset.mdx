@@ -5,7 +5,7 @@ Therefore the requests within a changeset should not depend on each other.
 If the execution of any of the requests within a changeset fails, the whole changeset will be reflected as an error in the response and will not be applied, much like a database transaction.
 
 Change requests cannot be passed to a batch request directly.
-They have to be combined in a changset, which in turn can be passed to the batch request.
+They have to be combined in a changeset, which in turn can be passed to the batch request.
 Once a batch request is executed it returns a list of `BatchResponse`s.
 Those contain the raw response information of each subrequest.
 The response to a changeset request can either be a collection of the subresponses to the subrequests of the changeset of type `WriteResponses` or an `ErrorResponse`.
@@ -25,9 +25,9 @@ Therefore, it is crucial to check responses for success, before casting them to 
 In the example below, a list of addresses is mapped to [UpdateRequestBuilder](#update-request-builder)s.
 These change requests are combined to one `changeset`, which is passed to the `batch` request and executed against a destination.
 
-Once the batch request is exeucted it returns a list of `BatchResponse`s, which in this example contains one response only, namely the one for the changeset.
+Once the batch request is executed it returns a list of `BatchResponse`s, which in this example contains one response only, namely the one for the changeset.
 
-If the request was not successul, an error will be thrown, otherwise the subresponses are transformed to instances of `BusinessPartnerAddress`.
+If the request was not successful, an error will be thrown, otherwise the subresponses are transformed to instances of `BusinessPartnerAddress`.
 
 ```ts
 async function updateAddresses(

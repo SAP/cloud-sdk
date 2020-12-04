@@ -17,9 +17,12 @@ keywords:
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-The SAP Cloud SDK offers some basic functionality that helps with connecting to other systems and services like S/4HANA Cloud. The SDK introduces the general concept of a `Destination` which holds basic information about how to connect to such a system. That could for instance be a `url`, a user name, and password for basic authentication or some custom headers.
+The SAP Cloud SDK offers some basic functionality that helps with connecting to other systems and services like S/4HANA Cloud.
+The SDK introduces the general concept of a `Destination` which holds basic information about how to connect to such a system.
+That could for instance be a `url`, a user name, and password for basic authentication or some custom headers.
 
-This concept is integrated with the [Destination Service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html) that is available on SAP Cloud Platform. If the application has a service binding to this service in place the SDK will provide access to these destinations.
+This concept is integrated with the [Destination Service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html) that is available on SAP Cloud Platform.
+If the application has a service binding to this service in place the SDK will provide access to these destinations.
 
 ## Accessing Destinations
 
@@ -29,8 +32,8 @@ In general destinations are accessed through the `DestinationAccessor`:
 DestinationAccessor.getDestination("my-destination");
 ```
 
-This will look up the destination in the destination service if the application is running on SAP Cloud Platform. But
-also, other sources like the environment variables are considered.
+This will look up the destination in the destination service if the application is running on SAP Cloud Platform.
+But also, other sources like the environment variables are considered.
 
 ### Integrated Multi-Tenancy
 
@@ -48,7 +51,8 @@ See the section on [destination options](#building-destination-options) below.
 
 ## Decorating Destinations
 
-Depending on the use case, one needs to wrap the accessed destination before issuing a request to a system. This is to make sure all required destination properties are correctly set before invoking the actual request.
+Depending on the use case, one needs to wrap the accessed destination before issuing a request to a system.
+This is to make sure all required destination properties are correctly set before invoking the actual request.
 
 ### HTTP Destinations
 
@@ -71,16 +75,14 @@ DestinationAccessor.getDestination("my-destination").asRfc();
 
 ### Connect to on-premise S/4HANA System
 
-If your destination is exposing an on-premise S/4HANA service via a **[Cloud
-Connector](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e6c7616abb5710148cfcf3e75d96d596.html)**
-you need to decorate the destination with `DefaultErpHttpDestination`:
+If your destination is exposing an on-premise S/4HANA service via a **[Cloud Connector](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e6c7616abb5710148cfcf3e75d96d596.html)** you need to decorate the destination with `DefaultErpHttpDestination`:
 
 ```java
 final HttpDestination httpDestination =
 destination.asHttp().decorate(DefaultErpHttpDestination::new);
 ```
 
-This ensures the mapping of all S/4 properties like `sap-client` and `sap-locale` as HTTP request headers.
+This ensures the mapping of all S/4HANA properties like `sap-client` and `sap-locale` as HTTP request headers.
 
 ## Registering Destinations at Runtime
 
@@ -140,7 +142,9 @@ Lastly use `setLoader()` to replace all existing loaders.
 
 ### Get all Destinations from the Destination Service on Cloud Foundry
 
-To fetch all destinations from the Destination Service, you need to make a call to `tryGetAllDestinations`.The method queries the [Destination Service API](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview) and retrieves all the destinations available at the service instance and sub-account level. In case there is a destination available on both the levels with the same name, then this method prioritizes the destination at the service instance level.
+To fetch all destinations from the Destination Service, you need to make a call to `tryGetAllDestinations`.
+The method queries the [Destination Service API](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview) and retrieves all the destinations available at the service instance and sub-account level.
+In case there is a destination available on both the levels with the same name, then this method prioritizes the destination at the service instance level.
 
 Below is the sample call to `tryGetAllDestinations`:
 
@@ -152,7 +156,9 @@ In the above call `destinationLoader` needs to be an instance of `ScpCfDestinati
 
 #### Building Destination Options
 
-You need to build a `DestinationOptions` object and pass it as a parameter. It defines how Destinations Service is queried. In a simple application without provider/subscriber setup, your initial configuration is as simple as:
+You need to build a `DestinationOptions` object and pass it as a parameter.
+It defines how Destinations Service is queried.
+In a simple application without provider/subscriber setup, your initial configuration is as simple as:
 
 ```java
 final DestinationOptions options = DestinationOptions.builder().build();
@@ -205,7 +211,8 @@ DestinationAccessor.tryGetDestination("MyDestination");
 
 #### Environment Variable
 
-The first destination loader attempts to find the requested destination in the environment variable `destinations`. Here is an example value:
+The first destination loader attempts to find the requested destination in the environment variable `destinations`.
+Here is an example value:
 
 ```json
 [
@@ -248,7 +255,9 @@ See the example value above for reference.
 We have to perform configuration steps which tell the SAP Cloud SDK how to access the SCP destination service and connectivity service.
 
 :::note Are your client and server located on the same Network?
-If your localhost (client) resides in the same network zone as the target system (server) you can access it directly. Configuration of SCP connectivity services is not needed. All you have to do is creating a destination via environment variable `destinations`.
+If your localhost (client) resides in the same network zone as the target system (server) you can access it directly.
+Configuration of SCP connectivity services is not needed.
+All you have to do is creating a destination via environment variable `destinations`.
 :::
 
 ##### Maintain VCAP_SERVICES
@@ -266,7 +275,7 @@ Copy the value of that environment variable from your app which is deployed to S
 
 <TabItem value ="true">
 
-Create the file `default-env.json` in your project's root and supply the `VCAP_SERVICES` value you copied beforehand so that th file looks similar to the following shortened example:
+Create the file `default-env.json` in your project's root and supply the `VCAP_SERVICES` value you copied beforehand so that the file looks similar to the following shortened example:
 
 ```json
 {

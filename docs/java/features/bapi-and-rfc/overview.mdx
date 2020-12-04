@@ -19,23 +19,27 @@ import TabItem from '@theme/TabItem';
 
 ## What is a BAPI/an RFC Module?
 
-As per the [official SAP documentation](https://help.sap.com/saphelp_46c/helpdata/en/a5/3ec8464ac011d1894e0000e829fbbd/content.htm?no_cache=true), a BAPI (Business Application Programming Interface) is a _precisely defined interface providing access to processes and data in business application systems_. BAPIs allow external systems to integrate with ABAP systems by reading and writing business data through the BAPI as an interface. By contrast, an RFC module can also be used for such integrations. However, the recommended approach is to leverage BAPIs wherever possible as BAPIs guarantee more stable and intuitive interfaces.
+As per the [official SAP documentation](https://help.sap.com/saphelp_46c/helpdata/en/a5/3ec8464ac011d1894e0000e829fbbd/content.htm?no_cache=true), a BAPI (Business Application Programming Interface) is a _precisely defined interface providing access to processes and data in business application systems_.
+BAPIs allow external systems to integrate with ABAP systems by reading and writing business data through the BAPI as an interface.
+By contrast, using an RFC module is possible for such integrations, but the recommended approach is to use BAPIs wherever possible as BAPIs guarantee more stable and intuitive interfaces.
 
 On the technical level, both BAPIs and RFC modules allow for invocation from external systems through the [RFC protocol](https://help.sap.com/doc/saphelp_nw73/7.3.16/en-US/48/88068ad9134076e10000000a42189d/content.htm) (Remote Function Call). As opposed to HTTP, RFC is a binary protocol highly-optimized for fast data transfer between enterprise systems.
 
-You can find more differences between BAPI and RFC module on the programming model. Here is a brief overview:
+You can find more differences between BAPI and RFC module on the programming model.
+Here is a brief overview:
 
 - BAPIs have names that **always** start with "BAPI". RFC modules have more flexible naming conventions.
 - BAPIs do not throw exceptions, but leverage return tables to transfer messages to the caller.
 - BAPIs do not use changing parameters, while RFC modules may do.
 
 :::info
-To improve readability, we use the term _BAPI_ in the remainder only but always refer to both BAPIs and RFC modules.
+To improve readability, we use the term _BAPI_ to refer to both BAPIs and RFC modules.
 :::
 
 ## Technical Overview
 
-SAP offers the [SAP Java Connector](https://support.sap.com/en/product/connectors/jco.html) library, hereafter referred to as _JCo_ in short, that allows native access to BAPIs inside SAP systems. That means, one can also invoke BAPIs without using the SAP Cloud SDK by solely leveraging JCo.
+SAP offers the [SAP Java Connector](https://support.sap.com/en/product/connectors/jco.html) library, hereafter referred to as _JCo_ in short, that allows native access to BAPIs inside SAP systems.
+That means, one can also invoke BAPIs without using the SAP Cloud SDK by solely leveraging JCo.
 
 SAP Cloud SDK offers a convenient Java API on top of JCo that integrates with other SDK core concepts, such as the destination retrieval on SCP, as well as a nice way to mapping Java entity classes to BAPI input parameters and result sets.
 
@@ -43,24 +47,28 @@ SAP Cloud SDK offers a convenient Java API on top of JCo that integrates with ot
 SAP Cloud SDK does _not_ package JCo as library with its dependencies. The SDK assumes that JCo is available on the JVM classpath.
 :::
 
-On the SCP Neo landscape, JCo is automatically provided by the infrastructure, on the SCP Cloud Foundry landscape one must use the SAP Java Build Pack during app deployment. There are other edge cases that we'll cover later.
+On the SCP Neo landscape, JCo is automatically provided by the infrastructure, on the SCP Cloud Foundry landscape one must use the SAP Java Build Pack during app deployment.
+There are other edge cases that we'll cover later.
 
 ## Call a BAPI in a SAP ABAP system
 
 :::tip Generate SDK project
-If you're starting from scratch, generate a `Tomee` project following the steps in the [Getting started](https://sap.github.io/cloud-sdk/docs/java/getting-started#generating-a-project-from-a-maven-archetype) guide.
+If you're starting from scratch, generate a `TomEE` project following the steps in the [Getting started](https://sap.github.io/cloud-sdk/docs/java/getting-started#generating-a-project-from-a-maven-archetype) guide.
 :::
 
 ### Implement an Example BAPI Call
 
 #### Example Scenario
 
-We build an app that we deploy to SCP Cloud Foundry. This app exposes a servlet which invokes a BAPI to retrieve cost center information from e.g. SAP S/4HANA. The servlet has two input parameters which we supply in the query string:
+We build an app that we deploy to SCP Cloud Foundry.
+This app exposes a servlet which invokes a BAPI to retrieve cost center information from e.g. SAP S/4HANA.
+The servlet has two input parameters which we supply in the query string:
 
 - _destinationName_: Defines which SCP destination to use for connecting to SAP S/4HANA.
 - _controllingArea_: Defines the controlling area for the cost center retrieval.
 
-The app retrieves the SCP destination with SDK core capabilities, creates a BAPI request and issues that to SAP S/4HANA through the SAP Cloud Connector. We use the SAP Cloud Connector in order to access an SAP S/4HANA On-Premise system.
+The app retrieves the SCP destination with SDK core capabilities, creates a BAPI request and issues that to SAP S/4HANA through the SAP Cloud Connector.
+We use the SAP Cloud Connector in order to access an SAP S/4HANA On-Premise system.
 
 The BAPI result contains cost center information which we print to the servlet response.
 
@@ -68,7 +76,8 @@ The BAPI result contains cost center information which we print to the servlet r
 
 ##### Create Cost Center Abstraction
 
-Firstly, we create an abstraction for the cost center as business entity. Thereby we gain type-safe access to the cost center information.
+Firstly, we create an abstraction for the cost center as business entity.
+Thereby we gain type-safe access to the cost center information.
 
 Create a new class `CostCenter` and implement it as follows:
 
@@ -91,9 +100,12 @@ public class CostCenter {
 
 The annotation `@Value` is a class-level annotation that comes from [Lombok](https://projectlombok.org/), check outs its [documentation](https://projectlombok.org/features/Value) when curious.
 
-We annotate every class member with `@ElementName` declaring the respective ABAP field name. The SDK uses this meta data to map the ABAP field to the Java field. You can look up the ABAP field name in S/4HANA transaction SE37 by opening the BAPI parameter list.
+We annotate every class member with `@ElementName` declaring the respective ABAP field name.
+The SDK uses this meta data to map the ABAP field to the Java field.
+You can look up the ABAP field name in S/4HANA transaction SE37 by opening the BAPI parameter list.
 
-To make that compile, we add Lombok to our application pom as dependency. Open `application/pom.xml` and add that dependency:
+To make that compile, we add Lombok to our application pom as dependency.
+Open `application/pom.xml` and add that dependency:
 
 ```xml
 <dependency>
@@ -133,7 +145,8 @@ Now follows the actual BAPI invocation.
 final BapiRequestResult result = new BapiRequest("BAPI_COSTCENTER_GETLIST1")
 ```
 
-We use the BAPI `BAPI_COSTCENTER_GETLIST1` to fetch cost center details from SAP S/4HANA. We call it with these parameters:
+We use the BAPI `BAPI_COSTCENTER_GETLIST1` to fetch cost center details from SAP S/4HANA.
+We call it with these parameters:
 
 - _Importing_: `CONTROLLINGAREA` is supplied with the controlling area the servlet received
 - _Tables_: `COSTCENTERLIST` provides us a list of cost centers that belong to the controlling area along with some cost center data
@@ -147,11 +160,16 @@ Here is how you code that with the SAP Cloud SDK.
 .withTableAsReturn("BAPIRET2")
 ```
 
-We call `withExporting` with the parameter name as first argument. The second argument `BAPI0012_GEN-CO_AREA` represents the ABAP data type of the BAPI parameter. You can look that up in transaction SE37 under the respective BAPI name. Thirdly, we pass the actual controlling area to the method.
+We call `withExporting` with the parameter name as first argument.
+The second argument `BAPI0012_GEN-CO_AREA` represents the ABAP data type of the BAPI parameter.
+You can look that up in transaction SE37 under the respective BAPI name. Thirdly, we pass the actual controlling area to the method.
 
-Using `withTable` allows us accessing the table parameter result after BAPI processing. If we would not call this method, the SDK would not ignore this tables parameter from the BAPI response, even though it contains some data. The second parameter is again the ABAP data type.
+Using `withTable` allows us accessing the table parameter result after BAPI processing.
+If we would not call this method, the SDK would not ignore this tables parameter from the BAPI response, even though it contains some data.
+The second parameter is again the ABAP data type.
 
-The invocation of method `withTableAsReturn` instructs the SAP Cloud SDK to treat the tables parameter with name `BAPIRET2` as BAPI result table. We'll see later how that helps us accessing the BAPI result in Java.
+The invocation of method `withTableAsReturn` instructs the SAP Cloud SDK to treat the tables parameter with name `BAPIRET2` as BAPI result table.
+We'll see later how that helps us accessing the BAPI result in Java.
 
 The BAPI invocation gets finished with a call to `.execute(destination)`.
 
@@ -165,9 +183,11 @@ final BapiRequestResult result = new BapiRequest("BAPI_COSTCENTER_GETLIST1")
                     .execute(destination);
 ```
 
-We receive an instance of `BapiRequestResult`. Let's look at how to access the BAPI result in detail.
+We receive an instance of `BapiRequestResult`.
+Let's look at how to access the BAPI result in detail.
 
-As mentioned above, we're interested in the cost center list and its content. Therefore, we access the `COSTCENTERLIST` tables parameter.
+As mentioned above, we're interested in the cost center list and its content.
+Therefore, we access the `COSTCENTERLIST` tables parameter.
 
 ```java
 final List<CostCenter> costCenterList = result
@@ -176,9 +196,11 @@ final List<CostCenter> costCenterList = result
                 .asList(CostCenter.class);
 ```
 
-This helps you automatically retrieve `List<CostCenter>` and can access the output in a type-safe way. On the return type of `result.get("COSTCENTERLIST")` you call `getAsCollection()` to treat this parameter as a collection and then you instruct the SDK to transfer the contained entries into individual `CostCenter` instances with `asList(...)`.
+This helps you automatically retrieve `List<CostCenter>` and can access the output in a type-safe way.
+On the return type of `result.get("COSTCENTERLIST")` you call `getAsCollection()` to treat this parameter as a collection and then you instruct the SDK to transfer the contained entries into individual `CostCenter` instances with `asList(...)`.
 
-Further processing depends on the use case. For example, we could simply print the cost centers to the servlet response.
+Further processing depends on the use case.
+For example, we could print the cost centers to the servlet response.
 
 ```java
 for (final CostCenter costCenter : costCenterList) {
@@ -186,12 +208,16 @@ for (final CostCenter costCenter : costCenterList) {
 }
 ```
 
-Before deploying the app, let's point out more possibilites to access the BAPI result. The class `BapiRequestResult` allows you to access the return table as follows:
+Before deploying the app, let's point out more possibilities to access the BAPI result.
+The class `BapiRequestResult` allows you to access the return table as follows:
 
 - Use `getErrorMessages()`, `getSuccessMessages()`, `getWarningMessages()` and `getInformationMessages` to access the returned messages.
-- Use `hasFailed()` to figure out if the BAPI call was in it self working. Note that this is a convenient method for checking if `getErrorMessages()` is empty. That is, the intepretation whether the BAPI call was successful highly depends on the business context and you could implement your own logic for that purpose.
+- Use `hasFailed()` to figure out if the BAPI call was in it self working.
+  Note that this is a convenient method for checking if `getErrorMessages()` is empty.
+  That is, the interpretation whether the BAPI call was successful highly depends on the business context and you could implement your own logic for that purpose.
 
-You might notice that the `execute` method declares to throw a `RequestExecutionException` in case of a failure at runtime. That requires encapsulating the BAPI call in a try-catch block.
+You might notice that the `execute` method declares to throw a `RequestExecutionException` in case of a failure at runtime.
+That requires encapsulating the BAPI call in a try-catch block.
 
 ```java
 try {
@@ -218,7 +244,8 @@ Run `mvn clean install` to verify that your app compiles and to assemble it to a
 
 #### Difference for RFC Module
 
-The presented code works for RFC modules too. The only difference is to use alternative classes:
+The presented code works for RFC modules too.
+The difference is to use alternative classes:
 
 - `RfmRequest` instead of `BapiRequest`
 - `RfmRequestResult` instead of `BapiRequestResult`
@@ -242,7 +269,9 @@ Official tutorials for setting up these scenarios can be found [here](https://he
 
 #### Setup App Router (optional)
 
-If tenant-aware access of JCo and its required microservices or Principal Propagation want to be achieved, it is required that the app is invoked with a JWT containing the user context. For that, securing the backend with an app router is required. Follow [this tutorial](https://developers.sap.com/tutorials/s4sdk-secure-cloudfoundry.html) to setup the app router.
+If tenant-aware access of JCo and its required microservices or Principal Propagation want to be achieved, it is required that the app is invoked with a JWT containing the user context.
+For that, securing the backend with an app router is required.
+Follow [this tutorial](https://developers.sap.com/tutorials/s4sdk-secure-cloudfoundry.html) to setup the app router.
 
 #### Setup Cloud Connector for SAP S/4HANA On-Premise access
 
@@ -250,7 +279,8 @@ Expose the S/4HANA system in the SAP Cloud Connector as described in the [offici
 
 #### Setup Destination
 
-Open the SCP cockpit on the subaccount level. Navigate to `Connectivity` -> `Destinations` and create a new RFC destination with these properties.
+Open the SCP cockpit on the subaccount level.
+Navigate to `Connectivity` -> `Destinations` and create a new RFC destination with these properties.
 
 - _Name_: BAPI-TEST (you can choose your own name of course)
 - _Type_: RFC
@@ -262,7 +292,7 @@ Open the SCP cockpit on the subaccount level. Navigate to `Connectivity` -> `Des
   - `jco.client.client`: Enter the SAP S/4HANA client
   - `jco.client.sysnr`: Enter the SAP S/4HANA instance number
 
-For performance improvements of your app please consider using optional properties additionally such as `jco.client.serialization_format` (see further in [JCo documentation](https://support.sap.com/en/product/connectors/jco.html)).
+For performance improvements of your app please consider using optional properties such as `jco.client.serialization_format` (see further in [JCo documentation](https://support.sap.com/en/product/connectors/jco.html)).
 
 :::info
 This destination setup is exemplary for accessing an On-Premise SAP S/4HANA system directly, if you want to access it e.g. via message server logon or you want to access a cloud system via WebSocketRFC, please adapt the properties as described in the [official documentation](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/ab6eac92978f469e9eabe3d477ca2411.html).
@@ -270,20 +300,28 @@ This destination setup is exemplary for accessing an On-Premise SAP S/4HANA syst
 
 ### Call the Test App
 
-Our test app has the two servlet parameters `destinationName` and `controllingArea`. Suppose our destination has the name `BAPI-TEST` and we intend to read cost centers from controlling area `0001`, we'd call the test app with the relative path `hello?destinationName=BAPI-TEST&controllingArea=0001`.
+Our test app has the two servlet parameters `destinationName` and `controllingArea`.
+Suppose our destination has the name `BAPI-TEST` and we intend to read cost centers from controlling area `0001`, we'd call the test app with the relative path `hello?destinationName=BAPI-TEST&controllingArea=0001`.
 
-Access the test app through your browser with the address comprising of the full host name plus the relative path. You should see the login prompt of the protected backend. After authentication, the servlet is invoked and you should see the servlet response printing the cost center details.
+Access the test app through your browser with the address comprising of the full host name plus the relative path.
+You should see the login prompt of the protected backend.
+After authentication, the servlet is invoked and you should see the servlet response printing the cost center details.
 
 ## Boundary Conditions and Edge Cases
 
 ### JCo Classes not found at Runtime
 
-The JCo classes are available on the JVM classpath at runtime. If not, the exception in such cases reads like `java.lang.NoClassDefFoundError: com/sap/conn/jco/JCoException`.
+The JCo classes are available on the JVM classpath at runtime.
+If not, the exception in such cases reads like `java.lang.NoClassDefFoundError: com/sap/conn/jco/JCoException`.
 
 Possible reasons and resolutions:
 
-- There have been issues with finding JCo classes in a Spring Boot project. In such cases using the "traditional deployment" of Spring solved the problem. Thereby you deploy a war file instead of a jar file and you use Tomcat as the servlet container.
-- On SCP Cloud Foundry, the SAP Java Build Pack brings JCo as a dependency. The problem arises when the build pack is not used. That is, you must declare its usage in your deployment descriptor `manifest.yml` as such:
+- There have been issues with finding JCo classes in a Spring Boot project.
+  In such cases using the "traditional deployment" of Spring solved the problem.
+  Thereby you deploy a war file instead of a jar file and you use Tomcat as the servlet container.
+- On SCP Cloud Foundry, the SAP Java Build Pack brings JCo as a dependency.
+  The problem arises when the build pack is not used.
+  That is, you must declare its usage in your deployment descriptor `manifest.yml` as such:
 
 ```yaml
 - name: testapp
@@ -299,7 +337,8 @@ env:
 
 ### Decoration of RFC Destinations
 
-In the realm of HTTP, destinations allow decoration to add further features to them. For instance, an `ErpHttpDestination` can decorate an `HttpDestination` which introduces the enhancement of request headers with S/4HANA-specific destination properties (e.g., `sap-client`).
+In the realm of HTTP, destinations allow decoration to add further features to them.
+For instance, an `ErpHttpDestination` can decorate an `HttpDestination` which introduces the enhancement of request headers with S/4HANA-specific destination properties (e.g., `sap-client`).
 
 ```java
 final HttpDestination httpDestination = DestinationAccessor.getDestination(destinationName).asHttp();
@@ -310,7 +349,9 @@ Simply speaking, for RFC destinations such decorations do not exist.
 
 ### Local Deployment
 
-It is possible to execute BAPI calls from a Java app that runs on `localhost`. That requires a few configuration steps.
+It is possible to execute BAPI calls from a Java app that runs on `localhost`.
+That requires some configuration steps.
+
 :::note
 Some configuration steps differ depending on which Maven archetype (Spring or TomEE) you use.
 :::
@@ -371,7 +412,7 @@ Replace the placeholder `X.Y.Z` with the JCo version you downloaded.
 <packaging>war</packaging>
 ```
 
-- Use the latest version of the `maven-war-plugin` by specifiying it explicitly in your pom.xml:
+- Use the latest version of the `maven-war-plugin` by specifying it explicitly in your pom.xml:
 
 ```xml
 <plugin>
@@ -458,6 +499,7 @@ Alternatively, you can pass the system property to the JVM via configuration in 
 <Tabs groupId="archetype" defaultValue="tomee" values={[ { label: 'TomEE', value: 'tomee', }, { label: 'Spring', value: 'spring', }]}>
 
 <TabItem value="tomee">
+
 You can see the system property `jco.destinations.dir` via the Maven plugin configuration as follows:
 
 ```xml
@@ -486,7 +528,8 @@ Example value: `-Djco.destinations.dir=here-comes-the-directory-with-the-destina
 
 <TabItem value="tomee">
 
-Build your app with `mvn clean package` and launch it with `mvn tomee:run`. Then, access the HTTP endpoint exposed by your app.
+Build your app with `mvn clean package` and launch it with `mvn tomee:run`.
+Then, access the HTTP endpoint exposed by your app.
 
 </TabItem>
 
@@ -507,6 +550,6 @@ Build your app with `mvn clean package` and launch it with `mvn tomee:run`. Then
 
 ### WebSocket RFC Client Communication
 
-JCo supports RFC calls from the client-side via web sockets as of version `3.1.2`. For this scenario, a certain configuration is required within the SAP ERP system
-as well as new RFC destination properties must be configured. Download the JCo package from [JCo product website](https://support.sap.com/jco) and check out the contained release notes
-for further details.
+JCo supports RFC calls from the client-side via web sockets as of version `3.1.2`.
+For this scenario, a certain configuration is required within the SAP ERP system as well as new RFC destination properties must be configured.
+Download the JCo package from [JCo product website](https://support.sap.com/jco) and check out the contained release notes for further details.

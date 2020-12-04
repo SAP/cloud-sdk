@@ -19,13 +19,18 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 ## Introduction
 
-The Cloud SDK for JavaScript offers a convenient way to connect to various systems offering public APIs. The most famous one is S/4HANA which comes in two flavors Cloud and OnPremise. We pre-generate type-safe clients for S/4HANA APIs and publish them to [NPM](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*) for your convenience.
+The Cloud SDK for JavaScript offers a convenient way to connect to various systems offering public APIs.
+The most famous one is S/4HANA which comes in two flavors Cloud and OnPremise.
+We pre-generate type-safe clients for S/4HANA APIs and publish them to [NPM](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*) for your convenience.
 
-For different systems like SuccessFactors, C4C, and many others you can generate a type-safe client yourself. All you have to do it look up an API definition on [SAP API BusinessHub](https://api.sap.com/) and invoke a [generator](../odata/generate-typed-odata-v2-and-v4-client-for-javascript-and-typescript) supplied with [SAP Cloud SDK for JavaScript](https://github.com/SAP/cloud-sdk-js). This [comprehensive tutorial](https://developers.sap.com/tutorials/cloudsdk-js-generator.html) and will guide you through this process step by step.
+For different systems like SuccessFactors, C4C, and many others you can generate a type-safe client yourself.
+All you have to do it look up an API definition on [SAP API BusinessHub](https://api.sap.com/) and invoke a [generator](../odata/generate-typed-odata-v2-and-v4-client-for-javascript-and-typescript) supplied with [SAP Cloud SDK for JavaScript](https://github.com/SAP/cloud-sdk-js).
+This [comprehensive tutorial](https://developers.sap.com/tutorials/cloudsdk-js-generator.html) and will guide you through this process step by step.
 
 ## Making a first API call
 
-Once you have generated a type-safe client, this is how you make your first API call. This example uses **BusinessPartner** service from the S/4HANA suit.
+Once you have generated a type-safe client, this is how you make your first API call.
+This example uses **BusinessPartner** service from the S/4HANA suit.
 
 ```js
 BusinessPartner.requestBuilder()
@@ -35,7 +40,8 @@ BusinessPartner.requestBuilder()
   .execute(yourDestination);
 ```
 
-SDK does a lot of heavy lifting under the hood to take care of complexity so that you can fully concentrate on your App's logic. A detailed step by step guide on using a type-safe client is provided in this [tutorial series](https://developers.sap.com/group.s4sdk-js-cloud-foundry.html).
+SDK does a lot of heavy lifting under the hood to take care of complexity so that you can fully concentrate on your app's logic.
+A detailed step by step guide on using a type-safe client is provided in this [tutorial series](https://developers.sap.com/group.s4sdk-js-cloud-foundry.html).
 
 **To name a few things handled by Cloud SDK for JavaScript:**
 
@@ -81,7 +87,8 @@ proxyConfiguration?: {
 }
 ```
 
-The `SAP-Connectivity-Authentication` field contains the `JWT` issued for the user on application login. This is mandatory if principal propagation is used i.e. identity propagation from the cloud application to the S/4HANA system.
+The `SAP-Connectivity-Authentication` field contains the `JWT` issued for the user on application login.
+This is mandatory if principal propagation is used i.e. identity propagation from the cloud application to the S/4HANA system.
 
 ## The Automatic Flow
 
@@ -158,5 +165,5 @@ If a proxy becomes necessary or is configured by the discussed environment varia
 }
 ```
 
-and adds them to the axios config. The agents contain the proxy configuration.
+and adds them to the `axios` config. The agents contain the proxy configuration.
 The standard [http and https agents](https://www.npmjs.com/package/http-proxy-agent) are used.

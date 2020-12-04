@@ -28,10 +28,11 @@ You will need an installation of Java and Maven.
 The SDK itself is compatible with Java 8 and 11.
 Other Java versions may work as well depending on your setup but are not yet tested by us.
 Note that SAP Cloud Platform Cloud Foundry environment only supports Java 8 out of the box but can be configured to also run with Java 11.
-SAP Cloud Plattform Neo only supports Java 8.
+SAP Cloud Platform Neo only supports Java 8.
 :::
 
-To start of with a clean, new project you can select [one of our archetypes](https://search.maven.org/search?q=com.sap.cloud.sdk.archetypes) and build upon it. Alternatively you can follow [these instructions](#integrate-the-cloud-sdk-for-java-into-your-project) to integrate the SDK into your existing setup.
+To start of with a clean, new project you can select [one of our archetypes](https://search.maven.org/search?q=com.sap.cloud.sdk.archetypes) and build upon it.
+Alternatively you can follow [these instructions](#integrate-the-cloud-sdk-for-java-into-your-project) to integrate the SDK into your existing setup.
 
 ## Generating a Project from a Maven Archetype
 
@@ -139,7 +140,7 @@ To change the Java version modify the `<java.version>` property in the root `pom
 
 :::tip
 The SAP Cloud SDK [integrates with CAP projects](/docs/related-projects/cloud-application-model)!
-Simply follow the steps below or check out the dedicated [tutorial on SAP Developers](https://developers.sap.com/tutorials/cloudsdk-integrate-cap.html).
+Follow the steps below or check out the dedicated [tutorial on SAP Developers](https://developers.sap.com/tutorials/cloudsdk-integrate-cap.html).
 :::
 
 To get started with an existing project include the _SDK BOM_ in the _dependency management_ section of your project:
@@ -235,7 +236,8 @@ This is helpful when you are facing an issue and are reaching out to us for help
 
 In general, the Cloud SDK for Java integrates natively into the [Spring Boot](https://spring.io/projects/spring-boot) and [TomEE](https://tomee.apache.org/) frameworks.
 
-In particular the [SDK provides listeners](features/multi-tenancy/thread-context.mdx) that can extract tenant and principal information from an incoming request. To ensure these listeners are present please configure your project accordingly.
+In particular the [SDK provides listeners](features/multi-tenancy/thread-context.mdx) that can extract tenant and principal information from an incoming request.
+To ensure these listeners are present please configure your project accordingly.
 
 <Tabs groupId="frameworks" defaultValue="spring" values={[
 { label: 'Spring', value: 'spring', },
@@ -250,12 +252,15 @@ For a Spring based project please ensure that the application is annotated to sc
 @ServletComponentScan({"com.sap.cloud.sdk", "your.own.package"})
 ```
 
-Check the logs on application startup to ensure the listeners got registered. Also please check [the Spring version](https://mvnrepository.com/artifact/com.sap.cloud.sdk/sdk-bom/latest) declared in the SDK BOM doesn't clash with your version of Spring.
+Check the logs on application startup to ensure the listeners got registered.
+Also please check [the Spring version](https://mvnrepository.com/artifact/com.sap.cloud.sdk/sdk-bom/latest) declared in the SDK BOM doesn't clash with your version of Spring.
 
 </TabItem>
 <TabItem value="tomee">
 
-For a TomEE based project the filters should be registered automatically. They are part of the `servlet` module which comes into the dependency tree through `scp-cf` or `scp-neo` automatically. Check the logs on application startup to ensure the listeners are being registered.
+For a TomEE based project the filters should be registered automatically.
+They are part of the `servlet` module which comes into the dependency tree through `scp-cf` or `scp-neo` automatically.
+Check the logs on application startup to ensure the listeners are being registered.
 
 </TabItem>
 </Tabs>

@@ -30,19 +30,19 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 - [ ] Open it with you favorite Markdown editor
 - [ ] Proceed to the next step
 
-:::tip Use Online Gitub editor if you can't clone things locally
+:::tip Use Online GitHub editor if you can't clone things locally
 
 <img alt="" src={useBaseUrl('img/edit-article.png')} />
 :::
 
 ## 1. Running documentation locally (approx. 5-7 min)
 
-Check `Node.js` and `npm` are installed. You can use the latest LTS release.
+Install `Node.js` and `npm` if necessary. You can use the latest LTS release.
 
 ```bash
-node -v
+$ node -v
 v12.16.1
-npm -v
+$ npm -v
 6.14.4
 ```
 
@@ -93,12 +93,12 @@ The process involves original thinking and then producing.
 
 :::tip Rule of thumb:
 
-- less then 5 mins? - **just do it, no need for backlog item**
-- 15 mins - 2hr - **depending on your and team's preferences add it to the backlog or to you personal ToDo**
+- Less then 5 minutes? - **just do it, no need for backlog item**
+- 15 minutes - 2 hours - **depending on your and team's preferences add it to the backlog or to you personal ToDo**
 - \> 2hr - **Add to backlog and track together with the team**
   :::
 
-### Getting hands dirty (approx. 15-20 mins)
+### Getting hands dirty (approx. 15-20 minutes)
 
 Create a branch for the thing you document
 
@@ -119,13 +119,13 @@ hide_title: false
 hide_table_of_contents: false
 sidebar_label: Generate OData client
 description: You'll learn how to convert your service definition into a Java project containing type-safe OData V4 client to consume it
-keywords: --- can be removed or standard template
-- sap
-- cloud
-- sdk
-- cloud native
-- cloud sdk
-- sap cloud sdk
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
 ---
 ```
 
@@ -154,7 +154,7 @@ keywords: --- can be removed or standard template
 ```
 
 - [ ] Start your project by running `npm start`, it should recompile automatically on every change afterward
-- [ ] Make sure you can access you article via [http://localhost:3000/cloud-sdk/docs/java/how-to/generate-odata-client-with-cloud-sdk-for-java-how-to](http://localhost:3000/cloud-sdk/docs/java/how-to/generate-odata-client-with-cloud-sdk-for-java-how-to)`
+- [ ] Make sure you can access your article via [localhost](http://localhost:3000/cloud-sdk/docs/java/how-to/generate-odata-client-with-cloud-sdk-for-java-how-to)
 
 6. Showcase your knowledge, creativity and markdown skills by delivering a concise but useful documentation. Please,
    check [this material on good writing practices](how-to-write-documentation).
@@ -162,7 +162,7 @@ keywords: --- can be removed or standard template
 
 ### Go Live!
 
-Time to show you amazing work to the world!
+Time to show your work to the world!
 
 - [ ] Make sure your documentation builds
 
@@ -181,8 +181,8 @@ Please, make sure you followed [this best practices](how-to-write-documentation)
 
 #### Publish
 
-After your pull request is successfully merged, the pipeline will automatically publish a new version of the documentation.
-You can check [GitHub actions](https://github.com/SAP/cloud-sdk/actions?query=workflow%3A%22Release+Cloud+SDK+documentation%22) for Documentation or simply navigate to live documentation portal and check if your changes are applied.
+After your pull request is merged, the pipeline will automatically publish a new version of the documentation.
+You can check [GitHub actions](https://github.com/SAP/cloud-sdk/actions?query=workflow%3A%22Release+Cloud+SDK+documentation%22) for Documentation or navigate to live documentation portal and check if your changes are applied.
 
 :::tip Clear cache
 I recommend reloading the page without cache.
@@ -194,12 +194,16 @@ I recommend reloading the page without cache.
 - Linking to files and images from Markdown starts from the folder where you file is located.
   In this case if I want to link anything in `docs` folder I'll have to go with [my-link](../java/getting-started).
   You can reach up until root `docs` folder level with this approach.
-- To make dynamic link to the `static` folder content you'll need to use a snippet similar to the one below:
+- To make a dynamic link to the `static` folder content you'll need to use a snippet similar to the one below:
+
+<!-- vale Vale.Spelling = NO -->
 
 ```js
 import useBaseUrl from '@docusaurus/useBaseUrl';
 <img alt="pull-request" src={useBaseUrl('img/docs/pull-request.png')} />;
 ```
+
+<!-- vale Vale.Spelling = YES -->
 
 - Of course you can link with `your-link/your-path#your-heading`,
   check the right-side menu for the links like [sending you to the top](http://localhost:3000/cloud-sdk/docs/dzen/getting-started#what-youll-need).
@@ -207,7 +211,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 ## 4. Advanced topics
 
 **Tabs? Admonitions? Advanced code blocks? Your own plugin?**
-Docusaurus support additional markup to extend markdown.
+Docusaurus supports markup to extend markdown.
 Please, refer to the official documentation:
 
 - [Tabs](https://v2.docusaurus.io/docs/markdown-features/#tabs)

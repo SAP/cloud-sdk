@@ -21,13 +21,18 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 ## Build and execute OData Requests with the typed OData client
 
-The typed OData v4 client allows to build type-safe OData v4 requests for a given service. The Java classes represent the _data model_ and the available _operations_ of the service. As a consequence all requests that are build through the typed OData client are not only _syntactically valid_ but also _semantically valid_.
+The typed OData v4 client allows to build type-safe OData v4 requests for a given service.
+The Java classes represent the _data model_ and the available _operations_ of the service.
+As a consequence all requests that are build through the typed OData client are not only _syntactically valid_ but also _semantically valid_.
 
 ## Using the Fluent API
 
-The typed OData v4 client consists of _service_ and _data model_ classes. The service classes mirror the API provided by the OData service and serve as entry point for creating requests. They provide a builder which allows for adding further parameters in a fluent way.
+The typed OData v4 client consists of _service_ and _data model_ classes.
+The service classes mirror the API provided by the OData service and serve as entry point for creating requests.
+They provide a builder which allows for adding further parameters in a fluent way.
 
-To execute HTTP requests the OData client leverages _Destinations_ and are documented in more detail <a href={useBaseUrl('docs/java/features/connectivity/sdk-connectivity-destination-service')}>here</a>. The following code snippets assume that such a destination is in place:
+To execute HTTP requests the OData client uses _Destinations_ and are documented in more detail <a href={useBaseUrl('docs/java/features/connectivity/sdk-connectivity-destination-service')}>here</a>.
+The following code snippets assume that such a destination is in place:
 
 ```java
 HttpDestination destination;
@@ -47,7 +52,9 @@ result = service.operation()
   - Or other modifiers like custom headers
 - Which OData v4 parameters are available depends on the operation. For example when updating entities the `$filter` parameter is not available.
 
-Below different OData features are documented using the [Business Partner Service](https://api.sap.com/api/API_BUSINESS_PARTNER/resource) on S/4HANA as an example. It is represented by the `BusinessPartnerService` class which is part of the pre-generated type-safe client for S/4HANA also known as Virtual Data Model (VDM). The following code snippets assume that an instance of this service is set up:
+Below different OData features are documented using the [Business Partner Service](https://api.sap.com/api/API_BUSINESS_PARTNER/resource) on S/4HANA as an example.
+It is represented by the `BusinessPartnerService` class which is part of the pre-generated type-safe client for S/4HANA also known as Virtual Data Model (VDM).
+The following code snippets assume that an instance of this service is set up:
 
 ```java
 BusinessPartnerService service = new DefaultBusinessPartnerService();
@@ -87,7 +94,8 @@ Request parameters:
 
 #### Handling of ETags
 
-An [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag) is a version identifier which is often used to implement an optimistic locking mechanism. The SDK will try to read version identifiers from responses and set them when sending OData requests.
+An [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag) is a version identifier which is often used to implement an optimistic locking mechanism.
+The SDK will try to read version identifiers from responses and set them when sending OData requests.
 
 Consider the following example:
 
@@ -100,7 +108,8 @@ response = service.updateBusinessPartner(partner)
 partner = response.getModifiedEntity();
 ```
 
-On the read request the SDK will automatically try to extract the version identifier from the response and store it within the `partner` object. When updating it will be taken from there and sent with the `If-match` header.
+On the read request the SDK will automatically try to extract the version identifier from the response and store it within the `partner` object.
+When updating it will be taken from there and sent with the `If-match` header.
 
 :::note
 If a service requires this header to be sent: Fetching the entity from the service first is essential to ensure that the ETag is present and up to date.
@@ -108,13 +117,22 @@ If a service requires this header to be sent: Fetching the entity from the servi
 
 ### Handling of CSRF tokens
 
-For create, update and delete requests the SDK will try to send a [CSRF token](https://en.wikipedia.org/wiki/Cross-site_request_forgery#Cookie-to-header_token). Upon execution the request will try to fetch a token first before issuing the actual create request. Many services require this behavior for security reasons. However, the create request will be made without a CSRF token if none could be obtained.
+For create, update and delete requests the SDK will try to send a [CSRF token](https://en.wikipedia.org/wiki/Cross-site_request_forgery#Cookie-to-header_token).
+Upon execution the request will try to fetch a token first before issuing the actual create request.
+Many services require this behavior for security reasons.
+However, the create request will be made without a CSRF token if none could be obtained.
 
 ### Select
 
-When reading entities the API offers `select( ... )` on the builders. Through it the query parameters `$select` and `$expand` are set. It takes in properties of the entity being queried. Primitive properties are added to `$select` while complex and navigational properties are added to `$expand`. This handling is done automatically by the SDK.
+When reading entities the API offers `select( ... )` on the builders.
+Through it the query parameters `$select` and `$expand` are set.
+It takes in properties of the entity being queried.
+Primitive properties are added to `$select` while complex and navigational properties are added to `$expand`.
+This handling is done automatically by the SDK.
 
-The properties that can be selected or expanded are represented via static _fields on the entity_ class. So there will be a field for each property. E.g. for the business partner entity one can find `BusinessPartner.FIRST_NAME` and `BusinessPartner.LAST_NAME`.
+The properties that can be selected or expanded are represented via static _fields on the entity_ class.
+So there will be a field for each property.
+E.g. for the business partner entity one can find `BusinessPartner.FIRST_NAME` and `BusinessPartner.LAST_NAME`.
 
 ```java
 service.getBusinessPartnerByKey("id")
@@ -128,7 +146,9 @@ The above translates to the following query parameters:
 $select=FirstName,LastName&$expand=to_BusinessPartnerAddress
 ```
 
-OData v4 allows for formulating nested, fully featured queries on complex and navigational properties. Querying nested objects is possible within expand. That means the following query is possible:
+OData v4 allows for formulating nested, fully featured queries on complex and navigational properties.
+Querying nested objects is possible within expand.
+That means the following query is possible:
 
 ```java
 service.getBusinessPartnerByKey("id")
@@ -148,7 +168,9 @@ $expand=to_BusinessPartnerAddress($select=CityCode,Country;$filter=CityCode eq '
 
 ### Filter
 
-When operating on a collection of entities the API offers `filter( ... )` on the builders. It directly corresponds to the `$filter` parameter of the request. Filters are also build via the static property fields on entities.
+When operating on a collection of entities the API offers `filter( ... )` on the builders.
+It directly corresponds to the `$filter` parameter of the request.
+Filters are also build via the static property fields on entities.
 
 The following example:
 
@@ -172,7 +194,8 @@ Will translate to this filter parameter:
 $filter=(((FirstName eq 'Alice') and (LastName ne 'Bob')) or (FirstName eq 'Mallory'))
 ```
 
-Take note of the order of `and` and `or`. As `or` is invoked on the result of `and` it will form the outer expression while `and` is an inner expression in the first branch of `or`.
+Take note of the order of `and` and `or`.
+As `or` is invoked on the result of `and` it will form the outer expression while `and` is an inner expression in the first branch of `or`.
 
 To achieve a different order with `and` as the top level statement one would nest the `or` within `and(...)`:
 
@@ -186,7 +209,9 @@ To achieve a different order with `and` as the top level statement one would nes
 
 <!-- TODO: Explain filters on complex types and navigational properties -->
 
-The [OData v4 standard](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter) allows for a wide range of filter expressions. A detailed list of what is available in the SDK can be obtained from [the Javadoc](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/datamodel/odatav4/expression/package-summary.html). The functionality can also be discovered through the fluent API.
+The [OData v4 standard](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter) allows for a wide range of filter expressions.
+A detailed list of what is available in the SDK can be obtained from [the Javadoc](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/datamodel/odatav4/expression/package-summary.html).
+The functionality can also be discovered through the fluent API.
 
 The below example leverages OData v4 exclusive features to build a more complex request:
 
@@ -205,9 +230,9 @@ service.getAllBusinessPartner()
 
 ### Batch Requests
 
-Batch requests allow wrapping multiple OData requests into one single batch call. Thereby we reduce the number of roundtrips to the remote server.
-Refer to the [official OData V4 spec](http://docs.oasis-open.org/odata/odata/v4.0/os/part1-protocol/odata-v4.0-os-part1-protocol.html#_Toc372793748)
-for further reference about batch requests, their semantics and the request/response format.
+Batch requests allow wrapping multiple OData requests into one single batch call.
+Thereby we reduce the number of roundtrips to the remote server.
+Refer to the [official OData V4 spec](http://docs.oasis-open.org/odata/odata/v4.0/os/part1-protocol/odata-v4.0-os-part1-protocol.html#_Toc372793748) for further reference about batch requests, their semantics and the request/response format.
 
 :::warning
 The described API is subject to change
@@ -218,10 +243,12 @@ The described API is subject to change
 The `service` object offers the method `batch` which allows access to the batch-related methods that help build the batch request.
 
 Multiple single requests (like `createBusinessPartnerRequest`) can be wrapped into so-called change sets.
-A change set can be added by `addChangeset` and the corresponding create, update or delete operations can be passed as partmenters into it. You can wrap multiple change sets into one batch request.
+A change set can be added by `addChangeset` and the corresponding create, update or delete operations can be passed as parameters into it.
+You can wrap multiple change sets into one batch request.
 Similarly, retrieve operations can be added to the batch request by using `addReadOperations`.
 
-Use `execute` to issue the batch request to the remote system. We receive an instance of `BatchResponse` as result object.
+Use `execute` to issue the batch request to the remote system.
+We receive an instance of `BatchResponse` as result object.
 
 ```java
 GetAllRequestBuilder<BusinessPartner> getBusinessPartners = service.getAllBusinessPartner();
@@ -254,7 +281,8 @@ List<BusinessPartners> readAllResult = response.getReadResult(getBusinessPartner
 BusinessPartner readByKeyResult = response.getReadResult(getBusinessPartnerByKey);
 ```
 
-As per the OData specification, either all operations or none within the same change set are successful. Hence, if the change set was a failure then evaluating the result of any of the contained requests will contain the failure of the change set.
+As per the OData specification, either all operations or none within the same change set are successful.
+Hence, if the change set was a failure then evaluating the result of any of the contained requests will contain the failure of the change set.
 
 <!--
 ### Count ###
@@ -317,7 +345,8 @@ For example, there are cases where OData services do not support PUT requests.
 
 ## Error Handling
 
-Sometimes requests fail and the SDK provides a flexible way to deal with such failures on multiple levels. All `execute` methods may throw a runtime exception (extending) `ODataException`.
+Sometimes requests fail and the SDK provides a flexible way to deal with such failures on multiple levels.
+All `execute` methods may throw a runtime exception (extending) `ODataException`.
 This will always contain the request which was (attempted to be) sent out as well as the cause of the exception.
 To handle all kind of failures consider the following code:
 
@@ -392,13 +421,22 @@ POST /ODataService/API_BUSINESS_PARTNER/A_BusinessPartner(123)/to_BusinessPartne
 
 ## Server-Driven Paging
 
-Pagination describes the practice of splitting a collection of entities from reading requests into one or many pages. The paging behavior is determined by both server and client.
+Pagination describes the practice of splitting a collection of entities from reading requests into one or many pages.
+The paging behavior is determined by both server and client.
 
-OData service operators may decide to enable server-driven pagination to limit the amount of data that is fetched and sent over the network to the client, in case generic query options yield huge amounts of data. By splitting the result-set into sequential pages of entities, the data can be requested incrementally. This reduces initial network load and improves overall response times. If the payload of an OData response contains a link including a `$skiptoken`, then it indicates a next page to the result-set. The iterable result-set is a consistent snapshot of the data, it can not change between reading individual pages.
+OData service operators may decide to enable server-driven pagination to limit the amount of data that is fetched and sent over the network to the client, in case generic query options yield huge amounts of data.
+By splitting the result-set into sequential pages of entities, the data can be requested incrementally.
+This reduces initial network load and improves overall response times.
+If the payload of an OData response contains a link including a `$skiptoken`, then it indicates a next page to the result-set.
+The iterable result-set is a consistent snapshot of the data, it can not change between reading individual pages.
 
-In comparison the OData consumer may use query options `$top` and `$skip` (client-driven paging) to read partial data from the result-set. But relying on a consistent state while browsing through the data can be problematic. Between individual requests another user could delete or add an item. This would result in an inconsistent aggregation of data.
+In comparison the OData consumer may use query options `$top` and `$skip` (client-driven paging) to read partial data from the result-set.
+But relying on a consistent state while browsing through the data can be problematic.
+Between individual requests another user could delete or add an item.
+This would result in an inconsistent aggregation of data.
 
-By default the SAP Cloud SDK automatically resolves all pages of a result-set if server-driven paging is encountered. For the API consumer it is not necessary to parse the next link and instantiate follow-up requests to aggregate the full result-set.
+By default the SAP Cloud SDK automatically resolves all pages of a result-set if server-driven paging is encountered.
+For the API consumer it is not necessary to parse the next link and instantiate follow-up requests to aggregate the full result-set.
 
 ```java
 List<BusinessPartner> iterablePagesOfEntities = service
@@ -406,7 +444,8 @@ List<BusinessPartner> iterablePagesOfEntities = service
   .execute( destination );
 ```
 
-In case memory efficiency and response time of the consuming application becomes a priority, then the advanced API provides additional means to manually iterate through the internal pages. While accessing the following methods, the internal HTTP requests are executed lazily:
+In case memory efficiency and response time of the consuming application becomes a priority, then the advanced API provides additional means to manually iterate through the internal pages.
+While accessing the following methods, the internal HTTP requests are executed lazily:
 
 ```java
 Iterable<List<BusinessPartner>> iterablePagesOfEntities = service
@@ -425,4 +464,5 @@ Stream<BusinessPartner> streamingEntities = service
   .execute(destination);
 ```
 
-The request builder allows for setting the optional parameter for preferred page size. Please note that the OData service is not obliged to respect this setting.
+The request builder allows for setting the optional parameter for preferred page size.
+Please note that the OData service is not obliged to respect this setting.

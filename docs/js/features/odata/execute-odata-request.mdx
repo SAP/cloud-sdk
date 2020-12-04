@@ -17,7 +17,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Once you have generated a typed OData client using the SAP Cloud SDK generator or if you decided to use one of the pregenerated OData clients for SAP S/4HANA you can use your OData client to execute HTTP requests against your service.
+Once you have generated a typed OData client using the SAP Cloud SDK generator or if you decided to use one of the pre-generated OData clients for SAP S/4HANA, you can use your OData client to execute HTTP requests against your service.
 The client provides request builders for the different types of requests and abstractions of the entity sets of the given service, that we refer to as _entities_.
 
 To make a request towards an entity set, entities offer a fluent API.
@@ -38,7 +38,7 @@ return MyEntity.requestBuilder()
 When using a custom OData client, import an entity from the generated service directory (`my-service`) within the specified output directory (`outputDir`).
 The name of the service directory corresponds to the `directoryName` specified in the service mapping file (`serviceMapping.json` by default) in your input directory.
 
-When using one of the predefined OData clients, simply import it from the npm module
+When using one of the predefined OData clients, import it from the npm module.
 
 ```ts
 import { PredefinedEntity } from '@sap/cloud-sdk-vdm-predefined-service';
@@ -126,15 +126,19 @@ See the list below for details on all available request types (denoted by `reque
 Some entities do not support all of the request types, which in turn won't be available through the API.
 :::
 
-The request can further be configured by chaining additional configuration functions (denoted by `additionalRequestConfiguration` in the example above). All requests can be configured by setting [custom request headers](#setting-custom-request-headers), [custom query parameters](#setting-custom-query-parameters) and a [custom service path](#setting-a-custom-service-path).
+The request can further be configured by chaining additional configuration functions (denoted by `additionalRequestConfiguration` in the example above).
+All requests can be configured by setting [custom request headers](#setting-custom-request-headers), [custom query parameters](#setting-custom-query-parameters) and a [custom service path](#setting-a-custom-service-path).
 
 Each request type has additional request specific configuration options, e. g. creating an entity `asChildOf` another entity for `create` requests, eTag handling for `update` and `delete` requests, as well as set operations for `getAll` requests and selecting properties for `getAll` and `getByKey` requests.
 
-The last step when making a request using the SAP Cloud SDK is the request execution. Once the request is configured use the `execute` function and pass a [destination](../connectivity/destination-js-sdk) to it. This will automatically construct your request URL and headers, execute the request and return a typed response if applicable.
+The last step when making a request using the SAP Cloud SDK is the request execution.
+Once the request is configured use the `execute` function and pass a [destination](../connectivity/destination-js-sdk) to it.
+This will automatically construct your request URL and headers, execute the request and return a typed response if applicable.
 
 ### Setting custom request headers
 
-The SAP Cloud SDK automatically sets some necessary request headers on every request. You can specify additional custom headers using the `withCustomHeaders` function:
+The SAP Cloud SDK automatically sets some necessary request headers on every request.
+You can specify additional custom headers using the `withCustomHeaders` function:
 
 ```ts
 MyEntity.requestBuilder().getAll().withCustomHeaders({
@@ -142,7 +146,9 @@ MyEntity.requestBuilder().getAll().withCustomHeaders({
 });
 ```
 
-The keys and values of the passed object correspond with the header names and values. Custom headers take priority over automatically generated headers. Automatically generated headers are sent with lower case header names, custom header keep the case they were set in.
+The keys and values of the passed object correspond with the header names and values.
+Custom headers take priority over automatically generated headers.
+Automatically generated headers are sent with lower case header names, custom header keep the case they were set in.
 In the example above we pass an `apikey`, which is necessary if you want to make use of the SAP API Business Hub sandbox.
 
 :::caution
@@ -151,7 +157,9 @@ Setting an `authorization` or `apikey` header (regardless of lowercase or upperc
 
 ### Setting custom query parameters
 
-The SAP Cloud SDK adds necessary query parameters for a request based on your configuration. You can add custom parameters by using the `withCustomQueryParameters` function. Custom query parameters take precedence over those created by the SAP Cloud SDK.
+The SAP Cloud SDK adds necessary query parameters for a request based on your configuration.
+You can add custom parameters by using the `withCustomQueryParameters` function.
+Custom query parameters take precedence over those created by the SAP Cloud SDK.
 
 In the example below an additional query parameter `language=en` will be added to the request url:
 
@@ -170,7 +178,9 @@ If you want to set a query parameter in quotes (e. g. `language='en'`) you will 
 
 ### Setting a custom service path
 
-If a service specification contains a specification for the servicePath, the SAP Cloud SDK generator generates an OData client with a default service path according to the specification (typically `'/sap/opu/odata/sap/'` for SAP S/4HANA services). When there is no such path defined in the specification it can be manually set in the `service-mapping.json`. It can also be adjusted per request by using the `withCustomServicePath` function:
+If a service specification contains a specification for the servicePath, the SAP Cloud SDK generator generates an OData client with a default service path according to the specification (typically `'/sap/opu/odata/sap/'` for SAP S/4HANA services).
+When there is no such path defined in the specification it can be manually set in the `service-mapping.json`.
+It can also be adjusted per request by using the `withCustomServicePath` function:
 
 ```ts
 MyEntity.requestBuilder()
@@ -178,4 +188,5 @@ MyEntity.requestBuilder()
   .withCustomServicePath('my/custom/service/path');
 ```
 
-This will add the custom service path to your request. Executing the example request above against a destination with URL 'https://my.s4-system.com' would then execute the request against something like this: 'https://my.s4-system.com/my/custom/service/path/MyEntity'.
+This will add the custom service path to your request.
+Executing the example request above against a destination with URL 'https://my.s4-system.com' would then execute the request against something like this: 'https://my.s4-system.com/my/custom/service/path/MyEntity'.
