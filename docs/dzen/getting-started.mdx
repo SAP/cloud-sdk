@@ -1,10 +1,10 @@
 ---
 id: getting-started
-title: Getting started with Documentation
+title: Getting Started with Documentation
 hide_title: false
 hide_table_of_contents: false
 sidebar_label: Getting Started
-description: This is a getting started guide for anyone willing to contributio to the Cloud SDK documentation.
+description: This is a getting started guide for anyone willing to contribute to the Cloud SDK documentation.
 keywords:
 - sap
 - cloud
@@ -17,11 +17,11 @@ image:
 
 import useBaseUrl from '@docusaurus/useBaseUrl'
 
+## 0. What you'll need?
 
-## 0. What you'll need?  ##
 > A great attitude and a bit of inspiration
 
-### Follow these steps (approx. 5 min) ###
+### Follow these steps (approx. 5 min)
 
 - [x] **Be The Best You**
 - [ ] Install [Node.js](https://nodejs.org/en/download/)
@@ -34,7 +34,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl'
 <img alt="" src={useBaseUrl('img/edit-article.png')}/>
 :::
 
-## 1. Running documentation locally (approx. 5-7 min) ##
+## 1. Running documentation locally (approx. 5-7 min)
 
 Check `Node.js` and `npm` are installed. You can use the latest LTS release.
 
@@ -44,6 +44,7 @@ v12.16.1
 npm -v
 6.14.4
 ```
+
 Clone the repository
 
 ```bash
@@ -53,12 +54,14 @@ git checkout documentation
 ```
 
 Run documentation locally
+
 ```bash
 npm install
 npm start
 ```
 
 You should see the following output in your console and documentation should automatically open in your browser
+
 ```bash
 > sap-cloud-sdk-documentation@0.1.0 start /home/USERNAME/dev/documentation
 > docusaurus start
@@ -74,12 +77,15 @@ Starting the development server...
 ℹ ｢wds｣: 404s will fallback to /index.html
 
 ```
-A browser tab with the starting page of documentation portal should open automatically. Try navigating to [http://localhost:3000/](http://localhost:3000/) as a fall back opiton.
 
+A browser tab with the starting page of documentation portal should open automatically. 
+Try navigating to [http://localhost:3000/](http://localhost:3000/) as a fall back option.
 
-## 2. Documenting ##
+## 2. Documenting
+
 :::info Most of the people using the word `creative` forget about the `create` side of it.
-Creativity is the ability to generate innovative ideas and manifest them from thought into reality. The process involves original thinking and then producing.
+Creativity is the ability to generate innovative ideas and manifest them from thought into reality. 
+The process involves original thinking and then producing.
 
 **Creative** without producing is just **Imaginative**
 :::
@@ -90,7 +96,7 @@ Creativity is the ability to generate innovative ideas and manifest them from th
 - \> 2hr - **Add to backlog and track together with the team**
 :::
 
-### Getting hands dirty (approx. 15-20 mins) ###
+### Getting hands dirty (approx. 15-20 mins)
 
 Create a branch for the thing you document
 
@@ -99,17 +105,18 @@ git checkout -b java-client-generator-how-to
 ```
 
 1. All the documentation resides in the `docs` folder.
-2. Let's start with creating a file containing our _How To_. In my case it will be `java/how-to/generate-client.md`
-3. Use content from this internal [generator how-to](https://github.wdf.sap.corp/MA/sdk/edit/develop/docs/how-to/use-odata-v4.mdx)
-4. Add the meta-header and update the fields
+2. Let's start with creating a file containing our _How To_. In my case it will be `java/how-to/generate-client.md`.
+3. Use content from this internal [generator how-to](https://github.wdf.sap.corp/MA/sdk/edit/develop/docs/how-to/use-odata-v4.mdx).
+4. Add the meta-header and update the fields.
+
 ```markdown
 ---
 id: generate-odata-client-with-cloud-sdk-for-java-how-to
 title: Generate OData client
 hide_title: false
 hide_table_of_contents: false
-sidebar_label: Generate Odata client
-description: You'll learn how to convert your service definition into a Java project containing type-safe Odata V4 lient to consume it
+sidebar_label: Generate OData client
+description: You'll learn how to convert your service definition into a Java project containing type-safe OData V4 client to consume it
 keywords: --- can be removed or standard template
 - sap
 - cloud
@@ -119,15 +126,20 @@ keywords: --- can be removed or standard template
 - sap cloud sdk
 ---
 ```
+
 5. Try it locally to enable preview
+
 - [ ] Open `sidebar.js` from project root
 - [ ] Find this code snippet in `Java` section
+
 ```javascript
         type: 'category',
         label: 'How To',
         items: [...]
 ```
+
 - [ ] Add your file to `How To` category
+
 ```javascript
         type: 'category',
         label: 'How To',
@@ -138,35 +150,45 @@ keywords: --- can be removed or standard template
 		  '...'
 		  ]
 ```
+
 - [ ] Start your project by running `npm start`, it should recompile automatically on every change afterward
-- [ ] Make sure you can access you article via [http://localhost:3000/cloud-sdk/docs/java/how-to/generate-odata-client-with-cloud-sdk-for-java-how-to](http://localhost:3000/cloud-sdk/docs/java/how-to/generate-odata-client-with-cloud-sdk-for-java-how-to )`
+- [ ] Make sure you can access you article via [http://localhost:3000/cloud-sdk/docs/java/how-to/generate-odata-client-with-cloud-sdk-for-java-how-to](http://localhost:3000/cloud-sdk/docs/java/how-to/generate-odata-client-with-cloud-sdk-for-java-how-to)`
+
 6. Showcase your knowledge, creativity and markdown skills by delivering a concise but useful documentation. Please,
    check [this material on good writing practices](how-to-write-documentation).
 7. Be proud of yourself!
 
-### Go Live! ###
+### Go Live!
+
 Time to show you amazing work to the world!
 
 - [ ] Make sure your documentation builds
+
 ```bash
 npm run build
 ```
+
 - [ ] Please, `commit` you work and create a `pull-request`.
 
 <img alt="pull-request" src={useBaseUrl('img/docs/pull-request.png')}/>
 
-#### Review ####
+#### Review
+
 Ask someone to review you work.
 Please, make sure you followed [this best practices](how-to-write-documentation) or at lease run you writing through the spell checker.
 
-#### Publish ####
-After your `Pull request` successfully merged, pipeline will automatically publish new version of the documentation. You can check [GitHub actions](https://github.com/SAP/cloud-sdk/actions?query=workflow%3A%22Release+Cloud+SDK+documentation%22) for Documentation or simply navigate to live documentation portal and check if your changes applied.
+#### Publish
+
+After your pull request is successfully merged, the pipeline will automatically publish a new version of the documentation. 
+You can check [GitHub actions](https://github.com/SAP/cloud-sdk/actions?query=workflow%3A%22Release+Cloud+SDK+documentation%22) for Documentation or simply navigate to live documentation portal and check if your changes are applied.
 
 :::tip Clear cache
 I recommend reloading the page without cache.
 :::
-## 3. Conventions ##
-- Static content resides in the `static` folder
+
+## 3. Conventions
+
+- Static content resides in the `static` folder.
 - Linking to files and images from Markdown starts from the folder where you file is located.
   In this case if I want to link anything in `docs` folder I'll have to go with [my-link](../java/getting-started).
   You can reach up until root `docs` folder level with this approach.
@@ -178,25 +200,29 @@ import useBaseUrl from '@docusaurus/useBaseUrl'
 ```
 
 - Of course you can link with `your-link/your-path#your-heading`,
-  check the right-side menu for the links like [sending you to the top](http://localhost:3000/cloud-sdk/docs/dzen/getting-started#what-youll-need ).
+  check the right-side menu for the links like [sending you to the top](http://localhost:3000/cloud-sdk/docs/dzen/getting-started#what-youll-need).
 
-## 4. Advanced topics ##
-**Tabs? Admonitions? Advanced code blocks? You own plugin?**
+## 4. Advanced topics
+
+**Tabs? Admonitions? Advanced code blocks? Your own plugin?**
 Docusaurus support additional markup to extend markdown.
 Please, refer to the official documentation:
-- [Tabs](https://v2.docusaurus.io/docs/markdown-features/#tabs )
-- [Admonitions](https://v2.docusaurus.io/docs/markdown-features/#calloutsadmonitions )
-- [Coding you own component with React and MDX](https://v2.docusaurus.io/docs/markdown-features/#embedding-react-components-with-mdx )
 
-## 5. Where to get help? ##
-- Check [Docusaurus documentation](https://v2.docusaurus.io/docs/markdown-features/ )
-- Read good documentation to write good documentation
-- Ask your experienced colleague
+- [Tabs](https://v2.docusaurus.io/docs/markdown-features/#tabs)
+- [Admonitions](https://v2.docusaurus.io/docs/markdown-features/#calloutsadmonitions)
+- [Coding you own component with React and MDX](https://v2.docusaurus.io/docs/markdown-features/#embedding-react-components-with-mdx)
 
-## 6. What to do next? ##
+## 5. Where to get help?
+
+- Check the [Docusaurus documentation](https://v2.docusaurus.io/docs/markdown-features/).
+- Read good documentation to write good documentation.
+- Ask a more experienced colleague.
+
+## 6. What to do next?
+
 - Deliver your great documentation item now.
-- Share ideas and feedback about improving Cloud SDK documentation
+- Share ideas and feedback about improving Cloud SDK documentation.
 
-## 7. Useful resources ##
+## 7. Useful resources
 
 - [Markdown Guide](https://www.markdownguide.org/) - officially supported by Docusaurus
