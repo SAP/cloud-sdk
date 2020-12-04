@@ -107,6 +107,8 @@ You can look up the ABAP field name in S/4HANA transaction SE37 by opening the B
 To make that compile, we add Lombok to our application pom as dependency.
 Open `application/pom.xml` and add that dependency:
 
+<!-- vale off -->
+
 ```xml
 <dependency>
     <groupId>org.projectlombok</groupId>
@@ -114,6 +116,8 @@ Open `application/pom.xml` and add that dependency:
     <scope>provided</scope>
 </dependency>
 ```
+
+<!-- vale on -->
 
 Run `mvn clean install` to verify that everything goes well.
 
@@ -412,7 +416,7 @@ Replace the placeholder `X.Y.Z` with the JCo version you downloaded.
 <packaging>war</packaging>
 ```
 
-- Use the latest version of the `maven-war-plugin` by specifying it explicitly in your pom.xml:
+- Use the latest version of the `maven-war-plugin` by specifying it explicitly in your `pom.xml`:
 
 ```xml
 <plugin>
@@ -502,6 +506,8 @@ Alternatively, you can pass the system property to the JVM via configuration in 
 
 You can see the system property `jco.destinations.dir` via the Maven plugin configuration as follows:
 
+<!-- vale off -->
+
 ```xml
 <plugin>
     <groupId>org.apache.tomee.maven</groupId>
@@ -510,6 +516,8 @@ You can see the system property `jco.destinations.dir` via the Maven plugin conf
         <args>-Djco.destinations.dir=here-comes-the-directory-with-the-destination</args>
 ...
 ```
+
+<!-- vale on -->
 
 </TabItem>
 

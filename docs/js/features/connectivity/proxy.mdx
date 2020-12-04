@@ -21,7 +21,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 The Cloud SDK for JavaScript offers a convenient way to connect to various systems offering public APIs.
 The most famous one is S/4HANA which comes in two flavors Cloud and OnPremise.
-We pre-generate type-safe clients for S/4HANA APIs and publish them to [NPM](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*) for your convenience.
+We pre-generate type-safe clients for S/4HANA APIs and publish them to [npm](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*) for your convenience.
 
 For different systems like SuccessFactors, C4C, and many others you can generate a type-safe client yourself.
 All you have to do it look up an API definition on [SAP API BusinessHub](https://api.sap.com/) and invoke a [generator](../odata/generate-typed-odata-v2-and-v4-client-for-javascript-and-typescript) supplied with [SAP Cloud SDK for JavaScript](https://github.com/SAP/cloud-sdk-js).
@@ -72,17 +72,17 @@ If you provide the destination name the SDK will try to lookup as described [her
 In productive use, the manual configuration will not be useful, but for testing, it might be valuable.
 The destination object contains a field `proxyConfiguration` in which you can configure a proxy.
 
-```JSON
+```json
 {
-url: "https://MyDestinationURL.com"
-proxyConfiguration?: {
-  host:"my.proxy.host.com"
-  port:123
-  protocol:"http"
-  headers?: {
-      Proxy-Authorization: 'yourAuthHeader could be basic or some bearer token'
-      SAP-Connectivity-Authentication?: ''
-    };,
+  url: "https://MyDestinationURL.com"
+  proxyConfiguration: {
+    host: "my.proxy.host.com",
+    port: 123,
+    protocol: "http",
+    headers: {
+      Proxy-Authorization: 'yourAuthHeader could be basic or some bearer token',
+      SAP-Connectivity-Authentication: ''
+    }
   }
 }
 ```
@@ -154,7 +154,7 @@ Hence, the SDK switches off the build-in proxy handling by `axios` completely by
 }
 ```
 
-in the `axios` request config.
+in the `axios` request configuration.
 If a proxy becomes necessary or is configured by the discussed environment variables the SDK builds directly the http or https-agent:
 
 ```json
@@ -165,5 +165,5 @@ If a proxy becomes necessary or is configured by the discussed environment varia
 }
 ```
 
-and adds them to the `axios` config. The agents contain the proxy configuration.
+and adds them to the `axios` configuration. The agents contain the proxy configuration.
 The standard [http and https agents](https://www.npmjs.com/package/http-proxy-agent) are used.

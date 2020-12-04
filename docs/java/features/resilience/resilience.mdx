@@ -64,7 +64,7 @@ ResilienceDecorator.executeSupplier(() -> operation(), configuration3);
 
 Here executions one, two and three will all share the same "resilience state".
 This means that they will share the same instance of a circuit breaker or bulkhead.
-So the state is shared via [the identifier](#building-a-resilience-configuration) of the associated configuration.
+The state is shared via [the identifier](#building-a-resilience-configuration) of the associated configuration.
 
 #### Operation Types
 
@@ -94,7 +94,7 @@ The decorator operates with two kinds of operations:
 </table>
 
 Noticeable is the difference in signatures: _Callable_ throws a _checked exception_ while _Supplier_ does not.
-So you can choose whatever fits your use case best.
+You can choose whatever fits your use case best.
 
 #### Execution Variants
 
@@ -130,7 +130,7 @@ The decorator will ensure the [Thread Context](../multi-tenancy/thread-context.m
 Note that the Resilience Decorator will try to propagate the current [Thread Context](../multi-tenancy/thread-context.mdx) at the _time the decorator is invoked_.
 This is important when you are decorating a Callable or Supplier and running it later.
 The Thread Context must be available whenever `decorateCallable` or `decorateSupplier` is evaluated.
-So if the call to `ResilienceDecorator` should take place asynchronously you should [follow these steps](../multi-tenancy/thread-context.mdx#running-asynchronous-operations) to ensure the Thread Context is available.
+If the call to `ResilienceDecorator` should take place asynchronously you should [follow these steps](../multi-tenancy/thread-context.mdx#running-asynchronous-operations) to ensure the Thread Context is available.
 :::
 
 #### Failures and Fallbacks
@@ -164,10 +164,10 @@ configuration = ResilienceConfiguration.of("identifier");
 ```
 
 The identifier can be either a string or a class.
-In case of the latter the (full) classname will be used as identifier.
+In case of the latter the (full) class name will be used as identifier.
 The identifier will be used to apply resilience patterns across [multiple invocations to operations](#executing-operations).
 
-Check [the JavaDoc](https://help.sap.com/http.svc/rc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.html#of-java.lang.String-) for which patterns and parameters will be applied by default.
+Check [the Javadoc](https://help.sap.com/http.svc/rc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.html#of-java.lang.String-) for which patterns and parameters will be applied by default.
 You can also create a configuration with all patterns disabled:
 
 ```java

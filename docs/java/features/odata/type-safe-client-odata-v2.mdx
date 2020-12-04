@@ -209,7 +209,7 @@ Primitive properties are added to `$select` while complex and navigational prope
 This handling is done automatically by the SDK.
 
 The properties that can be selected or expanded are represented via static _fields on the entity_ class.
-So there will be a field for each property.
+There will be a field for each property.
 E.g. for the business partner entity one can find `BusinessPartner.FIRST_NAME` and `BusinessPartner.LAST_NAME`.
 
 <Tabs groupId="odataProtocol" defaultValue="v2" values={[ { label: 'OData V2', value: 'v2', }, { label: 'OData V2 (Deprecated)', value: 'v2-deprecated', }, ]}>
@@ -366,7 +366,7 @@ The functionality can also be discovered through the fluent API.
 ### Batch Requests
 
 Batch requests allow wrapping multiple OData requests into one single batch call.
-Thereby we reduce the number of roundtrips to the remote server.
+Thereby we reduce the number of round trips to the remote server.
 Refer to the [official OData V2 spec](https://www.odata.org/documentation/odata-version-2-0/batch-processing/) for further reference about batch requests, their semantics and the request/response format.
 
 #### Execute Batch Request
@@ -601,8 +601,7 @@ This reduces initial network load and improves overall response times.
 If the payload of an OData response contains a link including a `$skiptoken`, then it indicates a next page to the result-set.
 The iterable result-set is a consistent snapshot of the data, it can not change between reading individual pages.
 
-In comparison the OData consumer may use query options `$top` and `$skip` (client-driven paging) to read partial data from the result-set.
-But relying on a consistent state while browsing through the data can be problematic.
+In comparison the OData consumer may use query options `$top` and `$skip` (client-driven paging) to read partial data from the result-set, but relying on a consistent state while browsing through the data can be problematic.
 Between individual requests another user could delete or add an item.
 This would result in an inconsistent aggregation of data.
 

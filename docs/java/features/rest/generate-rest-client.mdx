@@ -22,6 +22,8 @@ The REST generator is a wrapper around the public open-source [OpenAPI Generator
 
 The generated Java classes need the following dependencies to be present in your project:
 
+<!-- vale off -->
+
 ```xml
 <dependency>
 	<groupId>com.sap.cloud.sdk.datamodel</groupId>
@@ -39,6 +41,8 @@ The generated Java classes need the following dependencies to be present in your
 </dependency>
 ```
 
+<!-- vale on -->
+
 In order to use the generated client library either SDK BOM should be part of your project's `<dependencyManagement>` section or the version for the `rest-core` artifact must be mentioned explicitly here.
 
 :::note
@@ -49,6 +53,8 @@ It is an experimental preview from the Cloud SDK.
 ## Using the REST generator Maven plugin
 
 To use the Maven plugin following XML snippet should be added to the POM file of your project:
+
+<!-- vale off -->
 
 ```xml
 <plugin>
@@ -73,6 +79,8 @@ To use the Maven plugin following XML snippet should be added to the POM file of
 </plugin>
 ```
 
+<!-- vale on -->
+
 Maven will run the generator within the `generate-sources` phase which is executed before compile.
 Note the phase "generate-sources" is just a recommendation from our side, it can be changed as per your project's requirement.
 Refer the [Maven build lifecycle guide](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#Lifecycle_Reference) for complete explanation.
@@ -85,7 +93,9 @@ We recommend to use a Maven property for defining the version of both the Maven 
 
 This Maven plugin processes one OpenAPI specification per execution.
 In case you want to generate sources for multiple OpenAPI specifications then you need to create multiple executions of the plugin each corresponding to a particular OpenAPI specification.
-As an example refer the below plugin xml:
+As an example refer the below plugin XML:
+
+<!-- vale off -->
 
 ```xml
 <plugin>
@@ -119,6 +129,8 @@ As an example refer the below plugin xml:
 	</configuration>
 </plugin>
 ```
+
+<!-- vale on -->
 
 ### Available Parameters
 

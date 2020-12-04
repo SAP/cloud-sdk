@@ -30,6 +30,8 @@ The Cloud SDK relies on the `JCache` SPI to create and manage cache instances.
 Be sure to that such an implementation is present on your `classpath`.
 We recommend [Caffeine](https://github.com/ben-manes/caffeine) which you can use by simply adding the below dependency to your application `pom.xml`:
 
+<!-- vale off -->
+
 ```
 <dependency>
     <groupId>com.github.ben-manes.caffeine</groupId>
@@ -38,6 +40,8 @@ We recommend [Caffeine](https://github.com/ben-manes/caffeine) which you can use
     <scope>runtime</scope>
 </dependency>
 ```
+
+<!-- vale on -->
 
 :::caution
 Caching only works when a service provider or implementation for JCache is available at runtime.
@@ -137,7 +141,7 @@ resilienceConfig.cacheConfiguration(cacheConfig);
 ResilienceDecorator.executeSupplier(() -> operation(), resilienceConfig);
 ```
 
-So you can use parameters to separate cache entries as you see fit.
+You can use parameters to separate cache entries as you see fit.
 Please note that there is no need to do this to achieve multi tenancy.
 The SDK is tenant aware by default as described below.
 
@@ -163,8 +167,8 @@ TenantAccessor.executeWithTenant(tenantB, () -> cachedOperation());
 TenantAccessor.executeWithTenant(tenantB, () -> cachedOperation());
 ```
 
-This isolation is configured via the isolation mode of the resilience configuration.
-So you can disable tenant aware caching by setting the isolation mode to `NO_ISOLATION`.
+You can configure this isolation via the isolation mode of the resilience configuration.
+Set the isolation mode to `NO_ISOLATION` to disable tenant aware caching.
 See the section on isolation levels under [Resilience](https://sap.github.io/cloud-sdk/docs/java/features/resilience/resilience#multi-tenancy) for more details.
 
 ## Manipulating the State of Caches
