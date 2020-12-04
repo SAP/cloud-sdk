@@ -1,0 +1,54 @@
+---
+title: Use the OpenApi generator to generate typesafe clients
+sidebar_label: Generate an OpenApi Client
+description: This article describes how generate a client from the a service definition and how to use the client.
+keywords:
+- sap
+- cloud
+- sdk
+- OpenApi
+- rest
+- connectivity
+- JavaScript
+- TypeScript
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl'
+
+## Generate a Client
+
+For the S/4 HANA OData APIs we have pregenerated clients and published them as npm packages.
+For Rest clients we have not done this and you need to generate the clients on your own.
+
+The first thing is to install the generator via:
+```
+npm i @sap-cloud-sdk/XXX -g
+```
+
+Then you can generate a client via:
+
+```
+sap-cloud-sdk-XXX generate-XXX -i directoryWithOpenApiFiles -o outputDirectory
+```
+
+For additional options use the `--help` flag on the command.
+
+## Call the Generator Programmatically
+
+In case you want to generate clients not via the command line but via code you can also call the generator directly.
+In the [generator package](XXX) the a method `generateClients` is exported.
+This method can be used to generate clients:
+
+```ts
+import { generateClients } from '@sap-cloud-sdk/XXX'
+
+const generatorOptions = {
+  inputDir: 'directoryWithOpenApiFiles';
+  outputDir: 'myOutputDirectory';
+}
+
+generateClients(generatorOptions)
+```
+
+
+

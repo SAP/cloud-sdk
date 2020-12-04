@@ -135,7 +135,6 @@ module.exports = {
             type: 'category',
             label: 'OData',
             items: [
-
               'js/features/odata/overview',
               'js/features/odata/generate-odata-client',
               'js/features/odata/executing-a-request-using-a-generated-odata-v2-v4-client-with-sap-cloud-sdk-for-javascript',
@@ -147,10 +146,19 @@ module.exports = {
             type: 'category',
             label: 'Connectivity',
             items: [
-              'js/features/connectivity/destination-js-sdk',
-              'js/features/connectivity/proxy-js-sdk',
+              'js/features/connectivity/destination',
+              'js/features/connectivity/proxy',
               'js/features/connectivity/generic-http-client',
-              'js/features/connectivity/on-premise-connectivity-in-the-sap-cloud-sdk-for-javascript'
+              'js/features/connectivity/on-premise'
+            ]
+          },
+          {
+            type: 'category',
+            label: 'OpenApi',
+            items: [
+              'js/features/openapi/overview',
+              'js/features/openapi/generate-openapi-client',
+              'js/features/openapi/execute-openapi-request'
             ]
           }
         ]

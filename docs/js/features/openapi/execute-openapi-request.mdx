@@ -1,0 +1,87 @@
+---
+title: Executing a request using a generated OpenApi client
+sidebar_label: Execute an OpenApi Request
+description: This article describes how generate a client from the a service definition and how to use the client.
+keywords:
+- sap
+- cloud
+- sdk
+- OpenApi
+- rest
+- connectivity
+- JavaScript
+- TypeScript
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl'
+
+## How to Use the Client
+
+We tried to make the OpenApi client similar to the one for [OData](../odata/execute-odata-request).
+What methods are available in a client obviously depends on the service specification.
+Let's take  our [test service](https://github.com/SAP/cloud-sdk-js/blob/main/test-resources/rest-service-specs/test-service.json) as an example and see how the specification relates to methods in the generated client.
+
+The test service is simple and has only three paths: `/entities`, `/entities/{entityId}` and `entities/count`.
+Let's first focus on the `GET` operation which is present for all three paths.
+The central entry point to execute methods is the `TestServiceApi` object which provides all available methods:
+
+```ts
+import {
+   TestServiceApi
+} from './outputDirectory/test-service';
+
+const allTestEntities = await TestServiceApi.getAllEntities().execute(myDestination);
+```
+
+The type of `allTestEntities` is a `AxiosResponse<TestEntity[]>` and `myDestination` is the destination object explained in the [connectivity guide](./connectivity/destination).
+The name of the `API` object is derived from the OpenApi specification file name which was called `test-service.json` in our case.
+If you want to get an entity by ID you use the corresponding method:
+
+```ts
+import {
+   TestServiceApi
+} from './outputDirectory/test-service';
+
+const myEntity = await TestServiceApi.getEntityByKey('myId').execute(myDestination);
+```
+
+Note that the result of this request is also typed as `AxiosResponse<TestEntity[]>`  which is a bit unexpected.
+The reason for this lies in the return type definition in the [specification file](https://github.com/SAP/cloud-sdk-js/blob/main/test-resources/rest-service-specs/test-service.json) which is `array`.
+If the type would be `object` it would be `AxiosResponse<TestEntity>`.
+So always keep in mind that the generated client can only be as good as your specification file.
+To complete the `GET` methods let's see how the count path is represented in the client:
+
+```ts
+import {
+   TestServiceApi
+} from './outputDirectory/test-service';
+
+const numberOfEntities = await TestServiceApi.countEntities().execute(myDestination);
+```
+
+where the type of the response is `AxiosResponse<number>`.
+For the `entities` path the operation `POST` is also allowed.
+This corresponds to the creation of new entities.
+You create a entity in the following way:
+
+```ts
+import {
+   TestServiceApi,
+   TestEntity
+} from './outputDirectory/test-service';
+
+const testEntity: TestEntity = {
+      keyProperty: 'some-id-in-uuid-format',
+      stringProperty: 'myProperty'
+};
+const createResponse = await TestServiceApi.createEntity(testEntity).execute(restDestination);
+```
+
+The `POST` operation is [specified](https://github.com/SAP/cloud-sdk-js/blob/main/test-resources/rest-service-specs/test-service.json) to return no content and status code 201(created).
+Hence the `createResponse` is typed as `AxiosResponse<void>`.
+
+:::note
+If your server requires CSRF tokens for `POST` request you have to fetch and provide it manually as custom header in the `execute()` method, because the OpenApi clients to currently not support automatic token fethcing.
+:::
+
+
