@@ -18,7 +18,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl'
 ## How to Use the Client
 
 We tried to make the OpenApi client similar to the one for [OData](../odata/execute-odata-request).
-What methods are available in a client obviously depends on the service specification.
+What methods are available in a client depends on the service specification.
 Let's take  our [test service](https://github.com/SAP/cloud-sdk-js/blob/main/test-resources/rest-service-specs/test-service.json) as an example and see how the specification relates to methods in the generated client.
 
 The test service is simple and has only three paths: `/entities`, `/entities/{entityId}` and `entities/count`.
@@ -83,4 +83,3 @@ Hence the `createResponse` is typed as `AxiosResponse<void>`.
 :::note
 If your server requires CSRF tokens for `POST` request you have to fetch and provide it manually as custom header in the `execute()` method, because the OpenApi clients to currently not support automatic token fethcing.
 :::
-
