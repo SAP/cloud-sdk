@@ -19,11 +19,16 @@ import useBaseUrl from '@docusaurus/useBaseUrl'
 
 The API of the OpenApi clients are similar to the ones for [OData](../odata/execute-odata-request).
 What methods are available in a client depends on the service specification.
-Let's take  our [test service](https://github.com/SAP/cloud-sdk-js/blob/main/test-resources/rest-service-specs/test-service.json) as an example and see how the specification relates to methods in the generated client.
+We will use the [test service](https://github.com/SAP/cloud-sdk-js/blob/main/test-resources/rest-service-specs/test-service.json) as an example to explain how the specification relates to methods in the generated client.
 
 The test service is simple and has only three paths: `/entities`, `/entities/{entityId}` and `entities/count`.
-Let's first focus on the `GET` operation which is present for all three paths.
-The central entry point to execute methods is the `TestServiceApi` object which provides all available methods:
+The SDK will create meaningful names for these paths and operations automatically.
+We will explain how the `GET` operation for the three paths are executed as well as the `POST` operations.
+The central entry point to execute methods is the `TestServiceApi` object which provides all available methods.
+
+### Get Operation without Parameters
+
+The root path `/entites` in combination with the operation `GET` will get all entities and the method name is `getAllEntities`:
 
 ```ts
 import {
@@ -33,9 +38,15 @@ import {
 const allTestEntities = await TestServiceApi.getAllEntities().execute(myDestination);
 ```
 
-The type of `allTestEntities` is a `AxiosResponse<TestEntity[]>` and `myDestination` is the destination object explained in the [connectivity guide](./connectivity/destination).
-The name of the `API` object is derived from the OpenApi specification file name which was called `test-service.json` in our case.
-If you want to get an entity by ID you use the corresponding method:
+The type of `allTestEntities` is a `Promise<TestEntity[]>` and `myDestination` is the destination object explained in the [connectivity guide](./connectivity/destination).
+The name of the `API` object derives from the OpenApi specification file name.
+In this example it is called `test-service.json`.
+
+### Get Operation with Parameter
+
+The path `/entities/{entityId}` has a parameter.
+With `GET` it will return the entity by the given key.
+Hence, the SDK call the method `getEntityByKey`
 
 ```ts
 import {
@@ -45,11 +56,12 @@ import {
 const myEntity = await TestServiceApi.getEntityByKey('myId').execute(myDestination);
 ```
 
-Note that the result of this request is also typed as `AxiosResponse<TestEntity[]>`  which is a bit unexpected.
-The reason for this lies in the return type definition in the [specification file](https://github.com/SAP/cloud-sdk-js/blob/main/test-resources/rest-service-specs/test-service.json) which is `array`.
-If the type would be `object` it would be `AxiosResponse<TestEntity>`.
-So always keep in mind that the generated client can only be as good as your specification file.
-To complete the `GET` methods let's see how the count path is represented in the client:
+Note that the result of this request is also typed as `Promise<TestEntity>`.
+
+### Get Operations with longer Paths
+
+The path `root/someThing` will get `someThing` from the root entity.
+In our example we have a `entities/count` which will return the number of entities:
 
 ```ts
 import {
@@ -59,7 +71,10 @@ import {
 const numberOfEntities = await TestServiceApi.countEntities().execute(myDestination);
 ```
 
-where the type of the response is `AxiosResponse<number>`.
+where the type of the response is `Promise<number>`.
+
+### Post Operations
+
 For the `entities` path the operation `POST` is also allowed.
 This corresponds to the creation of new entities.
 You create a entity in the following way:
@@ -78,7 +93,7 @@ const createResponse = await TestServiceApi.createEntity(testEntity).execute(res
 ```
 
 The `POST` operation is [specified](https://github.com/SAP/cloud-sdk-js/blob/main/test-resources/rest-service-specs/test-service.json) to return no content and status code 201 (created).
-Hence the `createResponse` is typed as `AxiosResponse<void>`.
+Hence the `createResponse` is typed as `Promise<void>`.
 
 :::note
 If your server requires CSRF tokens for `POST` request you have to fetch and provide it manually as custom header in the `execute()` method, because the OpenApi clients to currently not support automatic token fethcing.
