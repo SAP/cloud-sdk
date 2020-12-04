@@ -35,6 +35,7 @@ module.exports = {
             label: 'REST',
             items: [
               'java/features/rest/overview',
+              'java/features/rest/generate-rest-client',
               {
                 type: 'category',
                 label: 'Released clients',
