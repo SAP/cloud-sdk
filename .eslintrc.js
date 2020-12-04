@@ -1,30 +1,28 @@
 module.exports = {
   env: {
     browser: true,
-    es6: true
+    es6: true,
   },
-  extends: [
-    'plugin:react/recommended',
-    'standard'
-  ],
+  extends: ['plugin:react/recommended', 'prettier'],
   settings: {
     react: {
-      version: 'detect'
-    }
+      version: 'detect',
+    },
   },
   globals: {
     Atomics: 'readonly',
-    SharedArrayBuffer: 'readonly'
+    SharedArrayBuffer: 'readonly',
   },
   parserOptions: {
     ecmaFeatures: {
-      jsx: true
+      jsx: true,
     },
     ecmaVersion: 11,
-    sourceType: 'module'
+    sourceType: 'module',
   },
-  plugins: [
-    'react'
-  ]
-//  ignorePatterns: ['static/**']
-}
+  plugins: ['react', 'prettier'],
+  rules: {
+    'react/prop-types': 'off',
+  },
+  //  ignorePatterns: ['static/**']
+};
