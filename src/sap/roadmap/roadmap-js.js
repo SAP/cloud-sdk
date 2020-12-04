@@ -1,14 +1,14 @@
-import moment from 'moment'
-import randomColor from 'randomcolor'
+import moment from 'moment';
+import randomColor from 'randomcolor';
 
 const style = {
-  fontSize: '0.9rem'
-}
+  fontSize: '0.9rem',
+};
 
 const styleFocus = {
   fontSize: '0.9rem',
-  background: 'indigo'
-}
+  background: 'indigo',
+};
 
 export const keys = {
   groupIdKey: 'id',
@@ -20,8 +20,8 @@ export const keys = {
   itemGroupKey: 'group',
   itemTimeStartKey: 'start',
   itemTimeEndKey: 'end',
-  groupLabelKey: 'title'
-}
+  groupLabelKey: 'title',
+};
 
 export const groups = [
   { id: 'odata', title: 'OData v2/4 type-safe client' },
@@ -36,8 +36,8 @@ export const groups = [
   { id: 'cap', title: 'One SAP' },
   { id: 'top', title: 'Developer happiness' },
   { id: 'future', title: 'Future shots' },
-  { id: 'scp', title: 'SAP Cloud Platform' }
-]
+  { id: 'scp', title: 'SAP Cloud Platform' },
+];
 
 export const items = [
   {
@@ -48,11 +48,13 @@ export const items = [
     end: moment().year(2020).month('Jul').date(32),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
-        ...styleFocus
-      }
-    }
+        ...styleFocus,
+      },
+    },
   },
   {
     id: 2,
@@ -62,12 +64,13 @@ export const items = [
     end: moment().year(2020).month('Sep').date(32),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
-        ...styleFocus
-
-      }
-    }
+        ...styleFocus,
+      },
+    },
   },
   {
     id: 5,
@@ -77,12 +80,13 @@ export const items = [
     end: moment().year(2020).month('Dec').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
-        ...styleFocus
-
-      }
-    }
+        ...styleFocus,
+      },
+    },
   },
   {
     id: 6,
@@ -92,27 +96,30 @@ export const items = [
     end: moment().year(2020).month('Dec').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
-        ...styleFocus
-
-      }
-    }
+        ...styleFocus,
+      },
+    },
   },
   {
     id: 7,
     group: 'libs',
-    title: 'Pre-generated clients for Graph, Kernel Service, Job Scheduler, etc.',
+    title:
+      'Pre-generated clients for Graph, Kernel Service, Job Scheduler, etc.',
     start: moment().year(2020).month('Oct').date(1),
     end: moment().year(2021).month('Dec').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
-        ...styleFocus
-
-      }
-    }
+        ...styleFocus,
+      },
+    },
   },
 
   {
@@ -123,12 +130,13 @@ export const items = [
     end: moment().year(2020).month('Jul').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
-        ...styleFocus
-
-      }
-    }
+        ...styleFocus,
+      },
+    },
   },
   {
     id: 9,
@@ -138,12 +146,13 @@ export const items = [
     end: moment().year(2020).month('Oct').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
-        ...styleFocus
-
-      }
-    }
+        ...styleFocus,
+      },
+    },
   },
   // {
   //   id: 10,
@@ -182,12 +191,13 @@ export const items = [
     end: moment().year(2020).month('Aug').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
-        ...style
-
-      }
-    }
+        ...style,
+      },
+    },
   },
   {
     id: 16,
@@ -197,12 +207,13 @@ export const items = [
     end: moment().year(2020).month('Oct').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
-        ...styleFocus
-
-      }
-    }
+        ...styleFocus,
+      },
+    },
   },
   {
     id: 17,
@@ -212,12 +223,13 @@ export const items = [
     end: moment().year(2021).month('Mar').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
-        ...style
-
-      }
-    }
+        ...style,
+      },
+    },
   },
   {
     id: 18,
@@ -227,11 +239,13 @@ export const items = [
     end: moment().year(2020).month('Dec').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
-        ...style
-      }
-    }
+        ...style,
+      },
+    },
   },
   // {
   //   id: 19,
@@ -251,17 +265,19 @@ export const items = [
   {
     id: 20,
     group: 'infra',
-    title: 'Improve service discovery and connectivity to enable new run times and rest client capabilities',
+    title:
+      'Improve service discovery and connectivity to enable new run times and rest client capabilities',
     start: moment().year(2021).month('Feb').date(31),
     end: moment().year(2021).month('Mar').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
-        ...styleFocus
-
-      }
-    }
+        ...styleFocus,
+      },
+    },
   },
   {
     id: 21,
@@ -271,12 +287,13 @@ export const items = [
     end: moment().year(2020).month('Dec').date(32),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
-        ...style
-
-      }
-    }
+        ...style,
+      },
+    },
   },
 
   {
@@ -287,12 +304,13 @@ export const items = [
     end: moment().year(2020).month('Dec').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
-        ...style
-
-      }
-    }
+        ...style,
+      },
+    },
   },
   {
     id: 26,
@@ -302,12 +320,13 @@ export const items = [
     end: moment().year(2020).month('Aug').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
-        ...style
-
-      }
-    }
+        ...style,
+      },
+    },
   },
   {
     id: 27,
@@ -317,12 +336,13 @@ export const items = [
     end: moment().year(2021).month('Mar').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
-        ...style
-
-      }
-    }
+        ...style,
+      },
+    },
   },
   {
     id: 29,
@@ -332,12 +352,12 @@ export const items = [
     end: moment().year(2021).month('Mar').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
-        ...styleFocus
-
-      }
-    }
-  }
-
-]
+        ...styleFocus,
+      },
+    },
+  },
+];

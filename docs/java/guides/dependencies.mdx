@@ -4,17 +4,17 @@ title: Managing Dependencies
 hide_title: false
 hide_table_of_contents: false
 sidebar_label: Dependency Management
-description: How to manage dependencies, detect and resolve conflicts 
+description: How to manage dependencies, detect and resolve conflicts
 keywords:
-- sap
-- cloud
-- sdk
-- cloud native
-- cloud sdk
-- dependency
-- dependency conflicts
-- manage dependencies
-- how-to
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - dependency
+  - dependency conflicts
+  - manage dependencies
+  - how-to
 image:
 ---
 
@@ -43,11 +43,12 @@ It can be used in the dependency management as follows:
             <type>pom</type>
             <scope>import</scope>
         </dependency>
-    </dependencies>        
+    </dependencies>
 </dependencyManagement>
 ```
 
 It helps in various ways:
+
 - minimizing the effort for updating SDK versions
 - ensuring all SDK components are used consistently with the same version
 - compatibility with some other key SAP libraries or frameworks like [XSUAA](https://github.com/SAP/cloud-security-xsuaa-integration) and [CAP](https://cap.cloud.sap/docs/).
@@ -72,21 +73,27 @@ You may run into dependency related problems when updating SDK versions since it
 Here are some recommendations from our experience that should help mitigating any problems:
 
 We recommend increasing the SDK version in a dedicated change e.g. a pull request.
+
 - This isolates the change and makes finding problems easier.
 
 Look out for `MethodNotFound` and `ClassDefNotFound` exceptions.
+
 - They are very typical when a library is provided with an unexpected version.
 
 Check out our [release notes](../release-notes.mdx).
+
 - Under improvements you will see all dependency changes.
 
 Use `mvn dependency:tree` to analyze the dependency tree.
+
 - It shows where dependencies are used and in which version.
 
 Google the error message.
+
 - Usually you will at least get an idea which library is causing the problems.
 
 Update the SDK version frequently.
+
 - This mitigates the risk per update and ensures you are up to date.
 
 ### Overriding Dependency Versions of the SDK BOM
@@ -95,6 +102,7 @@ Sometimes you may want to override the version of a specific dependency the SDK 
 You can achieve this by listing it in the dependency management _before the SDK BOM_.
 
 For example to override the version of SLF4J:
+
 ```xml
 <dependencyManagement>
     <dependencies>

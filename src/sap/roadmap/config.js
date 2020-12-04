@@ -1,4 +1,4 @@
-import moment from 'moment'
+import moment from 'moment';
 
 const config = {
   defaultTimeStart: moment().year(2020).startOf('year'),
@@ -12,7 +12,7 @@ const config = {
   canChangeGroup: true,
   fullUpdate: true,
   itemTouchSendsClick: true,
-  stackItems: true
-}
+  stackItems: true,
+};
 
-export default config
+export default config;

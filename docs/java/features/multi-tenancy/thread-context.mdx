@@ -6,24 +6,24 @@ hide_table_of_contents: false
 sidebar_label: Thread Context
 description: This article describes how the SAP Cloud SDK for Java provides an application context that is stored in a thread-safe manner and enables cloud native features to be used out of the box.
 keywords:
-- sap
-- cloud
-- sdk
-- thread context
-- multi tenancy
-- cloud native
-- tenant
-- user
-- principal
-- JWT
-- AuthToken
+  - sap
+  - cloud
+  - sdk
+  - thread context
+  - multi tenancy
+  - cloud native
+  - tenant
+  - user
+  - principal
+  - JWT
+  - AuthToken
 image:
 ---
 
 ## What is a Thread Context?
 
-The SAP Cloud SDK for Java provides a so called `ThreadContext`. 
-It serves as thread-safe storage for potentially sensitive information. 
+The SAP Cloud SDK for Java provides a so called `ThreadContext`.
+It serves as thread-safe storage for potentially sensitive information.
 Specifically the following three objects are stored:
 
 - The current _Tenant_
@@ -35,7 +35,7 @@ To ensure different tenants and users are properly isolated in an application th
 
 ## How is a Thread Context created?
 
-The SDK provides a [RequestFilter](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/servlet/RequestAccessorFilter.html) that will listen on incoming HTTP requests. 
+The SDK provides a [RequestFilter](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/servlet/RequestAccessorFilter.html) that will listen on incoming HTTP requests.
 If the `Authorization` header contains a `JWT` from the [AppRouter](https://blogs.sap.com/2020/04/03/sap-application-router/) the filter will:
 
 - Verify this token
@@ -46,7 +46,7 @@ If the `Authorization` header contains a `JWT` from the [AppRouter](https://blog
 
 ### Accessing Information
 
-The Thread context can be accessed via the static [ThreadContextAccessor](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/thread/ThreadContextAccessor.html). 
+The Thread context can be accessed via the static [ThreadContextAccessor](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/thread/ThreadContextAccessor.html).
 
 For the frequently needed _Tenant_, _Principal_ and _JWT_ there are also dedicated accessors: [TenantAccessor](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/tenant/TenantAccessor.html), [PrincipalAccessor](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html), [AuthTokenAccessor](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/security/AuthTokenAccessor.html).
 

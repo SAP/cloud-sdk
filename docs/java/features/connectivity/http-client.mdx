@@ -6,13 +6,13 @@ hide_table_of_contents: false
 sidebar_label: HttpClient
 description: This article describes how the SAP Cloud SDK for Java can be used to prepare instances of HttpClient. This class enables connections to other systems and services like S/4HANA or SAP Cloud Platform services.
 keywords:
-- sap
-- cloud
-- sdk
-- destination
-- java
-- connectivity
-- http
+  - sap
+  - cloud
+  - sdk
+  - destination
+  - java
+  - connectivity
+  - http
 ---
 
 The SAP Cloud SDK offers basic functionality that helps with connecting to other systems and services like S/4HANA Cloud or OnPremise edition.
@@ -56,6 +56,7 @@ HttpClient destinationClient = factory.createHttpClient(destination);
 ```
 
 The `DefaultHttpClientFactory` type offers a static builder, to enable custom properties for:
+
 - `timeoutMilliseconds`
 - `maxConnectionsPerRoute`
 - `maxConnectionsTotal`
@@ -69,6 +70,7 @@ HttpClientFactory customFactory = DefaultHttpClientFactory.builder()
 ```
 
 When inheriting from `DefaultHttpClientFactory` it's possible to provide even deeper customization:
+
 ```java
 DefaultHttpClientFactory customFactory = new DefaultHttpClientFactory() {
   @Override
@@ -83,13 +85,14 @@ DefaultHttpClientFactory customFactory = new DefaultHttpClientFactory() {
   }
 };
 ```
+
 It is possible to take advantage of calls to `super` - or use your own objects directly.
 This inheritance enables custom implementation for the following methods:
+
 - `getHttpClientBuilder`
 - `getRequestConfigBuilder`
 - `getSocketConfigBuilder`
 - `getConnectionManager`
-
 
 ## Overriding default behavior
 
@@ -99,4 +102,5 @@ Now that the customization of the HTTP client factory is available, the default 
 HttpClientFactory factory = new MyCustomHttpClientFactory();
 HttpClientAccessor.setHttpClientFactory(factory);
 ```
+
 From now on the custom factory will be used for every explicit and implicit HTTP request running through the Cloud SDK.

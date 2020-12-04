@@ -6,13 +6,13 @@ hide_table_of_contents: false
 sidebar_label: Caching
 description: How to use SAP Cloud SDK for Java to introduce caching into your application.
 keywords:
-- sap
-- cloud
-- sdk
-- caching
-- cache
-- JCache
-- CacheConfiguration
+  - sap
+  - cloud
+  - sdk
+  - caching
+  - cache
+  - JCache
+  - CacheConfiguration
 image:
 ---
 
@@ -61,7 +61,7 @@ The configuration options are explained further below.
 
 This configuration must then be added to a `ResilienceConfiguration`:
 
-```java 
+```java
 ResilienceConfiguration resilienceConfig = ResilienceConfiguration
         .empty(resilienceId)
         .cacheConfiguration(cacheConfig);
@@ -170,10 +170,12 @@ See the section on isolation levels under [Resilience](https://sap.github.io/clo
 ## Manipulating the State of Caches
 
 You may manually clear caches by:
+
 ```java
 // invalidate
 ResilienceDecorator.invalidateCache(resilienceConfig);
 ```
+
 This currently clears all cache entries associated with the resilience configuration irrespective of the current tenant and principal.
 
 To get hold of the created cache instance and to use it for advanced operations like for e.g registering [event listeners](https://www.baeldung.com/jcache#listeners) you can use JCache API:
@@ -184,5 +186,6 @@ final Cache<SomeCacheKey, SomeResult> cache = Caching.getCachingProvider()
                                                      .getCache(resilienceConfig.identifier()) //Returns the cache created using the resilienceId passed
                                                      .registerCacheEntryListener(SimpleCacheEntryListener); //Registers the event listener
 ```
+
 where `SimpleCacheEntryListener` is a class that implements the interfaces of the required events w.r.t cache defined in [EventType](https://javadoc.io/doc/javax.cache/cache-api/latest/javax/cache/event/EventType.html)
 Note that the identifier of the resilience configuration is also the identifier of the cache associated with it.

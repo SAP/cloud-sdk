@@ -12,6 +12,7 @@ import TabItem from '@theme/TabItem';
 
 This document aims to give you an overview of how you can write events of your application with the standard logging frameworks and how the SAP Cloud SDK integrates with that.
 There are three parts to this document:
+
 - How the SDK integrates with logging frameworks
 - How to create log entries
 - How to configure those entries
@@ -28,7 +29,7 @@ It serves as an interface to a variety of different logging frameworks (e.g. [Lo
 That means there are two components involved:
 
 - The _SLF4J API_
-  
+
   The API is used to get a logger instance and create log entries:
 
   ```java
@@ -37,7 +38,7 @@ That means there are two components involved:
   ```
 
 - A _logging framework_ which provides the implementation of that API
-  
+
   The framework is then responsible for writing such messages according to a configuration.
   Which configuration options are available depends on the framework.
   Typically one can configure a log level (Error, Warn, Debug, etc.) and the format of messages.
@@ -236,12 +237,11 @@ It usually looks something like this:
 ```yaml
 ---
 applications:
-
-- name: <your-application>
-  some-properties: <some-values>
-  env:
-    OTHER_ENVIRONMENT_VARIABLE: 'and their values'
-    SET_LOGGING_LEVEL: '{ROOT: INFO, com.sap.cloud.sdk: INFO, package.to.log: DEBUG}'
+  - name: <your-application>
+    some-properties: <some-values>
+    env:
+      OTHER_ENVIRONMENT_VARIABLE: 'and their values'
+      SET_LOGGING_LEVEL: '{ROOT: INFO, com.sap.cloud.sdk: INFO, package.to.log: DEBUG}'
 ```
 
 </TabItem>
@@ -252,10 +252,10 @@ applications:
 ID: com.company.project.app
 version: 1.0.1
 modules:
-   - name: <your-module>
-     type: java.tomcat
-     properties: 
-       SET_LOGGING_LEVEL: '{ROOT: INFO, com.sap.cloud.sdk: INFO, package.to.log: DEBUG}'
+  - name: <your-module>
+    type: java.tomcat
+    properties:
+      SET_LOGGING_LEVEL: '{ROOT: INFO, com.sap.cloud.sdk: INFO, package.to.log: DEBUG}'
 ```
 
 </TabItem>
@@ -283,9 +283,7 @@ In this example case the command would be the following:
 cf set-env logging-documentation SET_LOGGING_LEVEL '{ROOT: INFO, com.sap.cloud.sdk: INFO}'
 ```
 
-[//]: # (Think of further usage scenarios. CAP?)
-
-
+[//]: # 'Think of further usage scenarios. CAP?'
 
 ## Further Reading
 

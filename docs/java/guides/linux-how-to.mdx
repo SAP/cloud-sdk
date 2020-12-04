@@ -6,16 +6,16 @@ hide_table_of_contents: false
 sidebar_label: SAP Cloud SDK on Linux
 description: Get up and started to build with SAP Cloud SDK on Linux
 keywords:
-- sap
-- cloud
-- sdk
-- cloud native
-- cloud sdk
-- sap cloud sdk
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
 image:
 ---
 
-## Get SAP Cloud SDK development environment for Java on Linux (Debian based distribution) ##
+## Get SAP Cloud SDK development environment for Java on Linux (Debian based distribution)
 
 This tutorial will guide you through getting your SAP Cloud SDK development environment up and running on Linux. All the
 steps were verified on Ubuntu 18.04 and should be in compliance with other Debian based distributions.
@@ -32,7 +32,7 @@ SAP Cloud SDK supports Java 8 and Java 11
 
 I'll base this example on Java 8
 
-``` bash
+```bash
 sudo apt-get install openjdk-8-jdk
 ```
 
@@ -40,30 +40,41 @@ Updating alternatives to make sure right version of Java is used
 
 Your distribution might have a different version of Java installed by default. You can check you Java version by
 running:
-``` bash
+
+```bash
 java -version
 ```
+
 As you can see bellow, my laptop has Java 11 as default.
-``` bash
+
+```bash
 openjdk 11.0.5 2019-10-15
 OpenJDK Runtime Environment (build 11.0.5+10-post-Ubuntu-0ubuntu1.1)
 OpenJDK 64-Bit Server VM (build 11.0.5+10-post-Ubuntu-0ubuntu1.1, mixed mode)
 ```
+
 Check what Java versions you have on you machine with:
-``` bash
+
+```bash
 update-java-alternatives --list
 ```
+
 After installing OpenJDK 8 you should now have both Java 8 and Java 11
-``` bash
+
+```bash
 java-1.11.0-openjdk-amd64      1111       /usr/lib/jvm/java-1.11.0-openjdk-amd64
 java-1.8.0-openjdk-amd64       1081       /usr/lib/jvm/java-1.8.0-openjdk-amd64
- ```
+```
+
 To switch between Java versions run:
-``` bash
+
+```bash
 sudo update-alternatives --config java
 ```
+
 In my case I have to press **2** to make Java 8 default
-``` bash
+
+```bash
 Selection    Path                                            Priority   Status
 ------------------------------------------------------------
 0            /usr/lib/jvm/java-11-openjdk-amd64/bin/java      1111      auto mode
@@ -71,32 +82,38 @@ Selection    Path                                            Priority   Status
 2            /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java   1081      manual mode
 Press <enter> to keep the current choice[*], or type selection number:
 ```
+
 Check Java version again. Mind, `version` parameter has just one hyphen for Java 8 CLI
-``` bash
+
+```bash
 java -version
 ```
+
 You have now switched to Java 8
-``` bash
+
+```bash
 openjdk version "1.8.0_232"
 OpenJDK Runtime Environment (build 1.8.0_232-8u232-b09-0ubuntu1.1-b09)
 OpenJDK 64-Bit Server VM (build 25.232-b09, mixed mode)
 ```
+
 ### Use [maven](https://maven.apache.org/) to build and deploy your App
 
 Install maven with:
 
-``` bash
+```bash
 sudo apt-get install maven
 ```
 
 To check if `maven` is installed correctly run:
 
-``` bash
+```bash
 mvn --version
 ```
+
 You'll see the maven version and build details
 
-``` bash
+```bash
 Apache Maven 3.6.1
 Maven home: /usr/share/maven
 Java version: 1.8.0_232, vendor: Private Build, runtime: /usr/lib/jvm/java-8-openjdk-amd64/jre
@@ -117,7 +134,7 @@ manager: apt-get, yum and homebrew are supported.
 
 After installing the CLI you might need to reload you shell before it becomes available. To check if it works run:
 
-``` bash
+```bash
 cf
 ```
 
@@ -133,23 +150,25 @@ Another supported IDE is [Eclipse](https://www.eclipse.org/ide/).
 
 ## Initialize and build your App
 
-### To initialize your SAP Cloud SDK App from the maven archetype ###
+### To initialize your SAP Cloud SDK App from the maven archetype
 
-``` bash
+```bash
 mvn archetype:generate -DarchetypeGroupId=com.sap.cloud.sdk.archetypes -DarchetypeArtifactId=scp-cf-tomee -DarchetypeVersion=RELEASE
 ```
+
 The snippet above will create a Tomee App, you can also use archetype for Spring Boot.
 
 ### Building your App
+
 Change directory to the root of the App you've just created
 
-``` bash
+```bash
 cd /<app-root-directory>
 ```
 
 To build your APP run
 
-``` bash
+```bash
 mvn clean package
 ```
 
@@ -164,9 +183,9 @@ account.
 
 **Select endpoint depending on your region:**
 
-  - Europe <https://api.cf.eu10.hana.ondemand.com>
-  - US East: <https://api.cf.us10.hana.ondemand.com>
-  - US CENTRAL: <https://api.cf.us20.hana.ondemand.com>
+- Europe <https://api.cf.eu10.hana.ondemand.com>
+- US East: <https://api.cf.us10.hana.ondemand.com>
+- US CENTRAL: <https://api.cf.us20.hana.ondemand.com>
 
 To use a snippet for Europe run:
 
@@ -176,7 +195,7 @@ To use a snippet for Europe run:
 
 Provide your credential for SAP Cloud Foundry by running:
 
-``` bash
+```bash
 cf login
 ```
 
@@ -184,13 +203,13 @@ cf login
 
 To deploy your app run:
 
-``` bash
+```bash
 cf push
 ```
 
 After a successful deployment you'll see a status of just pushed App:
 
-``` bash
+```bash
 Waiting for app to start...
 name:                test-app
 requested state:     started

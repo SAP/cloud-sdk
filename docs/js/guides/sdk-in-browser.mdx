@@ -3,12 +3,12 @@ title: Use the Cloud SDK in browser
 sidebar_label: SDK in browser
 description: You'll learn how to package SDK for a browser, what are the limitations, and how to use it with popular frontend frameworks.
 keywords:
-- sap
-- cloud
-- sdk
-- cloud native
-- cloud sdk
-- sap cloud sdk
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
 ---
 
 The SAP Cloud SDK for JavaScript can be used both as a backend and frontend library when used in a browser.
@@ -25,6 +25,7 @@ For example an [Angular application](https://angular.io/cli/new) via `ng new myP
 
 For most examples we will use the business partner API.
 Add the package `@sap/cloud-sdk-vdm-business-partner-service` to your package.json introduce some call via:
+
 ```
 //In the .html part of the component
 <button (click)="callApi()">Click me!</button>
@@ -52,6 +53,7 @@ Please check out the [workaround](#workaround) for these kinds of errors.
 
 As discussed above the `myDest` can not be fetched via the destination service.
 When you run locally you can simply provide it
+
 ```
 import {Destination} from '@sap-cloud-sdk/core'
 
@@ -66,7 +68,7 @@ When you execute `npm run serve` your project is compiled and hosted on a local 
 
 :::note
 When you trigger a request from a browser to the remote system all modern browsers will block this to ensure [same origin policy](https://en.wikipedia.org/wiki/Same-origin_policy).
-One simple way to overcome this issue locally is to disable the web security of your  browser temporarily (e.g. --disable-web-security for Chrome)
+One simple way to overcome this issue locally is to disable the web security of your browser temporarily (e.g. --disable-web-security for Chrome)
 Alternatively, you can also create a second localhost proxy server which adds the `access-allow-origin-header` to the request.
 :::
 
@@ -74,6 +76,7 @@ Alternatively, you can also create a second localhost proxy server which adds th
 
 For productive usage, the methods mentioned above for running locally are of course not needed.
 You simply configure the `xs-app.json` of the used app-router with an entry like this:
+
 ```
  {
     "source": "/REMOTE-SYSTEM-IDENTIFIER/(.*)",
@@ -83,6 +86,7 @@ You simply configure the `xs-app.json` of the used app-router with an entry like
 ```
 
 and then in your application simply define the destination as:
+
 ```
 import {Destination} from '@sap-cloud-sdk/core'
 
@@ -111,6 +115,7 @@ We hope to resolve these issues in the future but here is a workaround:
 
 - Include @angular-builders/custom-webpack to the dev dependencies
 - Create a custom webpack config named `node-webpack.config.js` and list the following node modules:
+
 ```
 module.exports={
      node: {
@@ -124,7 +129,9 @@ module.exports={
      }
    }
 ```
+
 - In the `angular.json` adjust the `build` target to use the custom builder:
+
 ```
  "build": {
           "builder": "@angular-builders/custom-webpack:browser",
@@ -133,12 +140,16 @@ module.exports={
               "path": "./node-webpack.config.js"
             }...
 ```
+
 - In the `angular.json adjust the `serve` target to use the custom builder as well:
+
 ```
  "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
 ```
+
 - In the package.json exclude the node modules not existing in the browser:
+
 ```
 "browser": {
       "fs": false,
@@ -146,4 +157,5 @@ module.exports={
       "tls": false
     }
 ```
+
 Now the project should build and the run locally.

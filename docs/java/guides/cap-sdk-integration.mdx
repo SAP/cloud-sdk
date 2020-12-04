@@ -6,20 +6,20 @@ hide_table_of_contents: false
 sidebar_label: Integration with CAP
 description: Integrate the SAP Cloud SDK into your CAP application
 keywords:
-- sap
-- cloud
-- sdk
-- cloud native
-- cloud sdk
-- sap cloud sdk
-- cap
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+  - cap
 image:
 ---
 
 This document outlines how you integrate the SAP Cloud SDK into an application based on the [SAP Cloud Application Programming Model](https://cap.cloud.sap/docs/) (referred to as CAP in the remainder).
 
 :::success Check out the tutorial as well
-While this document provides a general overview on this topic, we have published a practical [tutorial on SAP Developers](https://developers.sap.com/tutorials/cloudsdk-integrate-cap.html) which illustrates all steps on a comprehensive example. 
+While this document provides a general overview on this topic, we have published a practical [tutorial on SAP Developers](https://developers.sap.com/tutorials/cloudsdk-integrate-cap.html) which illustrates all steps on a comprehensive example.
 :::
 
 ## Integration Steps
@@ -30,8 +30,10 @@ Furthermore, we assume that you deploy your app to the SCP Cloud Foundry environ
 :::
 
 ### Add the SAP Cloud SDK BOM
+
 Add the SAP Cloud SDK Bill-of-Material (BOM) into the `dependencyManagement` section of the root POM.
 Here is the XML snippet:
+
 ```xml
 <dependencyManagement>
     <dependencies>
@@ -42,16 +44,19 @@ Here is the XML snippet:
             <type>pom</type>
             <scope>import</scope>
         </dependency>
-    </dependencies>        
+    </dependencies>
 </dependencyManagement>
 ```
+
 :::success Use latest SDK version
-We recommend using the **latest** SAP Cloud SDK version always. 
+We recommend using the **latest** SAP Cloud SDK version always.
 Check out the [release notes](../release-notes-sap-cloud-sdk-for-java) to see the release history.
 :::
 
 ### Add the SAP Cloud SDK Dependencies
+
 Add the respective Cloud SDK dependencies to the POM file under the `srv` directory.
+
 ```xml
 <dependency>
     <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
@@ -63,6 +68,7 @@ Add the respective Cloud SDK dependencies to the POM file under the `srv` direct
     <artifactId>s4hana-all</artifactId>
 </dependency>
 ```
+
 :::note Version information controlled through Cloud SDK BOM
 Note that the `version` tags can be omitted, as the Cloud SDK BOM you added beforehand controls the version of all SDK modules.
 That is, you only need to increase the version of the BOM and all modules get updated automatically.
@@ -73,20 +79,23 @@ The two mentioned dependencies are modules which cover a broad range of possible
 You may choose a more fine-grained selection of Cloud SDK dependencies according to your specific use case.
 :::
 
-
 ### Add the Integration Dependency
+
 If your app uses multitenancy features and/or a protected backend, we have to integrate the tenant and user concepts of CAP and the Cloud SDK.
 We'll add a respective integration dependency to the POM file under the `srv` directory (same place as the previous step).
+
 ```xml
 <dependency>
   <groupId>com.sap.cds</groupId>
   <artifactId>cds-integration-cloud-sdk</artifactId>
-</dependency> 
+</dependency>
 ```
 
 ### Enable the Component Scan for Cloud SDK Package
-Let the Spring component scan crawl the Cloud SDK package. 
+
+Let the Spring component scan crawl the Cloud SDK package.
 We'll annotate the Spring Boot application class which is annotated with `@SpringBootApplication` as follows.
+
 ```java
 @ComponentScan({"com.sap.cloud.sdk"})
 @ServletComponentScan({"com.sap.cloud.sdk"})
@@ -96,4 +105,3 @@ We'll annotate the Spring Boot application class which is annotated with `@Sprin
 Now the Cloud SDK is integrated into with the CAP application.
 You can go ahead using the Cloud SDK features, such as querying OData services.
 :::
-
