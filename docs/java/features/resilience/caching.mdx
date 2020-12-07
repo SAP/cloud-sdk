@@ -27,8 +27,8 @@ The following article describes how to enable caching with the Cloud SDK for Jav
 
 The Cloud SDK relies on the `JCache` SPI to create and manage cache instances.
 `JCache` is a [Service Provider Interface](https://www.baeldung.com/java-spi) which requires an implementation of this interface to be present at runtime.
-Be sure to that such an implementation is present on your `classpath`.
-We recommend [Caffeine](https://github.com/ben-manes/caffeine) which you can use by simply adding the below dependency to your application `pom.xml`:
+Be sure that such an implementation is present on your `classpath`.
+We recommend [Caffeine](https://github.com/ben-manes/caffeine) which you can use by adding the below dependency to your application `pom.xml`:
 
 <!-- vale off -->
 
@@ -45,12 +45,12 @@ We recommend [Caffeine](https://github.com/ben-manes/caffeine) which you can use
 
 :::caution
 Caching only works when a service provider or implementation for JCache is available at runtime.
-Otherwise you will face a runtime exception.
+Otherwise, you will face a runtime exception.
 :::
 
 ### Creating a Cache configuration
 
-As described in our [Resilience section](https://sap.github.io/cloud-sdk/docs/java/features/resilience/resilience) the Cloud SDK allows to run any code in the context of one or more resilience patterns.
+As described in our [Resilience section](https://sap.github.io/cloud-sdk/docs/java/features/resilience/resilience) the Cloud SDK allows you to run any code in the context of one or more resilience patterns.
 Caching is also a resilience pattern so you can leverage the same API to build and apply a `CacheConfiguration`.
 
 ```java
@@ -71,8 +71,8 @@ ResilienceConfiguration resilienceConfig = ResilienceConfiguration
         .cacheConfiguration(cacheConfig);
 ```
 
-The above creates an otherwise empty `ResilienceConfiguration` and thus only enabling caching.
-Of course you may use other resilience patterns as well.
+The above creates an otherwise empty `ResilienceConfiguration` and thus only enables caching.
+Of course, you may use other resilience patterns as well.
 
 ### Applying a Cache configuration
 
@@ -83,11 +83,11 @@ ResilienceDecorator.executeSupplier(() -> operation(), resilienceConfig);
 ResilienceDecorator.executeSupplier(() -> operation(), resilienceConfig);
 ```
 
-The above code will invoke `operation()` only once since the result of the first invocation will be cached.
+The above code will invoke `operation()` once since the result of the first invocation will be cached.
 Only if the first call fails the second one would still happen.
 
-Note that a specific cache instance is not yet created when configuration is created.
-Instead it is only created when an operation is decorated or executed by the `ResilienceDecorator`.
+Note that a specific cache instance is not yet created when the configuration is created.
+Instead, it is only created when an operation is decorated or executed by the `ResilienceDecorator`.
 
 :::tip
 The cache functionality is tenant aware by default.
@@ -105,10 +105,10 @@ The cache configuration offers 3 options:
 
 Each cache configuration must at least specify a duration after which a cache expires.
 How this timeout is applied can be configured through the [Expiration Strategy](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/CacheExpirationStrategy.html).
-By default a cache entry is cleared once the configured duration has passed since the entry was created.
+By default, a cache entry is cleared once the configured duration has passed since the entry was created.
 
 Finally, parameters can be listed that further refine the caching functionality.
-Parameters values will be attached to cache key.
+Parameters values will be attached to the cache key.
 When the cache is accessed only entries with matching parameter values will be returned.
 
 ```java
@@ -142,12 +142,12 @@ ResilienceDecorator.executeSupplier(() -> operation(), resilienceConfig);
 ```
 
 You can use parameters to separate cache entries as you see fit.
-Please note that there is no need to do this to achieve multi tenancy.
+Please note that there is no need to do this to achieve multi-tenancy.
 The SDK is tenant aware by default as described below.
 
 ### Multi Tenancy
 
-By default this caching functionality is tenant aware.
+By default, this caching functionality is tenant aware.
 If a tenant is available the SDK will create cache entries only for that specific tenant.
 Other tenants will not see the value cached for that specific tenant.
 

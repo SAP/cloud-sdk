@@ -16,19 +16,19 @@ keywords:
 image:
 ---
 
-The SAP Cloud SDK for Java provides abstractions for some frequently used resilience patterns like timeout, retry or circuit breaker.
-Applying such patterns helps making an application more resilient against failures it might encounter.
+The SAP Cloud SDK for Java provides abstractions for some frequently used resilience patterns like timeout, retry, or circuit breaker.
+Applying such patterns helps to make an application more resilient against failures it might encounter.
 
 The following article describes which resilience features the SDK offers and how to apply them.
 If you are looking for a quick start with resilience also check out our [dedicated tutorial](https://developers.sap.com/tutorials/s4sdk-resilience.html) on the topic!
 
 ## Using the Resilience API
 
-The SDK allows to run any code in the context of one or more resilience patterns.
+The SDK allows running any code in the context of one or more resilience patterns.
 There are two essential building blocks for achieving this:
 
 1. The `ResilienceConfiguration` that determines which patterns should be applied.
-2. The `ResilienceDecorator` which is capable of applying the configuration to an operation.
+2. The `ResilienceDecorator` is capable of applying the configuration to an operation.
 
 The fluent [Resilience Configuration API](https://help.sap.com/http.svc/rc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.html) provides builders that help with assembling different resilience patterns and their associated parameters.
 Which patterns are available and how to use them is explained in the [dedicated section below](#building-a-resilience-configuration).
@@ -47,7 +47,7 @@ This code executes `operation()` in a resilient manner according to a `Resilienc
 The decorator will apply all in `configuration` configured patterns and all logic that is needed to combine these patterns.
 
 Some resilience patterns are applied over multiple executions of the same operation.
-For example the circuit breaker will prevent further executions, if a significant portion of previous attempts failed.
+For example, the circuit breaker will prevent further executions if a significant portion of previous attempts failed.
 
 To understand how the SDK applies this concept consider the following snippet:
 
@@ -62,7 +62,7 @@ ResilienceDecorator.executeSupplier(() -> operation(), configuration2);
 ResilienceDecorator.executeSupplier(() -> operation(), configuration3);
 ```
 
-Here executions one, two and three will all share the same "resilience state".
+Here executions one, two, and three will all share the same "resilience state".
 This means that they will share the same instance of a circuit breaker or bulkhead.
 The state is shared via [the identifier](#building-a-resilience-configuration) of the associated configuration.
 
@@ -153,7 +153,7 @@ executeCallable(() -> operation(), configuration,
 });
 ```
 
-In the case of Callable this relieves you of the need to catch the exception at the outer level.
+In the case of `Callable`, this relieves you of the need to catch the exception at the outer level.
 
 ### Building a Resilience Configuration
 
@@ -164,7 +164,7 @@ configuration = ResilienceConfiguration.of("identifier");
 ```
 
 The identifier can be either a string or a class.
-In case of the latter the (full) class name will be used as identifier.
+In the case of the latter, the (full) class name will be used as the identifier.
 The identifier will be used to apply resilience patterns across [multiple invocations to operations](#executing-operations).
 
 Check [the Javadoc](https://help.sap.com/http.svc/rc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.html#of-java.lang.String-) for which patterns and parameters will be applied by default.
@@ -180,10 +180,10 @@ For details see the list of [Resilience Capabilities](#resilience-capabilities) 
 #### Multi Tenancy
 
 The SDK is capable of applying the different resilience patterns in a tenant and principal aware manner.
-Consider for example the Bulkhead pattern which limits the amount of parallel executions.
-If the operation is tenant specific then you would probably want to avoid one tenant blocking all others.
+Consider for example the Bulkhead pattern which limits the number of parallel executions.
+If the operation is tenant-specific then you would probably want to avoid one tenant blocking all others.
 
-For this reason the SDK _by default_ isolates resilience patterns based on tenant and principal, if they are available.
+For this reason, the SDK _by default_ isolates resilience patterns based on tenant and principal, if they are available.
 This strategy can be configured, e.g. for running _without any isolation_ use:
 
 ```java

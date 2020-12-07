@@ -25,11 +25,11 @@ import MvnBadge from '../../../../../src/sap/sdk-java/MvnBadge';
 ## Overview
 
 The [SAP Cloud Platform (SCP) Workflow service](https://help.sap.com/viewer/product/WORKFLOW_SERVICE/Cloud/en-US) is available on the Cloud Foundry environment [since April 2019](https://blogs.sap.com/2019/04/03/workflow-and-business-rules-now-available-in-cloud-foundry-environment-of-sap-cloud-platform/).
-It helps you build, run and manage workflows to model processes that span from simple approval steps to complex business scenarios with several involved parties.
+It helps you build, run, and manage workflows to model processes that span from simple approval steps to complex business scenarios with several involved parties.
 
 Imagine a business scenario involving multiple parties, complex validation logic, and parallel execution flows.
 **SCP Workflow service** solves exactly this problem.
-To benefit from features offered by the REST API of the SCP Workflow service you can leverage type-safe client library provided by **SAP Cloud SDK** and discover it via your IDE or [manually integrate it into your application](https://help.sap.com/viewer/e157c391253b4ecd93647bf232d18a83/Cloud/en-US/df943e71122448caaf3c49f5ffd80627.html).
+To benefit from features offered by the REST API of the SCP Workflow service you can leverage type-safe client library provided by the **SAP Cloud SDK** and discover it via your IDE or [manually integrate it into your application](https://help.sap.com/viewer/e157c391253b4ecd93647bf232d18a83/Cloud/en-US/df943e71122448caaf3c49f5ffd80627.html).
 
 Refer to [this blog post](https://blogs.sap.com/2018/01/09/sap-cloud-platform-workflow-developer-center/) for an overview of all resources about the SCP Workflow Service.
 
@@ -41,21 +41,21 @@ This library is released for **productive usage** as of November 19, 2020.
 
 ### Problem
 
-We need to model a business workflow involving multiple parties, complex validation logic, and parallel flows execution together with other business logic in your App hosted on the SAP Cloud Platform.
+We need to model a business workflow involving multiple parties, complex validation logic, and parallel flows execution together with other business logic in your app hosted on the SAP Cloud Platform.
 
 ### Solution
 
 Use SAP Cloud Platform Workflow service and its REST API.
-You can do workflows modeling using a convenient visual editor and call SCP Workflow REST API via type-safe client library module provided by the SAP Cloud SDK for Java.
-Additionally, you'll get other benefits off SAP Cloud SDK like destinations and authentication handling, complete type-safety, multi-tenancy, easy resilience, and caching configuration.
+You can do workflow modeling using a convenient visual editor and call SCP Workflow REST API via type-safe client library module provided by the SAP Cloud SDK for Java.
+Additionally, you'll get other benefits from the SAP Cloud SDK like destinations and authentication handling, complete type-safety, multi-tenancy, easy resilience, and caching configuration.
 
 ## Consume the SCP Workflow REST API
 
 ### Prerequisites
 
-Add the latest version of [SAP Cloud SDK](https://search.maven.org/artifact/com.sap.cloud.sdk/sdk-bom) to your Java application dependencies or [generate a new one from archetypes that we provide](../../../getting-started).
+Add the latest version of the [SAP Cloud SDK](https://search.maven.org/artifact/com.sap.cloud.sdk/sdk-bom) to your Java application dependencies or [generate a new one from archetypes that we provide](../../../getting-started).
 
-After we have an SAP Cloud SDK-based Java App, we can invoke the SCP Workflow REST API in our business logic.
+After we have an SAP Cloud SDK-based Java app, we can invoke the SCP Workflow REST API in our business logic.
 More specifically, we are interested in retrieving a list of all workflow definitions that exist in the connected SCP Workflow service instance which corresponds to the API endpoint `/v1/workflow-definitions`.
 You can find it under the section `Workflow Definitions` on the left-hand side of your CF cockpit.
 
@@ -102,7 +102,7 @@ Open the command line and authenticate at your Cloud Foundry organization by inv
 
 Consider specifying the respective **subaccount**, **organization**, and **space** with `cf target` if necessary.
 
-Use `cd` to navigate to the directory that contains `JSON` configuration file we created before and run the following to create the service instance:
+Use `cd` to navigate to the directory that contains the `JSON` configuration file we created before and run the following to create the service instance:
 
 ```bash
 cf create-service workflow standard my-workflow-service -c <path-to-json-file>
@@ -204,8 +204,8 @@ Go to your CF subaccount, navigate to `Connectivity\Destinations` in the left-ha
 - Client Secret: The value of `clientsecret`
 - Token Service URL: The value of `url` appended by `/oauth/token?grant_type=client_credentials`
 
-Click save. Restart your app by navigating to `Spaces\<you-space-name>\Applications`.
-Chose your App from the list by clicking on the link with its name and find restart button on the page that loads.
+Click Save. Restart your app by navigating to `Spaces\<you-space-name>\Applications`.
+Chose your app from the list by clicking on the link with its name and find the restart button on the page that loads.
 
 ### Develop your App
 
@@ -303,8 +303,8 @@ The Java client library for SCP Workflow enables the developer to:
 - Provides Java abstractions for all REST API endpoints along with the respective model classes
 - Relieves the developer from all the `HTTP-related` development work like interpreting `status codes`, `JSON de-/serialization`, etc
 - It lets the developer focus on the business logic instead of coding low-level API calls
-- We keep the library up to date with the latest Workflow API specification which simplifies maintainability of your App's code
-- We integrate the SCP Workflow library with other valuable SAP Cloud SDK capabilities, such as the tenant-aware destination retrieval and many more
+- We keep the library up to date with the latest Workflow API specification which simplifies the maintainability of your app's code
+- We integrate the SCP Workflow library with SAP Cloud SDK capabilities, such as tenant-aware destination retrieval and many more
 
 ### Known Limitations
 
