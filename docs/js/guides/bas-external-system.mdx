@@ -56,7 +56,7 @@ The trick is to define a `destinations` environment variable when you run locall
 executeHttpRequest({ destinationName: 'myDestinationName', jwt: 'myJWT' });
 ```
 
-The code is the same for local execution and production. The two situation are:
+The code is the same for local execution and production. The two situations are:
 
 **Case 1:** When run locally, the SDK reads the destination from the environment variables. The `jwt` is irrelevant.
 The destination contains only the name and URL of the real CF destination.
@@ -82,7 +82,7 @@ The connection enables the proxy connection from the BAS to your CF account.
 
 ### Prerequisite II: Cloud Connector and Destination Setup <a name="CCandDestSetup"></a>
 
-You have setup a working Cloud Connector and configured a destination pointing to an On-Premise system you want to connect to.
+You have set up a working Cloud Connector and configured a destination pointing to an On-Premise system you want to connect to.
 Per default, destinations are not usable by a connected BAS.
 You need to set two properties `WebIDEEnabled` and `HTML5.DynamicDestination` to enable that feature for a specific destination.
 Go to the destination configuration in CF and add the properties:
@@ -119,12 +119,12 @@ The code will look almost identical for express or [CAP](https://community.sap.c
 The property `program` defines the script file executed when you run the configuration.
 In our case the `main.js` script will start up the Nest server.
 The `preLaunchTask` executes the build before each run which compiles the TypeScript files to JavaScript.
-The `outFiles` properties defines where the compiled files will be located.
+The `outFiles` property defines where the compiled files will be located.
 
-As discussed [in the beginning](#background) we need to set the `destinations` environment variable.
+As discussed [in the beginning](#background), we need to set the `destinations` environment variable.
 This will interrupt the [destination lookup](../../js/features/connectivity/destination.mdx) and lead to a destination with the HTTP_PROXY considered.
 The easiest way to do that is via a `.env` file which is read when starting the application.
-If you do not have a `.env` file create one or adjust the existing one.
+If you do not have a `.env` file, create one or adjust the existing one.
 Just add the following entry to the `.env` file:
 
 ```
