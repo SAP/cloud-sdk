@@ -1,6 +1,6 @@
 ---
-name: SAP Cloud SDK for Java issue
-about: Report the issue with the SAP Cloud SDK for Java
+name: SAP Cloud SDK for Java issues
+about: Report issues with the SAP Cloud SDK for Java
 title: ''
 labels: Java
 assignees: ''
