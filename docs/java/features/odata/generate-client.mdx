@@ -23,10 +23,10 @@ import TabItem from '@theme/TabItem';
 The OData Generator allows for generating Java classes from the metadata of an OData service.
 These classes which are referred to as _typed OData client_ provide type-safe access to the service.
 
-In general there are three ways to use the generator:
+In general, there are three ways to use the generator:
 
 - Via the dedicated maven plugin
-- Via the command line interface (CLI)
+- Via the command-line interface (CLI)
 - By instantiating and invoking it at runtime
 
 The maven plugin is usually the recommended way as it integrates nicely with most project setups and makes configuration easy.
@@ -43,7 +43,7 @@ There is a dedicated generator for each protocol version and it only accepts ser
 The OData VDM generator does support all data types as per the [OData specification](https://www.odata.org/documentation/odata-version-2-0/json-format/).
 If your OData service metadata uses a data type not listed in the standard, please alter your metadata to use a compatible data type from the specification instead.
 
-For example a non-standard `Edm.Float` type can be substituted by `Edm.Single` type from the OData specification.
+For example, a non-standard `Edm.Float` type can be substituted by `Edm.Single` type from the OData specification.
 :::
 
 ## Using the OData Generator
@@ -174,12 +174,12 @@ Use it by adding it to your `application/pom.xml` file under the `<plugin>` sect
 Adapt the `<inputDirectory>` to point to the location of your service definitions.
 A full list of parameters is [available here](#available-parameters).
 
-Now maven will run the generator within the `process-sources` phase which is executed before compile.
-Also the `<compileScope>` option instructs maven to add the generated code as sources for the compile phase.
+Now maven will run the generator within the `process-sources` phase which is executed before `compile`.
+The `<compileScope>` option instructs maven to add the generated code as sources for the compile phase.
 
 :::caution
-In most cases you will have to override the generated service path in the code.
-By default the generator will use the `namespace` value of the `<schema>` tag as service name.
+In most cases, you will have to override the generated service path in the code.
+By default, the generator will use the `namespace` value of the `<schema>` tag as the service name.
 The URL path will be built as `default-base-path` + `service-name`.
 If your service definition does not contain this value or the value does not match what is needed in the URL then you need to override the service path in the code.
 Use the `.withServicePath("/path/to/my/service")` option on the service class.
@@ -190,13 +190,13 @@ Use the `.withServicePath("/path/to/my/service")` option on the service class.
 <Tabs groupId="odataVersion" defaultValue="v4" values={[ { label: 'OData v2', value: 'v2', }, { label: 'OData v4', value: 'v4', }]}>
 <TabItem value="v4">
 
-1. Download the latest command line interface (CLI) of the generator from [maven central](https://search.maven.org/artifact/com.sap.cloud.sdk.datamodel/odata-v4-generator-cli).
+1. Download the latest command-line interface (CLI) of the generator from [maven central](https://search.maven.org/artifact/com.sap.cloud.sdk.datamodel/odata-v4-generator-cli).
    Rename it to `odata-generator-cli.jar` and put it in a directory of your choice.
 
 </TabItem>
 <TabItem value="v2">
 
-1. Download the latest command line interface (CLI) of the generator from [maven central](https://search.maven.org/artifact/com.sap.cloud.sdk.datamodel/odata-generator-cli).
+1. Download the latest command-line interface (CLI) of the generator from [maven central](https://search.maven.org/artifact/com.sap.cloud.sdk.datamodel/odata-generator-cli).
    Rename it to `odata-generator-cli.jar` and put it in a directory of your choice.
 
 </TabItem>
@@ -210,8 +210,8 @@ Use the `.withServicePath("/path/to/my/service")` option on the service class.
    For example, move them to the `application/src/main/java` folder.
 
 :::caution
-In most cases you will have to override the generated service path in the code.
-By default the generator will use the `namespace` value of the `<schema>` tag as service name.
+In most cases, you will have to override the generated service path in the code.
+By default, the generator will use the `namespace` value of the `<schema>` tag as the service name.
 The URL path will be built as `default-base-path` + `service-name`.
 If your service definition does not contain this value or the value does not match what is needed in the URL then you need to override the service path in the code.
 Use the `.withServicePath("/path/to/my/service")` option on the service class.
@@ -222,7 +222,7 @@ Use the `.withServicePath("/path/to/my/service")` option on the service class.
 <Tabs groupId="odataVersion" defaultValue="v4" values={[ { label: 'OData v2', value: 'v2', }, { label: 'OData v4', value: 'v4', }]}>
 <TabItem value="v4">
 
-1. Please include the `odata-v4-generator` artifact as a dependency in a your project.
+1. Please include the `odata-v4-generator` artifact as a dependency in your project.
    Choose a module and location from which you intend to invoke the generator and add the following dependency to the appropriate `pom.xml`.
    ```xml
     <dependency>
@@ -234,7 +234,7 @@ Use the `.withServicePath("/path/to/my/service")` option on the service class.
 </TabItem>
 <TabItem value="v2">
 
-1. Please include the `odata-generator` artifact as a dependency in a your project.
+1. Please include the `odata-generator` artifact as a dependency in your project.
    Choose a module and location from which you intend to invoke the generator and add the following dependency to the appropriate `pom.xml`.
    ```xml
     <dependency>
@@ -271,11 +271,11 @@ Use the `.withServicePath("/path/to/my/service")` option on the service class.
 This should give you the generated classes in the desired folder.
 You can now proceed with using them to build requests.
 
-In case you run into issues with the above process: Double check your service and file names, check that the folders are setup correctly and that the service name mappings meet your expectations.
+In case you run into issues with the above process: Double check your service and file names, check that the folders are set up correctly and that the service name mappings meet your expectations.
 
 :::caution
-In most cases you will have to override the generated service path in the code.
-By default the generator will use the `namespace` value of the `<schema>` tag as service name.
+In most cases, you will have to override the generated service path in the code.
+By default, the generator will use the `namespace` value of the `<schema>` tag as the service name.
 The URL path will be built as `default-base-path` + `service-name`.
 If your service definition does not contain this value or the value does not match what is needed in the URL then you need to override the service path in the code.
 Use the `.withServicePath("/path/to/my/service")` option on the service class.
