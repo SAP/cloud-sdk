@@ -21,15 +21,15 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 ## Build and execute OData Requests with the typed OData client
 
-The typed OData v4 client allows to build type-safe OData v4 requests for a given service.
+The typed OData v4 client allows building type-safe OData v4 requests for a given service.
 The Java classes represent the _data model_ and the available _operations_ of the service.
-As a consequence all requests that are built through the typed OData client are not only _syntactically valid_ but also _semantically valid_.
+As a consequence, all requests that are built through the typed OData client are not only _syntactically valid_ but also _semantically valid_.
 
 ## Using the Fluent API
 
 The typed OData v4 client consists of _service_ and _data model_ classes.
 The service classes mirror the API provided by the OData service and serve as entry point for creating requests.
-They provide a builder which allows for adding further parameters in a fluent way.
+They provide a builder that allows for fluently adding further parameters.
 
 To execute HTTP requests the OData client uses _Destinations_ and are documented in more detail <a href={useBaseUrl('docs/java/features/connectivity/sdk-connectivity-destination-service')}>here</a>.
 The following code snippets assume that such a destination is in place:
@@ -50,7 +50,7 @@ result = service.operation()
 - _withParameter_ corresponds to:
   - OData v4 query parameters e.g. `filter` or `orderby`
   - Or other modifiers like custom headers
-- Which OData v4 parameters are available depends on the operation. For example when updating entities the `$filter` parameter is not available.
+- Which OData v4 parameters are available depends on the operation. For example, when updating entities the `$filter` parameter is not available.
 
 Below different OData features are documented using the [Business Partner Service](https://api.sap.com/api/API_BUSINESS_PARTNER/resource) on S/4HANA as an example.
 It is represented by the `BusinessPartnerService` class which is part of the pre-generated type-safe client for S/4HANA also known as Virtual Data Model (VDM).
@@ -80,21 +80,21 @@ The following query parameters and request options are available for these opera
 
 Query parameters:
 
-- `$select`, `$expand` and `$search` are available on reading a single or multiple entities
+- `$select`, `$expand` and `$search` are available when reading a single value or multiple entities
 - `$filter`, `$top`, `$skip` and `$orderby` are available only when reading a collection of entities
 
 Request parameters:
 
 - Update operations allow to set either `modifyingEntity()` or `replacingEntity()` which will result in `HTTP PATCH` or `HTTP PUT` respectively. By default entities are modified via `PATCH`.
 - Update and delete operations allow to modify how ETags are handled:
-  - By default an ETag is send if one is present on the entity being modified.
+  - By default, an ETag is sent if one is present on the entity being modified.
   - `matchAnyVersionIdentifier()` will instead always send a `*` which acts as a wildcard to match all ETags.
   - `ignoreAnyVersionIdentifier()` will ensure that no ETag is sent.
 - All operations allow for adding custom headers via `withHeader(...)`
 
 #### Handling of ETags
 
-An [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag) is a version identifier which is often used to implement an optimistic locking mechanism.
+An [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag) is a version identifier that is often used to implement an optimistic locking mechanism.
 The SDK will try to read version identifiers from responses and set them when sending OData requests.
 
 Consider the following example:
@@ -108,7 +108,7 @@ response = service.updateBusinessPartner(partner)
 partner = response.getModifiedEntity();
 ```
 
-On the read request the SDK will automatically try to extract the version identifier from the response and store it within the `partner` object.
+On the read request, the SDK will automatically try to extract the version identifier from the response and store it within the `partner` object.
 When updating it will be taken from there and sent with the `If-match` header.
 
 :::note
@@ -118,15 +118,15 @@ If a service requires this header to be sent: Fetching the entity from the servi
 ### Handling of CSRF tokens
 
 For create, update and delete requests the SDK will try to send a [CSRF token](https://en.wikipedia.org/wiki/Cross-site_request_forgery#Cookie-to-header_token).
-Upon execution the request will try to fetch a token first before issuing the actual create request.
+Upon execution, the request will try to fetch a token first before issuing the create request.
 Many services require this behavior for security reasons.
 However, the create request will be made without a CSRF token if none could be obtained.
 
 ### Select
 
 When reading entities the API offers `select( ... )` on the builders.
-Through it the query parameters `$select` and `$expand` are set.
-It takes in properties of the entity being queried.
+Through it, the query parameters `$select` and `$expand` are set.
+It takes in the properties of the entity being queried.
 Primitive properties are added to `$select` while complex and navigational properties are added to `$expand`.
 This handling is done automatically by the SDK.
 
@@ -147,7 +147,7 @@ $select=FirstName,LastName&$expand=to_BusinessPartnerAddress
 ```
 
 OData v4 allows for formulating nested, fully featured queries on complex and navigational properties.
-Querying nested objects is possible within expand.
+Querying nested objects is possible within an expand statement.
 That means the following query is possible:
 
 ```java
@@ -170,7 +170,7 @@ $expand=to_BusinessPartnerAddress($select=CityCode,Country;$filter=CityCode eq '
 
 When operating on a collection of entities the API offers `filter( ... )` on the builders.
 It directly corresponds to the `$filter` parameter of the request.
-Filters are also build via the static property fields on entities.
+Filters are also built via the static property fields on entities.
 
 The following example:
 
@@ -232,7 +232,7 @@ service.getAllBusinessPartner()
 
 Batch requests allow wrapping multiple OData requests into one single batch call.
 Thereby we reduce the number of round trips to the remote server.
-Refer to the [official OData V4 spec](http://docs.oasis-open.org/odata/odata/v4.0/os/part1-protocol/odata-v4.0-os-part1-protocol.html#_Toc372793748) for further reference about batch requests, their semantics and the request/response format.
+Refer to the [official OData V4 spec](http://docs.oasis-open.org/odata/odata/v4.0/os/part1-protocol/odata-v4.0-os-part1-protocol.html#_Toc372793748) for further reference about batch requests, their semantics, and the request/response format.
 
 :::warning
 The described API is subject to change
@@ -242,13 +242,13 @@ The described API is subject to change
 
 The `service` object offers the method `batch` which allows access to the batch-related methods that help build the batch request.
 
-Multiple single requests (like `createBusinessPartnerRequest`) can be wrapped into so-called change sets.
-A change set can be added by `addChangeset` and the corresponding create, update or delete operations can be passed as parameters into it.
-You can wrap multiple change sets into one batch request.
+Multiple single requests (like `createBusinessPartnerRequest`) can be wrapped into so-called changesets.
+A changeset can be added by `addChangeset` and the corresponding create, update or delete operations can be passed as parameters into it.
+You can wrap multiple changesets into one batch request.
 Similarly, retrieve operations can be added to the batch request by using `addReadOperations`.
 
 Use `execute` to issue the batch request to the remote system.
-We receive an instance of `BatchResponse` as result object.
+We receive an instance of `BatchResponse` as the result object.
 
 ```java
 GetAllRequestBuilder<BusinessPartner> getBusinessPartners = service.getAllBusinessPartner();
@@ -267,22 +267,22 @@ BatchResponse result =
 
 #### Access Batch Response
 
-Use `getModificationResult` to access response for a specific create, update or delete operation.
+Use `getModificationResult` to access the response for a specific create, update, or delete operation.
 
 ```java
 ModificationResponse<BusinessPartner> createResult = response.getModificationResult(createBusinessPartnerRequest1);
 ModificationResponse<BusinessPartner> deleteResult = response.getModificationResult(deleteBusinessPartnerRequest);
 ```
 
-Similarly, use the method `getReadResult` to access response for a specific retrieve request.
+Similarly, use the method `getReadResult` to access the response for a specific retrieve request.
 
 ```java
 List<BusinessPartners> readAllResult = response.getReadResult(getBusinessPartners);
 BusinessPartner readByKeyResult = response.getReadResult(getBusinessPartnerByKey);
 ```
 
-As per the OData specification, either all operations or none within the same change set are successful.
-Hence, if the change set was a failure then evaluating the result of any of the contained requests will contain the failure of the change set.
+As per the OData specification, either all operations or none within the same changeset are successful.
+Hence, if the changeset was a failure then evaluating the result of any of the contained requests will contain the failure of the changeset.
 
 <!--
 ### Count ###
@@ -306,9 +306,9 @@ The default strategy is the _modifying entity update strategy_ which attempts to
 It issues a PATCH request and includes only the fields in the request payload whose values were changed by its setter method.
 Hence, fields whose values remain unchanged are not sent to the target system.
 Calling the method `includingFields(fields ...)` instructs the Cloud SDK to add the mentioned fields explicitly in the update request.
-This is useful for backend systems which require some unchanged fields in the request payload for given reasons.
+This is useful for backend systems that require some unchanged fields in the request payload for given reasons.
 
-This update strategy can be explicitly chosen invoking the method `modifyingEntity()` while building the update request.
+This update strategy can be explicitly chosen by invoking the method `modifyingEntity()` while building the update request.
 
 ```java
 service.updateBusinessPartner(partner)
@@ -326,7 +326,7 @@ service.updateBusinessPartner(partner)
 The _replacing entity update strategy_ attempts to replace the full entity in the remote system.
 It issues a PUT request and submits all fields in the update request, regardless of any field changes.
 
-This update strategy can be explicitly chosen invoking the method `replacingEntity()` while building the update request.
+This update strategy can be explicitly chosen by invoking the method `replacingEntity()` while building the update request.
 
 ```java
 service.updateBusinessPartner(partner)
@@ -360,8 +360,8 @@ try { ... }
 ```
 
 This handling is the most generic, handling all possible failures.
-For more specific information there are dedicated exceptions inheriting from `ODataException`.
-Please tend to the [documentation](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/datamodel/odata/client/exception/ODataException.html) for all the exception types.
+For more specific information, dedicated exceptions are inheriting from `ODataException`.
+Please check the [documentation](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/datamodel/odata/client/exception/ODataException.html) for details on all the exception types.
 
 In order to handle different kinds of failure one can list multiple catch clauses to cover different levels or cases that might occur, e.g.:
 
@@ -386,8 +386,8 @@ Note that instead of applying `try/catch` one can also make use of `tryExecute` 
 ## Navigation properties
 
 A navigation property describes a unidirectional relationship between two entity types.
-Like other properties it has a name and declares a multiplicity, i.e. whether to expect a single or multiple values.
-Additionally a navigation property allows for dedicated CRUD operations, that may not be exposed by default on entity sets of the service root.
+Like other properties, it has a name and declares a multiplicity, i.e. whether to expect a single value or multiple values.
+Additionally, a navigation property allows for dedicated CRUD operations, that may not be exposed by default on entity sets of the service root.
 Such operations also provide a convenient way to access the nested resources of entities.
 
 The typed OData client for OData v4 supports the following operations on (arbitrarily nested) navigation properties:
@@ -425,7 +425,7 @@ POST /ODataService/API_BUSINESS_PARTNER/A_BusinessPartner(123)/to_BusinessPartne
 ## Server-Driven Paging
 
 Pagination describes the practice of splitting a collection of entities from reading requests into one or many pages.
-The paging behavior is determined by both server and client.
+The paging behavior is determined by both the server and the client.
 
 OData service operators may decide to enable server-driven pagination to limit the amount of data that is fetched and sent over the network to the client, in case generic query options yield huge amounts of data.
 By splitting the result-set into sequential pages of entities, the data can be requested incrementally.
@@ -434,11 +434,11 @@ If the payload of an OData response contains a link including a `$skiptoken`, th
 The iterable result-set is a consistent snapshot of the data, it can not change between reading individual pages.
 
 In comparison the OData consumer may use query options `$top` and `$skip` (client-driven paging) to read partial data from the result-set, but relying on a consistent state while browsing through the data can be problematic.
-Between individual requests another user could delete or add an item.
+Between individual requests, another user could delete or add an item.
 This would result in an inconsistent aggregation of data.
 
-By default the SAP Cloud SDK automatically resolves all pages of a result-set if server-driven paging is encountered.
-For the API consumer it is not necessary to parse the next link and instantiate follow-up requests to aggregate the full result-set.
+By default, the SAP Cloud SDK automatically resolves all pages of a result-set if server-driven paging is encountered.
+For the API consumer, it is not necessary to parse the next link and instantiate follow-up requests to aggregate the full result-set.
 
 ```java
 List<BusinessPartner> iterablePagesOfEntities = service
