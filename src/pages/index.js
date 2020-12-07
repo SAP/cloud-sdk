@@ -18,10 +18,13 @@ const features = [
     badge: <MvnBadge />,
     description: (
       <>
-        SAP Cloud SDK for Java allows you develop, extend, and communicate with
-        SAP solutions SAP S/4HANA Cloud, SAP SuccessFactors, and many others.{' '}
+        The SAP Cloud SDK for Java allows you to develop, extend, and
+        communicate with SAP solutions SAP S/4HANA Cloud, SAP SuccessFactors,
+        and many others.
         <br />
-        <a href="docs/java/getting-started">Get started with SDK for Java.</a>
+        <a href="docs/java/getting-started">
+          Get started with the SDK for Java.
+        </a>
       </>
     ),
   },
@@ -37,11 +40,12 @@ const features = [
     ),
     description: (
       <>
-        SAP Cloud SDK for JavaScript (and TypeScript) leverages the popularity
-        and flexibility of Node.js ecosystem for building apps and extensions on
-        top of SAP solutions and deploy them to cloud. <br />
+        The SAP Cloud SDK for JavaScript (and TypeScript) helps you build
+        cloud-based apps and extensions to SAP solutions using the power and
+        flexibility of Node.js and its ecosystem.
+        <br />
         <a href="docs/js/getting-started">
-          Get started with SDK for JavaScript
+          Get started with the SDK for JavaScript
         </a>
       </>
     ),
