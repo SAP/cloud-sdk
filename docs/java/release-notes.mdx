@@ -26,10 +26,10 @@ Version 2.x of the SAP Cloud SDK for Java V2 has reached its end of life and is 
 
 We highly recommend regularly updating to the latest SDK version. It will help you:
 
-- ensure access to the latest Cloud SDK features
-- keep up with the latest changes in SAP Cloud Platform
-- update client libraries giving access to latest SAP services on SAP Cloud Platform and S/4HANA
-- protect yourself from bugs and breaking changes in the future
+- Ensure access to the latest Cloud SDK features
+- Keep up with the latest changes in SAP Cloud Platform
+- Update client libraries giving access to latest SAP services on SAP Cloud Platform and S/4HANA
+- Protect yourself from bugs and breaking changes in the future
 
 ## 3.33.0 - November 20, 2020
 
@@ -332,7 +332,7 @@ final DefaultHttpDestination defaultHttpDestination =
 ### New functionality
 
 - The implicit properties of `DefaultHttpClientFactory` can now be customized.
-  - With `HttpClientAccessor.setHttpClientFactory( HttpClientFactory )` it is possible to change the logic that manages creation and configuration of `HttpClient` instances. These clients are used to handle connection between platform services and integration endpoints internally. The `DefaultHttpClientFactory` class has been updated to allow for conveniently changing properties like time-out duration and maximum number of connections. Since the implementation can easily be extended, a custom logic would not need to start from scratch.
+  - With `HttpClientAccessor.setHttpClientFactory( HttpClientFactory )` it is possible to change the logic that manages creation and configuration of `HttpClient` instances. These clients are used to handle the connection between platform services and integration endpoints internally. The `DefaultHttpClientFactory` class has been updated to allow for conveniently changing properties like time-out duration and maximum number of connections. Since the implementation can easily be extended, a custom logic would not need to start from scratch.
   - To change the properties, either create a new class that inherits from `DefaultHttpClientFactory` and override the accessor methods with scope protected. Or explore the flexible builder pattern for a similar result: `DefaultHttpClientFactory.builder()`.
   - For more information, please find [the related documentation](https://sap.github.io/cloud-sdk/docs/java/features/connectivity/sdk-connectivity-http-client).
 
@@ -548,7 +548,7 @@ Release date: July 16, 2020
       batchRequest.execute( httpClient );
       ```
 
-- Add `getAllDestinations(DestinationOptions options)` in `ScpCfDestinationLoader` class to fetch all the cloud foundry destinations. The method prioritizes the destination at service instance level in case there exist a destination with the same name on service instance and on sub account level.
+- Add `getAllDestinations(DestinationOptions options)` in `ScpCfDestinationLoader` class to fetch all the cloud foundry destinations. The method prioritizes the destination at service instance level in case there exists a destination with the same name on service instance and on sub account level.
 
 ### Fixed Issues
 
@@ -1056,7 +1056,7 @@ Release date: July 16, 2020
 
 - The connectivity to on-premise systems from SCP Cloud Foundry is updated, so that the [authentication](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/39f538ad62e144c58c056ebc34bb6890.html) now follows the [recommended](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/39f538ad62e144c58c056ebc34bb6890.html) protocol for principal propagation.
 
-  - Instead of populating two headers `SAP-Connectivity-Authentication` and `Proxy-Authorization` for on-premise requests, the SAP Cloud SDK now takes the recommended approach of just using `Proxy-Authorization` with a dynamicly resolved _User Exchange Access Token_.
+  - Instead of populating two headers `SAP-Connectivity-Authentication` and `Proxy-Authorization` for on-premise requests, the SAP Cloud SDK now takes the recommended approach of just using `Proxy-Authorization` with a dynamically resolved _User Exchange Access Token_.
   - Introduce `PrincipalPropagationStrategy` for configuring that the previous behavior should be used.
 
   If for compatibility reasons the previous approach should be used, you can adjust strategy with the following code snippet:
@@ -1163,15 +1163,15 @@ Release date: July 16, 2020
 
 - Create, update, and delete operations have been removed from some VDM services, as they are no longer available on the SAP API Business Hub.
 - The custom constructor parameters of [`Resilience4jDecorationStrategy`](https://help.sap.com/doc/76f123ce6fae40df911590552579e523/1.0/en-US/com/sap/cloud/sdk/frameworks/resilience4j/Resilience4jDecorationStrategy.html) have been changed to accept generic modular decorators for the following properties. The default behavior has not been changed. This should not affect existing code, but you may need to recompile your code.
-  - time limiter
-  - bulkhead
-  - circuit breaker
-  - retry
-  - caching
+  - Time limiter
+  - Bulkhead
+  - Circuit breaker
+  - Retry
+  - Caching
 
 ### New Functionality
 
-- _OData client_: Update the OData VDM to the [newest release 1911 of SAP S/4HANA Cloud](https://news.sap.com/2019/11/sap-s4hana-cloud-1911-intelligent-enterprise-experience-economy/). The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
+- _OData client_: Update the OData VDM to the [newest release 1911 of SAP S/4HANA Cloud](https://news.sap.com/2019/11/sap-s4hana-cloud-1911-intelligent-enterprise-experience-economy/). The SDK supports all O Data services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
 
 ### Fixed Issues
 

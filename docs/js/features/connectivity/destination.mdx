@@ -54,7 +54,7 @@ If just a destinationName is provided i.e.:
 .execute({"destinationName": 'myDestination'})
 ```
 
-the SDK tries to look the destination up for you.
+The SDK tries to look the destination up for you.
 The details on this process are explained in the next chapters.
 
 ## The Lookup Flow
@@ -184,12 +184,12 @@ The selection strategy can be passed as an optional argument to the `.execute()`
 The default value is `subscriberFirst`.
 The selection strategies can be used to control for which account a destination lookup is attempted:
 
-- alwaysSubscriber: Only try to get destinations from the subscriber account.
+- AlwaysSubscriber: Only try to get destinations from the subscriber account.
   A valid JWT is mandatory to receive something.
-- alwaysProvider: Only try to get destination from the provider account.
+- AlwaysProvider: Only try to get destination from the provider account.
   A JWT is not needed.
   Even if you present a subscriber JWT the provider destination will be returned if present.
-- subscriberFirst: Tries to get from the subscriber first using the JWT.
+- SubscriberFirst: Tries to get from the subscriber first using the JWT.
   If no valid JWT is provided or the destination is not found it tries the provider as described for alwaysProvider.
 
 :::note
