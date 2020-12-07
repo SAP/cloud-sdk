@@ -4,7 +4,7 @@ title: Multi Tenancy with the Thread Context
 hide_title: false
 hide_table_of_contents: false
 sidebar_label: Thread Context
-description: This article describes how the SAP Cloud SDK for Java provides an application context that is stored in a thread-safe manner and enables cloud native features to be used out of the box.
+description: This article describes how the SAP Cloud SDK for Java provides an application context that is stored in a thread-safe manner and enables cloud-native features to be used out of the box.
 keywords:
   - sap
   - cloud
@@ -22,20 +22,20 @@ image:
 
 ## What is a Thread Context?
 
-The SAP Cloud SDK for Java provides a so called `ThreadContext`.
+The SAP Cloud SDK for Java provides a so-called `ThreadContext`.
 It serves as thread-safe storage for potentially sensitive information.
-Specifically the following three objects are stored:
+Specifically, the following three objects are stored:
 
 - The current _Tenant_
 - The current _Principal_ (User)
 - The [JSON Web Token](https://jwt.io) (JWT)
 
 This information is used throughout the SDK to provide features like tenant and principal isolation, JWT verification and authorization against other systems and services.
-To ensure different tenants and users are properly isolated in an application this information is always limited to the Thread it was created on, unless it is explicitly passed on by the application (see [Propagating the Thread Context](#running-asynchronous-operations)).
+To ensure different tenants and users are properly isolated in an application, this information is always limited to the thread it was created on unless it is explicitly passed on by the application (see [Propagating the Thread Context](#running-asynchronous-operations)).
 
 ## How is a Thread Context created?
 
-The SDK provides a [RequestFilter](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/servlet/RequestAccessorFilter.html) that will listen on incoming HTTP requests.
+The SDK provides a [RequestFilter](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/servlet/RequestAccessorFilter.html) that will listen to incoming HTTP requests.
 If the `Authorization` header contains a `JWT` from the [AppRouter](https://blogs.sap.com/2020/04/03/sap-application-router/) the filter will:
 
 - Verify this token
@@ -97,7 +97,7 @@ invokeAsynchronously(operationWithContext);
 ``` -->
 
 :::note
-Be cautious with long running, asynchronous operations.
+Be cautious with long-running, asynchronous operations.
 A propagated Thread context will only persist as long as the Thread lives that it was created on.
-So when the parent Thread dies the context will seize to exist and no longer be available in any of the Threads.
+So when the parent Thread dies the context will cease to exist and no longer be available in any of the Threads.
 :::

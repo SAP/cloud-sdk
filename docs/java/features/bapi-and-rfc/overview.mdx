@@ -50,7 +50,7 @@ SAP Cloud SDK does _not_ package JCo as a library with its dependencies. The SDK
 On the SCP Neo landscape, JCo is automatically provided by the infrastructure, on the SCP Cloud Foundry landscape one must use the SAP Java Build Pack during app deployment.
 There are other edge cases that we'll cover later.
 
-## Call a BAPI in a SAP ABAP system
+## Call a BAPI in an SAP ABAP system
 
 :::tip Generate SDK project
 If you're starting from scratch, generate a `TomEE` project following the steps in the [Getting started](https://sap.github.io/cloud-sdk/docs/java/getting-started#generating-a-project-from-a-maven-archetype) guide.
@@ -67,8 +67,8 @@ The servlet has two input parameters which we supply in the query string:
 - _destinationName_: Defines which SCP destination to use for connecting to SAP S/4HANA.
 - _controllingArea_: Defines the controlling area for the cost center retrieval.
 
-The app retrieves the SCP destination with SDK core capabilities, creates a BAPI request and issues that to SAP S/4HANA through the SAP Cloud Connector.
-We use the SAP Cloud Connector in order to access an SAP S/4HANA On-Premise system.
+The app retrieves the SCP destination with SDK core capabilities, creates a BAPI request, and issues that to SAP S/4HANA through the SAP Cloud Connector.
+We use the SAP Cloud Connector to access an SAP S/4HANA On-Premise system.
 
 The BAPI result contains cost center information which we print to the servlet response.
 
@@ -76,7 +76,7 @@ The BAPI result contains cost center information which we print to the servlet r
 
 ##### Create Cost Center Abstraction
 
-Firstly, we create an abstraction for the cost center as business entity.
+Firstly, we create an abstraction for the cost center as a business entity.
 Thereby we gain type-safe access to the cost center information.
 
 Create a new class `CostCenter` and implement it as follows:
@@ -101,10 +101,10 @@ public class CostCenter {
 The annotation `@Value` is a class-level annotation that comes from [Lombok](https://projectlombok.org/), check outs its [documentation](https://projectlombok.org/features/Value) when curious.
 
 We annotate every class member with `@ElementName` declaring the respective ABAP field name.
-The SDK uses this meta data to map the ABAP field to the Java field.
+The SDK uses this metadata to map the ABAP field to the Java field.
 You can look up the ABAP field name in S/4HANA transaction SE37 by opening the BAPI parameter list.
 
-To make that compile, we add Lombok to our `application/pom.xml` as dependency.
+To make that compile, we add Lombok to our `application/pom.xml` as a dependency.
 Open `application/pom.xml` and add that dependency:
 
 <!-- vale off -->
@@ -164,16 +164,16 @@ Here is how you code that with the SAP Cloud SDK.
 .withTableAsReturn("BAPIRET2")
 ```
 
-We call `withExporting` with the parameter name as first argument.
+We call `withExporting` with the parameter name as the first argument.
 The second argument `BAPI0012_GEN-CO_AREA` represents the ABAP data type of the BAPI parameter.
 You can look that up in transaction SE37 under the respective BAPI name. Thirdly, we pass the actual controlling area to the method.
 
 Using `withTable` allows us to access the table parameter result after BAPI processing.
-If we would not call this method, the SDK would not ignore this tables parameter from the BAPI response, even though it contains some data.
-The second parameter is again the ABAP data type.
+If we would not call this method, the SDK would ignore this tables parameter from the BAPI response, even though it contains some data.
+Again, the second parameter is the ABAP data type.
 
-The invocation of method `withTableAsReturn` instructs the SAP Cloud SDK to treat the tables parameter with name `BAPIRET2` as BAPI result table.
-We'll see later how that helps us accessing the BAPI result in Java.
+The invocation of method `withTableAsReturn` instructs the SAP Cloud SDK to treat the tables parameter with the name `BAPIRET2` as BAPI result table.
+We'll see later how that helps us access the BAPI result in Java.
 
 The BAPI invocation gets finished with a call to `.execute(destination)`.
 
@@ -218,7 +218,7 @@ The class `BapiRequestResult` allows you to access the return table as follows:
 - Use `getErrorMessages()`, `getSuccessMessages()`, `getWarningMessages()` and `getInformationMessages` to access the returned messages.
 - Use `hasFailed()` to figure out if the BAPI call was in itself working.
   Note that this is a convenient method for checking if `getErrorMessages()` is empty.
-  That is, the interpretation whether the BAPI call was successful, highly depends on the business context and you could implement your own logic for that purpose.
+  The interpretation if the BAPI call was successful, highly depends on the business context and you could implement custom logic for that purpose.
 
 You might notice that the `execute` method declares to throw a `RequestExecutionException` in case of a failure at runtime.
 That requires encapsulating the BAPI call in a try-catch block.
@@ -264,7 +264,7 @@ Invoke `cf push` from the directory root to deploy the app to your SAP Cloud Fou
 
 Here is what you'll need to make progress throughout the next steps.
 
-- Node installed on your own machine
+- Node.js installed on your machine
 - User in SAP S/4HANA target system
 - SCP Cloud Foundry subaccount with entitlements for XSUAA, destination and connectivity service
 - SAP Cloud Connector connected to the SAP Cloud Foundry subaccount (if SAP S/4HANA is On-Premise)
@@ -292,7 +292,7 @@ Navigate to `Connectivity` -> `Destinations` and create a new RFC destination wi
 - _User_: Enter the SAP S/4HANA user name
 - _Password_: Enter the SAP S/4HANA password
 - _Additional properties_:
-  - `jco.client.ashost`: Enter the SAP S/4HANA host name
+  - `jco.client.ashost`: Enter the SAP S/4HANA hostname
   - `jco.client.client`: Enter the SAP S/4HANA client
   - `jco.client.sysnr`: Enter the SAP S/4HANA instance number
 
@@ -307,7 +307,7 @@ This destination setup is exemplary for accessing an On-Premise SAP S/4HANA syst
 Our test app has the two servlet parameters `destinationName` and `controllingArea`.
 Suppose our destination has the name `BAPI-TEST` and we intend to read cost centers from controlling area `0001`, we'd call the test app with the relative path `hello?destinationName=BAPI-TEST&controllingArea=0001`.
 
-Access the test app through your browser with the address comprising of the full host name plus the relative path.
+Access the test app through your browser with the address comprising of the full hostname plus the relative path.
 You should see the login prompt of the protected backend.
 After authentication, the servlet is invoked and you should see the servlet response printing the cost center details.
 
@@ -337,7 +337,7 @@ env:
   USE_JCO: true
 ```
 
-- Furthermore, you must specify the environment variable `USE_JCO` in order to load JCo during app deployment.
+- Furthermore, you must specify the environment variable `USE_JCO` to load JCo during app deployment.
 
 ### Decoration of RFC Destinations
 
@@ -436,7 +436,7 @@ Replace the placeholder `X.Y.Z` with the JCo version you downloaded.
 Open the file `javadoc/installation.html` from the extracted JCo archive and follow the installation instructions. Essentially, you have to add the directory where you extracted the JCo archive to one system environment variable. The variable name depends on your operating system.
 
 - For Windows, add the directory which contains the downloaded JCo archive to the system environment variable `PATH`.
-- For MacOS, add the directory which contains the downloaded JCo archive to the system environment variable `DYLD_LIBRARY_PATH`.
+- For macOS, add the directory which contains the downloaded JCo archive to the system environment variable `DYLD_LIBRARY_PATH`.
 
 <Tabs groupId="archetype" defaultValue="tomee" values={[ { label: 'TomEE', value: 'tomee', }, { label: 'Spring', value: 'spring', }]}>
 
@@ -463,7 +463,7 @@ To overcome these exceptions, configure the classpath via the TomEE Maven plugin
 
 <TabItem value="spring">
   For Spring-based apps, we'll use a standalone Tomcat later on. For this
-  purpose setting the operating system-specific environment variable suffices.
+  purpose, setting the operating system-specific environment variable suffices.
 </TabItem>
 
 </Tabs>

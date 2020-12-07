@@ -65,7 +65,7 @@ When your project uses the SDK Bill-of-Material (BOM) `sdk-modules-bom` in the `
 </dependency>
 ```
 
-The library works within the tenant context, therefore, depending on the landscape you operate in, add one of the following dependencies in your `pom.xml` file, in addition to that of the library's.
+The library works within the tenant context, therefore, depending on the landscape you operate in, add one of the following dependencies in your `pom.xml` file, in addition to that of the libraries.
 Adding this additional dependency helps the library detect your tenants automatically.
 Without it, you would have to manually pass this information.
 Therefore, we recommend adding one or more of the following dependencies, based on your landscape.
@@ -92,7 +92,7 @@ If you want to run the library in the Neo environment, use the following:
 If your project was generated from one of Cloud SDK archetypes these dependencies should already present in your `pom.xml`
 :::
 
-If your IDE hasn't resolved the dependencies, run `mvn clean install` in the root directory of you project.
+If your IDE hasn't resolved the dependencies, run `mvn clean install` in the root directory of your project.
 
 ## Concepts
 
@@ -119,7 +119,7 @@ However, this scenario is covered by indirect conversions as described in the fo
 
 ### Indirect Conversions By Using an Inverse Rate
 
-You can request for a conversion from INR to USD even if the rates available are from USD to INR.
+You can request a conversion from INR to USD even if the rates available are from USD to INR.
 You (or your consumers) enable the inverse rates setting for each exchange rate type.
 You can then provide the rate type information by using the data adapter.
 Note that inverse rates are only used if no direct rates are available.
@@ -152,7 +152,7 @@ The library uses the run-time rates to perform the conversion.
 
 A set of exchange rates you provide to the library.
 The library picks the "best rate" from the list and uses it to perform each conversion.
-This "best rate" is determined by using various factors such as the from currency, to currency, the date time for which the conversion is requested and the exchange rate type.
+This "best rate" is determined by using various factors such as the from currency, to currency, the date time for which the conversion is requested, and the exchange rate type.
 If provided, the provider and source are also taken into consideration.
 The inversion and reference currency settings, if set, are considered to decide which rate to use.
 
@@ -182,8 +182,8 @@ You can work with the `Big Decimal` object and specify a scale of your choice.
 
 ### Rounding Off
 
-Rounded off values represent the usable currency amounts in relation to your business case.
-This means that the amounts are rounded off to a precision and value which make sense in a business.
+Rounded off values represent the usable currency amounts to your business case.
+This means that the amounts are rounded down to a usable precision and value.
 
 This is done by using an exponent value of the target currency.
 An exponent represents the relationship between a major and minor currency unit as a mathematical function.
@@ -197,7 +197,7 @@ This means that if the source currency's exponent value is 2 (as is the case in 
 
 Exponents for all currencies are published by ISO and this information is also available in the [Currency](https://docs.oracle.com/javase/7/docs/api/java/util/Currency.html) class.
 
-This rounding off logic is applied to all conversion amounts.
+This rounding down logic is applied to all conversion amounts.
 
 :::note
 The library provides both the unrounded and rounded-off amounts in the result set.
@@ -314,7 +314,7 @@ for(ConversionParametersForNonFixedRate param: paramList) {
 
 ### Getting Support
 
-You can report a BCP incident or error through the SAP Support Portal Information published on SAP site.
+You can report a BCP incident or error through the SAP Support Portal Information published on the SAP site.
 Use `XX-S4C-SDK-CC` as the component.
 
 ### Frequently Asked Questions
