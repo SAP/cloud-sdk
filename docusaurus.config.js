@@ -1,7 +1,7 @@
 module.exports = {
   title: 'SAP Cloud SDK',
   tagline:
-    'A one-stop shop for developing and extending SAP applications in a Cloud.',
+    'The one-stop shop for developing and extending SAP applications in the cloud.',
   url: 'https://github.com/SAP/cloud-sdk',
   baseUrl: '/cloud-sdk/',
   favicon: 'img/favicon.ico',
