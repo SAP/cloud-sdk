@@ -19,12 +19,12 @@ image:
 The SAP Cloud SDK for Java provides abstractions for some frequently used resilience patterns like timeout, retry, or circuit breaker.
 Applying such patterns helps to make an application more resilient against failures it might encounter.
 
-The following article describes which resilience features the SDK offers and how to apply them.
+The following article describes which resilience features the SAP Cloud SDK offers and how to apply them.
 If you are looking for a quick start with resilience also check out our [dedicated tutorial](https://developers.sap.com/tutorials/s4sdk-resilience.html) on the topic!
 
 ## Using the Resilience API
 
-The SDK allows running any code in the context of one or more resilience patterns.
+The SAP Cloud SDK allows running any code in the context of one or more resilience patterns.
 There are two essential building blocks for achieving this:
 
 1. The `ResilienceConfiguration` that determines which patterns should be applied.
@@ -49,7 +49,7 @@ The decorator will apply all in `configuration` configured patterns and all logi
 Some resilience patterns are applied over multiple executions of the same operation.
 For example, the circuit breaker will prevent further executions if a significant portion of previous attempts failed.
 
-To understand how the SDK applies this concept consider the following snippet:
+To understand how the SAP Cloud SDK applies this concept consider the following snippet:
 
 ```java
 configuration1 = ResilienceConfiguration.of("config-id-1");
@@ -140,7 +140,7 @@ An operation might fail for two reasons:
 1. The operation itself encounters a failure and throws an error or exception
 2. A resilience pattern causes the operation to fail (e.g. the circuit breaker prevents further invocations)
 
-The SDK wraps all kind of checked and unchecked exceptions into a `ResilienceRuntimeException` and throws them.
+The SAP Cloud SDK wraps all kind of checked and unchecked exceptions into a `ResilienceRuntimeException` and throws them.
 
 To deal with failures one can either catch the `ResilienceRuntimeException` or provide a fallback function:
 
@@ -179,11 +179,11 @@ For details see the list of [Resilience Capabilities](#resilience-capabilities) 
 
 #### Multi Tenancy
 
-The SDK is capable of applying the different resilience patterns in a tenant and principal aware manner.
+The SAP Cloud SDK is capable of applying the different resilience patterns in a tenant and principal aware manner.
 Consider for example the Bulkhead pattern which limits the number of parallel executions.
 If the operation is tenant-specific then you would probably want to avoid one tenant blocking all others.
 
-For this reason, the SDK _by default_ isolates resilience patterns based on tenant and principal, if they are available.
+For this reason, the SAP Cloud SDK _by default_ isolates resilience patterns based on tenant and principal, if they are available.
 This strategy can be configured, e.g. for running _without any isolation_ use:
 
 ```java
@@ -275,7 +275,7 @@ The following resilience patterns are available and can be configured in a Resil
 </tr>
 -->
 
-You can find good explanations on how the individual patterns behave on the [documentation of resilience4j](https://resilience4j.readme.io/docs/) which the SDK uses under the hood to perform resilient operations.
+You can find good explanations on how the individual patterns behave on the [documentation of resilience4j](https://resilience4j.readme.io/docs/) which the SAP Cloud SDK uses under the hood to perform resilient operations.
 
 Be aware that the patterns interact with each other. They are applied in the following order:
 

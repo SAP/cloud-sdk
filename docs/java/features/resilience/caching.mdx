@@ -18,14 +18,14 @@ image:
 
 Caching may improve your application's performance and responsiveness to your consumers.
 The SAP Cloud SDK for Java provides abstractions for caching that make it easy to integrate caching into an application with almost no configuration overhead.
-Also, it integrates with other SDK features and most importantly is tenant aware out of the box.
-The following article describes how to enable caching with the Cloud SDK for Java in your application.
+Also, it integrates with other SAP Cloud SDK features and most importantly is tenant aware out of the box.
+The following article describes how to enable caching with the SAP Cloud SDK for Java in your application.
 
 ## Using the Resilience API for Caching
 
 ### Adding a JCache Provider
 
-The Cloud SDK relies on the `JCache` SPI to create and manage cache instances.
+The SAP Cloud SDK relies on the `JCache` SPI to create and manage cache instances.
 `JCache` is a [Service Provider Interface](https://www.baeldung.com/java-spi) which requires an implementation of this interface to be present at runtime.
 Be sure that such an implementation is present on your `classpath`.
 We recommend [Caffeine](https://github.com/ben-manes/caffeine) which you can use by adding the below dependency to your application `pom.xml`:
@@ -48,9 +48,9 @@ Caching only works when a service provider or implementation for JCache is avail
 Otherwise, you will face a runtime exception.
 :::
 
-### Creating a Cache configuration
+### Creating a Cache Configuration
 
-As described in our [Resilience section](https://sap.github.io/cloud-sdk/docs/java/features/resilience/resilience) the Cloud SDK allows you to run any code in the context of one or more resilience patterns.
+As described in our [Resilience section](https://sap.github.io/cloud-sdk/docs/java/features/resilience/resilience) the SAP Cloud SDK allows you to run any code in the context of one or more resilience patterns.
 Caching is also a resilience pattern so you can leverage the same API to build and apply a `CacheConfiguration`.
 
 ```java
@@ -74,7 +74,7 @@ ResilienceConfiguration resilienceConfig = ResilienceConfiguration
 The above creates an otherwise empty `ResilienceConfiguration` and thus only enables caching.
 Of course, you may use other resilience patterns as well.
 
-### Applying a Cache configuration
+### Applying a Cache Configuration
 
 Since the cache configuration is part of a resilience configuration it is applied in the same way:
 
@@ -143,12 +143,12 @@ ResilienceDecorator.executeSupplier(() -> operation(), resilienceConfig);
 
 You can use parameters to separate cache entries as you see fit.
 Please note that there is no need to do this to achieve multi-tenancy.
-The SDK is tenant aware by default as described below.
+The SAP Cloud SDK is tenant aware by default as described below.
 
 ### Multi Tenancy
 
 By default, this caching functionality is tenant aware.
-If a tenant is available the SDK will create cache entries only for that specific tenant.
+If a tenant is available the SAP Cloud SDK will create cache entries only for that specific tenant.
 Other tenants will not see the value cached for that specific tenant.
 
 For this example assume that `config` is a `ResilienceConfiguration` that has a `CacheConfiguration` in place:

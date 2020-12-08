@@ -20,7 +20,7 @@ keywords:
 image:
 ---
 
-## What is a Thread Context?
+## What Is a Thread Context?
 
 The SAP Cloud SDK for Java provides a so-called `ThreadContext`.
 It serves as thread-safe storage for potentially sensitive information.
@@ -30,19 +30,19 @@ Specifically, the following three objects are stored:
 - The current _Principal_ (User)
 - The [JSON Web Token](https://jwt.io) (JWT)
 
-This information is used throughout the SDK to provide features like tenant and principal isolation, JWT verification and authorization against other systems and services.
+This information is used throughout the SAP Cloud SDK to provide features like tenant and principal isolation, JWT verification and authorization against other systems and services.
 To ensure different tenants and users are properly isolated in an application, this information is always limited to the thread it was created on unless it is explicitly passed on by the application (see [Propagating the Thread Context](#running-asynchronous-operations)).
 
-## How is a Thread Context created?
+## How Is a Thread Context Created?
 
-The SDK provides a [RequestFilter](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/servlet/RequestAccessorFilter.html) that will listen to incoming HTTP requests.
+The SAP Cloud SDK provides a [RequestFilter](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/servlet/RequestAccessorFilter.html) that will listen to incoming HTTP requests.
 If the `Authorization` header contains a `JWT` from the [AppRouter](https://blogs.sap.com/2020/04/03/sap-application-router/) the filter will:
 
 - Verify this token
 - Store it in the `ThreadContext` and
 - Pull the _Tenant_ and _Principal_ information from it
 
-## How can the Thread Context be used?
+## How Can the Thread Context Be Used?
 
 ### Accessing Information
 
@@ -62,7 +62,7 @@ In that case you can override the current tenant explicitly:
 TenantAccessor.executeWithTenant(customTenant, () -> doStuff());
 ```
 
-### Running asynchronous operations
+### Running Asynchronous Operations
 
 As the name suggests the `ThreadContext` is bound to a Thread, more specifically to the one it was created.
 If asynchronous operations need to access the information it has to be propagated to the new Threads.
