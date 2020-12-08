@@ -1,3 +1,11 @@
-<!-- Make sure your change works as expected by running the documentation locally. -->
+## What Has Changed?
 
-Please provide a description of what your change does and why it is needed.
+Explain what you have changed.
+
+## Manual Checks?
+
+- [ ] Text adheres to the style guide (`vale docs/`)
+- [ ] Grammar has been checked (see `CONTRIBUTING.md`)
+- [ ] Every sentence is on it's own line
+- [ ] Files are consistently formatted (`npm run prettier`)
+- [ ] Documentation builds successfully (`npm run build`)
