@@ -20,10 +20,10 @@ image:
 
 ## General Information
 
-The SAP Cloud SDK for Java is a set of libraries that itself depend on other libraries.
+The SAP Cloud SDK for Java is a set of libraries that itself depends on other libraries.
 To manage these relationships it relies on the [dependency management functionality](https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html) of [Maven](https://maven.apache.org/index.html).
 
-This article provides guidance on how to manage dependencies to the Cloud SDK for Java specifically.
+This article shows how to manage dependencies for the SAP Cloud SDK for Java specifically.
 For general information on how to deal with dependencies refer to the resources linked above and throughout this page.
 
 ### The SDK Bill of Material
@@ -63,8 +63,8 @@ For these reasons we highly recommend using the `sdk-bom` in your project.
 
 ## Dealing with Dependency Conflicts
 
-When using multiple libraries you will probably run into conflicts at some point.
-This lies in the nature of how dependencies work.
+When using multiple libraries you will probably run into a version conflict at some point.
+This is caused by the way dependencies are resolved.
 If you are using two libraries `A` and `B` where both depend on a different version of `C` you encounter a conflict.
 
 This conflict can only be solved by you as the consumer be explicitly stating which version of `C` should be used.
@@ -74,7 +74,7 @@ This conflict can only be solved by you as the consumer be explicitly stating wh
 ### Updating the SDK Version
 
 You may run into dependency related problems when updating SDK versions since it's dependencies are frequently updated.
-Here are some recommendations from our experience that should help mitigating any problems:
+Here are some recommendations from our experience that should help to mitigate any problems:
 
 We recommend increasing the SDK version in a dedicated change e.g. a pull request.
 
@@ -86,7 +86,7 @@ Look out for `MethodNotFound` and `ClassDefNotFound` exceptions.
 
 Check out our [release notes](../release-notes.mdx).
 
-- Under improvements you will see all dependency changes.
+- Under improvements, you will see all dependency changes.
 
 Use `mvn dependency:tree` to analyze the dependency tree.
 
@@ -94,7 +94,7 @@ Use `mvn dependency:tree` to analyze the dependency tree.
 
 Google the error message.
 
-- Usually you will at least get an idea which library is causing the problems.
+- Usually, you will at least get an idea which library is causing the problems.
 
 Update the SDK version frequently.
 
@@ -132,5 +132,5 @@ For example to override the version of SLF4J:
 
 :::note
 Remember that including a dependency in the `<dependencyManagement>` section only enforces its version.
-It does not yet include it as a dependency into your project.
+It does not yet include it as a dependency in your project.
 :::

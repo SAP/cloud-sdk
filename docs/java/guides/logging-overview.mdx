@@ -47,7 +47,7 @@ The SDK itself _only_ relies upon the SLF4J API, not on any specific logging fra
 This is good practice because otherwise all consumers would be forced to use the same logging framework that the SDK comes with, rendering the SDK unusable for many use cases.
 
 That means that you have to _provide a logging framework_ in your application.
-Otherwise you will not see any log entries the SDK attempts to put out.
+Otherwise, you will not see any log entries the SDK attempts to put out.
 
 :::tip
 In case your project is based on one of the SDK archetypes you will already have Logback set up as the logging provider.
@@ -55,7 +55,7 @@ In case your project is based on one of the SDK archetypes you will already have
 
 ### Providing a Logging Framework
 
-In order to provide a logging framework you have to add it to the dependency tree.
+To provide a logging framework, you have to add it to the dependency tree.
 Which artifacts are to be added exactly depends on the framework.
 
 To take Logback as an example:
@@ -70,23 +70,23 @@ To take Logback as an example:
 ```
 
 Also (again, depending on the framework) you might have to provide some sort of configuration file.
-For our example of Logback we need a `logback.xml` within the `main/resources` directory of our application.
+For our example of Logback, we need a `logback.xml` within the `main/resources` directory of our application.
 
 :::tip
 When running on SCP CloudFoundry using the SAP Java Buildpack the logging implementation is provided at runtime by the container.
 This means, if you only run the application on Cloud Foundry you don't need to provide any implementation.
 Still, oftentimes logging is also important for local deployment and testing.
-For that providing an implementation is required.
+For that providing, an implementation is required.
 :::
 
 ## Writing Log Messages
 
-To start writing your own log entries you also need to specify a dependency to the SLF4J API: `org.slf4j:slf4j-api`.
+To start writing your log entries you also need to specify a dependency to the SLF4J API: `org.slf4j:slf4j-api`.
 Depending on the chosen logging implementation you might not _need_ to specify the SLF4J API, but it's in general best practice to not rely on transitive dependencies and therefore reference the SLF4J API anyway.
 
 ### Simple SLF4J usage
 
-Having these prerequisite out of the way, you can now start logging:
+Having these prerequisites out of the way, you can now start logging:
 
 ```java
 import org.slf4j.Logger;
@@ -110,7 +110,7 @@ As you can see, no reference to the actual logging implementation can be found i
 
 ### Advanced SLF4J usage
 
-If you are logging more and more information you might find yourself in cases where you concatenate `String`s or log inside a loop. This might cause unnecessary load on your system if the runtime log level is higher than the messages you actually want to log. To make this more plastic have a look at the following example:
+If you are logging more and more information you might find yourself in cases where you concatenate `String`s or log inside a loop. This might cause unnecessary load on your system if the runtime log level is higher than the messages you want to log. To make this more plastic have a look at the following example:
 
 ```java
 public class DummyClass {
@@ -151,7 +151,7 @@ public class DummyClass {
 }
 ```
 
-That way the loop is only executed if actually necessary.
+That way the loop is only executed if necessary.
 
 ## Logging Configuration
 
@@ -174,7 +174,7 @@ General information about configuring Logback can be obtained from [the document
 This section only explains some basics.
 
 Logback is configured via the configuration file located in the `src/main/resources` directory of your `application` module.
-It is named `logback.xml` for TomEE and `logback-spring.xml` for Spring based projects.
+It is named `logback.xml` for TomEE and `logback-spring.xml` for Spring-based projects.
 To understand how Logback detects this file have a look at [their documentation](http://logback.qos.ch/manual/configuration.html#auto_configuration).
 
 :::danger
@@ -192,7 +192,7 @@ In this configuration file you will find a block like this:
 </root>
 ```
 
-This basically tells Logback to log all messages with level `INFO` and higher to an appender with the reference `STDOUT`.
+This tells Logback to log all messages with level `INFO` and higher to an appender with the reference `STDOUT`.
 Valid values for the `level` property are: `TRACE`, `DEBUG`, `INFO`, `WARN`, and `ERROR`.
 So, if you want to log all packages with level `DEBUG`, for example, you could set it the following way:
 
@@ -202,14 +202,14 @@ So, if you want to log all packages with level `DEBUG`, for example, you could s
 </root>
 ```
 
-However, usually you want to set the logging level for certain packages (or classes) only.
+However, you usually want to set the logging level for certain packages (or classes) only.
 For this you would add the following line:
 
 ```xml
 <logger name="package.to.log" level="INFO" />
 ```
 
-So, in the case that you want to log all requests sent and responses received by the Apache HttpClient in your application locally you would have the following configuration block:
+In the case that you want to log all requests sent and responses received by the Apache HttpClient in your application locally you would have the following configuration block:
 
 ```xml
 <logger name="org.apache.http" level="DEBUG" />
@@ -224,7 +224,7 @@ So, in the case that you want to log all requests sent and responses received by
 If you want to set the debug levels of your application running on Cloud Foundry (using the SAP Java Buildpack) you have to set the `SET_LOGGING_LEVEL`.
 This allows you to also change the log level at runtime, as we will see further down in this section.
 
-To set the environment variable with every start of the application it is advised to set it in your deployment descriptor of your project.
+To set the environment variable with every start of the application, it is advised to set it in the deployment descriptor of your project.
 This is typically a [Manifest](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjVv7TknpbsAhUJ36QKHaA_Bp4QFjAAegQIBBAC&url=https%3A%2F%2Fhelp.sap.com%2Fviewer%2F6a4563286d06419cb9927ef448c67432%2FCloud%2Fen-US%2Fe68e33b67c844689b07abf70e7ca5bc8.html&usg=AOvVaw1D_4MogbdbFNLOG1A1xeJy) or [MTA](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.03/en-US/33548a721e6548688605049792d55295.html) file in your project root directory.
 It usually looks something like this:
 
@@ -261,16 +261,16 @@ modules:
 </TabItem>
 </Tabs>
 
-So, in the case that you want to log all requests sent and responses received by the Apache HttpClient in your application on Cloud Foundry you would set `SET_LOGGING_LEVEL` to the following value:
+In the case that you want to log all requests sent and responses received by the Apache HttpClient in your application on Cloud Foundry you would set `SET_LOGGING_LEVEL` to the following value:
 
 ```bash
 {ROOT: INFO, com.sap.cloud.sdk: INFO, org.apache.http: DEBUG, org.apache.http.wire: ERROR}
 ```
 
-As mentioned earlier, it's possible to set environment variable via the Cloud Foundry CLI.
-The SAP Java Buildpack should then be able to pickup these changes and propagate them to your application.
+As mentioned earlier, it's possible to set the environment variable via the Cloud Foundry CLI.
+The SAP Java Buildpack should then be able to pick up these changes and propagate them to your application.
 
-So, assuming that you have the initial configuration shown above and you want to start logging the Apache HttpClient, you would now issue the following command on your command line:
+Assuming that you have the initial configuration shown above and you want to start logging the Apache HttpClient, you would now issue the following command on your command line:
 
 ```bash
  cf set-env logging-documentation SET_LOGGING_LEVEL '{ROOT: INFO, com.sap.cloud.sdk: INFO, org.apache.http: DEBUG, org.apache.http.wire: ERROR}'

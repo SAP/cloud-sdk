@@ -36,7 +36,7 @@ The Cloud SDK and XSUAA are developed independently. We do not provide in-depth 
 
 ### Read the Application Properties
 
-In order to create a request, we need to parse the XSUAA connection data.
+In order to, create a request, we need to parse the XSUAA connection data.
 
 1. Take note of your "_application route_". That's the URL for which an authorization request will be built.
 
@@ -78,7 +78,7 @@ You will likely need to run the following HTTP request in your browser and check
    :::
 
 1. Submit login form via a browser or REST API debugging tools like POSTMAN or Insomnia.
-1. Check the HTTP response and extract `[code]` from `Location` header.
+1. Check the HTTP response and extract `[code]` from the `Location` header.
    ```
    HTTP/1.1 302 Found
    Strict-Transport-Security: max-age=31536000
@@ -128,7 +128,7 @@ With the authorization code we can now request a real access token from the OAut
 
 :::tip
 Some applications like `_approuter_` will save the `refresh_token` to the user session for you.
-This enables automatic retrieval of new access tokens after the existing one has expired during the active session.
+This enables the automatic retrieval of new access tokens after the existing one has expired during the active session.
 :::
 
 ## JWT Bearer Token Grant
@@ -170,7 +170,7 @@ Several services on SCP Cloud Foundry require a dedicated OAuth2 access token, e
 
 ## Client Credentials Grant
 
-Some applications require access to a platform service without an active user sessions, with _technical user_ credentials.
+Some applications require access to a platform service without an active user session, with _technical user_ credentials.
 For example, reading a list of destinations does not require a user access token.
 Instead, we can request an access token on behalf of the service binding itself.
 Here we use the [Client Credentials Grant](https://docs.cloudfoundry.org/api/uaa/version/74.23.0/index.html#without-authorization).

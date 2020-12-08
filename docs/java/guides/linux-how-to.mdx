@@ -18,7 +18,7 @@ image:
 ## Get SAP Cloud SDK development environment for Java on Linux (Debian based distribution)
 
 This tutorial will guide you through getting your SAP Cloud SDK development environment up and running on Linux.
-All the steps were verified on Ubuntu 18.04 and should be in compliance with other Debian based distributions.
+All the steps were verified on Ubuntu 18.04 and should comply with other Debian based distributions.
 
 ## Required knowledge
 
@@ -36,16 +36,16 @@ I'll base this example on Java 8
 sudo apt-get install openjdk-8-jdk
 ```
 
-Updating alternatives to make sure right version of Java is used.
+Updating alternatives to make sure the right version of Java is used.
 
 Your distribution might have a different version of Java installed by default.
-You can check you Java version by running:
+You can check your Java version by running:
 
 ```bash
 java -version
 ```
 
-As you can see bellow, my laptop has Java 11 as default.
+As you can see below, my laptop has Java 11 as default.
 
 ```bash
 openjdk 11.0.5 2019-10-15
@@ -53,7 +53,7 @@ OpenJDK Runtime Environment (build 11.0.5+10-post-Ubuntu-0ubuntu1.1)
 OpenJDK 64-Bit Server VM (build 11.0.5+10-post-Ubuntu-0ubuntu1.1, mixed mode)
 ```
 
-Check what Java versions you have on you machine with:
+Check what Java versions you have on your machine with:
 
 ```bash
 update-java-alternatives --list
@@ -72,7 +72,7 @@ To switch between Java versions run:
 sudo update-alternatives --config java
 ```
 
-In my case I have to press **2** to make Java 8 default.
+In my case, I have to press **2** to make Java 8 default.
 
 ```bash
 Selection    Path                                            Priority   Status
@@ -83,8 +83,8 @@ Selection    Path                                            Priority   Status
 Press <enter> to keep the current choice[*], or type selection number:
 ```
 
-Check Java version again.
-Mind, `version` parameter has just one hyphen for Java 8 CLI.
+Check the Java version again.
+Mind, the `version` parameter has just one hyphen for Java 8 CLI.
 
 ```bash
 java -version
@@ -122,14 +122,14 @@ Default locale: en_US, platform encoding: ANSI_X3.4-1968
 OS name: "linux", version: "5.3.0-26-generic", arch: "amd64", family: "unix"
 ```
 
-To find out more about Apache Maven, how to get it for your Linux distribution and detailed tutorials [follow the official maven documentation](https://maven.apache.org/).
+To find out more about Apache Maven, how to get it for your Linux distribution, and detailed tutorials [follow the official maven documentation](https://maven.apache.org/).
 
 ### Cloud Foundry Command Line Interface (CLI)
 
 To deploy your app developed with SAP Cloud SDK to [SAP Cloud Platform](https://www.sap.com/products/cloud-platform.html) you'll need Cloud Foundry CLI.
-You can download latest release of DEB package [from the official CF GitHub repository](https://github.com/cloudfoundry/cli/releases) or follow [instructions](https://github.com/cloudfoundry/cli#installing-using-a-package-manager) to install it with you package manager: `apt-get`, `yum` and `homebrew` are supported.
+You can download the latest release of the DEB package [from the official CF GitHub repository](https://github.com/cloudfoundry/cli/releases) or follow [instructions](https://github.com/cloudfoundry/cli#installing-using-a-package-manager) to install it with you package manager: `apt-get`, `yum` and `homebrew` are supported.
 
-After installing the CLI you might need to reload you shell before it becomes available.
+After installing the CLI you might need to reload your shell before it becomes available.
 To check if it works run:
 
 ```bash
@@ -138,8 +138,8 @@ cf
 
 ### Installing IntelliJ Idea IDE
 
-For best developer experience we recommend getting community version of **IntelliJ Idea**.
-Download the archive from the [official site](https://www.jetbrains.com/idea/download/#section=linux) and follow installation instructions for you system.
+For the best developer experience, we recommend getting the community version of **IntelliJ Idea**.
+Download the archive from the [official site](https://www.jetbrains.com/idea/download/#section=linux) and follow installation instructions for your system.
 
 :::info
 Another supported IDE is [Eclipse](https://www.eclipse.org/ide/).
@@ -169,12 +169,12 @@ To build your APP run
 mvn clean package
 ```
 
-After a successful build you'll find a `target` folder within you app's root folder containing a `war` file along with other build artifacts.
+After a successful build, you'll find a `target` folder within your app's root folder containing a `war` file along with other build artifacts.
 This `war` file is a packaged version of your web-app that's going to be deployed in the SAP Cloud Foundry environment.
 
 ### Bind your CLI to SAP Cloud Foundry
 
-Let's associate you Cloud Foundry (CF) CLI to your SAP account by providing an API endpoint and logging in with your account.
+Let's associate your Cloud Foundry (CF) CLI to your SAP account by providing an API endpoint and logging in with your account.
 
 **Select endpoint depending on your region:**
 
@@ -225,6 +225,6 @@ state     since                  cpu     memory         disk           details
 #0   running   2020-01-12T13:30:29Z   69.0%   446.2M of 1G   191.1M of 1G
 ```
 
-To verify your deployment take a `URL` indicated in `routes` section from deployment output above.
+To verify your deployment take a `URL` indicated in the `routes` section from the deployment output above.
 Put it into your browser and add `/hello` at the end.
 It should look similar to: `https://test-app-shy-hyena-st.cfapps.eu10.hana.ondemand.com/hello`
