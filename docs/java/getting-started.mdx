@@ -25,18 +25,18 @@ import TabItem from '@theme/TabItem';
 
 <MvnBadge />
 
-To get started with the SAP Cloud SDK for Java you can either create a new project or integrate the SDK into your existing one.
+To get started with the SAP Cloud SDK for Java you can either create a new project or integrate the SAP Cloud SDK into your existing one.
 You will need an installation of Java and Maven.
 
 :::note Java version compatibility
-The SDK itself is compatible with Java 8 and 11.
+The SAP Cloud SDK itself is compatible with Java 8 and 11.
 Other Java versions may work as well depending on your setup but are not yet tested by us.
 Note that the SAP Cloud Platform Cloud Foundry environment only supports Java 8 out of the box but can be configured to also run with Java 11.
 SAP Cloud Platform Neo only supports Java 8.
 :::
 
 To start with a clean, new project you can select [one of our archetypes](https://search.maven.org/search?q=com.sap.cloud.sdk.archetypes) and build upon it.
-Alternatively, you can follow [these instructions](#integrate-the-cloud-sdk-for-java-into-your-project) to integrate the SDK into your existing setup.
+Alternatively, you can follow [these instructions](#integrate-the-cloud-sdk-for-java-into-your-project) to integrate the SAP Cloud SDK into your existing setup.
 
 ## Generating a Project from a Maven Archetype
 
@@ -44,7 +44,7 @@ Alternatively, you can follow [these instructions](#integrate-the-cloud-sdk-for-
 { label: 'Spring', value: 'spring', },
 { label: 'TomEE', value: 'tomee', }]}>
 
-The SDK provides archetypes based on [Spring](https://spring.io/) and [TomEE](https://tomee.apache.org/), so select whatever suits you best.
+The SAP Cloud SDK provides archetypes based on [Spring](https://spring.io/) and [TomEE](https://tomee.apache.org/), so select whatever suits you best.
 
 Run:
 
@@ -75,7 +75,7 @@ Maven will ask you to provide the following:
 - `version` - we recommend keeping `1.0-SNAPSHOT` if you're just starting
 - `package` - by default this equals to `groupId`. Change it only if you know what you're doing
 
-After providing all the interactive values to the CLI it will generate your first Cloud SDK based application:
+After providing all the interactive values to the CLI it will generate your first SAP Cloud SDK based application:
 
 ```bash
 [INFO] Scanning for projects...
@@ -138,16 +138,16 @@ skipUsageAnalytics: false
 To change the Java version modify the `<java.version>` property in the root `pom.xml`.
 :::
 
-## Integrate the Cloud SDK for Java into your Project
+## Integrate the SAP Cloud SDK for Java Into Your Project
 
-### 1. Adding Dependencies
+### Adding Dependencies
 
 :::tip
 The SAP Cloud SDK [integrates with CAP projects](/docs/related-projects/cloud-application-model)!
 Follow the steps below or check out the dedicated [tutorial on SAP Developers](https://developers.sap.com/tutorials/cloudsdk-integrate-cap.html).
 :::
 
-To get started with an existing project include the _SDK BOM_ in the _dependency management_ section of your project:
+To get started with an existing project include the _SAP Cloud SDK BOM_ in the _dependency management_ section of your project:
 
 <!-- vale off -->
 
@@ -196,7 +196,7 @@ If your application is running on **SAP Cloud Platform** please add the appropri
 </TabItem>
 </Tabs>
 
-If you want to connect to an **S/4HANA** system via the **OData** protocol you should also add a dependency to the client libraries of the SDK:
+If you want to connect to an **SAP S/4HANA** system via the **OData** protocol you should also add a dependency to the client libraries of the SAP Cloud SDK:
 
 ```xml
 <dependency>
@@ -239,16 +239,16 @@ We also recommend that you include the following plugin:
 </plugin>
 ```
 
-It sends _[anonymized usage data](https://blogs.sap.com/2018/10/23/usage-analytics-s4sdk/)_ such as the SDK version used and helps us with improving the SDK.
+It sends _[anonymized usage data](https://blogs.sap.com/2018/10/23/usage-analytics-s4sdk/)_ such as the SAP Cloud SDK version used and helps us with improving the SAP Cloud SDK.
 Furthermore, the plugin is capable of generating a report with useful information about the project setup.
-Invoking `diagnosis-report` will print out the SDK modules used and their version but also other information like the Java and Maven version.
+Invoking `diagnosis-report` will print out the SAP Cloud SDK modules used and their version but also other information like the Java and Maven version.
 This is helpful when you are facing an issue and are reaching out to us for help.
 
-### 2. Framework Integration
+### Framework Integration
 
-In general, the Cloud SDK for Java integrates natively into the [Spring Boot](https://spring.io/projects/spring-boot) and [TomEE](https://tomee.apache.org/) frameworks.
+In general, the SAP Cloud SDK for Java integrates natively into the [Spring Boot](https://spring.io/projects/spring-boot) and [TomEE](https://tomee.apache.org/) frameworks.
 
-In particular the [SDK provides listeners](features/multi-tenancy/thread-context.mdx) that can extract tenant and principal information from an incoming request.
+In particular the [SAP Cloud SDK provides listeners](features/multi-tenancy/thread-context.mdx) that can extract tenant and principal information from an incoming request.
 To ensure these listeners are present, please configure your project accordingly.
 
 <Tabs groupId="frameworks" defaultValue="spring" values={[
@@ -257,7 +257,7 @@ To ensure these listeners are present, please configure your project accordingly
 
 <TabItem value="spring">
 
-For a Spring based project please ensure that the application is annotated to scan for components of the SDK:
+For a Spring based project please ensure that the application is annotated to scan for components of the SAP Cloud SDK:
 
 ```java
 @ComponentScan({"com.sap.cloud.sdk", "your.own.package"})
@@ -265,7 +265,7 @@ For a Spring based project please ensure that the application is annotated to sc
 ```
 
 Check the logs during application startup to ensure the listeners got registered.
-Also please check [the Spring version](https://mvnrepository.com/artifact/com.sap.cloud.sdk/sdk-bom/latest) declared in the SDK BOM doesn't clash with your version of Spring.
+Also please check [the Spring version](https://mvnrepository.com/artifact/com.sap.cloud.sdk/sdk-bom/latest) declared in the SAP Cloud SDK BOM doesn't clash with your version of Spring.
 
 </TabItem>
 <TabItem value="tomee">
@@ -277,10 +277,10 @@ Check the logs during application startup to ensure the listeners got registered
 </TabItem>
 </Tabs>
 
-## Next steps
+## Next Steps
 
 - [Configure you IDE](guides/recommended-ide)
 - [Get and bind SAP Cloud Foundry CLI](guides/cf-cli)
-- [Check tutorials for Cloud SDK for Java](https://developers.sap.com/tutorial-navigator.html?tag=products:technology-platform/sap-cloud-sdk/sap-cloud-sdk&tag=topic:java)
+- [Check tutorials for SAP Cloud SDK for Java](https://developers.sap.com/tutorial-navigator.html?tag=products:technology-platform/sap-cloud-sdk/sap-cloud-sdk&tag=topic:java)
 - Check out key **Features** and **Guides** sections
 - Check our [release notes](release-notes.mdx)

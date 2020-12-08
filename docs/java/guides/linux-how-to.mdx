@@ -15,18 +15,18 @@ keywords:
 image:
 ---
 
-## Get SAP Cloud SDK development environment for Java on Linux (Debian based distribution)
+## Get SAP Cloud SDK Development Environment for Java on Linux (Debian Based Distribution)
 
 This tutorial will guide you through getting your SAP Cloud SDK development environment up and running on Linux.
 All the steps were verified on Ubuntu 18.04 and should comply with other Debian based distributions.
 
-## Required knowledge
+## Required Knowledge
 
 No initial knowledge is required.
 
-## Let's install dependencies
+## Let's Install Dependencies
 
-### Installing JDK and Maven
+### Installing the Java Development Kit and Maven
 
 SAP Cloud SDK supports Java 8 and Java 11
 
@@ -98,9 +98,9 @@ OpenJDK Runtime Environment (build 1.8.0_232-8u232-b09-0ubuntu1.1-b09)
 OpenJDK 64-Bit Server VM (build 25.232-b09, mixed mode)
 ```
 
-### Use [maven](https://maven.apache.org/) to build and deploy your app
+### Use [Maven](https://maven.apache.org/) To Build and Deploy Your App
 
-Install maven with:
+Install `maven` with:
 
 ```bash
 sudo apt-get install maven
@@ -145,9 +145,9 @@ Download the archive from the [official site](https://www.jetbrains.com/idea/dow
 Another supported IDE is [Eclipse](https://www.eclipse.org/ide/).
 :::
 
-## Initialize and build your app
+## Initialize and Build Your App
 
-### To initialize your SAP Cloud SDK app from the maven archetype
+### To Initialize Your SAP Cloud SDK App From the Maven Archetype
 
 ```bash
 mvn archetype:generate -DarchetypeGroupId=com.sap.cloud.sdk.archetypes -DarchetypeArtifactId=scp-cf-tomee -DarchetypeVersion=RELEASE
@@ -155,7 +155,7 @@ mvn archetype:generate -DarchetypeGroupId=com.sap.cloud.sdk.archetypes -Darchety
 
 The snippet above will create a `TomEE` app, you can also use archetype for Spring Boot.
 
-### Building your App
+### Building Your App
 
 Change directory to the root of the app you've just created
 
@@ -172,7 +172,7 @@ mvn clean package
 After a successful build, you'll find a `target` folder within your app's root folder containing a `war` file along with other build artifacts.
 This `war` file is a packaged version of your web-app that's going to be deployed in the SAP Cloud Foundry environment.
 
-### Bind your CLI to SAP Cloud Foundry
+### Bind your Command-Line Interface to SAP Cloud Foundry
 
 Let's associate your Cloud Foundry (CF) CLI to your SAP account by providing an API endpoint and logging in with your account.
 
@@ -194,7 +194,7 @@ Provide your credential for SAP Cloud Foundry by running:
 cf login
 ```
 
-### Deploying your App
+### Deploying Your App
 
 To deploy your app run:
 

@@ -37,7 +37,7 @@ Refer to [this blog post](https://blogs.sap.com/2018/01/09/sap-cloud-platform-wo
 This library is released for **productive usage** as of November 19, 2020.
 :::
 
-## Example Use Case for this guide
+## Example Use Case for This Guide
 
 ### Problem
 
@@ -49,7 +49,7 @@ Use SAP Cloud Platform Workflow service and its REST API.
 You can do workflow modeling using a convenient visual editor and call SCP Workflow REST API via type-safe client library module provided by the SAP Cloud SDK for Java.
 Additionally, you'll get other benefits from the SAP Cloud SDK like destinations and authentication handling, complete type-safety, multi-tenancy, easy resilience, and caching configuration.
 
-## Consume the SCP Workflow REST API
+## Consume the SAP Cloud Platform Workflow REST API
 
 ### Prerequisites
 
@@ -59,11 +59,11 @@ After we have an SAP Cloud SDK-based Java app, we can invoke the SCP Workflow RE
 More specifically, we are interested in retrieving a list of all workflow definitions that exist in the connected SCP Workflow service instance which corresponds to the API endpoint `/v1/workflow-definitions`.
 You can find it under the section `Workflow Definitions` on the left-hand side of your CF cockpit.
 
-### Cloud Foundry configuration
+### Cloud Foundry Configuration
 
 Let's look in detail at all necessary steps of Cloud Foundry configuration to run this scenario.
 
-#### Bind App to SCP Workflow Service instance
+#### Bind App to SAP Cloud Platform Workflow Service instance
 
 Refer to the documentation on [help.sap.com](https://help.sap.com/viewer/e157c391253b4ecd93647bf232d18a83/Cloud/en-US/e8d88dd056f14c75af59e68d6b20345f.html) for the full picture.
 We'll outline the essentials with the assumption that you understand or have all of the following:
@@ -73,7 +73,7 @@ We'll outline the essentials with the assumption that you understand or have all
 - You possess all necessary authorizations on Cloud Foundry
 - [You have installed the Cloud Foundry Command Line Interface (CLI) on your machine](../../../guides/cf-cli).
 
-##### Identifying necessary OAuth Scopes
+##### Identifying Necessary OAuth Scopes
 
 :::tip
 The SCP Workflow REST API is protected and requires authenticating with an OAuth 2.0 access token.
@@ -96,7 +96,7 @@ Open a text editor and create a JSON file with the following content:
 
 Remember where you've saved the file, you'll need it later.
 
-##### Create service instance
+##### Create Service Instance
 
 Open the command line and authenticate at your Cloud Foundry organization by invoking `cf login`.
 
@@ -207,9 +207,9 @@ Go to your CF subaccount, navigate to `Connectivity\Destinations` in the left-ha
 Click Save. Restart your app by navigating to `Spaces\<you-space-name>\Applications`.
 Chose your app from the list by clicking on the link with its name and find the restart button on the page that loads.
 
-### Develop your App
+### Develop Your App
 
-#### Dependency assumptions
+#### Dependency Assumptions
 
 We assume that you have a Java project using the SAP Cloud SDK.
 If not, we recommend going ahead and [creating one from one of the Maven archetypes](https://sap.github.io/cloud-sdk/docs/java/getting-started).
@@ -240,7 +240,7 @@ Current version is: <MvnBadge />
 
 <!-- vale on -->
 
-#### Add SCP Workflow library dependency to your project
+#### Add SAP Cloud Platform Workflow Library Dependency To Your Project
 
 You can refer to the Java client library for the SCP Workflow service with the following Maven dependency:
 
@@ -293,9 +293,9 @@ workflowDefinition.getJobs().forEach(job -> {
 });
 ```
 
-## Capabilities and limitations
+## Capabilities and Limitations
 
-### Capabilities and benefits
+### Capabilities and Benefits
 
 The Java client library for SCP Workflow enables the developer to:
 
@@ -311,7 +311,7 @@ The Java client library for SCP Workflow enables the developer to:
 - We support SCP Workflow API only on SCP Cloud Foundry. The SCP Neo landscape in **Not supported!**
 - In the current state, it is required to create a destination manually instead of letting the library resolve it for you via VCAP_SERVICES binding available on SCP Cloud Foundry.
 
-## Video tutorial
+## Video Tutorial
 
 This video tutorial by the developer advocate team of SAP Cloud Platform will help you get up to speed with SAP Cloud SDK for Java and Workflow API in 60 minutes.
 

@@ -24,10 +24,12 @@ The following steps will show what happens behind the scenes. The requests can b
 
 :::note XSUAA service is developed independently of SAP Cloud SDK
 The following documentation only touches a subset of features of the XSUAA Service on Cloud Foundry.
-The Cloud SDK and XSUAA are developed independently. We do not provide in-depth support on XSUAA topics beyond Cloud SDK use cases. Mind, if some information seems outdated - get in touch with us and refer to [official XSUAA docs](https://docs.cloudfoundry.org/api/uaa/).
+The SAP Cloud SDK and XSUAA are developed independently.
+We do not provide in-depth support on XSUAA topics beyond SAP Cloud SDK use cases.
+Mind, if some information seems outdated - get in touch with us and refer to [official XSUAA docs](https://docs.cloudfoundry.org/api/uaa/).
 :::
 
-## SCP CF XSUAA key use-cases
+## SAP Cloud Platform Cloud Foundry XSUAA Key Use-Cases
 
 - User Login: `Authorization Code Grant`
 - SCP Service Usage on behalf of a User: `JWT Bearer Token Grant`
@@ -36,7 +38,7 @@ The Cloud SDK and XSUAA are developed independently. We do not provide in-depth 
 
 ### Read the Application Properties
 
-In order to, create a request, we need to parse the XSUAA connection data.
+To create a request, we need to parse the XSUAA connection data.
 
 1. Take note of your "_application route_". That's the URL for which an authorization request will be built.
 
@@ -131,7 +133,7 @@ Some applications like `_approuter_` will save the `refresh_token` to the user s
 This enables the automatic retrieval of new access tokens after the existing one has expired during the active session.
 :::
 
-## JWT Bearer Token Grant
+## JSON Web Token Bearer Token Grant
 
 Several services on SCP Cloud Foundry require a dedicated OAuth2 access token, e.g. _Connectivity Service_ and _Destination Service_.
 

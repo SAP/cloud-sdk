@@ -13,7 +13,7 @@ import TabItem from '@theme/TabItem';
 This document aims to give you an overview of how you can write events of your application with the standard logging frameworks and how the SAP Cloud SDK integrates with that.
 There are three parts to this document:
 
-- How the SDK integrates with logging frameworks
+- How the SAP Cloud SDK integrates with logging frameworks
 - How to create log entries
 - How to configure those entries
 
@@ -23,7 +23,7 @@ This document describes how to write and configure _Applications Logs_.
 
 ## Logging Overview
 
-For creating log entries the SDK relies on the popular [Simple Logging Facade for Java (SLF4J)](http://www.slf4j.org/).
+For creating log entries the SAP Cloud SDK relies on the popular [Simple Logging Facade for Java (SLF4J)](http://www.slf4j.org/).
 It serves as an interface to a variety of different logging frameworks (e.g. [Logback](http://logback.qos.ch/), [log4j](https://logging.apache.org/log4j/2.x/)).
 
 That means there are two components involved:
@@ -43,14 +43,14 @@ That means there are two components involved:
   Which configuration options are available depends on the framework.
   Typically one can configure a log level (Error, Warn, Debug, etc.) and the format of messages.
 
-The SDK itself _only_ relies upon the SLF4J API, not on any specific logging framework.
-This is good practice because otherwise all consumers would be forced to use the same logging framework that the SDK comes with, rendering the SDK unusable for many use cases.
+The SAP Cloud SDK itself _only_ relies upon the SLF4J API, not on any specific logging framework.
+This is good practice because otherwise all consumers would be forced to use the same logging framework that the SAP Cloud SDK comes with, rendering the SAP Cloud SDK unusable for many use cases.
 
 That means that you have to _provide a logging framework_ in your application.
-Otherwise, you will not see any log entries the SDK attempts to put out.
+Otherwise, you will not see any log entries the SAP Cloud SDK attempts to put out.
 
 :::tip
-In case your project is based on one of the SDK archetypes you will already have Logback set up as the logging provider.
+In case your project is based on one of the SAP Cloud SDK archetypes you will already have Logback set up as the logging provider.
 :::
 
 ### Providing a Logging Framework
@@ -84,7 +84,7 @@ For that providing, an implementation is required.
 To start writing your log entries you also need to specify a dependency to the SLF4J API: `org.slf4j:slf4j-api`.
 Depending on the chosen logging implementation you might not _need_ to specify the SLF4J API, but it's in general best practice to not rely on transitive dependencies and therefore reference the SLF4J API anyway.
 
-### Simple SLF4J usage
+### Simple SLF4J Usage
 
 Having these prerequisites out of the way, you can now start logging:
 
@@ -108,7 +108,7 @@ What do you see in this example?
 
 As you can see, no reference to the actual logging implementation can be found in the code. This is the benefit of using SLF4J as a logging facade. This allows you to change the logging implementation without any changes to your application code.
 
-### Advanced SLF4J usage
+### Advanced SLF4J Usage
 
 If you are logging more and more information you might find yourself in cases where you concatenate `String`s or log inside a loop. This might cause unnecessary load on your system if the runtime log level is higher than the messages you want to log. To make this more plastic have a look at the following example:
 

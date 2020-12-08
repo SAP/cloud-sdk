@@ -26,10 +26,10 @@ To manage these relationships it relies on the [dependency management functional
 This article shows how to manage dependencies for the SAP Cloud SDK for Java specifically.
 For general information on how to deal with dependencies refer to the resources linked above and throughout this page.
 
-### The SDK Bill of Material
+### The SAP Cloud SDK Bill-of-Material
 
-The SDK provides a [Bill of Material](https://dzone.com/articles/the-bill-of-materials-in-maven).
-It comprises all dependencies and their specific version that the SDK relies upon.
+The SAP Cloud SDK provides a [Bill-of-Material](https://dzone.com/articles/the-bill-of-materials-in-maven).
+It comprises all dependencies and their specific version that the SAP Cloud SDK relies upon.
 
 It can be used in the dependency management as follows:
 
@@ -53,15 +53,15 @@ It can be used in the dependency management as follows:
 
 It helps in various ways:
 
-- Minimizing the effort for updating SDK versions
-- Ensuring all SDK components are used consistently with the same version
+- Minimizing the effort for updating SAP Cloud SDK versions
+- Ensuring all SAP Cloud SDK components are used consistently with the same version
 - Compatibility with some other key SAP libraries or frameworks like [XSUAA](https://github.com/SAP/cloud-security-xsuaa-integration) and [CAP](https://cap.cloud.sap/docs/).
 - Avoiding some potential dependency conflicts
-- Checking which components & their respective version the SDK depends upon
+- Checking which components & their respective version the SAP Cloud SDK depends upon
 
 For these reasons we highly recommend using the `sdk-bom` in your project.
 
-## Dealing with Dependency Conflicts
+## Dealing With Dependency Conflicts
 
 When using multiple libraries you will probably run into a version conflict at some point.
 This is caused by the way dependencies are resolved.
@@ -71,12 +71,12 @@ This conflict can only be solved by you as the consumer be explicitly stating wh
 
 [This guide](https://dzone.com/articles/solving-dependency-conflicts-in-maven) outlines this problem in more detail and provides general guidance on how to find and resolve such problems.
 
-### Updating the SDK Version
+### Updating the SAP Cloud SDK Version
 
-You may run into dependency related problems when updating SDK versions since it's dependencies are frequently updated.
+You may run into dependency related problems when updating SAP Cloud SDK versions since it's dependencies are frequently updated.
 Here are some recommendations from our experience that should help to mitigate any problems:
 
-We recommend increasing the SDK version in a dedicated change e.g. a pull request.
+We recommend increasing the SAP Cloud SDK version in a dedicated change e.g. a pull request.
 
 - This isolates the change and makes finding problems easier.
 
@@ -96,14 +96,14 @@ Google the error message.
 
 - Usually, you will at least get an idea which library is causing the problems.
 
-Update the SDK version frequently.
+Update the SAP Cloud SDK version frequently.
 
 - This mitigates the risk per update and ensures you are up to date.
 
-### Overriding Dependency Versions of the SDK BOM
+### Overriding Dependency Versions of the SAP Cloud SDK Bill-of-Material
 
-Sometimes you may want to override the version of a specific dependency the SDK is using.
-You can achieve this by listing it in the dependency management _before the SDK BOM_.
+Sometimes you may want to override the version of a specific dependency the SAP Cloud SDK is using.
+You can achieve this by listing it in the dependency management _before the SAP Cloud SDK BOM_.
 
 For example to override the version of SLF4J:
 
