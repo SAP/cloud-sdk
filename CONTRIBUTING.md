@@ -4,7 +4,7 @@
 
 - [Node.js](https://nodejs.org/en/download/).
   The latest LTS is recommended.
-  Check you version with `node -v`.
+  Check your version with `node -v`.
   You can use [`nvm`](https://github.com/nvm-sh/nvm) for managing multiple Node versions on a single machine.
 
 ## Hosting the documentation locally
