@@ -7,7 +7,7 @@ sidebar_label: Tutorials Overview for the JavaScript SDK
 description: This document will give you an overview of the different tutorials for the SAP Cloud SDK for JavaScript.
 ---
 
-To give you a quick and easy start into developing with Cloud SDK for JavaScript we created a set of comprehensive tutorials split into missions and groups for a convenient learning path.
+To give you a quick and easy start to developing with Cloud SDK for JavaScript we created a set of comprehensive tutorials split into missions and groups for a convenient learning path.
 They'll help you kick-start your project and get you up to speed with the most frequent use-cases and valuable features of the SDK.
 
 ## Tutorial Overview
@@ -15,7 +15,7 @@ They'll help you kick-start your project and get you up to speed with the most f
 Tutorials can also be bundled into groups and missions.
 A group is a series of individual tutorials.
 A mission consists of groups and/or individual tutorials.
-In this way, you can carry out more extensive and meaningful learning experience.
+In this way, you can carry out a more extensive and meaningful learning experience.
 We recommend [creating an account](https://developers.sap.com/bin/fiji/es/login.sapdxdevs.html) to keep track of your progress.
 
 ### Groups
@@ -31,7 +31,7 @@ Groups are a collection of topic-based tutorials.
 
 ### Tutorials quick links
 
-Use the links below to quickly access direct to your favorite tutorial and refresh your knowledge.
+Use the links below to quickly access your favorite tutorial and refresh your knowledge.
 
 1. [Get Set to Use SAP Cloud SDK for JavaScript](https://developers.sap.com/tutorials/s4sdkjs-prerequisites.html)
 

@@ -18,10 +18,10 @@ keywords:
 ## Introduction
 
 Most applications developed on SAP Cloud Platform (SCP) will integrate in some way with other LoB solutions and systems.
-Integration means the exchange of data and it is necessary to abstract the details on the data exchange from your code base.
-The reasons for this abstraction are manifold: URLs defining a resource may change, authentication information should not be part of code, in case of a multi customer application the locations depends on the customer, etc.
+Integration means the exchange of data and it is necessary to abstract the details on the data exchange from your codebase.
+The reasons for this abstraction are manifold: URLs defining a resource may change, authentication information should not be part of code, in case of a multi-customer application the locations depends on the customer, etc.
 
-On SCP this abstraction is provided by a so called destination object.
+On SCP this abstraction is provided by a so-called destination object.
 This object can be obtained at runtime of the application and contains information like:
 
 - URL
@@ -33,7 +33,7 @@ The SAP Cloud SDK helps you receiving this object and provides also options for 
 
 The SDK provides a generator to create a client or data model based on a service definition.
 For S/4HANA this client has been created and published to npm.
-In this [tutorial series](https://developers.sap.com/group.s4sdk-js-cloud-foundry.html) a detailed step-by-step guide how to use the data model is presented.
+In this [tutorial series](https://developers.sap.com/group.s4sdk-js-cloud-foundry.html) a detailed step-by-step guide on how to use the data model is presented.
 A simple request to receive some business-partners from an S/4HANA system would look like:
 
 ```js
@@ -55,7 +55,7 @@ If just a destinationName is provided i.e.:
 ```
 
 The SDK tries to look the destination up for you.
-The details on this process are explained in the next chapters.
+The details of this process are explained in the next chapters.
 
 ## The Lookup Flow
 
@@ -76,7 +76,7 @@ The value is expected to be a stringified JSON array, where the items adhere to 
 Example: `"[{name: 'TESTINATION', url: 'http://url.hana.ondemand.com', username: 'DUMMY', password: 'dummy'}]"`.
 
 The SDK provides a `mockDestinationsEnv(...destinations)` function to set the `destinations` environment variable for the current process programmatically.
-It takes a list of destination objects, transforms it to a JSON array and assigns it to `process.env.destinations`.
+It takes a list of destination objects, transforms it to a JSON array, and assigns it to `process.env.destinations`.
 At runtime, the SDK will check whether a destination with the given is present and use it, if it is.
 If a destination with the same name as the one given as `destinationName` is found it is taken for example:
 
@@ -90,12 +90,12 @@ mockDestinationsEnv({
 });
 ```
 
-would set a destination with name `TESTINATION`.
+This would set a destination with the name `TESTINATION`.
 
 ### Service Instance
 
-It is possible that the service credentials in other words `VCAP_SERVICES` environment variables contain a destination.
-If you want to use this information the name of the service instance must be provided as destination name.
+The service credentials, in other words `VCAP_SERVICES` environment variables, may contain a destination.
+If you want to use this information, the name of the service instance must be provided as the destination name.
 Currently two services types are supported out of the box `business-logging` and `s4-hana-cloud` with the following transformation functions:
 
 ```js
@@ -118,11 +118,11 @@ Currently two services types are supported out of the box `business-logging` and
 
 ### Destination Service
 
-In a productive environment you will use a [Destination service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html) to retrieve destinations.
+In a productive environment, you will use a [Destination service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html) to retrieve destinations.
 
 #### Authentication and JWT retrieval
 
-In order to access the destination service, the SDK will first fetch an access token from the XSUAA service via one of supported authentication flows:
+To access the destination service, the SDK will first fetch an access token from the XSUAA service via one of the supported authentication flows:
 
 - `PrincipalPropagation`
 - `NoAuthentication`
@@ -135,22 +135,22 @@ In order to access the destination service, the SDK will first fetch an access t
 **OAuth2UserTokenExchange** is currently not supported. We're working on it.
 :::
 
-The token retrieved from XSUAA service is used to make a call to the destination service and receive the destinations.
-For a simple service this would be the end of the story.
+The token retrieved from the XSUAA service is used to make a call to the destination service and receive the destinations.
+For a simple service, this would be the end of the story.
 
 #### Multi-tenancy
 
-However, the destination service is special in a way that it is a `tenant aware serive`.
-Such services make it possible to build multi tenant applications.
+However, the destination service is special in a way that it is a `tenant aware service`.
+Such services make it possible to build multi-tenant applications.
 So what defines a tenant aware service?
 
 Assume you want to build a simple application showing the 5 newest business-partner in an S/4 system.
 You want to offer this application as a service to customers.
-Of course you want to make this service cost efficient and host it only once and let multiple customers use it.
+Of course, you want to make this service cost-efficient and host it only once and let multiple customers use it.
 This leads now naturally to the requirement that your service needs to return the data related to the specific customers.
 A customer is represented by an account on SCP and a service considering the account is a `tenant aware service`.
 
-Tenant aware services on SCP are offered to customers via an `subscription` which works on a high level as follows:
+Tenant aware services on SCP are offered to customers via a `subscription` which works on a high level as follows:
 If a customer wants to use a service, a subscription is created linking the customer account and the one account hosting the service.
 In the following the term `subscriber account` will be used for the accounts using a service and `provider account` for the one hosting it.
 
@@ -168,7 +168,7 @@ The lookup process done by the SDK involves the following steps:
 - Request an access token for the destination service and a given tenant id from the XSUAA.
 - Due to the subscription between provider and subscriber, the XSUAA is allowed to issue the token.
 - The token allows for calling the destination service on behalf of the given tenant.
-  The tenant and service information are encoded in the access token.
+  The tenant and service information is encoded in the access token.
 - Make a call to the destination service using the obtained access token.
 - The destination maintained in the given tenant are returned.
 
@@ -194,7 +194,7 @@ The selection strategies can be used to control for which account a destination 
 
 :::note
 One aspect has been left out for simplicity.
-In principle it is possible to define destinations not only on the account level but also on the destination service level.
-These destinations are called `instance destinations` since they are tied to an service binding called instance on SCP.
-In every request these destinations are added to the destinations returned by the destination service.
+In principle, it is possible to define destinations not only on the account level but also on the destination service level.
+These destinations are called `instance destinations` since they are tied to a service binding called instance on SCP.
+In every request, these destinations are added to the destinations returned by the destination service.
 :::

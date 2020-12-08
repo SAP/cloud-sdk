@@ -40,7 +40,7 @@ Feel free to also check this [guide on mindful writing](https://sap.github.io/cl
 - Provide links whenever you mention 3rd party resources.
 - Build upon already available content and use it for reference.
 - Write incrementally.
-- Use a spell checker at all times.
+- Use a spell-checker at all times.
 
 ## Contributing as a team member
 

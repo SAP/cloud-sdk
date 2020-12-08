@@ -48,7 +48,7 @@ A detailed step by step guide on using a type-safe client is provided in this [t
 - Destination fetching
 - Handling of ETag
 - Handling of CSRF token
-- Serializing and deserializing of the request
+- Serializing and deserializing the request
 - And more...
 
 In this document, we focus on the **proxy** part and explain how proxies are handled by the SDK.
@@ -58,10 +58,10 @@ In this document, we focus on the **proxy** part and explain how proxies are han
 Before we get into the details it is important to have an overview of the different proxy types.
 There are two possible types of proxies:
 
-1. A local proxy running on the cloud platform used to connect to S/4HANA OnPremise systems.
+1. A local proxy running on the cloud platform that connects to S/4HANA OnPremise systems.
    The proxy information like host and port are provided by the [connectivity service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/daca64dacc6148fcb5c70ed86082ef91.html#loiodaca64dacc6148fcb5c70ed86082ef91__services).
    This proxy will be referred to as `connectivity proxy`.
-2. A proxy running in some landscape used to make requests to the internet.
+2. A proxy running in some landscape that makes requests to the internet.
    This proxy will be referred to as `web proxy`.
 
 ## Manual Configuration
@@ -97,7 +97,7 @@ Here you should let the SDK handle everything.
 Hence, you will provide in the `.execute()` method only the destination name.
 This will trigger the destination lookup as described [here](destination-js-sdk).
 
-The result of the lookup is a destination object which contains a property `Proxy Type`.
+The result of the lookup is a destination object which contains a property called `Proxy Type`.
 This property can have two values: `Internet` and `OnPremise`:
 
 <img alt="Destination in CF" src={useBaseUrl('img/proxyTypeDestination.png')} />
@@ -142,9 +142,9 @@ Currently, wild cards like `*` are supported in the list.
 
 ## A Word on the Used Libraries and Implementation Details
 
-The SDK uses `axios` to execute http requests.
+The SDK uses `axios` to execute `http` requests.
 In principle `axios` should support `web proxies` based on the environment variables.
-However, we found that request URL using a proxy was not correctly constructed and for the `connectivity proxy` an entry point was necessary anyhow.
+However, we found that the request URL using a proxy was not correctly constructed and for the `connectivity proxy`, an entry point was necessary anyhow.
 
 Hence, the SDK switches off the build-in proxy handling by `axios` completely by using:
 
@@ -155,7 +155,7 @@ Hence, the SDK switches off the build-in proxy handling by `axios` completely by
 ```
 
 in the `axios` request configuration.
-If a proxy becomes necessary or is configured by the discussed environment variables the SDK builds directly the http or https-agent:
+If a proxy becomes necessary or is configured by the discussed environment variables the SDK builds directly the `http-agent` or `https-agent`:
 
 ```json
 {
@@ -165,5 +165,6 @@ If a proxy becomes necessary or is configured by the discussed environment varia
 }
 ```
 
-and adds them to the `axios` configuration. The agents contain the proxy configuration.
+This adds them to the `axios` configuration.
+The agents contain the proxy configuration.
 The standard [http and https agents](https://www.npmjs.com/package/http-proxy-agent) are used.

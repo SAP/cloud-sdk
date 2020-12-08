@@ -15,7 +15,7 @@ Successful requests should be cast to `WriteResponses` which contains all subres
 Those responses can be accessed by `.responses` and have the type `WriteResponse`.
 Each `WriteResponse` contains the HTTP code and can contain the raw body and the constructor of the entity that was parsed from the response, depending on whether there was a body in the response.
 Create and delete requests typically do not have a response body.
-In order to work with an instance of an entity given in a `WriteResponse`, you can use the `.as` method, that allows you to transform the raw string body into an instance of the given constructor.
+To work with an instance of an entity given in a `WriteResponse`, you can use the `.as` method, which allows you to transform the raw string body into an instance of the given constructor.
 Note that the response may not exist, so you should only call this method if you know that there is data.
 Typically the HTTP code is a good indicator for this (`201 No Content` probably won't have content).
 If you are working with TypeScript you will have to tell the compiler, that the `.as!` method can be used here by adding a `!`.
@@ -27,7 +27,7 @@ These change requests are combined to one `changeset`, which is passed to the `b
 
 Once the batch request is executed it returns a list of `BatchResponse`s, which in this example contains one response only, namely the one for the changeset.
 
-If the request was not successful, an error will be thrown, otherwise the subresponses are transformed to instances of `BusinessPartnerAddress`.
+If the request was not successful, an error will be thrown, otherwise, the subresponses are transformed into instances of `BusinessPartnerAddress`.
 
 ```ts
 async function updateAddresses(

@@ -6,15 +6,15 @@ Once a batch request is executed it returns a list of `BatchResponse`s.
 Those contain the raw response information of each subrequest, the subresponse to a retrieve subrequest can either be a `ReadResponse` or an `ErrorResponse`.
 To determine if a request was successful use `.isSuccess()`.
 
-Successful requests can be cast to `ReadResponse` which contains the HTTP code, the raw body and the constructor of the entity that was parsed from the response.
-In order to work with an instance of the retrieved entity, you can use the `.as` method, that allows you to transform the raw data into an instance of the given constructor.
+Successful requests can be cast to `ReadResponse` which contains the HTTP code, the raw body, and the constructor of the entity that was parsed from the response.
+To work with an instance of the retrieved entity, you can use the `.as` method, which allows you to transform the raw data into an instance of the given constructor.
 Note, that retrieve responses can be [`ErrorResponse`s](#error-handling).
 Therefore, it is crucial to check responses for success, before casting them to `ReadResponse`.
 
 In the example below, each given address id is mapped to a [GetByKeyRequestBuilder](#getbykey-request-builder).
 These retrieve requests are combined into one `batch` request and executed against a destination.
 
-If one of the request was not successful, an error will be thrown, otherwise the responses are transformed to instances of `BusinessPartnerAddress`.
+If one of the requests was not successful, an error will be thrown, otherwise, the responses are transformed into instances of `BusinessPartnerAddress`.
 
 ```ts
 async function getAddressesByIds(

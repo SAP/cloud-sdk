@@ -36,11 +36,11 @@ The SAP Cloud SDK supports you end-to-end when developing applications that comm
 Using the SDK, you can reduce your effort when developing an application on SAP Cloud Platform by building on best practices delivered by the SDK.
 The SDK can provide JavaScript libraries and project templates.
 
-To create such an application we provide a command line interface, that allows you to scaffold or enhance an application with the missing parts to use the SDK.
+To create such an application we provide a command-line interface, that allows you to scaffold or enhance an application with the missing parts to use the SDK.
 
 ### What is the CLI.
 
-The CLI (command line interface) can initialize a nest-based project or (the more common case) add everything you need to develop for SAP Cloud Platform to an existing project no matter what backend framework you use.
+The CLI (command-line interface) can initialize a nest-based project or (the more common case) add everything you need to develop for SAP Cloud Platform to an existing project no matter what backend framework you use.
 If there are any incompatibilities, please let us know in the [issues](https://github.com/SAP/cloud-sdk-cli/issues/new/choose)!
 
 ## Installation
@@ -86,7 +86,7 @@ To create a new project run the CLI's `init` command in the project folder.
 $ sap-cloud-sdk init
 ```
 
-It will guide you through the initialization, create the necessary files and add necessary dependencies.
+It will guide you through the initialization, create the necessary files, and add necessary dependencies.
 If you run it in an empty folder, it will ask if you want to initialize a project using [`@nest/cli`](https://github.com/nestjs/nest-cli).
 
 The CLI will already install all the necessary dependencies for the project, so this might take a minute. If everything worked correctly, you should see the following output:
@@ -112,8 +112,8 @@ The project contains the following files and folders, among others, to get you s
 
 #### npm / Project
 
-- **`package.json`**: Specifies dependencies, metadata and user-defined scripts. The application comes with some predefined scripts and dependencies.
-- **`.npmrc`**: The **`npm`** configuration file. The SAP Cloud SDK consists of some generic libraries, that are available as Open Source Software and service libraries for allowlisted SAP S/4HANA APIs, referred to as the Virtual Data Model (VDM). In the scaffolding we specify the registry for the `@sap` scope, where the VDM libraries are published.
+- **`package.json`**: Specifies dependencies, metadata, and user-defined scripts. The application comes with some predefined scripts and dependencies.
+- **`.npmrc`**: The **`npm`** configuration file. The SAP Cloud SDK consists of some generic libraries, that are available as Open Source Software and service libraries for allowlisted SAP S/4HANA APIs, referred to as the Virtual Data Model (VDM). In the scaffolding, we specify the registry for the `@sap` scope, where the VDM libraries are published.
 
 #### TypeScript
 
@@ -146,16 +146,17 @@ To run the application locally, simply run the following command:
 npm run start:dev
 ```
 
-This will start a local server in watch mode, so that subsequent changes will automatically trigger a restart of the server.
+This will start a local server in watch mode so that subsequent changes will automatically trigger a restart of the server.
 Go to `http://localhost:3000` and you should get a `Hello, World!` in response.
 
 ## Deploy the project on Cloud Foundry
 
 ### Prerequisites
 
-The Cloud Foundry CLI comes in handy when you want to deploy your application to SAP Cloud Platform.
+The Cloud Foundry CLI comes in handy when you want to deploy your application to the SAP Cloud Platform.
 You can find installation instructions for all common platforms in the [`Cloud Foundry documentation`](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html).
-We recommend to use a package manager for that. If you are using `chocolatey` on Windows, please find the instructions [here](https://chocolatey.org/packages/cloudfoundry-cli).
+We recommend using a package manager for that.
+If you are using `chocolatey` on Windows, please find the instructions [here](https://chocolatey.org/packages/cloudfoundry-cli).
 
 ### Login
 
@@ -163,13 +164,13 @@ We recommend to use a package manager for that. If you are using `chocolatey` on
 If you don't have an [SAP Cloud Platform](https://account.hana.ondemand.com/) account you need to create one.
 :::
 
-In order to deploy our application, we first need to login to Cloud Foundry in SAP Cloud Platform using the `cf` CLI.
-First we need to set an `API endpoint`.
+In order to, deploy our application, we first need to login to Cloud Foundry in SAP Cloud Platform using the `cf` CLI.
+First, we need to set an `API endpoint`.
 The exact URL of this API endpoint depends on the region your subaccount is in.
 Open the [SAP Cloud Platform Cockpit](https://account.hana.ondemand.com/) and navigate to the subaccount you are planning to deploy your application to.
 Click on “Overview” on the left and you can see the URL of the API endpoint.
 
-Copy the URL and paste it into the following command in your command line:
+Copy the URL and paste it into the following command in your command-line:
 
 ```shell
 cf api https://api.cf.<region>.hana.ondemand.com
@@ -256,15 +257,15 @@ Login the [Cloud Cockpit](https://account.hana.ondemand.com), navigate to your r
 In the menu bar on the left, there should be a section `Connectivity` with an entry called `Destinations`.
 Click `Destinations`. On the page that opens, click `New Destination` and fill in the details below.
 
-For `Name`, choose a name that describes your system. For the example, we will go with `S4_SYSTEM`.
+For `Name`, choose a name that describes your system. For example, we will go with `S4_SYSTEM`.
 
 If you use the Business Partner mock server, enter for `URL` the URL that you have saved from the [previous step](#deployment) and use `NoAuthentication` for `Authentication`.
-If you use an SAP S/4HANA Cloud system, enter the systems URL in the `URL` field and choose `BasicAuthentication` as authentication type.
+If you use an SAP S/4HANA Cloud system, enter the systems URL in the `URL` field and choose `BasicAuthentication` as the authentication type.
 This will make the fields `User` and `Password` appear. Enter here the credentials of a technical user for your SAP S/4HANA Cloud system.
 
 ### Bind destination service
 
-In order to allow the application to use the destination you have just configured, you will need to bind an instance of the destination service and an instance of the `XSUAA service` to your application.
+To allow the application to use the destination you have just configured, you will need to bind an instance of the destination service and an instance of the `XSUAA service` to your application.
 
 To create an instance of the destination service, execute the following command in your terminal:
 

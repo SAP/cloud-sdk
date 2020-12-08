@@ -20,7 +20,7 @@ import TabItem from '@theme/TabItem';
 Once you have generated a typed OData client using the SAP Cloud SDK generator or if you decided to use one of the pre-generated OData clients for SAP S/4HANA, you can use your OData client to execute HTTP requests against your service.
 The client provides request builders for the different types of requests and abstractions of the entity sets of the given service, that we refer to as _entities_.
 
-To make a request towards an entity set, entities offer a fluent API.
+To request an entity set, entities offer a fluent API.
 
 ## General request structure
 
@@ -133,7 +133,7 @@ Each request type has additional request specific configuration options, e.g. cr
 
 The last step when making a request using the SAP Cloud SDK is the request execution.
 Once the request is configured use the `execute` function and pass a [destination](../connectivity/destination-js-sdk) to it.
-This will automatically construct your request URL and headers, execute the request and return a typed response if applicable.
+This will automatically construct your request URL and headers, execute the request, and return a typed response if applicable.
 
 ### Setting custom request headers
 
@@ -148,7 +148,7 @@ MyEntity.requestBuilder().getAll().withCustomHeaders({
 
 The keys and values of the passed object correspond with the header names and values.
 Custom headers take priority over automatically generated headers.
-Automatically generated headers are sent with lowercase header names, custom header keep the case they were set in.
+Automatically generated headers are sent with lowercase header names, custom headers keep the case they were set in.
 In the example above we pass an `apikey`, which is necessary if you want to make use of the SAP API Business Hub sandbox.
 
 :::caution
@@ -178,8 +178,8 @@ If you want to set a query parameter in quotes (e.g. `language='en'`) you will h
 
 ### Setting a custom service path
 
-If a service specification contains a specification for the servicePath, the SAP Cloud SDK generator generates an OData client with a default service path according to the specification (typically `'/sap/opus/data/sap/'` for SAP S/4HANA services).
-When there is no such path defined in the specification it can be manually set in the `service-mapping. json`.
+If a service specification contains a specification for the `servicePath`, the SAP Cloud SDK generator generates an OData client with a default service path according to the specification (typically `'/sap/opus/data/sap/'` for SAP S/4HANA services).
+When there is no such path defined in the specification it can be manually set in the `service-mapping.json`.
 It can also be adjusted per request by using the `withCustomServicePath` function:
 
 ```ts

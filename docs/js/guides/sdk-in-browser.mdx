@@ -23,7 +23,7 @@ For example an [Angular application](https://angular.io/cli/new) via `ng new myP
 
 ## Include the SDK
 
-For most examples we will use the business partner API.
+For most examples, we will use the business partner API.
 Add the package `@sap/cloud-sdk-vdm-business-partner-service` to your package.json introduce some call via:
 
 ```
@@ -40,8 +40,8 @@ async function callApi(){
 ```
 
 :::note
-For the destination lookup the SDK relies on `Node.js` functionality like `process.env` for example.
-However, the request building, execution and result parsing does not require any `Node.js` modules and can be used in the front-end.
+For the destination lookup, the SDK relies on `Node.js` functionality like `process.env` for example.
+However, the request building, execution, and result parsing does not require any `Node.js` modules and can be used in the front-end.
 Hence you have to create the destination variable `myDest` manually.
 :::
 
@@ -69,7 +69,7 @@ When you execute `npm run serve` your project is compiled and hosted on a local 
 :::note
 When you trigger a request from a browser to the remote system all modern browsers will block this to ensure [same origin policy](https://en.wikipedia.org/wiki/Same-origin_policy).
 One simple way to overcome this issue locally is to disable the web security of your browser temporarily (e.g. --disable-web-security for Chrome).
-Alternatively, you can also create a second localhost proxy server which adds the `access-allow-origin-header` to the request.
+Alternatively, you can also create a second localhost proxy server that adds the `access-allow-origin-header` to the request.
 :::
 
 ## Run On Cloud Foundry
@@ -104,13 +104,13 @@ See the documentation on [On-Premise systems](../features/connectivity/on-premis
 :::
 
 :::note
-With webpack it is possible to [load resources](https://webpack.js.org/plugins/normal-module-replacement-plugin/) for local or a productive usage.
+With webpack it is possible to [load resources](https://webpack.js.org/plugins/normal-module-replacement-plugin/) for local or productive usage.
 Using such a switch you can easily adjust the value of the destination for the two cases.
 :::
 
 ## Workaround
 
-Currently, we are facing the issue, that on compilation from TS to JS the `Node.js` parts cause problems even if they are not used.
+Currently, we are facing the issue, that during the compilation from TS to JS the `Node.js` parts cause problems even if they are not used.
 We hope to resolve these issues in the future but here is a workaround:
 
 - Include `@angular-builders/custom-webpack` to the `devDependencies`

@@ -19,7 +19,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 ## What is the Business Application Studio (BAS)?
 
 The Business Application Studio (BAS) is a development environment offered as a service on Cloud Foundry (CF).
-You can simply subscribe to the BAS and from there quickly start developing without installing node, git, Visual Studio Code or other tools.
+You can simply subscribe to the BAS and from there quickly start developing without installing node, git, Visual Studio Code, or other tools.
 The solution looks and feels like Visual Studio Code, which is no surprise since it is based on [Eclipse Theia](https://theia-ide.org/), the open source version of Visual Studio Code.
 
 However, SAP added a few useful features to the BAS.
@@ -38,11 +38,11 @@ Companies do not expose their SAP S/4HANA On-Premise systems to the internet.
 They are only reachable via a CC attached to a CF account.
 In principle, you cannot reach these systems outside the CF account.
 
-However, due to the subscription between the BAS and the CF account there is a connection from the local application to the SAP S/4HANA system.
+However, due to the subscription between the BAS and the CF account, there is a connection from the local application to the SAP S/4HANA system.
 On a high level the connection works the following way:
 
 - The BAS includes an HTTP_PROXY running at http://localhost:8887
-- This proxy forwards all http requests to the CF account
+- This proxy forwards all `http` requests to the CF account
 - CF searches the existing destinations for one matching the URL of the request
 - If a destination is present, an initial request is sent to this destination
 - The proxy is a reverse proxy also piping back the response to the BAS
@@ -114,10 +114,10 @@ Either extend your existing `.vscode/launch.json` or create a new one.
 }
 ```
 
-In this example we use a simple Nest.js application.
+In this example, we use a simple Nest.js application.
 The code will look almost identical for express or [CAP](https://community.sap.com/topics/cloud-application-programming) applications.
 The property `program` defines the script file executed when you run the configuration.
-In our case the `main.js` script will start up the Nest server.
+In our case, the `main.js` script will start up the Nest server.
 The `preLaunchTask` executes the build before each run which compiles the TypeScript files to JavaScript.
 The `outFiles` property defines where the compiled files will be located.
 
@@ -139,7 +139,7 @@ You can start your application via the launch button.
 :::note
 The SDK also offers a `mockTestDestination()` method which reads destination information from a `system.json` and `credentials.json` file.
 In the end, this only sets the `destinations` environment variables as stored in the `.env` file, but could become advantageous if you have many systems.
-You can also set the `credentials.json` to your git ignore list so that they are not checked in by accident and share the systems with your colleagues.
+You can also set the `credentials.json` to your git ignore list so that they are not checked-in by accident and share the systems with your colleagues.
 :::
 
 For the simple case you would add `mockTestDestination(<destinationName>)` to your local startup script and have a `systems.json` in your project root:
@@ -162,8 +162,8 @@ Just add values for `user` and `password` to the environment variables if the sy
 In case you use the `mockTestDestination()` add the login information to the `credentials.json`.
 
 :::note
-Via the connection between the BAS and CF it is also possible to import all environment variables from the CF account to the BAS.
-In particular, you can mirror `VCAP_SERVICE` variable containing all service information.
+Via the connection between the BAS and CF, it is also possible to import all environment variables from the CF account to the BAS.
+In particular, you can mirror the `VCAP_SERVICE` variable containing all service information.
 If you import these you can use the real destination via the destination service in your locally deployed app.
 This works for all destinations with a proxy type `Internet` but not for the ones with `OnPremise`.
 The reason for this is the interference of two proxies: (1) The web proxy of the BAS and (2) the connectivity proxy in CF.
