@@ -11,13 +11,13 @@ module.exports = {
     prism: {
       additionalLanguages: ['powershell', 'java', 'groovy'],
       theme: require('prism-react-renderer/themes/github'),
-      darkTheme: require('prism-react-renderer/themes/dracula'),
+      darkTheme: require('prism-react-renderer/themes/dracula')
     },
     algolia: {
       apiKey: '84d46c71e9f2445436400effad7c4e1b',
       indexName: 'sap_cloud-sdk',
       // appId: 'app-id', // Optional, if you run the DocSearch crawler on your own
-      algoliaOptions: {}, // Optional, if provided by Algolia
+      algoliaOptions: {} // Optional, if provided by Algolia
     },
     // ***************************************************************
     // Activate this announcement bar for global urgent notifications
@@ -37,13 +37,13 @@ module.exports = {
       logo: {
         alt: 'SAP Cloud SDK',
         src: 'img/logo.svg',
-        srcDark: 'img/logo-dark.svg',
+        srcDark: 'img/logo-dark.svg'
       },
       items: [
         {
           to: 'docs/overview/overview-cloud-sdk',
           label: 'Docs',
-          position: 'left',
+          position: 'left'
         },
         {
           label: 'Support',
@@ -51,22 +51,22 @@ module.exports = {
           items: [
             {
               label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/sap-cloud-sdk',
+              href: 'https://stackoverflow.com/questions/tagged/sap-cloud-sdk'
             },
             {
               label: 'GitHub JavaScript',
-              href: 'https://github.com/SAP/cloud-sdk-js/issues/new/choose',
+              href: 'https://github.com/SAP/cloud-sdk-js/issues/new/choose'
             },
             {
               label: ' GitHub Java',
               href:
-                'https://github.com/SAP/cloud-sdk/issues/new?assignees=&labels=Java&template=sap-cloud-sdk-for-java-issue.md&title=',
+                'https://github.com/SAP/cloud-sdk/issues/new?assignees=&labels=Java&template=sap-cloud-sdk-for-java-issue.md&title='
             },
             {
               label: 'Support Details',
-              to: 'docs/overview/get-support',
-            },
-          ],
+              to: 'docs/overview/get-support'
+            }
+          ]
         },
         {
           label: 'Release notes',
@@ -74,23 +74,23 @@ module.exports = {
           items: [
             {
               label: 'Java',
-              to: 'docs/java/release-notes-sap-cloud-sdk-for-java',
+              to: 'docs/java/release-notes-sap-cloud-sdk-for-java'
             },
             {
               label: 'JS/TS Core',
-              to: 'https://github.com/SAP/cloud-sdk-js/releases',
+              to: 'https://github.com/SAP/cloud-sdk-js/releases'
             },
             {
               label: 'JS/TS Client Libraries',
               to:
-                'docs/js/release-notes-sap-cloud-sdk-for-javascript-and-typescript',
-            },
-          ],
+                'docs/js/release-notes-sap-cloud-sdk-for-javascript-and-typescript'
+            }
+          ]
         },
         {
           label: 'Maven Central',
           href: 'https://search.maven.org/search?q=g:com.sap.cloud.sdk*',
-          position: 'left',
+          position: 'left'
         },
         {
           label: 'NPMJS',
@@ -98,19 +98,19 @@ module.exports = {
           items: [
             {
               label: 'Core Modules',
-              href: 'https://www.npmjs.com/search?q=sap-cloud-sdk*',
+              href: 'https://www.npmjs.com/search?q=sap-cloud-sdk*'
             },
             {
               label: 'S/4HANA Cloud',
-              href: 'https://www.npmjs.com/search?q=sap%2Fsap-cloud-vdm*',
+              href: 'https://www.npmjs.com/search?q=sap%2Fsap-cloud-vdm*'
             },
             {
               label: 'S/4HANA On-Premise',
-              href: 'https://www.npmjs.com/search?q=sap%2Fsap-cloud-op*',
-            },
-          ],
-        },
-      ],
+              href: 'https://www.npmjs.com/search?q=sap%2Fsap-cloud-op*'
+            }
+          ]
+        }
+      ]
     },
     footer: {
       style: 'dark',
@@ -120,65 +120,65 @@ module.exports = {
           items: [
             {
               label: 'SAP Cloud SDK overview',
-              to: 'docs/overview/overview-cloud-sdk',
+              to: 'docs/overview/overview-cloud-sdk'
             },
             {
               label: 'Cloud SDK for Java',
-              to: 'docs/java/getting-started',
+              to: 'docs/java/getting-started'
             },
             {
               label: 'Cloud SDK for JS',
-              to: 'docs/js/getting-started',
+              to: 'docs/js/getting-started'
             },
             {
               label: 'Cloud SDK Tutorials',
               href:
-                'https://developers.sap.com/tutorial-navigator.html?tag=products:technology-platform/sap-cloud-sdk/sap-cloud-sdk',
-            },
-          ],
+                'https://developers.sap.com/tutorial-navigator.html?tag=products:technology-platform/sap-cloud-sdk/sap-cloud-sdk'
+            }
+          ]
         },
         {
           title: 'Additional resources',
           items: [
             {
               label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/sap-cloud-sdk',
+              href: 'https://stackoverflow.com/questions/tagged/sap-cloud-sdk'
             },
             {
               label: 'SAP Developers Portal',
-              href: 'https://developers.sap.com/topics/cloud-sdk.html',
+              href: 'https://developers.sap.com/topics/cloud-sdk.html'
             },
             {
               label: 'Cloud SDK Community Page',
-              href: 'https://community.sap.com/topics/cloud-sdk',
+              href: 'https://community.sap.com/topics/cloud-sdk'
             },
             {
               label: 'Cloud SDK on SAP Help',
               href:
-                'https://help.sap.com/viewer/product/SAP_CLOUD_SDK/1.0/en-US?task=discover_task',
-            },
-          ],
+                'https://help.sap.com/viewer/product/SAP_CLOUD_SDK/1.0/en-US?task=discover_task'
+            }
+          ]
         },
         {
           title: 'Package repositories',
           items: [
             {
               label: 'Cloud SDK for JavaScript',
-              href: 'https://www.npmjs.com/search?q=%40sap-cloud-sdk',
+              href: 'https://www.npmjs.com/search?q=%40sap-cloud-sdk'
             },
             {
               label: 'JS client libraries for S/4HANA',
-              href: 'https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*',
+              href: 'https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*'
             },
             {
               label: 'Cloud SDK for Java',
-              href: 'https://search.maven.org/search?q=g:com.sap.cloud.sdk*',
-            },
-          ],
-        },
+              href: 'https://search.maven.org/search?q=g:com.sap.cloud.sdk*'
+            }
+          ]
+        }
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} SAP SE or an SAP affiliate company. All rights reserved.`,
-    },
+      copyright: `Copyright © ${new Date().getFullYear()} SAP SE or an SAP affiliate company. All rights reserved.`
+    }
   },
   presets: [
     [
@@ -189,24 +189,24 @@ module.exports = {
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
           editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
-          routeBasePath: 'docs',
+          routeBasePath: 'docs'
         },
         theme: {
-          customCss: require.resolve('./src/css/custom.css'),
+          customCss: require.resolve('./src/css/custom.css')
         },
         sitemap: {
           cacheTime: 600 * 1000, // 600 sec - cache purge period
           changefreq: 'weekly',
           priority: 0.5,
-          trailingSlash: false,
-        },
-      },
-    ],
+          trailingSlash: false
+        }
+      }
+    ]
   ],
   scripts: [
     {
-      src: 'https://sap.github.io/cloud-sdk/js/swa.js',
-    },
+      src: 'https://sap.github.io/cloud-sdk/js/swa.js'
+    }
   ],
-  customFields: {},
+  customFields: {}
 };

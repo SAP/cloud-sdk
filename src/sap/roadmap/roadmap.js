@@ -5,7 +5,7 @@ import Timeline, {
   TimelineMarkers,
   CustomMarker,
   TodayMarker,
-  CursorMarker,
+  CursorMarker
 } from 'react-calendar-timeline';
 import moment from 'moment';
 
@@ -16,7 +16,7 @@ export default class Roadmap extends Component {
     this.state = {
       items,
       groups,
-      keys,
+      keys
     };
   }
 
@@ -31,10 +31,10 @@ export default class Roadmap extends Component {
           ? Object.assign({}, item, {
               start: dragTime,
               end: dragTime + (item.end - item.start),
-              group: group.id,
+              group: group.id
             })
           : item
-      ),
+      )
     });
 
     console.log('Moved', itemId, dragTime, newGroupOrder);
@@ -48,10 +48,10 @@ export default class Roadmap extends Component {
         item.id === itemId
           ? Object.assign({}, item, {
               start: edge === 'left' ? time : item.start,
-              end: edge === 'left' ? item.end : time,
+              end: edge === 'left' ? item.end : time
             })
           : item
-      ),
+      )
     });
 
     console.log('Resized', itemId, time, edge);
@@ -68,7 +68,7 @@ export default class Roadmap extends Component {
           groups,
           items,
           onItemMove: this.handleItemMove.bind(this),
-          onItemResize: this.handleItemResize.bind(this),
+          onItemResize: this.handleItemResize.bind(this)
         }}
       >
         <TimelineMarkers>
@@ -77,7 +77,7 @@ export default class Roadmap extends Component {
               const customStyles = {
                 ...styles,
                 backgroundColor: 'lightgreen',
-                width: '4px',
+                width: '4px'
               };
               return <div style={customStyles} />;
             }}
@@ -87,7 +87,7 @@ export default class Roadmap extends Component {
               const customStyles = {
                 ...styles,
                 backgroundColor: 'lightgreen',
-                width: '4px',
+                width: '4px'
               };
               return <div style={customStyles} />;
             }}
@@ -97,7 +97,7 @@ export default class Roadmap extends Component {
               const customStyles = {
                 ...styles,
                 backgroundColor: 'lightgreen',
-                width: '4px',
+                width: '4px'
               };
               return <div style={customStyles} />;
             }}
@@ -107,7 +107,7 @@ export default class Roadmap extends Component {
               const customStyles = {
                 ...styles,
                 backgroundColor: 'deeppink',
-                width: '4px',
+                width: '4px'
               };
               return <div style={customStyles} />;
             }}

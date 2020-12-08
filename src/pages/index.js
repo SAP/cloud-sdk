@@ -26,7 +26,7 @@ const features = [
           Get started with the SDK for Java.
         </a>
       </>
-    ),
+    )
   },
   {
     title: <>SAP Cloud SDK for JavaScript</>,
@@ -48,8 +48,8 @@ const features = [
           Get started with the SDK for JavaScript
         </a>
       </>
-    ),
-  },
+    )
+  }
 ];
 
 function Feature({ imageUrl, link, title, description, badge }) {

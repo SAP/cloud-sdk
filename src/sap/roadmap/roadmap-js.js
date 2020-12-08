@@ -2,12 +2,12 @@ import moment from 'moment';
 import randomColor from 'randomcolor';
 
 const style = {
-  fontSize: '0.9rem',
+  fontSize: '0.9rem'
 };
 
 const styleFocus = {
   fontSize: '0.9rem',
-  background: 'indigo',
+  background: 'indigo'
 };
 
 export const keys = {
@@ -20,7 +20,7 @@ export const keys = {
   itemGroupKey: 'group',
   itemTimeStartKey: 'start',
   itemTimeEndKey: 'end',
-  groupLabelKey: 'title',
+  groupLabelKey: 'title'
 };
 
 export const groups = [
@@ -36,7 +36,7 @@ export const groups = [
   { id: 'cap', title: 'One SAP' },
   { id: 'top', title: 'Developer happiness' },
   { id: 'future', title: 'Future shots' },
-  { id: 'scp', title: 'SAP Cloud Platform' },
+  { id: 'scp', title: 'SAP Cloud Platform' }
 ];
 
 export const items = [
@@ -52,9 +52,9 @@ export const items = [
         console.log('You clicked double!');
       },
       style: {
-        ...styleFocus,
-      },
-    },
+        ...styleFocus
+      }
+    }
   },
   {
     id: 2,
@@ -68,9 +68,9 @@ export const items = [
         console.log('You clicked double!');
       },
       style: {
-        ...styleFocus,
-      },
-    },
+        ...styleFocus
+      }
+    }
   },
   {
     id: 5,
@@ -84,9 +84,9 @@ export const items = [
         console.log('You clicked double!');
       },
       style: {
-        ...styleFocus,
-      },
-    },
+        ...styleFocus
+      }
+    }
   },
   {
     id: 6,
@@ -100,9 +100,9 @@ export const items = [
         console.log('You clicked double!');
       },
       style: {
-        ...styleFocus,
-      },
-    },
+        ...styleFocus
+      }
+    }
   },
   {
     id: 7,
@@ -117,9 +117,9 @@ export const items = [
         console.log('You clicked double!');
       },
       style: {
-        ...styleFocus,
-      },
-    },
+        ...styleFocus
+      }
+    }
   },
 
   {
@@ -134,9 +134,9 @@ export const items = [
         console.log('You clicked double!');
       },
       style: {
-        ...styleFocus,
-      },
-    },
+        ...styleFocus
+      }
+    }
   },
   {
     id: 9,
@@ -150,9 +150,9 @@ export const items = [
         console.log('You clicked double!');
       },
       style: {
-        ...styleFocus,
-      },
-    },
+        ...styleFocus
+      }
+    }
   },
   // {
   //   id: 10,
@@ -195,9 +195,9 @@ export const items = [
         console.log('You clicked double!');
       },
       style: {
-        ...style,
-      },
-    },
+        ...style
+      }
+    }
   },
   {
     id: 16,
@@ -211,9 +211,9 @@ export const items = [
         console.log('You clicked double!');
       },
       style: {
-        ...styleFocus,
-      },
-    },
+        ...styleFocus
+      }
+    }
   },
   {
     id: 17,
@@ -227,9 +227,9 @@ export const items = [
         console.log('You clicked double!');
       },
       style: {
-        ...style,
-      },
-    },
+        ...style
+      }
+    }
   },
   {
     id: 18,
@@ -243,9 +243,9 @@ export const items = [
         console.log('You clicked double!');
       },
       style: {
-        ...style,
-      },
-    },
+        ...style
+      }
+    }
   },
   // {
   //   id: 19,
@@ -275,9 +275,9 @@ export const items = [
         console.log('You clicked double!');
       },
       style: {
-        ...styleFocus,
-      },
-    },
+        ...styleFocus
+      }
+    }
   },
   {
     id: 21,
@@ -291,9 +291,9 @@ export const items = [
         console.log('You clicked double!');
       },
       style: {
-        ...style,
-      },
-    },
+        ...style
+      }
+    }
   },
 
   {
@@ -308,9 +308,9 @@ export const items = [
         console.log('You clicked double!');
       },
       style: {
-        ...style,
-      },
-    },
+        ...style
+      }
+    }
   },
   {
     id: 26,
@@ -324,9 +324,9 @@ export const items = [
         console.log('You clicked double!');
       },
       style: {
-        ...style,
-      },
-    },
+        ...style
+      }
+    }
   },
   {
     id: 27,
@@ -340,9 +340,9 @@ export const items = [
         console.log('You clicked double!');
       },
       style: {
-        ...style,
-      },
-    },
+        ...style
+      }
+    }
   },
   {
     id: 29,
@@ -356,8 +356,8 @@ export const items = [
         console.log('You clicked double!');
       },
       style: {
-        ...styleFocus,
-      },
-    },
-  },
+        ...styleFocus
+      }
+    }
+  }
 ];
