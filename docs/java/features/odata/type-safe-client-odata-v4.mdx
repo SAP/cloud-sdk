@@ -115,9 +115,9 @@ When updating it will be taken from there and sent with the `If-match` header.
 If a service requires this header to be sent: Fetching the entity from the service first is essential to ensure that the ETag is present and up to date.
 :::
 
-### Handling of CSRF tokens
+### Handling of Cross-Site Request Forgery Tokens
 
-For create, update and delete requests the SAP Cloud SDK will try to send a [CSRF token](https://en.wikipedia.org/wiki/Cross-site_request_forgery#Cookie-to-header_token).
+For create, update and delete requests the SAP Cloud SDK will try to send a [cross-site request forgery (CSRF) token](https://en.wikipedia.org/wiki/Cross-site_request_forgery#Cookie-to-header_token).
 Upon execution, the request will try to fetch a token first before issuing the create request.
 Many services require this behavior for security reasons.
 However, the create request will be made without a CSRF token if none could be obtained.
