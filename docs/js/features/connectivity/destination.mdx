@@ -31,10 +31,10 @@ This object can be obtained at runtime of the application and contains informati
 
 The SAP Cloud SDK helps you receiving this object and provides also options for local testing outside the SCP.
 
-The SDK provides a generator to create a client or data model based on a service definition.
-For S/4HANA this client has been created and published to npm.
+The SAP Cloud SDK provides a generator to create a client or data model based on a service definition.
+For SAP S/4HANA this client has been created and published to npm.
 In this [tutorial series](https://developers.sap.com/group.s4sdk-js-cloud-foundry.html) a detailed step-by-step guide on how to use the data model is presented.
-A simple request to receive some business-partners from an S/4HANA system would look like:
+A simple request to receive some business-partners from an SAP S/4HANA system would look like:
 
 ```js
 BusinessPartner.requestBuilder()
@@ -47,19 +47,19 @@ BusinessPartner.requestBuilder()
 where `yourDestination` is a [`Destination` object](pathname:///api/1.32.0/interfaces/sap_cloud_sdk_core.destination).
 In principle, you could create a destination object yourself or read it from somewhere and then pass it to the `execute()` method.
 However, this would not be very flexible and convenient as discussed above.
-The SDK provides some help for this problem.
+The SAP Cloud SDK provides some help for this problem.
 If just a destinationName is provided i.e.:
 
 ```js
 .execute({"destinationName": 'myDestination'})
 ```
 
-The SDK tries to look the destination up for you.
+The SAP Cloud SDK tries to look the destination up for you.
 The details of this process are explained in the next chapters.
 
 ## The Lookup Flow
 
-When given a `destinationName` the SDK tries three things to find a destination:
+When given a `destinationName` the SAP Cloud SDK tries three things to find a destination:
 
 1. Checking local environment variables
 2. Checking a service instance
@@ -75,9 +75,9 @@ If a `destinations` environment variable is present it will be used for the dest
 The value is expected to be a stringified JSON array, where the items adhere to the `Destination` interface.
 Example: `"[{name: 'TESTINATION', url: 'http://url.hana.ondemand.com', username: 'DUMMY', password: 'dummy'}]"`.
 
-The SDK provides a `mockDestinationsEnv(...destinations)` function to set the `destinations` environment variable for the current process programmatically.
+The SAP Cloud SDK provides a `mockDestinationsEnv(...destinations)` function to set the `destinations` environment variable for the current process programmatically.
 It takes a list of destination objects, transforms it to a JSON array, and assigns it to `process.env.destinations`.
-At runtime, the SDK will check whether a destination with the given is present and use it, if it is.
+At runtime, the SAP Cloud SDK will check whether a destination with the given is present and use it, if it is.
 If a destination with the same name as the one given as `destinationName` is found it is taken for example:
 
 ```js
@@ -120,9 +120,9 @@ Currently two services types are supported out of the box `business-logging` and
 
 In a productive environment, you will use a [Destination service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html) to retrieve destinations.
 
-#### Authentication and JWT retrieval
+#### Authentication and JWT Retrieval
 
-To access the destination service, the SDK will first fetch an access token from the XSUAA service via one of the supported authentication flows:
+To access the destination service, the SAP Cloud SDK will first fetch an access token from the XSUAA service via one of the supported authentication flows:
 
 - `PrincipalPropagation`
 - `NoAuthentication`
@@ -138,7 +138,7 @@ To access the destination service, the SDK will first fetch an access token from
 The token retrieved from the XSUAA service is used to make a call to the destination service and receive the destinations.
 For a simple service, this would be the end of the story.
 
-#### Multi-tenancy
+#### Multi-Tenancy
 
 However, the destination service is special in a way that it is a `tenant aware service`.
 Such services make it possible to build multi-tenant applications.
@@ -154,7 +154,7 @@ Tenant aware services on SCP are offered to customers via a `subscription` which
 If a customer wants to use a service, a subscription is created linking the customer account and the one account hosting the service.
 In the following the term `subscriber account` will be used for the accounts using a service and `provider account` for the one hosting it.
 
-After this little definition detour, let's go back to the destination service and the SDK.
+After this little definition detour, let's go back to the destination service and the SAP Cloud SDK.
 For simplicity an optional argument of the destination lookup has been neglected in the beginning:
 
 ```js
@@ -163,7 +163,7 @@ For simplicity an optional argument of the destination lookup has been neglected
 
 The `jwt` argument takes the JSON web token (JWT) issued by an XSUAA as input.
 This token contains a field `zid` holding the tenant id which will be used in the lookup process.
-The lookup process done by the SDK involves the following steps:
+The lookup process done by the SAP Cloud SDK involves the following steps:
 
 - Request an access token for the destination service and a given tenant id from the XSUAA.
 - Due to the subscription between provider and subscriber, the XSUAA is allowed to issue the token.
@@ -173,13 +173,13 @@ The lookup process done by the SDK involves the following steps:
 - The destination maintained in the given tenant are returned.
 
 If no token is given or the destination is not found in the subscriber account the provider account is used as a fallback.
-In order to control this fallback behavior a selection strategy can be passed to the destination lookup:
+To control this fallback behavior a selection strategy can be passed to the destination lookup:
 
 ```js
 .execute({destinationName: 'myDestination', jwt: 'yourJWT'},{selectionStrategy:'alwaysSubscriber'})
 ```
 
-There are three selection strategies defined in the SDK: `alwaysSubscriber`, `alwaysProvider` and `subscriberFirst`.
+There are three selection strategies defined in the SAP Cloud SDK: `alwaysSubscriber`, `alwaysProvider` and `subscriberFirst`.
 The selection strategy can be passed as an optional argument to the `.execute()` method.
 The default value is `subscriberFirst`.
 The selection strategies can be used to control for which account a destination lookup is attempted:

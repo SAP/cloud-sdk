@@ -22,7 +22,7 @@ The client provides request builders for the different types of requests and abs
 
 To request an entity set, entities offer a fluent API.
 
-## General request structure
+## General Request Structure
 
 On an abstract level, creating a request using the fluent API always follows the same simple structure:
 
@@ -135,7 +135,7 @@ The last step when making a request using the SAP Cloud SDK is the request execu
 Once the request is configured use the `execute` function and pass a [destination](../connectivity/destination-js-sdk) to it.
 This will automatically construct your request URL and headers, execute the request, and return a typed response if applicable.
 
-### Setting custom request headers
+### Setting Custom Request Headers
 
 The SAP Cloud SDK automatically sets some necessary request headers on every request.
 You can specify additional custom headers using the `withCustomHeaders` function:
@@ -155,7 +155,7 @@ In the example above we pass an `apikey`, which is necessary if you want to make
 Setting an `authorization` or `apikey` header (regardless of lowercase or uppercase spelling) will skip any automatic authorization header building that the SAP Cloud SDK would normally do.
 :::
 
-### Setting custom query parameters
+### Setting Custom Query Parameters
 
 The SAP Cloud SDK adds necessary query parameters for a request based on your configuration.
 You can add custom parameters by using the `withCustomQueryParameters` function.
@@ -176,7 +176,7 @@ MyEntity.requestBuilder()
 If you want to set a query parameter in quotes (e.g. `language='en'`) you will have to provide the parameter with quotes, e.g. `{ language: "'en'" }`.
 :::
 
-### Setting a custom service path
+### Setting a Custom Service Path
 
 If a service specification contains a specification for the `servicePath`, the SAP Cloud SDK generator generates an OData client with a default service path according to the specification (typically `'/sap/opus/data/sap/'` for SAP S/4HANA services).
 When there is no such path defined in the specification it can be manually set in the `service-mapping.json`.

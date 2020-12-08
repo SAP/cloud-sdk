@@ -7,8 +7,8 @@ sidebar_label: Tutorials Overview for the JavaScript SDK
 description: This document will give you an overview of the different tutorials for the SAP Cloud SDK for JavaScript.
 ---
 
-To give you a quick and easy start to developing with Cloud SDK for JavaScript we created a set of comprehensive tutorials split into missions and groups for a convenient learning path.
-They'll help you kick-start your project and get you up to speed with the most frequent use-cases and valuable features of the SDK.
+To give you a quick and easy start to developing with SAP Cloud SDK for JavaScript we created a set of comprehensive tutorials split into missions and groups for a convenient learning path.
+They'll help you kick-start your project and get you up to speed with the most frequent use-cases and valuable features of the SAP Cloud SDK.
 
 ## Tutorial Overview
 
@@ -29,7 +29,7 @@ Groups are a collection of topic-based tutorials.
 - [Create an App Using SAP Cloud SDK for JavaScript](https://developers.sap.com/group.s4sdk-js-cloud-foundry.html)
   Create your first app on Cloud Foundry using the SAP Cloud SDK for JavaScript.
 
-### Tutorials quick links
+### Tutorials Quick Links
 
 Use the links below to quickly access your favorite tutorial and refresh your knowledge.
 

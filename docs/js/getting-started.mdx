@@ -29,18 +29,18 @@ import LicenseBadge from '../../src/sap/sdk-js/LicenseBadge';
 
 ## Introduction
 
-### What is the SDK
+### What Is the SAP Cloud SDK
 
 The SAP Cloud SDK supports you end-to-end when developing applications that communicate with SAP solutions and services such as SAP S/4HANA Cloud, SAP SuccessFactors, and many others.
 
-Using the SDK, you can reduce your effort when developing an application on SAP Cloud Platform by building on best practices delivered by the SDK.
-The SDK can provide JavaScript libraries and project templates.
+Using the SAP Cloud SDK, you can reduce your effort when developing an application on SAP Cloud Platform by building on best practices delivered by the SAP Cloud SDK.
+The SAP Cloud SDK can provide JavaScript libraries and project templates.
 
-To create such an application we provide a command-line interface, that allows you to scaffold or enhance an application with the missing parts to use the SDK.
+To create such an application we provide a command-line interface, that allows you to scaffold or enhance an application with the missing parts to use the SAP Cloud SDK.
 
-### What is the CLI.
+### What Is the Command-Line Interface?
 
-The CLI (command-line interface) can initialize a nest-based project or (the more common case) add everything you need to develop for SAP Cloud Platform to an existing project no matter what backend framework you use.
+The command-line interface (CLI) can initialize a nest-based project or (the more common case) add everything you need to develop for SAP Cloud Platform to an existing project no matter what backend framework you use.
 If there are any incompatibilities, please let us know in the [issues](https://github.com/SAP/cloud-sdk-cli/issues/new/choose)!
 
 ## Installation
@@ -78,7 +78,7 @@ To get a list of all commands, run:
 $ sap-cloud-sdk --help
 ```
 
-### Create a new project
+### Create a New Project
 
 To create a new project run the CLI's `init` command in the project folder.
 
@@ -104,7 +104,7 @@ The CLI will already install all the necessary dependencies for the project, so 
 +---------------------------------------------------------------+
 ```
 
-## Project files and folders
+## Project Files and Folders
 
 <!--not sure about this part-->
 
@@ -129,16 +129,16 @@ The project contains the following files and folders, among others, to get you s
 
 - **`manifest.yml`**: The deployment descriptor file for `Cloud Foundry in SAP Cloud Platform`.
 
-#### Local development
+#### Local Development
 
 - **`src/`**: Source code for the initial application.
 
-#### SDK specific
+#### SAP Cloud SDK Specific
 
 - **`systems.json`+`credentials.json`**: Allows you to maintain destinations for testing purposes.
 - **`sap-cloud-sdk-analytics.json`**: Only if you have agreed to usage analytics during the initialization of your project. You can find more information about anonymous usage analytics [in the CLI's repository](https://github.com/SAP/cloud-sdk-cli/blob/main/usage-analytics.mdx).
 
-## Run the project
+## Run the Project
 
 To run the application locally, simply run the following command:
 
@@ -164,7 +164,7 @@ If you are using `chocolatey` on Windows, please find the instructions [here](ht
 If you don't have an [SAP Cloud Platform](https://account.hana.ondemand.com/) account you need to create one.
 :::
 
-In order to, deploy our application, we first need to login to Cloud Foundry in SAP Cloud Platform using the `cf` CLI.
+To deploy our application, we first need to login to Cloud Foundry in SAP Cloud Platform using the `cf` CLI.
 First, we need to set an `API endpoint`.
 The exact URL of this API endpoint depends on the region your subaccount is in.
 Open the [SAP Cloud Platform Cockpit](https://account.hana.ondemand.com/) and navigate to the subaccount you are planning to deploy your application to.
@@ -177,7 +177,7 @@ cf api https://api.cf.<region>.hana.ondemand.com
 cf login
 ```
 
-### Before deploying
+### Before Deploying
 
 Build your app if necessary.
 
@@ -189,7 +189,8 @@ To deploy your app, run:
 npm run deploy
 ```
 
-<!--This step consists of:
+<!--
+This step consists of:
 
 - In productive environments:
   - Transpile the application from TypeScript to JavaScript using the `ci-build` script
@@ -197,7 +198,8 @@ npm run deploy
   - Push to Cloud Foundry:
 ```ts
 cf push
-```-->
+```
+-->
 
 This command will use your local sources for transpiling, packaging and deployment, but will omit packaging your local `node_modules` as those can be system dependent.
 Dependencies will instead be installed automatically when deploying to `Cloud Foundry`.
@@ -247,11 +249,11 @@ Should the application not work for whatever reason, you can call the following 
 cf logs <YOUR-APPLICATION-NAME> --recent
 ```
 
-## Additional features
+## Additional Features
 
 For productive use, your app should be linked to one or more databases and implement user authentication and authorization.
 
-### Configure destination
+### Configure Destination
 
 Login the [Cloud Cockpit](https://account.hana.ondemand.com), navigate to your respective subaccount (in case of a trial account it should be called `trial`).
 In the menu bar on the left, there should be a section `Connectivity` with an entry called `Destinations`.
@@ -263,7 +265,7 @@ If you use the Business Partner mock server, enter for `URL` the URL that you ha
 If you use an SAP S/4HANA Cloud system, enter the systems URL in the `URL` field and choose `BasicAuthentication` as the authentication type.
 This will make the fields `User` and `Password` appear. Enter here the credentials of a technical user for your SAP S/4HANA Cloud system.
 
-### Bind destination service
+### Bind Destination Service
 
 To allow the application to use the destination you have just configured, you will need to bind an instance of the destination service and an instance of the `XSUAA service` to your application.
 

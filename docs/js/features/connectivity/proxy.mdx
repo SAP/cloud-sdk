@@ -142,11 +142,11 @@ Currently, wild cards like `*` are supported in the list.
 
 ## A Word on the Used Libraries and Implementation Details
 
-The SDK uses `axios` to execute `http` requests.
+The SAP Cloud SDK uses `axios` to execute `http` requests.
 In principle `axios` should support `web proxies` based on the environment variables.
 However, we found that the request URL using a proxy was not correctly constructed and for the `connectivity proxy`, an entry point was necessary anyhow.
 
-Hence, the SDK switches off the build-in proxy handling by `axios` completely by using:
+Hence, the SAP Cloud SDK switches off the build-in proxy handling by `axios` completely by using:
 
 ```json
 {
@@ -155,7 +155,7 @@ Hence, the SDK switches off the build-in proxy handling by `axios` completely by
 ```
 
 in the `axios` request configuration.
-If a proxy becomes necessary or is configured by the discussed environment variables the SDK builds directly the `http-agent` or `https-agent`:
+If a proxy becomes necessary or is configured by the discussed environment variables the SAP Cloud SDK builds directly the `http-agent` or `https-agent`:
 
 ```json
 {

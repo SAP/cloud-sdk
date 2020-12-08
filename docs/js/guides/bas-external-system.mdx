@@ -16,7 +16,7 @@ keywords:
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-## What is the Business Application Studio (BAS)?
+## What is the Business Application Studio?
 
 The Business Application Studio (BAS) is a development environment offered as a service on Cloud Foundry (CF).
 You can simply subscribe to the BAS and from there quickly start developing without installing node, git, Visual Studio Code, or other tools.
@@ -47,8 +47,8 @@ On a high level the connection works the following way:
 - If a destination is present, an initial request is sent to this destination
 - The proxy is a reverse proxy also piping back the response to the BAS
 
-The SDK helps you to consider the HTTP_PROXY automatically and makes it easy to use the same code base locally and in production on CF.
-The SDK has a [destination lookup](../features/connectivity/destination-js-sdk) priority considering environment variables first.
+The SAP Cloud SDK helps you to consider the HTTP_PROXY automatically and makes it easy to use the same code base locally and in production on CF.
+The SAP Cloud SDK has a [destination lookup](../features/connectivity/destination-js-sdk) priority considering environment variables first.
 
 The trick is to define a `destinations` environment variable when you run locally, which works like a switch under the hood when you execute:
 
@@ -58,9 +58,9 @@ executeHttpRequest({ destinationName: 'myDestinationName', jwt: 'myJWT' });
 
 The code is the same for local execution and production. The two situations are:
 
-**Case 1:** When run locally, the SDK reads the destination from the environment variables. The `jwt` is irrelevant.
+**Case 1:** When run locally, the SAP Cloud SDK reads the destination from the environment variables. The `jwt` is irrelevant.
 The destination contains only the name and URL of the real CF destination.
-Since the destination has no proxy type specified, the SDK takes the HTTP_PROXY into account, as is the default.
+Since the destination has no proxy type specified, the SAP Cloud SDK takes the HTTP_PROXY into account, as is the default.
 From there the flow described above takes place.
 
 **Case 2:** When run on CF there is no environment variable present.
@@ -68,7 +68,7 @@ The `jwt` is used to fetch the full destination from the service.
 The proxy type is `OnPremise` and the connectivity service provides all proxy information.
 
 :::note
-The `executeHttpRequest()` function is used by all request builders provided of the SDK as well as by CAP applications connecting to an SAP S/4HANA system.
+The `executeHttpRequest()` function is used by all request builders provided of the SAP Cloud SDK as well as by CAP applications connecting to an SAP S/4HANA system.
 :::
 
 ## Setup
@@ -133,11 +133,11 @@ destinations="[{"name": "<destinationName>","url": "<destinationUrl>"}]"
 
 Fill in the `name` and `url` of the destination you [configured in CF](#CCandDestSetup).
 Once the request reaches the CF account via the proxy, it reads all authorization information from the real destination.
-All requests done with the SDK will now reach the SAP S/4HANA system.
+All requests done with the SAP Cloud SDK will now reach the SAP S/4HANA system.
 You can start your application via the launch button.
 
 :::note
-The SDK also offers a `mockTestDestination()` method which reads destination information from a `system.json` and `credentials.json` file.
+The SAP Cloud SDK also offers a `mockTestDestination()` method which reads destination information from a `system.json` and `credentials.json` file.
 In the end, this only sets the `destinations` environment variables as stored in the `.env` file, but could become advantageous if you have many systems.
 You can also set the `credentials.json` to your git ignore list so that they are not checked-in by accident and share the systems with your colleagues.
 :::
