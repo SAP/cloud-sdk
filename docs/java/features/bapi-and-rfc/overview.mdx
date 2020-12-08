@@ -17,11 +17,11 @@ keywords:
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-## What is a BAPI/an RFC Module?
+## What Is A BAPI? What Is An RFC Module?
 
-As per the [official SAP documentation](https://help.sap.com/saphelp_46c/helpdata/en/a5/3ec8464ac011d1894e0000e829fbbd/content.htm?no_cache=true), a BAPI (Business Application Programming Interface) is a _precisely defined interface providing access to processes and data in business application systems_.
+Per the [official SAP documentation](https://help.sap.com/saphelp_46c/helpdata/en/a5/3ec8464ac011d1894e0000e829fbbd/content.htm?no_cache=true), a Business Application Programming Interface (BAPI) is a _precisely defined interface providing access to processes and data in business application systems_.
 BAPIs allow external systems to integrate with ABAP systems by reading and writing business data through the BAPI as an interface.
-By contrast, using an RFC module is possible for such integrations, but the recommended approach is to use BAPIs wherever possible as BAPIs guarantee more stable and intuitive interfaces.
+By contrast, using a Remote Function Call (RFC) module is possible for such integrations, but the recommended approach is to use BAPIs wherever possible as BAPIs guarantee more stable and intuitive interfaces.
 
 On the technical level, both BAPIs and RFC modules allow for invocation from external systems through the [RFC protocol](https://help.sap.com/doc/saphelp_nw73/7.3.16/en-US/48/88068ad9134076e10000000a42189d/content.htm) (Remote Function Call). As opposed to HTTP, RFC is a binary protocol highly-optimized for fast data transfer between enterprise systems.
 
@@ -41,10 +41,10 @@ To improve readability, we use the term _BAPI_ to refer to both BAPIs and RFC mo
 SAP offers the [SAP Java Connector](https://support.sap.com/en/product/connectors/jco.html) library, hereafter referred to as _JCo_ in short, that allows native access to BAPIs inside SAP systems.
 That means, one can also invoke BAPIs without using the SAP Cloud SDK by solely leveraging JCo.
 
-SAP Cloud SDK offers a convenient Java API on top of JCo that integrates with other SDK core concepts, such as the destination retrieval on SCP, as well as a nice way to mapping Java entity classes to BAPI input parameters and result sets.
+SAP Cloud SDK offers a convenient Java API on top of JCo that integrates with other SAP Cloud SDK core concepts, such as the destination retrieval on SCP, as well as a nice way to mapping Java entity classes to BAPI input parameters and result sets.
 
 :::caution JCo is not packaged with SAP Cloud SDK
-SAP Cloud SDK does _not_ package JCo as a library with its dependencies. The SDK assumes that JCo is available on the JVM classpath.
+SAP Cloud SDK does _not_ package JCo as a library with its dependencies. The SAP Cloud SDK assumes that JCo is available on the JVM classpath.
 :::
 
 On the SCP Neo landscape, JCo is automatically provided by the infrastructure, on the SCP Cloud Foundry landscape one must use the SAP Java Build Pack during app deployment.
@@ -52,7 +52,7 @@ There are other edge cases that we'll cover later.
 
 ## Call a BAPI in an SAP ABAP system
 
-:::tip Generate SDK project
+:::tip Generate a SAP Cloud SDK project
 If you're starting from scratch, generate a `TomEE` project following the steps in the [Getting started](https://sap.github.io/cloud-sdk/docs/java/getting-started#generating-a-project-from-a-maven-archetype) guide.
 :::
 
@@ -67,7 +67,7 @@ The servlet has two input parameters which we supply in the query string:
 - _destinationName_: Defines which SCP destination to use for connecting to SAP S/4HANA.
 - _controllingArea_: Defines the controlling area for the cost center retrieval.
 
-The app retrieves the SCP destination with SDK core capabilities, creates a BAPI request, and issues that to SAP S/4HANA through the SAP Cloud Connector.
+The app retrieves the SCP destination with SAP Cloud SDK core capabilities, creates a BAPI request, and issues that to SAP S/4HANA through the SAP Cloud Connector.
 We use the SAP Cloud Connector to access an SAP S/4HANA On-Premise system.
 
 The BAPI result contains cost center information which we print to the servlet response.
@@ -101,8 +101,8 @@ public class CostCenter {
 The annotation `@Value` is a class-level annotation that comes from [Lombok](https://projectlombok.org/), check outs its [documentation](https://projectlombok.org/features/Value) when curious.
 
 We annotate every class member with `@ElementName` declaring the respective ABAP field name.
-The SDK uses this metadata to map the ABAP field to the Java field.
-You can look up the ABAP field name in S/4HANA transaction SE37 by opening the BAPI parameter list.
+The SAP Cloud SDK uses this metadata to map the ABAP field to the Java field.
+You can look up the ABAP field name in SAP S/4HANA transaction SE37 by opening the BAPI parameter list.
 
 To make that compile, we add Lombok to our `application/pom.xml` as a dependency.
 Open `application/pom.xml` and add that dependency:
@@ -169,7 +169,7 @@ The second argument `BAPI0012_GEN-CO_AREA` represents the ABAP data type of the 
 You can look that up in transaction SE37 under the respective BAPI name. Thirdly, we pass the actual controlling area to the method.
 
 Using `withTable` allows us to access the table parameter result after BAPI processing.
-If we would not call this method, the SDK would ignore this tables parameter from the BAPI response, even though it contains some data.
+If we would not call this method, the SAP Cloud SDK would ignore this tables parameter from the BAPI response, even though it contains some data.
 Again, the second parameter is the ABAP data type.
 
 The invocation of method `withTableAsReturn` instructs the SAP Cloud SDK to treat the tables parameter with the name `BAPIRET2` as BAPI result table.
@@ -201,7 +201,7 @@ final List<CostCenter> costCenterList = result
 ```
 
 This helps you automatically retrieve `List<CostCenter>` and can access the output in a type-safe way.
-On the return type of `result.get("COSTCENTERLIST")` you call `getAsCollection()` to treat this parameter as a collection and then you instruct the SDK to transfer the contained entries into individual `CostCenter` instances with `asList(...)`.
+On the return type of `result.get("COSTCENTERLIST")` you call `getAsCollection()` to treat this parameter as a collection and then you instruct the SAP Cloud SDK to transfer the contained entries into individual `CostCenter` instances with `asList(...)`.
 
 Further processing depends on the use case.
 For example, we could print the cost centers to the servlet response.
@@ -271,7 +271,7 @@ Here is what you'll need to make progress throughout the next steps.
 
 Official tutorials for setting up these scenarios can be found [here](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/fa4adc9bd40e45dbac573fd616695446.html).
 
-#### Setup App Router (optional)
+#### Optional: Setup App Router
 
 If tenant-aware access of JCo and its required microservices or Principal Propagation want to be achieved, it is required that the app is invoked with a JWT containing the user context.
 For that, securing the backend with an app router is required.
@@ -279,7 +279,7 @@ Follow [this tutorial](https://developers.sap.com/tutorials/s4sdk-secure-cloudfo
 
 #### Setup Cloud Connector for SAP S/4HANA On-Premise access
 
-Expose the S/4HANA system in the SAP Cloud Connector as described in the [official documentation](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/ca5868997e48468395cf0ca4882f5783.html).
+Expose the SAP S/4HANA system in the SAP Cloud Connector as described in the [official documentation](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/ca5868997e48468395cf0ca4882f5783.html).
 
 #### Setup Destination
 
@@ -313,7 +313,7 @@ After authentication, the servlet is invoked and you should see the servlet resp
 
 ## Boundary Conditions and Edge Cases
 
-### JCo Classes not found at Runtime
+### JCo Classes Not Found at Runtime
 
 The JCo classes are available on the JVM classpath at runtime.
 If not, the exception in such cases reads like `java.lang.NoClassDefFoundError: com/sap/conn/jco/JCoException`.
@@ -342,7 +342,7 @@ env:
 ### Decoration of RFC Destinations
 
 In the realm of HTTP, destinations allow decoration to add further features to them.
-For instance, an `ErpHttpDestination` can decorate an `HttpDestination` which introduces the enhancement of request headers with S/4HANA-specific destination properties (e.g., `sap-client`).
+For instance, an `ErpHttpDestination` can decorate an `HttpDestination` which introduces the enhancement of request headers with SAP S/4HANA-specific destination properties (e.g., `sap-client`).
 
 ```java
 final HttpDestination httpDestination = DestinationAccessor.getDestination(destinationName).asHttp();
@@ -371,13 +371,15 @@ Some configuration steps differ depending on which Maven archetype (Spring or To
   `mvn install:install-file -Dfile=sapjco3.jar -DgroupId=com.sap.conn.jco -DartifactId=com.sap.conn.jco.sapjco3 -Dversion=<sapjco-version> -Dpackaging=jar`
 - Now Maven uses the JCo JAR file when declaring the dependency in your pom file.
 
-#### Add Dependency to you POM
+#### Add a Dependency To Your `pom.xml`
 
 <Tabs groupId="archetype" defaultValue="tomee" values={[ { label: 'TomEE', value: 'tomee', }, { label: 'Spring', value: 'spring', }]}>
 
 <TabItem value="tomee">
 
 - Add this new dependency to your `pom.xml` in the `application` folder:
+
+<!-- vale off -->
 
 ```xml
 <dependency>
@@ -386,6 +388,8 @@ Some configuration steps differ depending on which Maven archetype (Spring or To
     <version>X.Y.Z</version>
 </dependency>
 ```
+
+<!-- vale on -->
 
 - Build the app with `mvn clean package`.
 
@@ -398,6 +402,8 @@ Replace the placeholder `X.Y.Z` with the JCo version you downloaded.
 
 - Add this new dependency to your `pom.xml` in the `application` folder:
 
+<!-- vale off -->
+
 ```xml
 <dependency>
     <groupId>com.sap.conn.jco</groupId>
@@ -405,6 +411,8 @@ Replace the placeholder `X.Y.Z` with the JCo version you downloaded.
     <version>X.Y.Z</version>
 </dependency>
 ```
+
+<!-- vale on -->
 
 :::tip
 Replace the placeholder `X.Y.Z` with the JCo version you downloaded.
@@ -431,7 +439,7 @@ Replace the placeholder `X.Y.Z` with the JCo version you downloaded.
 </TabItem>
 </Tabs>
 
-#### Add JCo Library to System Path
+#### Add JCo Library To System Path
 
 Open the file `javadoc/installation.html` from the extracted JCo archive and follow the installation instructions. Essentially, you have to add the directory where you extracted the JCo archive to one system environment variable. The variable name depends on your operating system.
 
@@ -485,7 +493,7 @@ jco.client.passwd=<password>
 Replace every `<placeholder>` with the respective value.
 :::
 
-#### Point JCo to your Destination File
+#### Point JCo To Your Destination File
 
 JCo considers the system property `jco.destinations.dir` to look for destination files. The property value must be the directory where the destination file resides.
 :::note

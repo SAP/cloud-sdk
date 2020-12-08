@@ -17,12 +17,12 @@ keywords:
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-The SAP Cloud SDK offers some basic functionality that helps with connecting to other systems and services like S/4HANA Cloud.
-The SDK introduces the general concept of a `Destination` which holds basic information about how to connect to such a system.
+The SAP Cloud SDK offers some basic functionality that helps with connecting to other systems and services like SAP S/4HANA Cloud.
+The SAP Cloud SDK introduces the general concept of a `Destination` which holds basic information about how to connect to such a system.
 That could for instance be a `url`, a user name, and password for basic authentication or some custom headers.
 
 This concept is integrated with the [Destination Service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html) that is available on the SAP Cloud Platform.
-If the application has a service binding to this service in place the SDK will provide access to these destinations.
+If the application has a service binding to this service in place the SAP Cloud SDK will provide access to these destinations.
 
 ## Accessing Destinations
 
@@ -39,7 +39,7 @@ Other sources like the environment variables are also considered.
 
 By default, the `DestinationAccessor` is tenant aware.
 If a tenant is available it will be used to access the destination service on behalf of that tenant.
-If no destination is found in the tenant-specific destination service the SDK will try to get it using the service binding of the application.
+If no destination is found in the tenant-specific destination service the SAP Cloud SDK will try to get it using the service binding of the application.
 
 This default retrieval strategy can be overridden by passing options to the destination loader as follows:
 
@@ -73,26 +73,26 @@ Similarly, for BAPI endpoints you need to use `asRfc()`:
 DestinationAccessor.getDestination("my-destination").asRfc();
 ```
 
-### Connect to on-premise S/4HANA System
+### Connect to SAP S/4HANA On-Premise
 
-If your destination is exposing an on-premise S/4HANA service via a **[Cloud Connector](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e6c7616abb5710148cfcf3e75d96d596.html)** you need to decorate the destination with `DefaultErpHttpDestination`:
+If your destination is exposing an SAP S/4HANA on-premise service via a **[Cloud Connector](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e6c7616abb5710148cfcf3e75d96d596.html)** you need to decorate the destination with `DefaultErpHttpDestination`:
 
 ```java
 final HttpDestination httpDestination =
 destination.asHttp().decorate(DefaultErpHttpDestination::new);
 ```
 
-This ensures the mapping of all S/4HANA properties like `sap-client` and `sap-locale` as HTTP request headers.
+This ensures the mapping of all SAP S/4HANA properties like `sap-client` and `sap-locale` as HTTP request headers.
 
 ## Registering Destinations at Runtime
 
-The SDK offers convenient ways to create a destination at runtime and register it so that it will be available via `DestinationAccessor.getDestination()`.
+The SAP Cloud SDK offers convenient ways to create a destination at runtime and register it so that it will be available via `DestinationAccessor.getDestination()`.
 This is especially useful when working in a local environment.
 Destinations configured in the destination service are not available in a local setting and have to be mocked.
 
 ### Mocking Destinations for Testing
 
-The SDK offers a `MockUtil` class that is capable of injecting destinations into the `DestinationAccessor`:
+The SAP Cloud SDK offers a `MockUtil` class that is capable of injecting destinations into the `DestinationAccessor`:
 
 ```java
 final MockUtil mockUtil = new MockUtil();
@@ -140,7 +140,7 @@ Lastly use `setLoader()` to replace all existing loaders.
 
 ## Retrieving Destinations
 
-### Get all Destinations from the Destination Service on Cloud Foundry
+### Get All Destinations From the Destination Service on Cloud Foundry
 
 To fetch all destinations from the Destination Service, you need to make a call to `tryGetAllDestinations`.
 The method queries the [Destination Service API](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview) and retrieves all the destinations available at the service instance and sub-account level.
@@ -201,7 +201,7 @@ It does not matter that the app does not run on your own machine.
 To better understand the configuration steps, we'll outline shortly how destination retrieval works when running your app on SCP.
 Thereafter we'll outline the configuration procedures in detail.
 
-### Background: Destination Retrieval on SCP
+### Background: Destination Retrieval on SAP Cloud Platform
 
 By default the SAP Cloud SDK uses a set of so-called destination loaders in a given order when searching for a destination via the `DestinationAccessor` API:
 
@@ -234,23 +234,23 @@ You can configure multiple destinations with that approach.
 Note that the value of the environment variable is a JSON array, so you can add further entries into it.
 :::
 
-#### SCP Destination Service
+#### SAP Cloud Platform Destination Service
 
 If the previous lookup was not successful, the next destination loaders examine the environment variable `VCAP_SERVICES` to see if the SCP destination service is bound.
-If so, the Cloud SDK queries the SCP destination service for the destination configuration as per the requested destination name.
+If so, the SAP Cloud SDK queries the SCP destination service for the destination configuration per the requested destination name.
 
-#### SCP Connectivity Service
+#### SAP Cloud Platform Connectivity Service
 
-In case the destination is of proxy type `OnPremise`, the SDK performs an additional query to the SCP connectivity service to obtain further proxy information and an authorization token.
+In case the destination is of proxy type `OnPremise`, the SAP Cloud SDK performs an additional query to the SCP connectivity service to obtain further proxy information and an authorization token.
 
 ### Configuration Procedure for Localhost
 
-#### Destinations with Proxy Type "Internet"
+#### Destinations With Proxy Type "Internet"
 
 Maintain the destination configuration via the environment variable `destinations`.
 See the example value above for reference.
 
-#### Destinations with Proxy Type "OnPremise"
+#### Destinations With Proxy Type "OnPremise"
 
 We have to some perform configuration steps to tell the SAP Cloud SDK how to access the SCP destination service and connectivity service.
 
@@ -336,7 +336,7 @@ Furthermore, add the dependency `com.sap.cds:cds-integration-cloud-sdk` to your 
 
 </Tabs>
 
-##### Enable Access to SCP Connectivity Service
+##### Enable Access to SAP Cloud Platform Connectivity Service
 
 The SCP connectivity service builds the connection between SCP and the on-premise network.
 That is why it has strong built-in restrictions to allow it only to be called from within SCP.
