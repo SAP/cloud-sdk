@@ -1,6 +1,6 @@
 ---
 id: tutorial-overview-sdk-js
-title: Tutorials for the SAP Cloud SDK for JavaScript
+title: Overview of the Available Tutorials
 hide_title: false
 hide_table_of_contents: false
 sidebar_label: Tutorials overview for the SAP Cloud SDK for JavaScript
