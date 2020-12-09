@@ -23,17 +23,19 @@ This is intentional because often they'd target slightly different use-cases tha
 
 :::tip Different packaging strategy
 
+<!-- vale SAP.Products = NO -->
+
 - SAP Cloud SDK for Java has separate maven modules for SAP S/4HANA Cloud & SAP S/4HANA On-premise.
   Those are in turn split into modules containing OData v2 and OData v4 services.
   We also ship an aggregating module if you want to add all the SAP S/4HANA client libraries to your dependencies.
   A Java `Class` represents one OData service in SAP S/4HANA.
-- SDK for JavaScript/Typescript ships one client library npm package per SAP S/4HANA service.
+- SDK for JavaScript/TypeScript ships one client library npm package per SAP S/4HANA service.
   Packages for SAP S/4HANA Cloud always contain the latest APIs.
   Packages for SAP S/4HANA On-Premise have `-op-` in their name and contain all the versions of respective service's APIs where the latest version exported as default.
   A `Class` represents an `Entity` in `OData` terms, while each package represents a service.
-  <!-- vale SAP.Products = NO -->
   The SAP Cloud SDK for JS/TS doesn't ship any aggregator packages.
-  <!-- vale SAP.Products = YES -->
+
+<!-- vale SAP.Products = YES -->
 
 :::
 

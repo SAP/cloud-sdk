@@ -24,18 +24,18 @@ export const keys = {
 };
 
 export const groups = [
-  { id: 'odata', title: 'OData v2/4 type-safe client' },
-  { id: 'advanced', title: 'Advanced value-add features' },
-  { id: 'rest', title: 'Open API type-safe client' },
-  { id: 'libs', title: 'SAP Eco-system' },
-  { id: 's4', title: 'S/4HANA API libraries' },
+  { id: 'odata', title: 'OData v2/4 Type-Safe Client' },
+  { id: 'advanced', title: 'Advanced Value-Add Features' },
+  { id: 'rest', title: 'Open API Type-Safe Client' },
+  { id: 'libs', title: 'SAP Ecosystem' },
+  { id: 's4', title: 'SAP S/4HANA API Libraries' },
   { id: 'lobs', title: 'LoB Solutions' },
-  { id: 'infra', title: 'K8s, Azure, AWS, GCP and beyond' },
-  { id: 'docs', title: 'SDK Documentation' },
-  //  { id: 'support', title: 'Analyze and scale support' },
+  { id: 'infra', title: 'K8s, Azure, AWS, GCP and Beyond' },
+  { id: 'docs', title: 'SAP Cloud SDK Documentation' },
+  //  { id: 'support', title: 'Analyze and Scale Support' },
   { id: 'cap', title: 'One SAP' },
-  { id: 'top', title: 'Developer happiness' },
-  { id: 'future', title: 'Future shots' },
+  { id: 'top', title: 'Developer Happiness' },
+  { id: 'future', title: 'Future Shots' },
   { id: 'scp', title: 'SAP Cloud Platform' }
 ];
 
@@ -43,7 +43,7 @@ export const items = [
   {
     id: 1,
     group: 'odata',
-    title: 'Reach feature parity between OData v2/4 type-safe clients',
+    title: 'Reach Feature Parity Between OData v2/4 Type-Safe Clients',
     start: moment().year(2020).month('Mar').date(1),
     end: moment().year(2020).month('Jul').date(32),
     itemProps: {
@@ -59,7 +59,7 @@ export const items = [
   {
     id: 2,
     group: 'odata',
-    title: 'Release advanced OData v4 features',
+    title: 'Release Advanced OData v4 Features',
     start: moment().year(2020).month('Jul').date(1),
     end: moment().year(2020).month('Sep').date(32),
     itemProps: {
@@ -75,7 +75,7 @@ export const items = [
   {
     id: 5,
     group: 'rest',
-    title: 'Release Open API type-safe client generator',
+    title: 'Release Open API Type-Safe Client Generator',
     start: moment().year(2020).month('Oct').date(0),
     end: moment().year(2020).month('Dec').date(31),
     itemProps: {
@@ -91,7 +91,7 @@ export const items = [
   {
     id: 6,
     group: 'libs',
-    title: 'Pre-generated clients for SCP Workflow Service.',
+    title: 'Pre-Generated Clients for SCP Workflow Service.',
     start: moment().year(2020).month('Oct').date(1),
     end: moment().year(2020).month('Dec').date(31),
     itemProps: {
@@ -108,7 +108,7 @@ export const items = [
     id: 7,
     group: 'libs',
     title:
-      'Pre-generated clients for Graph, Kernel Service, Job Scheduler, etc.',
+      'Pre-Generated Clients for Graph, Kernel Service, Job Scheduler, etc.',
     start: moment().year(2020).month('Oct').date(1),
     end: moment().year(2021).month('Dec').date(31),
     itemProps: {
@@ -125,7 +125,7 @@ export const items = [
   {
     id: 8,
     group: 'docs',
-    title: 'Release scalable docs and cover key features',
+    title: 'Release Scalable Docs and Cover Key Features',
     start: moment().year(2020).month('Apr').date(1),
     end: moment().year(2020).month('Jul').date(31),
     itemProps: {
@@ -141,7 +141,7 @@ export const items = [
   {
     id: 9,
     group: 'docs',
-    title: 'Reach 70% of coverage for docs. Raise quality.',
+    title: 'Reach 70% of Coverage for Docs. Raise Quality.',
     start: moment().year(2020).month('Jul').date(1),
     end: moment().year(2020).month('Oct').date(31),
     itemProps: {
@@ -157,7 +157,7 @@ export const items = [
   // {
   //   id: 10,
   //   group: 'odata',
-  //   title: 'Build reference CAP application to test OData v2/4',
+  //   title: 'Build Reference CAP Application to Test OData v2/4',
   //   start: moment().year(2020).month('June').date(1),
   //   end: moment().year(2020).month('Dec').date(31),
   //   itemProps: {
@@ -172,7 +172,7 @@ export const items = [
   // {
   //   id: 14,
   //   group: 'infra',
-  //   title: 'Native support for K8s in Java',
+  //   title: 'Native Support for K8s in Java',
   //   start: moment().year(2020).month('Sap').date(1),
   //   end: moment().year(2020).month('Nov').date(31),
   //   itemProps: {
@@ -186,7 +186,7 @@ export const items = [
   {
     id: 15,
     group: 's4',
-    title: 'Generate OData v4 libraries for S/4HANA 2008 release',
+    title: 'Generate OData v4 Libraries for SAP S/4HANA 2008 Release',
     start: moment().year(2020).month('Aug').date(1),
     end: moment().year(2020).month('Aug').date(31),
     itemProps: {
@@ -202,7 +202,7 @@ export const items = [
   {
     id: 16,
     group: 's4',
-    title: 'Type-safe client for S/4HANA on premise',
+    title: 'Type-Safe Client for SAP S/4HANA On-Premise',
     start: moment().year(2020).month('Aug').date(20),
     end: moment().year(2020).month('Oct').date(31),
     itemProps: {
@@ -218,7 +218,7 @@ export const items = [
   {
     id: 17,
     group: 's4',
-    title: 'Type-safe client for S/4HANA Enterprise Messaging',
+    title: 'Type-Safe Client for SAP S/4HANA Enterprise Messaging',
     start: moment().year(2021).month('Jan').date(0),
     end: moment().year(2021).month('Mar').date(31),
     itemProps: {
@@ -234,7 +234,7 @@ export const items = [
   {
     id: 18,
     group: 'scp',
-    title: 'Keep up with change rate of SCP development',
+    title: 'Keep up With Change Rate of SCP Development',
     start: moment().year(2020).month('Jul').date(20),
     end: moment().year(2020).month('Dec').date(31),
     itemProps: {
@@ -250,7 +250,7 @@ export const items = [
   // {
   //   id: 19,
   //   group: 'saas',
-  //   title: 'Automate release for existing libraries via Pipeline',
+  //   title: 'Automate Release for Existing Libraries via Pipeline',
   //   start: moment().year(2021).month('Jan').date(0),
   //   end: moment().year(2021).month('Mar').date(31),
   //   itemProps: {
@@ -266,7 +266,7 @@ export const items = [
     id: 20,
     group: 'infra',
     title:
-      'Improve service discovery and connectivity to enable new run times and rest client capabilities',
+      'Improve Service Discovery and Connectivity to Enable New Runtimes and REST Client Capabilities',
     start: moment().year(2021).month('Feb').date(31),
     end: moment().year(2021).month('Mar').date(31),
     itemProps: {
@@ -282,7 +282,7 @@ export const items = [
   {
     id: 21,
     group: 'odata',
-    title: 'Ongoing support and refinement for OData v2/4',
+    title: 'Ongoing Support and Refinement for OData v2/4',
     start: moment().year(2020).month('Sep').date(1),
     end: moment().year(2020).month('Dec').date(32),
     itemProps: {
@@ -299,7 +299,7 @@ export const items = [
   {
     id: 25,
     group: 'cap',
-    title: 'Regular alignment between CAP and SAP to achieve synergies',
+    title: 'Regular Alignment Between CAP and SAP to Achieve Synergies',
     start: moment().year(2020).month('Mar').date(1),
     end: moment().year(2020).month('Dec').date(31),
     itemProps: {
@@ -315,7 +315,7 @@ export const items = [
   {
     id: 26,
     group: 'libs',
-    title: 'Logging with SAP passport for Performance monitoring',
+    title: 'Logging With SAP Passport for Performance Monitoring',
     start: moment().year(2020).month('Jul').date(1),
     end: moment().year(2020).month('Aug').date(31),
     itemProps: {
@@ -331,7 +331,7 @@ export const items = [
   {
     id: 27,
     group: 'top',
-    title: 'Improve logging and debugging capabilities',
+    title: 'Improve Logging and Debugging Capabilities',
     start: moment().year(2020).month('Sep').date(1),
     end: moment().year(2021).month('Mar').date(31),
     itemProps: {
@@ -347,7 +347,7 @@ export const items = [
   {
     id: 29,
     group: 'advanced',
-    title: 'Caching & resilience w/ multi-tenancy',
+    title: 'Caching & Resilience w/ Multitenancy',
     start: moment().year(2021).month('Jan').date(1),
     end: moment().year(2021).month('Mar').date(31),
     itemProps: {

@@ -88,14 +88,6 @@ Callable operationWithTenant = TenantAccessor.executeWithTenant(customTenant, ()
 invokeAsynchronously(operationWithContext);
 ```
 
-<!-- For the Thread context there is also a dedicated decorator class which performs this exact task, so the following code is equivalent:
-
-```java
-Callable operationWithContext = new DefaultThreadContextProvider().decorate(operation);
-
-invokeAsynchronously(operationWithContext);
-``` -->
-
 :::note
 Be cautious with long-running, asynchronous operations.
 A propagated Thread context will only persist as long as the Thread lives that it was created on.
