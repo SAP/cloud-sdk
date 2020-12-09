@@ -1,13 +1,21 @@
-import React from 'react'
+import React from 'react';
 
-function BuildBadge ({ align }) {
+function BuildBadge({ align }) {
   return (
     <span className={align ? 'col text--right' : ''}>
-      <a target='_blank' rel='noopener noreferrer' href='https://github.com/SAP/cloud-sdk'>
-        <img src='https://github.com/SAP/cloud-sdk-js/workflows/build/badge.svg' alt='build' className='max-width:100%;' />
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href="https://github.com/SAP/cloud-sdk"
+      >
+        <img
+          src="https://github.com/SAP/cloud-sdk-js/workflows/build/badge.svg"
+          alt="build"
+          className="max-width:100%;"
+        />
       </a>
     </span>
-  )
+  );
 }
 
-export default BuildBadge
+export default BuildBadge;

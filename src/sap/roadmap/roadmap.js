@@ -1,77 +1,75 @@
-import React, { Component } from 'react'
-import 'react-calendar-timeline/lib/Timeline.css'
-import config from './config'
+import React, { Component } from 'react';
+import 'react-calendar-timeline/lib/Timeline.css';
+import config from './config';
 import Timeline, {
   TimelineMarkers,
   CustomMarker,
   TodayMarker,
   CursorMarker
-} from 'react-calendar-timeline'
-import moment from 'moment'
+} from 'react-calendar-timeline';
+import moment from 'moment';
 
 export default class Roadmap extends Component {
-  constructor (props) {
-    super(props)
-    const { groups, items, keys } = props
+  constructor(props) {
+    super(props);
+    const { groups, items, keys } = props;
     this.state = {
       items,
       groups,
       keys
-    }
+    };
   }
 
-  handleItemMove (itemId, dragTime, newGroupOrder) {
-    const { items, groups } = this.state
+  handleItemMove(itemId, dragTime, newGroupOrder) {
+    const { items, groups } = this.state;
 
-    const group = groups[newGroupOrder]
+    const group = groups[newGroupOrder];
 
     this.setState({
       items: items.map(item =>
         item.id === itemId
           ? Object.assign({}, item, {
-            start: dragTime,
-            end: dragTime + (item.end - item.start),
-            group: group.id
-          })
+              start: dragTime,
+              end: dragTime + (item.end - item.start),
+              group: group.id
+            })
           : item
       )
-    })
+    });
 
-    console.log('Moved', itemId, dragTime, newGroupOrder)
+    console.log('Moved', itemId, dragTime, newGroupOrder);
   }
 
-  handleItemResize (itemId, time, edge) {
-    const { items } = this.state
+  handleItemResize(itemId, time, edge) {
+    const { items } = this.state;
 
     this.setState({
       items: items.map(item =>
         item.id === itemId
           ? Object.assign({}, item, {
-            start: edge === 'left' ? time : item.start,
-            end: edge === 'left' ? item.end : time
-          })
+              start: edge === 'left' ? time : item.start,
+              end: edge === 'left' ? item.end : time
+            })
           : item
       )
-    })
+    });
 
-    console.log('Resized', itemId, time, edge)
+    console.log('Resized', itemId, time, edge);
   }
 
-  render () {
-    const { groups, items, keys } = this.state
+  render() {
+    const { groups, items, keys } = this.state;
 
     return (
       <Timeline
-        {
-          ...{
-            ...config,
-            keys,
-            groups,
-            items,
-            onItemMove: this.handleItemMove.bind(this),
-            onItemResize: this.handleItemResize.bind(this)
-          }
-        }
+        {...{
+          ...config,
+          keys,
+          groups,
+          items,
+          onItemMove: this.handleItemMove.bind(this),
+          onItemResize: this.handleItemResize.bind(this)
+        }}
       >
         <TimelineMarkers>
           <CustomMarker date={moment().year(2020).month('Mar').date(31)}>
@@ -80,8 +78,8 @@ export default class Roadmap extends Component {
                 ...styles,
                 backgroundColor: 'lightgreen',
                 width: '4px'
-              }
-              return <div style={customStyles} />
+              };
+              return <div style={customStyles} />;
             }}
           </CustomMarker>
           <CustomMarker date={moment().year(2020).month('Jun').date(31)}>
@@ -90,8 +88,8 @@ export default class Roadmap extends Component {
                 ...styles,
                 backgroundColor: 'lightgreen',
                 width: '4px'
-              }
-              return <div style={customStyles} />
+              };
+              return <div style={customStyles} />;
             }}
           </CustomMarker>
           <CustomMarker date={moment().year(2020).month('Sep').date(31)}>
@@ -100,8 +98,8 @@ export default class Roadmap extends Component {
                 ...styles,
                 backgroundColor: 'lightgreen',
                 width: '4px'
-              }
-              return <div style={customStyles} />
+              };
+              return <div style={customStyles} />;
             }}
           </CustomMarker>
           <CustomMarker date={moment()}>
@@ -110,13 +108,13 @@ export default class Roadmap extends Component {
                 ...styles,
                 backgroundColor: 'deeppink',
                 width: '4px'
-              }
-              return <div style={customStyles} />
+              };
+              return <div style={customStyles} />;
             }}
           </CustomMarker>
           <CursorMarker />
         </TimelineMarkers>
       </Timeline>
-    )
+    );
   }
 }

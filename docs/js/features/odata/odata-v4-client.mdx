@@ -1,31 +1,59 @@
 ---
 id: use-odata-v4-type-safe-client-for-javascript-typescript
-title: Use the OData v4 client for JavaScript / TypeScript
+title: Use the OData v4 Client
 sidebar_label: OData v4 client API
 description: Use the SAP Cloud SDK for JavaScript to build and run OData v4 requests in a type-safe way.
 keywords:
-- sap
-- cloud
-- sdk
-- odata
-- JavaScript
-- TypeScript
-- consume
+  - sap
+  - cloud
+  - sdk
+  - odata
+  - JavaScript
+  - TypeScript
+  - consume
 ---
 
-import {Count, Create, DeepCreate, CreateAsChildOf, Delete, Update, GetAll, GetByKey} from './common/operations'
-import {Top, Skip, Filter, FilterOneToOne, FilterFunctions} from './common/query-parameter'
-import {RequestBuilder, EtagFunctionImport} from './common/function-imports'
-import {BatchIntro, RetrieveRequests, CombiningRequests, Serialization, ChangeSet, ConfigureSerialization} from './common/batch'
-import {Csrf,Etag} from './common'
+<!-- vale off -->
+
 import {
-    ExpandSelect,
-    FilterOneToMany,
-    FilterParentChild,
-    SubqueriesInExpand,
-    Select,
-    FunctionImportKnownIssues, ActionImport, ActionImportKnownIssues
-} from './v4'
+  Count,
+  Create,
+  DeepCreate,
+  CreateAsChildOf,
+  Delete,
+  Update,
+  GetAll,
+  GetByKey
+} from './common/operations';
+import {
+  Top,
+  Skip,
+  Filter,
+  FilterOneToOne,
+  FilterFunctions
+} from './common/query-parameter';
+import { RequestBuilder, EtagFunctionImport } from './common/function-imports';
+import {
+  BatchIntro,
+  RetrieveRequests,
+  CombiningRequests,
+  Serialization,
+  ChangeSet,
+  ConfigureSerialization
+} from './common/batch';
+import { Csrf, Etag } from './common';
+import {
+  ExpandSelect,
+  FilterOneToMany,
+  FilterParentChild,
+  SubqueriesInExpand,
+  Select,
+  FunctionImportKnownIssues,
+  ActionImport,
+  ActionImportKnownIssues
+} from './v4';
+
+<!-- vale on -->
 
 In the following, the OData v4 features supported by the SAP Cloud SDK are explained.
 
@@ -36,105 +64,186 @@ In the following code examples sometimes the business-partner service is used.
 This is a v2 service, but the listed examples are identical for OData v2 and v4.
 :::
 
-
 ## GetAll Request Builder
-<GetAll/>
 
-  ### Select
-  <Select/>
+<GetAll />
 
-  ### Filter
-  <Filter/>
+### Select
 
-  #### Filter on One-To-One Navigation Properties
-  <FilterOneToOne/>
+{" "}
 
-  #### Filter on One-To-Many Navigation Properties
-  <FilterOneToMany/>
+<Select />
 
-  #### More Filter Expressions
-  More advanced filter expressions can be found [here](#available-filter-expressions).
+### Filter
 
-  ### Expand
+{" "}
 
-  #### Expand and Select <a name="expand-and-select"/>
-  <ExpandSelect/>
+<Filter />
 
-  #### Sub-queries in Expand
-  <SubqueriesInExpand/>
+#### Filter on One-to-One Navigation Properties
 
-  #### Filter parent vs. Filter children <a name="filterParentChildren"/>
-  <FilterParentChild/>
+{" "}
 
-  ### Skip
-  <Skip/>
+<FilterOneToOne />
 
-  ### Top
-  <Top/>
+#### Filter on One-to-Many Navigation Properties
 
-  ### Count
-  <Count/>
+{" "}
+
+<FilterOneToMany />
+
+#### More Filter Expressions
+
+More advanced filter expressions can be found [here](#available-filter-expressions).
+
+### Expand
+
+#### Expand and Select <a name="expand-and-select"/>
+
+{" "}
+
+<ExpandSelect />
+
+#### Sub-Queries in Expand
+
+{" "}
+
+<SubqueriesInExpand />
+
+#### Filter Parent vs Filter Children <a name="filterParentChildren"/>
+
+{" "}
+
+<FilterParentChild />
+
+### Skip
+
+{" "}
+
+<Skip />
+
+### Top
+
+{" "}
+
+<Top />
+
+### Count
+
+{" "}
+
+<Count />
+
+:::note Using count within a filter is not supported
+Note that we currently do not support the usage of count within a filter condition as described in the [OData v4 specification](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_AddressingtheCountofaCollection).
+:::
 
 ## GetByKey Request Builder
-<GetByKey/>
+
+<GetByKey />
 
 ## Create Request Builder
-<Create/>
 
-  ### Deep Create
-  <DeepCreate/>
+<Create />
 
-  ### Create as Child of
-  <CreateAsChildOf/>
+### Deep Create
+
+{" "}
+
+<DeepCreate />
+
+### Create as Child Of
+
+{" "}
+
+<CreateAsChildOf />
 
 ## Update Request Builder
-<Update/>
+
+<Update />
 
 ## Delete Request Builder
-<Delete/>
+
+<Delete />
 
 ## Handling of ETags
-<ETag/>
 
-## Handling of CSRF tokens
-<Csrf/>
+<ETag />
+
+## Handling of Cross-Site Request Forgery Tokens
+
+<Csrf />
 
 ## Available Filter Expressions
 
-  ### Filter Functions
-  <FilterFunctions/>
+### Filter Functions
 
-## Function imports
+{" "}
 
-  ### Request builder
-  <RequestBuilder/>
+<FilterFunctions />
 
-  ### Setting ETag
-  <EtagFunctionImport/>
+## Function Imports
 
-  ### Known issues
-  <FunctionImportKnownIssues/>
+### Request Builder
 
-## Action imports
-  <ActionImport/>
+{" "}
 
-  ### Known issues
-  <ActionImportKnownIssues/>
+<RequestBuilder />
+
+### Setting ETag
+
+{" "}
+
+<EtagFunctionImport />
+
+### Known Issues
+
+{" "}
+
+<FunctionImportKnownIssues />
+
+## Action Imports
+
+{" "}
+
+<ActionImport />
+
+### Known Issues
+
+{" "}
+
+<ActionImportKnownIssues />
 
 ## Batch Requests
-<BatchIntro/>
 
-  ### Retrieve request
-  <RetrieveRequests/>
+<BatchIntro />
 
-  ### Changeset
-  <ChangeSet/>
+### Retrieve Request
 
-  ### Combining requests
-  <CombingRequests/>
+{" "}
 
-  ### Serialization
-  <Serialization/>
+<RetrieveRequests />
 
-  ### Configure subrequest serialization
-  <ConfigureSerialization/>
+### Changeset
+
+{" "}
+
+<ChangeSet />
+
+### Combining Requests
+
+{" "}
+
+<CombingRequests />
+
+### Serialization
+
+{" "}
+
+<Serialization />
+
+### Configure Subrequest Serialization
+
+{" "}
+
+<ConfigureSerialization />

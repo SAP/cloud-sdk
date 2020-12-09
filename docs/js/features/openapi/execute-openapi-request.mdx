@@ -3,17 +3,17 @@ title: Executing a request using a generated OpenApi client
 sidebar_label: Execute an OpenApi Request
 description: This article describes how to generate a client from the a service definition and how to use the client.
 keywords:
-- sap
-- cloud
-- sdk
-- OpenApi
-- rest
-- connectivity
-- JavaScript
-- TypeScript
+  - sap
+  - cloud
+  - sdk
+  - OpenApi
+  - rest
+  - connectivity
+  - JavaScript
+  - TypeScript
 ---
 
-import useBaseUrl from '@docusaurus/useBaseUrl'
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
 :::note
 The OpenApi generator is in beta state.
@@ -36,17 +36,17 @@ In this example it is called `test-service.json`.
 
 The root path `/entites` in combination with the operation `GET` will get all entities.
 The SDK uses the `operationId` value of the spec file to name the method if possible.
-In the example the `operationId` is  `getAllEntities` and the method is executed in the following way:
+In the example the `operationId` is `getAllEntities` and the method is executed in the following way:
 
 ```ts
-import {
-   TestServiceApi
-} from './outputDirectory/test-service';
+import { TestServiceApi } from './outputDirectory/test-service';
 
-const allTestEntities = await TestServiceApi.getAllEntities().execute(myDestination);
+const allTestEntities = await TestServiceApi.getAllEntities().execute(
+  myDestination
+);
 ```
 
-The type of `allTestEntities` is  `Promise<TestEntity[]>` and `myDestination` is the destination object explained in the [connectivity guide](./connectivity/destination).
+The type of `allTestEntities` is `Promise<TestEntity[]>` and `myDestination` is the destination object explained in the [connectivity guide](./connectivity/destination).
 
 ### Get operation with parameter
 
@@ -54,11 +54,11 @@ The path `/entities/{entityId}` has a parameter of type `string` and it will ret
 The `operationId` is `getEntityByKey` and the path parameter is passed as an argument:
 
 ```ts
-import {
-   TestServiceApi
-} from './outputDirectory/test-service';
+import { TestServiceApi } from './outputDirectory/test-service';
 
-const myEntity = await TestServiceApi.getEntityByKey('myId').execute(myDestination);
+const myEntity = await TestServiceApi.getEntityByKey('myId').execute(
+  myDestination
+);
 ```
 
 Note that the result of this request is also typed as `Promise<TestEntity>`.
@@ -69,11 +69,11 @@ The path `root/someThing` will get `someThing` from the root entity.
 In our example we have a `entities/count` which will return the number of entities and is named `countEntities`:
 
 ```ts
-import {
-   TestServiceApi
-} from './outputDirectory/test-service';
+import { TestServiceApi } from './outputDirectory/test-service';
 
-const numberOfEntities = await TestServiceApi.countEntities().execute(myDestination);
+const numberOfEntities = await TestServiceApi.countEntities().execute(
+  myDestination
+);
 ```
 
 where the type of the response is `Promise<number>`.
@@ -85,16 +85,15 @@ This corresponds to the creation of new entities.
 You create a entity in the following way:
 
 ```ts
-import {
-   TestServiceApi,
-   TestEntity
-} from './outputDirectory/test-service';
+import { TestServiceApi, TestEntity } from './outputDirectory/test-service';
 
 const testEntity: TestEntity = {
-      keyProperty: 'some-id-in-uuid-format',
-      stringProperty: 'myProperty'
+  keyProperty: 'some-id-in-uuid-format',
+  stringProperty: 'myProperty'
 };
-const createResponse = await TestServiceApi.createEntity(testEntity).execute(restDestination);
+const createResponse = await TestServiceApi.createEntity(testEntity).execute(
+  restDestination
+);
 ```
 
 The `POST` operation is [specified](https://github.com/SAP/cloud-sdk-js/blob/main/test-resources/rest-service-specs/test-service.json) to return no content and status code 201 (created).

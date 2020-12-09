@@ -1,8 +1,14 @@
-When reading entities, the API offers `select( ... )` on the builders. Through it, the query parameters `$select` and `$expand` are set. It restricts the response to the given selection of properties in the request.
+When reading entities, the API offers `select( ... )` on the builders.
+Through it, the query parameters `$select` and `$expand` are set.
+It restricts the response to the given selection of properties in the request.
 
-The properties that can be selected or expanded are represented via static fields on the entity class. So there will be a field for each property. E.g. the business partner entity has `BusinessPartner.FIRST_NAME` as a representation of a property and `BusinessPartner.TO_BUSINESS_PARTNER_ADDRESS` as a representation of a navigation property.
+The properties that can be selected or expanded are represented via static fields on the entity class.
+So there will be a field for each property.
+E.g. the business partner entity has `BusinessPartner.FIRST_NAME` as a representation of a property and `BusinessPartner.TO_BUSINESS_PARTNER_ADDRESS` as a representation of a navigation property.
 
-A navigation property means that there is a relation between a business partner and their addresses. In this case, one business partner can have multiple addresses. In SAP S/4HANA, navigation properties typically start with `TO_`.
+A navigation property means that there is a relation between a business partner and their addresses.
+In this case, one business partner can have multiple addresses.
+In SAP S/4HANA, navigation properties typically start with `TO_`.
 
 ```ts
 BusinessPartner.requestBuilder()
