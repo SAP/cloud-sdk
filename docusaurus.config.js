@@ -5,8 +5,9 @@ module.exports = {
   url: 'https://github.com/SAP/cloud-sdk',
   baseUrl: '/cloud-sdk/',
   favicon: 'img/favicon.ico',
-  organizationName: 'SAP', // Usually your GitHub org/user name.
-  projectName: 'cloud-sdk', // Usually your repo name.
+  organizationName: 'SAP',
+  projectName: 'cloud-sdk',
+  onBrokenMarkdownLinks: 'throw',
   themeConfig: {
     prism: {
       additionalLanguages: ['powershell', 'java', 'groovy'],
@@ -69,7 +70,7 @@ module.exports = {
           ]
         },
         {
-          label: 'Release notes',
+          label: 'Release Notes',
           position: 'left',
           items: [
             {
@@ -93,7 +94,7 @@ module.exports = {
           position: 'left'
         },
         {
-          label: 'NPMJS',
+          label: 'npm',
           position: 'left',
           items: [
             {
@@ -138,7 +139,7 @@ module.exports = {
           ]
         },
         {
-          title: 'Additional resources',
+          title: 'Additional Resources',
           items: [
             {
               label: 'Stack Overflow',
@@ -160,7 +161,7 @@ module.exports = {
           ]
         },
         {
-          title: 'Package repositories',
+          title: 'Package Repositories',
           items: [
             {
               label: 'SAP Cloud SDK for JavaScript',

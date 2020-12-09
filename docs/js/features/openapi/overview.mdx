@@ -1,0 +1,38 @@
+---
+title: OpenAPI
+sidebar_label: OpenAPI
+description: This article describes how generate a client from the a service definition and how to use the client.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - OpenAPI
+  - rest
+  - connectivity
+  - JavaScript
+  - TypeScript
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+:::note
+The OpenAPI generator is in beta state.
+:::
+
+## What Is the OpenAPI Generator and What Does It Offer to You
+
+The OpenAPI generator is a command-line tool to generate clients from an [OpenAPI specification](https://swagger.io/specification/).
+OpenAPI specifications are the standard to define RESTful web service in a language-agnostic way comparable to the `edmx` service definition for [OData clients](../odata/overview.mdx).
+As you would expect, an [openapi-generator](https://github.com/OpenAPITools/openapi-generator) already exists which offers client generation for a big number of languages.
+Why do we provide an extra generator in the SAP Cloud SDK?
+
+We provided a generator based on the existing `openapi-generator` to integrate the connectivity layer of the SAP Cloud SDK for other REST APIs.
+So the same [destination lookup](../connectivity/destination), [on-premise connectivity](../connectivity/on-premise) and [proxy handling](../connectivity/proxy) applies to the OpenAPI clients.
+
+This is achieved in the following way.
+We use the open-source generator to create an [axios client](https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/typescript-axios.md).
+Then we include the request configuration, built with the SAP Cloud SDK, to this axios client.
+The request configuration contains all headers, proxy and http-agent information relevant for connectivity.
+In addition, we wrap the paths and operations with an API layer to have similar names as in the OData client.
+
+If you are interested in using an OpenAPI client in your project, find more information in the guides on [the generation of a client](./generate-openapi-client) and [the usage of the client](./execute-openapi-request).

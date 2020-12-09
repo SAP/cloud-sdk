@@ -1,0 +1,105 @@
+---
+title: Executing a Request Using a Generated OpenAPI Client
+sidebar_label: Execute an OpenAPI Request
+description: This article describes how to generate a client from the a service definition and how to use the client.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - OpenAPI
+  - rest
+  - connectivity
+  - JavaScript
+  - TypeScript
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+:::note
+The OpenAPI generator is in beta state.
+:::
+
+## How to Use the Client
+
+The API of the OpenAPI clients are similar to the ones for [OData](../odata/execute-odata-request).
+What methods are available in a client depend on the service specification.
+We will use the [test service](https://github.com/SAP/cloud-sdk-js/blob/main/test-resources/rest-service-specs/test-service.json) as an example to explain how the specification relates to methods in the generated client.
+
+The test service is simple and only has three paths: `/entities`, `/entities/{entityId}` and `entities/count`.
+We will explain how the `GET` operation for the three paths are executed as well as the `POST` operations.
+
+The central entry point to execute methods is the `TestServiceApi` object which provides all available methods.
+The name of the `API` object derives from the OpenAPI specification file name.
+In this example, it is called `test-service.json`.
+
+### `GET` Operation Without Parameters
+
+The root path `/entites` in combination with the operation `GET` will retrieve all entities.
+The SAP Cloud SDK uses the `operationId` value of the specification file to name the method if possible.
+In the example the `operationId` is `getAllEntities` and the method is executed in the following way:
+
+```ts
+import { TestServiceApi } from './outputDirectory/test-service';
+
+const allTestEntities = await TestServiceApi.getAllEntities().execute(
+  myDestination
+);
+```
+
+The type of `allTestEntities` is `Promise<TestEntity[]>` and `myDestination` is the destination object explained in the [connectivity guide](../connectivity/destination).
+
+### `GET` Operation With Parameter
+
+The path `/entities/{entityId}` has a parameter of type `string` and it will return the entity by the given key.
+The `operationId` is `getEntityByKey` and the path parameter is passed as an argument:
+
+```ts
+import { TestServiceApi } from './outputDirectory/test-service';
+
+const myEntity = await TestServiceApi.getEntityByKey('myId').execute(
+  myDestination
+);
+```
+
+Note that the result of this request is also typed as `Promise<TestEntity>`.
+
+### `GET` Operations With Longer Paths
+
+The path `root/someThing` will get `someThing` from the root entity.
+In our example we have a `entities/count` which will return the number of entities and is named `countEntities`:
+
+```ts
+import { TestServiceApi } from './outputDirectory/test-service';
+
+const numberOfEntities = await TestServiceApi.countEntities().execute(
+  myDestination
+);
+```
+
+where the type of the response is `Promise<number>`.
+
+### `POST` Operations
+
+For the `entities` path the operation `POST` is also allowed.
+This corresponds to the creation of new entities.
+You create a entity in the following way:
+
+```ts
+import { TestServiceApi, TestEntity } from './outputDirectory/test-service';
+
+const testEntity: TestEntity = {
+  keyProperty: 'some-id-in-uuid-format',
+  stringProperty: 'myProperty'
+};
+const createResponse = await TestServiceApi.createEntity(testEntity).execute(
+  restDestination
+);
+```
+
+The `POST` operation is [specified](https://github.com/SAP/cloud-sdk-js/blob/main/test-resources/rest-service-specs/test-service.json) to return no content and status code `201 Created`.
+Hence the `createResponse` is typed as `Promise<void>`.
+
+:::note
+If your server requires CSRF tokens for a `POST` request, you have to fetch and provide it manually as custom header in the `execute()` method.
+The OpenAPI clients currently don't support automatic token fetching.
+:::

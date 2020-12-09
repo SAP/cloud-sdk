@@ -38,7 +38,7 @@ module.exports = {
               'java/features/rest/generate-rest-client',
               {
                 type: 'category',
-                label: 'Released clients',
+                label: 'Released Clients',
                 items: ['java/features/rest/clients/scp-workflow-rest-api']
               }
             ]
@@ -67,12 +67,12 @@ module.exports = {
           },
           {
             type: 'category',
-            label: 'SDK extensions',
+            label: 'SDK Extensions',
             items: [
               'java/features/extensions/extensions-supported-by-sap-cloud-sdk-for-java',
               {
                 type: 'category',
-                label: 'Extension library',
+                label: 'Extension Library',
                 items: [
                   'java/features/extensions/extension-library/curconv/sap-currency-conversion-extension-library-for-cloud-sdk-for-java'
                   // 'java/features/extensions/extension-library/blockchain/sap-blockchain-extension-library-for-cloud-sdk-for-java',
@@ -111,7 +111,7 @@ module.exports = {
       },
       {
         type: 'category',
-        label: 'Video tutorials',
+        label: 'Video Tutorials',
         items: [
           'java/video/video-tutorial-about-getting-started-with-sap-cloud-sdk-for-java',
           'java/video/video-tutorial-about-type-safe-client-generator-for-odata-with-sap-cloud-sdk-for-java',
@@ -136,7 +136,7 @@ module.exports = {
             items: [
               'js/features/odata/overview',
               'js/features/odata/generate-odata-client',
-              'js/features/odata/executing-a-request-using-a-generated-odata-v2-v4-client-with-sap-cloud-sdk-for-javascript',
+              'js/features/odata/execute-odata-request',
               'js/features/odata/use-odata-v2-type-safe-client-for-javascript-typescript',
               'js/features/odata/use-odata-v4-type-safe-client-for-javascript-typescript'
             ]
@@ -145,10 +145,19 @@ module.exports = {
             type: 'category',
             label: 'Connectivity',
             items: [
-              'js/features/connectivity/destination-js-sdk',
-              'js/features/connectivity/proxy-js-sdk',
+              'js/features/connectivity/destination',
+              'js/features/connectivity/proxy',
               'js/features/connectivity/generic-http-client',
-              'js/features/connectivity/on-premise-connectivity-in-the-sap-cloud-sdk-for-javascript'
+              'js/features/connectivity/on-premise'
+            ]
+          },
+          {
+            type: 'category',
+            label: 'OpenApi',
+            items: [
+              'js/features/openapi/overview',
+              'js/features/openapi/generate-openapi-client',
+              'js/features/openapi/execute-openapi-request'
             ]
           }
         ]
@@ -173,7 +182,7 @@ module.exports = {
       'js/frequently-asked-questions'
     ],
     Community: ['community/community-call'],
-    'Related projects': [
+    'Related Projects': [
       'related-projects/cloud-application-model',
       'related-projects/sap-xsuaa-security-library-for-javascript-and-java',
       'related-projects/project-piper'

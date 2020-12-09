@@ -1,0 +1,59 @@
+---
+title: Use the OpenAPI Generator to Generate Type-Safe Clients
+sidebar_label: Generate an OpenAPI Client
+description: This article describes how generate a client from the a service definition and how to use the client.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - OpenAPI
+  - rest
+  - connectivity
+  - JavaScript
+  - TypeScript
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+:::note
+The OpenAPI generator is in beta state.
+:::
+
+## Generate a Client via the Command-Line Interface
+
+Many SAP systems like SAP S/4HANA, SAP Concur and SAP Cloud Platform provide REST APIs to the user.
+A common way to specify these services is via [OpenAPI](./overview) specification files.
+You can generate type-safe OpenAPI clients using these specification files with the SAP Cloud SDK.
+An example how such a file looks like can be found [here](https://github.com/SAP/cloud-sdk-js/blob/main/test-resources/rest-service-specs/test-service.json) and is discussed in detail in the guide on [how to execute an OpenAPI request](./execute-openapi-request).
+
+Run this command to install the OpenAPI generator globally:
+
+```
+npm i @sap-cloud-sdk/openapi-generator -g
+```
+
+Then you can generate an OpenAPI client via:
+
+```
+generate-openapi-client -i directoryWithOpenApiFiles -o outputDirectory
+```
+
+The `directoryWithOpenApiFiles` points to the directory containing your specification file and `outputDirectory` to the target folder where the generated client will be saved.
+For additional options on the command use the `--help` flag.
+
+## Generate a Client Programmatically
+
+The generator can also be executed programmatically in JavaScript code directly.
+In the [generator package](https://github.com/SAP/cloud-sdk-js/tree/main/packages/openapi-generator) the a method `generateClients` is exported.
+This method takes the same options as the command-line tool and generates OpenAPI clients:
+
+```ts
+import { generateClients } from '@sap-cloud-sdk/openapi-generator'
+
+const generatorOptions = {
+  inputDir: 'directoryWithOpenApiFiles';
+  outputDir: 'myOutputDirectory';
+}
+
+generateClients(generatorOptions)
+```
