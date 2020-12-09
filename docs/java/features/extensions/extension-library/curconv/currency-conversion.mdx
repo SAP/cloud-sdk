@@ -41,7 +41,8 @@ You can use the library for the following functions:
 - Direct one-to-one conversions, from a source currency to a target currency.
 - Indirect conversions by using inverse rates or a "reference currency".
 - Fixed rate conversions, for when you have the exact currency exchange rate that you want to use in your conversion operations.
-- Non-fixed rate conversions, for when you have a set of exchange rates, as opposed to the exact rate. The library will pick the "best rate" from the set depending on [various factors](#non-fixed-rate).
+- Non-fixed rate conversions, for when you have a set of exchange rates, as opposed to the exact rate.
+  The library will pick the "best rate" from the set depending on [various factors](#non-fixed-rate).
 
 ## Getting Started
 
@@ -55,7 +56,8 @@ Adding the Currency Conversion library to your list of dependencies will allow y
 Add the dependency in your `pom.xml` file under the existing _dependencies_ tag as follows:
 
 :::note Dependency version is handled via the SAP Cloud SDK BOM
-When your project uses the SAP Cloud SDK Bill-of-Material (BOM) `sdk-modules-bom` in the `dependencyManagement` section of the POM file, then you can omit the `version` tag. Otherwise, mention the latest SAP Cloud SDK version in the `version` tag.
+When your project uses the SAP Cloud SDK Bill-of-Material (BOM) `sdk-modules-bom` in the `dependencyManagement` section of the POM file, then you can omit the `version` tag.
+Otherwise, mention the latest SAP Cloud SDK version in the `version` tag.
 :::
 
 ```xml
@@ -346,10 +348,10 @@ Why are my conversion requests failing?
 Conversion requests fail due to several reasons, including but not limited to the following:
 
 - The library could not determine the exchange rate record for your conversion request: If this happens, check your Data Adapter settings and the exchange rate list you have provided.
-
-- The library found multiple exchange rates for the same conversion request, and there was no default exchange rate provider specified. If this happens, set a default exchange rate provider.
-
+- The library found multiple exchange rates for the same conversion request, and there was no default exchange rate provider specified.
+  If this happens, set a default exchange rate provider.
 - The library found duplicate exchange rate records from the same exchange rates provider.
 
-You can handle the individual status of a success or failure exception. To learn more, see [Code Example](#code-example).
+You can handle the individual status of a success or failure exception.
+To learn more, see [Code Example](#code-example).
 :::

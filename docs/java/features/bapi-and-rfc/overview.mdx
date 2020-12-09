@@ -44,7 +44,8 @@ That means, one can also invoke BAPIs without using the SAP Cloud SDK by solely 
 SAP Cloud SDK offers a convenient Java API on top of JCo that integrates with other SAP Cloud SDK core concepts, such as the destination retrieval on SCP, as well as a nice way to mapping Java entity classes to BAPI input parameters and result sets.
 
 :::caution JCo is not packaged with SAP Cloud SDK
-SAP Cloud SDK does _not_ package JCo as a library with its dependencies. The SAP Cloud SDK assumes that JCo is available on the JVM classpath.
+SAP Cloud SDK does _not_ package JCo as a library with its dependencies.
+The SAP Cloud SDK assumes that JCo is available on the JVM classpath.
 :::
 
 On the SCP Neo landscape, JCo is automatically provided by the infrastructure, on the SCP Cloud Foundry landscape one must use the SAP Java Build Pack during app deployment.
@@ -166,7 +167,8 @@ Here is how you code that with the SAP Cloud SDK.
 
 We call `withExporting` with the parameter name as the first argument.
 The second argument `BAPI0012_GEN-CO_AREA` represents the ABAP data type of the BAPI parameter.
-You can look that up in transaction SE37 under the respective BAPI name. Thirdly, we pass the actual controlling area to the method.
+You can look that up in transaction SE37 under the respective BAPI name.
+Thirdly, we pass the actual controlling area to the method.
 
 Using `withTable` allows us to access the table parameter result after BAPI processing.
 If we would not call this method, the SAP Cloud SDK would ignore this tables parameter from the BAPI response, even though it contains some data.
@@ -441,7 +443,9 @@ Replace the placeholder `X.Y.Z` with the JCo version you downloaded.
 
 #### Add JCo Library To System Path
 
-Open the file `javadoc/installation.html` from the extracted JCo archive and follow the installation instructions. Essentially, you have to add the directory where you extracted the JCo archive to one system environment variable. The variable name depends on your operating system.
+Open the file `javadoc/installation.html` from the extracted JCo archive and follow the installation instructions.
+Essentially, you have to add the directory where you extracted the JCo archive to one system environment variable.
+The variable name depends on your operating system.
 
 - For Windows, add the directory which contains the downloaded JCo archive to the system environment variable `PATH`.
 - For macOS, add the directory which contains the downloaded JCo archive to the system environment variable `DYLD_LIBRARY_PATH`.
@@ -472,8 +476,10 @@ To overcome these exceptions, configure the classpath via the TomEE Maven plugin
 </TabItem>
 
 <TabItem value="spring">
-  For Spring-based apps, we'll use a standalone Tomcat later on. For this
-  purpose, setting the operating system-specific environment variable suffices.
+
+For Spring-based apps, we'll use a standalone Tomcat later on.
+For this purpose, setting the operating system-specific environment variable suffices.
+
 </TabItem>
 
 </Tabs>
@@ -497,7 +503,9 @@ Replace every `<placeholder>` with the respective value.
 
 #### Point JCo To Your Destination File
 
-JCo considers the system property `jco.destinations.dir` to look for destination files. The property value must be the directory where the destination file resides.
+JCo considers the system property `jco.destinations.dir` to look for destination files.
+The property value must be the directory where the destination file resides.
+
 :::note
 Note that the system property must point to the directory, not to the Destination file.
 :::

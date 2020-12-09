@@ -103,14 +103,21 @@ public class DummyClass {
 
 What do you see in this example?
 
-- In the first line inside the class a new logger is created (once per class), with the class object as a reference. This class name will then be logged alongside the message in the logs.
-- Inside the `doSomething` method this logger is now used to log the fact that the given method was called. The method you use for that depends on the level at which you want to see the message. Other options besides `trace` are `debug`, `info`, `warn`, and `error`.
+- In the first line inside the class a new logger is created (once per class), with the class object as a reference.
+  This class name will then be logged alongside the message in the logs.
+- Inside the `doSomething` method this logger is now used to log the fact that the given method was called.
+  The method you use for that depends on the level at which you want to see the message.
+  Other options besides `trace` are `debug`, `info`, `warn`, and `error`.
 
-As you can see, no reference to the actual logging implementation can be found in the code. This is the benefit of using SLF4J as a logging facade. This allows you to change the logging implementation without any changes to your application code.
+As you can see, no reference to the actual logging implementation can be found in the code.
+This is the benefit of using SLF4J as a logging facade.
+This allows you to change the logging implementation without any changes to your application code.
 
 ### Advanced SLF4J Usage
 
-If you are logging more and more information you might find yourself in cases where you concatenate `String`s or log inside a loop. This might cause unnecessary load on your system if the runtime log level is higher than the messages you want to log. To make this more plastic have a look at the following example:
+If you are logging more and more information you might find yourself in cases where you concatenate `String`s or log inside a loop.
+This might cause unnecessary load on your system if the runtime log level is higher than the messages you want to log.
+To make this more plastic have a look at the following example:
 
 ```java
 public class DummyClass {

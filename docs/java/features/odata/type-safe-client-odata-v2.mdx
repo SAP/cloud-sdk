@@ -92,7 +92,8 @@ result = service.operation()
 - _withParameter_ corresponds to:
   - OData query parameters e.g. `filter` or `orderby`
   - Or other modifiers like custom headers
-- Which OData parameters are available depends on the operation. For example, when updating entities the `$filter` parameter is not available.
+- Which OData parameters are available depends on the operation.
+  For example, when updating entities the `$filter` parameter is not available.
 
 Below different OData features are documented using the [Business Partner Service](https://api.sap.com/api/API_BUSINESS_PARTNER/resource) on SAP S/4HANA as an example.
 It is represented by the `BusinessPartnerService` class which is part of the pre-generated SAP S/4HANA Virtual Data Model (VDM). The following code snippets assume that an instance of this service is set up:
@@ -127,7 +128,8 @@ Query parameters:
 Request parameters:
 
 - All operations allow for adding custom headers via `withHeader(...)`
-- Update operations allow to set either `modifyingEntity()` or `replacingEntity()` which will result in `HTTP PATCH` or `HTTP PUT` respectively. By default entities are modified via `PATCH`.
+- Update operations allow to set either `modifyingEntity()` or `replacingEntity()` which will result in `HTTP PATCH` or `HTTP PUT` respectively.
+  By default entities are modified via `PATCH`.
 
 #### Handling of ETags
 
@@ -380,7 +382,8 @@ The `service` object offers the method `batch` which allows access to the batch-
 Multiple single requests (like `createBusinessPartnerAddress`) can be wrapped into so-called changesets.
 Each changeset is opened with `beginChangeSet` and closed with `endChangeSet`. You can wrap multiple changesets into one batch request.
 
-Use `executeRequest` to issue the batch request to the remote system. We receive an instance of `BatchResponse` as the result object.
+Use `executeRequest` to issue the batch request to the remote system.
+We receive an instance of `BatchResponse` as the result object.
 
 ```java
 final BatchResponse result =
