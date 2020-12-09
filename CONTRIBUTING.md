@@ -1,45 +1,96 @@
-# Contributing to the SAP Cloud SDK documentation portal
+# Contributing to the SAP Cloud SDK Documentation Portal
 
 ## Prerequisites
-- [Node.js](https://nodejs.org/en/download/). 
-The latest LTS is recommended. 
-Check you version with `node -v`. 
-You can use [nvm](https://github.com/nvm-sh/nvm) for managing multiple Node versions on a single machine.
 
-## Hosting the documentation locally
+- [Node.js](https://nodejs.org/en/download/).
+  We recommend the latest LTS version of node.js.
+  Check your version with `node -v`.
+  You can use [`nvm`](https://github.com/nvm-sh/nvm) for managing multiple Node versions on a single machine.
+
+## Hosting the Documentation Locally
+
 - Run `npm install`
 - Run `npm start`
 - The SAP Cloud SDK documentation portal should open in a new browser window
 
-### How to document
+### How to Document
+
 Read the [getting started guide](https://sap.github.io/cloud-sdk/docs/dzen/getting-started).
-The documentation articles are located in the `docs` directory.
-Add or modify an article and create a pull request.
+The markdown files for the documentation are in the `docs` directory.
+Add or change an article and create a pull request.
 Feel free to also check this [guide on mindful writing](https://sap.github.io/cloud-sdk/docs/dzen/how-to-write-documentation).
 
-### Docker alternative
+### Docker Alternative
+
 - Consider the following commands (1) to install node dependencies and (2) to serve the continuously generated site:
   ```bash
   docker run -it --rm -v "${pwd}:/doc" -w "/doc" --entrypoint "/bin/sh" node:alpine3.10 -c "npm ci"
   docker run -it --rm -v "${pwd}:/doc" -w "/doc" --entrypoint "/bin/sh" -p 3000:3000 node:alpine3.10 -c "npm run start -- --port 3000 --host 0.0.0.0"
   ```
-Windows users can use PowerShell.
 
-## Dos and don'ts
+## Dos and Don'ts
+
 - Be concise.
-- Avoid abbreviations or introduce them unless it's absolutely obvious and widely adopted.
+- Put each sentence on it's own line to keep the changelogs clean.
+- Avoid abbreviations or introduce them unless it's obvious and widely adopted.
 - Don't sell your features, explain them.
 - Use simple words and short sentences.
 - Avoid statements about the complexity (e.g. "simply do this") as it can be discouraging for less-experienced readers.
 - Add meaningful examples wherever possible.
-- Provide links whenever you mention 3rd party resources.
+- Add links whenever you mention a third party resources.
 - Build upon already available content and use it for reference.
 - Write incrementally.
-- Use a spell checker at all times.
 
-## Contributing as a team member
+## Linting and Formatting
+
+### Vale
+
+Vale is a command-line tool that brings code-like linting to prose.
+This repository has a special configuration to enforce a consistent style.
+
+To use Vale locally, install it via your package manager.
+
+```bash
+# macos / linux
+$ brew install vale
+# windows
+$ choco install vale
+```
+
+If you use Microsoft Visual Studio Code, you can use the official [Vale plugin](https://marketplace.visualstudio.com/items?itemName=errata-ai.vale-server) to get hints in your editor.
+Once installed, add the following lines to your configuration.
+
+```json
+{
+  "vale.core.useCLI": true,
+  "vale.valeCLI.path": "/usr/local/bin/vale"
+}
+```
+
+### Prettier
+
+Please use [Prettier](https://prettier.io/) to keep the markdown files and code examples consistently formatted.
+
+```bash
+# Prettier is part of the repositories dependencies
+$ npm install
+# Use the npm script to run prettier
+$ npm run prettier
+```
+
+Prettier supports many editors and can be installed as a plugin to run the formatting automatically.
+
+### External Grammar Checker
+
+There is no automated grammar checker, but there are free online grammar checkers available.
+Examples are [Grammarly](https://app.grammarly.com/) or [Hemingway](http://www.hemingwayapp.com/).
+Since you upload your text to their servers, you may only upload content with `PUBLIC` designation.
+
+Please check your text manually with one of the mentioned tools before creating a pull request.
+
+## Contributing as a Team Member
 
 1. Go to: https://opensource-portal.tools.sap.corp/
-2. Search for the `cloud-sdk-team` and ask to be added.
+2. Search for the `cloud-sdk-team` and ask the colleagues to add you.
 
-Once you are added to the team, you can submit `pull requests` without forking the repository.
+Once you are part of the team, you can submit `pull requests` without forking the repository.

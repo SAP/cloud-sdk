@@ -3,10 +3,7 @@ module.exports = {
     browser: true,
     es6: true
   },
-  extends: [
-    'plugin:react/recommended',
-    'standard'
-  ],
+  extends: ['plugin:react/recommended', 'prettier'],
   settings: {
     react: {
       version: 'detect'
@@ -23,8 +20,8 @@ module.exports = {
     ecmaVersion: 11,
     sourceType: 'module'
   },
-  plugins: [
-    'react'
-  ]
-//  ignorePatterns: ['static/**']
-}
+  plugins: ['react', 'prettier'],
+  rules: {
+    'react/prop-types': 'off'
+  }
+};

@@ -35,6 +35,7 @@ module.exports = {
             label: 'REST',
             items: [
               'java/features/rest/overview',
+              'java/features/rest/generate-rest-client',
               {
                 type: 'category',
                 label: 'Released clients',
@@ -54,9 +55,7 @@ module.exports = {
           {
             type: 'category',
             label: 'Multitenancy',
-            items: [
-              'java/features/multi-tenancy/multi-tenancy-thread-context'
-            ]
+            items: ['java/features/multi-tenancy/multi-tenancy-thread-context']
           },
           {
             type: 'category',
@@ -114,9 +113,9 @@ module.exports = {
         type: 'category',
         label: 'Video tutorials',
         items: [
-          'java/video/video-tutorial-about-getting-started-with-sap-cloudsdk-for-java',
-          'java/video/video-tutorial-about-type-safe-client-generator-for-odata-with-sap-cloudsdk-for-java',
-          'java/video/video-tutorial-about-connectivity--for-odata-with-sap-cloudsdk-for-java',
+          'java/video/video-tutorial-about-getting-started-with-sap-cloud-sdk-for-java',
+          'java/video/video-tutorial-about-type-safe-client-generator-for-odata-with-sap-cloud-sdk-for-java',
+          'java/video/video-tutorial-about-connectivity--for-odata-with-sap-cloud-sdk-for-java',
           'java/video/video-tutorial-about-calling-odata-v4-services-via-type-safe-client'
         ]
       },
@@ -135,7 +134,6 @@ module.exports = {
             type: 'category',
             label: 'OData',
             items: [
-
               'js/features/odata/overview',
               'js/features/odata/generate-odata-client',
               'js/features/odata/executing-a-request-using-a-generated-odata-v2-v4-client-with-sap-cloud-sdk-for-javascript',
@@ -168,9 +166,7 @@ module.exports = {
       {
         type: 'category',
         label: 'Video Tutorials',
-        items: [
-          'js/video/demo-of-cloud-sdk-for-javascript-with-cloud-alm-and-cap'
-        ]
+        items: ['js/video/demo-of-cloud-sdk-for-javascript-with-calm-and-cap']
       },
       'js/api',
       'js/release-notes-sap-cloud-sdk-for-javascript-and-typescript',
@@ -183,4 +179,4 @@ module.exports = {
       'related-projects/project-piper'
     ]
   }
-}
+};

@@ -1,58 +1,67 @@
 ---
 id: cloud-sdk-feature-matrix
-title: Feature matrix
+title: Feature Matrix
 hide_title: false
 hide_table_of_contents: false
-sidebar_label: Feature matrix
+sidebar_label: Feature Matrix
 description: Key features of SAP Cloud SDK to seamlessly build and extend SAP services and applications.
 keywords:
-- sap
-- cloud
-- sdk
-- cloud native
-- cloud sdk
-- sap cloud sdk
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
 ---
 
 :::note
-There's no full feature parity between Java and JavaScript/Typescript SDKs. This is intentional and on purpose because often they'd target slightly different use-cases that justifies discrepancies.
+There's no full feature parity between the SAP Cloud SDK for Java and the SAP Cloud SDK for JavaScript.
+This is intentional because often they'd target slightly different use-cases that justify differences.
 :::
 
-## Pre-generated type-safe client libraries for S/4HANA
+## Pregenerated Type-Safe Client Libraries for SAP S/4HANA
 
-:::tip Different packaging strategy between SDKs
-- SDK for Java has separate maven modules for S/4HANA Cloud & S/4HANA On-premise. Those are in turn split into modules containing OData v2 and OData v4 services. We also ship an aggregating module if you want to add all the S/4HANA client libraries to you dependencies. A Java `Class` represents one OData service in S/4HANA.
-- SDK for JavaScript/Typescript ships one client library NPM package per S/4HANA service. Packages for S/4HANA Cloud always contain the latest APIs. Packages for S/4HANA On-Premise have `-op-` in their name and contain all the versions of respective service's APIs where the latest version exported as default. A `Class` here represents an `Entity` in `OData` terms, while package represents a service. SDK for JS/TS doesn't ship any aggregator packages.
+:::tip Different packaging strategy
+
+<!-- vale SAP.Products = NO -->
+
+- SAP Cloud SDK for Java has separate maven modules for SAP S/4HANA Cloud & SAP S/4HANA On-premise.
+  Those are in turn split into modules containing OData v2 and OData v4 services.
+  We also ship an aggregating module if you want to add all the SAP S/4HANA client libraries to your dependencies.
+  A Java `Class` represents one OData service in SAP S/4HANA.
+- SDK for JavaScript/TypeScript ships one client library npm package per SAP S/4HANA service.
+  Packages for SAP S/4HANA Cloud always contain the latest APIs.
+  Packages for SAP S/4HANA On-Premise have `-op-` in their name and contain all the versions of respective service's APIs where the latest version exported as default.
+  A `Class` represents an `Entity` in `OData` terms, while each package represents a service.
+  The SAP Cloud SDK for JS/TS doesn't ship any aggregator packages.
+
+<!-- vale SAP.Products = YES -->
+
 :::
 
+|                        | Java    | Maven Central                                                                                                                                                            | JS/TS   | NPMJS                                                                         |
+| ---------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------- | ----------------------------------------------------------------------------- |
+| SAP S/4HANA Cloud      | &check; | [OData v2](https://search.maven.org/search?q=a:s4hana-api-odata) <br/> [OData v4](https://search.maven.org/search?q=a:s4hana-api-odata-v4)                               | &check; | [List of packages](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm*)    |
+| SAP S/4HANA On-premise | &check; | [OData v2](https://search.maven.org/search?q=a:s4hana-api-odata-onpremise-2020) <br/> [OData v4](https://search.maven.org/search?q=a:s4hana-api-odata-v4-onpremise-2020) | &check; | [List of packages](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-op*) |
 
-|                    | Java    | Maven Central                                                                                                                                                            | JS/TS   | NPMJS                                                                         |
-|--------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------|-------------------------------------------------------------------------------|
-| S/4HANA Cloud      | &check; | [OData v2](https://search.maven.org/search?q=a:s4hana-api-odata) <br/> [OData v4](https://search.maven.org/search?q=a:s4hana-api-odata-v4)                               | &check; | [List of packages](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm*)    |
-| S/4HANA On-premise | &check; | [OData v2](https://search.maven.org/search?q=a:s4hana-api-odata-onpremise-2020) <br/> [OData v4](https://search.maven.org/search?q=a:s4hana-api-odata-v4-onpremise-2020) | &check; | [List of packages](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-op*) |
+## OData Code Generator
 
-## OData code generator
+## Command-Line Interface
 
+## Cloud Abstractions
 
+## Client Libraries
 
+## OData
 
-## CLI
+## Open API
 
+## Events and Messaging
 
-## Cloud Abstractions ##
+## Continuous Integration and Continuous Delivery Pipelines
 
-## Client Libraries ##
+## Blue-Green Deployment
 
-## Odata ##
+## DevOps
 
-## Open API ##
-
-## Events and Messaging ##
-
-## CI/CD Pipelines ##
-
-## Blue Green Deployment ##
-
-## DevOps ##
-
-## Test Utilities ##
+## Test Utilities

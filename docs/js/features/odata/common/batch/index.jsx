@@ -1,31 +1,31 @@
-import React from 'react'
-import BatchIntroContent from './batch-intro.mdx'
-import ChangeSetContent from './changeset.mdx'
-import CombiningRequestsContent from './combining-requests.mdx'
-import SerializationContent from './serialization.mdx'
-import RetrieveRequestsContent from './retrieve-request.mdx'
-import ConfigureSerializationContent from './configure-serialization.mdx'
+import React from 'react';
+import BatchIntroContent from './batch-intro.mdx';
+import ChangeSetContent from './changeset.mdx';
+import CombiningRequestsContent from './combining-requests.mdx';
+import SerializationContent from './serialization.mdx';
+import RetrieveRequestsContent from './retrieve-request.mdx';
+import ConfigureSerializationContent from './configure-serialization.mdx';
 
-export function BatchIntro () {
-  return <BatchIntroContent/>
+export function BatchIntro() {
+  return <BatchIntroContent />;
 }
 
-export function ChangeSet () {
-  return <ChangeSetContent/>
+export function ChangeSet() {
+  return <ChangeSetContent />;
 }
 
-export function CombiningRequests () {
-  return <CombiningRequestsContent/>
+export function CombiningRequests() {
+  return <CombiningRequestsContent />;
 }
 
-export function ConfigureSerialization () {
-  return <ConfigureSerializationContent/>
+export function ConfigureSerialization() {
+  return <ConfigureSerializationContent />;
 }
 
-export function RetrieveRequests () {
-  return <RetrieveRequestsContent/>
+export function RetrieveRequests() {
+  return <RetrieveRequestsContent />;
 }
 
-export function Serialization () {
-  return <SerializationContent/>
+export function Serialization() {
+  return <SerializationContent />;
 }
