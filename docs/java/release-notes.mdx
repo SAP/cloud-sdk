@@ -35,13 +35,13 @@ We highly recommend regularly updating to the latest SDK version. It will help y
 
 [Javadoc](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/index.html) | [Release blog](https://blogs.sap.com/?p=1225215) | [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.33.0)
 
-## Compatibility Notes
+### Compatibility Notes
 
 - The client library for SAP S/4HANA Enterprise Messaging is deprecated. This affects all classes in the following modules: [`s4hana-api-messaging`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-messaging), [`messaging-core`](https://search.maven.org/artifact/com.sap.cloud.sdk.datamodel/messaging-core), [`messaging-jms`](https://search.maven.org/artifact/com.sap.cloud.sdk.datamodel/messaging-jms)
 
 - _Blockchain Business Services Visibility_: The members of the class [`MerkleProof`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/index.html?com/sap/cloud/sdk/services/blockchainbusinessservices/blockchainvisibility/MerkleProof.html) are now immutable, forbidding any external modification of a proof
 
-## New Functionality
+### New Functionality
 
 - Destinations can be conveniently added into the [`DestinationAccessor`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/connectivity/DestinationAccessor.html) logic at runtime. It exposes two new methods [`appendDestinationLoader()`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationAccessor.html#appendDestinationLoader-com.sap.cloud.sdk.cloudplatform.connectivity.DestinationLoader-) and [`prependDestinationLoader()`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationAccessor.html#prependDestinationLoader-com.sap.cloud.sdk.cloudplatform.connectivity.DestinationLoader-) which add destination loaders with high or low priority to the accessor logic. Leverage a new default implementation for the [`DestinationLoader`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/connectivity/DestinationLoader.html) interface to load destinations created at runtime:
 
@@ -50,9 +50,9 @@ We highly recommend regularly updating to the latest SDK version. It will help y
   DestinationAccessor.appendDestinationLoader(loader);
   ```
 
-This new API is experimental.
+  This new API is experimental.
 
-## Improvements
+### Improvements
 
 - The SCP Workflow API client library in module [`scp-workflow-cf`](https://search.maven.org/artifact/com.sap.cloud.sdk.services/scp-workflow-cf) is now generally available and released for productive usage.
 - All OData V2 and V4 request builder classes now expose an experimental method [`toRequest()`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/com/sap/cloud/sdk/datamodel/odatav4/core/RequestBuilder.html#toRequest--) that returns a low-level, generic request object. It provides more convenience for debugging and flexibility to work around a non-standard service behavior.
@@ -83,7 +83,7 @@ This new API is experimental.
   - Okio from `2.7.0` to `2.9.0`
   - OkHttp from `4.5.0` to `4.9.0`
 
-## Fixed Issues
+### Fixed Issues
 
 - _Blockchain Business Services Visibility_: Fixed an issue where validating a structurally invalid proof could result in a stack overflow.
 - Fixed missing request header `If-Match` on batch request for Update or Delete Operation.
