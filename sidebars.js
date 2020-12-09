@@ -153,7 +153,7 @@ module.exports = {
           },
           {
             type: 'category',
-            label: 'OpenApi',
+            label: 'OpenAPI',
             items: [
               'js/features/openapi/overview',
               'js/features/openapi/generate-openapi-client',
