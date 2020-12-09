@@ -51,6 +51,7 @@ We highly recommend regularly updating to the latest SDK version. It will help y
 - Add support for alternative OData v4 metadata field notations `@type`, `@context`, and other introduced with OData Version `4.0.1`. The SDK is now able to parse this notation. However, outgoing requests will always use the notation that is compatible with Version `4.0.0` of the standard for now to ensure server compatibility.
 - The Workflow API client library in module `scp-workflow-cf` was enhanced with the latest Workflow API features.
 - The CSRF token retrieval of OData v2 type-safe function imports has been improved:
+
   - Function imports using the HTTP method GET no longer issue the unnecessary CSRF token request
   - Function imports using the HTTP method POST can be processed even if the CSRF token retrieval fails (for example, if the server does not support CSRF tokens)
 
@@ -100,8 +101,8 @@ Stream<EntityT> lazyStream = request.streamingEntities().execute( destination );
 Iterable<List<EntityT>> lazyPages = request.iteratingPages().execute( destination );
 ```
 
-
 :::note
+
 - For OData v2 the execute method is called `executeRequest`
 - The default behavior for OData v2 and v4 is now to return accumulated results from all pages. Before only the first page of results was returned.
 :::
@@ -115,15 +116,15 @@ Iterable<List<EntityT>> lazyPages = request.iteratingPages().execute( destinatio
     - Update Cf Java Logging Support Logback from `3.2.0` to `3.2.1`
   - Other dependency updates:
     - Minor version updates:
-        - Update Apache CXF from `3.3.7` to `3.3.8`
-        - Update EclipseLink from `2.7.6` to `2.7.7`
-        - Update Hibernate validator from `6.1.5.Final` to `6.1.6.Final`
-        - Update Jetty from `9.4.33.v20201020` to `9.4.34.v20201102`
-        - Update Json from `20200518` to `20201115`
-        - Update Protobuf java from `3.12.2` to `3.14.0`
-        - Update Swagger annotation from `1.5.22` to `1.6.2`
-        - Update Vavr from `0.10.2` to `0.10.3`
-        - Update hibernate-core from `5.4.3` to `5.4.24` to overcome security vulnerability [CVE-2020-25638](https://access.redhat.com/security/cve/cve-2020-25638)
+      - Update Apache CXF from `3.3.7` to `3.3.8`
+      - Update EclipseLink from `2.7.6` to `2.7.7`
+      - Update Hibernate validator from `6.1.5.Final` to `6.1.6.Final`
+      - Update Jetty from `9.4.33.v20201020` to `9.4.34.v20201102`
+      - Update Json from `20200518` to `20201115`
+      - Update Protobuf java from `3.12.2` to `3.14.0`
+      - Update Swagger annotation from `1.5.22` to `1.6.2`
+      - Update Vavr from `0.10.2` to `0.10.3`
+      - Update hibernate-core from `5.4.3` to `5.4.24` to overcome security vulnerability [CVE-2020-25638](https://access.redhat.com/security/cve/cve-2020-25638)
 
 ## Fixed Issues
 
