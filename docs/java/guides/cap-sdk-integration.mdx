@@ -105,9 +105,11 @@ Let the Spring component scan crawl the SAP Cloud SDK package.
 We'll annotate the Spring Boot application class which is annotated with `@SpringBootApplication` as follows.
 
 ```java
-@ComponentScan({"com.sap.cloud.sdk"})
-@ServletComponentScan({"com.sap.cloud.sdk"})
+@ComponentScan({"com.sap.cloud.sdk", "com.mycompany.myapplication"})
+@ServletComponentScan({"com.sap.cloud.sdk", "com.mycompany.myapplication"})
 ```
+
+Make sure that you also add the package name of your application.
 
 :::success Integration finished
 Now the SAP Cloud SDK is integrated with the CAP application.
