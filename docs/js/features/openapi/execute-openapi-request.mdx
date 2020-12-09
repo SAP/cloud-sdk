@@ -22,20 +22,20 @@ The OpenAPI generator is in beta state.
 ## How to Use the Client
 
 The API of the OpenAPI clients are similar to the ones for [OData](../odata/execute-odata-request).
-What methods are available in a client depends on the service specification.
+What methods are available in a client depend on the service specification.
 We will use the [test service](https://github.com/SAP/cloud-sdk-js/blob/main/test-resources/rest-service-specs/test-service.json) as an example to explain how the specification relates to methods in the generated client.
 
-The test service is simple and has only three paths: `/entities`, `/entities/{entityId}` and `entities/count`.
+The test service is simple and only has three paths: `/entities`, `/entities/{entityId}` and `entities/count`.
 We will explain how the `GET` operation for the three paths are executed as well as the `POST` operations.
 
 The central entry point to execute methods is the `TestServiceApi` object which provides all available methods.
 The name of the `API` object derives from the OpenAPI specification file name.
-In this example it is called `test-service.json`.
+In this example, it is called `test-service.json`.
 
 ### `GET` Operation Without Parameters
 
-The root path `/entites` in combination with the operation `GET` will get all entities.
-The SAP Cloud SDK uses the `operationId` value of the spec file to name the method if possible.
+The root path `/entites` in combination with the operation `GET` will retrieve all entities.
+The SAP Cloud SDK uses the `operationId` value of the specification file to name the method if possible.
 In the example the `operationId` is `getAllEntities` and the method is executed in the following way:
 
 ```ts
@@ -96,9 +96,10 @@ const createResponse = await TestServiceApi.createEntity(testEntity).execute(
 );
 ```
 
-The `POST` operation is [specified](https://github.com/SAP/cloud-sdk-js/blob/main/test-resources/rest-service-specs/test-service.json) to return no content and status code 201 (created).
+The `POST` operation is [specified](https://github.com/SAP/cloud-sdk-js/blob/main/test-resources/rest-service-specs/test-service.json) to return no content and status code `201 Created`.
 Hence the `createResponse` is typed as `Promise<void>`.
 
 :::note
-If your server requires CSRF tokens for `POST` request you have to fetch and provide it manually as custom header in the `execute()` method, because the OpenAPI clients to currently not support automatic token fetching.
+If your server requires CSRF tokens for a `POST` request, you have to fetch and provide it manually as custom header in the `execute()` method.
+The OpenAPI clients currently don't support automatic token fetching.
 :::
