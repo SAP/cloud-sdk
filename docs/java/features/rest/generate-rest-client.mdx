@@ -1,27 +1,28 @@
 ---
 id: generate-rest-client
-title: Generate a typed REST client for Java
+title: Generate a Typed REST Client
 hide_title: false
 hide_table_of_contents: false
-sidebar_label: Generate typed REST Client
+sidebar_label: Generate Typed REST Client
 description: This article describes how to leverage the REST client generator to obtain Java classes from a service definition. These classes can then be used to build type-safe REST requests.
 keywords:
-- sap
-- cloud
-- sdk
-- rest
-- java
-- VDM
-- generate
+  - sap
+  - cloud
+  - sdk
+  - rest
+  - java
+  - VDM
+  - generate
 ---
 
-## Generate a typed REST client with the REST Generator ##
+## Generate a Typed REST Client With the REST Generator
 
-The SAP Cloud SDK offers a REST client generator as Maven plugin which can be used to generate a client library for a REST API based on its OpenAPI specification.
-The REST generator is a wrapper around the public open-source [OpenAPI Generator](https://github.com/OpenAPITools/openapi-generator) where we have adjusted the Mustasche templates to integrate the generated client library with the SDK core. 
+The SAP Cloud SDK offers a REST client generator as a Maven plugin which can be used to generate a client library for a REST API based on its OpenAPI specification.
+The REST generator is a wrapper around the public open-source [OpenAPI Generator](https://github.com/OpenAPITools/openapi-generator) where we have adjusted the `mustache` templates to integrate the generated client library with the SAP Cloud SDK core.
 
 The generated Java classes need the following dependencies to be present in your project:
 
+<!-- vale off -->
 
 ```xml
 <dependency>
@@ -36,19 +37,24 @@ The generated Java classes need the following dependencies to be present in your
 <dependency>
     <groupId>org.springframework</groupId>
     <artifactId>spring-context</artifactId>
-    <version>use-latest-version</version> 
+    <version>use-latest-version</version>
 </dependency>
 ```
 
-In order to use the generated client library either SDK BOM should be part of your project's `<dependencyManagement>` section or the version for the `rest-core` artifact must be mentioned explicitly here.
+<!-- vale on -->
+
+In order to, use the generated client library either SDK BOM should be part of your project's `<dependencyManagement>` section or the version for the `rest-core` artifact must be mentioned explicitly here.
 
 :::note
-Please note that the REST generator is not yet recommended for productive usage. It is an experimental preview from the Cloud SDK.
+Please note that the REST generator is not yet recommended for productive usage.
+It is an experimental preview from the SAP Cloud SDK.
 :::
 
-## Using the REST generator Maven plugin ##
+## Using the REST generator Maven plugin
 
-To use the Maven plugin following XML snippet should be added to the POM file of your project: 
+To use the Maven plugin following XML snippet should be added to the POM file of your project:
+
+<!-- vale off -->
 
 ```xml
 <plugin>
@@ -73,19 +79,26 @@ To use the Maven plugin following XML snippet should be added to the POM file of
 </plugin>
 ```
 
-Maven will run the generator within the `generate-sources` phase which is executed before compile. 
+<!-- vale on -->
+
+Maven will run the generator within the `generate-sources` phase which is executed before `compile`.
 
 :::note
-The phase `generate-sources` is just a recommendation from our 
-side, it can be changed as per your project's requirement. Refer the [Maven build lifecycle guide](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#Lifecycle_Reference) for complete explanation.
+The phase `generate-sources` is just a recommendation from our side, it can be changed as per your project's requirement.
+Refer to the [Maven build lifecycle guide](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#Lifecycle_Reference) for a complete explanation.
 :::
 
-Please note that the version of the above plugin must be specified at least once in your project, preferably in the root POM. Also, the version of the plugin should be the same as of the Cloud SDK.
-We recommend to use a Maven property for defining the version of both the Maven plugin and the SDK BOM.
+Please note that the version of the above plugin must be specified at least once in your project, preferably in the root POM.
+Also, the version of the plugin should be the same as of the SAP Cloud SDK.
+We recommend using a Maven property for defining the version of both the Maven plugin and the SDK BOM.
 
-### Generating Java Client Library for multiple OpenAPI Specifications ###
-This Maven plugin processes one OpenAPI specification per execution. In case you want to generate sources for multiple OpenAPI specifications then you need to create multiple executions of the plugin each corresponding to a particular OpenAPI specification. 
-As an example refer the below plugin xml: 
+### Generating Java Client Library for multiple OpenAPI Specifications
+
+This Maven plugin processes one OpenAPI specification per execution.
+In case you want to generate sources for multiple OpenAPI specifications then you need to create multiple executions of the plugin each corresponding to a particular OpenAPI specification.
+As an example refer to the plugin XML below:
+
+<!-- vale off -->
 
 ```xml
 <plugin>
@@ -120,17 +133,18 @@ As an example refer the below plugin xml:
 </plugin>
 ```
 
+<!-- vale on -->
 
+### Available Parameters
 
-### Available Parameters ###
 The complete list of available parameters with their description is as follows:
 
-| Parameter                  | Default     |Required | Description                                                                                                         |
-|:---------------------------|:----------: |:-------:|:--------------------------------------------------------------------------------------------------------------------|
-| `<compileScope>`           | `NONE`      | No      | Adds the generated sources to the compile or test phase. Respective values are `COMPILE` and `TEST_COMPILE`                                                             |
-| `<inputSpec>`              | -           | Yes     | Location of the OpenAPI specification file                                                                               |
-| `<outputDirectory>`        | -           | Yes     | Output directory for generated sources                                                                              |
-| `<apiPackage>`             | -           | Yes     | Package name for the generated API classes                                                                          |
-| `<modelPackage>`           | -           | Yes     | Package name for the generated Model classes                                                                        |
-| `<apiMaturity>`            | `released`  | No      | Defines the maturity of the REST API for which Java classes are generated. Possible values are `released` and `beta`. Please note if you define it is as `beta` then [@Beta annotations](https://www.javadoc.io/doc/com.google.guava/guava/latest/com/google/common/annotations/Beta.html) are added to the generated classes which indicates that they are in the experimental state|
-| `<logLevel>`               | `info`      | No      | Defines the log level of the REST Generator. Possible values are `info` and `debug`                                 |
+| Parameter           |  Default   | Required | Description                                                                                                                                                                                                                                                                                                                                                                      |
+| :------------------ | :--------: | :------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `<compileScope>`    |   `NONE`   |    No    | Adds the generated sources to the compile or test phase. Respective values are `COMPILE` and `TEST_COMPILE`                                                                                                                                                                                                                                                                      |
+| `<inputSpec>`       |     -      |   Yes    | Location of the OpenAPI specification file                                                                                                                                                                                                                                                                                                                                       |
+| `<outputDirectory>` |     -      |   Yes    | Output directory for generated sources                                                                                                                                                                                                                                                                                                                                           |
+| `<apiPackage>`      |     -      |   Yes    | Package name for the generated API classes                                                                                                                                                                                                                                                                                                                                       |
+| `<modelPackage>`    |     -      |   Yes    | Package name for the generated Model classes                                                                                                                                                                                                                                                                                                                                     |
+| `<apiMaturity>`     | `released` |    No    | Defines the maturity of the REST API for which Java classes are generated. Possible values are `released` and `beta`. Please note if you define it as `beta` then [@Beta annotations](https://www.javadoc.io/doc/com.google.guava/guava/latest/com/google/common/annotations/Beta.html) are added to the generated classes which indicate that they are in an experimental state |
+| `<logLevel>`        |   `info`   |    No    | Defines the log level of the REST Generator. Possible values are `info` and `debug`                                                                                                                                                                                                                                                                                              |

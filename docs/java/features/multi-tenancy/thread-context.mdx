@@ -1,52 +1,52 @@
 ---
 id: multi-tenancy-thread-context
-title: Multi Tenancy with the Thread Context
+title: Multitenancy With the Thread Context
 hide_title: false
 hide_table_of_contents: false
 sidebar_label: Thread Context
-description: This article describes how the SAP Cloud SDK for Java provides an application context that is stored in a thread-safe manner and enables cloud native features to be used out of the box.
+description: This article describes how the SAP Cloud SDK for Java provides an application context that is stored in a thread-safe manner and enables cloud-native features to be used out of the box.
 keywords:
-- sap
-- cloud
-- sdk
-- thread context
-- multi tenancy
-- cloud native
-- tenant
-- user
-- principal
-- JWT
-- AuthToken
+  - sap
+  - cloud
+  - sdk
+  - thread context
+  - multi tenancy
+  - cloud native
+  - tenant
+  - user
+  - principal
+  - JWT
+  - AuthToken
 image:
 ---
 
-## What is a Thread Context?
+## What Is a Thread Context?
 
-The SAP Cloud SDK for Java provides a so called `ThreadContext`. 
-It serves as thread-safe storage for potentially sensitive information. 
-Specifically the following three objects are stored:
+The SAP Cloud SDK for Java provides a so-called `ThreadContext`.
+It serves as thread-safe storage for potentially sensitive information.
+Specifically, the following three objects are stored:
 
 - The current _Tenant_
 - The current _Principal_ (User)
 - The [JSON Web Token](https://jwt.io) (JWT)
 
-This information is used throughout the SDK to provide features like tenant and principal isolation, JWT verification and authorization against other systems and services.
-To ensure different tenants and users are properly isolated in an application this information is always limited to the Thread it was created on, unless it is explicitly passed on by the application (see [Propagating the Thread Context](#running-asynchronous-operations)).
+This information is used throughout the SAP Cloud SDK to provide features like tenant and principal isolation, JWT verification and authorization against other systems and services.
+To ensure different tenants and users are properly isolated in an application, this information is always limited to the thread it was created on unless it is explicitly passed on by the application (see [Propagating the Thread Context](#running-asynchronous-operations)).
 
-## How is a Thread Context created?
+## How Is a Thread Context Created?
 
-The SDK provides a [RequestFilter](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/servlet/RequestAccessorFilter.html) that will listen on incoming HTTP requests. 
+The SAP Cloud SDK provides a [RequestFilter](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/servlet/RequestAccessorFilter.html) that will listen to incoming HTTP requests.
 If the `Authorization` header contains a `JWT` from the [AppRouter](https://blogs.sap.com/2020/04/03/sap-application-router/) the filter will:
 
 - Verify this token
 - Store it in the `ThreadContext` and
 - Pull the _Tenant_ and _Principal_ information from it
 
-## How can the Thread Context be used?
+## How Can the Thread Context Be Used?
 
 ### Accessing Information
 
-The Thread context can be accessed via the static [ThreadContextAccessor](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/thread/ThreadContextAccessor.html). 
+The Thread context can be accessed via the static [ThreadContextAccessor](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/thread/ThreadContextAccessor.html).
 
 For the frequently needed _Tenant_, _Principal_ and _JWT_ there are also dedicated accessors: [TenantAccessor](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/tenant/TenantAccessor.html), [PrincipalAccessor](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html), [AuthTokenAccessor](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/security/AuthTokenAccessor.html).
 
@@ -62,7 +62,7 @@ In that case you can override the current tenant explicitly:
 TenantAccessor.executeWithTenant(customTenant, () -> doStuff());
 ```
 
-### Running asynchronous operations
+### Running Asynchronous Operations
 
 As the name suggests the `ThreadContext` is bound to a Thread, more specifically to the one it was created.
 If asynchronous operations need to access the information it has to be propagated to the new Threads.
@@ -88,14 +88,8 @@ Callable operationWithTenant = TenantAccessor.executeWithTenant(customTenant, ()
 invokeAsynchronously(operationWithContext);
 ```
 
-<!-- For the Thread context there is also a dedicated decorator class which performs this exact task, so the following code is equivalent:
-
-```java
-Callable operationWithContext = new DefaultThreadContextProvider().decorate(operation);
-
-invokeAsynchronously(operationWithContext);
-``` -->
-
 :::note
-Be cautious with long running, asynchronous operations. A propagated Thread context will only persist as long as the Thread lives that it was created on. So when the parent Thread dies the context will seize to exist and no longer be available in any of the Threads.
+Be cautious with long-running, asynchronous operations.
+A propagated Thread context will only persist as long as the Thread lives that it was created on.
+So when the parent Thread dies the context will cease to exist and no longer be available in any of the Threads.
 :::

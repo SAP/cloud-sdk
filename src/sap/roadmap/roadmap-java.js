@@ -1,14 +1,14 @@
-import moment from 'moment'
-import randomColor from 'randomcolor'
+import moment from 'moment';
+import randomColor from 'randomcolor';
 
 const style = {
   fontSize: '0.9rem'
-}
+};
 
 const styleFocus = {
   fontSize: '0.9rem',
   background: 'indigo'
-}
+};
 
 export const keys = {
   groupIdKey: 'id',
@@ -21,35 +21,37 @@ export const keys = {
   itemTimeStartKey: 'start',
   itemTimeEndKey: 'end',
   groupLabelKey: 'title'
-}
+};
 
 export const groups = [
-  { id: 'odata', title: 'OData v2/4 type-safe client' },
+  { id: 'odata', title: 'OData v2/4 Type-Safe Client' },
   { id: 'saas', title: 'SDK as a Service' },
-  { id: 'libs', title: 'SAP Eco-system' },
-  { id: 'rest', title: 'Open API type-safe client' },
+  { id: 'libs', title: 'SAP Ecosystem' },
+  { id: 'rest', title: 'Open API Type-Safe Client' },
   { id: 'oss', title: 'Open Source SDK for Java' },
   { id: 'infra', title: 'K8s, Azure, AWS, GCP and beyond' },
-  { id: 's4', title: 'S/4HANA API libraries' },
+  { id: 's4', title: 'SAP S/4HANA API Libraries' },
   { id: 'lobs', title: 'LoB Solutions' },
   { id: 'docs', title: 'SDK Documentation' },
-  //  { id: 'support', title: 'Analyze and scale support' },
+  //  { id: 'support', title: 'Analyze and Scale Support' },
   { id: 'cap', title: 'One SAP' },
-  { id: 'top', title: 'Developer happiness' },
-  { id: 'future', title: 'Future shots' },
+  { id: 'top', title: 'Developer Happiness' },
+  { id: 'future', title: 'Future Shots' },
   { id: 'scp', title: 'SAP Cloud Platform' }
-]
+];
 
 export const items = [
   {
     id: 1,
     group: 'odata',
-    title: 'Reach feature parity between OData v2/4 type-safe clients',
+    title: 'Reach Feature Parity Between OData v2/4 Type-Safe Clients',
     start: moment().year(2020).month('Jan').date(1),
     end: moment().year(2020).month('Mar').date(32),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...styleFocus
       }
@@ -58,120 +60,129 @@ export const items = [
   {
     id: 2,
     group: 'odata',
-    title: 'Release advanced OData v4 features',
+    title: 'Release Advanced OData v4 Features',
     start: moment().year(2020).month('Jan').date(1),
     end: moment().year(2020).month('Aug').date(32),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...style
-
       }
     }
   },
   {
     id: 3,
     group: 'odata',
-    title: 'Release unified programming model for OData v2/4.',
+    title: 'Release Unified Programming Model for OData v2/4.',
     start: moment().year(2020).month('Apr').date(1),
     end: moment().year(2020).month('Sep').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...styleFocus
-
       }
     }
   },
   {
     id: 4,
     group: 'rest',
-    title: 'Release type-safe client for SCP Workflow service ',
+    title: 'Release Type-Safe Client for SCP Workflow Service ',
     start: moment().year(2020).month('Apr').date(1),
     end: moment().year(2020).month('Jun').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...styleFocus
-
       }
     }
   },
   {
     id: 5,
     group: 'rest',
-    title: 'Release Open API type-safe client generator',
+    title: 'Release Open API Type-Safe Client Generator',
     start: moment().year(2021).month('Jan').date(0),
     end: moment().year(2021).month('Mar').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...style
-
       }
     }
   },
   {
     id: 6,
     group: 'libs',
-    title: 'Pre-generated clients for SAP Graph, kernel services, Job Scheduler, etc.',
+    title:
+      'Pre-Generated Clients for SAP Graph, Kernel Services, Job Scheduler, etc.',
     start: moment().year(2020).month('Oct').date(1),
     end: moment().year(2020).month('Dec').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...styleFocus
-
       }
     }
   },
   {
     id: 7,
     group: 'docs',
-    title: 'Release scalable docs and cover key features',
+    title: 'Release ScalableDocs and Cover Key Features',
     start: moment().year(2020).month('Apr').date(1),
     end: moment().year(2020).month('Jun').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...styleFocus
-
       }
     }
   },
   {
     id: 8,
     group: 'docs',
-    title: 'Build analytics and feedback system for Documentation',
+    title: 'Build Analytics and Feedback System for Documentation',
     start: moment().year(2020).month('Apr').date(1),
     end: moment().year(2020).month('Sep').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...styleFocus
-
       }
     }
   },
   {
     id: 9,
     group: 'docs',
-    title: 'Reach 90% of coverage for docs. Raise quality.',
+    title: 'Reach 90% of Coverage for Docs. Raise Quality.',
     start: moment().year(2020).month('Jul').date(1),
     end: moment().year(2020).month('Dec').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...style
-
       }
     }
   },
@@ -183,47 +194,50 @@ export const items = [
     end: moment().year(2020).month('Dec').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...style
-
       }
     }
   },
   {
     id: 11,
     group: 'oss',
-    title: 'Get approval to Open Source Cloud SDK for Java',
+    title: 'Get Approval to Open Source SAP Cloud SDK for Java',
     start: moment().year(2020).month('Nov').date(1),
     end: moment().year(2020).month('Dec').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...style
-
       }
     }
   },
   {
     id: 12,
     group: 'oss',
-    title: 'Release Open Source version of SAP Cloud SDK for Java',
+    title: 'Release Open Source Version of SAP Cloud SDK for Java',
     start: moment().year(2021).month('Jan').date(1),
     end: moment().year(2021).month('Mar').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...styleFocus
-
       }
     }
   },
   // {
   //   id: 13,
   //   group: 'oss',
-  //   title: 'Achieve a split between Open Source and Closed Source parts of the SDK',
+  //   title: 'Achieve a Split Between Open Source and Closed Source Parts of the SDK',
   //   start: moment().year(2021).month('Jan').date(1),
   //   end: moment().year(2021).month('Mar').date(31),
   //   itemProps: {
@@ -238,12 +252,14 @@ export const items = [
   {
     id: 14,
     group: 'infra',
-    title: 'Native support for K8s in Java',
+    title: 'Native Support for K8s in Java',
     start: moment().year(2021).month('Jan').date(1),
     end: moment().year(2021).month('Feb').date(29),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...styleFocus
       }
@@ -266,67 +282,71 @@ export const items = [
   {
     id: 15,
     group: 's4',
-    title: 'S4HC 2008 VDM (incl v4 services)',
+    title: 'SAP S/4HANA Cloud 2008 VDM (incl v4 services)',
     start: moment().year(2020).month('Aug').date(1),
     end: moment().year(2020).month('Aug').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...style
-
       }
     }
   },
   {
     id: 16,
     group: 's4',
-    title: 'VDM for S4OP (SAP S/4HANA on premise)',
+    title: 'VDM for SAP S/4HANA On-Premise',
     start: moment().year(2020).month('Aug').date(20),
     end: moment().year(2020).month('Sep').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...styleFocus
-
       }
     }
   },
   {
     id: 17,
     group: 's4',
-    title: 'Type-safe client for S/4HANA Enterprise Messaging',
+    title: 'Type-Safe Client for SAP S/4HANA Enterprise Messaging',
     start: moment().year(2021).month('Jan').date(0),
     end: moment().year(2021).month('Mar').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...style
-
       }
     }
   },
   {
     id: 18,
     group: 'scp',
-    title: 'Keep up with change rate of SCP development',
+    title: 'Keep up With Change Rate of SCP Development',
     start: moment().year(2020).month('Jul').date(0),
     end: moment().year(2020).month('Dec').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...style
-
       }
     }
   },
   // {
   //   id: 19,
   //   group: 'saas',
-  //   title: 'Automate release for existing libraries via Pipeline',
+  //   title: 'Automate Release for Existing Libraries via Pipeline',
   //   start: moment().year(2020).month('Oct').date(1),
   //   end: moment().year(2020).month('Dec').date(31),
   //   itemProps: {
@@ -341,67 +361,72 @@ export const items = [
   {
     id: 20,
     group: 'infra',
-    title: 'Improve service discovery and connectivity to enable new run times and rest client capabilities',
+    title:
+      'Improve Service Discovery and Connectivity to Enable New Runtimes and REST Client Capabilities',
     start: moment().year(2020).month('Oct').date(1),
     end: moment().year(2020).month('Dec').date(32),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...styleFocus
-
       }
     }
   },
   {
     id: 21,
     group: 'odata',
-    title: 'Ongoing support and refinement for OData v2/4',
+    title: 'Ongoing Support and Refinement for OData v2/4',
     start: moment().year(2020).month('Oct').date(1),
     end: moment().year(2020).month('Dec').date(32),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...style
-
       }
     }
   },
   {
     id: 22,
     group: 'libs',
-    title: 'Currency Conversion contribution',
+    title: 'Currency Conversion Contribution',
     start: moment().year(2020).month('Feb').date(1),
     end: moment().year(2020).month('Sep').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...styleFocus
-
       }
     }
   },
   {
     id: 23,
     group: 'libs',
-    title: 'Blockchain library contribution',
+    title: 'Blockchain Library Contribution',
     start: moment().year(2020).month('Apr').date(1),
     end: moment().year(2020).month('June').date(32),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...style
-
       }
     }
   },
   // {
   //   id: 24,
   //   group: 'support',
-  //   title: 'Introduce support metrics',
+  //   title: 'Introduce Support Metrics',
   //   start: moment().year(2020).month('Aug').date(1),
   //   end: moment().year(2020).month('Sep').date(32),
   //   itemProps: {
@@ -416,52 +441,55 @@ export const items = [
   {
     id: 25,
     group: 'cap',
-    title: 'Regular alignment between CAP and SAP to achieve synergies',
+    title: 'Regular Alignment Between CAP and SAP to Achieve Synergies',
     start: moment().year(2020).month('Mar').date(1),
     end: moment().year(2020).month('Dec').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...styleFocus
-
       }
     }
   },
   {
     id: 26,
     group: 'libs',
-    title: 'Logging with SAP passport for Performance monitoring',
+    title: 'Logging With SAP Passport for Performance Monitoring',
     start: moment().year(2020).month('Jul').date(1),
     end: moment().year(2020).month('Aug').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...style
-
       }
     }
   },
   {
     id: 27,
     group: 'top',
-    title: 'Improve logging and debugging capabilities',
+    title: 'Improve Logging and Debugging Capabilities',
     start: moment().year(2020).month('Sep').date(1),
     end: moment().year(2021).month('Mar').date(31),
     itemProps: {
       'aria-hidden': true,
-      onDoubleClick: () => { console.log('You clicked double!') },
+      onDoubleClick: () => {
+        console.log('You clicked double!');
+      },
       style: {
         ...style
-
       }
     }
   }
   // {
   //   id: 28,
   //   group: 'top',
-  //   title: 'Introduce quality measurement for SDK deliveries (regressions, bugs, stability, support load)',
+  //   title: 'Introduce Quality Measurement for SAP Cloud SDK Deliveries (regressions, bugs, stability, support load)',
   //   start: moment().year(2020).month('Sep').date(1),
   //   end: moment().year(2021).month('Mar').date(31),
   //   itemProps: {
@@ -473,5 +501,4 @@ export const items = [
   //     }
   //   }
   // }
-
-]
+];
