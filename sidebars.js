@@ -38,7 +38,7 @@ module.exports = {
               'java/features/rest/generate-rest-client',
               {
                 type: 'category',
-                label: 'Released clients',
+                label: 'Released Clients',
                 items: ['java/features/rest/clients/scp-workflow-rest-api']
               }
             ]
@@ -67,12 +67,12 @@ module.exports = {
           },
           {
             type: 'category',
-            label: 'SDK extensions',
+            label: 'SDK Extensions',
             items: [
               'java/features/extensions/extensions-supported-by-sap-cloud-sdk-for-java',
               {
                 type: 'category',
-                label: 'Extension library',
+                label: 'Extension Library',
                 items: [
                   'java/features/extensions/extension-library/curconv/sap-currency-conversion-extension-library-for-cloud-sdk-for-java'
                   // 'java/features/extensions/extension-library/blockchain/sap-blockchain-extension-library-for-cloud-sdk-for-java',
@@ -111,7 +111,7 @@ module.exports = {
       },
       {
         type: 'category',
-        label: 'Video tutorials',
+        label: 'Video Tutorials',
         items: [
           'java/video/video-tutorial-about-getting-started-with-sap-cloud-sdk-for-java',
           'java/video/video-tutorial-about-type-safe-client-generator-for-odata-with-sap-cloud-sdk-for-java',
@@ -182,7 +182,7 @@ module.exports = {
       'js/frequently-asked-questions'
     ],
     Community: ['community/community-call'],
-    'Related projects': [
+    'Related Projects': [
       'related-projects/cloud-application-model',
       'related-projects/sap-xsuaa-security-library-for-javascript-and-java',
       'related-projects/project-piper'
