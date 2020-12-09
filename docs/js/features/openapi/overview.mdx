@@ -1,12 +1,12 @@
 ---
-title: OpenApi with the Cloud SDK for JavaScript
-sidebar_label: Overview
+title: OpenAPI
+sidebar_label: OpenAPI
 description: This article describes how generate a client from the a service definition and how to use the client.
 keywords:
   - sap
   - cloud
   - sdk
-  - OpenApi
+  - OpenAPI
   - rest
   - connectivity
   - JavaScript
@@ -16,24 +16,24 @@ keywords:
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
 :::note
-The OpenApi generator is in beta state.
+The OpenAPI generator is in beta state.
 :::
 
-## What is the OpenApi generator and what does it offer for you
+## What Is the OpenAPI Generator and What Does It Offer to You
 
-The OpenApi generator is a command line tool to generate clients from an [OpenApi specification](https://swagger.io/specification/).
-OpenApi specifications are the defacto standard to define RESTful webservice in a language-agnostic way comparable to the `edmx` service definition for [OData clients](../odata/overview.mdx).
+The OpenAPI generator is a command line tool to generate clients from an [OpenAPI specification](https://swagger.io/specification/).
+OpenAPI specifications are the standard to define RESTful web service in a language-agnostic way comparable to the `edmx` service definition for [OData clients](../odata/overview.mdx).
 As you would expect an [openapi-generator](https://github.com/OpenAPITools/openapi-generator) which offers client generation for a big number of languages already exists.
-So why do we provide an extra generator in the SDK?
+So why do we provide an extra generator in the SAP Cloud SDK?
 
-The reason we provided an extra generator based on the existing one is that we wanted to include the connectivity layer of the SDK for other REST APIs as well and not only for OData.
-So the same [destination lookup](../connectivity/destination), [on-premise connectivity](../connectivity/on-premise) and [proxy handling](../connectivity/proxy) applies to the OpenApi clients.
+The reason we provided an extra generator based on the existing one is that we wanted to include the connectivity layer of the SAP Cloud SDK for other REST APIs as well and not only for OData.
+So the same [destination lookup](../connectivity/destination), [on-premise connectivity](../connectivity/on-premise) and [proxy handling](../connectivity/proxy) applies to the OpenAPI clients.
 
 This is achieved in the following way.
 We use the open source generator to create an [axios client](https://github.com/OpenAPITools/openapi-generator/blob/master/docs/generators/typescript-axios.md).
-Then we include the request config build with the SDK to this axios client.
-The request config contains all headers, proxy and http-agent information relevant for connectivity.
+Then we include the request configuration build with the SAP Cloud SDK to this axios client.
+The request configuration contains all headers, proxy and http-agent information relevant for connectivity.
 In addition we wrap the paths and operations with an API layer to have similar names as in the OData client.
 
-If you are interested in using an OpenApi client in your project the next steps to do are to generate a client and to use it in your project.
-You find information on the generation of client [here](./generate-openapi-client) and details on the usage of the client [here](./execute-openapi-request).
+If you are interested in using an OpenAPI client in your project the next steps to do are to generate a client and to use it in your project.
+You find information in the guides on [the generation of a client](./generate-openapi-client) and [the usage of the client](./execute-openapi-request).
