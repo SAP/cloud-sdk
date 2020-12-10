@@ -88,14 +88,16 @@ We highly recommend regularly updating to the latest SDK version. It will help y
 Example:
 
 ```java
-// consider
-GetAllRequestBuilder<EntityT> request = service.getEntities(); // for V4
-FluentHelperRead<?, EntityT, ?> request = service.getEntities(); // for V2
+// Let's assume these are your requests for OData v2 and v4 to fetch entities.
+FluentHelperRead<?, EntityT, ?> request = service.getEntities(); // for v2
+GetAllRequestBuilder<EntityT> request = service.getEntities(); // for v4
 
-// default
+// Before you had only this method which would fetch all the data eagerly by
+// travesing through pages and providing the final result set for you.
 List<EntityT> defaultEager = request.execute( destination );
 
-// new
+// Now you have an option to handle paginated results yourself using one of the
+// methods below depending on your use-case.
 Iterable<EntityT> lazyIterable = request.iteratingEntities().execute( destination );
 Stream<EntityT> lazyStream = request.streamingEntities().execute( destination );
 Iterable<List<EntityT>> lazyPages = request.iteratingPages().execute( destination );
@@ -105,6 +107,7 @@ Iterable<List<EntityT>> lazyPages = request.iteratingPages().execute( destinatio
 
 - For OData v2 the execute method is called `executeRequest`
 - The default behavior for OData v2 and v4 is now to return accumulated results from all pages. Before only the first page of results was returned.
+
 :::
 
 ## Improvements
