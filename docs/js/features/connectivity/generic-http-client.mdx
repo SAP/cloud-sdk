@@ -12,9 +12,13 @@ keywords:
   - TypeScript
 ---
 
+<!-- vale off -->
+
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-## What is the Generic HTTP Client?
+<!-- vale on -->
+
+## What Is the Generic HTTP Client?
 
 In the [Executing a request using a generated OData client](../odata/execute-odata-request.mdx) section, we explained how to make OData requests using the generated OData client.
 This client is the highest layer of convenience and type-safety for the user.
@@ -31,23 +35,26 @@ For the final HTTP calls, we have decided to use the `axios` library.
 In this document, we explain when and how to use the middle layer directly.
 Different clients serve different purposes:
 
-**OData Client:** Provides strong typing for the request (payload, select, filter, ...) and response.
+**OData Client:**
+Provides strong typing for the request (payload, select, filter, ...) and response.
 For each OData service, a separate client needs to be generated which defines the types and methods for this service.
 The client takes care of deserializing your request to a URL and JSON payload as well as serializing the response.
 The generated payload and URL are passed to the Generic HTTP Client.
 
-**Generic HTTP Client:** Adds SAP infrastructure specific functionality on top of a standard HTTP Client.
+**Generic HTTP Client:**
+Adds SAP infrastructure specific functionality on top of a standard HTTP Client.
 All OData services use the same generic HTTP client, so it contains no service-specific information.
 The client handles connectivity related issues such as:
 
-- [destination lookup](../connectivity/destination.mdx)
-- Connections to [On-Premise](../connectivity/on-premise.mdx) system via the connectivity service
-- [web proxies](../connectivity/proxy.mdx).
+- [Destination lookup](../connectivity/destination.mdx)
+- Connections to [SAP S/4HANA On-Premise](../connectivity/on-premise.mdx) via the connectivity service
+- [Web proxies](../connectivity/proxy.mdx).
 
 In the end, all information from the destination, connectivity service, and proxy configuration ends up in header-fields and [proxy-agents](https://www.npmjs.com/package/proxy-agent).
 The information goes one level down to the `axios` client.
 
-**`axios` HTTP Client:** Is a widely used open source [HTTP client for node](https://www.npmjs.com/package/axios).
+**`axios` HTTP Client:**
+Is a widely used open source [HTTP client for node](https://www.npmjs.com/package/axios).
 This client executes the actual HTTP requests in the end.
 
 ## How to Use It
