@@ -110,8 +110,6 @@ You can look up the ABAP field name in SAP S/4HANA transaction SE37 by opening t
 To make that compile, we add Lombok to our `application/pom.xml` as a dependency.
 Open `application/pom.xml` and add that dependency:
 
-<!-- vale off -->
-
 ```xml
 <dependency>
     <groupId>org.projectlombok</groupId>
@@ -119,8 +117,6 @@ Open `application/pom.xml` and add that dependency:
     <scope>provided</scope>
 </dependency>
 ```
-
-<!-- vale on -->
 
 Run `mvn clean install` to verify that everything goes well.
 
@@ -275,11 +271,14 @@ Here is what you'll need to make progress throughout the next steps.
 
 Official tutorials for setting up these scenarios can be found [here](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/fa4adc9bd40e45dbac573fd616695446.html).
 
-#### Optional: Setup App Router
+#### Optional: Set Up App Router
 
 If tenant-aware access of JCo and its required microservices or Principal Propagation want to be achieved, it is required that the app is invoked with a JWT containing the user context.
 For that, securing the backend with an app router is required.
 Follow [this tutorial](https://developers.sap.com/tutorials/s4sdk-secure-cloudfoundry.html) to setup the app router.
+
+Furthermore, if you want to call JCo from any newly created thread, please check out the documentation [here](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/b14eeb94be944c62a5880bde50c59aef.html).
+Be aware to exclude the `java-api` artifact, since this is transitively included with the SAP Cloud SDK!
 
 #### Setup Cloud Connector for SAP S/4HANA On-Premise access
 
@@ -383,8 +382,6 @@ Some configuration steps differ depending on which Maven archetype (Spring or To
 
 - Add this new dependency to your `pom.xml` in the `application` folder:
 
-<!-- vale off -->
-
 ```xml
 <dependency>
     <groupId>com.sap.conn.jco</groupId>
@@ -392,8 +389,6 @@ Some configuration steps differ depending on which Maven archetype (Spring or To
     <version>X.Y.Z</version>
 </dependency>
 ```
-
-<!-- vale on -->
 
 - Build the app with `mvn clean package`.
 
@@ -406,8 +401,6 @@ Replace the placeholder `X.Y.Z` with the JCo version you downloaded.
 
 - Add this new dependency to your `pom.xml` in the `application` folder:
 
-<!-- vale off -->
-
 ```xml
 <dependency>
     <groupId>com.sap.conn.jco</groupId>
@@ -415,8 +408,6 @@ Replace the placeholder `X.Y.Z` with the JCo version you downloaded.
     <version>X.Y.Z</version>
 </dependency>
 ```
-
-<!-- vale on -->
 
 :::tip
 Replace the placeholder `X.Y.Z` with the JCo version you downloaded.
@@ -430,8 +421,6 @@ Replace the placeholder `X.Y.Z` with the JCo version you downloaded.
 
 - Use the latest version of the `maven-war-plugin` by specifying it explicitly in your `pom.xml`:
 
-<!-- vale off -->
-
 ```xml
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
@@ -439,8 +428,6 @@ Replace the placeholder `X.Y.Z` with the JCo version you downloaded.
     <version>3.3.1</version> <!-- use latest version -->
 </plugin>
 ```
-
-<!-- vale on -->
 
 - Build the app with `mvn clean package`.
 
@@ -467,8 +454,6 @@ If you face an exception like the following ones, then you must configure the cl
 
 To overcome these exceptions, configure the classpath via the TomEE Maven plugin.
 
-<!-- vale off -->
-
 ```xml
 <plugin>
     <groupId>org.apache.tomee.maven</groupId>
@@ -480,8 +465,6 @@ To overcome these exceptions, configure the classpath via the TomEE Maven plugin
     </configuration>
 </plugin>
 ```
-
-<!-- vale on -->
 
 </TabItem>
 
@@ -534,8 +517,6 @@ Alternatively, you can pass the system property to the JVM via configuration in 
 
 You can see the system property `jco.destinations.dir` via the Maven plugin configuration as follows:
 
-<!-- vale off -->
-
 ```xml
 <plugin>
     <groupId>org.apache.tomee.maven</groupId>
@@ -544,8 +525,6 @@ You can see the system property `jco.destinations.dir` via the Maven plugin conf
         <args>-Djco.destinations.dir=here-comes-the-directory-with-the-destination</args>
 ...
 ```
-
-<!-- vale on -->
 
 </TabItem>
 

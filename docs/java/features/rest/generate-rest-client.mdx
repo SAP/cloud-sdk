@@ -22,8 +22,6 @@ The REST generator is a wrapper around the public open-source [OpenAPI Generator
 
 The generated Java classes need the following dependencies to be present in your project:
 
-<!-- vale off -->
-
 ```xml
 <dependency>
 	<groupId>com.sap.cloud.sdk.datamodel</groupId>
@@ -34,16 +32,9 @@ The generated Java classes need the following dependencies to be present in your
 	<artifactId>swagger-annotations</artifactId>
 	<version>use-latest-version</version>
 </dependency>
-<dependency>
-    <groupId>org.springframework</groupId>
-    <artifactId>spring-context</artifactId>
-    <version>use-latest-version</version>
-</dependency>
 ```
 
-<!-- vale on -->
-
-In order to, use the generated client library either SDK BOM should be part of your project's `<dependencyManagement>` section or the version for the `rest-core` artifact must be mentioned explicitly here.
+In order to, use the generated client library, either the SAP Cloud SDK BOM should be part of your project's `<dependencyManagement>` section or the version for the `rest-core` artifact must be mentioned explicitly here.
 
 :::note
 Please note that the REST generator is not yet recommended for productive usage.
@@ -53,8 +44,6 @@ It is an experimental preview from the SAP Cloud SDK.
 ## Using the REST Generator Maven Plugin
 
 To use the Maven plugin following XML snippet should be added to the POM file of your project:
-
-<!-- vale off -->
 
 ```xml
 <plugin>
@@ -79,8 +68,6 @@ To use the Maven plugin following XML snippet should be added to the POM file of
 </plugin>
 ```
 
-<!-- vale on -->
-
 Maven will run the generator within the `generate-sources` phase which is executed before `compile`.
 
 :::note
@@ -90,15 +77,13 @@ Refer to the [Maven build lifecycle guide](https://maven.apache.org/guides/intro
 
 Please note that the version of the above plugin must be specified at least once in your project, preferably in the root POM.
 Also, the version of the plugin should be the same as of the SAP Cloud SDK.
-We recommend using a Maven property for defining the version of both the Maven plugin and the SDK BOM.
+We recommend using a Maven property for defining the version of both the Maven plugin and the SAP Cloud SDK BOM.
 
 ### Generating Java Client Library for Multiple OpenAPI Specifications
 
 This Maven plugin processes one OpenAPI specification per execution.
 In case you want to generate sources for multiple OpenAPI specifications then you need to create multiple executions of the plugin each corresponding to a particular OpenAPI specification.
 As an example refer to the plugin XML below:
-
-<!-- vale off -->
 
 ```xml
 <plugin>
@@ -132,8 +117,6 @@ As an example refer to the plugin XML below:
 	</configuration>
 </plugin>
 ```
-
-<!-- vale on -->
 
 ### Available Parameters
 
