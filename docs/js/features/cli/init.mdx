@@ -43,13 +43,57 @@ Do you want to provide anonymous usage analytics to help us improve the SDK? (y|
   ✔ Modifying `.gitignore`
 ```
 
-### Enter Project Name
+### Options
+
+#### Project Directory
+
+You can set the project directory via a flag or as a path parameter.
+**The default value is the working directory.**
+If the project directory is empty, the CLI will offer to create a new project.
+
+```bash
+$ sap-cloud-sdk init PROJECTDIR
+
+$ sap-cloud-sdk init --projectDir=PROJECTDIR
+```
+
+#### SAP Cloud Application Programming Model
+
+Add a `cds` configuration and example data to follow the SAP Cloud Application Programming model.
+**By default, this configuration is not added.**
+
+This can also be added with a separate command.
+
+```bash
+$ sap-cloud-sdk init --addCds
+
+$ sap-cloud-sdk add-cds
+```
+
+#### Frontend Scripts
+
+Add frontend-related npm scripts which are executed by our CI/CD toolkit.
+**By default, this configuration is not added.**
+
+```bash
+$ sap-cloud-sdk init --frontendScripts
+```
+
+#### Force, Help, and Verbose
+
+- `--help` or `-h`: Show help for the init command.
+- `--verbose` or `-v`: Show more detailed output.
+- `--force`: Do not fail if a file or npm script already exist and overwrite it.
+
+### Step-by-Step
+
+#### Enter Project Name
 
 The project name is relevant for the Cloud Foundry repository.
 Your application will use this name to appear in the SAP Cloud Platform Cockpit.
 By default, it will suggest the name of the project folder.
 
-### Enter the Command to Start Your Application
+#### Enter the Command to Start Your Application
 
 When deploying to Cloud Foundry, it needs to know the command to start your application.
 This can be any bash command.
@@ -58,7 +102,7 @@ Often the command will be `npm run start`.
 The start command will be entered in the `manifest.yml`.
 If you don't know the command at this moment, you can adjust it manually in the `manifest.yml`.
 
-### Do You Want to Provide Anonymous Usage Analytics to Help Us Improve the SAP Cloud SDK?
+#### Do You Want to Provide Anonymous Usage Analytics to Help Us Improve the SAP Cloud SDK?
 
 If you give your consent, the SAP Cloud SDK will collect some anonymized information on your project and computer.
 This helps us understand the ecosystem in which the SAP Cloud SDK is used and prioritize features accordingly.
@@ -89,9 +133,11 @@ $ sap-cloud-sdk init
 +--------------------------------------------------------------+
 ```
 
+### Next Steps
+
 After the initialization is finished, the CLI displays recommended next steps.
 
-### Make Sure That Your App Listens To `process.env.PORT`
+#### Make Sure That Your App Listens To `process.env.PORT`
 
 Your application may use a predefined listening port.
 This can usually configured in a central place like the `app.js` or `main.ts`.
@@ -106,7 +152,7 @@ According to the [Cloud Foundry documentation](https://docs.cloudfoundry.org/bui
 >   app.listen(process.env.PORT || 3000);
 > ```
 
-### Build Your App if Necessary
+#### Build Your App if Necessary
 
 Before your application can be prepared for deployment, you may need to compile the code.
 This is needed for any project that is built with TypeScript or Babel.
@@ -123,7 +169,7 @@ Often this is done by adding a `--prod` flag (or removing `--dev`).
 
 :::
 
-### Run `sap-cloud-sdk package`
+#### Run `sap-cloud-sdk package`
 
 Your repository will likely contain files that are not necessary to be uploaded when deploying.
 The generated `manifest.yml` defines the `deployment` folder as the path that will be uploaded when calling `cf push`.
@@ -133,7 +179,7 @@ These flags support [glob patterns](<https://en.wikipedia.org/wiki/Glob_(program
 
 You can find more information in [the article on this command](./package.mdx).
 
-### Push to Cloud Foundry
+#### Push to Cloud Foundry
 
 Once your project is prepared, you can use the [Cloud Foundry CLI](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html) to deploy your application.
 You may need to log in to your Cloud Foundry account first.
