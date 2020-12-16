@@ -192,7 +192,7 @@ module.exports = {
       'js/release-notes-sap-cloud-sdk-for-javascript-and-typescript',
       'js/frequently-asked-questions'
     ],
-    Community: ['community/community-call'],
+    Community: ['community/community-call', 'community/sap-teched'],
     'Related Projects': [
       'related-projects/cloud-application-model',
       'related-projects/sap-xsuaa-security-library-for-javascript-and-java',
