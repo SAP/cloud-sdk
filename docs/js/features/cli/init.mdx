@@ -123,7 +123,7 @@ Often this is done by adding a `--prod` flag (or removing `--dev`).
 
 :::
 
-### Run `sap-cloud-sdk package [--include INC][--exclude EXC]`
+### Run `sap-cloud-sdk package`
 
 Your repository will likely contain files that are not necessary to be uploaded when deploying.
 The generated `manifest.yml` defines the `deployment` folder as the path that will be uploaded when calling `cf push`.
@@ -133,7 +133,7 @@ These flags support [glob patterns](<https://en.wikipedia.org/wiki/Glob_(program
 
 You can find more information in [the article on this command](./package.mdx).
 
-### Push to Cloud Foundry (`cf push`)
+### Push to Cloud Foundry
 
 Once your project is prepared, you can use the [Cloud Foundry CLI](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html) to deploy your application.
 You may need to log in to your Cloud Foundry account first.
@@ -143,4 +143,20 @@ Those deployments should be done by a CI/CD pipeline that ensures successful tes
 
 ## Set Up a New Project With the Command-Line Interface
 
-TBD
+If the target directory does not exist or does not contain a `package.json`, the CLI will ask you if you want to create a new project.
+The new project will be based on the nest CLI.
+
+```
+$ sap-cloud-sdk init example-project
+The target directory (example-project) does not contain a `package.json.`
+Should a new `nest.js` project be initialized in the target directory? (y|n): y
+```
+
+The generated project uses TypeScript as a language, npm as the package manager, nest as the backend framework and jest as a test framework.
+Of course, it also includes the most current version of the SAP Cloud SDK as a dependency.
+
+:::note But I would rather use JavaScript!
+
+If you prefer different tooling, we recommend you set up the your project first and use the CLI to add the SAP Cloud SDK afterwards.
+
+:::
