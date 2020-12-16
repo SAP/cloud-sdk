@@ -188,7 +188,14 @@ If your application is running on **SAP Cloud Platform** please add the appropri
 </TabItem>
 </Tabs>
 
-If you want to connect to an **SAP S/4HANA** system via the **OData** protocol you should also add a dependency to the client libraries of the SAP Cloud SDK:
+If you want to connect to an **SAP S/4HANA** system via the **OData** protocol you should also add a dependency to the client libraries of the SAP Cloud SDK.
+The dependencies differ with respect to the type of **SAP S/4HANA** system([**SAP S/4HANA Cloud**](https://api.sap.com/package/SAPS4HANACloud?section=Artifacts) or [**SAP S/4HANA On-Premise 2020**](https://api.sap.com/package/S4HANAOPAPI?section=Artifacts)):
+
+<Tabs groupId="s4hana" defaultValue="s4hanacloud" values={[ { label: 'SAP S/4HANA Cloud', value: 's4hanacloud', }, { label: 'SAP S/4HANA On-Premise 2020', value: 's4hana_onpremise', }]}>
+
+<TabItem value="s4hanacloud">
+
+<!-- vale off -->
 
 ```xml
 <dependency>
@@ -196,6 +203,33 @@ If you want to connect to an **SAP S/4HANA** system via the **OData** protocol y
     <artifactId>s4hana-all</artifactId>
 </dependency>
 ```
+
+</TabItem>
+<TabItem value="s4hana_onpremise">
+
+```xml
+<dependency>
+    <groupId>com.sap.cloud.sdk.s4hana</groupId>
+    <artifactId>s4hana-api-odata-onpremise-2020</artifactId>
+</dependency>
+<dependency>
+    <groupId>com.sap.cloud.sdk.s4hana</groupId>
+    <artifactId>s4hana-api-odata-v4-onpremise-2020</artifactId>
+</dependency>
+<dependency>
+	<groupId>com.sap.cloud.sdk.s4hana</groupId>
+	<artifactId>s4hana-connectivity</artifactId>
+</dependency>
+<dependency>
+	<groupId>com.sap.cloud.sdk.s4hana</groupId>
+	<artifactId>s4hana-core</artifactId>
+</dependency>
+```
+
+<!-- vale on -->
+
+</TabItem>
+</Tabs>
 
 In case you have a **CAP application** which uses **multitenancy** features and/or a **protected backend** your service will need the following dependency:
 
