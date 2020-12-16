@@ -45,9 +45,27 @@ Do you want to provide anonymous usage analytics to help us improve the SDK? (y|
 
 ### Enter Project Name
 
+The project name is relevant for the Cloud Foundry repository.
+Your application will use this name to appear in the SAP Cloud Platform Cockpit.
+By default, it will suggest the name of the project folder.
+
 ### Enter the Command to Start Your Application
 
-### Do You Want to Provide Anonymous Usage Analytics to Help Us Improve the SDK?
+When deploying to Cloud Foundry, it needs to know the command to start your application.
+This can be any bash command.
+Often the command will be `npm run start`.
+
+The start command will be entered in the `manifest.yml`.
+If you don't know the command at this moment, you can adjust it manually in the `manifest.yml`.
+
+### Do You Want to Provide Anonymous Usage Analytics to Help Us Improve the SAP Cloud SDK?
+
+If you give your consent, the SAP Cloud SDK will collect some anonymized information on your project and computer.
+This helps us understand the ecosystem in which the SAP Cloud SDK is used and prioritize features accordingly.
+The consent is maintained in the `sap-cloud-sdk-analytics.json`.
+To withdraw your consent, set `"enabled": false` or delete the `sap-cloud-sdk-analytics.json` file.
+
+More information can be found on [GitHub](https://github.com/SAP/cloud-sdk-cli/blob/main/usage-analytics.md).
 
 ```
 $ sap-cloud-sdk init
@@ -117,4 +135,12 @@ You can find more information in [the article on this command](./package.mdx).
 
 ### Push to Cloud Foundry (`cf push`)
 
+Once your project is prepared, you can use the [Cloud Foundry CLI](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html) to deploy your application.
+You may need to log in to your Cloud Foundry account first.
+
+Manual deployments can be helpful in the beginning, but are strongly discouraged for productive environments.
+Those deployments should be done by a CI/CD pipeline that ensures successful tests before a deployment.
+
 ## Set Up a New Project With the Command-Line Interface
+
+TBD
