@@ -15,7 +15,7 @@ keywords:
   - TypeScript
 ---
 
-The SAP Cloud SDK CLI adds necessary dependencies and configurations to add the SAP Cloud SDK deploy your app to SAP Cloud Foundry with one command.
+The SAP Cloud SDK CLI adds necessary dependencies and configurations to use the SAP Cloud SDK and deploy your app to SAP Cloud Platform with one command.
 This is possible for any existing project that uses `npm`.
 
 If you are starting from scratch, the SAP Cloud SDK CLI can also generate a fully-loaded new project to get you started quickly.
@@ -28,7 +28,7 @@ Do you want to add the SAP Cloud SDK to your existing Node.js application?
 Do you want to use the backend and testing frameworks you already know?
 
 If you answered yes to either question, you can use the SAP Cloud SDK CLI to add the SAP Cloud SDK and necessary configuration to your project.
-The command-line tool will take you step-by-step to create the right configuration for your project.
+The command-line tool will guide you step-by-step to create the right configuration for your project.
 
 ```bash
 $ cd my-project
@@ -72,7 +72,8 @@ $ sap-cloud-sdk add-cds
 
 #### Frontend Scripts
 
-Add frontend-related npm scripts which are executed by our CI/CD toolkit.
+Add frontend-related npm scripts which are executed by Project "Piper".
+This is only needed if you the project serves the frontend and you use Project "Piper" for your pipeline.
 **By default, this configuration is not added.**
 
 ```bash
@@ -95,12 +96,12 @@ By default, it will suggest the name of the project folder.
 
 #### Enter the Command to Start Your Application
 
-When deploying to Cloud Foundry, it needs to know the command to start your application.
+When deploying to Cloud Foundry, it calls the entered command to start your application.
 This can be any bash command.
-Often the command will be `npm run start`.
+Often the command will be `npm start`.
 
-The start command will be entered in the `manifest.yml`.
-If you don't know the command at this moment, you can adjust it manually in the `manifest.yml`.
+The SAP Cloud SDK CLI will add this command to the `manifest.yml`.
+If you don't know the command at this moment, you can adjust it manually afterward.
 
 #### Do You Want to Provide Anonymous Usage Analytics to Help Us Improve the SAP Cloud SDK?
 
