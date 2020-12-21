@@ -160,6 +160,7 @@ module.exports = {
               'js/features/openapi/execute-openapi-request'
             ]
           },
+          'js/features/error-handling',
           {
             type: 'category',
             label: 'SAP Cloud SDK CLI',
