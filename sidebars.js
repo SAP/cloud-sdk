@@ -159,6 +159,16 @@ module.exports = {
               'js/features/openapi/generate-openapi-client',
               'js/features/openapi/execute-openapi-request'
             ]
+          },
+          {
+            type: 'category',
+            label: 'SAP Cloud SDK CLI',
+            items: [
+              'js/features/cli/overview',
+              'js/features/cli/init',
+              'js/features/cli/package',
+              'js/features/cli/generator'
+            ]
           }
         ]
       },
