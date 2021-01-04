@@ -14,16 +14,38 @@ keywords:
   - sap cloud sdk
 ---
 
-:::note
-There's no full feature parity between the SAP Cloud SDK for Java and the SAP Cloud SDK for JavaScript.
-This is intentional because often they'd target slightly different use-cases that justify differences.
-:::
+<!-- vale SAP.Products = NO -->
+
+|                                       | Java                                                                            | JavaScript                                                                                                         |
+| ------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| OData v2                              | :heavy_check_mark: [Docs](../java/features/odata/type-safe-client-odata-v2.mdx) | :heavy_check_mark: [Docs](../js/features/odata/odata-v2-client.mdx)                                                |
+| OData v4                              | :heavy_check_mark: [Docs](../java/features/odata/type-safe-client-odata-v4.mdx) | :heavy_check_mark: [Docs](../js/features/odata/odata-v4-client.mdx)                                                |
+| OData Generator                       | :heavy_check_mark: [Docs](../java/features/odata/generate-client.mdx)           | :heavy_check_mark: [Docs](../js/features/odata/generate-odata-client.mdx)                                          |
+| SOAP                                  | :heavy_check_mark:                                                              | :x:                                                                                                                |
+| BAPI                                  | :heavy_check_mark: [Docs](../java/features/bapi-and-rfc/overview.mdx)           | :x:                                                                                                                |
+| RFC                                   | :heavy_check_mark: [Docs](../java/features/bapi-and-rfc/overview.mdx)           | :x: Take a look at the [SAP NetWeaver RFC SDK client bindings for Node.js](https://github.com/SAP/node-rfc)        |
+| OpenAPI 2.0                           | :heavy_check_mark: [Docs](../java/features/rest/overview.mdx)                   | :heavy_check_mark: [Docs](../js/features/openapi/execute-openapi-request.mdx)                                      |
+| OpenAPI 3.0                           | :heavy_check_mark: [Docs](../java/features/rest/overview.mdx)                   | :heavy_check_mark: [Docs](../js/features/openapi/execute-openapi-request.mdx)                                      |
+| OpenAPI Generator                     | :heavy_check_mark: [Docs](../java/features/rest/generate-rest-client.mdx)       | :heavy_check_mark: [Docs](../js/features/openapi/generate-openapi-client.mdx)                                      |
+| Resilience                            | :heavy_check_mark: [Docs](../java/features/resilience/resilience.mdx)           | :x:                                                                                                                |
+| Caching                               | :heavy_check_mark: [Docs](../java/features/resilience/resilience.mdx)           | :x:                                                                                                                |
+| SAP Cloud Platform                    | :heavy_check_mark:                                                              | :heavy_check_mark:                                                                                                 |
+| Destinations                          | :heavy_check_mark: [Docs](../java/features/connectivity/destinations.mdx)       | :heavy_check_mark: [Docs](../js/features/connectivity/destination.mdx)                                             |
+| Service Bindings                      | :heavy_check_mark:                                                              | :heavy_check_mark:                                                                                                 |
+| Authentication                        | :heavy_check_mark: [Docs](../java/guides/cf-xsuaa.mdx)                          | :heavy_check_mark: [Docs](../js/features/connectivity/destination.mdx#authentication-and-json-web-token-retrieval) |
+| Multi-tenancy                         | :heavy_check_mark: [Docs](../java/features/multi-tenancy/thread-context.mdx)    | :heavy_check_mark: [Docs](../js/features/connectivity/destination.mdx#multi-tenancy)                               |
+| Proxy                                 | :heavy_check_mark: [Docs](../java/features/connectivity/destinations.mdx)       | :heavy_check_mark: [Docs](../js/features/connectivity/proxy.mdx#what-kind-of-proxies-are-there)                    |
+| HTTP Client                           | :heavy_check_mark: [Docs](../java/features/connectivity/http-client.mdx)        | :heavy_check_mark: [Docs](../js/features/connectivity/generic-http-client.mdx)                                     |
+| CLI                                   | :heavy_check_mark:                                                              | :heavy_check_mark: [Docs](../js/features/cli/overview.mdx)                                                         |
+| SAP Business Application Studio (BAS) |                                                                                 |                                                                                                                    |
+
+<!-- vale SAP.Products = YES -->
 
 ## Pregenerated Type-Safe Client Libraries for SAP S/4HANA
 
 :::tip Different packaging strategy
 
-- The SAP Cloud SDK for Java has separate maven modules for SAP S/4HANA Cloud & SAP S/4HANA On-premise.
+- The SAP Cloud SDK for Java has separate maven modules for SAP S/4HANA Cloud /4HANA On-premise.
   Those are in turn split into modules containing OData v2 and OData v4 services.
   We also ship an aggregating module if you want to add all the SAP S/4HANA client libraries to your dependencies.
   A Java `Class` represents one OData service in SAP S/4HANA.
@@ -35,10 +57,10 @@ This is intentional because often they'd target slightly different use-cases tha
 
 :::
 
-|                        | Java    | Maven Central                                                                                                                                                            | JS/TS   | NPMJS                                                                         |
-| ---------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------- | ----------------------------------------------------------------------------- |
-| SAP S/4HANA Cloud      | &check; | [OData v2](https://search.maven.org/search?q=a:s4hana-api-odata) <br/> [OData v4](https://search.maven.org/search?q=a:s4hana-api-odata-v4)                               | &check; | [List of packages](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm*)    |
-| SAP S/4HANA On-premise | &check; | [OData v2](https://search.maven.org/search?q=a:s4hana-api-odata-onpremise-2020) <br/> [OData v4](https://search.maven.org/search?q=a:s4hana-api-odata-v4-onpremise-2020) | &check; | [List of packages](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-op*) |
+|                        | Java | Maven Central                                                                                                                                                                                                  | JS/TS | NPMJS                                                                                            |
+| ---------------------- | ---- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- | ------------------------------------------------------------------------------------------------ |
+| SAP S/4HANA Cloud      |      | :heavy_check_mark: [OData v2](https://search.maven.org/search?q=a:s4hana-api-odata) <br/> :heavy_check_mark: [OData v4](https://search.maven.org/search?q=a:s4hana-api-odata-v4)                               |       | :heavy_check_mark: [List of packages](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm*)    |
+| SAP S/4HANA On-premise |      | :heavy_check_mark: [OData v2](https://search.maven.org/search?q=a:s4hana-api-odata-onpremise-2020) <br/> :heavy_check_mark: [OData v4](https://search.maven.org/search?q=a:s4hana-api-odata-v4-onpremise-2020) |       | :heavy_check_mark: [List of packages](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-op*) |
 
 ## OData Code Generator
 
