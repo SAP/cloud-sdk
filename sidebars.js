@@ -3,6 +3,7 @@ module.exports = {
     // Dzen: ['dzen/getting-started', 'dzen/how-to-write-documentation'],
     Overview: [
       'overview/overview-cloud-sdk',
+      'overview/cloud-sdk-feature-matrix',
       'overview/getting-started',
       'overview/benefits',
       'overview/who-uses-sap-cloud-sdk',
