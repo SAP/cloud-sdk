@@ -13,8 +13,7 @@ export const features = [
     js: {
       status: ':x:',
       docsLink: ``,
-      note:
-        'Take a look at the [SAP NetWeaver RFC SDK client bindings for Node.js](https://github.com/SAP/node-rfc)'
+      note: ''
     }
   },
   {
@@ -50,7 +49,7 @@ export const features = [
     }
   },
   {
-    name: '[OData v2](https://www.odata.org/documentation/odata-version-2-0/)',
+    name: '[OData v2 type-safe client](https://www.odata.org/documentation/odata-version-2-0/)',
     category: 'OData',
     java: {
       status: ':heavy_check_mark:',
@@ -92,21 +91,7 @@ export const features = [
     }
   },
   {
-    name: '[OData v4 type-safe client](https://www.odata.org/documentation/)',
-    category: 'OData',
-    java: {
-      status: ':heavy_check_mark:',
-      docsLink: `[docs](${baseUrl}/java/features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java)`,
-      note: ''
-    },
-    js: {
-      status: ':heavy_check_mark:',
-      docsLink: `[docs](${baseUrl}/js/features/odata/use-odata-v4-type-safe-client-for-javascript-typescript)`,
-      note: ''
-    }
-  },
-  {
-    name: 'OpenAPI 2.0',
+    name: 'OpenAPI 2.0 type-safe client',
     category: 'OpenAPI',
     java: {
       status: ':bulb:',
@@ -120,7 +105,7 @@ export const features = [
     }
   },
   {
-    name: 'OpenAPI 3.0',
+    name: 'OpenAPI 3.0 type-safe client',
     category: 'OpenAPI',
     java: {
       status: ':bulb:',
@@ -310,7 +295,7 @@ export const features = [
     java: {
       status: ':heavy_check_mark:',
       docsLink: ``,
-      note: ''
+      note: `Via a Maven plugin `
     },
     js: {
       status: ':heavy_check_mark:',
