@@ -2,7 +2,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useTable } from 'react-table';
 import { features } from './data/features';
-import { mainFeatureTableLayout } from './data/table-layouts';
+import { jsFeatureTableLayout } from './data/table-layouts';
 import gfm from 'remark-gfm';
 import emoji from 'remark-emoji';
 
@@ -53,10 +53,10 @@ function Table({ columns, data }) {
   );
 }
 
-export default function FeatureTable() {
+export default function JsFeatureTable() {
 
   const data = React.useMemo(() => features, []);
-  const columns = React.useMemo(() => mainFeatureTableLayout, [])
+  const columns = React.useMemo(() => jsFeatureTableLayout, [])
 
   return (
     <>

@@ -149,7 +149,7 @@ export const features = [
   },
   {
     name: 'Enterprise messaging',
-    category: 'messaging',
+    category: 'Messaging',
     java: {
       status: ':gear:',
       docsLink: ``,
@@ -277,7 +277,7 @@ export const features = [
   },
   {
     name: 'Principal propagation',
-    category: 'connectivity',
+    category: 'Connectivity',
     java: {
       status: ':heavy_check_mark:',
       docsLink: ``,
@@ -292,7 +292,7 @@ export const features = [
   {
     name:
       '[Cloud Connector](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e6c7616abb5710148cfcf3e75d96d596.html?q=cloud%20connector)',
-    category: 'connectivity',
+    category: 'Connectivity',
     java: {
       status: ':heavy_check_mark:',
       docsLink: `[docs](${baseUrl}/java/features/connectivity/sdk-connectivity-destination-service#connect-to-sap-s4hana-on-premise)`,
