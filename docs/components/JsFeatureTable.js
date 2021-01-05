@@ -54,9 +54,8 @@ function Table({ columns, data }) {
 }
 
 export default function JsFeatureTable() {
-
   const data = React.useMemo(() => features, []);
-  const columns = React.useMemo(() => jsFeatureTableLayout, [])
+  const columns = React.useMemo(() => jsFeatureTableLayout, []);
 
   return (
     <>
