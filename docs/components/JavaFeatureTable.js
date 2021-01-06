@@ -6,6 +6,11 @@ import { javaFeatureTableLayout } from './data/table-layouts'; // Table layout f
 import { features } from './data/features';
 import Table from './Table';
 
+/**
+ * Generates a feature-table for Java.
+ * Data (features.js) and Columns layout (table-layour.js) come from the `data` folder.
+ *
+ */
 export default function JavaFeatureTable() {
   const data = React.useMemo(() => features, []);
   const columns = React.useMemo(() => javaFeatureTableLayout, []);

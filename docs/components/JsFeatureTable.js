@@ -6,6 +6,11 @@ import gfm from 'remark-gfm';
 import emoji from 'remark-emoji';
 import Table from './Table';
 
+/**
+ * Generates a feature-table for JS
+ * Data (features.js) and Columns layout (table-layour.js) come from the `data` folder.
+ *
+ */
 export default function JsFeatureTable() {
   const data = React.useMemo(() => features, []);
   const columns = React.useMemo(() => jsFeatureTableLayout, []);

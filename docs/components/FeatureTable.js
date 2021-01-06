@@ -6,6 +6,11 @@ import { features } from './data/features'; // JSON Object with main SDK feature
 import { mainFeatureTableLayout } from './data/table-layouts'; // Table layout with bindings for main feature matrix
 import Table from './Table';
 
+/**
+ * Generates a main feature-table in SDK overview.
+ * Data (features.js) and Columns layout (table-layour.js) come from the `data` folder.
+ *
+ */
 export default function FeatureTable() {
   const data = React.useMemo(() => features, []);
   const columns = React.useMemo(() => mainFeatureTableLayout, []);
