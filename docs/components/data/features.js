@@ -1,5 +1,8 @@
 const baseUrl = '/cloud-sdk/docs';
 
+/**
+ * Global SDK feature list.
+ */
 export const features = [
   {
     name:
@@ -49,7 +52,8 @@ export const features = [
     }
   },
   {
-    name: '[OData v2 type-safe client](https://www.odata.org/documentation/odata-version-2-0/)',
+    name:
+      '[OData v2 type-safe client](https://www.odata.org/documentation/odata-version-2-0/)',
     category: 'OData',
     java: {
       status: ':heavy_check_mark:',
@@ -301,6 +305,49 @@ export const features = [
       status: ':heavy_check_mark:',
       docsLink: `[docs](${baseUrl}/js/features/cli/overview)`,
       note: ''
+    }
+  }
+];
+
+/**
+ * List of OData feauters supported or planned to be supported by SDK
+ */
+export const ODataFeatures = [
+  {
+    name: 'Get an Entity by Key',
+    type: 'GET',
+    reference:
+      '[Get ](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_Entity)',
+    java: {
+      v2: ':heavy_check_mark:',
+      v4: ':heavy_check_mark:',
+      docsLink: `${baseUrl}/java/features/odata/overview`
+    },
+    js: {
+      v2: ':heavy_check_mark:',
+      v4: ':heavy_check_mark:',
+      docsLink: `${baseUrl}/js/features/odata/overview`
+    }
+  }
+];
+
+/**
+ * List of OpenAPI features supported or planned to be supported by SDK
+ */
+export const OpenAPIFeatures = [];
+
+/**
+ * List of releases or planned extensions
+ */
+export const extensions = [
+  {
+    name: 'Currency conversion library',
+    java: {
+      status: ':heavy_check_mark:',
+      docsLink: `[docs](${baseUrl}/java/features/extensions/extension-library/curconv/sap-currency-conversion-extension-library-for-cloud-sdk-for-java)`
+    },
+    js: {
+      status: ':gear:'
     }
   }
 ];
