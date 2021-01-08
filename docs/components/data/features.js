@@ -16,7 +16,8 @@ export const features = [
     js: {
       status: ':x:',
       docsLink: ``,
-      note: 'Take a look at the [node-soap](https://github.com/vpulim/node-soap) library'
+      note:
+        'Take a look at the [node-soap](https://github.com/vpulim/node-soap) library'
     }
   },
   {
@@ -180,7 +181,37 @@ export const features = [
   },
   {
     name:
-      '[SCP Destinations](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html)',
+      '[SCP Cloud Foundry](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/9c7092c7b7ae4d49bc8ae35fdd0e0b18.html)',
+    category: 'Runtime',
+    java: {
+      status: ':heavy_check_mark:',
+      docsLink: `[docs](${baseUrl}/java/guides/cf-deploy)`,
+      note: ''
+    },
+    js: {
+      status: ':heavy_check_mark:',
+      docsLink: `[docs](${baseUrl}js/features/cli/package)`,
+      note: ''
+    }
+  },
+  {
+    name:
+      '[SCP Neo](https://help.sap.com/viewer/ea72206b834e4ace9cd834feed6c0e09/Cloud/en-US)',
+    category: 'Runtime',
+    java: {
+      status: ':heavy_check_mark:',
+      docsLink: `[docs](${baseUrl}/java/guides/tutorial-overview-sdk-java/#groups-for-neo)`,
+      note: `Not recommended for new projects`
+    },
+    js: {
+      status: ':x:',
+      docsLink: ``,
+      note: ''
+    }
+  },
+  {
+    name:
+      '[SCP CF Destinations](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html)',
     category: 'Connectivity',
     java: {
       status: ':heavy_check_mark:',
@@ -195,7 +226,7 @@ export const features = [
   },
   {
     name:
-      '[SCP Service Bindings](https://help.sap.com/viewer/09cc82baadc542a688176dce601398de/Cloud/en-US/bb8009dbb7814a2a94e42983fbaa9bae.html)',
+      '[SCP CF Service Bindings](https://help.sap.com/viewer/09cc82baadc542a688176dce601398de/Cloud/en-US/bb8009dbb7814a2a94e42983fbaa9bae.html)',
     category: 'Connectivity',
     java: {
       status: ':heavy_check_mark:',
