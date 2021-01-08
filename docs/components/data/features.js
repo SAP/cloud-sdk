@@ -16,7 +16,7 @@ export const features = [
     js: {
       status: ':x:',
       docsLink: ``,
-      note: ''
+      note: 'Take a look at the [node-soap](https://github.com/vpulim/node-soap) library'
     }
   },
   {
