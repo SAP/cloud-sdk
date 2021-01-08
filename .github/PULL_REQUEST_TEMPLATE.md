@@ -12,4 +12,4 @@ Explain what you have changed.
 - [ ] You formatted all changed files with prettier (`npm run prettier`)
 - [ ] You tested if the documentation still builds (`npm run build`)
 - [ ] You verified all new and changed links still work (changing the `id` or name of a file can break links)
-- [ ] You have updated a [feature matrix](https://github.com/SAP/cloud-sdk/blob/main/docs/components/data/features.js) if you add documentation on a new feature or otherwise required.
+- [ ] You have updated the [feature matrix](https://github.com/SAP/cloud-sdk/blob/main/docs/components/data/features.js) if you add documentation on a new feature or otherwise required.
