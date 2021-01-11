@@ -203,7 +203,10 @@ There are situations where you do not have a JWT issued by the XSUAA but need to
 In such situations the property `iss` of the `DestinationAccessorOptions` can be used:
 
 ```js
-.execute({destinationName: 'myDestination'},{iss:yourIssuerValue})
+.execute(
+  { destinationName: 'myDestination' },
+  { iss:yourIssuerValue }
+ )
 ```
 
 The value for `iss` is supposed to be the same as in a JWT issued from the XSUAA e.g. `https://yourSubdomain.localhost:8080/uaa/oauth/token`.
