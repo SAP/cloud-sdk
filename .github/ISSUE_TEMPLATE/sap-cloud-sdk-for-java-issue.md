@@ -66,12 +66,12 @@ Please provide as much information about your project as possible.
 If you cannot share your project for confidentiality reasons, please consider providing a minimal working example https://en.wikipedia.org/w/index.php?title=Minimal_working_example&oldid=893866607
 -->
 
-- SDK Version: <your SAP Cloud SDK version here>
+- SAP Cloud SDK Version: <your SAP Cloud SDK version here>
 <!-- The group id of the modules of the SAP Cloud SDK start with "com.sap.cloud.sdk" -->
 - Link to GitHub repository: <your link here>
 - Project type, for example:
   - [ ] CAP Project
-  - [ ] SDK Maven Archetype
+  - [ ] SAP Cloud SDK Maven Archetype
   - [ ] None of the above:
 - Platform:
   - [ ] Cloud Foundry
@@ -86,4 +86,4 @@ If you cannot share your project for confidentiality reasons, please consider pr
 - [ ] Description provided with all relevant information
 - [ ] Attached debug logs
 - [ ] Attached dependency tree
-- [ ] Provided Cloud SDK version & link to relevant source code
+- [ ] Provided the SAP Cloud SDK version & link to relevant source code
