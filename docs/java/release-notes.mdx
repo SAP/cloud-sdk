@@ -31,7 +31,6 @@ We highly recommend regularly updating to the latest SDK version. It will help y
 - Update client libraries giving access to latest SAP services on SAP Cloud Platform and SAP S/4HANA
 - Protect yourself from bugs and breaking changes in the future
 
-
 <!-- Copy and fill
 ## 3.xx.x - January 1, 2021
 
@@ -54,7 +53,8 @@ We highly recommend regularly updating to the latest SDK version. It will help y
 
 ### Known issues
 
-- Currently, the TomEE based archetype for Cloud Foundry does not work with the latest SAP Java Buildpack when using Java 11. Please use the buildpack version `sap_java_buildpack_1_29` for this use case.
+- Currently, the TomEE based archetype for Cloud Foundry does not work with the latest SAP Java Buildpack when using Java 11.
+  Please use the buildpack version `sap_java_buildpack_1_29` for this use case.
 
 ### Compatibility Notes
 
@@ -70,30 +70,32 @@ We highly recommend regularly updating to the latest SDK version. It will help y
 
 ### Improvements
 
-- Replace the deprecated constant `org.apache.commons.codec.Charsets.UTF_8` in the HelloWorldControllerTest class of the Spring archetype by its recommended successor `java.nio.charset.StandardCharsets.UTF_8`. This resolves a compiler warning.
+- Replace the deprecated constant `org.apache.commons.codec.Charsets.UTF_8` in the HelloWorldControllerTest class of the Spring archetype by its recommended successor `java.nio.charset.StandardCharsets.UTF_8`.
+  This resolves a compiler warning.
 - Add Maven module `s4hana-api-odata-v4` into `s4hana-all` to enable type-safe OData v4 client library for SAP S/4HANA Cloud Edition.
 - Dependency Updates:
   - SAP dependency updates:
   - Other dependency updates:
     - Major version updates:
     - Minor version updates:
-        - Downgrade Spring dependencies to resolve conflicts with [SAP CP Spring XSUAA Security Library](https://github.com/SAP/cloud-security-xsuaa-integration/tree/master/spring-xsuaa)
-          - Change Spring Framework BOM from `5.3.1` to `5.2.10.RELEASE`
-          - Change Spring Security BOM from `5.4.2` to `5.3.5.RELEASE`
-        - Update PMD from `6.29.0` to `6.30.0`
-        - Update Caffeine from `2.8.6` to `2.8.8`
-        - Update Jackson from `2.11.3` to `2.12.0`
-        - Update Reactor from `3.4.0` to `3.4.1`
-        - Update Guava from `30.0-jre` to `30.1-jre`
-        - Update Hibernate Core from `5.4.25.Final` to `5.4.26.Final`
-        - Update Netty BOM from `4.1.49.Final` to `4.1.56.Final`
-        - Update Java JWT from `3.11.0` to `3.12.0`
+      - Downgrade Spring dependencies to resolve conflicts with [SAP CP Spring XSUAA Security Library](https://github.com/SAP/cloud-security-xsuaa-integration/tree/master/spring-xsuaa)
+        - Change Spring Framework BOM from `5.3.1` to `5.2.10.RELEASE`
+        - Change Spring Security BOM from `5.4.2` to `5.3.5.RELEASE`
+      - Update PMD from `6.29.0` to `6.30.0`
+      - Update Caffeine from `2.8.6` to `2.8.8`
+      - Update Jackson from `2.11.3` to `2.12.0`
+      - Update Reactor from `3.4.0` to `3.4.1`
+      - Update Guava from `30.0-jre` to `30.1-jre`
+      - Update Hibernate Core from `5.4.25.Final` to `5.4.26.Final`
+      - Update Netty BOM from `4.1.49.Final` to `4.1.56.Final`
+      - Update Java JWT from `3.11.0` to `3.12.0`
 
 ### Fixed issues
 
-- Fix an issue where OData V2 Update requests with PATCH contained incorrectly serialized date values. 
+- Fix an issue where OData V2 Update requests with PATCH contained incorrectly serialized date values.
 - Fix an issue where OData Batch requests sent an invalid `Accept` header.
-- Fix an issue where OData Batch response API did not conveniently throw or wrap an exception for failing HTTP response code health checks. Affected methods:
+- Fix an issue where OData Batch response API did not conveniently throw or wrap an exception for failing HTTP response code health checks.
+  Affected methods:
   - OData v4 VDM: `getReadResult` of `BatchResult`
   - OData v2 VDM: `get` of `BatchResponse`
   - OData Client: `getResult` of `ODataRequestResultMultipartGeneric`
@@ -105,7 +107,8 @@ We highly recommend regularly updating to the latest SDK version. It will help y
 
 ### Known issues
 
-- OData Batch response API is known to not conveniently throw or wrap an exception for failing HTTP response code health checks. This affects the type-safe batch request builders for both v2 and v4 protocol. We're working to fix this in the next release.
+- OData Batch response API is known to not conveniently throw or wrap an exception for failing HTTP response code health checks.
+  This affects the type-safe batch request builders for both v2 and v4 protocol. We're working to fix this in the next release.
 
 ### Compatibility Notes
 
