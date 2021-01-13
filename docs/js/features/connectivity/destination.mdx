@@ -121,7 +121,9 @@ In a productive environment, you will use a [Destination service](https://help.s
 
 #### Authentication and JSON Web Token Retrieval
 
-To access the destination service, the SAP Cloud SDK will first fetch an access token from the XSUAA service via one of the supported authentication flows:
+To access the destination service, the SAP Cloud SDK will first fetch an access token from the XSUAA service.
+The token retrieved from the XSUAA service is used to make a call to the destination service and receive the destinations.
+The destination service returns a destination with all relevant authentication information depending on the used authentication flow:
 
 - `PrincipalPropagation`
 - `NoAuthentication`
@@ -131,7 +133,7 @@ To access the destination service, the SAP Cloud SDK will first fetch an access 
 - `OAuth2ClientCredentials`
 - `ClientCertificateAuthentication`
 
-The token retrieved from the XSUAA service is used to make a call to the destination service and receive the destinations.
+The SAP Cloud SDK automatically parses the response of the destination service and uses the provided authentication information for the request to the target system.
 For a simple service, this would be the end of the story.
 
 #### Multi-Tenancy
@@ -193,4 +195,27 @@ One aspect has been left out for simplicity.
 In principle, it is possible to define destinations not only on the account level but also on the destination service level.
 These destinations are called `instance destinations` since they are tied to a service binding called instance on SCP.
 In every request, these destinations are added to the destinations returned by the destination service.
+:::
+
+#### Destination Lookup without a JWT
+
+There are situations where you do not have a JWT issued by the XSUAA but need to look a destination up e.g. in background processes.
+In such situations the property `iss` of the `DestinationAccessorOptions` can be used:
+
+```js
+.execute(
+  { destinationName: 'myDestination' },
+  { iss: yourIssuerValue }
+ )
+
+The value for `iss` is supposed to be the same as in a JWT issued from the XSUAA e.g. `https://yourSubdomain.localhost:8080/uaa/oauth/token`.
+In principle only the host of the URL is relevant but since the same parsing and replacement methods are used for the JWT handling, the URL has to be provided in the format above.
+
+:::note
+If a JWT is used in the destination lookup a validation of the provided token is performed.
+This validation ensures that the JWT has not been manipulated.
+If only the `iss` is provided no such validation is performed.
+Note that the given subdomain value defines from which tenant destinations are fetched.
+So a wrong value may break the isolation for tenants.
+It is your responsibility as a developer to ensure that the provided value for the `iss` property is valid.
 :::
