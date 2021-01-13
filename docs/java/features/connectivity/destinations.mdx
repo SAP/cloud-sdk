@@ -177,6 +177,7 @@ public List<Header> getHeaders( @Nonnull final DestinationProperties destination
 The SAP Cloud SDK uses the [Service Loader](https://docs.oracle.com/javase/7/docs/api/java/util/ServiceLoader.html) mechanism of Java to lookup the `DestinationHeaderProvider` implementations at runtime.
 To let your custom implementation be found, you need to provide a configuration file as resource in the folder `META-INF/services`.
 Name this resource file as the interface `com.sap.cloud.sdk.cloudplatform.connectivity.DestinationHeaderProvider` and mention the fully-qualified class name of your custom implementation.
+You can refer to several implementations by putting their fully qualified class names on separate lines.
 
 For example, if your custom implementation is named `ApiTokenHeaderProvider` in the package `com.example`, the content would be:
 ```
