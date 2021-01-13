@@ -138,6 +138,39 @@ That means the new loader can operate as a fallback.
 Use `prependDestinationLoader()` to add it at the beginning if you would like it to take precedence.
 Lastly use `setLoader()` to replace all existing loaders.
 
+## Provide Headers For Destinations
+
+### How it works
+You can provide headers which are issued for any request over destinations.
+You can implement custom logic which defines which headers are sent under which circumstances.
+
+:::note Example Usage
+For example, you want to issue an API token via the request header to any calls made over any destination in your whole application.
+:::
+
+
+The SAP Cloud SDK offers the interface `DestinationHeaderProvider` which defines the method `List<Header> getHeaders(destination)`.
+At runtime, while preparing an outbound request the  SAP Cloud SDK looks up all implementations of that interface on the classpath.
+For each found implementation it invokes the method `getHeaders(destination)` and appends the returned headers to the currently prepared request.
+
+### Implement own Header Provider
+To implement your custom destination header provider you need to implement the interface `DestinationHeaderProvider`.
+The method `getHeaders` lets you access the destination over which the currently prepared request will be issued.
+You can read destination properties (for example, the name and the URI) if your logic requires to determine the headers.
+
+Here is one simple example implementation which returns the same header for each request:
+```java
+@Nonnull
+@Override
+public List<Header> getHeaders( @Nonnull final DestinationProperties destination )
+{
+  final Header header = new Header("API-Token", obtainApiToken());
+  
+  return Collections.singletonList(header);
+}
+```
+
+
 ## Retrieving Destinations
 
 ### Get All Destinations From the Destination Service on Cloud Foundry
