@@ -138,6 +138,53 @@ That means the new loader can operate as a fallback.
 Use `prependDestinationLoader()` to add it at the beginning if you would like it to take precedence.
 Lastly use `setLoader()` to replace all existing loaders.
 
+## Provide Headers For Destinations
+
+### How It Works
+
+You can add headers that are sent for any request over destinations.
+You can implement custom logic that defines which headers are sent under which circumstances.
+
+:::note Example Use-case
+Let's imagine, you want to send an API token via a request header with any calls made over any destination in your whole application.
+:::
+
+The SAP Cloud SDK offers the interface `DestinationHeaderProvider` which defines the method `List<Header> getHeaders(destination)`.
+At runtime, while preparing an outbound request, the SAP Cloud SDK will use all implementations of that interface which have been registered via the Java ServiceLoader mechanism (see below).
+For each registered implementation it invokes the method `getHeaders(destination)` and appends the returned headers to the currently prepared request.
+
+### Implement Own Header Provider
+
+#### Implement the Interface
+To implement your custom destination header provider, you need to implement the interface `DestinationHeaderProvider`.
+The method `getHeaders` lets you access the destination properties over which the currently prepared request will be issued.
+You can read destination properties (for example, the name and the URI) if your logic requires to determine the headers.
+
+Here is one simple example implementation which returns the same header for each request:
+
+```java
+@Nonnull
+@Override
+public List<Header> getHeaders( @Nonnull final DestinationProperties destination )
+{
+  final Header header = new Header("API-Token", obtainApiToken());
+
+  return Collections.singletonList(header);
+}
+```
+
+#### Make Interface Implementation Accessible
+The SAP Cloud SDK uses the [Service Loader](https://docs.oracle.com/javase/7/docs/api/java/util/ServiceLoader.html) mechanism of Java to lookup the `DestinationHeaderProvider` implementations at runtime.
+To let your custom implementation be found, you need to provide a configuration file as resource in the folder `META-INF/services`.
+Name this resource file as the interface `com.sap.cloud.sdk.cloudplatform.connectivity.DestinationHeaderProvider` and mention the fully-qualified class name of your custom implementation.
+You can refer to several implementations by putting their fully qualified class names on separate lines.
+Place the file in your resources folder, that is for a regular Maven project the file path `src/main/resources/`.
+
+For example, if your custom implementation is named `ApiTokenHeaderProvider` in the package `com.example`, the content would be:
+```
+com.example.ApiTokenHeaderProvider
+```
+
 ## Retrieving Destinations
 
 ### Get All Destinations From the Destination Service on Cloud Foundry
