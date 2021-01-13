@@ -51,14 +51,9 @@ We highly recommend regularly updating to the latest SDK version. It will help y
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.36.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
 
-### Known issues
-
-- Currently, the TomEE based archetype for Cloud Foundry does not work with the latest SAP Java Buildpack when using Java 11.
-  Please use the buildpack version `sap_java_buildpack_1_29` for this use case.
-
 ### Compatibility Notes
 
-- Remove dependencies from SDK Bill-of-Material (BOM)
+- We removed the following dependencies from the SAP Cloud SDK Bill-of-Material (BOM):
   - Netty
   - Protobuf
   - Spring Security OAuth
@@ -66,13 +61,13 @@ We highly recommend regularly updating to the latest SDK version. It will help y
 
 ### New Functionality
 
-- Introduce support for String-based filter functions `endswith`, `startswith` and `substringof` in the OData V2 VDM.
+- We introduced support for the String-based filter functions `endswith`, `startswith` and `substringof` in the OData V2 type-safe client (VDM).
 
 ### Improvements
 
-- Replace the deprecated constant `org.apache.commons.codec.Charsets.UTF_8` in the HelloWorldControllerTest class of the Spring archetype by its recommended successor `java.nio.charset.StandardCharsets.UTF_8`.
+- We replaced the deprecated constant `org.apache.commons.codec.Charsets.UTF_8` in the HelloWorldControllerTest class of the Spring archetype by its recommended successor `java.nio.charset.StandardCharsets.UTF_8`.
   This resolves a compiler warning.
-- Add Maven module `s4hana-api-odata-v4` into `s4hana-all` to enable type-safe OData v4 client library for SAP S/4HANA Cloud Edition.
+- We added Maven module `s4hana-api-odata-v4` into `s4hana-all` to enable type-safe OData v4 client library (VDM) for SAP S/4HANA Cloud Edition.
 - Dependency Updates:
   - SAP dependency updates:
   - Other dependency updates:
@@ -92,14 +87,14 @@ We highly recommend regularly updating to the latest SDK version. It will help y
 
 ### Fixed issues
 
-- Fix an issue where OData V2 Update requests with PATCH contained incorrectly serialized date values.
-- Fix an issue where OData Batch requests sent an invalid `Accept` header.
-- Fix an issue where OData Batch response API did not conveniently throw or wrap an exception for failing HTTP response code health checks.
+- We fixed incorrect serialization of `date` values for OData V2 requests using the `PATCH` request method.
+- We fixed an issue where OData Batch requests were sending an invalid `Accept` header.
+- We fixed an issue where the API for OData Batch responses did not conveniently throw or wrap an exception for failing HTTP response code health checks.
   Affected methods:
   - OData v4 VDM: `getReadResult` of `BatchResult`
   - OData v2 VDM: `get` of `BatchResponse`
   - OData Client: `getResult` of `ODataRequestResultMultipartGeneric`
-- Remove a log message that incorrectly indicated an error when receiving OData responses without payload
+- We removed a log message that incorrectly indicated an error when receiving an OData response without payload.
 
 ## 3.35.0 - December 17, 2020
 
