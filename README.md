@@ -19,7 +19,8 @@ It has moved [here](https://github.com/SAP/cloud-sdk-js).
 
 ## Contributing
 
-Feel free to contribute to the SAP Cloud SDK documentation. Check out our [contribution guide](./CONTRIBUTING.md) and follow our [code of conduct](./CODE_OF_CONDUCT.md).
+Feel free to contribute to the SAP Cloud SDK documentation.
+Check out our [contribution guide](./CONTRIBUTING.md) and follow our [code of conduct](./CODE_OF_CONDUCT.md).
 
 ## License
 
