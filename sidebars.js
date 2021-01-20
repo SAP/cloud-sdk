@@ -28,7 +28,8 @@ module.exports = {
               'java/features/odata/overview',
               'java/features/odata/generate-typed-odata-v2-and-v4-client-for-java',
               'java/features/odata/use-typed-odata-v2-client-in-sap-cloud-sdk-for-java',
-              'java/features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java'
+              'java/features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java',
+              'java/features/odata/generic-untyped-odata-client'
             ]
           },
           {

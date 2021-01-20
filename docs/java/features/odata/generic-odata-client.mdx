@@ -1,0 +1,67 @@
+---
+id: generic-untyped-odata-client
+title: Generic Advanced OData Client
+sidebar_label: Generic OData Client
+description: Together with type-safe OData client we provide a more generic and untyped OData client implementation to be used in advanced use-cases when the capabilities of typed OData client are not yet covering your use-case or fundamentally not enough to achieve your development goals. You can leverage untyped generic OData client for workarounds and trying out OData features that are not very frequently used. It's also helpful in a situation when flexibility is above safety and convenience.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+---
+
+:::danger Advanced! Use on your own discretion.
+
+The API for generic OData client is not intended to be used by application developers unless absolutely required. Its API is a subject to change and non-breaking changes are not guaranteed.
+
+Please, make sure you know what you're doing and check if stable type-safe OData client API can solve you problem.
+
+:::
+
+## Overview
+
+Together with type-safe OData client, we provide a more generic and untyped OData client implementation to be used in **advanced** use-cases when the capabilities of typed OData client are not enough to achieve your development goals.
+You can leverage generic untyped OData client for:
+
+- Workarounds and quick fixes
+- Trying out OData features that are not yet implemented in OData type-safe client.
+- When flexibility is above safety and convenience
+- Debugging and testing
+- Building specific OData protocol based API youself
+- Integrating OData capabilities and awareness into your project
+
+## Handling OData Delta Token
+
+[OData v4 specification](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_RequestingChanges) provides capabilities to return only a delta between your last and ongoing request.
+For example, if your previous request loaded information from the service which continues to be updated with new records, then with your next request you can ask to provide you only with the difference between what you've already loaded and current records on the service side.
+For that, you can leverage `$deltatokens` query parameter.
+We do not provide convenience API for delta tokens in our type-safe client, but you can leverage generic OData client to fetch the delta link from the `response` metadata and extract `$deltatoken` from there as in the code snippet below.
+
+```java
+// Fetching of a $deltatoken from response metadata
+@Nullable
+private static String getDeltaTokenFromResponse( @Nonnull final ODataRequestResultGeneric response) {
+    try {
+        final InputStream httpResponseContent = response.getHttpResponse().getEntity().getContent();
+        final String deltaLink = new ObjectMapper().readTree(httpResponseContent).get("@odata.deltaLink").asText();
+        final Matcher matcher = Pattern.compile("\\$deltatoken=(.*?)(&|$)").matcher(deltaLink);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+    catch(Exception e) {
+        // log exception with debug level
+        return null;
+    }
+}
+
+// Composing a delta request with generic OData client
+ODataRequestResultGeneric response = request.execute(httpClient);
+String deltaToken = getDeltaTokenFromResponse(response);
+if( deltaToken!=null) {
+    deltaRequest.addQueryParameter("$deltatoken", deltaToken);
+}
+```
