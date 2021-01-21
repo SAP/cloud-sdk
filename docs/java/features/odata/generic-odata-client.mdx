@@ -126,6 +126,7 @@ query.filter(expression);
 [OData v4 specification](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_RequestingChanges) provides capabilities to return only a delta between your last and ongoing request.
 For example, if your previous request loaded information from the service which continues to be updated with new records, then with your next request you can ask to provide you only with the difference between what you've already loaded and current records on the service side.
 For that, you can leverage `$deltatokens` query parameter.
+
 We do not provide convenience API for delta tokens in our type-safe client, but you can leverage generic OData client to fetch the delta link from the `response` metadata and extract `$deltatoken` from there as in the code snippet below.
 
 ```java
@@ -147,6 +148,11 @@ private static String getDeltaTokenFromResponse( @Nonnull final ODataRequestResu
     }
 }
 
+```
+
+Now you can create an OData request leveraging the `$deltatoken` token you have just fetched.
+
+```java
 // Composing a delta request with generic OData client
 ODataRequestResultGeneric response = request.execute(httpClient);
 String deltaToken = getDeltaTokenFromResponse(response);
