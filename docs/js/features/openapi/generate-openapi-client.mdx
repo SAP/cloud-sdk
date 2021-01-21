@@ -57,3 +57,19 @@ const generatorOptions = {
 
 generateClients(generatorOptions)
 ```
+
+## Transpile to JavaScript
+
+The generator transpiles the TypeScript client to JavaScript by default.
+If the JavaScript client is not needed, the flag `generateJS` disables the generation of JavaScript sources:
+
+```
+generate-openapi-client -i directoryWithOpenApiFiles -o outputDirectory --generateJS false
+```
+
+A minimal default tsconfig.json is used in the transpilation process from TypeScript to JavaScript.
+If you want to use your one configuration you can provide it via the flag `tsConfig`:
+
+```
+generate-openapi-client -i directoryWithOpenApiFiles -o outputDirectory --tsConfig pathToYourTsConfig
+```
