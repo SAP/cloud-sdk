@@ -14,7 +14,8 @@ keywords:
 
 :::danger Advanced! Use on your own discretion.
 
-The API for generic OData client is not intended to be used by application developers unless absolutely required. Its API is a subject to change and non-breaking changes are not guaranteed.
+The API for generic OData client is not intended to be used by application developers unless absolutely required.
+Its API is a subject to change and non-breaking changes are not guaranteed.
 
 Please, make sure you know what you're doing and check if stable type-safe OData client API can solve you problem.
 
@@ -29,8 +30,96 @@ You can leverage generic untyped OData client for:
 - Trying out OData features that are not yet implemented in OData type-safe client.
 - When flexibility is above safety and convenience
 - Debugging and testing
-- Building specific OData protocol based API youself
+- Building specific OData protocol based API yourself
 - Integrating OData capabilities and awareness into your project
+
+:::tip
+The generic client is capable of both OData V2 and V4 protocols.
+The client is made aware about which version to use in requests via a dedicated parameter.
+:::
+
+## Basic API Usage
+
+### Creating Requests
+
+Requests are represented by dedicated request classes for each operation.
+For example to read a collection of entities use:
+
+```java
+new ODataRequestRead(servicePath, entityName, encodedQuery, ODataProtocol.V4);
+// e.g.
+new ODataRequestRead("/path/to/service", "A_Entity", "$select=Foo%20Bar", ODataProtocol.V4);
+```
+
+:::tip
+Encoded queries can be created conveniently as described in [Building Queries below](#building-queries).
+:::
+
+**Other Operations:**
+
+```txt
+ODataRequestRead
+ODataRequestReadByKey
+ODataRequestCreate
+ODataRequestUpdate
+ODataRequestDelete
+ODataRequestFunction
+ODataRequestAction
+```
+
+:::note
+What used to be function imports in OData V2 have been split into functions and actions in the OData V4 standard.
+The above classes adopt the OData V4 notion.
+To perform V2 function imports leverage the function class in case the operation should use HTTP GET.
+Instead use the action class if the operation should use POST.
+:::
+
+### Evaluating Responses
+
+Requests can be executed by supplying an HTTP client to the `execute` method.
+You can obtain a client from any given destination as follows:
+
+```java
+final HttpClient client = HttpClientAccessor.getHttpClient(destination);
+// perform the HTTP operation:
+final ODataRequestResultGeneric result = request.execute(client);
+```
+
+Within `execute` the SAP Cloud SDK will perform a health check on the response.
+In case of a status code greater or equal to 400 an exception will be thrown.
+
+The result class allows for parsing the result into a specific Java type, getting metadata or even the raw HTTP response.
+For example you can parse the response body into a `SalesOrder` or a list of sales orders as follows:
+
+```java
+SalesOrder order = result.as(SalesOrder.class);
+Collection<SalesOrder> order = result.asList(SalesOrder.class);
+```
+
+### Building Queries
+
+Queries can be build with dedicated, fluent builder classes.
+Use the `StructuredQuery` class to create a query:
+
+```java
+StructuredQuery query = StructuredQuery.onEntity("Movies", ODataProtocol.V4);
+// method names correspond to the OData query parameters $select, $filter, etc.
+query.select("Field A", "Field B");
+// obtain the encoded URL string representation:
+String encodedQuery = query.getEncodedQueryString();
+```
+
+For filters there is a dedicated API to build filter expressions:
+
+```java
+FieldUntyped fieldA = FieldReference.of("Field A")
+FieldUntyped fieldB = FieldReference.of("Field B")
+
+ValueBoolean expression = fieldA.equalTo("foo").and(fieldB.greaterThan(42));
+
+// add the expression as filter to a query:
+query.filter(expression);
+```
 
 ## Handling OData Delta Token
 
