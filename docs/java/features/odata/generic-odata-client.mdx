@@ -160,3 +160,49 @@ if( deltaToken!=null) {
     deltaRequest.addQueryParameter("$deltatoken", deltaToken);
 }
 ```
+
+## OData v2 Batch Read Request
+
+Batch requests for OData v2 are not yet supported in the [type-safe client](./type-safe-client-odata-v2.mdx#batch-requests).
+Let's look how you can work around that with generic OData client for SAP S/4HANA `YY1_QUANTITYCONTRACTTRACKI_CDS`service
+
+In the code snippet below we:
+
+1. Initialize generic OData Batch request with service path and OData protocol version.
+1. Create a Map establishing relation between Contract object and Read request.
+1. Build Read requests for contracts we want to fetch and add them to Batch request and store in Map of Read requests.
+1. Make a Batch request
+1. Collate response of the Batch request to Read requests stored in the Map
+
+```java
+String servicePath = "/sap/opu/odata/sap/YY1_QUANTITYCONTRACTTRACKI_CDS";
+ODataRequestBatch requestBatch = new ODataRequestBatch(servicePath, ODataProtocol.V2);
+Map<Contract, ODataRequestRead> batchedRequests = new HashMap<>();
+
+// iterate over contracts, construct OData query objects and add them to the OData batch request builder
+for (Contract contract : contracts) {
+    String entityName = sapConfig.getEssentialsContractListEntity();
+    String serviceUrl = sapConfig.getEssentialsContractServiceUrl();
+    StructuredQuery structuredQuery = StructuredQuery.onEntity(entityName, ODataProtocol.V2);
+
+    structuredQuery.select("SalesSchedulingAgreement", "PurchaseOrderByCustomer", "Customer", "CustomerName", "SalesSchedulingAgreementItem", "Material", "MaterialByCustomer");
+    structuredQuery.filter(FieldReference.of("SalesSchedulingAgreement").equalTo(contract.getSchAgrmntNo()));
+    structuredQuery.filter(FieldReference.of("PurchaseOrderByCustomer").equalTo(contract.getCustRefNo()));
+
+    String encodedQuery = structuredQuery.getEncodedQueryString();
+    ODataRequestRead requestRead = new ODataRequestRead(serviceUrl, entityName, encodedQuery, ODataProtocol.V2);
+    batchedRequests.put(contract, requestRead);
+    requestBatch.addRead(requestRead);
+}
+
+// execute the OData batch request
+ODataRequestResultMultipartGeneric batchResult = requestBatch.execute(httpClient);
+
+// extract information from batch response, by referring to the individual OData request references
+for( Map.Entry<Contract, ODataRequestRead> requestMapping : batchedRequests.entrySet() ) {
+    ODataRequestResultGeneric queryResult = batchResult.getResult(requestMapping.getValue());
+    List<Map<String, Object>> itemsForQuery = queryResult.asListOfMaps();
+}
+```
+
+This example is a great demonstration how you can workaround certain limitation of type-safe client aka VDM, tackle advance OData features, or even take care of misbehaving servers or OData standard deviations.
