@@ -134,12 +134,129 @@ applications:
     routes:
       - route: <omitted-on-purpose>
 ```
-
+This ensures that the `VCAP_SERVICES` environment variable of the CF application gets enhanced with an additional entry containing the connection details of the
+newly bound workflow service.
 Now, redeploy your app with `cf push`.
 
-##### Take Note of API endpoint and OAuth Credentials
 
-After app deployment has finished, go to your CF space and navigate to `Services\Service Instances`.
+### Develop Your App
+
+#### Dependency Assumptions
+
+We assume that you have a Java project using the SAP Cloud SDK.
+If not, we recommend going ahead and [creating one from one of the Maven archetypes](https://sap.github.io/cloud-sdk/docs/java/getting-started).
+You should also have [Apache Maven](https://maven.apache.org/download.cgi) installed and be able to successfully run `mvn clean install` from the root of your project.
+
+Make sure that you have the SAP Cloud SDK Bill-of-Material (BOM) in your `dependencyManagement` section of your `pom.xml` structure like on the example below.
+
+:::caution Always use the latest version of SAP Cloud SDK
+Current version is: <MvnBadge />
+:::
+
+```xml title="pom.xml"
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>com.sap.cloud.sdk</groupId>
+      <artifactId>sdk-bom</artifactId>
+      <!-- WF API is supported in ver 3.19.1 of the SDK and above. Please, always use the latest version -->
+      <version>3.XX.X</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+  </dependencies>
+</dependencyManagement>
+```
+
+#### Add SAP Cloud Platform Workflow Library Dependency To Your Project
+
+You can refer to the Java client library for the SCP Workflow service with the following Maven dependency:
+
+```xml title="pom.xml"
+<dependency>
+    <groupId>com.sap.cloud.sdk.services</groupId>
+    <artifactId>scp-workflow-cf</artifactId>
+</dependency>
+```
+
+After adding the dependency to your `pom.xml` file run `mvn clean install` to let `Maven` install it.
+
+### Invoke the Java Client Library
+
+Let's create a Java representation of this destination. You can use `ScpCfServiceDestinationLoader.getDestinationForService` to retrieve
+a destination instance from the VCAP_SERVICES entry for the workflow service.
+
+```java
+final HttpDestination destination =
+                ScpCfServiceDestinationLoader.getDestinationForService(
+                        "workflow",
+                        "my-workflow");
+```
+
+:::caution
+The `ScpCfServiceDestinationLoader.getDestinationForService` API currently only works out of the box for the workflow service.
+For other services, alternative would be to create a Destination manually in CF using values in the `VCAP_SERVICES` and then accessing the
+destination using the `DestinationAccessor`. For details refer to Additional information section.
+:::
+
+Now we can make the first call to SCP Workflow API by invoking the method to get the list of all existing workflow definitions.
+For that, we pass the HTTP destination as an argument to the constructor of the API class.
+
+```java
+final List<WorkflowDefinition> workflowDefinitions =
+        new WorkflowDefinitionsApi(httpDestination).queryDefinitions();
+```
+
+This is how we call the SCP Workflow REST API in a type-safe manner and benefit from type-safe access to the resulting response objects.
+For instance, we can read particular details about each workflow definition.
+We'll log them for demonstration purposes.
+
+```java
+workflowDefinitions.forEach(workflowDefinition -> {
+    log.info(workflowDefinition.getName());
+    log.info(workflowDefinition.getVersion());
+    log.info(workflowDefinition.getCreatedAt().toString());
+});
+```
+
+Another benefit is that the SCP Workflow API library allows us to inspect all jobs related to a particular workflow definition together with many other properties.
+You can check the SCP Workflow API's model definition on the [SAP API Hub](https://api.sap.com/package/SAPCPWorkflowAPIs?section=Artifacts) or simply use your IDE to discover available properties via its auto-complete function.
+
+```java
+final WorkflowDefinition workflowDefinition = workflowDefinitions.get(0);
+workflowDefinition.getJobs().forEach(job -> {
+    log.info(job.getId());
+    log.info(job.getPurpose().toString());
+});
+```
+## Capabilities and Limitations
+
+### Capabilities and Benefits
+
+The Java client library for SCP Workflow enables the developer to:
+
+- Invoke the REST API in a type-safe and convenient manner
+- Provides Java abstractions for all REST API endpoints along with the respective model classes
+- Relieves the developer from all the `HTTP-related` development work like interpreting `status codes`, `JSON de-/serialization`, etc
+- It lets the developer focus on the business logic instead of coding low-level API calls
+- We keep the library up to date with the latest Workflow API specification which simplifies the maintainability of your app's code
+- We integrate the SCP Workflow library with SAP Cloud SDK capabilities, such as tenant-aware destination retrieval and many more
+
+### Known Limitations
+
+- We support SCP Workflow API only on SCP Cloud Foundry.
+  The SAP Cloud Platform Neo landscape in **Not supported!**
+- In the current state, it is required to create a destination manually instead of letting the library resolve it for you via VCAP_SERVICES binding available on SCP Cloud Foundry.
+
+## Additional Information
+
+### Creating HTTP Destinations Manually
+
+To create HTTP destinations manually in CF from the values read from `VCAP_SERVICES` of the CF application, please follow the below steps:
+
+### Take Note of API endpoint and OAuth Credentials
+
+Once the app is bound to the workflow service (here in our example) and app deployment has finished, go to your CF space and navigate to `Services\Service Instances`.
 You should see the service instance you created along with the information that is bound to your application.
 
 Click on the service instance name, for instance `my-workflow`, in the upcoming screen you should see the headline `Service Instance: my-workflow - Referencing Apps`.
@@ -187,7 +304,7 @@ Next look carefully at the `JSON` content and collect the values for the followi
 
 You'll need these values in the next step.
 
-#### Create HTTP Destination
+### Create HTTP Destination
 
 Go to your CF subaccount, navigate to `Connectivity\Destinations` in the left-hand side menu, and create a new HTTP destination with the following properties:
 
@@ -204,107 +321,15 @@ Click Save.
 Restart your app by navigating to `Spaces\<you-space-name>\Applications`.
 Chose your app from the list by clicking on the link with its name and find the restart button on the page that loads.
 
-### Develop Your App
+### Create Destination Programmatically
 
-#### Dependency Assumptions
-
-We assume that you have a Java project using the SAP Cloud SDK.
-If not, we recommend going ahead and [creating one from one of the Maven archetypes](https://sap.github.io/cloud-sdk/docs/java/getting-started).
-You should also have [Apache Maven](https://maven.apache.org/download.cgi) installed and be able to successfully run `mvn clean install` from the root of your project.
-
-Make sure that you have the SAP Cloud SDK Bill-of-Material (BOM) in your `dependencyManagement` section of your `pom.xml` structure like on the example below.
-
-:::caution Always use the latest version of SAP Cloud SDK
-Current version is: <MvnBadge />
-:::
-
-```xml title="pom.xml"
-<dependencyManagement>
-  <dependencies>
-    <dependency>
-      <groupId>com.sap.cloud.sdk</groupId>
-      <artifactId>sdk-bom</artifactId>
-      <!-- WF API is supported in ver 3.19.1 of the SDK and above. Please, always use the latest version -->
-      <version>3.XX.X</version>
-      <type>pom</type>
-      <scope>import</scope>
-    </dependency>
-  </dependencies>
-</dependencyManagement>
-```
-
-#### Add SAP Cloud Platform Workflow Library Dependency To Your Project
-
-You can refer to the Java client library for the SCP Workflow service with the following Maven dependency:
-
-```xml title="pom.xml"
-<dependency>
-    <groupId>com.sap.cloud.sdk.services</groupId>
-    <artifactId>scp-workflow-cf</artifactId>
-</dependency>
-```
-
-After adding the dependency to your `pom.xml` file run `mvn clean install` to let `Maven` install it.
-
-### Invoke the Java Client Library
-
-The name of the HTTP destination that we configured in the SCP cockpit is `Workflow-API`.
-Let's create a Java representation of this destination.
-
+The invocation of the workflow client remains the same, the only difference in code is while trying to fetch the destination.
+The name of the HTTP destination that we configured in the SCP cockpit is Workflow-API. Let's create a Java representation of this destination.
 ```java
 final String destinationName = "Workflow-Api";
 final HttpDestination httpDestination = DestinationAccessor.getDestination(destinationName).asHttp();
 ```
-
-Now we can make the first call to SCP Workflow API by invoking the method to get the list of all existing workflow definitions.
-For that, we pass the HTTP destination as an argument to the constructor of the API class.
-
-```java
-final List<WorkflowDefinition> workflowDefinitions =
-        new WorkflowDefinitionsApi(httpDestination).queryDefinitions();
-```
-
-This is how we call the SCP Workflow REST API in a type-safe manner and benefit from type-safe access to the resulting response objects.
-For instance, we can read particular details about each workflow definition.
-We'll log them for demonstration purposes.
-
-```java
-workflowDefinitions.forEach(workflowDefinition -> {
-    log.info(workflowDefinition.getName());
-    log.info(workflowDefinition.getVersion());
-    log.info(workflowDefinition.getCreatedAt().toString());
-});
-```
-
-Another benefit is that the SCP Workflow API library allows us to inspect all jobs related to a particular workflow definition together with many other properties.
-You can check the SCP Workflow API's model definition on the [SAP API Hub](https://api.sap.com/package/SAPCPWorkflowAPIs?section=Artifacts) or simply use your IDE to discover available properties via its auto-complete function.
-
-```java
-final WorkflowDefinition workflowDefinition = workflowDefinitions.get(0);
-workflowDefinition.getJobs().forEach(job -> {
-    log.info(job.getId());
-    log.info(job.getPurpose().toString());
-});
-```
-
-## Capabilities and Limitations
-
-### Capabilities and Benefits
-
-The Java client library for SCP Workflow enables the developer to:
-
-- Invoke the REST API in a type-safe and convenient manner
-- Provides Java abstractions for all REST API endpoints along with the respective model classes
-- Relieves the developer from all the `HTTP-related` development work like interpreting `status codes`, `JSON de-/serialization`, etc
-- It lets the developer focus on the business logic instead of coding low-level API calls
-- We keep the library up to date with the latest Workflow API specification which simplifies the maintainability of your app's code
-- We integrate the SCP Workflow library with SAP Cloud SDK capabilities, such as tenant-aware destination retrieval and many more
-
-### Known Limitations
-
-- We support SCP Workflow API only on SCP Cloud Foundry.
-  The SAP Cloud Platform Neo landscape in **Not supported!**
-- In the current state, it is required to create a destination manually instead of letting the library resolve it for you via VCAP_SERVICES binding available on SCP Cloud Foundry.
+That's it, the invocation to the java client library would remain the same (as above) and no more further changes are required.
 
 ## Video Tutorial
 
