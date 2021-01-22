@@ -176,7 +176,21 @@ You may manually clear caches by:
 ResilienceDecorator.invalidateCache(resilienceConfig);
 ```
 
-This currently clears all cache entries associated with the resilience configuration irrespective of the current tenant and principal.
+This clears cache entries associated with the resilience configuration, the current tenant, and the principal depending on the configured isolation mode.
+Currently, however, additional parameters that may be specified within the `CacheConfiguration` are not considered.
+
+If you need to manually clear the entire cache associated with a resilience configuration, you may do so by:
+
+```java
+ResilienceDecorator.forceClearCache(resilienceConfig);
+```
+
+:::danger Warning
+
+This operation is intended to delete **all** cache entries associated with the given `CacheConfiguration`.
+It intentionally ignores the isolation mode and, in consequence, affects all tenants and principals.
+
+:::
 
 To get hold of the created cache instance and to use it for advanced operations like for e.g registering [event listeners](https://www.baeldung.com/jcache#listeners) you can use JCache API:
 
