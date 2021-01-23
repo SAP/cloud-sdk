@@ -82,6 +82,21 @@ export const features = [
     }
   },
   {
+    name: 'Generic OData client',
+    category: 'OData',
+    java: {
+      status: ':heavy_check_mark:',
+      docsLink: `[docs](${baseUrl}/java/features/odata/generic-untyped-odata-client)`,
+      note: ''
+    },
+    js: {
+      status: ':x:',
+      docsLink: ``,
+      note:
+        'We expose [gelneric HTTP client](${baseUrl}/js/features/connectivity/generic-http-client) aware of connectivity abstractions'
+    }
+  },
+  {
     name: '[OData code generator](https://www.odata.org/documentation/)',
     category: 'OData',
     java: {
