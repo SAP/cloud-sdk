@@ -342,7 +342,7 @@ export const features = [
     name: 'MDI',
     category: 'MDI',
     java: {
-      status: ':gear:',
+      status: ':bulb:',
       docsLink: ``,
       note: `Internal only or allow listed`
     },
