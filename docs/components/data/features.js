@@ -337,6 +337,34 @@ export const features = [
       docsLink: `[docs](${baseUrl}/js/features/cli/overview)`,
       note: ''
     }
+  },
+   {
+    name: 'MDI',
+    category: 'MDI',
+    java: {
+      status: ':bulb:',
+      docsLink: ``,
+      note: `Internal only or allow listed`
+    },
+    js: {
+      status: ':x:',
+      docsLink: ``,
+      note: 'Planned if requested'
+    }
+  },
+  {
+    name: 'MDO',
+    category: 'MDO',
+    java: {
+      status: ':bulb:',
+      docsLink: ``,
+      note: `Internal only or allow listed`
+    },
+    js: {
+      status: ':x:',
+      docsLink: ``,
+      note: 'Planned if requested'
+    }
   }
 ];
 
