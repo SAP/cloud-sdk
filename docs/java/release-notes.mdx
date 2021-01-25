@@ -1552,11 +1552,22 @@ Release date: July 16, 2020
 
 ### Compatibility Notes
 
+- As part of the update of the OData VDM to SAP S/4HANA Cloud 1908, the `OutboundDeliveryService` has been removed from the SAP API Business Hub and, as a consequence, from the SDK. Use [`OutboundDeliveryV2Service`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/OutboundDeliveryV2Service.html) instead.
+- The destination expected as second parameter of the [`attachToService()`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/com/sap/cloud/sdk/datamodel/odata/helper/VdmEntity.html#attachToService-java.lang.String-com.sap.cloud.sdk.cloudplatform.connectivity.HttpDestinationProperties-) method of [`VdmEntity`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odata/helper/VdmEntity.html) is now mandatory (`@Nonnull`), rather than nullable, because attaching to a service does not work without a destination to designate the target system.
+
 ### New Functionality
+
+- OData VDM: Update the OData virtual data model to the [newest release 1908 of SAP S/4HANA Cloud](https://news.sap.com/2019/08/sap-s4hana-cloud-1908-new-release/). This includes completely new services (available as usual as from package [`com.sap.cloud.sdk.s4hana.datamodel.odata.services`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/package-summary.html)), new operations in previously existing services, and new entity types. The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
+- Message VDM: Update the message virtual data model for the [newest release 1908 of SAP S/4HANA Cloud](https://news.sap.com/2019/08/sap-s4hana-cloud-1908-new-release/). This includes 21 new message types to reflect the new event types added in SAP S/4HANA Cloud (available as usual from package [`com.sap.cloud.sdk.s4hana.datamodel.messaging.api.message`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/messaging/api/message/package-summary.html)). The SDK supports all event types listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/package/SAPS4HANACloudBusinessEvents?section=Artifacts).
 
 ### Improvements
 
+- Update dependency to Jackson Databind to version `2.9.9.2` (from `2.9.9.1`) in order to fix reported security vulnerabilities.
+
 ### Fixed Issues
+
+- Fix an issue where [`DefaultHttpDestination`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.html) failed to load the authentication type, so that authentication was not correctly applied when loading destinations from environment variable or instantiating `DefaultHttpDestination` manually.
+- Fix issues with HTTP destinations in the SAP Cloud Platform Neo environment when using EJBs to run code on server startup.
 
 
 ## 3.0.0
