@@ -188,7 +188,7 @@ StructuredQuery structuredQuery = StructuredQuery.onEntity(entityName, ODataProt
 structuredQuery.select("Field1", "Field2", "Field3");
 structuredQuery.filter(FieldReference.of("Field4").equalTo("FooBar"));
 String encodedQuery = structuredQuery.getEncodedQueryString();
-ODataRequestRead requestRead = new ODataRequestRead(servicePath , entityName, encodedQuery, ODataProtocol.V2);
+ODataRequestRead requestRead = new ODataRequestRead(servicePath, entityName, encodedQuery, ODataProtocol.V2);
 
 // add read request to batch
 requestBatch.addRead(requestRead);
