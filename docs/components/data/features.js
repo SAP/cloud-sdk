@@ -311,7 +311,7 @@ export const features = [
     }
   },
   {
-    name: 'Principal propagation',
+    name: '[Principal propagation](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e2cbb48def4342048362039cc157b12e.html?q=principal)',
     category: 'Connectivity',
     java: {
       status: ':heavy_check_mark:',
@@ -320,7 +320,7 @@ export const features = [
     },
     js: {
       status: ':heavy_check_mark:',
-      docsLink: ``,
+      docsLink: `[docs](${baseUrl})/js/features/connectivity/on-premise#principal-propagation)`,
       note: ''
     }
   },
