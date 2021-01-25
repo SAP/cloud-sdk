@@ -356,7 +356,7 @@ export const features = [
     name: 'MDO',
     category: 'MDO',
     java: {
-      status: ':gear:',
+      status: ':bulb:',
       docsLink: ``,
       note: `Internal only or allow listed`
     },
