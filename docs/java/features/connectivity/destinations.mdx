@@ -149,9 +149,9 @@ You can implement custom logic that defines which headers are sent under which c
 Let's imagine, you want to send an API token via a request header with any calls made over any destination in your whole application.
 :::
 
-The SAP Cloud SDK offers the interface `DestinationHeaderProvider` which defines the method `List<Header> getHeaders(destination)`.
+The SAP Cloud SDK offers the interface `DestinationHeaderProvider` which defines the method `List<Header> getHeaders(DestinationRequestContext)`.
 At runtime, while preparing an outbound request, the SAP Cloud SDK will use all implementations of that interface which have been registered via the Java ServiceLoader mechanism (see below).
-For each registered implementation it invokes the method `getHeaders(destination)` and appends the returned headers to the currently prepared request.
+For each registered implementation it invokes the method `getHeaders(DestinationRequestContext)` and appends the returned headers to the currently prepared request.
 
 ### Implement Own Header Provider
 
@@ -166,7 +166,7 @@ Here is one simple example implementation which returns the same header for each
 ```java
 @Nonnull
 @Override
-public List<Header> getHeaders( @Nonnull final DestinationProperties destination )
+public List<Header> getHeaders( @Nonnull final DestinationRequestContext requestContext )
 {
   final Header header = new Header("API-Token", obtainApiToken());
 
