@@ -168,41 +168,37 @@ Let's look at how you can work around that with a generic OData client.
 
 In the code snippet below we:
 
-1. Initialize generic OData Batch request with service path and OData protocol version.
-1. Create a Map establishing the relation between the Contract object and the Read request.
-1. Build Read requests for contracts we want to fetch and add them to Batch request and store them in Map of Read requests.
-1. Make a Batch request
-1. Collate response of the Batch request to Read requests stored in the Map
+1. Prepare an instance of `HttpClient` that will be used to execute the HTTP request.
+1. Initialize a generic OData Batch request with OData service path and protocol version.
+1. Build a read request for an OData entity collection and add it to the Batch request object.
+1. Execute the Batch request.
+1. Access the Batch response and fetch the list of fields from OData entities, that matched the applied read request.
 
 ```java
+HttpDestination destination;
 String servicePath = "/sap/opu/odata/sap/<SERVICE_PATH>";
+String entityName = "EntityCollectionName";
+HttpClient httpClient = HttpClientAccessor.getHttpClient(destination);
+
+// instantiate custom OData V2 batch request
 ODataRequestBatch requestBatch = new ODataRequestBatch(servicePath, ODataProtocol.V2);
-Map<Contract, ODataRequestRead> batchedRequests = new HashMap<>();
 
-// iterate over contracts, construct OData query objects and add them to the OData batch request builder
-for (Contract contract : contracts) {
-    String entityName = sapConfig.getEssentialsContractListEntity();
-    String serviceUrl = sapConfig.getEssentialsContractServiceUrl();
-    StructuredQuery structuredQuery = StructuredQuery.onEntity(entityName, ODataProtocol.V2);
+// instantiate custom OData V2 read request
+StructuredQuery structuredQuery = StructuredQuery.onEntity(entityName, ODataProtocol.V2);
+structuredQuery.select("Field1", "Field2", "Field3");
+structuredQuery.filter(FieldReference.of("Field4").equalTo("FooBar"));
+String encodedQuery = structuredQuery.getEncodedQueryString();
+ODataRequestRead requestRead = new ODataRequestRead(servicePath , entityName, encodedQuery, ODataProtocol.V2);
 
-    structuredQuery.select("SalesSchedulingAgreement", "PurchaseOrderByCustomer", "Customer", "CustomerName", "SalesSchedulingAgreementItem", "Material", "MaterialByCustomer");
-    structuredQuery.filter(FieldReference.of("SalesSchedulingAgreement").equalTo(contract.getSchAgrmntNo()));
-    structuredQuery.filter(FieldReference.of("PurchaseOrderByCustomer").equalTo(contract.getCustRefNo()));
+// add read request to batch
+requestBatch.addRead(requestRead);
 
-    String encodedQuery = structuredQuery.getEncodedQueryString();
-    ODataRequestRead requestRead = new ODataRequestRead(serviceUrl, entityName, encodedQuery, ODataProtocol.V2);
-    batchedRequests.put(contract, requestRead);
-    requestBatch.addRead(requestRead);
-}
-
-// execute the OData batch request
+// execute the batch request
 ODataRequestResultMultipartGeneric batchResult = requestBatch.execute(httpClient);
 
-// extract information from batch response, by referring to the individual OData request references
-for( Map.Entry<Contract, ODataRequestRead> requestMapping : batchedRequests.entrySet() ) {
-    ODataRequestResultGeneric queryResult = batchResult.getResult(requestMapping.getValue());
-    List<Map<String, Object>> itemsForQuery = queryResult.asListOfMaps();
-}
+// extract information from batch response, by referring to the individual OData request reference
+ODataRequestResultGeneric queryResult = batchResult.getResult(requestRead);
+List<Map<String, Object>> listOfEntityFields = queryResult.asListOfMaps();
 ```
 
 This example is a great demonstration of how you can work around certain limitations of a type-safe client aka VDM, tackle advanced OData features, or even take care of misbehaving servers or OData standard deviations.
