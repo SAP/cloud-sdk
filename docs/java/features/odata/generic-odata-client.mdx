@@ -126,6 +126,7 @@ query.filter(expression);
 [OData v4 specification](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_RequestingChanges) provides capabilities to return only a delta between your last and ongoing request.
 For example, if your previous request loaded information from the service which continues to be updated with new records, then with your next request you can ask to provide you only with the difference between what you've already loaded and current records on the service side.
 For that, you can leverage `$deltatokens` query parameter.
+
 We do not provide convenience API for delta tokens in our type-safe client, but you can leverage generic OData client to fetch the delta link from the `response` metadata and extract `$deltatoken` from there as in the code snippet below.
 
 ```java
@@ -147,6 +148,11 @@ private static String getDeltaTokenFromResponse( @Nonnull final ODataRequestResu
     }
 }
 
+```
+
+Now you can create an OData request leveraging the `$deltatoken` token you have just fetched.
+
+```java
 // Composing a delta request with generic OData client
 ODataRequestResultGeneric response = request.execute(httpClient);
 String deltaToken = getDeltaTokenFromResponse(response);
@@ -154,3 +160,45 @@ if( deltaToken!=null) {
     deltaRequest.addQueryParameter("$deltatoken", deltaToken);
 }
 ```
+
+## OData v2 Batch Read Request
+
+Batch requests for OData v2 are not yet supported in the [type-safe client](./type-safe-client-odata-v2.mdx#batch-requests).
+Let's look at how you can work around that with a generic OData client.
+
+In the code snippet below we:
+
+1. Prepare an instance of `HttpClient` that will be used to execute the HTTP request.
+1. Initialize a generic OData Batch request with OData service path and protocol version.
+1. Build a read request for an OData entity collection and add it to the Batch request object.
+1. Execute the Batch request.
+1. Access the Batch response and fetch the list of fields from OData entities, that matched the applied read request.
+
+```java
+HttpDestination destination;
+String servicePath = "/sap/opu/odata/sap/<SERVICE_PATH>";
+String entityName = "EntityCollectionName";
+HttpClient httpClient = HttpClientAccessor.getHttpClient(destination);
+
+// instantiate custom OData V2 batch request
+ODataRequestBatch requestBatch = new ODataRequestBatch(servicePath, ODataProtocol.V2);
+
+// instantiate custom OData V2 read request
+StructuredQuery structuredQuery = StructuredQuery.onEntity(entityName, ODataProtocol.V2);
+structuredQuery.select("Field1", "Field2", "Field3");
+structuredQuery.filter(FieldReference.of("Field4").equalTo("FooBar"));
+String encodedQuery = structuredQuery.getEncodedQueryString();
+ODataRequestRead requestRead = new ODataRequestRead(servicePath, entityName, encodedQuery, ODataProtocol.V2);
+
+// add read request to batch
+requestBatch.addRead(requestRead);
+
+// execute the batch request
+ODataRequestResultMultipartGeneric batchResult = requestBatch.execute(httpClient);
+
+// extract information from batch response, by referring to the individual OData request reference
+ODataRequestResultGeneric queryResult = batchResult.getResult(requestRead);
+List<Map<String, Object>> listOfEntityFields = queryResult.asListOfMaps();
+```
+
+This example is a great demonstration of how you can work around certain limitations of a type-safe client aka VDM, tackle advanced OData features, or even take care of misbehaving servers or OData standard deviations.
