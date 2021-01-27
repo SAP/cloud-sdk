@@ -134,10 +134,10 @@ applications:
     routes:
       - route: <omitted-on-purpose>
 ```
+
 This ensures that the `VCAP_SERVICES` environment variable of the CF application gets enhanced with an additional entry containing the connection details of the
 newly bound workflow service.
 Now, redeploy your app with `cf push`.
-
 
 ### Develop Your App
 
@@ -183,21 +183,25 @@ After adding the dependency to your `pom.xml` file run `mvn clean install` to le
 
 ### Invoke the Java Client Library
 
-Let's create a Java representation of this destination. You can use `ScpCfServiceDestinationLoader.getDestinationForService` to retrieve
-a destination instance from the VCAP_SERVICES entry for the workflow service.
+#### Create Destination
+
+Let's create a Java representation of this destination. You can use `ScpCfServiceDestinationLoader.getDestinationForService` to create
+a destination by reading properties from the VCAP_SERVICES environment variable entry for the workflow service.
 
 ```java
 final HttpDestination destination =
                 ScpCfServiceDestinationLoader.getDestinationForService(
-                        "workflow",
+                        ScpCfServiceDestinationLoader.CfServices.WORKFLOW,
                         "my-workflow");
 ```
 
 :::caution
 The `ScpCfServiceDestinationLoader.getDestinationForService` API currently only works out of the box for the workflow service.
-For other services, alternative would be to create a Destination manually in CF using values in the `VCAP_SERVICES` and then accessing the
-destination using the `DestinationAccessor`. For details refer to Additional information section.
+For other services, the alternative would be to create a Destination manually in CF using values in the `VCAP_SERVICES` and then accessing the
+destination using the `DestinationAccessor`. For details refer to [Additional information](scp-workflow-rest-api#additional-information) section.
 :::
+
+#### Invoke the SCP Workflow API
 
 Now we can make the first call to SCP Workflow API by invoking the method to get the list of all existing workflow definitions.
 For that, we pass the HTTP destination as an argument to the constructor of the API class.
@@ -229,6 +233,7 @@ workflowDefinition.getJobs().forEach(job -> {
     log.info(job.getPurpose().toString());
 });
 ```
+
 ## Capabilities and Limitations
 
 ### Capabilities and Benefits
@@ -250,9 +255,15 @@ The Java client library for SCP Workflow enables the developer to:
 
 ## Additional Information
 
+:::info
+Please note the steps outlined in the below section are only required if you chose to skip using the convenience API `ScpCfServiceDestinationLoader.getDestinationForService`
+introduced [here](scp-workflow-rest-api#create-destination) and instead would like to use `DestinationAccessor` for e.g while trying to use generated clients of other services.
+:::
+
 ### Creating HTTP Destinations Manually
 
-To create HTTP destinations manually in CF from the values read from `VCAP_SERVICES` of the CF application, please follow the below steps:
+To create HTTP destinations manually in CF from the values read from `VCAP_SERVICES` of the CF application, please follow the below steps.
+The steps below can be continued in this example from [Bind your App to Service Instance](scp-workflow-rest-api#bind-your-app-to-service-instance) section.
 
 ### Take Note of API endpoint and OAuth Credentials
 
@@ -325,11 +336,13 @@ Chose your app from the list by clicking on the link with its name and find the 
 
 The invocation of the workflow client remains the same, the only difference in code is while trying to fetch the destination.
 The name of the HTTP destination that we configured in the SCP cockpit is Workflow-API. Let's create a Java representation of this destination.
+
 ```java
 final String destinationName = "Workflow-Api";
 final HttpDestination httpDestination = DestinationAccessor.getDestination(destinationName).asHttp();
 ```
-That's it, the invocation to the java client library would remain the same (as above) and no more further changes are required.
+
+That's it, the invocation to the java client library would remain the [same](scp-workflow-rest-api#invoke-the-scp-workflow-api) and no more further changes are required.
 
 ## Video Tutorial
 
