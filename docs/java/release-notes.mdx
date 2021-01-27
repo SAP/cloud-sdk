@@ -1672,7 +1672,7 @@ When defining destinations via the environment variable destinations, version 3.
 
 - RequestContext is now ThreadContext
   - New concept of ThreadContextDecorator to allow decorating the callable which is wrapped in a ThreadContext.
-    Difference to ThreadContextListener is that the listener is responsible for setting ThreadContext properties, while the decorator allows to decorate the callable that is wrapped in the ThreadContext.
+    The difference to ThreadContextListener is that the listener is responsible for setting ThreadContext properties, while the decorator allows decorating the callable that is wrapped in the ThreadContext.
   - Now there is a RequestAccessor
   - Rename RequestContextServletFilter to RequestAccessorFilter
   - DestinationsRequestContextListener has been renamed to HttpClientsThreadContextListener to better reflect its purpose
@@ -1681,18 +1681,18 @@ When defining destinations via the environment variable destinations, version 3.
 - TenantNotAvailableException etc. were removed and replaced with Option.
 - Principal replaces User.
   - No Locale as part of principal anymore (only available on Neo, cast to ScpNeoPrincipal if needed)
-  - No hasAuthorizations method, use authorizations with "contains" method of set
-  - CacheKey and CacheManager have been adjusted accordingly to reflecting naming: user is now principal
+  - No `hasAuthorizations` method, use authorizations with "contains" method of setting
+  - CacheKey and CacheManager have been adjusted accordingly to reflecting naming: the user is now principal
   - AccessDeniedException also now uses "principal" instead of "user" (note, however, that the AccessDeniedResponse still exposes "user" to remain compatible on REST API level).
-- LocalScopePrefixProvider now uses Try instead of throwing exceptions which were previously not declared on the API.
-- Remove ErpEdition (also removed in mocking of ErpSystem)
+- LocalScopePrefixProvider now uses Try instead of throwing exceptions that were previously not declared on the API.
+- Remove ErpEdition (also removed in the mocking of ErpSystem)
 - Accessors now use vavr in more places (offering methods returning Try).
 - TenantAccessor, PrincipalAccessor, AuthTokenAccessor, and RequestAccessor now support on-behalf execution, with-fallback execution, and a global fallback.
 - SapPassportBuilder now uses the following defaults:
   - "SAP_CLOUD_SDK_APPLICATION" instead of "S4SDK_APPLICATION"
   - "SAP_CLOUD_SDK_USER" instead of "S4SDK_USER"
   - "SAP_CLOUD_SDK_REQUEST" instead of "S4SDK_REQUEST"
-- Add new module security-servlet containing servlet-based security filters.
+- Add a new module security-servlet containing servlet-based security filters.
   Note that this may require that you add the following dependency to your project if you rely on these web filters:
   ```
   <dependency>
