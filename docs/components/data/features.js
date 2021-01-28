@@ -320,7 +320,7 @@ export const features = [
     },
     js: {
       status: ':heavy_check_mark:',
-      docsLink: `[docs](${baseUrl})/js/features/connectivity/on-premise#principal-propagation)`,
+      docsLink: `[docs](${baseUrl}/js/features/connectivity/on-premise#principal-propagation)`,
       note: ''
     }
   },
@@ -353,7 +353,7 @@ export const features = [
       note: ''
     }
   },
-   {
+  {
     name: 'MDI',
     category: 'MDI',
     java: {
@@ -368,8 +368,8 @@ export const features = [
     }
   },
   {
-    name: 'MDO',
-    category: 'MDO',
+    name: 'Deploy with Confidence',
+    category: 'Runtimes',
     java: {
       status: ':bulb:',
       docsLink: ``,
@@ -381,6 +381,7 @@ export const features = [
       note: 'Planned if requested'
     }
   }
+
 ];
 
 /**
