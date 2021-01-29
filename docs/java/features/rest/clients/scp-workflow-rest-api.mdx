@@ -135,74 +135,8 @@ applications:
       - route: <omitted-on-purpose>
 ```
 
+This ensures that the `VCAP_SERVICES` environment variable of the CF application gets enhanced with an additional entry containing the connection details of the newly bound workflow service.
 Now, redeploy your app with `cf push`.
-
-##### Take Note of API endpoint and OAuth Credentials
-
-After app deployment has finished, go to your CF space and navigate to `Services\Service Instances`.
-You should see the service instance you created along with the information that is bound to your application.
-
-Click on the service instance name, for instance `my-workflow`, in the upcoming screen you should see the headline `Service Instance: my-workflow - Referencing Apps`.
-Make sure that the entry belongs to your app is selected in the table below, given that multiple apps are bound to the same service instance.
-
-Consider the `JSON` content below the table.
-For your convenience, we recommend copying that `JSON` to a text editor.
-Here is a quick example:
-
-```json
-{
-  "endpoints": {
-    "workflow_odata_url": "foo",
-    "workflow_rest_url": "bar"
-  },
-  "html5-apps-repo": {
-    "app_host_id": "foo"
-  },
-  "uaa": {
-    "uaadomain": "bar",
-    "tenantmode": "dedicated",
-    "sburl": "bar",
-    "clientid": "foo",
-    "verificationkey": "bar",
-    "apiurl": "foo",
-    "xsappname": "bar",
-    "identityzone": "foo",
-    "identityzoneid": "bar",
-    "clientsecret": "foo",
-    "tenantid": "bar",
-    "url": "foo"
-  },
-  "sap.cloud.service": "com.sap.bpm.workflow",
-  "saasregistryappname": "workflow",
-  "content_endpoint": "foo"
-}
-```
-
-Next look carefully at the `JSON` content and collect the values for the following `JSON` keys:
-
-- `workflow_rest_url`
-- `url`
-- `clientid`
-- `clientsecret`
-
-You'll need these values in the next step.
-
-#### Create HTTP Destination
-
-Go to your CF subaccount, navigate to `Connectivity\Destinations` in the left-hand side menu, and create a new HTTP destination with the following properties:
-
-- Name: Workflow-Api
-- Type: HTTP
-- URL: The value of `workflow_rest_url`
-- Proxy Type: Internet
-- Authentication: OAuth2ClientCredentials
-- Client ID: The value of `clientid`
-- Client Secret: The value of `clientsecret`
-- Token Service URL: The value of `url` appended by `/oauth/token?grant_type=client_credentials`
-
-Click Save.
-Restart your app by navigating to `Spaces\<you-space-name>\Applications`.
-Chose your app from the list by clicking on the link with its name and find the restart button on the page that loads.
 
 ### Develop Your App
 
@@ -248,13 +182,25 @@ After adding the dependency to your `pom.xml` file run `mvn clean install` to le
 
 ### Invoke the Java Client Library
 
-The name of the HTTP destination that we configured in the SCP cockpit is `Workflow-API`.
+#### Create Destination
+
 Let's create a Java representation of this destination.
+You can use `ScpCfServiceDestinationLoader.getDestinationForService` to create a destination by reading properties from the VCAP_SERVICES environment variable entry for the workflow service.
 
 ```java
-final String destinationName = "Workflow-Api";
-final HttpDestination httpDestination = DestinationAccessor.getDestination(destinationName).asHttp();
+final HttpDestination destination =
+                ScpCfServiceDestinationLoader.getDestinationForService(
+                        ScpCfServiceDestinationLoader.CfServices.WORKFLOW,
+                        "my-workflow");
 ```
+
+:::caution
+The `ScpCfServiceDestinationLoader.getDestinationForService` API currently only works out of the box for the workflow service.
+For other services, the alternative would be to create a Destination manually in CF using values in the `VCAP_SERVICES` and then accessing the destination using the `DestinationAccessor`.
+For details refer to [Additional information](scp-workflow-rest-api#additional-information) section.
+:::
+
+#### Invoke the SCP Workflow API
 
 Now we can make the first call to SCP Workflow API by invoking the method to get the list of all existing workflow definitions.
 For that, we pass the HTTP destination as an argument to the constructor of the API class.
@@ -305,6 +251,97 @@ The Java client library for SCP Workflow enables the developer to:
 - We support SCP Workflow API only on SCP Cloud Foundry.
   The SAP Cloud Platform Neo landscape in **Not supported!**
 - In the current state, it is required to create a destination manually instead of letting the library resolve it for you via VCAP_SERVICES binding available on SCP Cloud Foundry.
+
+## Additional Information
+
+:::info
+Please note the steps outlined in the below section are only required if you chose to skip using the convenience API `ScpCfServiceDestinationLoader.getDestinationForService` introduced [here](scp-workflow-rest-api#create-destination) and instead would like to use `DestinationAccessor` for e.g. while trying to use generated clients of other services.
+:::
+
+### Creating HTTP Destinations Manually
+
+To create HTTP destinations manually in CF from the values read from `VCAP_SERVICES` of the CF application, please follow the below steps.
+The steps below can be continued in this example from the [Bind your App to Service Instance](scp-workflow-rest-api#bind-your-app-to-service-instance) section.
+
+### Take Note of API endpoint and OAuth Credentials
+
+Once the app is bound to the workflow service (here in our example) and app deployment has finished, go to your CF space and navigate to `Services\Service Instances`.
+You should see the service instance you created along with the information that is bound to your application.
+
+Click on the service instance name, for instance `my-workflow`, in the upcoming screen you should see the headline `Service Instance: my-workflow - Referencing Apps`.
+Make sure that the entry that belongs to your app is selected in the table below, given that multiple apps are bound to the same service instance.
+
+Consider the `JSON` content below the table.
+For your convenience, we recommend copying that `JSON` to a text editor.
+Here is a quick example:
+
+```json
+{
+  "endpoints": {
+    "workflow_odata_url": "foo",
+    "workflow_rest_url": "bar"
+  },
+  "html5-apps-repo": {
+    "app_host_id": "foo"
+  },
+  "uaa": {
+    "uaadomain": "bar",
+    "tenantmode": "dedicated",
+    "sburl": "bar",
+    "clientid": "foo",
+    "verificationkey": "bar",
+    "apiurl": "foo",
+    "xsappname": "bar",
+    "identityzone": "foo",
+    "identityzoneid": "bar",
+    "clientsecret": "foo",
+    "tenantid": "bar",
+    "url": "foo"
+  },
+  "sap.cloud.service": "com.sap.bpm.workflow",
+  "saasregistryappname": "workflow",
+  "content_endpoint": "foo"
+}
+```
+
+Next look carefully at the `JSON` content and collect the values for the following `JSON` keys:
+
+- `workflow_rest_url`
+- `url`
+- `clientid`
+- `clientsecret`
+
+You'll need these values in the next step.
+
+### Create HTTP Destination
+
+Go to your CF subaccount, navigate to `Connectivity\Destinations` in the left-hand side menu, and create a new HTTP destination with the following properties:
+
+- Name: Workflow-Api
+- Type: HTTP
+- URL: The value of `workflow_rest_url`
+- Proxy Type: Internet
+- Authentication: OAuth2ClientCredentials
+- Client ID: The value of `clientid`
+- Client Secret: The value of `clientsecret`
+- Token Service URL: The value of `url` appended by `/oauth/token?grant_type=client_credentials`
+
+Click Save.
+Restart your app by navigating to `Spaces\<you-space-name>\Applications`.
+Chose your app from the list by clicking on the link with its name and find the restart button on the page that loads.
+
+### Create Destination Programmatically
+
+The invocation of the workflow client remains the same, the only difference in code is while trying to fetch the destination.
+The name of the HTTP destination that we configured in the SCP cockpit is Workflow-API.
+Let's create a Java representation of this destination.
+
+```java
+final String destinationName = "Workflow-Api";
+final HttpDestination httpDestination = DestinationAccessor.getDestination(destinationName).asHttp();
+```
+
+That's it, the invocation to the java client library would remain the [same](scp-workflow-rest-api#invoke-the-scp-workflow-api) and no more further changes are required.
 
 ## Video Tutorial
 
