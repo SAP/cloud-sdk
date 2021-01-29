@@ -167,22 +167,21 @@ You can configure this isolation via the isolation mode of the resilience config
 Set the isolation mode to `NO_ISOLATION` to disable tenant aware caching.
 See the section on isolation levels under [Resilience](https://sap.github.io/cloud-sdk/docs/java/features/resilience/resilience#multi-tenancy) for more details.
 
-## Manipulating the State of Caches
+### Removing Cache Entries Manually
 
-You may manually clear caches by:
+The SAP Cloud SDK offers different possibilities to let you remove cached entries manually.
+First of all, you may remove entries that are associated with a specific tenant and/or principal by:
 
 ```java
-// invalidate
-ResilienceDecorator.invalidateCache(resilienceConfig);
+// tenant/principal aware
+ResilienceDecorator.clearCache(resilienceConfig);
 ```
 
-This clears cache entries associated with the resilience configuration, the current tenant, and the principal depending on the configured isolation mode.
-Currently, however, additional parameters that may be specified within the `CacheConfiguration` are not considered.
-
-If you need to manually clear the entire cache associated with a resilience configuration, you may do so by:
+Furthermore, should you need to remove all entries from a cache, you may use:
 
 ```java
-ResilienceDecorator.forceClearCache(resilienceConfig);
+// disregards tenant/principal isolation
+ResilienceDecorator.clearAllCacheEntries(resilienceConfig);
 ```
 
 :::danger Warning
@@ -191,6 +190,8 @@ This operation is intended to delete **all** cache entries associated with the g
 It intentionally ignores the isolation mode and, in consequence, affects all tenants and principals.
 
 :::
+
+## Advanced Cache Manipulation
 
 To get hold of the created cache instance and to use it for advanced operations like for e.g registering [event listeners](https://www.baeldung.com/jcache#listeners) you can use JCache API:
 
