@@ -61,11 +61,11 @@ The details of this process are explained in the next chapters.
 When given a `destinationName` the SAP Cloud SDK tries three things to find a destination:
 
 1. Checking local environment variables
-2. Checking a service instance
+2. Checking a service binding environment variables
 3. Using the destination service
 
 Once a destination is found, the flow is stopped and the destination is returned.
-So local environment beats service instance beats destination service in case all contain a destination with the given name.
+So local environment beats service binding beats destination service in case all contain a destination with the given name.
 
 ### Local Environment Variable
 
@@ -91,7 +91,7 @@ mockDestinationsEnv({
 
 This would set a destination with the name `TESTINATION`.
 
-### Service Instance
+### Service Binding Environment Variables
 
 The service credentials, in other words `VCAP_SERVICES` environment variables, may contain a destination.
 If you want to use this information, the name of the service instance must be provided as the destination name.

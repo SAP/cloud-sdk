@@ -156,7 +156,7 @@ That means the new loader can operate as a fallback.
 Use `prependDestinationLoader()` to add it at the beginning if you would like it to take precedence.
 Lastly use `setLoader()` to replace all existing loaders.
 
-## Provide Headers For Destinations
+## Provide Headers for Destinations
 
 ### How It Works
 
@@ -221,6 +221,30 @@ final Try<Iterable<ScpCfDestination>> destinations = destinationLoader.tryGetAll
 ```
 
 In the above call `destinationLoader` needs to be an instance of `ScpCfDestinationLoader`.
+
+#### Configuring Timeout Durations When Querying the Destination Service on Cloud Foundry
+
+By default, the [TimeLimiter resilience pattern](/cloud-sdk/docs/java/features/resilience/resilience#resilience-capabilities) aborts requests to the Destination Service on Cloud Foundry after 6 seconds.
+If your app requires more time when fetching destinations, you may create your own `ScpCfDestinationLoader` instance by:
+
+```java
+// Allow requests to take up to 10 seconds instead of just 6
+final DestinationLoader destinationLoader = new ScpCfDestinationLoader(Duration.ofSecond(10));
+```
+
+This operation overrides the default timeout duration so that you are free to choose whatever value fits your needs.
+
+:::note Hint
+
+You may register your `destinationLoader` within the `DestinationAccessor` by:
+
+```java
+DestinationAccessor.setLoader(destinationLoader);
+```
+
+That way, all future requests to the Destination Service will use the increased timeout duration.
+
+:::
 
 #### Building Destination Options
 
