@@ -82,6 +82,21 @@ export const features = [
     }
   },
   {
+    name: 'Generic OData client',
+    category: 'OData',
+    java: {
+      status: ':heavy_check_mark:',
+      docsLink: `[docs](${baseUrl}/java/features/odata/generic-untyped-odata-client)`,
+      note: ''
+    },
+    js: {
+      status: ':x:',
+      docsLink: ``,
+      note:
+        'We expose [gelneric HTTP client](${baseUrl}/js/features/connectivity/generic-http-client) aware of connectivity abstractions'
+    }
+  },
+  {
     name: '[OData code generator](https://www.odata.org/documentation/)',
     category: 'OData',
     java: {
@@ -296,7 +311,7 @@ export const features = [
     }
   },
   {
-    name: 'Principal propagation',
+    name: '[Principal propagation](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e2cbb48def4342048362039cc157b12e.html?q=principal)',
     category: 'Connectivity',
     java: {
       status: ':heavy_check_mark:',
@@ -305,7 +320,7 @@ export const features = [
     },
     js: {
       status: ':heavy_check_mark:',
-      docsLink: ``,
+      docsLink: `[docs](${baseUrl}/js/features/connectivity/on-premise#principal-propagation)`,
       note: ''
     }
   },
@@ -337,7 +352,36 @@ export const features = [
       docsLink: `[docs](${baseUrl}/js/features/cli/overview)`,
       note: ''
     }
+  },
+  {
+    name: 'MDI',
+    category: 'MDI',
+    java: {
+      status: ':bulb:',
+      docsLink: ``,
+      note: `Internal only or allow listed`
+    },
+    js: {
+      status: ':x:',
+      docsLink: ``,
+      note: 'Planned if requested'
+    }
+  },
+  {
+    name: 'Deploy with Confidence',
+    category: 'Runtimes',
+    java: {
+      status: ':bulb:',
+      docsLink: ``,
+      note: `Internal only or allow listed`
+    },
+    js: {
+      status: ':x:',
+      docsLink: ``,
+      note: 'Planned if requested'
+    }
   }
+
 ];
 
 /**
