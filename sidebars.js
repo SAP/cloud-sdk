@@ -34,7 +34,7 @@ module.exports = {
           },
           {
             type: 'category',
-            label: 'REST',
+            label: 'OpenAPI',
             items: [
               'java/features/rest/overview',
               'java/features/rest/generate-rest-client',
