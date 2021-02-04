@@ -170,17 +170,19 @@ See the section on isolation levels under [Resilience](https://sap.github.io/clo
 ### Removing Cache Entries Manually
 
 The SAP Cloud SDK offers different possibilities to let you remove cached entries manually.
-First of all, you may remove entries that are associated with a specific tenant and/or principal by:
+First of all, you may remove individual cache entries by: 
 
 ```java
-// tenant/principal aware
+// respect tenant/principal and parameter isolation
 ResilienceDecorator.clearCache(resilienceConfig);
 ```
+
+This operation is implicitly tenant/principal aware and also considers parameters defined in the `CacheConfiguration` when choosing which entries to remove.
 
 Furthermore, should you need to remove all entries from a cache, you may use:
 
 ```java
-// disregards tenant/principal isolation
+// disregards tenant/principal and parameter isolation
 ResilienceDecorator.clearAllCacheEntries(resilienceConfig);
 ```
 
