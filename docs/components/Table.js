@@ -27,7 +27,9 @@ export default function Table({ columns, data }) {
         {headerGroups.map(headerGroup => (
           <tr key={headerGroup.key} {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
-              <th key={column.key}  {...column.getHeaderProps()}>{column.render('Header')}</th>
+              <th key={column.key} {...column.getHeaderProps()}>
+                {column.render('Header')}
+              </th>
             ))}
           </tr>
         ))}
