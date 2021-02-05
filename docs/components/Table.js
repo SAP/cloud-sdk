@@ -25,9 +25,9 @@ export default function Table({ columns, data }) {
     <table {...getTableProps()}>
       <thead>
         {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
+          <tr key={headerGroup.key} {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+              <th key={column.key}  {...column.getHeaderProps()}>{column.render('Header')}</th>
             ))}
           </tr>
         ))}
@@ -36,10 +36,10 @@ export default function Table({ columns, data }) {
         {rows.map((row, i) => {
           prepareRow(row);
           return (
-            <tr {...row.getRowProps()}>
+            <tr key={row.key} {...row.getRowProps()}>
               {row.cells.map(cell => {
                 return (
-                  <td {...cell.getCellProps()}>
+                  <td key={cell.key} {...cell.getCellProps()}>
                     <ReactMarkdown plugins={[gfm, emoji]}>
                       {cell.value}
                     </ReactMarkdown>
