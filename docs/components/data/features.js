@@ -311,7 +311,8 @@ export const features = [
     }
   },
   {
-    name: '[Principal propagation](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e2cbb48def4342048362039cc157b12e.html?q=principal)',
+    name:
+      '[Principal propagation](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e2cbb48def4342048362039cc157b12e.html?q=principal)',
     category: 'Connectivity',
     java: {
       status: ':heavy_check_mark:',
@@ -381,7 +382,6 @@ export const features = [
       note: 'Planned if requested'
     }
   }
-
 ];
 
 /**
@@ -390,18 +390,26 @@ export const features = [
 export const ODataFeatures = [
   {
     name: 'Get an Entity by Key',
-    type: 'GET',
-    reference:
-      '[Get ](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_Entity)',
+    type: 'CRUD',
     java: {
-      v2: ':heavy_check_mark:',
-      v4: ':heavy_check_mark:',
-      docsLink: `${baseUrl}/java/features/odata/overview`
+      v2: {
+        status: ':heavy_check_mark:',
+        docs: ''
+      },
+      v4: {
+        status: ':heavy_check_mark:',
+        docs: ''
+      }
     },
     js: {
-      v2: ':heavy_check_mark:',
-      v4: ':heavy_check_mark:',
-      docsLink: `${baseUrl}/js/features/odata/overview`
+      v2: {
+        status: ':heavy_check_mark:',
+        docs: ''
+      },
+      v4: {
+        status: ':heavy_check_mark:',
+        docs: ''
+      }
     }
   }
 ];
