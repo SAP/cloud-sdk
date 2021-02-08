@@ -141,7 +141,13 @@ We highly recommend regularly updating to the latest SDK version. It will help y
            .end() // End nested structure
        .end();
   ```
-
+- Update the OData VDM to the [newest release 2102 of SAP S/4HANA Cloud](https://news.sap.com/2021/02/sap-s4hana-cloud-2102-empowering-businesses-seize-opportunities/). This includes completely new services (available as usual in packages `com.sap.cloud.sdk.s4hana.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types. The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud) with the exception of the following services:
+  - (OData V2) _Purchase Requisition_ - `API_PURCHASEREQ_PROCESS_SRV`
+  - (OData V2) _Production Order Confirmation_ - `API_PROD_ORDER_CONFIRMATION_2_SRV`
+  - (OData V2) _Process Order Confirmation_ - `API_PROC_ORDER_CONFIRMATION_2_SRV`
+  - (OData V2) _Attachments_ - `API_CV_ATTACHMENT_SRV`
+  - (OData V4) _Contract Accounting: Invoices of Business Partner_ - `API_CABUSPARTINVOICE_0001`
+  
 ### Improvements
 
 - `ResilienceDecorator.clearCache(ResilienceConfiguration)` does now also respect parameters defined in the `ResilienceConfiguration.CacheConfiguration` when selecting cache entries to clear.
