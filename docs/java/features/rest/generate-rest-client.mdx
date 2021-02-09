@@ -74,6 +74,24 @@ Please note that the version of the above plugin must be specified at least once
 Also, the version of the plugin should be the same as of the SAP Cloud SDK.
 We recommend using a Maven property for defining the version of both the Maven plugin and the SAP Cloud SDK BOM.
 
+### Customizing the Generated Code
+
+The SAP Cloud SDK offers further customization of the generated code via [OpenAPI vendor exentsions](https://swagger.io/docs/specification/openapi-extensions/).
+
+#### Method Names
+
+Use the property `x-sap-cloud-sdk-operation-name` to specify the method name for an operation:
+
+```yml
+/operation/path:
+  get:
+    summary: My Operation.
+    x-sap-cloud-sdk-operation-name: performMyOperation
+    operationId: myOperation
+```
+
+This field is optional and the generator will fall back to using the `operationId` if not present.
+
 ### Generating Java Client Library for Multiple OpenAPI Specifications
 
 This Maven plugin processes one OpenAPI specification per execution.
