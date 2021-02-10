@@ -110,6 +110,11 @@ module.exports = {
               href: 'https://www.npmjs.com/search?q=sap%2Fsap-cloud-op*'
             }
           ]
+        },
+        {
+          label: 'Feature Matrix',
+          position: 'left',
+          to: 'docs/overview/cloud-sdk-feature-matrix'
         }
       ]
     },
