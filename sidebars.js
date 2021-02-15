@@ -162,7 +162,6 @@ module.exports = {
               'js/features/openapi/execute-openapi-request'
             ]
           },
-          'js/features/error-handling',
           {
             type: 'category',
             label: 'SAP Cloud SDK CLI',
@@ -172,7 +171,9 @@ module.exports = {
               'js/features/cli/package',
               'js/features/cli/generator'
             ]
-          }
+          },
+          'js/features/error-handling',
+          'js/features/eslint-configuration'
         ]
       },
       {
