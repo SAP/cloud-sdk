@@ -49,6 +49,130 @@ We highly recommend regularly updating to the latest SDK version. It will help y
 ### Fixed issues
 -->
 
+## 3.38.0 - February 11, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.38.0) | [Javadoc](https://help.sap.com/doc/cfa38ab94e4f481298556d6fdaf3672b/1.0/en-US/index.html)
+
+### Compatibility Notes
+
+- The method `getHeaders(DestinationProperties)` of extension API `DestinationHeaderProvider` is deprecated but still functional.
+  Please implement `getHeaders(DestinationRequestContext)` instead.
+  The new argument allows accessing the request specific `URI` as well as the original `DestinationProperties`.
+- The method `ResilienceDecorator#invalidateCache` is deprecated but still functional.
+  Please use `ResilienceDecorator#clearCache` for tenant aware cache invalidation or `ResilienceDecorator#clearAllCacheEntries` to clear all entries for all tenants and principals.
+- As part of the update of the OData VDM to SAP S/4HANA Cloud 2102 a few operations were removed. The operations were never supported by the S/4 system (like CRUD support for some entities), so no existing functionality is affected. The following services are affected:
+  - _Nota Fiscal – Create, Update_ - `API_LOGBR_NOTAFISCAL_SRV`
+  - _Purchase Contracts_ - `API_PURCHASECONTRACT_PROCESS_SRV`
+  - _Outbound Delivery (A2X)_ - `API_OUTBOUND_DELIVERY_SRV_0002`
+  
+### New Functionality
+
+- We introduced a new API on table parameters of `BapiRequest`.
+  When a table uses a domain-type as row-type there are no field names to refer to.
+  But such a table can be treated as a one-dimensional vector of primitive values, e.g.:
+
+  ```java
+  new BapiRequest("BAPI_DEMO", true)
+    .withExportingTable("DEMO_TABLE", "BAPI_DEMO_TAB01")
+      .asVector()
+      .row("CC01")
+      .row("CC02")
+      .row("CC03")
+      .end();
+  ```
+
+- We now support the `SAMLAssertion` authentication type on Cloud Foundry.
+  Refer to the [help page](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/d81e1683bd434823abf3ceefc4ff157f.html) for more detail on the `SAMLAssertion` authentication type.
+- We introduced a new API to build a `Destination` for connecting to services on Cloud Foundry.
+  The information will be read from the `VCAP_SERVICES` environment variable at runtime.
+  For certain authentication types i.e. `NoAuthentication` and `OAuth2ClientCredentials` this API eliminates the need to manually create a destination in the CF account for connecting to services.
+
+  Example:
+
+  ```java
+  final Map<String, String> mapping =
+        ScpCfServiceDestinationLoader.buildClientCredentialsMapping(
+          "credentials.endpoints.service_rest_url",
+          "credentials.uaa.clientid",
+          "credentials.uaa.clientsecret",
+          "credentials.endpoints.token_url");
+  ```
+
+  `ScpCfServiceDestinationLoader.buildClientCredentialsMapping` creates a mapping for loading a destination and provides JSON paths for all required destination properties.
+
+  ```java
+  final HttpDestination destination =
+        ScpCfServiceDestinationLoader.getDestinationForService(
+          "label",
+          "serviceBindingName",
+          AuthenticationType.OAUTH2_CLIENT_CREDENTIALS,
+          mapping);
+  ```
+
+  For certain services (only workflow for now), we provide further convenience that skips the need to provide the `mapping` explicitly.
+  Example:
+
+  ```java
+  final HttpDestination destination =
+        ScpCfServiceDestinationLoader.getDestinationForService(
+          ScpCfServiceDestinationLoader.CfServices.WORKFLOW,
+          "my-workflow");
+  ```
+
+- We introduced a new API to construct a `ScpCfDestinationLoader` that allows overriding the default timeout for the Time Limiter resilience pattern.
+  If not specified, requests will automatically timeout after 6 seconds.
+
+- We added support for recursive tables and structures in parameters of `BapiRequest` API for both protocols: _JCo_ and _SOAP_. Example:
+  ```diff
+  final BapiRequest bapiReqauest = new BapiRequest("DEMO_BAPI")
+      .withExportingTable("TABLE_PARAMETER1","ABC_T_PARAM1" )
+      .row()
+      .field("ROW_UUID","STRING","foobar")
+      //Start nested table
+  +   .table("TABLE_NESTED1","ABC_T_NESTED1")
+  +       .row()
+  +       .field("NESTED_FIELD1","STRING","john")
+  +       .field("NESTED_FIELD2","STRING","doe")
+  +       .end() // End nested table
+       // START nested structure
+       .fields("NESTED_STRUCTURE", "NESTED_STRUCTURE_TYPE")
+           .field("latitude", "Axis", "52")
+           .field("longitude", "Axis", "13")
+           .end() // End nested structure
+       .end();
+  ```
+- We updated the [OData type-safe client also known as a VDM](java/features/odata/overview.mdx) to the [newest release 2102 of SAP S/4HANA Cloud](https://news.sap.com/2021/02/sap-s4hana-cloud-2102-empowering-businesses-seize-opportunities/). This includes completely new services (available as usual in packages `com.sap.cloud.sdk.s4hana.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types. The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud) with the exception of the following services:
+  - (OData V2) _Purchase Requisition_ - `API_PURCHASEREQ_PROCESS_SRV`
+  - (OData V2) _Production Order Confirmation_ - `API_PROD_ORDER_CONFIRMATION_2_SRV`
+  - (OData V2) _Process Order Confirmation_ - `API_PROC_ORDER_CONFIRMATION_2_SRV`
+  - (OData V2) _Attachments_ - `API_CV_ATTACHMENT_SRV`
+  - (OData V4) _Contract Accounting: Invoices of Business Partner_ - `API_CABUSPARTINVOICE_0001`
+  
+### Improvements
+
+- `ResilienceDecorator.clearCache(ResilienceConfiguration)` does now also respect parameters defined in the `ResilienceConfiguration.CacheConfiguration` when selecting cache entries to clear.
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [SAP CP Spring XSUAA Security Library](https://github.com/SAP/cloud-security-xsuaa-integration/tree/master/spring-xsuaa) from `2.8.0`to `2.8.3`
+  - Other dependency updates:
+    - Minor version updates:
+      - Update Spring from `5.2.10.RELEASE` to `5.3.2`
+      - Update Spring Security from `5.3.5.RELEASE` to `5.4.2`
+      - Update Mockito from `3.7.0` to `3.7.7`
+      - Update AssertJ from `3.18.1` to `3.19.0`
+      - Update Fabric SDK for Java from `2.2.4` to `2.2.5`
+      - Update Resilience4J from `1.6.1` to `1.7.0`
+      - Update Java JWT Java from `3.12.0` to `3.12.1`
+      - Update PMD from `6.30.0` to `6.31.0`
+      - Update Lombok from `1.18.16` to `1.18.18`
+      - Update Jetty from `9.4.35.v20201120` to `9.4.36.v20210114`
+
+### Fixed Issues
+
+- We fixed an issue with OData V4 update requests where the serialization of primitives with types like Integer, Boolean, and Double leads to null values.
+- We fixed an issue with the JCo serialization of BAPI requests, where adding field parameter values of type `ErpType` led to an exception.
+
 ## 3.37.0 - January 28, 2021
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.37.0) | [Javadoc](https://help.sap.com/doc/9e7b665dbf6149ec964c148ec9bf6641/1.0/en-US/index.html)

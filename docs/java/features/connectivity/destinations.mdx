@@ -35,7 +35,9 @@ DestinationAccessor.getDestination("my-destination");
 This will look up the destination in the destination service if the application is running on SAP Cloud Platform.
 Other sources like the environment variables are also considered.
 
-We provide support for the following authentication types:
+## Supported Authentication Flows
+
+We provide support for the following authentication types on Business Technology Platform - Cloud Foundry.
 
 | Authentication Type                                                                                                                                                           | Parameter Name                                         |
 | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------- |
@@ -427,6 +429,41 @@ Furthermore, add the dependency `com.sap.cds:cds-integration-cloud-sdk` to your 
 </TabItem>
 
 </Tabs>
+
+#### Skip Destination Creation Step for Certain Authentication Types on Cloud Foundry
+
+For certain authentication types i.e. `NoAuthentication` and `OAuth2ClientCredentials` there is an API that eliminates the need to manually create a destination in the CF account for connecting to services.
+
+  Example:
+
+  ```java
+  final Map<String, String> mapping =
+        ScpCfServiceDestinationLoader.buildClientCredentialsMapping(
+          "credentials.endpoints.service_rest_url",
+          "credentials.uaa.clientid",
+          "credentials.uaa.clientsecret",
+          "credentials.endpoints.token_url");
+  ```
+
+  `ScpCfServiceDestinationLoader.buildClientCredentialsMapping` creates a mapping for loading a destination and provides JSON paths for all required destination properties.
+
+  ```java
+  final HttpDestination destination =
+        ScpCfServiceDestinationLoader.getDestinationForService(
+          "label",
+          "serviceBindingName",
+          AuthenticationType.OAUTH2_CLIENT_CREDENTIALS,
+          mapping);
+  ```
+
+For certain services (only BTP Workflow service for now), we provide further convenience that skips the need to provide the `mapping` explicitly.
+  Example:
+
+  ```java
+  final HttpDestination destination =
+        ScpCfServiceDestinationLoader.getDestinationForService(
+          ScpCfServiceDestinationLoader.CfServices.WORKFLOW,
+          "my-workflow");
 
 ##### Enable Access to SAP Cloud Platform Connectivity Service
 
