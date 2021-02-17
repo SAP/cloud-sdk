@@ -44,7 +44,7 @@ The SAP Cloud SDK provides archetypes based on [Spring](https://spring.io/) and 
 
 :::note
 
-Please note the mentioned archetypes work out-of-the-box for Cloud Foundry.
+The mentioned archetypes work out-of-the-box for Cloud Foundry.
 For Neo platform we provide an archetype `scp-neo-javaee7` for only servlet based projects.
 
 :::
@@ -297,6 +297,10 @@ For a Spring based project please ensure that the application is annotated to sc
 Check the logs during application startup to ensure the listeners got registered.
 Also please check [the Spring version](https://mvnrepository.com/artifact/com.sap.cloud.sdk/sdk-bom/latest) declared in the SAP Cloud SDK BOM doesn't clash with your version of Spring.
 
+:::note Spring Support for Cloud Foundry
+For Spring based projects we provide out-of-the-box support only on Cloud Foundry with archetype `scp-cf-spring`.
+:::
+
 </TabItem>
 <TabItem value="tomee">
 
@@ -307,8 +311,9 @@ Check the logs during application startup to ensure the listeners got registered
 </TabItem>
 </Tabs>
 
-:::note
-Please note for Spring based projects we provide out-of-the-box support only on Cloud Foundry with archetype `scp-cf-spring`.
+:::note SAP Cloud SDK Modules Bill-of-Material
+By default, the SAP Cloud SDK archetypes reference the SAP Cloud SDK Bill-of-Material `sdk-bom`, which manages dependency versions for all SAP Cloud SDK modules and transitive dependencies.
+If you face dependency conflicts, you can instead try using the SAP Cloud SDK Modules Bill-of-Material `sdk-modules-bom` in the `dependencyManagement` section of your Maven POM file.
 :::
 
 ## Next Steps
