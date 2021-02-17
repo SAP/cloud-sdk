@@ -1,13 +1,14 @@
-import React from 'react';
-import classnames from 'classnames';
-import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import styled from 'styled-components';
 import useBaseUrl from '@docusaurus/useBaseUrl';
-import styles from './styles.module.css';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import Layout from '@theme/Layout';
+import classnames from 'classnames';
+import React from 'react';
 import MvnBadge from '../sap/sdk-java/MvnBadge';
 import BuildBadge from '../sap/sdk-js/BuildBadge';
 import LicenseBadge from '../sap/sdk-js/LicenseBadge';
+import styles from './styles.module.css';
 
 const features = [
   {
@@ -51,6 +52,41 @@ const features = [
     )
   }
 ];
+
+let sdkFeatures = {
+  js: {
+    img: 'img/java-black.svg'
+  },
+  java: {
+    img: 'img/js-black.svg'
+  }
+};
+
+let FlexCol = styled.div.attrs(props => ({
+  className: 'col'
+}))`
+  display: felx;
+  align-items: center;
+  justify-content: center;
+`;
+
+let SectionDividerCol = styled(FlexCol)`
+  background-color: var(--ifm-color-secondary-light);
+  color: var(--ifm-color-primary-dark);
+`;
+
+let FeatImg = styled.div`
+  padding: 1rem;
+  width: 70%;
+`;
+
+let H2 = styled.h2`
+  font-size: 2.5rem;
+  padding: 1.5rem;
+  @media (max-width: 997px) {
+    font-size: 2rem;
+  }
+`;
 
 function Feature({ imageUrl, link, title, description, badge }) {
   const imgUrl = useBaseUrl(imageUrl);
@@ -111,6 +147,9 @@ function Home() {
         </div>
       </header>
       <main>
+        <SectionDividerCol title="Supported Programming Languages">
+          <H2>Supported Programming Languages</H2>
+        </SectionDividerCol>
         {features && features.length && (
           <section className={styles.features}>
             <div className="container">
@@ -122,6 +161,36 @@ function Home() {
             </div>
           </section>
         )}
+        <SectionDividerCol title="OData Type-safe Client & Code Generator">
+          <H2>OData: Type-safe Client & Code Generator</H2>
+        </SectionDividerCol>
+
+        <SectionDividerCol title="Developers to Developers Support">
+          <H2>First Class Support</H2>
+        </SectionDividerCol>
+        <div className="container">
+          <div className="row">
+            <div className="col">
+              <FlexCol>
+                <FeatImg>
+                  <img
+                    src={useBaseUrl('img/feat/feat-support.svg')}
+                    alt="Image alt text"
+                    title="Logo Title Text 1"
+                  />
+                </FeatImg>
+              </FlexCol>
+            </div>
+            <FlexCol>
+              <ul>
+                <li>Done by Developers for Developers!</li>
+                <li>Support is 1st class citizen</li>
+                <li>Public GutHub for the Issues</li>
+                <li>More convenient channels</li>
+              </ul>
+            </FlexCol>
+          </div>
+        </div>
       </main>
     </Layout>
   );
