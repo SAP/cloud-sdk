@@ -34,15 +34,15 @@ Add the package `@sap/cloud-sdk-vdm-business-partner-service` to your package.js
 import {BusinessPartner} from '@sap/cloud-sdk-vdm-business-partner-service'
 
 async function callApi(){
-    const result await BusinessPartner.requestBuilder().getAll().execute(myDest)
-    console.log(result)
+  const result await BusinessPartner.requestBuilder().getAll().execute(myDest)
+  console.log(result)
 }
 ```
 
 :::note
 For the destination lookup, the SAP Cloud SDK relies on `Node.js` functionality like `process.env` for example.
-However, the request building, execution, and result parsing does not require any `Node.js` modules and can be used in the front-end.
-Hence you have to create the destination variable `myDest` manually.
+However, the request building, execution, and result parsing do not require any `Node.js` modules and can be used in the front end.
+Hence, you have to create the destination variable `myDest` manually.
 :::
 
 When you run `npm run build` your project should compile.
@@ -78,11 +78,11 @@ For productive usage, the methods mentioned above for running locally are of cou
 You simply configure the `xs-app.json` of the used app-router with an entry like this:
 
 ```
- {
-    "source": "/REMOTE-SYSTEM-IDENTIFIER/(.*)",
-    "target": "/$1",
-    "destination": "DESTINATION-NAME-ON-CF"
-  }
+{
+  "source": "/REMOTE-SYSTEM-IDENTIFIER/(.*)",
+  "target": "/$1",
+  "destination": "DESTINATION-NAME-ON-CF"
+}
 ```
 
 and then in your application simply define the destination as:
@@ -111,51 +111,52 @@ Using such a switch you can easily adjust the value of the destination for the t
 ## Workaround
 
 Currently, we are facing the issue, that during the compilation from TS to JS the `Node.js` parts cause problems even if they are not used.
-We hope to resolve these issues in the future but here is a workaround:
+We hope to resolve these issues in the future but for now, here is a workaround:
 
-- Include `@angular-builders/custom-webpack` to the `devDependencies`
+- Include `@angular-builders/custom-webpack` in the `devDependencies`
 - Create a custom webpack configuration named `node-webpack.config.js` and list the following node modules:
 
 ```
-module.exports={
-     node: {
-       crypto: true,
-       stream: true,
-       zlib: true,
-       path: true,
-       os: true,
-       http: true,
-       https: true
-     }
-   }
+module.exports = {
+  node: {
+    crypto: true,
+    stream: true,
+    zlib: true,
+    path: true,
+    os: true,
+    http: true,
+    https: true
+  }
+}
 ```
 
 - In the `angular.json` adjust the `build` target to use the custom builder:
 
 ```
  "build": {
-          "builder": "@angular-builders/custom-webpack:browser",
-          "options": {
-            "customWebpackConfig": {
-              "path": "./node-webpack.config.js"
-            }...
+   "builder": "@angular-builders/custom-webpack:browser",
+   "options": {
+     "customWebpackConfig": {
+       "path": "./node-webpack.config.js"
+     }
+  ...
 ```
 
-- In the `angular.json adjust the `serve` target to use the custom builder as well:
+- In the `angular.json` adjust the `serve` target to use the custom builder as well:
 
 ```
  "serve": {
-          "builder": "@angular-builders/custom-webpack:dev-server",
+   "builder": "@angular-builders/custom-webpack:dev-server",
 ```
 
-- In the package.json exclude the node modules not existing in the browser:
+- In the package.json exclude the node modules, that do not exist in the browser:
 
 ```
 "browser": {
-      "fs": false,
-      "net": false,
-      "tls": false
-    }
+  "fs": false,
+  "net": false,
+  "tls": false
+}
 ```
 
 Now the project should build and the run locally.

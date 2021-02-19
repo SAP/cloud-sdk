@@ -2,7 +2,7 @@ module.exports = {
   title: 'SAP Cloud SDK',
   tagline:
     'The one-stop shop for developing and extending SAP applications in the cloud.',
-  url: 'https://github.com/SAP/cloud-sdk',
+  url: 'https://sap.github.io',
   baseUrl: '/cloud-sdk/',
   favicon: 'img/favicon.ico',
   organizationName: 'SAP',
@@ -110,6 +110,11 @@ module.exports = {
               href: 'https://www.npmjs.com/search?q=sap%2Fsap-cloud-op*'
             }
           ]
+        },
+        {
+          label: 'Feature Matrix',
+          position: 'left',
+          to: 'docs/overview/cloud-sdk-feature-matrix'
         }
       ]
     },

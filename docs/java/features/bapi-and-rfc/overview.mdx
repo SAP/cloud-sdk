@@ -314,6 +314,46 @@ Access the test app through your browser with the address comprising of the full
 You should see the login prompt of the protected backend.
 After authentication, the servlet is invoked and you should see the servlet response printing the cost center details.
 
+## Advanced BAPI Calls
+
+### Use of API for Table Parameters of a BapiRequest
+
+When a table uses a domain-type as row-type there are no field names to refer to.
+But such a table can be treated as a one-dimensional vector of primitive values, e.g.:
+
+```java
+new BapiRequest("BAPI_DEMO", true)
+  .withExportingTable("DEMO_TABLE", "BAPI_DEMO_TAB01")
+    .asVector()
+    .row("CC01")
+    .row("CC02")
+    .row("CC03")
+    .end();
+```
+
+### Recursive tables and structures in parameters of a BapiRequest
+
+The following example demonstrates the API for recursive tables and structures in parameters of `BapiRequest` for both protocols: _JCo_ and _SOAP_.
+
+```diff
+final BapiRequest bapiReqauest = new BapiRequest("DEMO_BAPI")
+    .withExportingTable("TABLE_PARAMETER1","ABC_T_PARAM1" )
+    .row()
+    .field("ROW_UUID","STRING","foobar")
+    //Start nested table
++   .table("TABLE_NESTED1","ABC_T_NESTED1")
++       .row()
++       .field("NESTED_FIELD1","STRING","john")
++       .field("NESTED_FIELD2","STRING","doe")
++       .end() // End nested table
+     // START nested structure
+     .fields("NESTED_STRUCTURE", "NESTED_STRUCTURE_TYPE")
+         .field("latitude", "Axis", "52")
+         .field("longitude", "Axis", "13")
+         .end() // End nested structure
+     .end();
+```
+
 ## Boundary Conditions and Edge Cases
 
 ### JCo Classes Not Found at Runtime
