@@ -2,13 +2,16 @@ In some cases it makes sense for you to store your data as a JSON object, that i
 If you are looking for a way to create an entity from a JSON response, that you got from an OData service, you are probably looking for <!--[entity deserialization]().-->
 
 This would be the JSON representation for the data above:
+
 ```json
 {
   "firstName": "Peter",
   "lastName": "Pan",
-  "toBusinessPartnerAddress": [{
-    "country": "Neverland"
-  }]
+  "toBusinessPartnerAddress": [
+    {
+      "country": "Neverland"
+    }
+  ]
 }
 ```
 
@@ -16,14 +19,18 @@ You can use this data to build an entity using the `.fromJson` function.
 The example below shows how you would create the data from above based on a JSON representation.
 
 ```ts
-import { BusinessPartner, BusinessPartnerAddress } from '@sap/cloud-sdk-vdm-business-partner-service';
+import {
+  BusinessPartner,
+  BusinessPartnerAddress
+} from '@sap/cloud-sdk-vdm-business-partner-service';
 
-const businessPartner = BusinessPartner.builder()
-  .fromJson({
-    firstName: 'Peter',
-    lastName: 'Pan',
-    toBusinessPartnerAddress: [{
+const businessPartner = BusinessPartner.builder().fromJson({
+  firstName: 'Peter',
+  lastName: 'Pan',
+  toBusinessPartnerAddress: [
+    {
       country: 'Neverland'
-    }]
-  });
+    }
+  ]
+});
 ```

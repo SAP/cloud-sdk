@@ -2,18 +2,22 @@ In OData entity collections are the resource against which you execute requests 
 The SAP Cloud SDK operates on entity classes, that represent those resources.
 
 In OData the JSON representation of a single business parter could be something like this:
+
 ```json
 {
   "FirstName": "Peter",
   "LastName": "Pan",
-  "to_BusinessPartnerAddress": [{
-    "Country": "Neverland"
-  }]
+  "to_BusinessPartnerAddress": [
+    {
+      "Country": "Neverland"
+    }
+  ]
 }
 ```
 
 When using the SDK this entity would be represented as an instance of the `BusinessPartner` entity class from the according business partner service.
 The properties of entity class instances are held in camel case as is common in JavaScript:
+
 ```bash
 BusinessPartner {
   firstName: 'Peter',

@@ -39,4 +39,3 @@ export function GetByKey() {
 export function Update() {
   return <UpdateContent />;
 }
-
