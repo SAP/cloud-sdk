@@ -17,24 +17,23 @@ keywords:
 
 ## Generate a Typed OpenAPI Client With OpenAPI Generator
 
-The SAP Cloud SDK offers a REST client generator as a Maven plugin which can be used to generate a client library for a REST API based on its OpenAPI specification.
-The REST generator is a wrapper around the public open-source [OpenAPI Generator](https://github.com/OpenAPITools/openapi-generator) where we have adjusted the `mustache` templates to integrate the generated client library with the SAP Cloud SDK core.
+The SAP Cloud SDK offers an OpenAPI client generator as a Maven plugin which can be used to generate a client library for a REST API based on its OpenAPI specification.
+The OpenAPI generator is a wrapper around the public open-source [OpenAPI Generator](https://github.com/OpenAPITools/openapi-generator) where we have adjusted the `mustache` templates to integrate the generated client library with the SAP Cloud SDK core.
+
+:::success Announcing General availability
+The OpenAPI client generator is now generally available and can be used for productive usages.
+:::
 
 The generated Java classes need the following dependency to be present in your project:
 
 ```xml
 <dependency>
 	<groupId>com.sap.cloud.sdk.datamodel</groupId>
-	<artifactId>rest-core</artifactId>
+	<artifactId>openapi-core</artifactId>
 </dependency>
 ```
 
-In order to use the generated client library, either the SAP Cloud SDK BOM should be part of your project's `<dependencyManagement>` section or the version for the `rest-core` artifact must be mentioned explicitly here.
-
-:::note
-Please note that the OpenAPI generator is not yet recommended for productive usage.
-It is an experimental preview from the SAP Cloud SDK.
-:::
+In order to use the generated client library, either the SAP Cloud SDK BOM should be part of your project's `<dependencyManagement>` section or the version for the `openapi-core` artifact must be mentioned explicitly here.
 
 ## Using the OpenAPI Generator Maven Plugin
 
@@ -43,7 +42,7 @@ To use the Maven plugin following XML snippet should be added to the POM file of
 ```xml
 <plugin>
 	<groupId>com.sap.cloud.sdk.datamodel</groupId>
-	<artifactId>rest-generator-maven-plugin</artifactId>
+	<artifactId>openapi-generator-maven-plugin</artifactId>
     <executions>
 		<execution>
 			<goals>
@@ -54,9 +53,9 @@ To use the Maven plugin following XML snippet should be added to the POM file of
 	</executions>
 	<configuration>
    		<inputSpec>${project.basedir}/sample.yaml</inputSpec>
-		<outputDirectory>${project.basedir}/restvdm</outputDirectory>
-        <apiPackage>com.mycompany.restvdm.sample.api</apiPackage>
-		<modelPackage>com.mycompany.restvdm.sample.model</modelPackage>
+		<outputDirectory>${project.basedir}/openapi</outputDirectory>
+        <apiPackage>com.mycompany.openapi.sample.api</apiPackage>
+		<modelPackage>com.mycompany.openapi.sample.model</modelPackage>
 		<apiMaturity>released</apiMaturity>
 		<logLevel>info</logLevel>
 		<!-- (Optional) You can add a custom copyright header:
@@ -89,7 +88,7 @@ As an example refer to the plugin XML below:
 ```xml
 <plugin>
 	<groupId>com.sap.cloud.sdk.datamodel</groupId>
-	<artifactId>rest-generator-maven-plugin</artifactId>
+	<artifactId>openapi-generator-maven-plugin</artifactId>
 	<executions>
 		<execution>
 			<id>generate-sample1-id</id>
@@ -111,9 +110,9 @@ As an example refer to the plugin XML below:
 		</execution>
 	</executions>
 	<configuration>
-		<apiPackage>com.mycompany.restvdm.sample.api</apiPackage>
-		<modelPackage>com.mycompany.restvdm.sample.api.model</modelPackage>
-		<outputDirectory>${project.basedir}/restvdm</outputDirectory>
+		<apiPackage>com.mycompany.openapi.sample.api</apiPackage>
+		<modelPackage>com.mycompany.openapi.sample.api.model</modelPackage>
+		<outputDirectory>${project.basedir}/openapi</outputDirectory>
 		<apiMaturity>released</apiMaturity>
 	</configuration>
 </plugin>
