@@ -157,6 +157,44 @@ For the simple case you would add `mockTestDestination(<destinationName>)` to yo
 }
 ```
 
+## Principal Propagation
+
+We have not discussed the authentication in the SAP S/4HANA system.
+Up to now, we assumed that the destination would contain all necessary information to authenticate the user in the SAP S/4HANA system.
+This is the case for the authentication type `BasicAuthentication` because the user and password are part of the destination configuration.
+Hence, the simple destination
+
+```
+destinations="[{"name": "<destinationName>","url": "<destinationUrl>"}]"
+```
+
+implicitly assumes basic authentication.
+If you want to use principal propagation you need to provide more information.
+Principal propagation means that the user identity after login to the cloud application is forwarded to the SAP S/4HANA system.
+This is achieved by passing on a JWT issued for the user.
+
+If you run your application in the local BAS you do not have such a JWT and you need to fetch it [manually](../../java/guides/cf-xsuaa.mdx).
+In a production environment, the JWT will be part of your request after the user logged in.
+Once you have the user JWT, include it in the proxy configuration of your destination:
+
+```JSON
+{
+    "name": "<destinationName>",
+    "url": "<destinationUrl>"}]",
+    "proxyType": "OnPremise",
+    "proxyConfiguration": {
+        "host": "localhost",
+        "port": "8887",
+        "headers": {
+            "SAP-Connectivity-Authentication": "Bearer <yourJWT>"}
+        }
+    }
+}
+```
+
+The proxy host and port are the values of the connectivity proxy provided by BAS.
+You can check the values via the HTTP_PROXY environment variable.
+
 ## Closing Remarks for Cloud Systems
 
 In case you have a cloud system like SAP S/4HANA Cloud or any other system on the internet you can follow the same approach.

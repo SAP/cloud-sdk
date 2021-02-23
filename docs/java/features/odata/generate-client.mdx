@@ -128,6 +128,12 @@ Use it by adding it to your `application/pom.xml` file under the `<plugin>` sect
                 <defaultBasePath>odata/v4/</defaultBasePath>
                 <compileScope>COMPILE</compileScope>
                 <serviceMethodsPerEntitySet>true</serviceMethodsPerEntitySet>
+                <!-- (Optional) You can add a custom copyright header:
+		        <copyrightHeader>Copyright (c) this year, my company</copyrightHeader>
+
+		        Or use the SAP copyright header:
+		        <sapCopyrightHeader>true</sapCopyrightHeader>
+		        -->
             </configuration>
         </execution>
     </executions>
@@ -157,6 +163,13 @@ Use it by adding it to your `application/pom.xml` file under the `<plugin>` sect
                 <packageName>com.mycompany.vdm</packageName>
                 <defaultBasePath>odata/v2/</defaultBasePath>
                 <compileScope>COMPILE</compileScope>
+                <serviceMethodsPerEntitySet>true</serviceMethodsPerEntitySet>
+                <!-- (Optional) You can add a custom copyright header:
+		        <copyrightHeader>Copyright (c) this year, my company</copyrightHeader>
+
+		        Or use the SAP copyright header:
+		        <sapCopyrightHeader>true</sapCopyrightHeader>
+		        -->
             </configuration>
         </execution>
     </executions>
@@ -288,6 +301,7 @@ The following parameters are available on the generator for both OData protocol 
 | Parameter                      | Default  | Description                                                      |
 | :----------------------------- | :------: | :--------------------------------------------------------------- |
 | `<compileScope>`               |  `NONE`  | Adds the generated sources to the compile or test phase          |
+| `<copyrightHeader>`            |  `null`  | Copyright header to be added at the top of generated files       |
 | `<deleteOutputDirectory>`      | `False`  | Target directory is deleted before code generation               |
 | `<defaultBasePath>`            |    -     | Base path of the exposed API                                     |
 | `<includeEntitySets>`          |    -     | Only generate classes for specific entity sets                   |
@@ -297,6 +311,7 @@ The following parameters are available on the generator for both OData protocol 
 | `<outputDirectory>`            | `output` | Output directory for generated sources                           |
 | `<overwriteFiles>`             | `False`  | Overwrite existing files                                         |
 | `<packageName>`                |    -     | Package name for the generated sources                           |
+| `<sapCopyrightHeader>`         | `False`  | Add the SAP copyright header (overrides `copyrightHeader`)       |
 | `<serviceNameMappingFile>`     |    -     | Determine service names from a given mapping file                |
 | `<serviceMethodsPerEntitySet>` | `False`  | Generate service methods per each entity set for one entity type |
 
@@ -307,8 +322,9 @@ More information is also available in the Javadoc of the generator implementatio
 
 | Parameter                          | Alias  |  Default | Description                                                      |
 | :--------------------------------- | :----: | :------: | :--------------------------------------------------------------- |
+| `--copyrightHeader <arg>`          |  none  |  `null`  | Copyright header to be added at the top of generated files       |
 | `--default-base-path <arg>`        |  `-b`  |    -     | Base path of the exposed API                                     |
-| `--delete-output-dir`              |  `-d`  | `False`  |  Target directory is deleted before code generation              |
+| `--delete-output-dir`              |  `-d`  | `False`  | Target directory is deleted before code generation               |
 | `--help`                           |  `-h`  |    -     | Print a help message.                                            |
 | `--input-dir <arg>`                |  `-i`  | `input`  | Location of the metadata files                                   |
 | `--include-entity-sets <arg>`      | `-ies` |    -     | Only generate classes for specific entity sets                   |
@@ -318,6 +334,7 @@ More information is also available in the Javadoc of the generator implementatio
 | `--output-dir <arg>`               |  `-o`  | `output` | Output directory for generated sources                           |
 | `--overwrite-files`                |  `-f`  | `False`  |  Overwrite existing files                                        |
 | `--package-name-prefix <arg>`      |  `-p`  |    -     | Package name for the generated sources                           |
+| `--sapCopyrightHeader`             |  none  | `False`  | Add the SAP copyright header (overrides `copyrightHeader`)       |
 | `--service-methods-per-entity-set` |  none  | `False`  | Generate service methods per each entity set for one entity type |
 
 For details leverage the `--help` option.
@@ -328,6 +345,7 @@ More information is also available in the Javadoc of the generator implementatio
 
 | Parameter                                  | Default  | Description                                                      |
 | :----------------------------------------- | :------: | :--------------------------------------------------------------- |
+| `copyrightHeader(String)`                  |  `null`  |  Copyright header to be added at the top of generated files      |
 | `deleteOutputDirectory()`                  | `False`  |  Target directory is deleted before code generation              |
 | `overwriteFiles()`                         | `False`  |  Overwrite existing files                                        |
 | `withDefaultBasePath(String)`              |    -     | Base path of the exposed API                                     |
@@ -338,6 +356,7 @@ More information is also available in the Javadoc of the generator implementatio
 | `withOutputDirectory(String)`              | `output` | Output directory for generated sources                           |
 | `withPackageName(String)`                  |    -     | Package name for the generated sources                           |
 | `withServiceNameMapping(String)`           |    -     | Determine service names from a given mapping file                |
+| `sapCopyrightHeader()`                     | `False`  | Add the SAP copyright header (overrides `copyrightHeader`)       |
 | `serviceMethodsPerEntitySet()`             | `False`  | Generate service methods per each entity set for one entity type |
 
 More details can be found on the Javadoc ([OData v2](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odata/generator/DataModelGenerator.html), [OData v4](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odatav4/generator/DataModelGenerator.html)).
