@@ -66,21 +66,6 @@ module.exports = {
               'java/features/resilience/resilience',
               'java/features/resilience/caching'
             ]
-          },
-          {
-            type: 'category',
-            label: 'SDK Extensions',
-            items: [
-              'java/features/extensions/extensions-supported-by-sap-cloud-sdk-for-java',
-              {
-                type: 'category',
-                label: 'Extension Library',
-                items: [
-                  'java/features/extensions/extension-library/curconv/sap-currency-conversion-extension-library-for-cloud-sdk-for-java'
-                  // 'java/features/extensions/extension-library/blockchain/sap-blockchain-extension-library-for-cloud-sdk-for-java',
-                ]
-              }
-            ]
           }
         ]
       },
@@ -109,6 +94,14 @@ module.exports = {
           'java/guides/tutorial-overview-sdk-java',
           'java/guides/sap-cloud-sdk-linux-how-to',
           'java/guides/cap-sdk-integration'
+        ]
+      },
+      {
+        type: 'category',
+        label: 'Extensions',
+        items: [
+          'java/extensions/extensions-supported-by-sap-cloud-sdk-for-java',
+          'java/extensions/sap-currency-conversion-extension-library-for-cloud-sdk-for-java'
         ]
       },
       {
@@ -184,6 +177,13 @@ module.exports = {
           'js/guides/bas-external-system',
           'js/guides/tutorial-overview-sdk-js',
           'js/guides/sdk-in-browser'
+        ]
+      },
+      {
+        type: 'category',
+        label: 'Extensions',
+        items: [
+          'js/extensions/currency-conversion'
         ]
       },
       {
