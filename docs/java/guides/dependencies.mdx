@@ -57,9 +57,14 @@ It helps in various ways:
 
 For these reasons we highly recommend using the `sdk-bom` in your project.
 
-:::note Alternative: SAP Cloud SDK Modules Bill-of-Material
+:::tip Alternative: SAP Cloud SDK Modules Bill-of-Material
 Besides the SAP Cloud SDK Bill-of-Material `sdk-bom` there is also the SAP Cloud SDK Modules Bill-of-Material `sdk-modules-bom`, which manages the version of all SAP Cloud SDK modules only.
 `sdk-modules-bom` does not manage versions of transitive dependencies and hence can be chosen to resolve dependency version conflicts.
+:::
+
+:::info SAP Cloud SDK Maven Plugins
+Please be aware that neither the `sdk-bom` nor the `modules-bom` will manage the versions of any Cloud SKD Maven plugins (like the `odata-generator-maven-plugin`) you may use.
+It is required to specify a version for such plugins explicitly, otherwise dependency conflicts may occur.
 :::
 
 ## Dealing With Dependency Conflicts
