@@ -427,7 +427,7 @@ export const extensions = [
     name: 'Currency conversion library',
     java: {
       status: ':heavy_check_mark:',
-      docsLink: `[docs](${baseUrl}/java/features/extensions/extension-library/curconv/sap-currency-conversion-extension-library-for-cloud-sdk-for-java)`
+      docsLink: `[docs](${baseUrl}/java/extensions/sap-currency-conversion-extension-library-for-cloud-sdk-for-java)`
     },
     js: {
       status: ':gear:'
