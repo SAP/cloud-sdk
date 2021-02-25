@@ -1,0 +1,31 @@
+In OData, entity collections are the resource against which you execute requests and CRUD operations.
+The SAP Cloud SDK operates on entity classes, that represent those resources.
+
+An OData JSON representation of a single business partner could be something like this:
+
+```json
+{
+  "FirstName": "Peter",
+  "LastName": "Pan",
+  "to_BusinessPartnerAddress": [
+    {
+      "Country": "Neverland"
+    }
+  ]
+}
+```
+
+When using the SAP Cloud SDK this entity would be represented as an instance of the `BusinessPartner` entity class from the according business partner service.
+The properties of entity class instances are held in camel case as is common in JavaScript:
+
+```bash
+BusinessPartner {
+  firstName: 'Peter',
+  lastName: 'Pan',
+  toBusinessPartnerAddress: [ BusinessPartnerAddress { country: 'Neverland' } ]
+}
+```
+
+OData responses, that contain entities are automatically deserialized to the respective entity class when using the SAP Cloud SDK.
+To execute create or update requests you have to build an instance of an entity class, that represents the data to be created or updated.
+There are three ways to build entities on your own as described below.
