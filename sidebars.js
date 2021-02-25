@@ -166,6 +166,7 @@ module.exports = {
             ]
           },
           'js/features/error-handling',
+          'js/features/logging',
           'js/features/eslint-configuration'
         ]
       },
