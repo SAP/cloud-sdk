@@ -355,25 +355,28 @@ final BapiRequest bapiReqauest = new BapiRequest("DEMO_BAPI")
 ```
 
 ## Clearing the Java Connector Cache
+
 The Java Connector library caches metadata about the BAPI interface to gain performance.
 In case the BAPI interface changes in the backend during the application runtime, the metadata in the cache and in the backend can become inconsistent.
 This inconsistency can lead to severe errors and difficult to understand exceptions.
 For such cases, the metadata cache can be cleared explicitly on different levels of granularity.
 
 You can clear the Java Connector cache per destination with the following Java API.
+
 ```java
 RemoteFunctionCache.clearCache(destination);
 ```
-This clears the cache for all BAPIs called over this destination. 
+
+This clears the cache for all BAPIs called over this destination.
 Upon invoking a BAPI over this destination with the cleared cache, the Java Connector will retrieve the metadata again and the consistency is recovered.
 
 You can also clear the cache for a Destination and a certain BAPI.
+
 ```java
 RemoteFunctionCache.clearCache(destination, "BAPI_COSTCENTER_CREATEMULTIPLE");
 ```
+
 This call clears the metadata cache of the selected BAPI for the given Destination.
-
-
 
 ## Boundary Conditions and Edge Cases
 
