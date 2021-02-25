@@ -102,7 +102,8 @@ final HttpDestination httpDestination =
 destination.asHttp().decorate(DefaultErpHttpDestination::new);
 ```
 
-This ensures the mapping of all SAP S/4HANA properties like `sap-client` and `sap-locale` as HTTP request headers.
+- This ensures the mapping of all SAP S/4HANA properties like `sap-client` and `sap-locale` as HTTP request headers.
+- In case **Principal Propagation** is specified as an authentication type for the destination the SAP Cloud SDK will automatically apply it.
 
 ## Registering Destinations at Runtime
 
@@ -264,7 +265,7 @@ final DestinationOptions options = DestinationOptions.builder().build();
 
 For a provider/subscriber setup, a [retrieval strategy](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/connectivity/ScpCfDestinationRetrievalStrategy.html) must be chosen according to your particular use case from:
 
-- `ALWAYS_SUBSCRIBER`
+- `ALWAYS_SUBSCRIBER` (default)
 - `ALWAYS_PROVIDER`
 - `SUBSCRIBER_THEN_PROVIDER`.
 

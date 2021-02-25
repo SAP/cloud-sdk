@@ -202,3 +202,35 @@ List<Map<String, Object>> listOfEntityFields = queryResult.asListOfMaps();
 ```
 
 This example is a great demonstration of how you can work around certain limitations of a type-safe client aka VDM, tackle advanced OData features, or even take care of misbehaving servers or OData standard deviations.
+
+## Call OData v4 Bound Functions and Actions
+
+Bound function and actions were freshly introduced in OData v4 specification.
+We'll soon provide a type-safe API to leverage these features in a convenient way.
+If you already require using this functionality, we have a low-level implementation in place that is capable of performing bound function and action calls.
+
+Below is a generic client example that you can use as a workaround:
+
+```java
+// this code will build the following URL:
+// "/service/Entity(key1='foo%2Fbar',key2=123)/Model.Function(param1='foo%2Fbar',param2=123)"
+
+ODataEntityKey key = new ODataEntityKey(ODataProtocol.V4)
+    .addKeyProperty("key1", "foo/bar")
+    .addKeyProperty("key2", 123);
+
+ODataFunctionParameters  params = new ODataFunctionParameters(ODataProtocol.V4)
+    .addKeyProperty("param1", "foo/bar")
+    .addKeyProperty("param2", 123);
+
+ODataResourcePath functionPath =
+    new ODataResourcePath()
+        .addSegment("Entity", key)
+        .addSegment("Model.Function", params);
+
+ODataRequestFunction request =
+    new ODataRequestFunction("/service", functionPath, null, ODataProtocol.V4);
+```
+
+This is essentially what happens under the hood when you are using the generated type-safe client code.
+When we release a support for type-safe calls you can simple replace this snippets with the fluent API.

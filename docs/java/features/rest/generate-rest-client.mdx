@@ -3,7 +3,7 @@ id: generate-rest-client
 title: Generate a Typed OpenAPI Client
 hide_title: false
 hide_table_of_contents: false
-sidebar_label: Generate Typed OpenAPI Client
+sidebar_label: Generate a Typed OpenAPI Client
 description: This article describes how to leverage the OpenAPI client generator to obtain Java classes from a service definition. These classes can then be used to build type-safe OpenAPI requests.
 keywords:
   - sap
@@ -17,24 +17,23 @@ keywords:
 
 ## Generate a Typed OpenAPI Client With OpenAPI Generator
 
-The SAP Cloud SDK offers a REST client generator as a Maven plugin which can be used to generate a client library for a REST API based on its OpenAPI specification.
-The REST generator is a wrapper around the public open-source [OpenAPI Generator](https://github.com/OpenAPITools/openapi-generator) where we have adjusted the `mustache` templates to integrate the generated client library with the SAP Cloud SDK core.
+The SAP Cloud SDK offers an OpenAPI client generator as a Maven plugin which can be used to generate a client library for a REST API based on its OpenAPI specification.
+The OpenAPI generator is a wrapper around the public open-source [OpenAPI Generator](https://github.com/OpenAPITools/openapi-generator) where we have adjusted the `mustache` templates to integrate the generated client library with the SAP Cloud SDK core.
+
+:::success Announcing General availability
+The OpenAPI client generator is now generally available and can be used in production environments.
+:::
 
 The generated Java classes need the following dependency to be present in your project:
 
 ```xml
 <dependency>
 	<groupId>com.sap.cloud.sdk.datamodel</groupId>
-	<artifactId>rest-core</artifactId>
+	<artifactId>openapi-core</artifactId>
 </dependency>
 ```
 
-In order to use the generated client library, either the SAP Cloud SDK BOM should be part of your project's `<dependencyManagement>` section or the version for the `rest-core` artifact must be mentioned explicitly here.
-
-:::note
-Please note that the OpenAPI generator is not yet recommended for productive usage.
-It is an experimental preview from the SAP Cloud SDK.
-:::
+In order to use the generated client library, either the SAP Cloud SDK BOM should be part of your project's `<dependencyManagement>` section or the version for the `openapi-core` artifact must be mentioned explicitly here.
 
 ## Using the OpenAPI Generator Maven Plugin
 
@@ -43,7 +42,7 @@ To use the Maven plugin following XML snippet should be added to the POM file of
 ```xml
 <plugin>
 	<groupId>com.sap.cloud.sdk.datamodel</groupId>
-	<artifactId>rest-generator-maven-plugin</artifactId>
+	<artifactId>openapi-generator-maven-plugin</artifactId>
     <executions>
 		<execution>
 			<goals>
@@ -54,11 +53,17 @@ To use the Maven plugin following XML snippet should be added to the POM file of
 	</executions>
 	<configuration>
    		<inputSpec>${project.basedir}/sample.yaml</inputSpec>
-		<outputDirectory>${project.basedir}/restvdm</outputDirectory>
-        <apiPackage>com.mycompany.restvdm.sample.api</apiPackage>
-		<modelPackage>com.mycompany.restvdm.sample.model</modelPackage>
+		<outputDirectory>${project.basedir}/openapi</outputDirectory>
+        <apiPackage>com.mycompany.openapi.sample.api</apiPackage>
+		<modelPackage>com.mycompany.openapi.sample.model</modelPackage>
 		<apiMaturity>released</apiMaturity>
 		<logLevel>info</logLevel>
+		<!-- (Optional) You can add a custom copyright header:
+		<copyrightHeader>Copyright (c) this year, my company</copyrightHeader>
+
+		Or use the SAP copyright header:
+		<sapCopyrightHeader>true</sapCopyrightHeader>
+		-->
 	</configuration>
 </plugin>
 ```
@@ -83,7 +88,7 @@ As an example refer to the plugin XML below:
 ```xml
 <plugin>
 	<groupId>com.sap.cloud.sdk.datamodel</groupId>
-	<artifactId>rest-generator-maven-plugin</artifactId>
+	<artifactId>openapi-generator-maven-plugin</artifactId>
 	<executions>
 		<execution>
 			<id>generate-sample1-id</id>
@@ -105,9 +110,9 @@ As an example refer to the plugin XML below:
 		</execution>
 	</executions>
 	<configuration>
-		<apiPackage>com.mycompany.restvdm.sample.api</apiPackage>
-		<modelPackage>com.mycompany.restvdm.sample.api.model</modelPackage>
-		<outputDirectory>${project.basedir}/restvdm</outputDirectory>
+		<apiPackage>com.mycompany.openapi.sample.api</apiPackage>
+		<modelPackage>com.mycompany.openapi.sample.api.model</modelPackage>
+		<outputDirectory>${project.basedir}/openapi</outputDirectory>
 		<apiMaturity>released</apiMaturity>
 	</configuration>
 </plugin>
@@ -117,12 +122,14 @@ As an example refer to the plugin XML below:
 
 The complete list of available parameters with their description is as follows:
 
-| Parameter           |  Default   | Required | Description                                                                                                                                                                                                                                                                                                                                                                     |
-| :------------------ | :--------: | :------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `<compileScope>`    |   `NONE`   |    No    | Adds the generated sources to the compile or test phase. Respective values are `COMPILE` and `TEST_COMPILE`                                                                                                                                                                                                                                                                     |
-| `<inputSpec>`       |     -      |   Yes    | Location of the OpenAPI specification file                                                                                                                                                                                                                                                                                                                                      |
-| `<outputDirectory>` |     -      |   Yes    | Output directory for generated sources                                                                                                                                                                                                                                                                                                                                          |
-| `<apiPackage>`      |     -      |   Yes    | Package name for the generated API classes                                                                                                                                                                                                                                                                                                                                      |
-| `<modelPackage>`    |     -      |   Yes    | Package name for the generated Model classes                                                                                                                                                                                                                                                                                                                                    |
-| `<apiMaturity>`     | `released` |    No    | Defines the maturity of the OpenAPI for which Java classes are generated. Possible values are `released` and `beta`. Please note if you define it as `beta` then [@Beta annotations](https://www.javadoc.io/doc/com.google.guava/guava/latest/com/google/common/annotations/Beta.html) are added to the generated classes which indicate that they are in an experimental state |
-| `<logLevel>`        |   `info`   |    No    | Defines the log level of the OpenAPI Generator. Possible values are `info` and `debug`                                                                                                                                                                                                                                                                                          |
+| Parameter              |  Default   | Required | Description                                                                                                                                                                                                                                                                                                                                                                     |
+| :--------------------- | :--------: | :------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `<apiPackage>`         |     -      |   Yes    | Package name for the generated API classes                                                                                                                                                                                                                                                                                                                                      |
+| `<apiMaturity>`        | `released` |    No    | Defines the maturity of the OpenAPI for which Java classes are generated. Possible values are `released` and `beta`. Please note if you define it as `beta` then [@Beta annotations](https://www.javadoc.io/doc/com.google.guava/guava/latest/com/google/common/annotations/Beta.html) are added to the generated classes which indicate that they are in an experimental state |
+| `<compileScope>`       |   `NONE`   |    No    | Adds the generated sources to the compile or test phase. Respective values are `COMPILE` and `TEST_COMPILE`                                                                                                                                                                                                                                                                     |
+| `<copyrightHeader>`    |   `null`   |    No    | Copyright header to be added at the top of generated files                                                                                                                                                                                                                                                                                                                      |
+| `<inputSpec>`          |     -      |   Yes    | Location of the OpenAPI specification file                                                                                                                                                                                                                                                                                                                                      |
+| `<logLevel>`           |   `info`   |    No    | Defines the log level of the OpenAPI Generator. Possible values are `info` and `debug`                                                                                                                                                                                                                                                                                          |
+| `<modelPackage>`       |     -      |   Yes    | Package name for the generated Model classes                                                                                                                                                                                                                                                                                                                                    |
+| `<outputDirectory>`    |     -      |   Yes    | Output directory for generated sources                                                                                                                                                                                                                                                                                                                                          |
+| `<sapCopyrightHeader>` |  `False`   |    No    | Add the SAP copyright header (overrides `copyrightHeader`)                                                                                                                                                                                                                                                                                                                      |
