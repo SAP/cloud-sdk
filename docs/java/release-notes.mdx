@@ -49,6 +49,98 @@ We highly recommend regularly updating to the latest SDK version. It will help y
 ### Fixed issues
 -->
 
+## 3.39.0 - February 25, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.39.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+
+### Compatibility Notes
+
+As part of the update of the pre-generated type-safe client for S/4HANA On-premise, we encountered the following changes:
+
+- The following methods of the OData V4 service `ContractAccountingBusinessPartnerPaymentService` have been renamed:
+
+  - `getAllBusPartPaymentParameters` has been renamed to `getAllBusPartPayment`
+  - `countBusPartPaymentParameters` has been renamed to `countBusPartPayment`
+  - `getBusPartPaymentParametersByKey` has been renamed to `getBusPartPaymentByKey`
+  - `getAllBusPartPaymentItemParameters` has been renamed to `getAllBusPartPaymentItem`
+  - `countBusPartPaymentItemParameters` has been renamed to `countBusPartPaymentItem`
+  - `getBusPartPaymentItemParametersByKey` has been renamed to `getBusPartPaymentItemByKey`
+
+- The following classes of the OData V4 VDM have been renamed:
+
+  - `ProtocolQueryReadSingle` has been renamed to `ProtocolQueryRead`
+  - `StructuredPropertyCollection` has been renamed to `NavigationPropertyCollection`
+  - `StructuredPropertyCollectionQuery` has been renamed to `NavigationPropertyCollectionQuery`
+  - `StructuredPropertySingleQuery` has been renamed to `NavigationPropertySingleQuery`
+  - `StructuredPropertySingle` has been replaced by either the `NavigationProperty<Single/Collection>Query` or the newly introduced `ComplexPropertyQuery`
+
+- The type-safe client (VDM) classes for `TimeDependentStockLevelService` have been removed as the SAP S/4HANA on-premise OData service does not exist in releases 2020 FPS0 or FPS1.
+
+- With SAP S/4 OnPremise release 2020 FPS1, in the type-safe client (VDM) class for `VehicleManagementSystemForVehicleService` the `getVMSVehicleIncomingInvoiceByKey` method now takes only two parameters ( `vMSVehicleUUID` and `vMSVehicleActionDateTime`) as input as opposed to three before ( `vMSVehicleUUID`,`vMSVehicleActionDateTime` and `vMSVehicleActionDocType` ).
+
+### New Functionality
+
+- The [type-safe OData client](features/odata/overview.mdx#type-safe-odata-client) (VDM) is updated to the latest release (FPS1) of SAP S/4HANA on-premise 2020.
+  This also includes completely new services added to the pre-existing `com.sap.cloud.sdk.s4hana.onpremise.v2020.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.onpremise.v2020.datamodel.odatav4.services` packages.
+
+- In the OData v2 and v4 type-safe client (VDM) generators we now support generating service methods for multiple entity sets belonging to the same entity type.
+  Formerly only the first entity set of an entity type was regarded.
+
+  ```note
+
+  To ensure backward compatibility this feature is turned off by default.
+  To activate the new functionality, supply the feature flag explicitly.
+
+  Generator Maven Plugin Configuration:
+  `<serviceMethodsPerEntitySet>true</serviceMethodsPerEntitySet>`
+
+  Generator CLI Flag:
+  `--service-methods-per-entity-set`
+
+  ```
+
+- The OpenAPI Generator now allows for customizing the method names on generated API classes.
+  Use the vendor extension `x-sap-cloud-sdk-operation-name` to specify a name on an operation:
+
+  ```yml
+  /operation/path:
+    get:
+      summary: My Operation.
+      x-sap-cloud-sdk-operation-name: performMyOperation
+      operationId: myOperation
+  ```
+
+  This field is optional and the generator will fall back to using the `operationId` if verndor extensions are not present.
+
+- The OpenAPI Generator now allows for setting a custom copyright header.
+  Use the option `<copyrightHeader>` to set a custom header, or set the flag `<sapCopyrightHeader>` to have an SAP copyright header added.
+  By default, no header is generated.
+
+### Improvements
+
+- The OData v2 type-safe client (VDM) classes and generator now support `null` as parameter values for function import methods when applicable.
+  For visibility the respective annotations on arguments are provided, i.e. `@Nullable` and `@Nonnull`.
+
+- The OData v4 VDM now better reflect which operations are allowed on complex properties.
+  Operations that are not applicable to complex properties like `top(int)` and `skip(int)` are no longer available.
+  This causes some existing classes to be renamed/removed (see Compatibility Notes)
+- Dependency Updates:
+  - Update JUnit Jupiter from `5.7.0` to `5.7.1`
+  - Update Joda-Time from `2.10.9` to `2.10.10`
+  - Update Netty from `4.1.58` to `4.1.59.Final` to overcome security vulnerability [CVE-2021-21290](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-21290)
+  - Update Hibernate Core from `5.4.27.Final` to `5.4.28.Final`
+  - Update jOOQ from `3.4.16` to `3.4.17`
+  - Update Reactor from `3.4.2` to `3.4.3`
+  - Update OkHttp from `4.9.0` to `4.9.1`
+  - Update Java JWT from `3.12.1` to `3.13.0`
+  - Update JUnit from `4.13.1` to `4.13.2`
+  - Update Caffeine from `2.8.8` to `2.9.0`
+
+### Fixed issues
+
+- We fixed an issue where selecting complex properties in the OData V4 VDM would lead to an incorrect HTTP query.
+- We fixed an issue where very long RFC function names (>= 30 characters) would lead to an incorrect `SOAPAction` header.
+
 ## 3.38.0 - February 11, 2021
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.38.0) | [Javadoc](https://help.sap.com/doc/cfa38ab94e4f481298556d6fdaf3672b/1.0/en-US/index.html)
