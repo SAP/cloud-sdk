@@ -8,6 +8,7 @@ import styles from './styles.module.css';
 import MvnBadge from '../sap/sdk-java/MvnBadge';
 import BuildBadge from '../sap/sdk-js/BuildBadge';
 import LicenseBadge from '../sap/sdk-js/LicenseBadge';
+import styled from 'styled-components';
 
 const features = [
   {
@@ -70,6 +71,67 @@ function Feature({ imageUrl, link, title, description, badge }) {
   );
 }
 
+const FlexCol = styled.div.attrs(props => ({
+  className: 'col'
+}))`
+  display: felx;
+  align-items: center;
+  justify-content: center;
+`;
+
+const H2 = styled.h2`
+  font-size: 2.5rem;
+  @media (max-width: 997px) {
+    font-size: 2rem;
+  }
+  margin: 0 0 0.5rem 0;
+`;
+
+const SectionDividerCol = styled(FlexCol)`
+  background-color: var(--ifm-color-secondary-light);
+  color: var(--ifm-color-primary-dark);
+  height: 5rem;
+`;
+
+const FeatImg = styled.div`
+  padding: 1rem;
+  width: 70%;
+`;
+
+const ImgBlock = styled.img`
+  display: block;
+`;
+
+const UL = styled.ul`
+  font-size: 1.8rem;
+`;
+
+function sdkFeature({ id, title, benefits, img }) {
+  return (
+    <>
+      <SectionDividerCol>
+        <H2>{title}</H2>
+      </SectionDividerCol>
+      <div className="container">
+        <div className="row">
+          <FlexCol>
+            <FeatImg>
+              <img src={img} title="Logo Title Text 1" />
+            </FeatImg>
+          </FlexCol>
+          <FlexCol>
+            <UL>
+              {benefits.map(benefit => (
+                <li key={benefit}>{benefit}</li>
+              ))}
+            </UL>
+          </FlexCol>
+        </div>
+      </div>
+    </>
+  );
+}
+
 function Home() {
   const context = useDocusaurusContext();
   const { siteConfig = {} } = context;
@@ -99,29 +161,99 @@ function Home() {
           <p className="hero__subtitle">{siteConfig.tagline}</p>
           <div className={styles.buttons}>
             <Link
-              className={classnames(
-                'button button--outline button--secondary button--lg',
-                styles.getStarted
-              )}
+              className={classnames('button button--secondary button--lg')}
               to={useBaseUrl('docs/overview/getting-started')}
             >
               Get Started
+            </Link>
+            <Link
+              className={classnames(
+                'button button--info button--lg',
+                styles.heroButton
+              )}
+              to={useBaseUrl('docs/overview/getting-started')}
+            >
+              Feature request
+            </Link>
+            <Link
+              className={classnames(
+                'button button--danger button--lg',
+                styles.heroButton
+              )}
+              to={useBaseUrl('docs/overview/getting-started')}
+            >
+              Report a bug
             </Link>
           </div>
         </div>
       </header>
       <main>
-        {features && features.length && (
-          <section className={styles.features}>
-            <div className="container">
-              <div className="row">
-                {features.map((props, idx) => (
-                  <Feature key={idx} {...props} />
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
+        <SectionDividerCol>
+          <H2>We Support Coding in:</H2>
+        </SectionDividerCol>
+
+        <div className="container">
+          <div className="row row--no-gutters">
+            <FlexCol>
+              <a href={useBaseUrl('docs/overview/overview-cloud-sdk')}>
+                <ImgBlock
+                  src={useBaseUrl('img/feat/java-square.svg')}
+                  alt="Java"
+                  title="The SAP Cloud SDK for Java"
+                />
+              </a>
+            </FlexCol>
+            <FlexCol>
+              <a href={useBaseUrl('docs/js/overview-cloud-sdk-for-javascript')}>
+                <ImgBlock
+                  src={useBaseUrl('img/feat/js.svg')}
+                  alt="JavaScript"
+                  title="The SAP Cloud SDK for JavaScript"
+                />
+              </a>
+            </FlexCol>
+            <FlexCol>
+              <a href={useBaseUrl('docs/js/overview-cloud-sdk-for-javascript')}>
+                <ImgBlock
+                  src={useBaseUrl('img/feat/ts.svg')}
+                  alt="The SAP Cloud SDK for Typescript"
+                  title="The SAP Cloud SDK for Typescript"
+                />
+              </a>
+            </FlexCol>
+          </div>
+        </div>
+        <SectionDividerCol title="OData Type-safe Client & Code Generator">
+          <H2>OData: Type-safe Client & Code Generator</H2>
+        </SectionDividerCol>
+
+        <SectionDividerCol title="Developers to Developers Support">
+          <H2>First Class Support</H2>
+        </SectionDividerCol>
+        <div className="container">
+          <div className="row">
+            <FlexCol>
+              <FeatImg>
+                <img
+                  src={useBaseUrl('img/feat/feat-support.svg')}
+                  alt="Image alt text"
+                  title="Logo Title Text 1"
+                />
+              </FeatImg>
+            </FlexCol>
+            <FlexCol>
+              <UL>
+                <li>Done by Developers for Developers!</li>
+                <li>Support is 1st class citizen</li>
+                <li>Public GutHub for the Issues</li>
+                <li>More convenient channels</li>
+              </UL>
+            </FlexCol>
+          </div>
+        </div>
+        <SectionDividerCol title="Developers to Developers Support">
+          <H2>-----------------------</H2>
+        </SectionDividerCol>
       </main>
     </Layout>
   );
