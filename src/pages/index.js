@@ -71,6 +71,29 @@ function Feature({ imageUrl, link, title, description, badge }) {
   );
 }
 
+const ghIssuesLink = 'https://github.com/SAP/cloud-sdk/issues/new/choose';
+const UL = styled.ul`
+  font-size: 1.8rem;
+`;
+
+const feats = [
+  {
+    id: 'support',
+    title: 'First Class Support',
+    benefits: (
+      <UL>
+        <li>We take support seriously</li>
+        <li>By Developers for Developers</li>
+        <li>Quick and proactive response</li>
+        <li>
+          <a href={ghIssuesLink}>Public GitHub Issue</a> for convenience
+        </li>
+      </UL>
+    ),
+    imgSrc: ``
+  }
+];
+
 const FlexCol = styled.div.attrs(props => ({
   className: 'col'
 }))`
@@ -102,11 +125,7 @@ const ImgBlock = styled.img`
   display: block;
 `;
 
-const UL = styled.ul`
-  font-size: 1.8rem;
-`;
-
-function sdkFeature({ id, title, benefits, img }) {
+function sdkFeature({ id, title, benefits, imgSrc }) {
   return (
     <>
       <SectionDividerCol>
@@ -116,16 +135,10 @@ function sdkFeature({ id, title, benefits, img }) {
         <div className="row">
           <FlexCol>
             <FeatImg>
-              <img src={img} title="Logo Title Text 1" />
+              <img src={useBaseUrl('img/feat/feat-support.svg')} />
             </FeatImg>
           </FlexCol>
-          <FlexCol>
-            <UL>
-              {benefits.map(benefit => (
-                <li key={benefit}>{benefit}</li>
-              ))}
-            </UL>
-          </FlexCol>
+          <FlexCol>{benefits}</FlexCol>
         </div>
       </div>
     </>
@@ -252,8 +265,33 @@ function Home() {
           </div>
         </div>
         <SectionDividerCol title="Developers to Developers Support">
+          <H2>First Class Support</H2>
+        </SectionDividerCol>
+        <div className="container">
+          <div className="row">
+            <FlexCol>
+              <FeatImg>
+                <img
+                  src={useBaseUrl('img/feat/feat-support.svg')}
+                  alt="Image alt text"
+                  title="Logo Title Text 1"
+                />
+              </FeatImg>
+            </FlexCol>
+            <FlexCol>
+              <UL>
+                <li>Done by Developers for Developers!</li>
+                <li>Support is 1st class citizen</li>
+                <li>Public GutHub for the Issues</li>
+                <li>More convenient channels</li>
+              </UL>
+            </FlexCol>
+          </div>
+        </div>
+        <SectionDividerCol title="Developers to Developers Support">
           <H2>-----------------------</H2>
         </SectionDividerCol>
+        {sdkFeature(feats[0])}
       </main>
     </Layout>
   );
