@@ -9,90 +9,11 @@ import MvnBadge from '../sap/sdk-java/MvnBadge';
 import BuildBadge from '../sap/sdk-js/BuildBadge';
 import LicenseBadge from '../sap/sdk-js/LicenseBadge';
 import styled from 'styled-components';
+import { features } from './data';
 
-const features = [
-  {
-    title: <>SAP Cloud SDK for Java</>,
-    link: 'docs/java/getting-started',
-    imageUrl:
-      'https://help.sap.com/doc/6c02295dfa8f47cf9c08a19f2e172901/1.0/en-US/logo-for-java.svg',
-    badge: <MvnBadge />,
-    description: (
-      <>
-        The SAP Cloud SDK for Java allows you to develop, extend, and
-        communicate with SAP solutions SAP S/4HANA Cloud, SAP SuccessFactors,
-        and many others.
-        <br />
-        <a href="docs/java/getting-started">
-          Get started with the SDK for Java.
-        </a>
-      </>
-    )
-  },
-  {
-    title: <>SAP Cloud SDK for JavaScript</>,
-    link: 'docs/js/getting-started',
-    imageUrl:
-      'https://help.sap.com/doc/2324e9c3b28748a4ae2ad08166d77675/1.0/en-US/logo-with-js.svg',
-    badge: (
-      <>
-        <BuildBadge /> <LicenseBadge />
-      </>
-    ),
-    description: (
-      <>
-        The SAP Cloud SDK for JavaScript (and TypeScript) helps you build
-        cloud-based apps and extensions to SAP solutions using the power and
-        flexibility of Node.js and its ecosystem.
-        <br />
-        <a href="docs/js/getting-started">
-          Get started with the SDK for JavaScript
-        </a>
-      </>
-    )
-  }
-];
-
-function Feature({ imageUrl, link, title, description, badge }) {
-  const imgUrl = useBaseUrl(imageUrl);
-  return (
-    <div className={classnames('col', styles.feature)}>
-      {imgUrl && (
-        <div className="text--left">
-          <a href={link}>
-            <img className={styles.featureImage} src={imgUrl} alt={title} />
-          </a>
-        </div>
-      )}
-      <h3>{title}</h3>
-      {badge || ''}
-      <p>{description}</p>
-    </div>
-  );
-}
-
-const ghIssuesLink = 'https://github.com/SAP/cloud-sdk/issues/new/choose';
 const UL = styled.ul`
   font-size: 1.8rem;
 `;
-
-const feats = [
-  {
-    id: 'support',
-    title: 'First Class Support',
-    benefits: (
-      <UL>
-        <li>We take support seriously</li>
-        <li>By Developers for Developers</li>
-        <li>Quick and proactive response</li>
-        <li>
-          <a href={ghIssuesLink}>Public GitHub Issue</a> for convenience
-        </li>
-      </UL>
-    ),
-    imgSrc: ``
-  }
-];
 
 const FlexCol = styled.div.attrs(props => ({
   className: 'col'
@@ -116,33 +37,68 @@ const SectionDividerCol = styled(FlexCol)`
   height: 5rem;
 `;
 
+const SdkButton = styled(Link).attrs(props => ({
+  className: `button button--lg ${props.type}`
+}))`
+  margin-left: 0.5rem;
+`;
+
 const FeatImg = styled.div`
   padding: 1rem;
-  width: 70%;
+  width: 100%;
 `;
 
 const ImgBlock = styled.img`
   display: block;
 `;
 
-function sdkFeature({ id, title, benefits, imgSrc }) {
-  return (
-    <>
-      <SectionDividerCol>
-        <H2>{title}</H2>
-      </SectionDividerCol>
-      <div className="container">
-        <div className="row">
-          <FlexCol>
-            <FeatImg>
-              <img src={useBaseUrl('img/feat/feat-support.svg')} />
-            </FeatImg>
-          </FlexCol>
-          <FlexCol>{benefits}</FlexCol>
+function sdkFeatures(features) {
+  let counter = 0;
+  return features.map(feature => {
+    counter++;
+    return (
+      <section key={counter}>
+        <SectionDividerCol>
+          <H2>{feature.title}</H2>
+        </SectionDividerCol>
+        <div className="container">
+          <div className="row">
+            {counter % 2 ? (
+              <>
+                <FlexCol>
+                  <FeatImg>
+                    <img src={useBaseUrl(feature.img)} />
+                  </FeatImg>
+                </FlexCol>
+                <FlexCol>
+                  <UL>
+                    {feature.benefits.map(benefit => (
+                      <li key={benefit}>{benefit}</li>
+                    ))}
+                  </UL>
+                </FlexCol>
+              </>
+            ) : (
+              <>
+                <FlexCol>
+                  <UL>
+                    {feature.benefits.map(benefit => (
+                      <li key={benefit}>{benefit}</li>
+                    ))}
+                  </UL>
+                </FlexCol>
+                <FlexCol>
+                  <FeatImg>
+                    <img src={useBaseUrl(feature.img)} />
+                  </FeatImg>
+                </FlexCol>
+              </>
+            )}
+          </div>
         </div>
-      </div>
-    </>
-  );
+      </section>
+    );
+  });
 }
 
 function Home() {
@@ -173,30 +129,24 @@ function Home() {
           <h1 className="hero__title">{siteConfig.title}</h1>
           <p className="hero__subtitle">{siteConfig.tagline}</p>
           <div className={styles.buttons}>
-            <Link
-              className={classnames('button button--secondary button--lg')}
-              to={useBaseUrl('docs/overview/getting-started')}
+            <SdkButton
+              to={useBaseUrl('docs/overview/overview-cloud-sdk')}
+              type="button--secondary"
             >
               Get Started
-            </Link>
-            <Link
-              className={classnames(
-                'button button--info button--lg',
-                styles.heroButton
-              )}
-              to={useBaseUrl('docs/overview/getting-started')}
+            </SdkButton>
+            <SdkButton
+              to="https://github.com/SAP/cloud-sdk/issues/new/choose"
+              type="button--info"
             >
               Feature request
-            </Link>
-            <Link
-              className={classnames(
-                'button button--danger button--lg',
-                styles.heroButton
-              )}
-              to={useBaseUrl('docs/overview/getting-started')}
+            </SdkButton>
+            <SdkButton
+              to="https://github.com/SAP/cloud-sdk/issues/new/choose"
+              type="button--danger"
             >
               Report a bug
-            </Link>
+            </SdkButton>
           </div>
         </div>
       </header>
@@ -208,7 +158,7 @@ function Home() {
         <div className="container">
           <div className="row row--no-gutters">
             <FlexCol>
-              <a href={useBaseUrl('docs/overview/overview-cloud-sdk')}>
+              <a href={useBaseUrl('docs/java/overview-cloud-sdk-for-java')}>
                 <ImgBlock
                   src={useBaseUrl('img/feat/java-square.svg')}
                   alt="Java"
@@ -229,69 +179,14 @@ function Home() {
               <a href={useBaseUrl('docs/js/overview-cloud-sdk-for-javascript')}>
                 <ImgBlock
                   src={useBaseUrl('img/feat/ts.svg')}
-                  alt="The SAP Cloud SDK for Typescript"
+                  alt="Typescript"
                   title="The SAP Cloud SDK for Typescript"
                 />
               </a>
             </FlexCol>
           </div>
         </div>
-        <SectionDividerCol title="OData Type-safe Client & Code Generator">
-          <H2>OData: Type-safe Client & Code Generator</H2>
-        </SectionDividerCol>
-
-        <SectionDividerCol title="Developers to Developers Support">
-          <H2>First Class Support</H2>
-        </SectionDividerCol>
-        <div className="container">
-          <div className="row">
-            <FlexCol>
-              <FeatImg>
-                <img
-                  src={useBaseUrl('img/feat/feat-support.svg')}
-                  alt="Image alt text"
-                  title="Logo Title Text 1"
-                />
-              </FeatImg>
-            </FlexCol>
-            <FlexCol>
-              <UL>
-                <li>Done by Developers for Developers!</li>
-                <li>Support is 1st class citizen</li>
-                <li>Public GutHub for the Issues</li>
-                <li>More convenient channels</li>
-              </UL>
-            </FlexCol>
-          </div>
-        </div>
-        <SectionDividerCol title="Developers to Developers Support">
-          <H2>First Class Support</H2>
-        </SectionDividerCol>
-        <div className="container">
-          <div className="row">
-            <FlexCol>
-              <FeatImg>
-                <img
-                  src={useBaseUrl('img/feat/feat-support.svg')}
-                  alt="Image alt text"
-                  title="Logo Title Text 1"
-                />
-              </FeatImg>
-            </FlexCol>
-            <FlexCol>
-              <UL>
-                <li>Done by Developers for Developers!</li>
-                <li>Support is 1st class citizen</li>
-                <li>Public GutHub for the Issues</li>
-                <li>More convenient channels</li>
-              </UL>
-            </FlexCol>
-          </div>
-        </div>
-        <SectionDividerCol title="Developers to Developers Support">
-          <H2>-----------------------</H2>
-        </SectionDividerCol>
-        {sdkFeature(feats[0])}
+        {sdkFeatures(features)}
       </main>
     </Layout>
   );
