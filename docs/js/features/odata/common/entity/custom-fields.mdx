@@ -5,6 +5,7 @@ The SAP Cloud SDK supports custom fields on your entities, that are not covered 
 You can set custom fields on an entity through the `.setCustomFields` and `.setCustomField` methods.
 Setting custom fields with existing keys overrides the exising fields.
 Non-existent fields are added without removing other fields.
+
 ```ts
 // add custom fields to the exisitng fields
 businessPartner.setCustomFields({
@@ -16,6 +17,7 @@ businessPartner.setCustomField('myCustomField', 'this is custom');
 ```
 
 You can also access existing fields using the `.getCustomField` and `.getCustomFields` methods.
+
 ```ts
 // get all custom fields
 const customFields = businessPartner.getCustomFields(); // { myCustomField: 'this is custom' }
@@ -29,5 +31,3 @@ As custom fields are not defined through the service specification, the type of 
 Therefore custom fields are never automatically serialized or deserialized.
 If you are using custom fields, you might have to take care of serialization on your own.
 :::
-
-

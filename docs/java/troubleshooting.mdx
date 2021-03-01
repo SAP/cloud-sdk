@@ -1,8 +1,6 @@
 ---
 id: sdk-java-troubleshooting-frequent-problems
-title: Troubleshooting Frequent Problems
-hide_title: true
-hide_table_of_contents: false
+title: Troubleshooting SDK Java
 sidebar_label: Troubleshooting
 description: This article is a collection of frequently occurring symptoms and a short guidance on how to address them.
 keywords:
@@ -13,18 +11,24 @@ keywords:
   - FAQ
   - common mistakes
   - problems
-image:
 ---
 
-## Troubleshooting Frequent Problems
+import MvnBadge from '../../src/sap/sdk-java/MvnBadge';
 
-This article lists common problems that can be encountered when using the SAP Cloud SDK for Java.
-The linked resources provide more information on the subject.
+<div className="logo logo-java"> </div>
 
-If not covered here also search for any issue you might face on [Stack Overflow](https://stackoverflow.com/questions/tagged/sap-cloud-sdk).
-There you can also reach out to us by [asking a question](https://stackoverflow.com/questions/ask) (be sure to tag it with `sap-cloud-sdk`).
+<MvnBadge />
 
-### Tenant or Principal Not Available
+## Solving common problems
+
+- Check if you're using the latest [SAP Cloud SDK version](release-notes.mdx).
+  We release significant updates bi-weekly.
+- Try searching on [Stack Overflow](https://stackoverflow.com/questions/tagged/sap-cloud-sdk)
+  You can [ask there questions](https://stackoverflow.com/questions) as well by tagging it with `sap-cloud-sdk`
+- Check this page for known solutions for most frequent problems
+- Welcome to our [awesome support](../overview/support.mdx) if nothing else helps.
+
+## Tenant or Principal Not Available
 
 :::info **Symptoms**
 Tenant or principal information is not available or an incorrect tenant is used.
@@ -46,7 +50,7 @@ Tenant or principal information is not available or an incorrect tenant is used.
 - A BAPI/RFC call was attempted while using resilience or multithreading capabilities of the SAP Cloud SDK.
   See [Subscriber Tenant Is Not Found at Runtime](features/bapi-and-rfc/bapi-and-rfc-overview#subscriber-tenant-is-not-found-at-runtime)
 
-### Provider Instead of Subscriber Account Used
+## Provider Instead of Subscriber Account Used
 
 :::info **Symptoms**
 Destinations are returned only for the provider account, but not for a subscriber account.
@@ -57,7 +61,7 @@ Destinations are returned only for the provider account, but not for a subscribe
 - The SAP Cloud SDK defaults back to the provider account if no tenant information is available.
   See the above section on [Tenant or Principal not available](#tenant-or-principal-not-available).
 
-### JSON Web Token Validation Fails
+## JSON Web Token Validation Fails
 
 :::info **Symptoms:**
 Logs show JWT validation exceptions, Tenant information is not available.
@@ -68,7 +72,7 @@ Logs show JWT validation exceptions, Tenant information is not available.
 - The SAP Cloud SDK version might be outdated.
   Check with the [latest SAP Cloud SDK version](https://search.maven.org/artifact/com.sap.cloud.sdk/sdk-bom).
 
-### Connecting to an ERP System fails
+## Connecting to an ERP System fails
 
 :::info **Symptoms:**
 The ERP system unexpectedly responds with _401: Unauthorized_ or _403: Forbidden_.
@@ -79,7 +83,7 @@ The ERP system unexpectedly responds with _401: Unauthorized_ or _403: Forbidden
 - The SAP Client and Locale headers will be missing if the `Destination` is not an `ErpHttpDestination`.
   See [Connecting to SAP S/4HANA](features/connectivity/sdk-connectivity-destination-service#connect-to-on-premise-s4hana-system).
 
-### Compilation Failures in the Generated OData Virtual Data Model Classes
+## Compilation Failures in the Generated OData Virtual Data Model Classes
 
 :::info **Symptoms:**
 Compilation fails due to missing _Getters_ and _Setters_ on entity objects.
@@ -93,7 +97,7 @@ Compilation fails due to missing _Getters_ and _Setters_ on entity objects.
   - For IntelliJ, install [the Lombok plugin](https://plugins.jetbrains.com/plugin/6317-lombok).
   - For Eclipse, follow [this guide](https://projectlombok.org/setup/eclipse).
 
-### Compilation or Runtime Failures After Updating the SAP Cloud SDK Version
+## Compilation or Runtime Failures After Updating the SAP Cloud SDK Version
 
 :::info **Symptoms:**
 `MethodNotFound`, `ClassDefNotFound` or similar exceptions occur.
@@ -104,7 +108,7 @@ Compilation fails due to missing _Getters_ and _Setters_ on entity objects.
 - Conflicting dependency versions may cause such issues.
   See the section on [Managing Dependencies](guides/dependencies.mdx#dealing-with-dependency-conflicts).
 
-### The Java App Has Good Performance on Your Local Machine but Utilizes 100% CPU on SAP Cloud Platform Cloud Foundry
+## The Java App Has Good Performance on Your Local Machine but Utilizes 100% CPU on SAP Cloud Platform Cloud Foundry
 
 :::info **Symptoms:**
 
