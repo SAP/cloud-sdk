@@ -9,7 +9,7 @@ import MvnBadge from '../sap/sdk-java/MvnBadge';
 import BuildBadge from '../sap/sdk-js/BuildBadge';
 import LicenseBadge from '../sap/sdk-js/LicenseBadge';
 import styled from 'styled-components';
-import { features } from './data';
+import { features } from '../sap/sdk-data/data';
 
 const UL = styled.ul`
   font-size: 1.8rem;
