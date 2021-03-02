@@ -4,7 +4,7 @@ const ghIssuesLink = 'https://github.com/SAP/cloud-sdk/issues/new/choose';
 export const features = [
   {
     id: 'odata',
-    title: 'OData: Type-safe Client & Code Generator',
+    title: 'OData: Type-Safe Client & Code Generator',
     benefits: [
       'Efficient OData code generator built from scratch by SDK team',
       'Fluent API for type-safe OData calls',
@@ -17,7 +17,7 @@ export const features = [
   },
   {
     id: 'openapi',
-    title: 'OpenAPI: Type-safe Client & Code Generator',
+    title: 'OpenAPI: Type-Safe Client & Code Generator',
     benefits: [
       'Customized code generator',
       'Fluent API for type-safe OpenAPI calls',
@@ -42,9 +42,9 @@ export const features = [
   },
   {
     id: 'clients',
-    title: 'Pre-generaed type-safe client libraries',
+    title: 'Pre-Generated Type-Safe Client Libraries',
     benefits: [
-      'S/4HANA Cloud, S/4HANA On-Premis, Workflow and more...',
+      'SAP S/4HANA Cloud, SAP S/4HANA On-Premise, Workflow and more...',
       <>
         Find then on{' '}
         <a href="https://search.maven.org/search?q=g:com.sap.cloud.sdk*">
