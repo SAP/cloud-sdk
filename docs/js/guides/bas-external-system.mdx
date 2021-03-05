@@ -32,7 +32,9 @@ Being able to test changes locally reduces the overhead of deploying remotely an
   src={useBaseUrl('img/cloud-connector.png')}
 />
 
-## Technical Background <a name="background"></a>
+## Case 1: Connection to an OnPremises System
+
+### Technical Background <a name="background"></a>
 
 Companies do not expose their SAP S/4HANA On-Premise systems to the internet.
 They are only reachable via a CC attached to a CF account.
@@ -43,10 +45,59 @@ On a high level the connection works the following way:
 
 - The BAS includes an HTTP_PROXY running at http://localhost:8887
 - This proxy forwards all `http` requests to the CF account
-- CF searches the existing destinations for one matching the URL of the request
+- CF searches the existing destinations for one matching the name
 - If a destination is present, an initial request is sent to this destination
 - The proxy is a reverse proxy also piping back the response to the BAS
 
+### Prerequisite 1: The Business Application Studio
+
+You have a Cloud Foundry account and a subscription to the BAS.
+Via the subscription the BAS can access all destination in the subscribed account.
+
+### Prerequisite 2: Cloud Connector and Destination Setup <a name="CCandDestSetup"></a>
+
+You have set up a working Cloud Connector and configured a destination pointing to an On-Premise system.
+Per default, destinations are not usable by a subscribed BAS.
+You need to set two properties `WebIDEEnabled` and `HTML5.DynamicDestination` to enable that feature for a specific destination.
+Go to the destination configuration in CF and add the properties:
+
+| Property                   | Value |
+| -------------------------- | ----- |
+| `WebIDEEnabled`            | true  |
+| `HTML5.DynamicDestination` | true  |
+
+### Testing <a name="testing"></a>
+
+Before you start the implementation it is good to test the connection.
+The connectivity proxy running in BAS expects a pattern of the kind `http://<destinationName>.dest`.
+When such a pattern is found the destination name is extracted and checked against the destinations in the related cloud foundry account.
+If a match is found and the `WebIDEEnabled` and `HTML5.DynamicDestination` properties are enabled for the destination the request is forwarded via this destination.
+All authorization information from the real destination are used.
+You can test this flow by using a simple `curl` command without any code.
+
+```bash
+curl <destinationName>.dest/path/to/service
+```
+
+So if your destination is called `S4H_Test.dest` and you want to query the catalogue service the command would be:
+
+```bash
+curl -v -i "S4H_Test.dest/sap/opu/odata/iwfnd/catalogservice;v=2/ServiceCollection?%24top=1"
+```
+
+If this returns 200 for the service you want to use, you can start the implementation.
+The connectivity proxy has a build in cache which needs to be emptied after you adjusted destinations.
+This is done by calling:
+
+```bash
+curl localhost:8887/reload
+```
+
+For more details on testing and troubleshooting have a look at [this guide](https://blogs.sap.com/2020/10/13/how-to-check-the-connectivity-to-your-backend-system-in-business-application-studio/).
+
+### Implementation
+
+If the connection is tested and working you can start the implementation.
 The SAP Cloud SDK helps you to consider the HTTP_PROXY automatically and makes it easy to use the same code base locally and in production on CF.
 The SAP Cloud SDK has a [destination lookup](../features/connectivity/destination) priority considering environment variables first.
 
@@ -72,29 +123,6 @@ The proxy type is `OnPremise` and the connectivity service provides all proxy in
 :::note
 The `executeHttpRequest()` function is used by all request builders provided of the SAP Cloud SDK as well as by CAP applications connecting to an SAP S/4HANA system.
 :::
-
-## Setup
-
-### Prerequisite 1: The Business Application Studio
-
-You have a Cloud Foundry account and a subscription to the BAS.
-Start the BAS and connect your BAS workspace to the CF account.
-This is done via the little CF icon (<img src={useBaseUrl('img/cf-connect-button.jpg')} />) on the left of the BAS.
-The connection enables the proxy connection from the BAS to your CF account.
-
-### Prerequisite 2: Cloud Connector and Destination Setup <a name="CCandDestSetup"></a>
-
-You have set up a working Cloud Connector and configured a destination pointing to an On-Premise system you want to connect to.
-Per default, destinations are not usable by a connected BAS.
-You need to set two properties `WebIDEEnabled` and `HTML5.DynamicDestination` to enable that feature for a specific destination.
-Go to the destination configuration in CF and add the properties:
-
-| Property                   | Value |
-| -------------------------- | ----- |
-| `WebIDEEnabled`            | true  |
-| `HTML5.DynamicDestination` | true  |
-
-### Local Application Setup with Business Application Studio
 
 You use [launch configurations](https://code.visualstudio.com/docs/editor/debugging#_launchjson-attributes) to run and debug applications locally.
 Either extend your existing `.vscode/launch.json` or create a new one.
@@ -123,19 +151,19 @@ In our case, the `main.js` script will start up the Nest server.
 The `preLaunchTask` executes the build before each run which compiles the TypeScript files to JavaScript.
 The `outFiles` property defines where the compiled files will be located.
 
-As discussed [in the beginning](#background), we need to set the `destinations` environment variable.
+As discussed in the beginning, we need to set the `destinations` environment variable.
 This will interrupt the [destination lookup](../../js/features/connectivity/destination.mdx) and lead to a destination with the HTTP_PROXY considered.
 The easiest way to do that is via a `.env` file which is read when starting the application.
 If you do not have a `.env` file, create one or adjust the existing one.
 Just add the following entry to the `.env` file:
 
 ```
-destinations="[{"name": "<destinationName>","url": "<destinationUrl>"}]"
+destinations="[{"name": "<destinationName>","url": "http://<destinationName>.dest"}]"
 ```
 
 Fill in the `name` and `url` of the destination you [configured in CF](#CCandDestSetup).
-Once the request reaches the CF account via the proxy, it reads all authorization information from the real destination.
-All requests done with the SAP Cloud SDK will now reach the SAP S/4HANA system.
+As you see you use the same pattern `<name>.dest` we discussed in the [testing section](#testing).
+All requests done with the SAP Cloud SDK will now reach the SAP S/4HANA system via the BAS connectivity proxy.
 You can start your application via the launch button.
 
 :::note
@@ -157,55 +185,41 @@ For the simple case you would add `mockTestDestination(<destinationName>)` to yo
 }
 ```
 
-## Principal Propagation
+### Principal Propagation
 
-We have not discussed the authentication in the SAP S/4HANA system.
-Up to now, we assumed that the destination would contain all necessary information to authenticate the user in the SAP S/4HANA system.
-This is the case for the authentication type `BasicAuthentication` because the user and password are part of the destination configuration.
-Hence, the simple destination
+We have tested the flow with destinations using `BasicAuthorization`.
+The SAP Cloud SDK team is currently investigation with the colleagues from BAS if principal propagation is possible and which conditions are needed.
+We will update this section as soon as possible.
 
-```
-destinations="[{"name": "<destinationName>","url": "<destinationUrl>"}]"
-```
+## Case 2: Connection to Cloud Systems
 
-implicitly assumes basic authentication.
-If you want to use principal propagation you need to provide more information.
-Principal propagation means that the user identity after login to the cloud application is forwarded to the SAP S/4HANA system.
-This is achieved by passing on a JWT issued for the user.
+Cloud systems are reachable via the internet and you do not need any cloud connector to reach them.
+The same is true for the destination service of the SAP Cloud Platform.
+Hence you can use the same approach locally and in production.
 
-If you run your application in the local BAS you do not have such a JWT and you need to fetch it [manually](../../java/guides/cf-xsuaa.mdx).
-In a production environment, the JWT will be part of your request after the user logged in.
-Once you have the user JWT, include it in the proxy configuration of your destination:
+### Prerequisite: Service Setup
 
-```JSON
-{
-    "name": "<destinationName>",
-    "url": "<destinationUrl>"}]",
-    "proxyType": "OnPremise",
-    "proxyConfiguration": {
-        "host": "localhost",
-        "port": "8887",
-        "headers": {
-            "SAP-Connectivity-Authentication": "Bearer <yourJWT>"}
-        }
-    }
-}
-```
+On cloud foundry the access to services is granted via the `VCAP_SERVICE` variables.
+We assume that you have configured your application so that it can access the destination service.
+If not, follow the [steps in the cloud foundry tutorial](https://developers.sap.com/group.s4sdk-js-cloud-foundry.html).
 
-The proxy host and port are the values of the connectivity proxy provided by BAS.
-You can check the values via the HTTP_PROXY environment variable.
+### Implementation
 
-## Closing Remarks for Cloud Systems
+You can mirror the `VCAP_SERVICE` variables from your cloud foundry account to your local BAS.
+Start the BAS and connect your BAS workspace to the CF account.
+This is done via the little CF icon (<img src={useBaseUrl('img/cf-connect-button.jpg')} />) on the left of the BAS.
+Then select the application from which you wan to mirror the variables and select the folder containing the `.env` file to store it.
+Use the `envFile` property in the `launch.json` to load the file on your local application startup.
 
-In case you have a cloud system like SAP S/4HANA Cloud or any other system on the internet you can follow the same approach.
-Just add values for `user` and `password` to the environment variables if the system requires authorization.
-In case you use the `mockTestDestination()` add the login information to the `credentials.json`.
+Now your application will fetch the service credentials and call the destination service as in production.
+Note that there are certain limitations to this approach.
+Within the BAS you will not have a JWT issued for your user.
+This means that flows like `OAuth2SAMLBearerAssertion` and `OAuth2UserTokenExchange` can only work if you provide such a JWT.
+This is possible in principle, but difficult withing the local development environment.
+We recommend to create dedicated development destinations with authentications flows like:
 
-:::note
-Via the connection between the BAS and CF, it is also possible to import all environment variables from the CF account to the BAS.
-In particular, you can mirror the `VCAP_SERVICE` variable containing all service information.
-If you import these you can use the real destination via the destination service in your locally deployed app.
-This works for all destinations with a proxy type `Internet` but not for the ones with `OnPremise`.
-The reason for this is the interference of two proxies: (1) The web proxy of the BAS and (2) the connectivity proxy in CF.
-If you load an On-Premise destination via the destination service it will contain the connectivity proxy of CF, although you would need the web proxy when you run locally in BAS.
-:::
+- OAuth2ClientCredentials
+- BasicAuthentication
+- ClientCertificateAuthentication (here we wait for a fix on the [http-proxy-agent](https://github.com/TooTallNate/node-https-proxy-agent/pull/111) or you have to disable the proxy
+
+Note that for the connection to cloud system the destinations do not need the two properties `WebIDEEnabled` and `HTML5.DynamicDestination`, because the BAS connectivity proxy is not needed.
