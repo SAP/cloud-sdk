@@ -54,6 +54,64 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed issues
 -->
 
+## 3.40.0 - March 18, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.40.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+
+### Known issues
+
+- Updating individual fields (in contrast to updating the entire object) of nested complex properties is not reflected correctly in the actual **PATCH** request.
+
+### Compatibility Notes
+
+- The general availability of the OpenAPI generator brings the following renamings:
+  - The following dependencies in the Maven Group ID `com.sap.cloud.sdk.datamodel` have been renamed:
+    - Rename dependency `rest-core` to `openapi-core`
+    - Rename dependency `rest-generator` to `openapi-generator`
+    - Rename dependency `rest-generator-maven-plugin` to `openapi-generator-maven-plugin`
+  - The Maven Plugin has been renamed from `rest-generator-maven-plugin` to `openapi-generator-maven-plugin`
+
+### New Functionality
+
+- The OData V4 VDM generator now generates static fields for accessible properties on `VdmComplex` types, which can be used exactly like their counterparts on `VdmEntity` when building OData queries.
+- Enable clearing the cache for remote functions with the new experimental APIs `RemoteFunctionCache.clearCache(Destination)`
+  and `RemoteFunctionCache.clearCache(Destination, functionName)`.
+  - Example usages:
+  ```java
+  final Destination destination = DestinationAccessor.getDestination(destinationName);
+  try {
+    RemoteFunctionCache.clearCache(destination);
+  }
+  catch( final RemoteFunctionException e ) {
+    //deal with exception
+  }
+  ```
+  ```java
+  final Destination destination = DestinationAccessor.getDestination(destinationName);
+  try {
+     RemoteFunctionCache.clearCache(destination, "BAPI_GET_COSTCENTER");
+  }
+  catch( final RemoteFunctionException e ) {
+     //deal with exception
+  }
+  ```
+
+### Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update SCP Neo Java Tomcat API from `3.121.8.1` to `3.123.6.2`
+    - Update SCP Neo Java TomEE7 API from `1.90.9.1` to `1.92.6.2`
+    - Update JPaaS Security Utils for Neo from `1.4.87` to `1.4.89`
+    - Update [SAP CP Spring XSUAA Security Library](https://github.com/SAP/cloud-security-xsuaa-integration/tree/master/spring-xsuaa) from `2.8.3`to `2.8.4`
+  - Other dependency updates:
+    - Minor version updates:
+      - Update Mockito from `3.7.7` to `3.8.0`
+      - Update Spring from `5.3.2` to `5.3.3`
+      - Update Spring Boot from `2.4.1` to `2.4.2`
+      - Update AQMP Client from `5.10.0` to `5.11.0`
+      - Update Protobuf java from `3.14.0` to `3.15.1`
+
 ## 3.39.0 - February 25, 2021
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.39.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
