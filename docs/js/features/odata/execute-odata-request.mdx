@@ -192,14 +192,14 @@ Executing the example request above against a destination with URL `https://my.s
 
 ### Getting the Raw Response
 
-There are some valid use cases with requirements that a typed response doesn't meet:
+In some cases you might prefer to retrieve the unserialized raw response:
 
-- the response cannot be deserialized automatically, so the raw response can work as a workaround
-- instead of the response body, additional information is needed like status code or response header
-- in addition to the response, the request built by the SAP Cloud SDK needs also to be returned
+- The response cannot be deserialized automatically, so the raw response can work as a workaround
+- In addition to the response body, you need additional information, like the status code or response headers.
+- In addition to the response, the request built by the SAP Cloud SDK needs also to be returned
 
-To fulfill the requirement shown above, the SAP Cloud SDK provides the `executeRaw` function that returns the original request and the corresponding raw response.
+To retrieve a raw response for your request use the `executeRaw` method.
 
-:::note typed response from `execute()` is the best practice
+:::note Best Practice: Retrieve typed responses using `execute()`
 Use `executeRaw` only for workarounds, debugging, logging, and other good reasons where the typed `execute` method doesn't provide enough flexibility.
 :::
