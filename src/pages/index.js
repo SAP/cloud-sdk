@@ -158,15 +158,6 @@ function Home() {
         <div className="container">
           <div className="row row--no-gutters">
             <FlexCol>
-              <a href={useBaseUrl('docs/java/overview-cloud-sdk-for-java')}>
-                <ImgBlock
-                  src={useBaseUrl('img/feat/java-square.svg')}
-                  alt="Java"
-                  title="The SAP Cloud SDK for Java"
-                />
-              </a>
-            </FlexCol>
-            <FlexCol>
               <a href={useBaseUrl('docs/js/overview-cloud-sdk-for-javascript')}>
                 <ImgBlock
                   src={useBaseUrl('img/feat/js.svg')}
