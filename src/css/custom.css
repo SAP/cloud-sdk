@@ -44,3 +44,47 @@
   margin-left: auto;
   margin-right: auto;
 }
+
+.logo {
+  max-height: 0;
+  max-width: 0;
+  position: relative;
+}
+
+.logo-java::before {
+  content: '';
+  background-image: url(https://help.sap.com/doc/6c02295dfa8f47cf9c08a19f2e172901/1.0/en-US/logo-for-java.svg);
+  position: absolute;
+  width: 277px;
+  height: 150px;
+  left: 35rem;
+  top: -3rem;
+}
+
+.logo-js::before {
+  content: '';
+  background-image: url(https://help.sap.com/doc/6c02295dfa8f47cf9c08a19f2e172901/1.0/en-US/logo-with-js.svg);
+  position: absolute;
+  width: 277px;
+  height: 150px;
+  left: 35rem;
+  top: -3rem;
+}
+
+@media screen and (max-width: 1440px) {
+  .logo-js::before {
+    display: none;
+  }
+  .logo-java::before {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 966px) {
+  .logo-js::before {
+    display: block;
+  }
+  .logo-java::before {
+    display: block;
+  }
+}

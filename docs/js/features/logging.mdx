@@ -57,7 +57,7 @@ setLogLevel('error', 'my-message-context');
 In the example above a string was passed to the logging method:
 
 ```ts
-myLogger.info('Here is some info.')
+myLogger.info('Here is some info.');
 ```
 
 and in the logs you would find a related entry
@@ -98,22 +98,22 @@ A `logger` instance is created from a central container which knows all existing
 Via the `container` the SAP Cloud SDK provides methods per message context:
 
 ```ts
-getLogger('my-message-context');            //get logger if present
+getLogger('my-message-context'); //get logger if present
 setLogLevel('error', 'my-message-context'); //set log level
 ```
 
 or global methods for all loggers:
 
 ```ts
-setGlobalLogLevel('warn')   //set log level all logger to warn
-muteLoggers()               //mute all loggers completely
-unmuteLogger()              //unmute all loggers
+setGlobalLogLevel('warn'); //set log level all logger to warn
+muteLoggers(); //mute all loggers completely
+unmuteLogger(); //unmute all loggers
 ```
 
 Besides a log level, each logger contains a `format` and `transports`.
 The SAP Cloud SDK sets [default values](https://github.com/SAP/cloud-sdk-js/blob/c8f11d600efbc28b6f6a89dec8552c518e204a0b/packages/util/src/logger/cloud-sdk-logger.ts#L97-L123) for these parts.
 
 The transport is set to `console` and the format is set to [local](https://github.com/SAP/cloud-sdk-js/blob/main/packages/util/src/logger/format/local.ts) or [kibana](https://github.com/SAP/cloud-sdk-js/blob/main/packages/util/src/logger/format/kibana.ts).
-If `VCAP_SERVICE` variables are present in the environment variables the `kibana` format is used, because the SAP Cloud SDK assumes your application is running on cloud foundry.
+If `VCAP_SERVICE` variables are present in the environment variables the `kibana` format is used, because the SAP Cloud SDK assumes your application is running on Cloud Foundry.
 
 In case you see a need for higher flexibility of the logging instance feel free to create an issue in our [repository](https://github.com/SAP/cloud-sdk-js) or make a contribution

@@ -16,22 +16,27 @@ keywords:
 
 import MvnBadge from '../../src/sap/sdk-java/MvnBadge';
 
+<div className="logo logo-java"> </div>
+
 <MvnBadge />
-
-:::info Update to SDK v3
-
-Version 2.x of the SAP Cloud SDK for Java V2 has reached its end of life and is no longer maintained. To continue using the latest features outlined in the release notes for version 3 below, please [upgrade to **SDK V3**](https://developers.sap.com/tutorials/s4sdk-migration-v3.html).
-
-:::
 
 ## Should I update?
 
-We highly recommend regularly updating to the latest SDK version. It will help you:
+We highly recommend regularly updating to the latest SAP Cloud SDK version. It will help you:
 
 - Ensure access to the latest Cloud SDK features
 - Keep up with the latest changes in SAP Cloud Platform
 - Update client libraries giving access to latest SAP services on SAP Cloud Platform and SAP S/4HANA
 - Protect yourself from bugs and breaking changes in the future
+
+### The SAP Cloud SDK v2 for Java is Deprecated
+
+:::info Update to the SAP Cloud SDK v3
+
+Version 2.x of the SAP Cloud SDK for Java v2 has reached its end of life and is no longer maintained.
+To continue using the latest features outlined in the release notes for version 3 below, please [upgrade to **the SAP Cloud SDK v3**](https://developers.sap.com/tutorials/s4sdk-migration-v3.html).
+
+:::
 
 <!-- Copy and fill
 ## 3.xx.x - January 1, 2021
@@ -55,9 +60,9 @@ We highly recommend regularly updating to the latest SDK version. It will help y
 
 ### Compatibility Notes
 
-As part of the update of the pre-generated type-safe client for S/4HANA On-premise, we encountered the following changes:
+As part of the update of the pre-generated type-safe client for SAP S/4HANA On-premise, we encountered the following changes:
 
-- The following methods of the OData V4 service `ContractAccountingBusinessPartnerPaymentService` have been renamed:
+- The following methods of the OData v4 service `ContractAccountingBusinessPartnerPaymentService` have been renamed:
 
   - `getAllBusPartPaymentParameters` has been renamed to `getAllBusPartPayment`
   - `countBusPartPaymentParameters` has been renamed to `countBusPartPayment`
@@ -66,7 +71,7 @@ As part of the update of the pre-generated type-safe client for S/4HANA On-premi
   - `countBusPartPaymentItemParameters` has been renamed to `countBusPartPaymentItem`
   - `getBusPartPaymentItemParametersByKey` has been renamed to `getBusPartPaymentItemByKey`
 
-- The following classes of the OData V4 VDM have been renamed:
+- The following classes of the OData v4 VDM have been renamed:
 
   - `ProtocolQueryReadSingle` has been renamed to `ProtocolQueryRead`
   - `StructuredPropertyCollection` has been renamed to `NavigationPropertyCollection`
@@ -110,7 +115,7 @@ As part of the update of the pre-generated type-safe client for S/4HANA On-premi
       operationId: myOperation
   ```
 
-  This field is optional and the generator will fall back to using the `operationId` if verndor extensions are not present.
+  This field is optional and the generator will fall back to using the `operationId` if vendor extensions are not present.
 
 - The OpenAPI Generator now allows for setting a custom copyright header.
   Use the option `<copyrightHeader>` to set a custom header, or set the flag `<sapCopyrightHeader>` to have an SAP copyright header added.
@@ -442,7 +447,7 @@ As part of the update of the pre-generated type-safe client for S/4HANA On-premi
 
 - `ClassCastException` fix an issue with accessing navigational properties directly in OData V4 requests. Read and count operations performed on nested collections directly via e.g. `service.naviagteTo(Entity.COLLECTION_PROPERTY).getAll()` would cause a `ClassCastException` when parsing the result. This is now done correctly.
 - Fix an issue where dependency conflicts between the SDK and the SAP Java Buildback lead to runtime issues on the SCP Cloud Foundry.
-- Fix an issue where operations with empty payload in OData Batch request changesets on S/4HANA OData services failed with _Bad Request_ responses.
+- Fix an issue where operations with empty payload in OData Batch request changesets on SAP S/4HANA OData services failed with _Bad Request_ responses.
 
 ## 3.34.0 - December 3, 2020
 
@@ -1030,7 +1035,7 @@ Release date: July 16, 2020
       batchRequest.execute( httpClient );
       ```
 
-- Add `getAllDestinations(DestinationOptions options)` in `ScpCfDestinationLoader` class to fetch all the cloud foundry destinations. The method prioritizes the destination at service instance level in case there exists a destination with the same name on service instance and on sub account level.
+- Add `getAllDestinations(DestinationOptions options)` in `ScpCfDestinationLoader` class to fetch all the Cloud Foundry destinations. The method prioritizes the destination at service instance level in case there exists a destination with the same name on service instance and on sub account level.
 
 ### Fixed Issues
 
@@ -1330,7 +1335,7 @@ Release date: July 16, 2020
 
 ## 3.16.1
 
-- Release date: March 26, 2019
+- Release date: March 26, 2020
 - Javadoc: https://help.sap.com/doc/059aaed870b44d8e8e24938c505b8120/1.0/en-US/index.html
 - Release blog: https://blogs.sap.com/?p=1068438
 
@@ -2036,7 +2041,7 @@ When defining destinations via the environment variable destinations, version 3.
 - Renamed/Moved Modules. Our goals with the renaming were the following:
   - Use the prefix `com.sap.cloud.sdk` instead of `com.sap.cloud.s4hana`.
   - Make all artifact ids unique, so that tools gradle can easily consume our modules.
-  - The term `s4hana` in the group id is only used if the contained module is in some way specific for S/4HANA.
+  - The term `s4hana` in the group id is only used if the contained module is in some way specific for SAP S/4HANA.
   - Remove all obsolete modules.
 
 | v2.19.2                                                         | v3.0.0                                                             |
