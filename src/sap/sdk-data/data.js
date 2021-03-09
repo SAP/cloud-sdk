@@ -11,7 +11,7 @@ export const features = [
       'Both OData v2 and OData v4 covered',
       'Discover OData APIs from your IDE',
       'Clean code - low to no boilerplate',
-      'Keep focus on a business logic'
+      'Keep focus on business logic'
     ],
     img: 'img/feat/feat-type-safe-client.svg'
   },
@@ -31,12 +31,12 @@ export const features = [
     id: 'btp',
     title: 'Seamless Support for the SAP Business Technology Platform',
     benefits: [
-      'Automated handling connectivity ',
+      'Automated handling of connectivity ',
       'Embedded multi-tenancy',
       'Support all authentication flows',
       'Multiple runtimes covered',
       'Cloud to On-Premise connectivity',
-      'Advance cloud quality patterns'
+      'Advanced cloud quality patterns'
     ],
     img: 'img/feat/feat-btp-cloud.svg'
   },
@@ -55,7 +55,7 @@ export const features = [
         Available on npm for{' '}
         <a href="https://www.npmjs.com/search?q=sap%2Fsap-cloud-vdm*">
           SAP S/4HANA Cloud
-        </a>
+        </a>{' '}
         and{' '}
         <a href="https://www.npmjs.com/search?q=sap%2Fsap-cloud-op*">
           SAP S/4HANA On-Premise
@@ -75,7 +75,7 @@ export const features = [
         </a>{' '}
         (BAS)
       </>,
-      'Code you application without leaving your browser',
+      'Code your application without leaving your browser',
       'Connect your repository directly to BAS'
     ],
     img: 'img/feat/feat-bas.svg'
