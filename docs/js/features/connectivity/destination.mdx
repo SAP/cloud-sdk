@@ -74,14 +74,13 @@ If a `destinations` environment variable is present it will be used for the dest
 The value is expected to be a stringified JSON array, where the items adhere to the `Destination` interface.
 Example: `"[{name: 'TESTINATION', url: 'http://url.hana.ondemand.com', username: 'DUMMY', password: 'dummy'}]"`.
 
-The SAP Cloud SDK provides a `mockDestinationsEnv(...destinations)` function to set the `destinations` environment variable for the current process programmatically.
-It takes a list of destination objects, transforms it to a JSON array, and assigns it to `process.env.destinations`.
-At runtime, the SAP Cloud SDK will check whether a destination with the given is present and use it, if it is.
-If a destination with the same name as the one given as `destinationName` is found it is taken for example:
+The SAP Cloud SDK provides a `setTestDestination(destination)` function to add a destination environment variable for the current process programmatically.
+It takes a destination objects, transforms it to a JSON object, and adds it to `process.env.destinations`.
 
-```js
-mockDestinationsEnv({
-  authTokens: [],
+```ts
+import { setTestDestination } from '@sap-cloud-sdk/test-util';
+
+setTestDestination({
   authentication: 'NoAuthentication',
   name: 'TESTINATION',
   isTrustingAllCertificates: false,
@@ -90,6 +89,7 @@ mockDestinationsEnv({
 ```
 
 This would set a destination with the name `TESTINATION`.
+At runtime, the SAP Cloud SDK will check the environment variable for a destination with the given name and use it if present.
 Note that the SAP Cloud SDK offers also a `mockTestDestination()` method, which reads in a `systems.json` and `credentials.json` to create destinations.
 The advantage of files is that they can be excluded from the repository since they contain sensitive information.
 
