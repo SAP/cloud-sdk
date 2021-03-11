@@ -290,6 +290,14 @@ Hence, if the changeset was a failure then evaluating the result of any of the c
 
 The SAP Cloud SDK supports different strategies for updating entities which differ in the HTTP method and the payload of the update request.
 
+:::info
+To update an entity it should first be retrieved from the service.
+This ensures the latest state of the entity is updated.
+Otherwise updating with old data could erase changes that have been made to the entity in the mean time.
+Many services will enforce this behaviour with optimistic locking mechanisms.
+Refer to the [section about ETags for details](#handling-of-etags).
+:::
+
 <Tabs groupId="updateStrategy" defaultValue="modify" values={[ { label: 'Modify Entity (default)', value: 'modify', }, { label: 'Replace Entity', value: 'replace', }, ]}>
 
 <TabItem value="modify">
