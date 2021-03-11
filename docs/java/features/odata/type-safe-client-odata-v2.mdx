@@ -441,7 +441,7 @@ Refer to the [section about ETags for details](#handling-of-etags).
 <TabItem value="modify">
 
 The default strategy is the _modifying entity update strategy_ which attempts to modify only the necessary entity fields in the remote system.
-It issues a PATCH request and includes only the fields in the request payload whose values were changed by its setter method.
+It issues a PATCH request and includes only the fields in the request payload whose values were _changed by its setter method_.
 Hence, fields whose values remain unchanged are not sent to the target system.
 Calling the method `includingFields(fields ...)` instructs the SAP Cloud SDK to add the mentioned fields explicitly in the update request.
 This is useful for backend systems that require some unchanged fields in the request payload for given reasons.
