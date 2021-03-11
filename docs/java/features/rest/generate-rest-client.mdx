@@ -35,6 +35,52 @@ The generated Java classes need the following dependency to be present in your p
 
 In order to use the generated client library, either the SAP Cloud SDK BOM should be part of your project's `<dependencyManagement>` section or the version for the `openapi-core` artifact must be mentioned explicitly here.
 
+## Influence Java Class and Method Names
+
+The OpenAPI generator uses the `tag` field to determine the Java service class name and the `operationId` to determine the Java method for each service operation.
+You can influence the service class name and the method names by adding extension fields to the OpenAPI specification.
+Thereby you can leave the `tag` and `operationId` fields untouched if they need to stay stable.
+
+### Java Class Name
+
+The Java class name can be influenced with the extension field `x-sap-cloud-sdk-api-name`. 
+The OpenAPI generator takes the value of `x-sap-cloud-sdk-api-name` and adds the `Api` prefix to determine the class name.
+
+In the following example the custom value `CustomOperations` takes precedence over the `tag` value `Operations`
+
+```yml
+/operation/path:
+  get:
+    summary: My operation
+    operationId: myOperation
+    x-sap-cloud-sdk-api-name: CustomOperations
+    tags:
+      - Operations
+```		
+
+The Java class for this service operation will be named `CustomOperationsApi`.
+
+### Java Method Name
+
+The Java method name can be overriden with the extension field `x-sap-cloud-sdk-operation-name`.
+
+In the following example the custom value `performMyOperation` takes precedence over the `operationId` value `myOperation`.
+
+```yml
+/operation/path:
+  get:
+    summary: My Operation
+    x-sap-cloud-sdk-operation-name: performMyOperation
+    operationId: myOperation
+```
+
+The Java method for this service operation will be named `peformMyOperation`.
+
+:::tip Field Order
+The order of fields in the OpenAPI specification does not matter.
+Only the right nesting is necessary, that is, the two fields `x-sap-cloud-sdk-operation-name` and `x-sap-cloud-sdk-api-name` should be assigned to an operation (get, post, ...).
+:::
+
 ## Using the OpenAPI Generator Maven Plugin
 
 To use the Maven plugin following XML snippet should be added to the POM file of your project:
