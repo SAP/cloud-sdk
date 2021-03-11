@@ -41,7 +41,11 @@ The OpenAPI generator uses the `tag` field to determine the Java service class n
 You can influence the service class name and the method names by adding extension fields to the OpenAPI specification.
 Thereby you can leave the `tag` and `operationId` fields untouched if they need to stay stable.
 
-The Java class name can be overriden with the extension field `x-sap-cloud-sdk-api-name`.
+### Java Class Name
+
+The Java class name can be influenced with the extension field `x-sap-cloud-sdk-api-name`. 
+The OpenAPI generator takes the value of `x-sap-cloud-sdk-api-name` and adds the `Api` prefix to determine the class name.
+
 In the following example the custom value `CustomOperations` takes precedence over the `tag` value `Operations`
 
 ```yml
@@ -53,7 +57,13 @@ In the following example the custom value `CustomOperations` takes precedence ov
     tags:
       - Operations
 ```		
+
+The Java class for this service operation will be named `CustomOperationsApi`.
+
+### Java Method Name
+
 The Java method name can be overriden with the extension field `x-sap-cloud-sdk-operation-name`.
+
 In the following example the custom value `performMyOperation` takes precedence over the `operationId` value `myOperation`.
 
 ```yml
@@ -63,6 +73,13 @@ In the following example the custom value `performMyOperation` takes precedence 
     x-sap-cloud-sdk-operation-name: performMyOperation
     operationId: myOperation
 ```
+
+The Java method for this service operation will be named `peformMyOperation`.
+
+:::tip Field Order
+The order of fields in the OpenAPI specification does not matter.
+Only the right nesting is necessary, that is, the two fields `x-sap-cloud-sdk-operation-name` and `x-sap-cloud-sdk-api-name` should be assigned to an operation (get, post, ...).
+:::
 
 ## Using the OpenAPI Generator Maven Plugin
 
