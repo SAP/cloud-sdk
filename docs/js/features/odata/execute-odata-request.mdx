@@ -190,16 +190,31 @@ MyEntity.requestBuilder()
 This will add the custom service path to your request.
 Executing the example request above against a destination with URL `https://my.s4-system.com` would then execute the request against something like this: `https://my.s4-system.com/my/custom/service/path/MyEntity`.
 
-### Getting the Raw Response
+### Getting the Raw Response and the Original Request
 
-In some cases you might prefer to retrieve the unserialized raw response:
+In most cases, it is recommended to use `execute` method to retrieve the deserialized typed response.
 
-- The response cannot be deserialized automatically, so the raw response can work as a workaround
+In some cases, on the other hand, you might prefer to retrieve the raw response and the original request:
+
+- The response cannot be deserialized automatically, so the raw response can work as a workaround.
+  For example, when `function import`s use an entity type as return type, and this entity type is shared by multiple `EntitySet`s, without further information, it is unclear which `Entity` the SAP Cloud SDK should build during the deserialization.
 - In addition to the response body, you need additional information, like the status code or response headers.
-- In addition to the response, the request built by the SAP Cloud SDK needs also to be returned
+- In addition to the response, the request built by the SAP Cloud SDK needs also to be returned.
 
-To retrieve a raw response for your request use the `executeRaw` method.
+As shown in the example below, the `executeRaw` method returns an `HttpResponse`, which contains:
 
-:::note Best Practice: Retrieve typed responses using `execute()`
-Use `executeRaw` only for workarounds, debugging, logging, and other good reasons where the typed `execute` method doesn't provide enough flexibility.
-:::
+- status code
+- response header
+- response body
+- original request
+
+```ts
+const httpResponse: HttpResponse = MyEntity.requestBuilder()
+  .getAll()
+  .executeRaw(destination);
+
+const status = httpResponse.status;
+const responseHeaders = httpResponse.headers;
+const responseBody = httpResponse.data;
+const request = httpResponse.request;
+```
