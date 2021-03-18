@@ -52,6 +52,66 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed issues
 -->
 
+## 3.41.0 - March 25, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.41.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+
+### New Functionality
+
+- Added a convenience method to configure the proxy authorizations when building a custom `DefaultHttpDestination`.
+  The `.proxyAuthorization("value")` will send `value` within the `Proxy-Authorization` header, unless that header is already set.
+- Enable the OpenAPI generator to consider the vendor extension field `x-sap-cloud-sdk-api-name` in an OpenAPI specification.
+  By default, the OpenAPI generator considers the `tag` of an operation to determine the Java service class name.
+  In case changing the `tag` field is not suitable to influence the Java service class name, you can add the field `x-sap-cloud-sdk-api-name` to the operation.
+  If this field is present, the OpenAPI generator uses its value to determine the Java service class name.
+- Enable OData requests to skip the CSRF token retrieval if the server does not require it.
+  Use the method `withoutCsrfToken()` to disable the CSRF token retrieval.
+- Enable new experimental OData V2 reading requests as items in a Batch request. The API is similar to OData V4 Batch request:
+
+  ```
+  BusinessPartnerService service = new DefaultBusinessPartnerService();
+
+  BusinessPartnerFluentHelper readOperationAll = service.getAllBusinessPartner().top(10);
+  BusinessPartnerByKeyFluentHelper readOperationByKey = service.getBusinessPartnerByKey("bupa9000");
+
+  BatchResponse response = service.batch()
+      .addReadOperation(readOperationAll)
+      .addReadOperation(readOperationByKey)
+      .executeRequest(destination);
+
+  List<BusinessPartner> entities = response.getReadResult(readOperationAll);
+  BusinessPartner entity = response.getReadResult(readOperationByKey);
+  ```
+
+### Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update SCP Neo Java Tomcat API from `3.123.6.2` to `3.124.9.2`
+    - Update SCP Neo Java TomEE7 API from `1.92.6.2` to `1.93.10.2`
+    - Update [SAP CP Spring XSUAA Security Library](https://github.com/SAP/cloud-security-xsuaa-integration/tree/master/spring-xsuaa) from `2.8.4`to `2.8.7`
+  - Other dependency updates:
+    - Minor version updates:
+      - Update Spring from `5.3.3` to `5.3.4`
+      - Update Spring Security from `5.4.2` to `5.4.5`
+      - Update Jetty BOM from `9.4.36.v20210114` to `9.4.38.v20210224`
+      - Update Woodstox Core from `5.0.3` to `5.3.0`
+      - Update Netty from `4.1.59.Final` to `4.1.60.Final`
+      - Update Java JWT from `3.13.0` to `3.14.0`
+      - Update [Jackson](https://github.com/FasterXML/jackson) from `2.12.1` to `2.12.2`
+      - Update Apache Commons Lang from version `3.11` to `3.12.0`
+      - Update JSON from version `20201115` to `20210307`
+      - Update Jackson from version `2.12.1` to `2.12.2`
+- The OData type-safe client (VDM) for OData V4 services of newest release [2102 of SAP S/4HANA Cloud](https://news.sap.com/2021/02/sap-s4hana-cloud-2102-empowering-businesses-seize-opportunities/) and FPS1 of SAP S/4HANA on-premise 2020 now also supports static fields for accessible properties on `VdmComplex` types.
+
+### Fixed issues
+
+- Fix an issue with OData V2 read requests where an error message was incorrectly written to the log when using filters.
+  The error messages are no longer logged unless it is applicable:
+  > Registered custom filter expression cannot be used when performing the OData V2 request with toRequest() or executeRequest().
+  > Registered custom filter expression cannot be used when performing the OData V2 request with execute().
+- Fix an issue with OData response handling where deserialization of one-to-many properties failed for primitive and complex data types.
+
 ## 3.40.0 - March 18, 2021
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.40.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
