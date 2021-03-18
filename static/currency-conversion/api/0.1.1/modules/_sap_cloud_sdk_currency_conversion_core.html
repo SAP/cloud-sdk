@@ -1,0 +1,182 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>@sap-cloud-sdk/currency-conversion-core | currency-conversion-library - v0.1.1</title>
+	<meta name="description" content="Documentation for currency-conversion-library - v0.1.1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">currency-conversion-library - v0.1.1</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../modules.html">currency-conversion-library - v0.1.1</a>
+				</li>
+				<li>
+					<a href="_sap_cloud_sdk_currency_conversion_core.html">@sap-cloud-sdk/currency-conversion-core</a>
+				</li>
+			</ul>
+			<h1>Module @sap-cloud-sdk/currency-conversion-core</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<a href="#sap-cloud-sdk-currency-conversion-core" id="sap-cloud-sdk-currency-conversion-core" style="color: inherit; text-decoration: none;">
+							<h1>SAP Cloud SDK Currency Conversion Core</h1>
+						</a>
+						<p>The SAP Cloud SDK currency conversion library is a TypeScript library that can be used to convert currency exchange rates. You can perform conversions with either one currency pair or multiple conversions through a single API call. You can use a data adapter to provide exchange rates, configuration settings, and so on.</p>
+						<a href="#direct-conversions" id="direct-conversions" style="color: inherit; text-decoration: none;">
+							<h2>Direct Conversions</h2>
+						</a>
+						<p>Direct conversions happen between a source currency and a target currency by using the exact rate from the source to the target currency. A conversion request with USD as the source currency and EUR as the target currency is performed only if an exchange rate from USD to EUR is available. Conversions will fail if only the rate from EUR to USD is available.</p>
+						<p>However, this scenario is covered by indirect conversions.</p>
+						<a href="#indirect-conversions-by-using-an-inverse-rate" id="indirect-conversions-by-using-an-inverse-rate" style="color: inherit; text-decoration: none;">
+							<h2>Indirect Conversions By Using an Inverse Rate</h2>
+						</a>
+						<p>You can request a conversion from INR to USD even if the exchange rates are available only from USD to INR. You (or your consumers) enable the inverse rates setting for each exchange rate type. You can then provide the rate type information by using the data adapter. Note that inverse rates are only used if no direct rates are available. For example, if you have enabled the inverse rate type for INR to USD and if a direct rate is available for this currency pair, it will still be given precedence over the inverse rate. If a direct rate from INR to USD is unavailable, the library looks for the USD to INR rate.</p>
+						<a href="#indirect-conversions-by-using-a-reference-rate" id="indirect-conversions-by-using-a-reference-rate" style="color: inherit; text-decoration: none;">
+							<h2>Indirect Conversions By Using a Reference Rate</h2>
+						</a>
+						<p>A currency conversion can be performed by using a reference or intermediate currency besides your desired currency pair. A conversion from INR to USD can be performed by using a reference currency, say EUR, with the currency exchange rates for INR to EUR and USD to EUR. Note that this can only be done if a reference currency for these rates are specified when you define the exchange rate pairs, in the &#39;toCurrency&#39; field.</p>
+						<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+							<h2>Usage</h2>
+						</a>
+						<a href="#direct-conversion" id="direct-conversion" style="color: inherit; text-decoration: none;">
+							<h3>Direct Conversion</h3>
+						</a>
+						<pre><code class="language-js"><span style="color: #AF00DB">import</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #001080">SingleFixedRateConversionResult</span><span style="color: #000000">,</span>
+<span style="color: #000000">  </span><span style="color: #001080">buildConversionParameterForFixedRate</span>
+<span style="color: #000000">} </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@sap-cloud-sdk/currency-conversion-models&#039;</span><span style="color: #000000">;</span>
+<span style="color: #AF00DB">import</span><span style="color: #000000"> { </span><span style="color: #001080">CurrencyConverter</span><span style="color: #000000"> } </span><span style="color: #AF00DB">from</span><span style="color: #000000"> </span><span style="color: #A31515">&#039;@sap-cloud-sdk/currency-conversion-core&#039;</span><span style="color: #000000">;</span>
+<span style="color: #008000">// Initialize the Currency Conversion Library.</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">currConverter</span><span style="color: #000000"> = </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #795E26">CurrencyConverter</span><span style="color: #000000">();</span>
+
+<span style="color: #AF00DB">try</span><span style="color: #000000"> {</span>
+<span style="color: #000000">  </span><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">result</span><span style="color: #000000">: </span><span style="color: #267F99">SingleFixedRateConversionResult</span><span style="color: #000000"> = </span><span style="color: #001080">currConverter</span><span style="color: #000000">.</span><span style="color: #795E26">convertCurrencyWithFixedRate</span><span style="color: #000000">(</span>
+<span style="color: #000000">    </span><span style="color: #795E26">buildConversionParameterForFixedRate</span><span style="color: #000000">(</span><span style="color: #A31515">&#039;INR&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;USD&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;10.00&#039;</span><span style="color: #000000">, </span><span style="color: #A31515">&#039;70.23&#039;</span><span style="color: #000000">)</span>
+<span style="color: #000000">  );</span>
+<span style="color: #000000">} </span><span style="color: #AF00DB">catch</span><span style="color: #000000"> (</span><span style="color: #001080">error</span><span style="color: #000000">) {</span>
+<span style="color: #000000">  </span><span style="color: #008000">// Exception handling here</span>
+<span style="color: #000000">}</span>
+</code></pre>
+						<blockquote>
+							<p>INFO:
+							Indirect conversions using inverse rates and reference currencies are disabled by default. You can use the data adapter implementation to specify whether you want to enable them, for each exchange rate type.</p>
+						</blockquote>
+						<blockquote>
+							<p>CAUTION:
+							If a reference currency is provided, it takes precedence over direct rates. The conversion is performed based on the reference currency specified. Inverse rates are not considered in this scenario.</p>
+						</blockquote>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Classes</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/_sap_cloud_sdk_currency_conversion_core.currencyconverter.html" class="tsd-kind-icon">Currency<wbr>Converter</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="../modules.html">Modules</a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="_sap_cloud_sdk_currency_conversion_core.html">@sap-<wbr>cloud-<wbr>sdk/currency-<wbr>conversion-<wbr>core</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="_sap_cloud_sdk_currency_conversion_models.html">@sap-<wbr>cloud-<wbr>sdk/currency-<wbr>conversion-<wbr>models</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/_sap_cloud_sdk_currency_conversion_core.currencyconverter.html" class="tsd-kind-icon">Currency<wbr>Converter</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer>
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
