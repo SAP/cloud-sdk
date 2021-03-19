@@ -103,20 +103,20 @@ Inside the given code block only the _AuthToken_ will be replaced, while e.g. th
 If you want to start a fresh context based on a given _AuthToken_, for example accessing information of the provider tenant while in a subscriber context, have a look at this code:
 
 ```java
+
+Tenant retrieveProviderTenant()
 {
-  Tenant retrieveProviderTenant()
-  {
-      // retrieves an access token from the provider context
-      AuthToken providerXsuaaAccessToken = AuthTokenAccessor.getXsuaaServiceToken();
-      return new ThreadContextExecutor()
-          // don't reuse the original context
-          .withoutParentThreadContext()
-          // add the provider token into the new context
-          .withListeners(new AuthTokenThreadContextListener(providerXsuaaAccessToken))
-          // return the actual provider tenant
-          .execute(TenantAccessor::getCurrentTenant);
-  }
+    // retrieves an access token from the provider context
+    AuthToken providerXsuaaAccessToken = AuthTokenAccessor.getXsuaaServiceToken();
+    return new ThreadContextExecutor()
+        // don't reuse the original context
+        .withoutParentThreadContext()
+        // add the provider token into the new context
+        .withListeners(new AuthTokenThreadContextListener(providerXsuaaAccessToken))
+        // return the actual provider tenant
+        .execute(TenantAccessor::getCurrentTenant);
 }
+
 ```
 
 :::
