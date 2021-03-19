@@ -385,26 +385,41 @@ The `service` object offers the method `batch` which allows access to the batch-
 Multiple single requests (like `createBusinessPartnerAddress`) can be wrapped into so-called changesets.
 Each changeset is opened with `beginChangeSet` and closed with `endChangeSet`. You can wrap multiple changesets into one batch request.
 
+Non-modification requests can be added outside of changesets with the `addReadOperations` method.
+
 Use `executeRequest` to issue the batch request to the remote system.
 We receive an instance of `BatchResponse` as the result object.
 
 ```java
-final BatchResponse result =
+BusinessPartnerAddress addressToCreate1;
+BusinessPartnerAddress addressToCreate2;
+
+BusinessPartnerFluentHelper requestTenEntities = service.getAllBusinessPartner().top(10);
+BusinessPartnerByKeyFluentHelper requestSingleEntity = service.getBusinessPartnerByKey("bupa9000");
+
+BatchResponse result =
     service
         .batch()
         .beginChangeSet()
-        .createBusinessPartnerAddress(address1)
-        .createBusinessPartnerAddress(address2)
+        .createBusinessPartnerAddress(addressToCreate1)
+        .createBusinessPartnerAddress(addressToCreate2)
         .endChangeSet()
+        .addReadOperations(requestTenEntities)
+        .addReadOperations(requestSingleEntity)
         .executeRequest(destination);
 ```
 
 #### Access Batch Response
 
+In OData Batch the response is structured similar to the request.
+The unordered responses of data modification requests are accessible with a given changeset index.
+The ordered responses of data retrieval requests are accessible with the reference of the original request object.
+
+##### Changeset Response
 Use the method `get` to access the individual changeset responses by index.
 
 ```java
-final Try<BatchResponseChangeSet> changeSetTry = result.get(0);
+Try<BatchResponseChangeSet> changeSetTry = result.get(0);
 ```
 
 The returned `Try` allows checking if the respective changeset was processed successfully by the remote server.
@@ -423,6 +438,19 @@ if (changeSetTry.isSuccess()) {
 :::note
 You have to cast the entity representations from the generic type `VdmEntity` to the respective subclasses.
 :::
+
+##### Read Response
+
+Use the method `getReadResult` to extract the deserialized response of a given read operation:
+
+```java
+List<BusinessPartner> entities = result.getReadResult(requestTenEntities);
+BusinessPartner entity = result.getReadResult(requestSingleEntity);
+```
+
+Instead of an index to indicate the batch position, the API expects the original request reference.
+The request-response mapping and deserialization is happening internally.
+
 
 ## Entity Update Strategies
 
