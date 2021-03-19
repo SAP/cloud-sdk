@@ -75,8 +75,8 @@ To continue using the latest features outlined in the release notes for version 
   BusinessPartnerByKeyFluentHelper readOperationByKey = service.getBusinessPartnerByKey("bupa9000");
 
   BatchResponse response = service.batch()
-      .addReadOperation(readOperationAll)
-      .addReadOperation(readOperationByKey)
+      .addReadOperations(readOperationAll)
+      .addReadOperations(readOperationByKey)
       .executeRequest(destination);
 
   List<BusinessPartner> entities = response.getReadResult(readOperationAll);
