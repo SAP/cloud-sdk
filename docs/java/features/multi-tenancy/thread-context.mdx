@@ -62,6 +62,33 @@ In that case you can override the current tenant explicitly:
 TenantAccessor.executeWithTenant(customTenant, () -> doStuff());
 ```
 
+:::caution
+Be aware, that the _executeWith_ methods shown above only replaces the given property, but does not update properties derived from it.
+
+Example: You have a special _AuthToken_, that you propagate with _AuthTokenAccessor.executeWithAuthToken_.
+Inside the given code block only the _AuthToken_ will be replaced, while e.g. the _Tenant_ is the same as in the original context.
+
+If you want to start a fresh context based on a given _AuthToken_, for example accessing information of the provider tenant while in a subscriber context, have a look at this code:
+
+```java
+
+Tenant retrieveProviderTenant()
+{
+    // retrieves an access token from the provider context
+    AuthToken providerXsuaaAccessToken = AuthTokenAccessor.getXsuaaServiceToken();
+    return new ThreadContextExecutor()
+        // don't reuse the original context
+        .withoutParentThreadContext()
+        // add the provider token into the new context
+        .withListeners(new AuthTokenThreadContextListener(providerXsuaaAccessToken))
+        // return the actual provider tenant
+        .execute(TenantAccessor::getCurrentTenant);
+}
+
+```
+
+:::
+
 ### Running Asynchronous Operations
 
 As the name suggests the `ThreadContext` is bound to a Thread, more specifically to the one it was created.
@@ -92,31 +119,4 @@ invokeAsynchronously(operationWithContext);
 Be cautious with long-running, asynchronous operations.
 A propagated Thread context will only persist as long as the Thread lives that it was created on.
 So when the parent Thread dies the context will cease to exist and no longer be available in any of the Threads.
-:::
-
-:::note
-Be aware, that the _executeWith_ methods shown above only replaces the given property, but does not update properties derived from it.
-
-Example: You have a special _AuthToken_, that you propagate with _AuthTokenAccessor.executeWithAuthToken_.
-Inside the given code block only the _AuthToken_ will be replaced, while e.g. the _Tenant_ is the same as in the original context.
-
-If you want to start a fresh context based on a given _AuthToken_, for example accessing information of the provider tenant while in a subscriber context, have a look at this code:
-
-```java
-
-Tenant retrieveProviderTenant()
-{
-    // retrieves an access token from the provider context
-    AuthToken providerXsuaaAccessToken = AuthTokenAccessor.getXsuaaServiceToken();
-    return new ThreadContextExecutor()
-        // don't reuse the original context
-        .withoutParentThreadContext()
-        // add the provider token into the new context
-        .withListeners(new AuthTokenThreadContextListener(providerXsuaaAccessToken))
-        // return the actual provider tenant
-        .execute(TenantAccessor::getCurrentTenant);
-}
-
-```
-
 :::
