@@ -26,14 +26,14 @@ import LicenseBadge from '../../src/sap/sdk-js/LicenseBadge';
 
 The SAP Cloud SDK supports you end-to-end when developing applications that communicate with SAP solutions and services such as SAP S/4HANA Cloud, SAP SuccessFactors, and many others.
 
-Using the SAP Cloud SDK, you can reduce your effort when developing an application on SAP Cloud Platform by building on best practices delivered by the SAP Cloud SDK.
+Using the SAP Cloud SDK, you can reduce your effort when developing an application on SAP Business Technology Platform (SAP BTP) by building on best practices delivered by the SAP Cloud SDK.
 The SAP Cloud SDK can provide JavaScript libraries and project templates.
 
 To create such an application we provide a command-line interface, that allows you to scaffold or enhance an application with the missing parts to use the SAP Cloud SDK.
 
 ### What Is the Command-Line Interface?
 
-The command-line interface (CLI) can initialize a Nest-based project or (the more common case) add everything you need to develop for SAP Cloud Platform to an existing project no matter what backend framework you use.
+The command-line interface (CLI) can initialize a Nest-based project or (the more common case) add everything you need to develop for SAP Business Technology Platform to an existing project no matter what backend framework you use.
 If there are any incompatibilities, please let us know in the [issues](https://github.com/SAP/cloud-sdk-cli/issues/new/choose)!
 
 ## Installation
@@ -125,7 +125,7 @@ The project contains the following files and folders, among others, to get you s
 
 #### Cloud Foundry
 
-- **`manifest.yml`**: The deployment descriptor file for `Cloud Foundry in SAP Cloud Platform`.
+- **`manifest.yml`**: The deployment descriptor file for `SAP BTP, Cloud Foundry environment`.
 
 #### Local Development
 
@@ -152,7 +152,7 @@ Go to `http://localhost:3000` and you should get a `Hello, World!` in response.
 
 ### Prerequisites
 
-The Cloud Foundry CLI comes in handy when you want to deploy your application to the SAP Cloud Platform.
+The Cloud Foundry CLI comes in handy when you want to deploy your application to the SAP Business Technology Platform.
 You can find installation instructions for all common platforms in the [`Cloud Foundry documentation`](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html).
 We recommend using a package manager for that.
 If you are using `chocolatey` on Windows, please find the instructions [here](https://chocolatey.org/packages/cloudfoundry-cli).
@@ -160,13 +160,13 @@ If you are using `chocolatey` on Windows, please find the instructions [here](ht
 ### Login
 
 :::note
-If you don't have an [SAP Cloud Platform](https://account.hana.ondemand.com/) account you need to create one.
+If you don't have an [SAP Business Technology Platform](https://account.hana.ondemand.com/) account you need to create one.
 :::
 
-To deploy our application, we first need to login to Cloud Foundry in SAP Cloud Platform using the `cf` CLI.
+To deploy our application, we first need to login to Cloud Foundry in SAP Business Technology Platform using the `cf` CLI.
 First, we need to set an `API endpoint`.
 The exact URL of this API endpoint depends on the region your subaccount is in.
-Open the [SAP Cloud Platform Cockpit](https://account.hana.ondemand.com/) and navigate to the subaccount you are planning to deploy your application to.
+Open the [SAP BTP cockpit](https://account.hana.ondemand.com/) and navigate to the subaccount you are planning to deploy your application to.
 Click on “Overview” on the left and you can see the URL of the API endpoint.
 
 Copy the URL and paste it into the following command in your command-line:
@@ -264,7 +264,7 @@ To create an instance of the destination service, execute the following command 
 cf create-service destination lite my-destination
 ```
 
-This tells `Cloud Foundry in SAP Cloud Platform` to create an instance of the destination service with service plan `lite` and make it accessible under the name `my-destination`.
+This tells `Cloud Foundry in SAP Business Technology Platform` to create an instance of the destination service with service plan `lite` and make it accessible under the name `my-destination`.
 We can now use the name to bind this service to our application.
 To do this, open your `manifest.yml` and add a section called `services`, under which you can then add the name of the just created service.
 
@@ -297,7 +297,7 @@ Create a file called `xs-security.json` with the following content:
 }
 ```
 
-The value for `xsappname` again has to be unique across the whole of `Cloud Foundry in SAP Cloud Platform`, so make sure to choose a unique name or prefix.
+The value for `xsappname` again has to be unique across the whole of `Cloud Foundry in SAP Business Technology Platform`, so make sure to choose a unique name or prefix.
 
 Now, execute the following command:
 
