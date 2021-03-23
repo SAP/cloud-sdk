@@ -186,11 +186,12 @@ For the simple case you would add `mockTestDestination(<destinationName>)` to yo
 }
 ```
 
-### Principal Propagation
+### Supported Authentication Types for On-premise Systems
 
-We have tested the flow with destinations using `BasicAuthorization`.
-The SAP Cloud SDK team is currently investigating with the colleagues from BAS if principal propagation is possible and which conditions are needed.
-We will update this section as soon as possible.
+The supported authentication types are either `BasicAuthorization` or `PrincipalPropagation`.
+In case you use principal propagation, the BAS will fill the `SAP-Connectivity-Authentication` header as discussed in the [OnPremises connectivity guide.](../features/connectivity/on-premise.mdx)
+The user logged into the BAS will be propagated.
+In case your BAS user is **not** a valid user of the On-Premise system you can use a destination using basic authorization.
 
 ## Case 2: Connection to Cloud Systems
 
