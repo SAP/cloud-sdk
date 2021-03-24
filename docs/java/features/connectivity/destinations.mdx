@@ -35,6 +35,14 @@ DestinationAccessor.getDestination("my-destination");
 This will look up the destination in the destination service if the application is running on SAP Business Technology Platform.
 Other sources like the environment variables are also considered.
 
+:::note Hint
+
+To minimize the runtime overhead of finding destinations, the SAP Cloud SDK uses caching to internally maintain a list of already retrieved destinations.
+Therefore, subsequent calls to `DestinationAccessor.getDestination("my-destination");` will be served from that cache instead of performing the look up over and over again.
+Cache entries will automatically be invalidated 5 minutes after their initial creation.
+
+:::
+
 ## Supported Authentication Flows
 
 We provide support for the following authentication types on Business Technology Platform - Cloud Foundry.
