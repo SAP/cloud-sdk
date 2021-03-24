@@ -64,6 +64,11 @@ You can use the extension field `x-sap-cloud-sdk-api-name` on an operation, on a
 All subordinated objects inherit its value automatically.
 For instance, if you assign the field `x-sap-cloud-sdk-api-name` to one path, all operations under that path inherit this field automatically.
 
+:::tip Removal of `api` Suffix
+If the `x-sap-cloud-sdk-api-name` field value ends on `api` (regardless of the case), this suffix gets removed by the OpenAPI generator.
+For instance, if the value is `FooApi`, the generator removes the `Api` suffix. Consequently, the Java class name will be `FooApi`.
+:::
+
 ### Java Method Name
 
 The Java method name can be overriden with the extension field `x-sap-cloud-sdk-operation-name`.
