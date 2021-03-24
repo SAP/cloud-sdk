@@ -44,7 +44,7 @@ Thereby you can leave the `tag` and `operationId` fields untouched if they need 
 ### Java Class Name
 
 The Java class name can be influenced with the extension field `x-sap-cloud-sdk-api-name`.
-The OpenAPI generator takes the value of `x-sap-cloud-sdk-api-name` and adds the `Api` prefix to determine the class name.
+The OpenAPI generator takes the value of `x-sap-cloud-sdk-api-name` and adds an `Api` suffix (if not already present) to determine the class name.
 
 In the following example the custom value `CustomOperations` takes precedence over the `tag` value `Operations`
 
@@ -63,12 +63,6 @@ The Java class for this service operation will be named `CustomOperationsApi`.
 You can use the extension field `x-sap-cloud-sdk-api-name` on an operation, on a path or on the root level of the OpenAPI specification.
 All subordinated objects inherit its value automatically.
 For instance, if you assign the field `x-sap-cloud-sdk-api-name` to one path, all operations under that path inherit this field automatically.
-
-:::tip Removal of `api` Suffix
-If the `x-sap-cloud-sdk-api-name` field value ends on `api` (regardless of the case), this suffix gets removed by the OpenAPI generator.
-For instance, if the value is `FooApi`, the generator removes the `Api` suffix.
-Consequently, the Java class name will be `FooApi`.
-:::
 
 ### Java Method Name
 
