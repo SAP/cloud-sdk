@@ -39,6 +39,7 @@ Other sources like the environment variables are also considered.
 
 To minimize the runtime overhead of finding destinations, the SAP Cloud SDK uses caching to internally maintain a list of already retrieved destinations.
 Therefore, subsequent calls to `DestinationAccessor.getDestination("my-destination");` will be served from that cache instead of performing the look up over and over again.
+Cache entries will automatically be invalidated 5 minutes after their initial creation.
 
 :::
 
