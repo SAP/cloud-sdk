@@ -4,7 +4,7 @@ title: Use Destinations To Connect To Other Systems and Services
 hide_title: false
 hide_table_of_contents: false
 sidebar_label: Destinations
-description: This article describes how the SAP Cloud SDK for Java can be used to establish connections to other systems and services like SAP S/4HANA or SAP Cloud Platform services.
+description: This article describes how the SAP Cloud SDK for Java can be used to establish connections to other systems and services like SAP S/4HANA or SAP Business Technology Platform services.
 keywords:
   - sap
   - cloud
@@ -21,7 +21,7 @@ The SAP Cloud SDK offers some basic functionality that helps with connecting to 
 The SAP Cloud SDK introduces the general concept of a `Destination` which holds basic information about how to connect to such a system.
 That could for instance be a `url`, a user name, and password for basic authentication or some custom headers.
 
-This concept is integrated with the [Destination Service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html) that is available on the SAP Cloud Platform.
+This concept is integrated with the [Destination Service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html) that is available on the SAP Business Technology Platform.
 If the application has a service binding to this service in place the SAP Cloud SDK will provide access to these destinations.
 
 ## Accessing Destinations
@@ -32,8 +32,16 @@ In general destinations are accessed through the `DestinationAccessor`:
 DestinationAccessor.getDestination("my-destination");
 ```
 
-This will look up the destination in the destination service if the application is running on SAP Cloud Platform.
+This will look up the destination in the destination service if the application is running on SAP Business Technology Platform.
 Other sources like the environment variables are also considered.
+
+:::note Hint
+
+To minimize the runtime overhead of finding destinations, the SAP Cloud SDK uses caching to internally maintain a list of already retrieved destinations.
+Therefore, subsequent calls to `DestinationAccessor.getDestination("my-destination");` will be served from that cache instead of performing the look up over and over again.
+Cache entries will automatically be invalidated 5 minutes after their initial creation.
+
+:::
 
 ## Supported Authentication Flows
 
@@ -300,7 +308,7 @@ It does not matter that the app does not run on your own machine.
 To better understand the configuration steps, we'll outline shortly how destination retrieval works when running your app on SCP.
 Thereafter we'll outline the configuration procedures in detail.
 
-### Background: Destination Retrieval on SAP Cloud Platform
+### Background: Destination Retrieval on SAP Business Technology Platform
 
 By default the SAP Cloud SDK uses a set of so-called destination loaders in a given order when searching for a destination via the `DestinationAccessor` API:
 
@@ -333,12 +341,12 @@ You can configure multiple destinations with that approach.
 Note that the value of the environment variable is a JSON array, so you can add further entries into it.
 :::
 
-#### SAP Cloud Platform Destination Service
+#### SAP Business Technology Platform Destination Service
 
 If the previous lookup was not successful, the next destination loaders examine the environment variable `VCAP_SERVICES` to see if the SCP destination service is bound.
 If so, the SAP Cloud SDK queries the SCP destination service for the destination configuration per the requested destination name.
 
-#### SAP Cloud Platform Connectivity Service
+#### SAP Business Technology Platform Connectivity Service
 
 In case the destination is of proxy type `OnPremise`, the SAP Cloud SDK performs an additional query to the SCP connectivity service to obtain further proxy information and an authorization token.
 
@@ -467,7 +475,7 @@ final HttpDestination destination =
         "my-workflow");
 ```
 
-##### Enable Access to SAP Cloud Platform Connectivity Service
+##### Enable Access to SAP Business Technology Platform Connectivity Service
 
 The SCP connectivity service builds the connection between SCP and the on-premise network.
 That is why it has strong built-in restrictions to allow it only to be called from within SCP.
