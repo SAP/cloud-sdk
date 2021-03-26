@@ -58,15 +58,14 @@ To continue using the latest features outlined in the release notes for version 
 
 ### New Functionality
 
-- Added a convenience method to configure the proxy authorizations when building a custom `DefaultHttpDestination`.
+- We added a convenience method to configure the proxy authorizations when building a custom `DefaultHttpDestination`.
   The `.proxyAuthorization("value")` will send `value` within the `Proxy-Authorization` header, unless that header is already set.
-- Enable the OpenAPI generator to consider the vendor extension field `x-sap-cloud-sdk-api-name` in an OpenAPI specification.
-  By default, the OpenAPI generator considers the `tag` of an operation to determine the Java service class name.
-  In case changing the `tag` field is not suitable to influence the Java service class name, you can add the field `x-sap-cloud-sdk-api-name` to the operation.
-  If this field is present, the OpenAPI generator uses its value to determine the Java service class name.
+- The OpenAPI generator now supports the vendor extension field `x-sap-cloud-sdk-api-name` in an OpenAPI specification.
+  By default, the OpenAPI generator uses the `tag` of an operation to determine the Java service class name.
+  In case you're not happy with the name generated from the `tag` field, and changing it is not possible, you can add `x-sap-cloud-sdk-api-name` vendor extension to the `operation` section of the specification. This vendor extension will be used by the generator to derive the Java service class name.
 - Enable OData requests to skip the CSRF token retrieval if the server does not require it.
   Use the method `withoutCsrfToken()` to disable the CSRF token retrieval.
-- Enable new experimental OData V2 reading requests as items in a Batch request. The API is similar to OData V4 Batch request:
+- We provided experimental support for OData v2 read requests as items in a Batch request. The API is unified and similar to the OData v4 Batch request:
 
   ```
   BusinessPartnerService service = new DefaultBusinessPartnerService();
