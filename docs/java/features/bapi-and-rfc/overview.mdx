@@ -69,7 +69,7 @@ The servlet has two input parameters which we supply in the query string:
 - _controllingArea_: Defines the controlling area for the cost center retrieval.
 
 The app retrieves the SCP destination with SAP Cloud SDK core capabilities, creates a BAPI request, and issues that to SAP S/4HANA through the SAP Cloud Connector.
-We use the SAP Cloud Connector to access an SAP S/4HANA On-Premise system.
+We use the SAP Cloud Connector to access an SAP S/4HANA On-premise system.
 
 The BAPI result contains cost center information which we print to the servlet response.
 
@@ -267,7 +267,7 @@ Here is what you'll need to make progress throughout the next steps.
 - Node.js installed on your machine
 - User in SAP S/4HANA target system
 - SCP Cloud Foundry subaccount with entitlements for XSUAA, destination and connectivity service
-- SAP Cloud Connector connected to the SAP Cloud Foundry subaccount (if SAP S/4HANA is On-Premise)
+- SAP Cloud Connector connected to the SAP Cloud Foundry subaccount (if SAP S/4HANA is On-premise)
 
 Official tutorials for setting up these scenarios can be found [here](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/fa4adc9bd40e45dbac573fd616695446.html).
 
@@ -289,9 +289,9 @@ Expose the SAP S/4HANA system in the SAP Cloud Connector as described in the [of
 Open the SCP cockpit on the subaccount level.
 Navigate to `Connectivity` -> `Destinations` and create a new RFC destination with these properties.
 
-- _Name_: BAPI-TEST (you can also choose your own name)
-- _Type_: RFC
-- _ProxyType_: On-Premise
+- _Name_: `BAPI-TEST` (you can also choose your own name)
+- _Type_: `RFC`
+- _ProxyType_: `OnPremise`
 - _User_: Enter the SAP S/4HANA user name
 - _Password_: Enter the SAP S/4HANA password
 - _Additional properties_:
@@ -302,7 +302,7 @@ Navigate to `Connectivity` -> `Destinations` and create a new RFC destination wi
 For performance improvements of your app, please consider using optional properties such as `jco.client.serialization_format` (see further in [JCo documentation](https://support.sap.com/en/product/connectors/jco.html)).
 
 :::info
-This destination setup is exemplary for accessing an On-Premise SAP S/4HANA system directly, if you want to access it e.g. via message server logon or you want to access a cloud system via WebSocketRFC, please adapt the properties as described in the [official documentation](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/ab6eac92978f469e9eabe3d477ca2411.html).
+This destination setup is exemplary for accessing an On-premise SAP S/4HANA system directly, if you want to access it e.g. via message server logon or you want to access a cloud system via WebSocketRFC, please adapt the properties as described in the [official documentation](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/ab6eac92978f469e9eabe3d477ca2411.html).
 :::
 
 ### Call the Test App
