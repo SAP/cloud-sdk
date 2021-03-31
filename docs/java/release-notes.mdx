@@ -197,7 +197,7 @@ As part of the update of the pre-generated type-safe client for SAP S/4HANA On-p
 
 - The type-safe client (VDM) classes for `TimeDependentStockLevelService` have been removed as the SAP S/4HANA on-premise OData service does not exist in releases 2020 FPS0 or FPS1.
 
-- With SAP S/4 OnPremise release 2020 FPS1, in the type-safe client (VDM) class for `VehicleManagementSystemForVehicleService` the `getVMSVehicleIncomingInvoiceByKey` method now takes only two parameters ( `vMSVehicleUUID` and `vMSVehicleActionDateTime`) as input as opposed to three before ( `vMSVehicleUUID`,`vMSVehicleActionDateTime` and `vMSVehicleActionDocType` ).
+- With SAP S/4 On-premise release 2020 FPS1, in the type-safe client (VDM) class for `VehicleManagementSystemForVehicleService` the `getVMSVehicleIncomingInvoiceByKey` method now takes only two parameters ( `vMSVehicleUUID` and `vMSVehicleActionDateTime`) as input as opposed to three before ( `vMSVehicleUUID`,`vMSVehicleActionDateTime` and `vMSVehicleActionDocType` ).
 
 ### New Functionality
 
@@ -735,7 +735,7 @@ The following changes apply to experimental functionality of the SAP Cloud SDK:
 ### New Functionality
 
 - Generated OData V4 client library service types provide a new method `batch()` to conveniently create instances of `BatchRequestBuilder`. It can be used to combine multiple reading and modifying OData operations into one OData Batch request.
-- We released new pre-generated type-safe client libraries (also known as the Virtual Data Model - VDM) for the [latest RTC release 2020 of SAP S/4HANA On-premise](https://blogs.sap.com/2020/10/07/sap-s-4hana-2020-release/). Except for the following services, everything else available in [SAP API Business Hub for SAP S/4HANA On-Premise 2020](https://api.sap.com/package/S4HANAOPAPI?section=Artifacts) are available:
+- We released new pre-generated type-safe client libraries (also known as the Virtual Data Model - VDM) for the [latest RTC release 2020 of SAP S/4HANA On-premise](https://blogs.sap.com/2020/10/07/sap-s-4hana-2020-release/). Except for the following services, everything else available in [SAP API Business Hub for SAP S/4HANA On-premise 2020](https://api.sap.com/package/S4HANAOPAPI?section=Artifacts) are available:
   - [Settlement Document](https://api.sap.com/api/OP_API_SETTLMT_DOC_0001/resource)
   - [Settlement Process Type - Read](https://api.sap.com/api/OP_API_SETTLMT_PROC_TYPE_0001/resource)
   - [Responsibility Management Team Configurations - Read](https://api.sap.com/api/OP_API_RESPYM_TEAM_CONFIG_SRV_0001/resource)
@@ -806,7 +806,7 @@ Blockchain Business Services update:
 
 ### Improvements
 
-- In case a `DefaultErpHttpDestination` decorates an on-premise `HttpDestination` and the destination configuration
+- In case a `DefaultErpHttpDestination` decorates an On-premise `HttpDestination` and the destination configuration
   lacks a `sap-client` property, an information message is logged to raise awareness for potential authentication issues.
 - Dependency Updates:
   - Update Spring Boot from `2.3.3.RELEASE` to `2.3.4.RELEASE`
@@ -1399,7 +1399,7 @@ Release date: July 16, 2020
 
 ### Fixed Issues
 
-- Fix unnecessary second request to destination service, when using proxy type "OnPremise" and authentication type "Principal Propagation".
+- Fix unnecessary second request to destination service, when using proxy type `OnPremise` and authentication type `Principal Propagation`.
 
 - Fix a regression introduced in `3.16.1` where public keys for token validation are not cached.
 
@@ -1476,7 +1476,7 @@ Release date: July 16, 2020
 
 ### Fixed Issues
 
-- Fix missing authorization header with Principal Propagation for OnPremise connectivitiy on CloudFoundry.
+- Fix missing authorization header with Principal Propagation for On-premise connectivitiy on CloudFoundry.
 - Fix several special characters escaping and encoding issues.
   - `?` in the service path
   - `#` and `&` in filter and select expressions
@@ -1625,7 +1625,7 @@ Release date: July 16, 2020
 
 - The existence of a principal as retrieved by the [`PrincipalAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html) is no longer an indicator for a JWT to be present. Due to the introduction of [`BasicAuthenticationAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html) a principal can also originate from the Basic Authentication header on the current request. As before verifying authentication and authorizations needs to be done explicitly by the application using the SAP Cloud SDK.
 
-- The behavior for principal propagation when accessing on-premise systems has changed as explained below in the Improvements section.
+- The behavior for principal propagation when accessing On-premise systems has changed as explained below in the Improvements section.
 
 ### New Functionality
 
