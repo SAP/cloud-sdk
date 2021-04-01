@@ -86,8 +86,8 @@ To continue using the latest features outlined in the release notes for version 
 
 - Dependency Updates:
   - SAP dependency updates:
-    - Update SCP Neo Java Tomcat API from `3.123.6.2` to `3.124.9.2`
-    - Update SCP Neo Java TomEE7 API from `1.92.6.2` to `1.93.10.2`
+    - Update BTP Neo Java Tomcat API from `3.123.6.2` to `3.124.9.2`
+    - Update BTP Neo Java TomEE7 API from `1.92.6.2` to `1.93.10.2`
     - Update [SAP CP Spring XSUAA Security Library](https://github.com/SAP/cloud-security-xsuaa-integration/tree/master/spring-xsuaa) from `2.8.4`to `2.8.7`
   - Other dependency updates:
     - Minor version updates:
@@ -158,8 +158,8 @@ To continue using the latest features outlined in the release notes for version 
 
 - Dependency Updates:
   - SAP dependency updates:
-    - Update SCP Neo Java Tomcat API from `3.121.8.1` to `3.123.6.2`
-    - Update SCP Neo Java TomEE7 API from `1.90.9.1` to `1.92.6.2`
+    - Update BTP Neo Java Tomcat API from `3.121.8.1` to `3.123.6.2`
+    - Update BTP Neo Java TomEE7 API from `1.90.9.1` to `1.92.6.2`
     - Update JPaaS Security Utils for Neo from `1.4.87` to `1.4.89`
     - Update [SAP CP Spring XSUAA Security Library](https://github.com/SAP/cloud-security-xsuaa-integration/tree/master/spring-xsuaa) from `2.8.3`to `2.8.4`
   - Other dependency updates:
@@ -294,9 +294,9 @@ As part of the update of the pre-generated type-safe client for SAP S/4HANA On-p
       .end();
   ```
 
-- We now support the `SAMLAssertion` authentication type on Cloud Foundry.
+- We now support the `SAMLAssertion` authentication type on Cloud Foundry environment.
   Refer to the [help page](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/d81e1683bd434823abf3ceefc4ff157f.html) for more detail on the `SAMLAssertion` authentication type.
-- We introduced a new API to build a `Destination` for connecting to services on Cloud Foundry.
+- We introduced a new API to build a `Destination` for connecting to services on Cloud Foundry environment.
   The information will be read from the `VCAP_SERVICES` environment variable at runtime.
   For certain authentication types i.e. `NoAuthentication` and `OAuth2ClientCredentials` this API eliminates the need to manually create a destination in the CF account for connecting to services.
 
@@ -394,7 +394,7 @@ As part of the update of the pre-generated type-safe client for SAP S/4HANA On-p
 
 - We deprecated the constructor `UncheckedFilterExpression(FilterExpression)`. It can still be used for OData V2 type-safe client (VDM) read requests that are executed with the deprecated `execute(...)` method. However, we strongly encourage you to migrate to `executeRequest(...)`. Unchecked filter expressions can be instantiated with recommended constructor `UncheckedFilterExpression(ValueBoolean)`.
 - We deprecated the class `com.sap.cloud.sdk.s4hana.connectivity.RequestBody` as it has no usage.
-- For BTP Cloud Foundry, instances of `DestinationHeaderProvider` will be called for every HTTP request as of now. Earlier versions invoked the API only once during destination construction.
+- For BTP Cloud Foundry environment, instances of `DestinationHeaderProvider` will be called for every HTTP request as of now. Earlier versions invoked the API only once during destination construction.
 
 ### New Functionality
 
@@ -430,9 +430,9 @@ As part of the update of the pre-generated type-safe client for SAP S/4HANA On-p
 - The Workflow API client library in module `scp-workflow-cf` got enhanced to reflect the latest Workflow API features.
 - Dependency Updates:
   - SAP dependency updates:
-    - Update SCP CF Java Logging Support from `3.2.1` to `3.3.0`
-    - Update SCP Neo Java Tomcat API from `3.119.9` to `3.121.8.1`
-    - Update SCP Neo Java TomEE7 API from `1.88.6` to `1.90.9.1`
+    - Update BTP CF Java Logging Support from `3.2.1` to `3.3.0`
+    - Update BTP Neo Java Tomcat API from `3.119.9` to `3.121.8.1`
+    - Update BTP Neo Java TomEE7 API from `1.88.6` to `1.90.9.1`
     - Update JPaaS Security Utils for Neo from `1.4.86` to `1.4.87`
   - Other dependency updates:
     - Major version updates: -
@@ -562,7 +562,7 @@ As part of the update of the pre-generated type-safe client for SAP S/4HANA On-p
 ### Fixed issues
 
 - `ClassCastException` fix an issue with accessing navigational properties directly in OData V4 requests. Read and count operations performed on nested collections directly via e.g. `service.naviagteTo(Entity.COLLECTION_PROPERTY).getAll()` would cause a `ClassCastException` when parsing the result. This is now done correctly.
-- Fix an issue where dependency conflicts between the SDK and the SAP Java Buildback lead to runtime issues on the SCP Cloud Foundry.
+- Fix an issue where dependency conflicts between the SDK and the SAP Java Buildback lead to runtime issues on the BTP Cloud Foundry environment.
 - Fix an issue where operations with empty payload in OData Batch request changesets on SAP S/4HANA OData services failed with _Bad Request_ responses.
 
 ## 3.34.0 - December 3, 2020
@@ -657,7 +657,7 @@ Iterable<List<EntityT>> lazyPages = request.iteratingPages().execute( destinatio
 
 ### Improvements
 
-- The SCP Workflow API client library in module [`scp-workflow-cf`](https://search.maven.org/artifact/com.sap.cloud.sdk.services/scp-workflow-cf) is now generally available and released for productive usage.
+- The BTP Workflow API client library in module [`scp-workflow-cf`](https://search.maven.org/artifact/com.sap.cloud.sdk.services/scp-workflow-cf) is now generally available and released for productive usage.
 - All OData V2 and V4 request builder classes now expose an experimental method [`toRequest()`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/com/sap/cloud/sdk/datamodel/odatav4/core/RequestBuilder.html#toRequest--) that returns a low-level, generic request object. It provides more convenience for debugging and flexibility to work around a non-standard service behavior.
 - The method [`withHeader()`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/com/sap/cloud/sdk/datamodel/odatav4/core/RequestBuilder.html#withHeader-java.lang.String-java.lang.String-) of OData V4 request builders is no longer experimental.
 
@@ -670,7 +670,7 @@ Iterable<List<EntityT>> lazyPages = request.iteratingPages().execute( destinatio
 - Dependency Updates:
   - API of Java EE 7 Web Profile TomEE 7 from `1.85.7.2` to `1.86.9`
   - API of Java Web Tomcat 8 from `3.116.7.2` to `3.117.9`
-  - Support for Logback for SCP CF from `3.0.1` to `3.2.0`
+  - Support for Logback for BTP CF from `3.0.1` to `3.2.0`
   - Tomcat from `8.5.50` to `8.5.59` to overcome the security vulnerability [CVE-2020-13943](https://nvd.nist.gov/vuln/detail/CVE-2020-13943)
   - Jetty from version `9.4.31.v20200723` to `9.4.33.v20201020` to overcome the security vulnerability [CVE-2020-27216](https://nvd.nist.gov/vuln/detail/CVE-2020-27216)
   - Netty BOM from `4.1.53.Final` to `4.1.54.Final`
@@ -702,7 +702,7 @@ Iterable<List<EntityT>> lazyPages = request.iteratingPages().execute( destinatio
 
 The following changes apply to experimental functionality of the SAP Cloud SDK:
 
-- The SCP service "Hyperledger Fabric on SAP Business Technology Platform" is deprecated, the corresponding Maven dependency `com.sap.cloud.sdk.services:scp-blockchain` gets deprecated too. Use the dependency [`com.sap.cloud.sdk.serices:blockchain-client-fabric`](https://mvnrepository.com/artifact/com.sap.cloud.sdk.services/blockchain-client-fabric) instead.
+- The BTP service "Hyperledger Fabric on SAP Business Technology Platform" is deprecated, the corresponding Maven dependency `com.sap.cloud.sdk.services:scp-blockchain` gets deprecated too. Use the dependency [`com.sap.cloud.sdk.serices:blockchain-client-fabric`](https://mvnrepository.com/artifact/com.sap.cloud.sdk.services/blockchain-client-fabric) instead.
 - The method `setResponseFormat()` in the class [`ODataRequestGeneric`](https://help.sap.com/doc/f08906c8d31640d583a106325f6a8184/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odata/client/request/ODataRequestGeneric.html) is no longer available. You can still configure the `Accept` header via the method [`addHeaderIfAbsent()`](https://help.sap.com/doc/f08906c8d31640d583a106325f6a8184/1.0/en-US/com/sap/cloud/sdk/datamodel/odata/client/request/ODataRequestGeneric.html#addHeaderIfAbsent-java.lang.String-java.lang.String-).
   Example: `request.addHeaderIfAbsent(HttpHeaders.ACCEPT, "application/xml")`.
 - The enum `com.sap.cloud.sdk.datamodel.odata.client.request.ODataFormat` is no longer public.
@@ -987,7 +987,7 @@ final DefaultHttpDestination defaultHttpDestination =
 
 #### REST
 
-- The experimental REST SCP Workflow client library got enhanced with a new API class constructor that expects an `ApiClient`, which allows for easier integration with e.g., the Spring `RestTemplate`.
+- The experimental REST BTP Workflow client library got enhanced with a new API class constructor that expects an `ApiClient`, which allows for easier integration with e.g., the Spring `RestTemplate`.
 
   ```java
   final String basePath = "https://my-api.org";
@@ -1000,7 +1000,7 @@ final DefaultHttpDestination defaultHttpDestination =
 
 #### SAP Business Technology Platform - Clound Foundry
 
-- We added support for new authentication types recently introduced on SAP Business Technology Platform - Cloud Foundry. It further improves handling of `Destinations` and keeps SDK up to date with SCP features:
+- We added support for new authentication types recently introduced on SAP Business Technology Platform - Cloud Foundry environment. It further improves handling of `Destinations` and keeps SDK up to date with BTP features:
   - `SAP_ASSERTION_SSO`
   - `OAuth2JWTBearer`
   - `OAuth2Password`
@@ -1058,7 +1058,7 @@ final DefaultHttpDestination defaultHttpDestination =
 
 ### Fixed Issues
 
-- Fix an issue on SCP Neo with anonymous HTTP requests being blocked, when optional module `concurrency-scp-neo` was added as application dependency.
+- Fix an issue on BTP Neo with anonymous HTTP requests being blocked, when optional module `concurrency-scp-neo` was added as application dependency.
 - Fix an issue with SOAP wrapped RFC and BAPI calls that sends pure exporting parameters as empty tags in SOAP serialised requests. Exporting parameters are no longer sent in SOAP serialised requests.
 - Fix an issue with SOAP wrapped RFC and BAPI calls where de-serialisation failed when the exporting parameter is a list and is empty.
 - Fixed an issue with listeners where `FileWritingODataQueryListener` was inadvertently called for OData CRUD operations.
@@ -1083,13 +1083,13 @@ Release date: July 16, 2020
 
 ### Compatibility Notes
 
-- Method and parameter names for the SCP Workflow client library were adjusted
+- Method and parameter names for the BTP Workflow client library were adjusted
 
 ### Improvements
 
 - Improved the error messages shown when JWT validation fails.
 - Improved the [`AuthTokenBuilder`](https://help.sap.com/doc/e95b7f89bb45412b943760333df7a016/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/AuthTokenBuilder.html) so that public keys used for verification of authorization tokens created by it are now being cached.
-- Client Library for SCP Workflow:
+- Client Library for BTP Workflow:
   - Method names improved to better reflect the Workflow domain
   - Methods return strong return types, the previous version had generic return types
   - Parameter names improved to better reflect their semantics
@@ -1109,7 +1109,7 @@ Release date: July 16, 2020
 ### Fixed Issues
 
 - Fix a memory leak that occurs when repeatedly using the [`AuthTokenBuilder`](https://help.sap.com/doc/e95b7f89bb45412b943760333df7a016/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/AuthTokenBuilder.html).
-- Fix an issue on SCP Neo with tenant-aware execution of a [`Callable`](https://docs.oracle.com/javase/8/docs/api/index.html?java/util/concurrent/Callable.html) when using [`TenantAccessor.executeWithTenant()`](https://help.sap.com/doc/e95b7f89bb45412b943760333df7a016/1.0/en-US/com/sap/cloud/sdk/cloudplatform/tenant/TenantAccessor.html#executeWithTenant-com.sap.cloud.sdk.cloudplatform.tenant.Tenant-java.util.concurrent.Callable-) in conjunction with a `DefaultTenant`
+- Fix an issue on BTP Neo with tenant-aware execution of a [`Callable`](https://docs.oracle.com/javase/8/docs/api/index.html?java/util/concurrent/Callable.html) when using [`TenantAccessor.executeWithTenant()`](https://help.sap.com/doc/e95b7f89bb45412b943760333df7a016/1.0/en-US/com/sap/cloud/sdk/cloudplatform/tenant/TenantAccessor.html#executeWithTenant-com.sap.cloud.sdk.cloudplatform.tenant.Tenant-java.util.concurrent.Callable-) in conjunction with a `DefaultTenant`
 
 ## 3.22.0
 
@@ -1151,7 +1151,7 @@ Release date: July 16, 2020
       batchRequest.execute( httpClient );
       ```
 
-- Add `getAllDestinations(DestinationOptions options)` in `ScpCfDestinationLoader` class to fetch all the Cloud Foundry destinations. The method prioritizes the destination at service instance level in case there exists a destination with the same name on service instance and on sub account level.
+- Add `getAllDestinations(DestinationOptions options)` in `ScpCfDestinationLoader` class to fetch all the Cloud Foundry environment destinations. The method prioritizes the destination at service instance level in case there exists a destination with the same name on service instance and on sub account level.
 
 ### Fixed Issues
 
@@ -1248,7 +1248,7 @@ Release date: July 16, 2020
 
 ### New Functionality
 
-- Introducing the client library for the Workflow API on SAP Business Technology Platform, Cloud Foundry
+- Introducing the client library for the Workflow API on SAP Business Technology Platform, Cloud Foundry environment
 
   - Example usage:
 
@@ -1461,7 +1461,7 @@ Release date: July 16, 2020
 
 ### New Functionality
 
-- Introduce the module _SCP Blockchain Client Fabric_ for easy interaction with a Hyperledger Fabric network using all necessary configuration and credentials from a standardized user-provided service in the Cloud Foundry environment.
+- Introduce the module _SCP Blockchain Client Fabric_ for easy interaction with a Hyperledger Fabric network using all necessary configuration and credentials from a standardized user-provided service in the Cloud Foundry environment environment.
 - JSON Web Tokens (JWT) are now validated using their `issuer` and `jku` properties. Public keys for signature verification are fetched from the URL specified by the `jku` property. This only works if the `issuer` domain matches the domain of the XSUAA service. In case this fails or if the properties are not set, the implementation falls back to the previous validation mechanisms (e.g. verification key of XSUAA service binding, XSUAA token endpoint provider).
 
 ### Improvements
@@ -1629,7 +1629,7 @@ Release date: July 16, 2020
 
 ### New Functionality
 
-- Introduce a new [`BasicAuthenticationAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html) to read the username and password from the Basic Authentication header of the currently incoming request on Cloud Foundry.
+- Introduce a new [`BasicAuthenticationAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html) to read the username and password from the Basic Authentication header of the currently incoming request on Cloud Foundry environment.
 
   - Use it like the other `*Accessor` classes:
     ```
@@ -1644,7 +1644,7 @@ Release date: July 16, 2020
     BasicAuthenticationAccessor.setBasicAuthenticationFacade(new CustomBasicAuthenticationFacade());
     ```
 
-- Enable the [`PrincipalAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html) to also read the current principal from the newly introduced [`BasicAuthenticationAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html), in addition to the already existing way to read it from the current JWT. This functionality applies to Cloud Foundry. A valid JWT takes precedence over a Basic Authentication header.
+- Enable the [`PrincipalAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html) to also read the current principal from the newly introduced [`BasicAuthenticationAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html), in addition to the already existing way to read it from the current JWT. This functionality applies to Cloud Foundry environment. A valid JWT takes precedence over a Basic Authentication header.
 
   The order of resolution is
 
@@ -1657,7 +1657,7 @@ Release date: July 16, 2020
 
 ### Improvements
 
-- The connectivity to on-premise systems from SCP Cloud Foundry is updated, so that the [authentication](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/39f538ad62e144c58c056ebc34bb6890.html) now follows the [recommended](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/39f538ad62e144c58c056ebc34bb6890.html) protocol for principal propagation.
+- The connectivity to on-premise systems from BTP Cloud Foundry environment is updated, so that the [authentication](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/39f538ad62e144c58c056ebc34bb6890.html) now follows the [recommended](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/39f538ad62e144c58c056ebc34bb6890.html) protocol for principal propagation.
 
   - Instead of populating two headers `SAP-Connectivity-Authentication` and `Proxy-Authorization` for on-premise requests, the SAP Cloud SDK now takes the recommended approach of just using `Proxy-Authorization` with a dynamically resolved _User Exchange Access Token_.
   - Introduce `PrincipalPropagationStrategy` for configuring that the previous behavior should be used.
@@ -1670,7 +1670,7 @@ Release date: July 16, 2020
   PrincipalPropagationStrategy.setDefaultStrategy(PrincipalPropagationStrategy.COMPATIBILITY);
   ```
 
-- Support reading the principal from an OAuth SAML Bearer token on Cloud Foundry.
+- Support reading the principal from an OAuth SAML Bearer token on Cloud Foundry environment.
 
 - Update dependencies:
   - Apache TomEE libraries from version `7.0.5` to `7.0.6`
@@ -1721,7 +1721,7 @@ Release date: July 16, 2020
 
 ### Fixed Issues
 
-- Fix an issue concerning HTTP destinations on Cloud Foundry where the default JDK trust store was mistakenly taken into account even if an own trust store is defined.
+- Fix an issue concerning HTTP destinations on Cloud Foundry environment where the default JDK trust store was mistakenly taken into account even if an own trust store is defined.
 - Fix OData query formatting for filter expressions with temporal values. This affects queries comparing entity properties based on `Edm.Time`, `Edm.DateTime` or `Edm.DateTimeOffset`.
 
 ## 3.9.0
@@ -1875,7 +1875,7 @@ Release date: July 16, 2020
 - No longer require a binding to an XSUAA service instance when consuming the destination or connectivity service via the SDK.
 - Automatically read the principal ID from the `user_name` claim of the current JWT in [`ScpCfPrincipalFacade`](https://help.sap.com/doc/2656a317c96d481b9216b8882f1eadad/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/principal/ScpCfPrincipalFacade.html) when the JWT has the `user_token` grant type.
 - Update dependencies on Jackson from `2.9.9`/`2.9.9.2` to `2.9.10`.
-- Verify that the Maven `artifactId` does not contain an underscore character when creating a project using the `scp-cf-spring` and `scp-cf-tomee` archetypes. This is necessary as the artifact ID will also be used as Cloud Foundry application name and the deployment to Cloud Foundry will fail if the application name contains an underscore.
+- Verify that the Maven `artifactId` does not contain an underscore character when creating a project using the `scp-cf-spring` and `scp-cf-tomee` archetypes. This is necessary as the artifact ID will also be used as Cloud Foundry environment application name and the deployment to Cloud Foundry environment will fail if the application name contains an underscore.
 
 ## 3.4.0
 
@@ -1991,7 +1991,7 @@ When defining destinations via the environment variable destinations, version 3.
 
   - Destination retrieval strategy configuration is now stored in instances of the new DestinationOptions class.
   - To set the destination retrieval strategy, use the ScpCfDestinationOptionsHelper or ScpNeoDestinationOptionsHelper with the builder of DestinationOptions.
-  - e.g. on Cloud Foundry:
+  - e.g. on Cloud Foundry environment:
     ```
     final DestinationOptions destinationOptions = DestinationOptions.builder()
             .parameter("myParameter", myValue)
@@ -2286,7 +2286,7 @@ When defining destinations via the environment variable destinations, version 3.
   - At the example of TenantAccessor.executeWithTenant, the given callable/executable will be executed in a context where the given tenant is set as the current tenant.
   - In addition to overriding, provide the option to set a fallback for a single execution (for example, with TenantAccessor.executeWithFallbackTenant) or globally (for example, with TenantAccessor.setFallbackTenant). Whenever, for example, a tenant is requested but not available, the SDK will retrieve a fallback tenant from the given supplier.
 - Offer access to the current request, if available, via the new RequestAccessor and allow overriding the request and providing a fallback request when executing code.
-- Make XsuaaService public for communicating with a given XSUAA service on SAP Business Technology Platform, Cloud Foundry.
+- Make XsuaaService public for communicating with a given XSUAA service on SAP Business Technology Platform, Cloud Foundry environment.
 
 ### Improvements
 

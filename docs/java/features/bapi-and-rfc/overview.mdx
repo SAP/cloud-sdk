@@ -48,7 +48,7 @@ SAP Cloud SDK does _not_ package JCo as a library with its dependencies.
 The SAP Cloud SDK assumes that JCo is available on the JVM classpath.
 :::
 
-On the SCP Neo landscape, JCo is automatically provided by the infrastructure, on the SCP Cloud Foundry landscape one must use the SAP Java Build Pack during app deployment.
+On the BTP Neo landscape, JCo is automatically provided by the infrastructure, on the BTP Cloud Foundry environment landscape one must use the SAP Java Build Pack during app deployment.
 There are other edge cases that we'll cover later.
 
 ## Call a BAPI in an SAP ABAP system
@@ -61,14 +61,14 @@ If you're starting from scratch, generate a `TomEE` project following the steps 
 
 #### Example Scenario
 
-We build an app that we deploy to SCP Cloud Foundry.
+We build an app that we deploy to BTP Cloud Foundry environment.
 This app exposes a servlet which invokes a BAPI to retrieve cost center information from e.g. SAP S/4HANA.
 The servlet has two input parameters which we supply in the query string:
 
-- _destinationName_: Defines which SCP destination to use for connecting to SAP S/4HANA.
+- _destinationName_: Defines which BTP destination to use for connecting to SAP S/4HANA.
 - _controllingArea_: Defines the controlling area for the cost center retrieval.
 
-The app retrieves the SCP destination with SAP Cloud SDK core capabilities, creates a BAPI request, and issues that to SAP S/4HANA through the SAP Cloud Connector.
+The app retrieves the BTP destination with SAP Cloud SDK core capabilities, creates a BAPI request, and issues that to SAP S/4HANA through the SAP Cloud Connector.
 We use the SAP Cloud Connector to access an SAP S/4HANA On-premise system.
 
 The BAPI result contains cost center information which we print to the servlet response.
@@ -136,7 +136,7 @@ protected void doGet(final HttpServletRequest request, final HttpServletResponse
 ...
 ```
 
-Thereafter we instruct the SAP Cloud SDK to retrieve the SCP destination per the provided name.
+Thereafter we instruct the SAP Cloud SDK to retrieve the BTP destination per the provided name.
 
 ```java
 final Destination destination = DestinationAccessor.getDestination(destinationName);
@@ -254,11 +254,11 @@ The difference is to use alternative classes:
 - `RfmRequest` instead of `BapiRequest`
 - `RfmRequestResult` instead of `BapiRequestResult`
 
-### Deploy to SAP Business Technology Platform - Cloud Foundry
+### Deploy to SAP Business Technology Platform - Cloud Foundry environment
 
-Invoke `cf push` from the directory root to deploy the app to your SAP Cloud Foundry space.
+Invoke `cf push` from the directory root to deploy the app to your SAP Cloud Foundry environment space.
 
-### Configure SAP Business Technology Platform - Cloud Foundry
+### Configure SAP Business Technology Platform - Cloud Foundry environment
 
 #### Prerequisites
 
@@ -266,8 +266,8 @@ Here is what you'll need to make progress throughout the next steps.
 
 - Node.js installed on your machine
 - User in SAP S/4HANA target system
-- SCP Cloud Foundry subaccount with entitlements for XSUAA, destination and connectivity service
-- SAP Cloud Connector connected to the SAP Cloud Foundry subaccount (if SAP S/4HANA is On-premise)
+- BTP Cloud Foundry environment subaccount with entitlements for XSUAA, destination and connectivity service
+- SAP Cloud Connector connected to the SAP Cloud Foundry environment subaccount (if SAP S/4HANA is On-premise)
 
 Official tutorials for setting up these scenarios can be found [here](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/fa4adc9bd40e45dbac573fd616695446.html).
 
@@ -286,7 +286,7 @@ Expose the SAP S/4HANA system in the SAP Cloud Connector as described in the [of
 
 #### Setup Destination
 
-Open the SCP cockpit on the subaccount level.
+Open the BTP cockpit on the subaccount level.
 Navigate to `Connectivity` -> `Destinations` and create a new RFC destination with these properties.
 
 - _Name_: `BAPI-TEST` (you can also choose your own name)
@@ -390,7 +390,7 @@ Possible reasons and resolutions:
 - There have been issues with finding JCo classes in a Spring Boot project.
   In such cases using the "traditional deployment" of Spring solved the problem.
   Thereby you deploy a war file instead of a jar file and you use Tomcat as the servlet container.
-- On SCP Cloud Foundry, the SAP Java Build Pack brings JCo as a dependency.
+- On BTP Cloud Foundry environment, the SAP Java Build Pack brings JCo as a dependency.
   The problem arises when the build pack is not used.
   That is, you must declare its usage in your deployment descriptor `manifest.yml` as such:
 
