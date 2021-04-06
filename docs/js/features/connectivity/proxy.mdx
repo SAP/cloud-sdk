@@ -19,7 +19,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 ## Introduction
 
 The SAP Cloud SDK for JavaScript offers a convenient way to connect to various systems offering public APIs.
-The most famous one is SAP S/4HANA which comes in two flavors Cloud and OnPremise.
+The most famous one is SAP S/4HANA which comes in two flavors Cloud and On-premise.
 We pre-generate type-safe clients for SAP S/4HANA APIs and publish them to [npm](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*) for your convenience.
 
 For different systems like SAP SuccessFactors, SAP Cloud for Customer, and many others you can generate a type-safe client yourself.
@@ -57,7 +57,7 @@ In this document, we focus on the **proxy** part and explain how proxies are han
 Before we get into the details it is important to have an overview of the different proxy types.
 There are two possible types of proxies:
 
-1. A local proxy running on the cloud platform that connects to SAP S/4HANA OnPremise systems.
+1. A local proxy running on the cloud platform that connects to SAP S/4HANA On-premise systems.
    The proxy information like host and port are provided by the [connectivity service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/daca64dacc6148fcb5c70ed86082ef91.html#loiodaca64dacc6148fcb5c70ed86082ef91__services).
    This proxy will be referred to as `connectivity proxy`.
 2. A proxy running in some landscape that makes requests to the internet.
@@ -101,10 +101,10 @@ This property can have two values: `Internet` and `OnPremise`:
 
 <img alt="Destination in CF" src={useBaseUrl('img/proxyTypeDestination.png')} />
 
-If `OnPremise` is selected it is assumed that this destination points to an SAP S/4HANA OnPremise system.
+If `OnPremise` is selected it is assumed that this destination points to an SAP S/4HANA On-premise system.
 In this case, you need the `connectivity proxy`.
 The SAP Cloud SDK will request the proxy host and port from the connectivity service and make a request using this proxy.
-From there the request will pass via the **SAP Cloud Connector** to the SAP S/4HANA OnPremise system.
+From there the request will pass via the **SAP Cloud Connector** to the SAP S/4HANA On-premise system.
 
 If `Internet` is selected it is assumed that this destination points to something on the Internet and in most cases, no proxy is needed.
 However, if a proxy is needed to reach this destination it is configured in the following way.

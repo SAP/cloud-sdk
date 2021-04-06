@@ -373,13 +373,6 @@ Refer to the [official OData V2 spec](https://www.odata.org/documentation/odata-
 
 #### Execute Batch Request
 
-:::note OData Read request
-
-At the moment we do not provide type-safe API for adding OData Read requests to Batch.
-You can work around it for now with generic [OData Client](./generic-odata-client.mdx#odata-v2-batch-read-request).
-
-:::
-
 The `service` object offers the method `batch` which allows access to the batch-related methods that help build the batch request.
 
 Multiple single requests (like `createBusinessPartnerAddress`) can be wrapped into so-called changesets.
@@ -416,6 +409,7 @@ The unordered responses of data modification requests are accessible with a give
 The ordered responses of data retrieval requests are accessible with the reference of the original request object.
 
 ##### Changeset Response
+
 Use the method `get` to access the individual changeset responses by index.
 
 ```java
@@ -450,7 +444,6 @@ BusinessPartner entity = result.getReadResult(requestSingleEntity);
 
 Instead of an index to indicate the batch position, the API expects the original request reference.
 The request-response mapping and deserialization are happening internally.
-
 
 ## Entity Update Strategies
 
