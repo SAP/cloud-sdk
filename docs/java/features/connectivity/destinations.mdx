@@ -45,7 +45,7 @@ Cache entries will automatically be invalidated 5 minutes after their initial cr
 
 ## Supported Authentication Flows
 
-We provide support for the following authentication types on Business Technology Platform - Cloud Foundry environment.
+We provide support for the following authentication types on SAP BTP, Cloud Foundry environment.
 
 | Authentication Type                                                                                                                                                           | Parameter Name                                         |
 | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------- |
@@ -223,7 +223,7 @@ com.example.ApiTokenHeaderProvider
 
 ## Retrieving Destinations
 
-### Get All Destinations From the Destination Service on Cloud Foundry environment
+### Get All Destinations From the Destination Service on Cloud Foundry
 
 To fetch all destinations from the Destination Service, you need to make a call to `tryGetAllDestinations`.
 The method queries the [Destination Service API](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview) and retrieves all the destinations available at the service instance and sub-account level.
@@ -237,9 +237,9 @@ final Try<Iterable<ScpCfDestination>> destinations = destinationLoader.tryGetAll
 
 In the above call `destinationLoader` needs to be an instance of `ScpCfDestinationLoader`.
 
-#### Configuring Timeout Durations When Querying the Destination Service on Cloud Foundry environment
+#### Configuring Timeout Durations When Querying the Destination Service on Cloud Foundry
 
-By default, the [TimeLimiter resilience pattern](/cloud-sdk/docs/java/features/resilience/resilience#resilience-capabilities) aborts requests to the Destination Service on Cloud Foundry environment after 6 seconds.
+By default, the [TimeLimiter resilience pattern](/cloud-sdk/docs/java/features/resilience/resilience#resilience-capabilities) aborts requests to the Destination Service on Cloud Foundry after 6 seconds.
 If your app requires more time when fetching destinations, you may create your own `ScpCfDestinationLoader` instance by:
 
 ```java
@@ -293,7 +293,7 @@ You can similarly use other retrieval options.
 
 ## Configure HTTP Destinations for Local Deployment
 
-When testing your app on localhost instead of BTP you require some configuration steps to make the destination retrieval work.
+When testing your app on localhost instead of SAP BTP you require some configuration steps to make the destination retrieval work.
 
 :::note HTTP Destinations
 This section refers to the maintenance of HTTP destinations.
@@ -343,12 +343,12 @@ Note that the value of the environment variable is a JSON array, so you can add 
 
 #### SAP Business Technology Platform Destination Service
 
-If the previous lookup was not successful, the next destination loaders examine the environment variable `VCAP_SERVICES` to see if the BTP destination service is bound.
-If so, the SAP Cloud SDK queries the BTP destination service for the destination configuration per the requested destination name.
+If the previous lookup was not successful, the next destination loaders examine the environment variable `VCAP_SERVICES` to see if the SAP BTP destination service is bound.
+If so, the SAP Cloud SDK queries the SAP BTP destination service for the destination configuration per the requested destination name.
 
 #### SAP Business Technology Platform Connectivity Service
 
-In case the destination is of proxy type `OnPremise`, the SAP Cloud SDK performs an additional query to the BTP connectivity service to obtain further proxy information and an authorization token.
+In case the destination is of proxy type `OnPremise`, the SAP Cloud SDK performs an additional query to the SAP BTP connectivity service to obtain further proxy information and an authorization token.
 
 ### Configuration Procedure for Localhost
 
@@ -359,11 +359,11 @@ See the example value above for reference.
 
 #### Destinations With Proxy Type `OnPremise`
 
-We have to some perform configuration steps to tell the SAP Cloud SDK how to access the BTP destination service and connectivity service.
+We have to some perform configuration steps to tell the SAP Cloud SDK how to access the SAP BTP destination service and connectivity service.
 
 :::note Are your client and server located on the same Network?
 If your localhost (client) resides in the same network zone as the target system (server) you can access it directly.
-Configuration of BTP connectivity services is not needed.
+Configuration of SAP BTP connectivity services is not needed.
 All you have to do is creating a destination via environment variable `destinations`.
 :::
 
@@ -439,7 +439,7 @@ Furthermore, add the dependency `com.sap.cds:cds-integration-cloud-sdk` to your 
 
 </Tabs>
 
-#### Skip Destination Creation Step for Certain Authentication Types on Cloud Foundry Environment
+#### Skip Destination Creation Step for Certain Authentication Types on Cloud Foundry
 
 For certain authentication types i.e. `NoAuthentication` and `OAuth2ClientCredentials` there is an API that eliminates the need to manually create a destination in the CF account for connecting to services.
 
@@ -477,12 +477,12 @@ final HttpDestination destination =
 
 ##### Enable Access to SAP Business Technology Platform Connectivity Service
 
-The BTP connectivity service builds the connection between BTP and the On-premise network.
+The SAP BTP connectivity service builds the connection between SAP BTP and the On-premise network.
 That is why it has strong built-in restrictions to allow it only to be called from within SCP.
 If you would call the connectivity service from your local machine, you would encounter a connection timeout.
 We'll therefore apply port forwarding via SSH to simulate that your localhost plays the cloud app.
 
-- Deploy your app to the BTP once.
+- Deploy your app to the SAP BTP once.
 - Enable SSH access to your app container with the `cf` CLI:
 
 ```bash
