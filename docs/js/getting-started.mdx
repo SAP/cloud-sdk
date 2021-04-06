@@ -123,7 +123,7 @@ The project contains the following files and folders, among others, to get you s
   It uses the [project "Piper" General Purpose Pipeline](https://sap.github.io/jenkins-library).
 - **`pipeline_config.yml`**: Pipeline configuration file for the Jenkins pipeline.
 
-#### Cloud Foundry environment
+#### Cloud Foundry
 
 - **`manifest.yml`**: The deployment descriptor file for `SAP BTP, Cloud Foundry environment`.
 
@@ -148,11 +148,11 @@ npm run start:dev
 This will start a local server in watch mode so that subsequent changes will automatically trigger a restart of the server.
 Go to `http://localhost:3000` and you should get a `Hello, World!` in response.
 
-## Deploy the Project on SAP BTP Cloud Foundry Environment
+## Deploy the Project on SAP BTP, Cloud Foundry Environment
 
 ### Prerequisites
 
-The Cloud Foundry environment CLI comes in handy when you want to deploy your application to the SAP Business Technology Platform.
+The Cloud Foundry CLI comes in handy when you want to deploy your application to the SAP Business Technology Platform.
 You can find installation instructions for all common platforms in the [`Cloud Foundry documentation`](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html).
 We recommend using a package manager for that.
 If you are using `chocolatey` on Windows, please find the instructions [here](https://chocolatey.org/packages/cloudfoundry-cli).
@@ -163,7 +163,7 @@ If you are using `chocolatey` on Windows, please find the instructions [here](ht
 If you don't have an [SAP Business Technology Platform](https://account.hana.ondemand.com/) account you need to create one.
 :::
 
-To deploy our application, we first need to login to Cloud Foundry environment in SAP Business Technology Platform using the `cf` CLI.
+To deploy our application, we first need to login to Cloud Foundry in the SAP BTP using the `cf` CLI.
 First, we need to set an `API endpoint`.
 The exact URL of this API endpoint depends on the region your subaccount is in.
 Open the [SAP BTP cockpit](https://account.hana.ondemand.com/) and navigate to the subaccount you are planning to deploy your application to.
@@ -189,9 +189,9 @@ npm run deploy
 ```
 
 This command will use your local sources for transpiling, packaging and deployment, but will omit packaging your local `node_modules` as those can be system dependent.
-Dependencies will instead be installed automatically when deploying to `Cloud Foundry environment`.
+Dependencies will instead be installed automatically when deploying to Cloud Foundry.
 
-The Cloud Foundry environment CLI will automatically pick up the `manifest.yml` of the project when deploying your application.
+The Cloud Foundry CLI will automatically pick up the `manifest.yml` of the project when deploying your application.
 The file should look like this (where `<YOUR-APPLICATION-NAME>` is replaced by the name you specified when initializing the project):
 
 ```YAML
@@ -205,7 +205,7 @@ applications:
     random-route: true
 ```
 
-- The specified `path` instructs Cloud Foundry environment to upload all the files from the `deployment/` folder.
+- The specified `path` instructs Cloud Foundry to upload all the files from the `deployment/` folder.
 - The command specified under the `command` attribute tells the `buildpack` what command to issue to start the application.
 
 When everything works as expected, you should get output that looks something like this:
@@ -264,7 +264,7 @@ To create an instance of the destination service, execute the following command 
 cf create-service destination lite my-destination
 ```
 
-This tells `Cloud Foundry environment in SAP Business Technology Platform` to create an instance of the destination service with service plan `lite` and make it accessible under the name `my-destination`.
+This tells Cloud Foundry to create an instance of the destination service with service plan `lite` and make it accessible under the name `my-destination` on the SAP BTP.
 We can now use the name to bind this service to our application.
 To do this, open your `manifest.yml` and add a section called `services`, under which you can then add the name of the just created service.
 
@@ -297,7 +297,7 @@ Create a file called `xs-security.json` with the following content:
 }
 ```
 
-The value for `xsappname` again has to be unique across the whole of `Cloud Foundry environment in SAP Business Technology Platform`, so make sure to choose a unique name or prefix.
+The value for `xsappname` again has to be unique across the whole of SAP BTP, so make sure to choose a unique name or prefix.
 
 Now, execute the following command:
 

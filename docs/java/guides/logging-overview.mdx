@@ -73,8 +73,8 @@ Also (again, depending on the framework) you might have to provide some sort of 
 For our example of Logback, we need a `logback.xml` within the `main/resources` directory of our application.
 
 :::tip
-When running on the BTP Cloud Foundry environment using the SAP Java Buildpack the logging implementation is provided at runtime by the container.
-This means, if you only run the application on Cloud Foundry environment you don't need to provide any implementation.
+When running on the SAP BTP, Cloud Foundry environment using the SAP Java build pack the logging implementation is provided at runtime by the container.
+This means, if you only run the application on Cloud Foundry you don't need to provide any implementation.
 Still, oftentimes logging is also important for local deployment and testing.
 For that providing, an implementation is required.
 :::
@@ -189,8 +189,8 @@ It is named `logback.xml` for TomEE and `logback-spring.xml` for Spring-based pr
 To understand how Logback detects this file have a look at [their documentation](http://logback.qos.ch/manual/configuration.html#auto_configuration).
 
 :::danger
-This configuration file is not accounted for when running a TomEE based application on BTP Cloud Foundry environment!
-To configure logging on Cloud Foundry environment refer to the [dedicated section](#on-cloud-foundry) below.
+This configuration file is not accounted for when running a TomEE based application on SAP BTP, Cloud Foundry environment!
+To configure logging on Cloud Foundry refer to the [dedicated section](#on-cloud-foundry) below.
 :::
 
 #### Setting Log Levels
@@ -230,9 +230,9 @@ In the case that you want to log all requests sent and responses received by the
 </root>
 ```
 
-#### On Cloud Foundry Environment
+#### On Cloud Foundry
 
-If you want to set the debug levels of your application running on Cloud Foundry environment (using the SAP Java Buildpack) you have to set the `SET_LOGGING_LEVEL`.
+If you want to set the debug levels of your application running on Cloud Foundry (using the SAP Java Buildpack) you have to set the `SET_LOGGING_LEVEL`.
 This allows you to also change the log level at runtime, as we will see further down in this section.
 
 To set the environment variable with every start of the application, it is advised to set it in the deployment descriptor of your project.
@@ -272,13 +272,13 @@ modules:
 </TabItem>
 </Tabs>
 
-In the case that you want to log all requests sent and responses received by the Apache HttpClient in your application on Cloud Foundry environment you would set `SET_LOGGING_LEVEL` to the following value:
+In the case that you want to log all requests sent and responses received by the Apache HttpClient in your application on Cloud Foundry you would set `SET_LOGGING_LEVEL` to the following value:
 
 ```bash
 {ROOT: INFO, com.sap.cloud.sdk: INFO, org.apache.http: DEBUG, org.apache.http.wire: ERROR}
 ```
 
-As mentioned earlier, it's possible to set the environment variable via the Cloud Foundry environment CLI.
+As mentioned earlier, it's possible to set the environment variable via the Cloud Foundry CLI.
 The SAP Java Buildpack should then be able to pick up these changes and propagate them to your application.
 
 Assuming that you have the initial configuration shown above and you want to start logging the Apache HttpClient, you would now issue the following command on your command line:

@@ -91,13 +91,13 @@ $ sap-cloud-sdk init --frontendScripts
 
 #### Enter Project Name
 
-The project name is relevant for the Cloud Foundry environment repository.
+The project name is relevant for the Cloud Foundry repository.
 Your application will use this name to appear in the SAP Business Technology Platform Cockpit.
 By default, it will suggest the name of the project folder.
 
 #### Enter the Command to Start Your Application
 
-When deploying to Cloud Foundry environment, it calls the entered command to start your application.
+When deploying to Cloud Foundry, it calls the entered command to start your application.
 This can be any bash command.
 Often the command will be `npm start`.
 
@@ -136,7 +136,7 @@ $ sap-cloud-sdk init
  - Make sure that your app listens to `process.env.PORT`
  - Build your app if necessary
  - Run `sap-cloud-sdk package [--include INC][--exclude EXC]`
- - Push to Cloud Foundry environment (`cf push`)
+ - Push to Cloud Foundry (`cf push`)
 
  🔨 Consider setting up Jenkins to continuously build your app.
  Use `sap-cloud-sdk add-cx-server` to create the setup script.
@@ -145,7 +145,7 @@ $ sap-cloud-sdk init
 
 ### Next Steps
 
-After the initialization is finished, the CLI displays the necessary steps to deploy your application to Cloud Foundry environment.
+After the initialization is finished, the CLI displays the necessary steps to deploy your application to Cloud Foundry.
 
 #### Make Sure That Your App Listens To `process.env.PORT`
 
@@ -189,10 +189,10 @@ These flags support [glob patterns](<https://en.wikipedia.org/wiki/Glob_(program
 
 You can find more information in [the article on this command](./package.mdx).
 
-#### Push to Cloud Foundry Environment
+#### Push to Cloud Foundry
 
-Once your project is prepared, you can use the [Cloud Foundry environment CLI](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html) to deploy your application.
-You may need to log in to your Cloud Foundry environment account first.
+Once your project is prepared, you can use the [Cloud Foundry CLI](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html) to deploy your application.
+You may need to log in to your Cloud Foundry account first.
 
 Manual deployments via [cf push](https://docs.cloudfoundry.org/devguide/push.html) can be helpful in the beginning but are strongly discouraged for productive environments.
 Those deployments should be done by a CI/CD pipeline that ensures successful tests before deployment.
