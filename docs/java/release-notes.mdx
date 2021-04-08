@@ -16,6 +16,8 @@ keywords:
 
 import MvnBadge from '../../src/sap/sdk-java/MvnBadge';
 
+<div className="logo logo-java"> </div>
+
 <MvnBadge />
 
 ## Should I update?
@@ -23,8 +25,8 @@ import MvnBadge from '../../src/sap/sdk-java/MvnBadge';
 We highly recommend regularly updating to the latest SAP Cloud SDK version. It will help you:
 
 - Ensure access to the latest Cloud SDK features
-- Keep up with the latest changes in SAP Business Technology Platform
-- Update client libraries giving access to latest SAP services on SAP Business Technology Platform and SAP S/4HANA
+- Keep up with the latest changes in SAP Cloud Platform
+- Update client libraries giving access to latest SAP services on SAP Cloud Platform and SAP S/4HANA
 - Protect yourself from bugs and breaking changes in the future
 
 ### The SAP Cloud SDK v2 for Java is Deprecated
@@ -155,9 +157,11 @@ To continue using the latest features outlined in the release notes for version 
 
 - We fixed an issue with OData V2 read requests where an error message was incorrectly written to the log when using filters.
   The error messages are no longer logged unless it is applicable:
+
   > Registered custom filter expression cannot be used when performing the OData V2 request with toRequest() or executeRequest().
-  
+
   > Registered custom filter expression cannot be used when performing the OData V2 request with execute().
+
 - Fix an issue with OData response handling where deserialization of one-to-many properties failed for primitive and complex data types.
 
 ## 3.40.0 - March 18, 2021
@@ -245,7 +249,7 @@ As part of the update of the pre-generated type-safe client for SAP S/4HANA On-p
 
 - The type-safe client (VDM) classes for `TimeDependentStockLevelService` have been removed as the SAP S/4HANA on-premise OData service does not exist in releases 2020 FPS0 or FPS1.
 
-- With SAP S/4 On-premise release 2020 FPS1, in the type-safe client (VDM) class for `VehicleManagementSystemForVehicleService` the `getVMSVehicleIncomingInvoiceByKey` method now takes only two parameters ( `vMSVehicleUUID` and `vMSVehicleActionDateTime`) as input as opposed to three before ( `vMSVehicleUUID`,`vMSVehicleActionDateTime` and `vMSVehicleActionDocType` ).
+- With SAP S/4 OnPremise release 2020 FPS1, in the type-safe client (VDM) class for `VehicleManagementSystemForVehicleService` the `getVMSVehicleIncomingInvoiceByKey` method now takes only two parameters ( `vMSVehicleUUID` and `vMSVehicleActionDateTime`) as input as opposed to three before ( `vMSVehicleUUID`,`vMSVehicleActionDateTime` and `vMSVehicleActionDocType` ).
 
 ### New Functionality
 
@@ -750,7 +754,7 @@ Iterable<List<EntityT>> lazyPages = request.iteratingPages().execute( destinatio
 
 The following changes apply to experimental functionality of the SAP Cloud SDK:
 
-- The SCP service "Hyperledger Fabric on SAP Business Technology Platform" is deprecated, the corresponding Maven dependency `com.sap.cloud.sdk.services:scp-blockchain` gets deprecated too. Use the dependency [`com.sap.cloud.sdk.serices:blockchain-client-fabric`](https://mvnrepository.com/artifact/com.sap.cloud.sdk.services/blockchain-client-fabric) instead.
+- The SCP service "Hyperledger Fabric on SAP Cloud Platform" is deprecated, the corresponding Maven dependency `com.sap.cloud.sdk.services:scp-blockchain` gets deprecated too. Use the dependency [`com.sap.cloud.sdk.serices:blockchain-client-fabric`](https://mvnrepository.com/artifact/com.sap.cloud.sdk.services/blockchain-client-fabric) instead.
 - The method `setResponseFormat()` in the class [`ODataRequestGeneric`](https://help.sap.com/doc/f08906c8d31640d583a106325f6a8184/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odata/client/request/ODataRequestGeneric.html) is no longer available. You can still configure the `Accept` header via the method [`addHeaderIfAbsent()`](https://help.sap.com/doc/f08906c8d31640d583a106325f6a8184/1.0/en-US/com/sap/cloud/sdk/datamodel/odata/client/request/ODataRequestGeneric.html#addHeaderIfAbsent-java.lang.String-java.lang.String-).
   Example: `request.addHeaderIfAbsent(HttpHeaders.ACCEPT, "application/xml")`.
 - The enum `com.sap.cloud.sdk.datamodel.odata.client.request.ODataFormat` is no longer public.
@@ -783,7 +787,7 @@ The following changes apply to experimental functionality of the SAP Cloud SDK:
 ### New Functionality
 
 - Generated OData V4 client library service types provide a new method `batch()` to conveniently create instances of `BatchRequestBuilder`. It can be used to combine multiple reading and modifying OData operations into one OData Batch request.
-- We released new pre-generated type-safe client libraries (also known as the Virtual Data Model - VDM) for the [latest RTC release 2020 of SAP S/4HANA On-premise](https://blogs.sap.com/2020/10/07/sap-s-4hana-2020-release/). Except for the following services, everything else available in [SAP API Business Hub for SAP S/4HANA On-premise 2020](https://api.sap.com/package/S4HANAOPAPI?section=Artifacts) are available:
+- We released new pre-generated type-safe client libraries (also known as the Virtual Data Model - VDM) for the [latest RTC release 2020 of SAP S/4HANA On-premise](https://blogs.sap.com/2020/10/07/sap-s-4hana-2020-release/). Except for the following services, everything else available in [SAP API Business Hub for SAP S/4HANA On-Premise 2020](https://api.sap.com/package/S4HANAOPAPI?section=Artifacts) are available:
   - [Settlement Document](https://api.sap.com/api/OP_API_SETTLMT_DOC_0001/resource)
   - [Settlement Process Type - Read](https://api.sap.com/api/OP_API_SETTLMT_PROC_TYPE_0001/resource)
   - [Responsibility Management Team Configurations - Read](https://api.sap.com/api/OP_API_RESPYM_TEAM_CONFIG_SRV_0001/resource)
@@ -795,7 +799,7 @@ The following changes apply to experimental functionality of the SAP Cloud SDK:
 
 - The Workflow API client library in module `scp-workflow-cf` got enhanced to reflect the latest Workflow API features.
 - Update Dependencies
-  - Spring dependency for the SAP Business Technology Platform multitenancy implementation module to version `4.3.29.RELEASE` to overcome the security vulnerability [CVE-2020-5421](https://nvd.nist.gov/vuln/detail/CVE-2020-5421).
+  - Spring dependency for the SAP Cloud Platform multitenancy implementation module to version `4.3.29.RELEASE` to overcome the security vulnerability [CVE-2020-5421](https://nvd.nist.gov/vuln/detail/CVE-2020-5421).
   - Apache HttpComponents from version `4.5.12` to `4.5.13`
   - Jackson from `2.11.2` to `2.11.3`
   - Java JWT from `3.10.3` to `3.11.0`
@@ -854,7 +858,7 @@ Blockchain Business Services update:
 
 ### Improvements
 
-- In case a `DefaultErpHttpDestination` decorates an On-premise `HttpDestination` and the destination configuration
+- In case a `DefaultErpHttpDestination` decorates an on-premise `HttpDestination` and the destination configuration
   lacks a `sap-client` property, an information message is logged to raise awareness for potential authentication issues.
 - Dependency Updates:
   - Update Spring Boot from `2.3.3.RELEASE` to `2.3.4.RELEASE`
@@ -1046,9 +1050,9 @@ final DefaultHttpDestination defaultHttpDestination =
   new WorkflowDefinitionsApi(apiClient).queryDefinitions();
   ```
 
-#### SAP Business Technology Platform - Clound Foundry
+#### SAP Cloud Platform - Clound Foundry
 
-- We added support for new authentication types recently introduced on SAP Business Technology Platform - Cloud Foundry. It further improves handling of `Destinations` and keeps SDK up to date with SCP features:
+- We added support for new authentication types recently introduced on SAP Cloud Platform - Cloud Foundry. It further improves handling of `Destinations` and keeps SDK up to date with SCP features:
   - `SAP_ASSERTION_SSO`
   - `OAuth2JWTBearer`
   - `OAuth2Password`
@@ -1077,7 +1081,7 @@ final DefaultHttpDestination defaultHttpDestination =
 - OData 4.0: Extract version identifiers from the `ETag` header in case of create and update operations. Now result entities obtained via `ModificationRespnse#getResponseEntity()` will contain a version identifier. It will be sent as `IF-MATCH` header in subsequent update and delete operations.
 
 - New experimental method `ScpCfDestinationLoader#tryGetDestination`.
-  It allows for custom request handling to resources on _SAP Business Technology Platform Destination Service_.
+  It allows for custom request handling to resources on _SAP Cloud Platform Destination Service_.
   With the handler acting as functional interface, you can conveniently manage your own HTTP interaction. E.g.
 
   ```java
@@ -1199,11 +1203,11 @@ Release date: July 16, 2020
       batchRequest.execute( httpClient );
       ```
 
-- Add `getAllDestinations(DestinationOptions options)` in `ScpCfDestinationLoader` class to fetch all the Cloud Foundry destinations. The method prioritizes the destination at service instance level in case there exists a destination with the same name on service instance and on sub account level.
+- Add `getAllDestinations(DestinationOptions options)` in `ScpCfDestinationLoader` class to fetch all the cloud foundry destinations. The method prioritizes the destination at service instance level in case there exists a destination with the same name on service instance and on sub account level.
 
 ### Fixed Issues
 
-- Fix an issue where subscriber tenant and principal information would not be available in asynchronous threads when running on SAP Business Technology Platform Neo.
+- Fix an issue where subscriber tenant and principal information would not be available in asynchronous threads when running on SAP Cloud Platform Neo.
 
 ## 3.21.0
 
@@ -1236,7 +1240,7 @@ Release date: July 16, 2020
 
 ### Fixed Issues
 
-- Fix an issue in the realm of HTTP destinations created through the SAP Business Technology Platform Extension Factory where a `DestinationAccessException` occurs
+- Fix an issue in the realm of HTTP destinations created through the SAP Cloud Platform Extension Factory where a `DestinationAccessException` occurs
 
 ## 3.20.0
 
@@ -1296,7 +1300,7 @@ Release date: July 16, 2020
 
 ### New Functionality
 
-- Introducing the client library for the Workflow API on SAP Business Technology Platform, Cloud Foundry
+- Introducing the client library for the Workflow API on SAP Cloud Platform, Cloud Foundry
 
   - Example usage:
 
@@ -1447,7 +1451,7 @@ Release date: July 16, 2020
 
 ### Fixed Issues
 
-- Fix unnecessary second request to destination service, when using proxy type `OnPremise` and authentication type `Principal Propagation`.
+- Fix unnecessary second request to destination service, when using proxy type "OnPremise" and authentication type "Principal Propagation".
 
 - Fix a regression introduced in `3.16.1` where public keys for token validation are not cached.
 
@@ -1524,7 +1528,7 @@ Release date: July 16, 2020
 
 ### Fixed Issues
 
-- Fix missing authorization header with Principal Propagation for On-premise connectivitiy on CloudFoundry.
+- Fix missing authorization header with Principal Propagation for OnPremise connectivitiy on CloudFoundry.
 - Fix several special characters escaping and encoding issues.
   - `?` in the service path
   - `#` and `&` in filter and select expressions
@@ -1570,7 +1574,7 @@ Release date: July 16, 2020
 ### Improvements
 
 - Introduce snakeyaml version `1.26` as direct dependency and exclude the one used by the jackson library to overcome the security vulnerability [CVE-2017-18640](https://bitbucket.org/asomov/snakeyaml/issues/377/allow-configuration-for-preventing-billion).
-- Replace the SAP Cloud SDK implementation for handling authentication and authorization within the SAP Business Technology Platform landscape by the library [XSUAA Token Client and Token Flow API](https://github.com/SAP/cloud-security-xsuaa-integration/tree/master/token-client) version `2.5.1`. See the compatibility notes for details.
+- Replace the SAP Cloud SDK implementation for handling authentication and authorization within the SAP Cloud Platform landscape by the library [XSUAA Token Client and Token Flow API](https://github.com/SAP/cloud-security-xsuaa-integration/tree/master/token-client) version `2.5.1`. See the compatibility notes for details.
 - Update Dependencies
   - [SAP Cloud Application Programming Model](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/00823f91779d4d42aa29a498e0535cdf.html) from version `1.37.1` to `1.38.0`
   - Lombok from version `1.18.10` to `1.18.12`
@@ -1589,7 +1593,7 @@ Release date: July 16, 2020
   - AssertJ from version `3.14.0` to `3.15.0`
   - Mockito from version `3.2.4` to `3.3.0`
   - Wiremock from version `2.20.0` to `2.26.1`
-  - SAP Business Technology Platform SDK For Neo Environment (Java EE 7 Web Profile TomEE 7) to version `1.69.18`
+  - SAP Cloud Platform SDK For Neo Environment (Java EE 7 Web Profile TomEE 7) to version `1.69.18`
 
 ### Fixed Issues
 
@@ -1634,7 +1638,7 @@ Release date: July 16, 2020
 
 ### Improvements
 
-- Update the Spring dependency for the SAP Business Technology Platform multitenancy implementation module to version `4.3.26.RELEASE` to overcome the security vulnerability [CVE-2020-5397](https://bugs.chromium.org/p/chromium/issues/detail?id=775438).
+- Update the Spring dependency for the SAP Cloud Platform multitenancy implementation module to version `4.3.26.RELEASE` to overcome the security vulnerability [CVE-2020-5397](https://bugs.chromium.org/p/chromium/issues/detail?id=775438).
 
 ## 3.12.0
 
@@ -1645,7 +1649,7 @@ Release date: July 16, 2020
 ### New Functionality
 
 - _SCP Blockchain Module_: Allow the usage of custom HTTP clients by adding support for a custom HTTP request factory for the rest template in [`MultichainRequest`](https://help.sap.com/doc/3ef4616701f642658f0a7be6b2aaf587/1.0/en-US/index.html?com/sap/cloud/sdk/services/blockchain/multichain/service/MultichainRequest.html).
-- When creating a [`MultichainService`](https://help.sap.com/doc/3ef4616701f642658f0a7be6b2aaf587/1.0/en-US/index.html?com/sap/cloud/sdk/services/blockchain/multichain/service/MultichainService.html) instance using a SAP Business Technology Platform destination, the destination's HTTP client will now be used as a pre-configured `HttpClient` instance with authentication, HTTP connection pooling, etc. for each [`MultichainRequest`](https://help.sap.com/doc/3ef4616701f642658f0a7be6b2aaf587/1.0/en-US/index.html?com/sap/cloud/sdk/services/blockchain/multichain/service/MultichainRequest.html).
+- When creating a [`MultichainService`](https://help.sap.com/doc/3ef4616701f642658f0a7be6b2aaf587/1.0/en-US/index.html?com/sap/cloud/sdk/services/blockchain/multichain/service/MultichainService.html) instance using a SAP Cloud Platform destination, the destination's HTTP client will now be used as a pre-configured `HttpClient` instance with authentication, HTTP connection pooling, etc. for each [`MultichainRequest`](https://help.sap.com/doc/3ef4616701f642658f0a7be6b2aaf587/1.0/en-US/index.html?com/sap/cloud/sdk/services/blockchain/multichain/service/MultichainRequest.html).
 
 ### Improvements
 
@@ -1673,7 +1677,7 @@ Release date: July 16, 2020
 
 - The existence of a principal as retrieved by the [`PrincipalAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html) is no longer an indicator for a JWT to be present. Due to the introduction of [`BasicAuthenticationAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html) a principal can also originate from the Basic Authentication header on the current request. As before verifying authentication and authorizations needs to be done explicitly by the application using the SAP Cloud SDK.
 
-- The behavior for principal propagation when accessing On-premise systems has changed as explained below in the Improvements section.
+- The behavior for principal propagation when accessing on-premise systems has changed as explained below in the Improvements section.
 
 ### New Functionality
 
@@ -1730,7 +1734,7 @@ Release date: July 16, 2020
   - Java JWT from version `3.8.3` to `3.9.0`
   - JUnit from version `4.12` to `4.13`
   - Jetty from version `9.4.19.v20190610` to `9.4.25.v20191220`
-  - [SAP Business Technology Platform Neo Environment SDK for Java EE 7 Web Profile TomEE 7](https://tools.hana.ondemand.com/#cloud) from version `1.44.12` to `1.65.15`
+  - [SAP Cloud Platform Neo Environment SDK for Java EE 7 Web Profile TomEE 7](https://tools.hana.ondemand.com/#cloud) from version `1.44.12` to `1.65.15`
 
 ### Fixed Issues
 
@@ -2015,7 +2019,7 @@ Release date: July 16, 2020
 ### Fixed Issues
 
 - Fix an issue where [`DefaultHttpDestination`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.html) failed to load the authentication type, so that authentication was not correctly applied when loading destinations from an environment variable or instantiating `DefaultHttpDestination` manually.
-- Fix issues with HTTP destinations in the SAP Business Technology Platform Neo environment when using EJBs to run code on server startup.
+- Fix issues with HTTP destinations in the SAP Cloud Platform Neo environment when using EJBs to run code on server startup.
 
 ## 3.0.0
 
@@ -2334,7 +2338,7 @@ When defining destinations via the environment variable destinations, version 3.
   - At the example of TenantAccessor.executeWithTenant, the given callable/executable will be executed in a context where the given tenant is set as the current tenant.
   - In addition to overriding, provide the option to set a fallback for a single execution (for example, with TenantAccessor.executeWithFallbackTenant) or globally (for example, with TenantAccessor.setFallbackTenant). Whenever, for example, a tenant is requested but not available, the SDK will retrieve a fallback tenant from the given supplier.
 - Offer access to the current request, if available, via the new RequestAccessor and allow overriding the request and providing a fallback request when executing code.
-- Make XsuaaService public for communicating with a given XSUAA service on SAP Business Technology Platform, Cloud Foundry.
+- Make XsuaaService public for communicating with a given XSUAA service on SAP Cloud Platform, Cloud Foundry.
 
 ### Improvements
 
