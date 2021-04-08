@@ -114,7 +114,7 @@ export const features = [
     name: 'OpenAPI 2.0 type-safe client',
     category: 'OpenAPI',
     java: {
-      status: ':bulb:',
+      status: ':heavy_check_mark:',
       docsLink: `[docs](${baseUrl}/java/features/rest/overview)`,
       note: ''
     },
@@ -128,7 +128,7 @@ export const features = [
     name: 'OpenAPI 3.0 type-safe client',
     category: 'OpenAPI',
     java: {
-      status: ':bulb:',
+      status: ':heavy_check_mark:',
       docsLink: `[docs](${baseUrl}/java/features/rest/overview)`,
       note: ''
     },
@@ -142,7 +142,7 @@ export const features = [
     name: 'OpenAPI code generator',
     category: 'OpenAPI',
     java: {
-      status: ':bulb:',
+      status: ':heavy_check_mark:',
       docsLink: `[docs](${baseUrl}/java/features/rest/generate-rest-client)`,
       note: ''
     },
