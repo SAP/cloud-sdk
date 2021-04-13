@@ -26,11 +26,11 @@ jobs:
           # An externally-hosted configuration file to use.
           config: https://raw.githubusercontent.com/SAP/cloud-sdk/main/.vale.ini
           # The files to lint: "all" or "<some_folder>".
-          files: all
+          files: __onlyModified
           # Only post annotations on lines that have changed within a PR.
           onlyAnnotateModifiedLines: false # optional, default is false
           # Log debugging information to stdout
-          debug: true # optional, default is false
+          debug: false # optional, default is false
         env:
          # Required
          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
