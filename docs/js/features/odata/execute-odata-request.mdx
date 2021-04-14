@@ -15,6 +15,7 @@ keywords:
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import {CustomRequestConfig, CustomRequestConfigNote} from "../common";
 
 Once you have generated a typed OData client using the SAP Cloud SDK generator or if you decided to use one of the pre-generated OData clients for SAP S/4HANA, you can use your OData client to execute HTTP requests against your service.
 The client provides request builders for the different types of requests and abstractions of the entity sets of the given service, that we refer to as _entities_.
@@ -137,10 +138,10 @@ This will automatically construct your request URL and headers, execute the requ
 ### Setting Custom Request Headers
 
 The SAP Cloud SDK automatically sets some necessary request headers on every request.
-You can specify additional custom headers using the `withCustomHeaders` function:
+You can specify additional custom headers using the `addCustomHeaders` function:
 
 ```ts
-MyEntity.requestBuilder().getAll().withCustomHeaders({
+MyEntity.requestBuilder().getAll().addCustomHeaders({
   apikey: 'my-api-key'
 });
 ```
@@ -188,12 +189,23 @@ MyEntity.requestBuilder()
 ```
 
 This will add the custom service path to your request.
-Executing the example request above against a destination with URL `https://my.s4-system.com` would then execute the request against something like this: `https://my.s4-system.com/my/custom/service/path/MyEntity`.
+Executing the example request above against a destination with URL `https://my.s4-system.com` would result in a request against something like this: `https://my.s4-system.com/my/custom/service/path/MyEntity`.
+
+### Setting a Custom Request Configuration
+<CustomRequestConfig />
+
+```ts
+MyEntity.requestBuilder()
+  .getAll()
+  .addCustomRequestConfiguration({ responseType: 'arraybuffer' })
+```
+
+<CustomRequestConfigNote />
 
 ### Getting the Raw Response and the Original Request
 
-In most cases, it is recommended to use `execute` method to retrieve the deserialized typed response.
-In some cases, you might prefer to retrieve the raw response and the original request:
+Usually, it is recommended to use `execute` method to retrieve the deserialized typed response.
+Sometimes, you might prefer to retrieve the raw response and the original request:
 
 - The response cannot be deserialized automatically, so the raw response can work as a workaround.
   For example, when `function import`s use an entity type as return type, and this entity type is shared by multiple `EntitySet`s, without further information, it is unclear which `Entity` the SAP Cloud SDK should build during the deserialization.
