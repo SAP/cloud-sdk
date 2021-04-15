@@ -31,7 +31,7 @@ Run this command to install the OpenAPI generator globally:
 npm install -g @sap-cloud-sdk/openapi-generator
 ```
 
-## Generate a Client using the Command Line Interface
+## Generate a Client Using the Command Line Interface
 
 The SAP Cloud SDK generator is primarily intended to be used on the command line.
 You can generate an OpenAPI client by running:
@@ -45,7 +45,7 @@ The `<inputDirectory>` points to the directory containing your specification fil
 By default the generated clients will each contain:
 
 - API files as `.ts` files - one for each "API" in the service.
-  See details in [how APIs are generated](#customizing-generation))
+  See [details](#how-the-api-code-is-generated).
 - A schema directory, containing schema files (`.ts`), one for each schema defined in the service specification.
 - All of the above as transpiled sources, including JavaScript sources (`.js`), type definition files (`.d.ts`) and sourcemap files (`.js.map` and `.d.ts.map`).
 - A `package.json`.
@@ -92,7 +92,7 @@ const generatorOptions = {
 await generate(generatorOptions);
 ```
 
-## How the API code is Generated
+## How the API Code is Generated
 
 By default the generator produces one service directory for every OpenAPI specification.
 The directory name is based on the file name of the specification and is transformed to kebab case, e.g. `my-service`.
