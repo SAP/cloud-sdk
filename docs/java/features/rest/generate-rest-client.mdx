@@ -87,6 +87,8 @@ To use the Maven plugin following XML snippet should be added to the POM file of
 <plugin>
 	<groupId>com.sap.cloud.sdk.datamodel</groupId>
 	<artifactId>openapi-generator-maven-plugin</artifactId>
+	<!-- Maintain Maven property sap-cloud-sdk.version in your POM with the latest SAP Cloud SDK version -->
+	<version>${sap-cloud-sdk.version}</version>
     <executions>
 		<execution>
 			<goals>
@@ -110,6 +112,17 @@ To use the Maven plugin following XML snippet should be added to the POM file of
 		-->
 	</configuration>
 </plugin>
+```
+
+Maven requires that we specify the version for plugins explicitly.
+In above code snippet you can see the `version` tag pointing to the Maven property `sap-cloud-sdk.version`.
+Maintain such a property in your POM and ensure that you always use the latest SAP Cloud SDK version.
+
+```xml
+<properties>
+    <!-- Use latest version always as per https://sap.github.io/cloud-sdk/docs/java/release-notes-sap-cloud-sdk-for-java -->
+	<sap-cloud-sdk.version>3.42.0</sap-cloud-sdk.version>
+</properties>
 ```
 
 Maven will run the generator within the `generate-sources` phase which is executed before `compile`.
