@@ -1,6 +1,8 @@
 import React from 'react';
 import CustomRequestConfigContent from './custom-request-config.mdx';
 import CustomRequestConfigNoteContent from './custom-request-config-note.mdx';
+import ExecuteRawOverviewContent from './execute-raw-overview.mdx';
+import ExecuteRawUseCasesContent from './execute-raw-use-cases.mdx';
 
 export function CustomRequestConfig() {
   return <CustomRequestConfigContent />;
@@ -8,4 +10,12 @@ export function CustomRequestConfig() {
 
 export function CustomRequestConfigNote() {
   return <CustomRequestConfigNoteContent />;
+}
+
+export function ExecuteRawOverview() {
+  return <ExecuteRawOverviewContent />;
+}
+
+export function ExecuteRawUseCases() {
+  return <ExecuteRawUseCasesContent />;
 }
