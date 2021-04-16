@@ -136,6 +136,5 @@ In your application log you find the HTTP error code 407 and the request targets
 
 - You are caching the `HttpDestination` instance in your application code instead of retrieving it for each request.
   Since the `HttpDestination` object stores the JWT needed for passing the SAP Cloud Connector, the JWT does not get refreshed after its expiration.
-
   To solve this issue, retrieve the `HttpDestination` for each request again with the `DestinationAccessor` API.
   There is no need to worry about performance, because the SAP Cloud SDK uses an optimized built-in cache for Destinations.
