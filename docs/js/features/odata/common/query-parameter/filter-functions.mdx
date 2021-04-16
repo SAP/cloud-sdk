@@ -11,15 +11,22 @@ BusinessPartner.requestBuilder()
 ```
 
 For filter functions with `boolean` as a return types, the filter function can be used directly as a filter without `.equal(true)`.
-The two following examples are equivalent to each other:
+Logically, the two following examples are equivalent to each other:
 ```ts
+  /*
+    $filter=startswith(FirstName, 'Bob') eq true
+  */
   .filter(
     startsWith(BusinessPartner.FIRST_NAME, 'Bob').equal(true)
   )
 ```
 The filter expression can be shortened:
 ```ts
+  /*
+    $filter=startswith(FirstName, 'Bob')
+  */
   .filter(
     startsWith(BusinessPartner.FIRST_NAME, 'Bob')
   )
 ```
+However, as some services might not support both versions shown above, you might have to choose one of them to fits the target system.
