@@ -9,3 +9,17 @@ BusinessPartner.requestBuilder()
   .filter(length(BusinessPartner.FIRST_NAME).lessThan(5))
   .execute(destination);
 ```
+
+For filter functions with boolean as a return types, the filter function can be used directly as a filter without `.equal(true)`.
+The two following examples are equivalent to each other:
+```ts
+  .filter(
+    startsWith(BusinessPartner.FIRST_NAME, 'Bob').equal(true)
+  )
+```
+The filter expression can be shortened:
+```ts
+  .filter(
+    startsWith(BusinessPartner.FIRST_NAME, 'Bob')
+  )
+```
