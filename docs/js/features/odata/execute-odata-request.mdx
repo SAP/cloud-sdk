@@ -15,7 +15,12 @@ keywords:
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-import {CustomRequestConfig, CustomRequestConfigNote} from "../common";
+import {
+  CustomRequestConfig,
+  CustomRequestConfigNote,
+  ExecuteRawOverview,
+  ExecuteRawUseCases
+} from '../common';
 
 Once you have generated a typed OData client using the SAP Cloud SDK generator or if you decided to use one of the pre-generated OData clients for SAP S/4HANA, you can use your OData client to execute HTTP requests against your service.
 The client provides request builders for the different types of requests and abstractions of the entity sets of the given service, that we refer to as _entities_.
@@ -192,40 +197,39 @@ This will add the custom service path to your request.
 Executing the example request above against a destination with URL `https://my.s4-system.com` would result in a request against something like this: `https://my.s4-system.com/my/custom/service/path/MyEntity`.
 
 ### Setting a Custom Request Configuration
+
 <CustomRequestConfig />
 
 ```ts
 MyEntity.requestBuilder()
   .getAll()
-  .addCustomRequestConfiguration({ responseType: 'arraybuffer' })
+  .addCustomRequestConfiguration({ responseType: 'arraybuffer' });
 ```
 
 <CustomRequestConfigNote />
 
 ### Getting the Raw Response and the Original Request
 
-Usually, it is recommended to use `execute` method to retrieve the deserialized typed response.
-Sometimes, you might prefer to retrieve the raw response and the original request:
+<ExecuteRawOverview />
 
-- The response cannot be deserialized automatically, so the raw response can work as a workaround.
-  For example, when `function import`s use an entity type as return type, and this entity type is shared by multiple `EntitySet`s, without further information, it is unclear which `Entity` the SAP Cloud SDK should build during the deserialization.
-- In addition to the response body, you need additional information, like the status code or response headers.
-- In addition to the response, the request built by the SAP Cloud SDK needs also to be returned.
-
-As shown in the example below, the `executeRaw` method returns an `HttpResponse`, which contains:
-
-- status code
-- response header
-- response body
-- original request
+Example:
 
 ```ts
 const httpResponse: HttpResponse = MyEntity.requestBuilder()
   .getAll()
   .executeRaw(destination);
-
-const status = httpResponse.status;
-const responseHeaders = httpResponse.headers;
-const responseBody = httpResponse.data;
-const request = httpResponse.request;
 ```
+
+<ExecuteRawUseCases />
+
+<!-- The following ul/li tags + style are necessary to make the bullet points from execute raw look like one list including the following point. -->
+
+<!-- prettier-ignore -->
+<ul style={{ 'margin-top': '-16px' }}>
+  <li>
+    In rare cases, when the response data cannot be deserialized.
+    This can happen when function imports use an entity type as return type, and this entity type is shared by multiple <code>EntitySet</code>s.
+    Without further information, it is unclear which <code>Entity</code> should be deserialized.
+    For those cases, you have to use <code>executeRaw</code> and use the <code>deserialize</code> function on the response data.
+  </li>
+</ul>

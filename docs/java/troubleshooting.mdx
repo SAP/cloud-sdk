@@ -124,3 +124,17 @@ Compilation fails due to missing _Getters_ and _Setters_ on entity objects.
   Please check the latest details about [SAP BTP, Cloud Foundry Environment quotas and limitations](https://help.sap.com/viewer/3504ec5ef16548778610c7e89cc0eac3/Cloud/en-US/9c7092c7b7ae4d49bc8ae35fdd0e0b18.html#loio9809fa4f02cb4696baea5c23d6eaac94)
 - If even after achieving the maximum vertical scale of your instance, your app doesn't reach the desired performance level, try to optimize it.
   Consider scaling it horizontally or different custom solutions to boost performance where it lags.
+
+## Request via Cloud Connector fails with HTTP 407
+
+:::info **Symptoms**
+In your application log you find the HTTP error code 407 and the request targets an On-Premise system via the SAP Cloud Connector.
+:::
+
+**Possible causes:**
+
+- You are caching the `HttpDestination` instance in your application code instead of retrieving it for each request.
+  Since the `HttpDestination` object stores the JWT needed for passing the SAP Cloud Connector, the JWT does not get refreshed after its expiration.
+
+  To solve this issue, retrieve the `HttpDestination` for each request again with the `DestinationAccessor` API.
+  There is no need to worry about performance, because the SAP Cloud SDK uses an optimized built-in cache for Destinations.

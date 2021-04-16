@@ -59,9 +59,9 @@ There are two possible types of proxies:
 
 1. A local proxy running on the cloud platform that connects to SAP S/4HANA On-premise systems.
    The proxy information like host and port are provided by the [connectivity service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/daca64dacc6148fcb5c70ed86082ef91.html#loiodaca64dacc6148fcb5c70ed86082ef91__services).
-   This proxy will be referred to as `connectivity proxy`.
+   This proxy will be referred to as connectivity proxy.
 2. A proxy running in some landscape that makes requests to the internet.
-   This proxy will be referred to as `web proxy`.
+   This proxy will be referred to as web proxy.
 
 ## Manual Configuration
 
@@ -102,7 +102,7 @@ This property can have two values: `Internet` and `OnPremise`:
 <img alt="Destination in CF" src={useBaseUrl('img/proxyTypeDestination.png')} />
 
 If `OnPremise` is selected it is assumed that this destination points to an SAP S/4HANA On-premise system.
-In this case, you need the `connectivity proxy`.
+In this case, you need the connectivity proxy.
 The SAP Cloud SDK will request the proxy host and port from the connectivity service and make a request using this proxy.
 From there the request will pass via the **SAP Cloud Connector** to the SAP S/4HANA On-premise system.
 
@@ -141,11 +141,11 @@ Currently, wild cards like `*` are supported in the list.
 
 ## A Word on the Used Libraries and Implementation Details
 
-The SAP Cloud SDK uses `axios` to execute `http` requests.
-In principle `axios` should support `web proxies` based on the environment variables.
-However, we found that the request URL using a proxy was not correctly constructed and for the `connectivity proxy`, an entry point was necessary anyhow.
+The SAP Cloud SDK uses axios to execute `http` requests.
+In principle axios should support web proxies based on the environment variables.
+However, we found that the request URL using a proxy was not correctly constructed and for the connectivity proxy, an entry point was necessary anyhow.
 
-Hence, the SAP Cloud SDK switches off the build-in proxy handling by `axios` completely by using:
+Hence, the SAP Cloud SDK switches off the build-in proxy handling by axios completely by using:
 
 ```json
 {
@@ -153,7 +153,7 @@ Hence, the SAP Cloud SDK switches off the build-in proxy handling by `axios` com
 }
 ```
 
-in the `axios` request configuration.
+in the axios request configuration.
 If a proxy becomes necessary or is configured by the discussed environment variables the SAP Cloud SDK builds directly the `http-agent` or `https-agent`:
 
 ```json
@@ -164,6 +164,6 @@ If a proxy becomes necessary or is configured by the discussed environment varia
 }
 ```
 
-This adds them to the `axios` configuration.
+This adds them to the axios configuration.
 The agents contain the proxy configuration.
 The standard [http and https agents](https://www.npmjs.com/package/http-proxy-agent) are used.
