@@ -19,7 +19,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 In the [Executing a request using a generated OData client](../odata/execute-odata-request.mdx) section, we explained how to make OData requests using the generated OData client.
 This client is the highest layer of convenience and type-safety for the user.
 Below the OData client uses the Generic HTTP client of the SAP Cloud SDK.
-For the final HTTP calls, we have decided to use the `axios` library.
+For the final HTTP calls, we have decided to use the axios library.
 
 <img
   alt="The layers of HTTP clients in the SDK."
@@ -47,9 +47,9 @@ The client handles connectivity related issues such as:
 - [Web proxies](../connectivity/proxy.mdx).
 
 In the end, all information from the destination, connectivity service, and proxy configuration ends up in header-fields and [proxy-agents](https://www.npmjs.com/package/proxy-agent).
-The information goes one level down to the `axios` client.
+The information goes one level down to the axios client.
 
-**`axios` HTTP Client:**
+**axios HTTP Client:**
 Is a widely used open source [HTTP client for node](https://www.npmjs.com/package/axios).
 This client executes the actual HTTP requests in the end.
 
@@ -58,7 +58,7 @@ This client executes the actual HTTP requests in the end.
 To make a request using the Generic HTTP client use the `executeHttpRequest` function.
 
 ```ts
-executeHttpRequest(destination, requestConfig);
+executeHttpRequest(destination, requestConfig, httpRequestOptions);
 ```
 
 The `destination` argument is either a full destination object you have already fetched or an object containing a destination name and JWT.
@@ -93,6 +93,18 @@ The values you give in the request configuration [will be merged](https://github
 For keys which exist for both object the value from the custom request configuration will be used.
 For example, a request configuration with `authorization` headers will overwrite the authorization header information from the destination.
 
+You can also pass an optional third parameter `httpRequestOptions`, where you can indicate for example whether the SAP Cloud SDK should fetch `CSRF` token for a non-GET request.
+For a get request, the `CSRF` token is not fetched and this option is ignored.
+Below is an example of the `httpRequestOptions` to delegate the `CSRF` token fetching to the SAP Cloud SDK.
+
+```JSON
+{
+     fetchCsrfToken: true
+}
+```
+
+By default, the value of `fetchCsrfToken` is false.
+
 ## When to Use It
 
 You should consider the Generic HTTP client if:
@@ -108,5 +120,5 @@ You should consider the OData client if:
 - You have to build complicated filter, selection, and/or expand conditions.
   Here you will highly benefit from the help of the OData client.
 - You want to update or create new entities.
-  The OData Client has built-in `ETag` versions handling and takes also care of `CSRF` token fetching for you.
-  With the generic client, you have to manage versions and tokens on your own.
+  The OData Client has built-in `ETag` versions handling.
+  With the generic client, you have to manage versions on your own.
