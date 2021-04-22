@@ -54,6 +54,42 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed issues
 -->
 
+## 3.43.0 - April 22, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.43.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+
+### New Functionality
+
+- We added a new API for creating OData V2 Changesets in Batch requests that mimics the existing OData V4 API.
+  This new API also supports custom headers on a per-request basis.
+
+  Example usage:
+  ```java
+  // define modification requests including custom headers per request
+  MyEntityCreate createRequest = new MyEntityCreate(myNewEntityInstance).withHeader("custom-header", "value");
+  MyEntityUpdate updateRequest = new MyEntityUpdate(myUpdatedEntityInstance).withHeader("another-custom-header", "another value");
+
+  // assemble batch request by adding both modifications into a single changeset
+  MyEntityBatch batchRequest = new MyEntityBatch().addChangeSet(createRequest, updateRequest);
+
+  // execute the batch request
+  BatchResponse response = batchRequest.executeRequest(myDestination);
+  ```
+
+### Improvements
+
+- Dependency Updates:
+    - Minor version updates:
+      - Update Netty from `4.1.60.Final` to `4.1.63.Final`
+      - Update Lombok from `1.18.18` to `1.18.20`
+      - Update Jetty from `9.4.38.v20210224` to `9.4.39.v20210325`
+      - Update Bouncycastle from `1.64` to `1.68`
+      - Update Error Prone from `2.5.1` to `2.6.0`
+      - Update Java JWT from `3.14.0` to `3.15.0`
+      - Update Protobuf from `3.15.6` to `3.15.7`
+      - Update Apache CXF from `3.3.8` to `3.3.10`
+      - Update Mockito from `3.8.0` to `3.9.0`
+
 ## 3.42.0 - April 8, 2021
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.42.0) | [Javadoc](https://help.sap.com/doc/7d0d6f45c6b64bd3a930121641c0d65b/1.0/en-US/index.html)
