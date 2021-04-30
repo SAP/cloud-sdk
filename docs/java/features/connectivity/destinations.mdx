@@ -213,13 +213,19 @@ The SAP Cloud SDK uses the [Service Loader](https://docs.oracle.com/javase/7/doc
 To let your custom implementation be found, you need to provide a configuration file as resource in the folder `META-INF/services`.
 Name this resource file as the interface `com.sap.cloud.sdk.cloudplatform.connectivity.DestinationHeaderProvider` and mention the fully-qualified class name of your custom implementation.
 You can refer to several implementations by putting their fully qualified class names on separate lines.
-Place the file in your resources folder, that is for a regular Maven project the file path `src/main/resources/`.
 
-For example, if your custom implementation is named `ApiTokenHeaderProvider` in the package `com.example`, the content would be:
+Place the new folder + file in your resources folder.
+In a Maven project the resource folder is typically `src/main/resources/`.
+For example, if your custom implementation is named `ApiTokenHeaderProvider` in the package `com.example`, the configuration should be as follows:
 
-```
-com.example.ApiTokenHeaderProvider
-```
+- File path & name:
+  ```
+  src/main/resources/META-INF/services/com.sap.cloud.sdk.cloudplatform.connectivity.DestinationHeaderProvider
+  ```
+- File content:
+  ```
+  com.example.ApiTokenHeaderProvider
+  ```
 
 ## Retrieving Destinations
 
