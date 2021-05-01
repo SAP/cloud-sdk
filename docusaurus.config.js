@@ -1,13 +1,15 @@
+/** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
   title: 'SAP Cloud SDK',
   tagline:
     'The one-stop shop for developing and extending SAP applications in the cloud.',
   url: 'https://sap.github.io',
   baseUrl: '/cloud-sdk/',
+  onBrokenLinks: 'throw',
+  onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   organizationName: 'SAP',
   projectName: 'cloud-sdk',
-  onBrokenMarkdownLinks: 'throw',
   themeConfig: {
     prism: {
       additionalLanguages: ['powershell', 'java', 'groovy'],
@@ -173,7 +175,7 @@ module.exports = {
               href: 'https://www.npmjs.com/search?q=%40sap-cloud-sdk'
             },
             {
-              label: 'JS client libraries for SAP S/4HANA',
+              label: 'Typescript client libraries for SAP S/4HANA',
               href: 'https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*'
             },
             {
