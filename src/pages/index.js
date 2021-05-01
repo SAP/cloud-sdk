@@ -30,7 +30,7 @@ export default function Home() {
   const { siteConfig } = useDocusaurusContext();
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
+      title={`${siteConfig.title}`}
       description="SAP Cloud SDK is a one stop shop for developing and extending SAP applications in a Cloud"
     >
       <HomepageHeader />
