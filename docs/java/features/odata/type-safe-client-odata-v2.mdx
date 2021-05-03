@@ -376,7 +376,7 @@ Refer to the [official OData V2 spec](https://www.odata.org/documentation/odata-
 The `service` object offers the method `batch` which allows access to the batch-related methods that help build the batch request.
 
 Multiple single requests (like `createBusinessPartnerAddress`) can be wrapped into so-called changesets.
-Each changeset is opened with `beginChangeSet` and closed with `endChangeSet`. 
+Each changeset is opened with `beginChangeSet` and closed with `endChangeSet`.
 You can wrap multiple changesets into one batch request.
 
 Non-modification or in other words Read requests can be added outside of changesets with the `addReadOperations` method.
@@ -697,8 +697,19 @@ Stream<BusinessPartner> streamingEntities = service
   .executeRequest(destination);
 ```
 
-The request builder allows for setting the optional parameter for preferred page size.
+The request builder allows for setting the optional parameter for preferred page size, e.g.:
+
+```java
+Iterable<List<BusinessPartner>> iterablePagesOfEntities = service
+  .getAllBusinessPartner()
+  .withPreferredPageSize(20)
+  .iteratingPages()
+  .executeRequest( destination );
+```
+
+:::caution
 Please note that the OData service is not obliged to respect this setting.
+:::
 
 ## Switch to Improved OData v2 Type-Safe Client
 
