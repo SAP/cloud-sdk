@@ -466,5 +466,16 @@ Stream<BusinessPartner> streamingEntities = service
   .execute(destination);
 ```
 
-The request builder allows for setting the optional parameter for preferred page size.
+The request builder allows for setting the optional parameter for preferred page size, e.g.:
+
+```java
+Iterable<List<BusinessPartner>> iterablePagesOfEntities = service
+  .getAllBusinessPartner()
+  .withPreferredPageSize(20)
+  .iteratingPages()
+  .execute( destination );
+```
+
+:::caution
 Please note that the OData service is not obliged to respect this setting.
+:::
