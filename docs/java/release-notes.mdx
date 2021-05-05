@@ -99,7 +99,9 @@ To continue using the latest features outlined in the release notes for version 
 
 - We improved OData v4 update requests that use the PATCH HTTP method. Now they allow adding complex properties without the need to use setters for each value inside the complex property.
   You can use the builder pattern or the constructor to propagate the property values.
+  
   Before:
+  
   ```java
   Entity entity;
   ComplexProperty property = new ComplexProperty();
@@ -107,6 +109,7 @@ To continue using the latest features outlined in the release notes for version 
   entity.setComplexProperty(property);
   ```
   Now:
+  
   ```java
   Entity entity;
   entity.setComplexProperty(new ComplexProperty("Foo"));
