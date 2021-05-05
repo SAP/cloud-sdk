@@ -93,7 +93,8 @@ module.exports = {
           'java/guides/logging-overview',
           'java/guides/tutorial-overview-sdk-java',
           'java/guides/sap-cloud-sdk-linux-how-to',
-          'java/guides/cap-sdk-integration'
+          'java/guides/cap-sdk-integration',
+          'java/guides/spring-boot-war-deployment'
         ]
       },
       {
