@@ -101,7 +101,7 @@ Consider specifying the respective **subaccount**, **organization**, and **space
 Use `cd` to navigate to the directory that contains the `JSON` configuration file we created before and run the following to create the service instance:
 
 ```bash
-cf create-service workflow standard my-workflow-service -c <path-to-json-file>
+cf create-service workflow standard my-workflow -c <path-to-json-file>
 ```
 
 This command creates an instance of the SAP BTP Workflow Service in the CF space that your CLI points to.
@@ -195,7 +195,7 @@ final HttpDestination destination =
 ```
 
 :::caution
-The `ScpCfServiceDestinationLoader.getDestinationForService` API currently only works out of the box for the workflow service.
+The `ScpCfServiceDestinationLoader.getDestinationForService` API currently only works out of the box for a handfull of services.
 For other services, the alternative would be to create a Destination manually in CF using values in the `VCAP_SERVICES` and then accessing the destination using the `DestinationAccessor`.
 For details refer to [Additional information](scp-workflow-rest-api#additional-information) section.
 :::
@@ -250,7 +250,6 @@ The Java client library for SAP BTP Workflow enables the developer to:
 
 - We support SAP Workflow service API only on the SAP BTP Cloud Foundry environment.
   The SAP Business Technology Platform Neo environment is **Not supported!**
-- In the current state, it is required to create a destination manually instead of letting the library resolve it for you via VCAP_SERVICES binding available on the SAP BTP Cloud Foundry environment.
 
 ## Additional Information
 
@@ -265,7 +264,7 @@ The steps below can be continued in this example from the [Bind your App to Serv
 
 ### Take Note of API endpoint and OAuth Credentials
 
-Once the app is bound to the workflow service (here in our example) and app deployment has finished, go to your CF space and navigate to `Services\Service Instances`.
+Once the app is bound to the workflow service (here in our example) and app deployment has finished, go to your CF space and navigate to `Services\Instances and Subscriptions`.
 You should see the service instance you created along with the information that is bound to your application.
 
 Click on the service instance name, for instance `my-workflow`, in the upcoming screen you should see the headline `Service Instance: my-workflow - Referencing Apps`.
