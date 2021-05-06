@@ -94,6 +94,16 @@ Request parameters:
   - `ignoreAnyVersionIdentifier()` will ensure that no ETag is sent.
 - All operations allow for adding custom headers via `withHeader(...)`
 
+:::note  "`UPSERT` operation in OData v4"
+
+We do not provide an API for `UPSERT` [operation available in OData v4](http://docs.oasis-open.org/odata/odata/v4.0/os/part1-protocol/odata-v4.0-os-part1-protocol.html#_Toc372793720).
+`UPSERT` uses `PATCH` or `PUT` HTTP method which allows updating or creating an Entity if it doesn't exist and URL is valid.
+This gives mostly performance benefits for a narrow set of cases where it matters.
+You can implement `UPSERT` by combining `UPDATE` and `CREATE` requests mentioned above together with custom logic required to handle the upserting.
+If `UPSERT` is mission critical for you application, you can use our Generic OData client to construct an `UPSERT` call yourself by example.
+
+:::
+
 #### Handling of ETags
 
 An [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag) is a version identifier that is often used to implement an optimistic locking mechanism.
