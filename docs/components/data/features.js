@@ -119,7 +119,7 @@ export const features = [
       note: ''
     },
     js: {
-      status: ':bulb:',
+      status: ':heavy_check_mark:',
       docsLink: `[docs](${baseUrl}/js/features/openapi/execute-openapi-request)`,
       note: ''
     }
@@ -133,7 +133,7 @@ export const features = [
       note: ''
     },
     js: {
-      status: ':bulb:',
+      status: ':heavy_check_mark:',
       docsLink: `[docs](${baseUrl}/js/features/openapi/execute-openapi-request)`,
       note: ''
     }
@@ -147,7 +147,7 @@ export const features = [
       note: ''
     },
     js: {
-      status: ':bulb:',
+      status: ':heavy_check_mark:',
       docsLink: `[docs](${baseUrl}/js/features/openapi/generate-openapi-client)`,
       note: ''
     }
@@ -196,7 +196,7 @@ export const features = [
   },
   {
     name:
-      '[SCP Cloud Foundry](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/9c7092c7b7ae4d49bc8ae35fdd0e0b18.html)',
+      '[BTP Cloud Foundry Environment](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/9c7092c7b7ae4d49bc8ae35fdd0e0b18.html)',
     category: 'Runtime',
     java: {
       status: ':heavy_check_mark:',
@@ -211,7 +211,7 @@ export const features = [
   },
   {
     name:
-      '[BTP Neo](https://help.sap.com/viewer/ea72206b834e4ace9cd834feed6c0e09/Cloud/en-US)',
+      '[BTP Neo Environment](https://help.sap.com/viewer/ea72206b834e4ace9cd834feed6c0e09/Cloud/en-US)',
     category: 'Runtime',
     java: {
       status: ':heavy_check_mark:',
@@ -349,7 +349,7 @@ export const features = [
       note: `Via a Maven plugin `
     },
     js: {
-      status: ':heavy_check_mark:',
+      status: 'deprecated',
       docsLink: `[docs](${baseUrl}/js/features/cli/overview)`,
       note: ''
     }
