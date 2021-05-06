@@ -1,0 +1,126 @@
+---
+id: release-notes-sap-cloud-sdk-for-typescript-javascript
+title: Release Notes
+sidebar_label: Release Notes
+description: Release notes for the Typescript SAP Cloud SDK, stay up to date with the recent features, fixes, dependency updates and recommendedations.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+---
+
+<!-- vale off -->
+
+## Should I update?
+
+We highly recommend regularly updating to the latest SAP Cloud SDK version. It will help you:
+
+- Ensure access to the latest Cloud SDK features
+- Keep up with the latest changes in SAP Cloud Platform
+- Update client libraries giving access to latest SAP services on SAP Cloud Platform and SAP S/4HANA
+- Protect yourself from bugs and breaking changes in the future
+
+<!-- Copy and fill
+## 3.xx.x - January 1, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.34.1) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+
+### Known issues
+
+### Compatibility Notes
+
+### New Functionality
+
+### Improvements
+
+### Fixed issues
+-->
+
+## 3.41.0 - March 25, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.41.0) | [Javadoc](https://help.sap.com/doc/4d51cd942a184d88bd51f4385e14d7c8/1.0/en-US/index.html)
+
+### New Functionality
+
+- We added a convenience method to configure the proxy authorizations when building a custom `DefaultHttpDestination`.
+  The `.proxyAuthorization("value")` will send `value` within the `Proxy-Authorization` header, unless that header is already set.
+- The OpenAPI generator now supports the vendor extension field `x-sap-cloud-sdk-api-name` in an OpenAPI specification.
+  By default, the OpenAPI generator uses the `tag` of an operation to determine the Java service class name.
+  In case you're not happy with the name generated from the `tag` field, and changing it is not possible, you can add `x-sap-cloud-sdk-api-name` vendor extension to the `operation` section of the specification. This vendor extension will be used by the generator to derive the Java service class name.
+- Enable OData requests to skip the CSRF token retrieval if the server does not require it.
+  Use the method `withoutCsrfToken()` to disable the CSRF token retrieval.
+- We provided experimental support for OData v2 read requests as items in a Batch request. The API is unified and similar to the OData v4 Batch request:
+
+  ```
+  BusinessPartnerService service = new DefaultBusinessPartnerService();
+
+  BusinessPartnerFluentHelper readOperationAll = service.getAllBusinessPartner().top(10);
+  BusinessPartnerByKeyFluentHelper readOperationByKey = service.getBusinessPartnerByKey("bupa9000");
+
+  BatchResponse response = service.batch()
+      .addReadOperations(readOperationAll)
+      .addReadOperations(readOperationByKey)
+      .executeRequest(destination);
+
+  List<BusinessPartner> entities = response.getReadResult(readOperationAll);
+  BusinessPartner entity = response.getReadResult(readOperationByKey);
+  ```
+
+### Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update SCP Neo Java Tomcat API from `3.123.6.2` to `3.124.9.2`
+    - Update SCP Neo Java TomEE7 API from `1.92.6.2` to `1.93.10.2`
+    - Update [SAP CP Spring XSUAA Security Library](https://github.com/SAP/cloud-security-xsuaa-integration/tree/master/spring-xsuaa) from `2.8.4`to `2.8.7`
+  - Other dependency updates:
+    - Minor version updates:
+      - Update Spring from `5.3.3` to `5.3.4`
+      - Update Spring Security from `5.4.2` to `5.4.5`
+      - Update Jetty BOM from `9.4.36.v20210114` to `9.4.38.v20210224`
+      - Update Woodstox Core from `5.0.3` to `5.3.0`
+      - Update Netty from `4.1.59.Final` to `4.1.60.Final`
+      - Update Java JWT from `3.13.0` to `3.14.0`
+      - Update [Jackson](https://github.com/FasterXML/jackson) from `2.12.1` to `2.12.2`
+      - Update Apache Commons Lang from version `3.11` to `3.12.0`
+      - Update JSON from version `20201115` to `20210307`
+      - Update Jackson from version `2.12.1` to `2.12.2`
+- The OData type-safe client (VDM) for OData V4 services of newest release [2102 of SAP S/4HANA Cloud](https://news.sap.com/2021/02/sap-s4hana-cloud-2102-empowering-businesses-seize-opportunities/) and FPS1 of SAP S/4HANA on-premise 2020 now also supports static fields for accessible properties on `VdmComplex` types.
+
+### Fixed issues
+
+- We fixed an issue with OData V2 read requests where an error message was incorrectly written to the log when using filters.
+  The error messages are no longer logged unless it is applicable:
+
+  > Registered custom filter expression cannot be used when performing the OData V2 request with toRequest() or executeRequest().
+
+  > Registered custom filter expression cannot be used when performing the OData V2 request with execute().
+
+- Fix an issue with OData response handling where deserialization of one-to-many properties failed for primitive and complex data types.
+
+
+## Compatibility Notes
+
+- [core] Use `HEAD` instead of `GET` when fetching CSRF tokens. Change the URL for CSRF token fetching in OData requests from the service URL to the request URL.
+- [test-util] Use `HEAD` for `mockHeaderRequest()` to align with the core behaviour.
+- [core] Remove experimental `Exclude` type, which was accidentally exposed as non-experimental.
+- [openapi-generator] Rename the CLI generator command from `generate-openapi-client` to `openapi-generator`.
+- [openapi-generator] Rename some generator options and default behavior of those options ([details](./knowledge-base/adr/0020-generator-options.md)).
+
+## New Functionality
+
+- [openapi-generator] **Release the SAP Cloud SDK OpenAPI generator.**
+- [core] Support custom axios options for all request builders.
+- [core] Support disabling csrf token request as an option for all request builders.
+- [odata] Support unary operator `not` in the `filter()` of OData request builders.
+
+## Improvements
+
+- [odata] Allow using filter functions with boolean return types directly in the `filter()` of OData request builders without `equals(true)`.
+- [odata-generator] Disable the `execute` function, when an entity type is shared by multiple entity sets and is used as the return type of function/action imports.
+- [openapi-generator] Introduce `verbose` option to enable verbose logging.
+- [openapi-generator] Introduce `overwrite` option to allow overwriting of existing files.
+- [openapi-generator] Introduce `include` option to allow copying files to the generated clients.
