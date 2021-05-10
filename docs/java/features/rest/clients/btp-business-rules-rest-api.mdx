@@ -18,6 +18,12 @@ import MvnBadge from '../../../../../src/sap/sdk-java/MvnBadge';
 
 <MvnBadge />
 
+:::caution Beta State
+
+This library is released in **beta state** only and is subject to change.
+
+:::
+
 ## Overview
 
 The [SAP Business Rules service](https://help.sap.com/viewer/product/BUSINESS_RULES/Cloud/en-US) for Cloud Foundry helps customers to translate complex business logic into a natural language.
@@ -25,15 +31,11 @@ It consists of multiple APIs that can be used for modelling, authoring, and simu
 
 To benefit from features offered by the REST APIs of the SAP BTP Business Rules service you can leverage the type-safe client library provided by the **SAP Cloud SDK** and discover it via your IDE.
 
-:::caution Beta State
-This library is released in **beta state** only and is subject to change.
-:::
-
 ### Prerequisites
 
 Add the latest version of the [SAP Cloud SDK](https://search.maven.org/artifact/com.sap.cloud.sdk/sdk-bom) to your Java application dependencies or [generate a new one from archetypes that we provide](../../../getting-started).
 
-After you created an SAP Cloud SDK-based Java app, you can invoke the SAP BTP Business Rules REST API in your business logic.
+After you created an SDK-based Java app, you can invoke the SAP BTP Business Rules REST API in your business logic.
 More precisely, the SAP Cloud SDK offers abstractions for the [Rule Authoring API](https://api.sap.com/api/SAP_CF_BusinessRules_Repository/resource) and the [Rule Execution API](https://api.sap.com/api/SAP_CF_BusinessRules_Runtime_V2/resource).
 Both of them can be accessed conveniently once the initial configuration is completed.
 
@@ -92,7 +94,7 @@ applications:
       - route: <omitted-on-purpose>
 ```
 
-This ensures that the `VCAP_SERVICES` environment variable of the CF application gets enhanced with an additional entry containing the connection details of the newly bound workflow service.
+This ensures that the `VCAP_SERVICES` environment variable of the CF application gets enhanced with an additional entry containing the connection details of the newly bound SAP BTP Business Rules service.
 Now, redeploy your app with `cf push`.
 
 ### Develop Your App
@@ -159,9 +161,11 @@ final HttpDestination ruleExecutionDestination =
 ```
 
 :::caution
+
 The `ScpCfServiceDestinationLoader.getDestinationForService` API currently only works out of the box for a handfull of services.
 For other services, the alternative would be to create a Destination manually in CF using values in the `VCAP_SERVICES` and then accessing the destination using the `DestinationAccessor`.
-For details refer to [Additional information](scp-workflow-rest-api#additional-information) section.
+For details refer to [Additional information](btp-business-rules-rest-api#additional-information) section.
+
 :::
 
 #### Invoke the APIs
