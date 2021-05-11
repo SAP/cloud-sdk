@@ -193,6 +193,19 @@ In case you use principal propagation, the BAS will fill the `SAP-Connectivity-A
 The user logged into the BAS will be propagated.
 In case your BAS user is **not** a valid user of the On-premise system you can use a destination using basic authorization.
 
+### Supported Authentication Types for Cloud Systems
+
+For calls to Cloud Systems, i.e. systems that are reachable via Internet, the local BAS proxy is not needed.
+However, the web proxy will be used for all requests.
+In general, this does not cause problems because the proxy is totally transparent.
+
+An exception to this rule is destinations using `ClientCertificateAuthentication` because the http-agent does not yet [allow for certificate forwarding](https://github.com/TooTallNate/node-https-proxy-agent/pull/111).
+As a workaround you can add the target system to the `no_proxy` environment variable:
+
+```
+process.env.no_proxy = process.env.no_proxy  + ",<YourDestinationUrl>"
+```
+
 ## Case 2: Connection to Cloud Systems
 
 Cloud systems are reachable via the internet and you do not need any cloud connector to reach them.
