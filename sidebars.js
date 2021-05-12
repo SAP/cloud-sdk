@@ -41,7 +41,10 @@ module.exports = {
               {
                 type: 'category',
                 label: 'Released Clients',
-                items: ['java/features/rest/clients/scp-workflow-rest-api']
+                items: [
+                  'java/features/rest/clients/scp-workflow-rest-api',
+                  'java/features/rest/clients/btp-business-rules-rest-api'
+                ]
               }
             ]
           },
