@@ -25,6 +25,14 @@ The typed OData v2 client allows to build type-safe OData v2 requests for a give
 The Java classes represent the _data model_ and the available _operations_ of the service.
 As a consequence all requests that are built through the typed OData v2 client are not only _syntactically valid_ but also _semantically valid_.
 
+:::info
+The type safe client may in some situations not be suitable for your needs.
+For instance a service might not fully conform to the OData standard, forcing you to perform customized requests.
+Or the typed API doesn't support a specific feature just yet.
+
+For such cases you can leverage the more [low-level generic OData Client](./generic-untyped-odata-client).
+:::
+
 <!-- vale SAP.Headings = NO -->
 
 ## Versions of OData v2 Client
@@ -375,7 +383,7 @@ Refer to the [official OData V2 spec](https://www.odata.org/documentation/odata-
 
 The `service` object offers the method `batch` which allows access to the batch-related methods that help build the batch request.
 
-Multiple single requests like `createBusinessPartnerAddress` and others can be wrapped into an [OData BATCH  ChangeSet](https://www.odata.org/documentation/odata-version-2-0/batch-processing/). 
+Multiple single requests like `createBusinessPartnerAddress` and others can be wrapped into an [OData BATCH ChangeSet](https://www.odata.org/documentation/odata-version-2-0/batch-processing/).
 OData BATCH ChangeSets are meant to wrap transactional requests together for better performance.
 OData Function Import can be also used inside of OData Batch ChangeSets, for that use the method `addFunctionImport(...)`.
 Each changeset is opened with `beginChangeSet` and closed with `endChangeSet`.
