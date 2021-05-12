@@ -294,7 +294,44 @@ In this example case the command would be the following:
 cf set-env logging-documentation SET_LOGGING_LEVEL '{ROOT: INFO, com.sap.cloud.sdk: INFO}'
 ```
 
-[//]: # 'Think of further usage scenarios. CAP?'
+#### Recommendation for Spring Boot (e.g. CAP)
+
+It's possible to customize the log levels and formatting of your Spring Boot application, e.g. when using the [CAP](https://cap.cloud.sap/docs/) framework.
+For this we recommend the best practices as they are used in our [scp-cf-spring](https://sap.github.io/cloud-sdk/docs/java/getting-started#generating-a-project-from-a-maven-archetype) Maven archetype.
+
+If not exist, add a `src/main/resources/logback-spring.xml` with the following contents:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProfile name="!cloud">
+        <include resource="org/springframework/boot/logging/logback/base.xml"/>
+        <root level="INFO"/>
+        <logger name="org.springframework.web" level="INFO"/>
+    </springProfile>
+
+    <springProfile name="cloud">
+        <appender name="STDOUT-JSON" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="com.sap.hcp.cf.logback.encoder.JsonEncoder"/>
+        </appender>
+        <root level="INFO">
+            <appender-ref ref="STDOUT-JSON"/>
+        </root>
+        <logger name="com.sap.cloud.sdk" level="INFO"/>
+        <logger name="package.to.log" level="DEBUG"/>
+    </springProfile>
+</configuration>
+```
+
+If your application starts with an error message about missing class `JsonEncoder`, then an additional dependency is still required:
+
+```xml
+<dependency>
+    <groupId>com.sap.hcp.cf.logging</groupId>
+    <artifactId>cf-java-logging-support-logback</artifactId>
+</dependency>
+```
+
+Please choose the latest version manually or have the dependency managed by the [SAP Cloud SDK BOM](https://sap.github.io/cloud-sdk/docs/java/guides/manage-dependencies#the-sap-cloud-sdk-bill-of-material).
 
 ## Further Reading
 
