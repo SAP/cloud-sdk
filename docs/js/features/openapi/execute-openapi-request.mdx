@@ -14,6 +14,7 @@ keywords:
 ---
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
+import { SkipCsrf } from '../common';
 import {
   CustomRequestConfig,
   CustomRequestConfigNote,
@@ -115,3 +116,13 @@ const httpResponse: HttpResponse = MyEntity.requestBuilder()
 ```
 
 <ExecuteRawUseCases />
+
+### Skip CSRF token handling
+
+<SkipCsrf />
+
+```ts
+const responseData = await MyApi.myFunction()
+  .skipCsrfTokenFetching()
+  .execute(destination);
+```
