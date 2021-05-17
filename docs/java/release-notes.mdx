@@ -54,6 +54,37 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed issues
 -->
 
+## 3.44.1 - May 6, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.44.1) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+
+### Compatibility Notes
+
+- The OpenAPI Generator no longer adds the prefix `src/main/java` to the output directory.
+  Thus, you need to explicitly add this part to the output directory if you need it.
+
+### New Functionality
+
+- We enhanced the [BTP Workflow API](https://api.sap.com/api/SAP_CP_Workflow_CF/overview) client library to reflect the latest state of this BTP service.
+- We introduced a new CLI wrapper for the OpenAPI generator that can be used without having to set up a Maven project.
+
+### Improvements
+
+- Dependency Updates:
+  - Minor version updates:
+    - Update Reactor from `3.4.4` to `3.4.5`
+    - Update Protobuf Java from `3.15.7` to `3.15.8`
+    - Update PMD from `6.32.0` to `6.33.0`
+    - Update JPaaS Security Utils for Neo from `1.4.89` to `1.4.90`
+    - Update Jackson from `2.12.2` to `2.12.3`
+
+### Fixed issues
+
+- The OpenAPI Generator no longer adds the prefix `src/main/java` unexpectedly to the output directory.
+- The OpenAPI Generator generates the equals method for model classes now with an argument annotated as `@Nullable`.
+- We fixed an issue where the user JWT token was not sent to destinations that use the SAMLAssertion authentication method.
+- For HTTP destinations with the authentication type OAuth SAML Bearer Assertion Flow the destination key store is no longer used for the TLS handshake.
+
 ## 3.43.0 - April 22, 2021
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.43.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
@@ -99,22 +130,25 @@ To continue using the latest features outlined in the release notes for version 
 
 - We improved OData v4 update requests that use the PATCH HTTP method. Now they allow adding complex properties without the need to use setters for each value inside the complex property.
   You can use the builder pattern or the constructor to propagate the property values.
-  
+
   Before:
-  
+
   ```java
   Entity entity;
   ComplexProperty property = new ComplexProperty();
   property.setValue("Foo");
   entity.setComplexProperty(property);
   ```
+
   Now:
-  
+
   ```java
   Entity entity;
   entity.setComplexProperty(new ComplexProperty("Foo"));
   ```
+
   Transitive changes inside a complex property will automatically be detected.
+
 - The OData v2 generator is able to maintain argument order in function imports and get-by-key fluent helpers over successive generations, even when the originating specification changes parameter order.
   This is now a default behavior. It can be disabled by adding the flag to the plugin configuration: `<keepExistingSignatures>false</keepExistingSignatures>`
 - We updated the OData v2 type-safe client (VDM) for the services that couldn't be generated because of the parameters re-ordering issue mentioned above. Now you can use them as any other service. Find the list below:
