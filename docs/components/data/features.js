@@ -5,8 +5,7 @@ const baseUrl = '/cloud-sdk/docs';
  */
 export const features = [
   {
-    name:
-      '[SOAP](https://help.sap.com/saphelp_snc700_ehp01/helpdata/en/bb/ddb33d2ae46b3be10000000a114084/content.htm?no_cache=true)',
+    name: '[SOAP](https://help.sap.com/saphelp_snc700_ehp01/helpdata/en/bb/ddb33d2ae46b3be10000000a114084/content.htm?no_cache=true)',
     category: 'Legacy',
     java: {
       status: ':heavy_check_mark:',
@@ -16,29 +15,11 @@ export const features = [
     js: {
       status: ':x:',
       docsLink: ``,
-      note:
-        'Take a look at the [node-soap](https://github.com/vpulim/node-soap) library'
+      note: 'Take a look at the [node-soap](https://github.com/vpulim/node-soap) library'
     }
   },
   {
-    name:
-      '[BAPI](https://help.sap.com/doc/saphelp_nw73/7.3.16/en-US/4d/c89000ebfc5a9ee10000000a42189b/frameset.htm)',
-    category: 'Legacy',
-    java: {
-      status: ':heavy_check_mark:',
-      docsLink: `[docs](${baseUrl}/java/features/bapi-and-rfc/bapi-and-rfc-overview/)`,
-      note: ''
-    },
-    js: {
-      status: ':x:',
-      docsLink: ``,
-      note:
-        'Take a look at the [SAP NetWeaver RFC SDK client bindings for Node.js](https://github.com/SAP/node-rfc)'
-    }
-  },
-  {
-    name:
-      '[RFC](https://help.sap.com/doc/saphelp_nw73/7.3.16/en-US/48/9f1952a81417cee10000000a421937/frameset.htm)',
+    name: '[BAPI](https://help.sap.com/doc/saphelp_nw73/7.3.16/en-US/4d/c89000ebfc5a9ee10000000a42189b/frameset.htm)',
     category: 'Legacy',
     java: {
       status: ':heavy_check_mark:',
@@ -48,13 +29,25 @@ export const features = [
     js: {
       status: ':x:',
       docsLink: ``,
-      note:
-        'Take a look at the [SAP NetWeaver RFC SDK client bindings for Node.js](https://github.com/SAP/node-rfc)'
+      note: 'Take a look at the [SAP NetWeaver RFC SDK client bindings for Node.js](https://github.com/SAP/node-rfc)'
     }
   },
   {
-    name:
-      '[OData v2 type-safe client](https://www.odata.org/documentation/odata-version-2-0/)',
+    name: '[RFC](https://help.sap.com/doc/saphelp_nw73/7.3.16/en-US/48/9f1952a81417cee10000000a421937/frameset.htm)',
+    category: 'Legacy',
+    java: {
+      status: ':heavy_check_mark:',
+      docsLink: `[docs](${baseUrl}/java/features/bapi-and-rfc/bapi-and-rfc-overview/)`,
+      note: ''
+    },
+    js: {
+      status: ':x:',
+      docsLink: ``,
+      note: 'Take a look at the [SAP NetWeaver RFC SDK client bindings for Node.js](https://github.com/SAP/node-rfc)'
+    }
+  },
+  {
+    name: '[OData v2 type-safe client](https://www.odata.org/documentation/odata-version-2-0/)',
     category: 'OData',
     java: {
       status: ':heavy_check_mark:',
@@ -92,8 +85,7 @@ export const features = [
     js: {
       status: ':x:',
       docsLink: ``,
-      note:
-        'We expose [gelneric HTTP client](${baseUrl}/js/features/connectivity/generic-http-client) aware of connectivity abstractions'
+      note: 'We expose [gelneric HTTP client](${baseUrl}/js/features/connectivity/generic-http-client) aware of connectivity abstractions'
     }
   },
   {
@@ -195,8 +187,7 @@ export const features = [
     }
   },
   {
-    name:
-      '[BTP Cloud Foundry Environment](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/9c7092c7b7ae4d49bc8ae35fdd0e0b18.html)',
+    name: '[BTP Cloud Foundry Environment](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/9c7092c7b7ae4d49bc8ae35fdd0e0b18.html)',
     category: 'Runtime',
     java: {
       status: ':heavy_check_mark:',
@@ -210,8 +201,7 @@ export const features = [
     }
   },
   {
-    name:
-      '[BTP Neo Environment](https://help.sap.com/viewer/ea72206b834e4ace9cd834feed6c0e09/Cloud/en-US)',
+    name: '[BTP Neo Environment](https://help.sap.com/viewer/ea72206b834e4ace9cd834feed6c0e09/Cloud/en-US)',
     category: 'Runtime',
     java: {
       status: ':heavy_check_mark:',
@@ -225,8 +215,7 @@ export const features = [
     }
   },
   {
-    name:
-      '[BTP CF Destinations](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html)',
+    name: '[BTP CF Destinations](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html)',
     category: 'Connectivity',
     java: {
       status: ':heavy_check_mark:',
@@ -240,8 +229,7 @@ export const features = [
     }
   },
   {
-    name:
-      '[BTP CF Service Bindings](https://help.sap.com/viewer/09cc82baadc542a688176dce601398de/Cloud/en-US/bb8009dbb7814a2a94e42983fbaa9bae.html)',
+    name: '[BTP CF Service Bindings](https://help.sap.com/viewer/09cc82baadc542a688176dce601398de/Cloud/en-US/bb8009dbb7814a2a94e42983fbaa9bae.html)',
     category: 'Connectivity',
     java: {
       status: ':heavy_check_mark:',
@@ -311,8 +299,7 @@ export const features = [
     }
   },
   {
-    name:
-      '[Principal propagation](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e2cbb48def4342048362039cc157b12e.html?q=principal)',
+    name: '[Principal propagation](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e2cbb48def4342048362039cc157b12e.html?q=principal)',
     category: 'Connectivity',
     java: {
       status: ':heavy_check_mark:',
@@ -326,8 +313,7 @@ export const features = [
     }
   },
   {
-    name:
-      '[Cloud Connector](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e6c7616abb5710148cfcf3e75d96d596.html?q=cloud%20connector)',
+    name: '[Cloud Connector](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e6c7616abb5710148cfcf3e75d96d596.html?q=cloud%20connector)',
     category: 'Connectivity',
     java: {
       status: ':heavy_check_mark:',
