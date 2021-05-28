@@ -14,27 +14,27 @@ keywords:
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-The [SAP Workflow services](https://help.sap.com/viewer/product/WORKFLOW_SERVICE/Cloud/en-US) allow you to automate business processes across organizations and applications on SAP Business Technology Platform, both Cloud Foundry and Neo environment.
-They are separated into two services per environment: the Inbox service (OData) and the Workflow service (OpenAPI).
-The Inbox service is mainly meant to build a personal inbox, while the Workflow service provides APIs for managing workflows and tasks across recipients.
+The [SAP Workflow service](https://help.sap.com/viewer/product/WORKFLOW_SERVICE/Cloud/en-US) allows you to automate business processes across organizations and applications on SAP Business Technology Platform, both Cloud Foundry and Neo environment.
+It is technically separated into two services per environment: the Inbox API (OData) and the Workflow API (OpenAPI).
+The Inbox API is mainly meant to build a personal inbox, while the Workflow API helps to manage workflows and tasks across recipients.
 
-The first SAP Cloud SDK pregenerated OpenAPI client is for the OpenAPI Workflow service.
-There is no pregenerated client for the Inbox service, yet.
-The remainder of this document will refer to the OpenAPI service for Cloud Foundry only.
+The first SAP Cloud SDK pregenerated OpenAPI client is for the OpenAPI Workflow API.
+There is no pregenerated client for the Inbox API, yet.
+The remainder of this document will refer to the OpenAPI Workflow API for Cloud Foundry only.
 
 :::note Prerequisites
 The following documentation explains how to use the pregenerated client for:
 
-- an existing instance of the Workflow service
+- an existing instance of the SAP Workflow service
 - a user, who has the necessary roles to make the requests
 - an existing workflow definition that contains one simple user task
 
-To learn how to setup your environment to use the Workflow services, please refer to the [Workflow service documentation](https://help.sap.com/viewer/e157c391253b4ecd93647bf232d18a83/Cloud/en-US/fc3d44872c354742afd672aa8d9c16b4.html).
+To learn how to setup your environment to use the SAP Workflow service, please refer to the [Workflow service documentation](https://help.sap.com/viewer/e157c391253b4ecd93647bf232d18a83/Cloud/en-US/fc3d44872c354742afd672aa8d9c16b4.html).
 :::
 
 ## Installation
 
-The client for the Workflow service is available as an npm package.
+The client for the Workflow API is available as an npm package.
 To install it, run:
 
 ```bash
@@ -52,7 +52,7 @@ The following use case shows how to initiate a workflow, retrieve its tasks, com
 
 ### Start a Workflow
 
-First, import the `WorkflowInstancesApi` from the Workflow service client.
+First, import the `WorkflowInstancesApi` from the Workflow API client.
 This API includes functionality to manage workflow instances.
 It allows you to start an instance of a workflow for an existing definition.
 Use the `startInstance` function build a request to start a workflow instance for the definition with the id `'myWorkflowDefinitionId'` and execute it against a [destination](../../connectivity/destination.mdx):
