@@ -12,8 +12,11 @@ keywords:
   - TypeScript
 ---
 
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
 The [SAP Workflow services](https://help.sap.com/viewer/product/WORKFLOW_SERVICE/Cloud/en-US) allow you to automate business processes across organizations and applications on SAP Business Technology Platform, both Cloud Foundry and Neo environment.
-They are separated into two services per environment: the Inbox service (OData), mainly meant to build a personal inbox and the Workflow service (OpenAPI), that provides APIs for managing workflows and tasks accross recipients.
+They are separated into two services per environment: the Inbox service (OData) and the Worfklow service (OpenAPI).
+The Inbox service is mainly meant to build a personal inbox, while the Workflow service provides APIs for managing workflows and tasks accross recipients.
 
 The first SAP Cloud SDK pregenerated OpenAPI client is for the OpenAPI Workflow service.
 There is no pregenerated client for the Inbox service, yet.
@@ -41,12 +44,12 @@ $ npm install @sap/cloud-sdk-workflow-service-cf
 
 ## Use the Client
 
-For this examplary use case, we assume a simple workflow definition.
+For this examplary use case, assume a simple workflow definition:
 
-<IMAGE>
+<img src={useBaseUrl('img/workflow-definition.png')} style={{ width: '50%' }} />
 
 It contains one task definition to approve a request through a form with one boolean field, `approve`.
-In the following we we show how to start an instance of a workflow, retrieve tasks of this workflow, update and complete a task and retrieve the execution logs for all this.
+The following use case shows how to initiate a workflow, retrieve its tasks, complete a task and retrieve the execution logs for this workflow.
 
 ### Start a Workflow
 
@@ -139,14 +142,14 @@ It has properties like the id of the instance and definition (`id` and `definiti
 ### Update the Status and Context of a Task
 
 To update a task, use the `updateInstance` on the `UserTaskInstancesApi`.
-Pass the the mandatory instance id as first parameter.
+Pass the mandatory instance id as first parameter.
 The second parameter is the body to be sent with the update.
 Is has the type `UpdateTaskInstancePayload` and allows you to pass the parameters `context` and `status`, among others.
 In this example the task requires to give (or not to give) an approval.
+The form to fulfill this task has one boolean field, `approve`:
 
-<IMAGE>
+<img src={useBaseUrl('img/workflow-task-form.png')} style={{ width: '50%' }} />
 
-The form to fulfill this task has one boolean field, `approve` as shown in the image above.
 It is defined to point to the context path `${context.approve}`.
 Therefore, you can set it on the context in the request body as in the example below.
 To complete the action, you can also set the `status` to `'COMPLETED'`.
