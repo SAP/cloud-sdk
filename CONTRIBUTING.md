@@ -30,6 +30,8 @@ Feel free to also check this [guide on mindful writing](https://sap.github.io/cl
 
 ## Dos and Don'ts
 
+<!-- vale off -->
+
 - Be concise.
 - Put each sentence on it's own line to keep the changelogs clean.
 - Avoid abbreviations or introduce them unless it's obvious and widely adopted.
@@ -40,6 +42,8 @@ Feel free to also check this [guide on mindful writing](https://sap.github.io/cl
 - Add links whenever you mention a third party resources.
 - Build upon already available content and use it for reference.
 - Write incrementally.
+
+<!-- vale on -->
 
 ## Linting and Formatting
 
