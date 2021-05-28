@@ -15,10 +15,14 @@ keywords:
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
 The [SAP Workflow service](https://help.sap.com/viewer/product/WORKFLOW_SERVICE/Cloud/en-US) allows you to automate business processes across organizations and applications on SAP Business Technology Platform, both Cloud Foundry and Neo environment.
-It is technically separated into two services per environment: the Inbox API (OData) and the Workflow API (OpenAPI).
+It is technically separated into two services per environment:
+
+- Inbox API (OData)
+- Workflow API (OpenAPI)
+
 The Inbox API is mainly meant to build a personal inbox, while the Workflow API helps to manage workflows and tasks across recipients.
 
-The first SAP Cloud SDK pregenerated OpenAPI client is for the OpenAPI Workflow API.
+The first SAP Cloud SDK pregenerated OpenAPI client is for the Workflow API.
 There is no pregenerated client for the Inbox API, yet.
 The remainder of this document will refer to the OpenAPI Workflow API for Cloud Foundry only.
 
@@ -43,12 +47,12 @@ $ npm install @sap/cloud-sdk-workflow-service-cf
 
 ## Use the Client
 
-For this exemplary use case, assume a simple workflow definition:
+For this example, assume the following workflow definition:
 
 <img src={useBaseUrl('img/workflow-definition.png')} style={{ width: '50%' }} />
 
 It contains one task definition to approve a request through a form with one boolean field, `approve`.
-The following use case shows how to initiate a workflow, retrieve its tasks, complete a task and retrieve the execution logs for this workflow.
+The use case shows how to initiate a workflow, retrieve its tasks, complete a task and retrieve the execution logs.
 
 ### Start a Workflow
 

@@ -159,8 +159,8 @@ module.exports = {
               'js/features/openapi/execute-openapi-request',
               {
                 type: 'category',
-                label: 'Pre-generated Clients',
-                items: ['js/features/openapi/pre-generated-clients/workflow']
+                label: 'Pregenerated Clients',
+                items: ['js/features/openapi/pregenerated-clients/workflow']
               }
             ]
           },
