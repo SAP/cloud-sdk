@@ -15,15 +15,15 @@ keywords:
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
 The [SAP Workflow services](https://help.sap.com/viewer/product/WORKFLOW_SERVICE/Cloud/en-US) allow you to automate business processes across organizations and applications on SAP Business Technology Platform, both Cloud Foundry and Neo environment.
-They are separated into two services per environment: the Inbox service (OData) and the Worfklow service (OpenAPI).
-The Inbox service is mainly meant to build a personal inbox, while the Workflow service provides APIs for managing workflows and tasks accross recipients.
+They are separated into two services per environment: the Inbox service (OData) and the Workflow service (OpenAPI).
+The Inbox service is mainly meant to build a personal inbox, while the Workflow service provides APIs for managing workflows and tasks across recipients.
 
 The first SAP Cloud SDK pregenerated OpenAPI client is for the OpenAPI Workflow service.
 There is no pregenerated client for the Inbox service, yet.
 The remainder of this document will refer to the OpenAPI service for Cloud Foundry only.
 
 :::note Prerequisites
-The following documentation exlpains how to use the pregenerated client for:
+The following documentation explains how to use the pregenerated client for:
 
 - an existing instance of the Workflow service
 - a user, who has the necessary roles to make the requests
@@ -43,7 +43,7 @@ $ npm install @sap/cloud-sdk-workflow-service-cf
 
 ## Use the Client
 
-For this examplary use case, assume a simple workflow definition:
+For this exemplary use case, assume a simple workflow definition:
 
 <img src={useBaseUrl('img/workflow-definition.png')} style={{ width: '50%' }} />
 
@@ -52,17 +52,17 @@ The following use case shows how to initiate a workflow, retrieve its tasks, com
 
 ### Start a Workflow
 
-First, import the `WorfklowInstancesApi` from the Workflow service client.
-This API includes functionality to manage worfklow instances.
-It allows you to start an instance of a worfklow for an exsiting defintion.
-Use the `startInstance` function build a request to start a workflow instance for the defintion with the id `'myWorfklowDefinitionId'` and execute it against a [destination](../../connectivity/destination.mdx):
+First, import the `WorkflowInstancesApi` from the Workflow service client.
+This API includes functionality to manage workflow instances.
+It allows you to start an instance of a workflow for an existing definition.
+Use the `startInstance` function build a request to start a workflow instance for the definition with the id `'myWorkflowDefinitionId'` and execute it against a [destination](../../connectivity/destination.mdx):
 
 ```ts
 import { WorkflowDefinitionsApi } from '@sap/cloud-sdk-workflow-service-cf';
 
 function startWorkflow(): Promise<WorkflowInstance> {
   return WorkflowInstancesApi.startInstance({
-    definitionId: 'myWorfklowDefinitionId'
+    definitionId: 'myWorkflowDefinitionId'
   }).execute(destination);
 }
 ```
