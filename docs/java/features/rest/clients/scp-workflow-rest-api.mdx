@@ -64,7 +64,7 @@ Let's look in detail at all necessary steps of Cloud Foundry configuration to ru
 #### Bind App to SAP Business Technology Platform Workflow Service instance
 
 Refer to the documentation on [help.sap.com](https://help.sap.com/viewer/e157c391253b4ecd93647bf232d18a83/Cloud/en-US/e8d88dd056f14c75af59e68d6b20345f.html) for the full picture.
-We'll outline the essentials with the assumption that you understand or have all of the following:
+We'll outline the essentials with the assumption that you understand or have the following:
 
 - Which Cloud Foundry subaccount and space you want to use
 - You have access to the SAP BTP Workflow Service feature
@@ -180,14 +180,14 @@ You can refer to the Java client library for the SAP BTP Workflow service with t
 </dependency>
 ```
 
-After adding the dependency to your `pom.xml` file run `mvn clean install` to let `Maven` install it.
+After adding the dependency to your `pom.xml` file, run `mvn clean install` to let `Maven` install it.
 
 ### Invoke the Java Client Library
 
 #### Create Destination
 
 Let's create a Java representation of this destination.
-You can use `ScpCfServiceDestinationLoader.getDestinationForService` to create a destination by reading properties from the VCAP_SERVICES environment variable entry for the workflow service.
+You can use `ScpCfServiceDestinationLoader.getDestinationForService` to create a destination by reading properties from the `VCAP_SERVICES` environment variable entry for the workflow service.
 
 ```java
 final HttpDestination destination =
@@ -342,7 +342,7 @@ final String destinationName = "Workflow-Api";
 final HttpDestination httpDestination = DestinationAccessor.getDestination(destinationName).asHttp();
 ```
 
-That's it, the invocation to the java client library would remain the [same](scp-workflow-rest-api#invoke-the-scp-workflow-api) and no more further changes are required.
+That's it, the invocation to the java client library would remain the [same](scp-workflow-rest-api#invoke-the-scp-workflow-api) and no more changes are required.
 
 ## Video Tutorial
 
