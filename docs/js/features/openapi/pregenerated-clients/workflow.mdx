@@ -24,16 +24,16 @@ The Inbox API is mainly meant to build a personal inbox, while the Workflow API 
 
 The first SAP Cloud SDK pregenerated OpenAPI client is for the Workflow API.
 There is no pregenerated client for the Inbox API, yet.
-The remainder of this document will refer to the OpenAPI Workflow API for Cloud Foundry only.
+The remainder of this document refers to the OpenAPI Workflow API for Cloud Foundry only.
 
 :::note Prerequisites
 The following documentation explains how to use the pregenerated client for:
 
-- an existing instance of the SAP Workflow service
-- a user, who has the necessary roles to make the requests
-- an existing workflow definition that contains one simple user task
+- An existing instance of the SAP Workflow service
+- A user, who has the necessary roles to make the requests
+- An existing workflow definition that contains one simple user task
 
-To learn how to setup your environment to use the SAP Workflow service, please refer to the [Workflow service documentation](https://help.sap.com/viewer/e157c391253b4ecd93647bf232d18a83/Cloud/en-US/fc3d44872c354742afd672aa8d9c16b4.html).
+To learn how to set up your environment for the SAP Workflow service, see the [Workflow service documentation](https://help.sap.com/viewer/e157c391253b4ecd93647bf232d18a83/Cloud/en-US/fc3d44872c354742afd672aa8d9c16b4.html).
 :::
 
 ## Installation
@@ -52,14 +52,14 @@ For this example, assume the following workflow definition:
 <img src={useBaseUrl('img/workflow-definition.png')} style={{ width: '50%' }} />
 
 It contains one task definition to approve a request through a form with one boolean field, `approve`.
-The use case shows how to initiate a workflow, retrieve its tasks, complete a task and retrieve the execution logs.
+The use case shows how to initiate a workflow, retrieve its tasks, complete a task, and retrieve the execution logs.
 
 ### Start a Workflow
 
 First, import the `WorkflowInstancesApi` from the Workflow API client.
 This API includes functionality to manage workflow instances.
 It allows you to start an instance of a workflow for an existing definition.
-Use the `startInstance` function build a request to start a workflow instance for the definition with the id `'myWorkflowDefinitionId'` and execute it against a [destination](../../connectivity/destination.mdx):
+Use the `startInstance` function to build a request to start a workflow instance for the definition with the ID `'myWorkflowDefinitionId'` and execute it against a [destination](../../connectivity/destination.mdx):
 
 ```ts
 import { WorkflowDefinitionsApi } from '@sap/cloud-sdk-workflow-service-cf';
@@ -90,13 +90,13 @@ The returned workflow instance looks something like this:
 }
 ```
 
-It contains information on the started workflow, e.g., `id`, the id of the instance, `defintionId`, the id of the definition, and status, which in this case is `'RUNNING'`.
+It contains information on the started workflow, for example, `id`, the ID of the instance, `defintionId`, the ID of the definition, and `status`, which in this case is `'RUNNING'`.
 
 ### Retrieve Tasks of a Workflow Instance
 
 To get the tasks that are part of an instance, use the `UserTaskInstancesApi`.
 It includes functionality around managing user tasks.
-To retrieve the tasks of a workflow, use the `queryInstances` function and pass the workflow instance id as query parameter to filter the tasks by your workflow instance.
+To retrieve the tasks of a workflow, use the `queryInstances` function and pass the workflow instance ID as query parameter to filter the tasks by your workflow instance.
 Execute the request against a destination:
 
 ```ts
@@ -140,23 +140,23 @@ The function above returns an instance of a task, that looks as follows:
 ```
 
 This is an object with data on the task.
-It has properties like the id of the instance and definition (`id` and `definitionId`), the `status`, `priority`, etc.
+It has properties like the ID of the instance and definition (`id` and `definitionId`), the `status`, `priority`, and so on.
 
 ### Update the Status and Context of a Task
 
 To update a task, use the `updateInstance` on the `UserTaskInstancesApi`.
-Pass the mandatory instance id as first parameter.
+Pass the mandatory instance ID as first parameter.
 The second parameter is the body to be sent with the update.
 Is has the type `UpdateTaskInstancePayload` and allows you to pass the parameters `context` and `status`, among others.
 In this example the task requires to give (or not to give) an approval.
-The form to fulfill this task has one boolean field, `approve`:
+The form to execute this task has one boolean field, `approve`:
 
 <img src={useBaseUrl('img/workflow-task-form.png')} style={{ width: '50%' }} />
 
 It is defined to point to the context path `${context.approve}`.
 Therefore, you can set it on the context in the request body as in the example below.
 To complete the action, you can also set the `status` to `'COMPLETED'`.
-As in this example this is the only task, this will also complete the workflow.
+As in this example, this is the only task, it will also complete the workflow.
 Execute the request against a destination:
 
 ```ts
@@ -174,15 +174,15 @@ function updateTask(taskInstance: TaskInstance): Promise<void> {
 
 ### Retrieve Execution Logs
 
-Every workflow tracks information on the events that happend throughout its execution.
+Every workflow tracks information on the events that occurred throughout its execution.
 The `WorkflowInstanceApi` provides the `queryInstanceExecutionLogs` function to retrieve the current logs for a workflow.
-Pass the id of the workflow to this function and execute it against a destination to retrieve the logs:
+Pass the ID of the workflow to this function and execute it against a destination to retrieve the logs:
 
 ```ts
 import { WorkflowInstancesApi } from '@sap/cloud-sdk-workflow-service-cf';
 
 function getLogs(
-  workdlowInstance: WorkflowInstance
+  workflowInstance: WorkflowInstance
 ): Promise<WorkflowInstanceExecutionLog[]> {
   return WorkflowInstancesApi.queryInstanceExecutionLogs(
     workflowInstance.id
@@ -226,4 +226,4 @@ The returned logs for this exemplary use case would look something like this:
 ]
 ```
 
-The three items represented here are the initiation of the workflow, the creation of the task and the completion of the task
+The three items represented here are the initiation of the workflow, the creation of the task, and the completion of the task.
