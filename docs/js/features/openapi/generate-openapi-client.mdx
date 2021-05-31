@@ -39,7 +39,7 @@ openapi-generator --input <input> --outputDir <outputDirectory>
 
 The `<input>` points to your specification file or a directory containing the specification(s) and `<outputDirectory>` to the target folder where the generated client(s) will be saved.
 
-By default the generated clients will each contain:
+By default, the generated clients will each contain:
 
 - API files as `.ts` files - one for each "API" in the service.
   See [details](#how-the-api-code-is-generated).
@@ -107,8 +107,8 @@ If no tags are specified, "default" is used.
 <!-- vale Vale.Spelling = NO -->
 
 The API names are transformed by appending "Api" and transforming them to pascal case, e.g. 'my-tag' results in `MyTagApi`.
-In case the tag already ends with "api" (case independent), one "Api" will be removed, e. g. `myapi` results in `MyApi`.
-If your tags end with "api", but this is part of the word, e.g. "okapi", we recommend to use the OpenAPI vendor extensions and provide an explicit API name ending with "Api", e.g. "OkapiApi".
+In case the tag already ends with "api" (case independent), one "Api" will be removed, e.g. `myapi` results in `MyApi`.
+If your tags end with "api", but this is part of the word, e.g. "okapi", we recommend the OpenAPI vendor extensions and provide an explicit API name ending with "Api", e.g. "OkapiApi".
 Note, that operations are grouped into APIs based on their transformed names, not the original names.
 Therefore tags like "my-tag" and "MyTag" are treated as the same API, "MyTagApi".
 
@@ -137,7 +137,7 @@ Example:
 ### Configure Generated Client Structure and Naming
 
 In case you need more flexibility when generating clients, you can use the SAP Cloud SDK's vendor extensions for OpenAPI.
-We provide two extenstions:
+We provide two extensions:
 
 - [x-sap-cloud-sdk-api-name](#x-sap-cloud-sdk-api-name) to configure the structure and naming of the generated APIs.
 - [x-sap-cloud-sdk-operation-name](#x-sap-cloud-sdk-operation-name) to configure the generated function names.
@@ -172,6 +172,6 @@ Use this extension to overwrite the default names for the generated functions.
 As of the OpenAPI specification, this is the intent of the `operationId` field.
 However, the value of this property has to be unique throughout a specification file.
 Many OpenAPI validators fail if there are duplicate `operationId`s.
-With the approach of the SAP Cloud SDK OpenAPI generator this restriction might overcomplicate APIs.
+With the approach of the SAP Cloud SDK OpenAPI generator this restriction might make the resulting clients more complicated than necessary.
 Given that you have multiple APIs, it can make sense to have the same function names in different APIs, e.g. `MyResource1Api.getAll()` and `MyResource2Api.getAll()`.
 The purpose of the `x-sap-cloud-sdk-operation-name` is to allow using duplicate names across APIs, while complying with the OpenAPI specification.
