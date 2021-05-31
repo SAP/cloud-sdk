@@ -40,8 +40,8 @@ That means there are two components involved:
 - A _logging framework_ which provides the implementation of that API
 
   The framework is then responsible for writing such messages according to a configuration.
-  Which configuration options are available depends on the framework.
-  Typically one can configure a log level (Error, Warn, Debug, etc.) and the format of messages.
+  Which configuration options are available, depends on the framework.
+  Typically, one can configure a log level (Error, Warn, Debug, etc.) and the format of messages.
 
 The SAP Cloud SDK itself _only_ relies upon the SLF4J API, not on any specific logging framework.
 This is good practice because otherwise all consumers would be forced to use the same logging framework that the SAP Cloud SDK comes with, rendering the SAP Cloud SDK unusable for many use cases.
@@ -50,15 +50,17 @@ That means that you have to _provide a logging framework_ in your application.
 Otherwise, you will not see any log entries the SAP Cloud SDK attempts to put out.
 
 :::tip
+
 In case your project is based on one of the SAP Cloud SDK archetypes you will already have Logback set up as the logging provider.
+
 :::
 
 ### Providing a Logging Framework
 
 To provide a logging framework, you have to add it to the dependency tree.
-Which artifacts are to be added exactly depends on the framework.
+Which artifacts are to be added exactly, depends on the framework.
 
-To take Logback as an example:
+To take `Logback` as an example:
 
 ```xml
 <dependency>
@@ -69,7 +71,7 @@ To take Logback as an example:
 </dependency>
 ```
 
-Also (again, depending on the framework) you might have to provide some sort of configuration file.
+Also, you might have to provide some sort of configuration file.
 For our example of Logback, we need a `logback.xml` within the `main/resources` directory of our application.
 
 :::tip
@@ -82,7 +84,7 @@ For that providing, an implementation is required.
 ## Writing Log Messages
 
 To start writing your log entries you also need to specify a dependency to the SLF4J API: `org.slf4j:slf4j-api`.
-Depending on the chosen logging implementation you might not _need_ to specify the SLF4J API, but it's in general best practice to not rely on transitive dependencies and therefore reference the SLF4J API anyway.
+Depending on the chosen logging-implementation, you might not _need_ to specify the SLF4J API, but it's in general best practice to not rely on transitive dependencies and therefore reference the SLF4J API anyway.
 
 ### Simple SLF4J Usage
 
@@ -205,7 +207,7 @@ In this configuration file you will find a block like this:
 
 This tells Logback to log all messages with level `INFO` and higher to an appender with the reference `STDOUT`.
 Valid values for the `level` property are: `TRACE`, `DEBUG`, `INFO`, `WARN`, and `ERROR`.
-So, if you want to log all packages with level `DEBUG`, for example, you could set it the following way:
+If you want to log all packages with level `DEBUG`, for example, you could set it the following way:
 
 ```xml
 <root level="DEBUG">
@@ -232,7 +234,7 @@ In the case that you want to log all requests sent and responses received by the
 
 #### On Cloud Foundry
 
-If you want to set the debug levels of your application running on Cloud Foundry (using the SAP Java Buildpack) you have to set the `SET_LOGGING_LEVEL`.
+If you want to set the debug levels of your application running on Cloud Foundry (using the SAP Java Buildpack), you have to set the `SET_LOGGING_LEVEL`.
 This allows you to also change the log level at runtime, as we will see further down in this section.
 
 To set the environment variable with every start of the application, it is advised to set it in the deployment descriptor of your project.
@@ -294,10 +296,10 @@ In this example case the command would be the following:
 cf set-env logging-documentation SET_LOGGING_LEVEL '{ROOT: INFO, com.sap.cloud.sdk: INFO}'
 ```
 
-#### Recommendation for Spring Boot (e.g. CAP)
+#### Recommendation for Spring Boot (e.g. SAP Cloud Application Programming Model)
 
-It's possible to customize the log levels and formatting of your Spring Boot application, e.g. when using the [CAP](https://cap.cloud.sap/docs/) framework.
-For this we recommend the best practices as they are used in our [scp-cf-spring](https://sap.github.io/cloud-sdk/docs/java/getting-started#generating-a-project-from-a-maven-archetype) Maven archetype.
+It's possible to customize the log levels and formatting of your Spring Boot application, e.g. when using the [SAP Cloud Application Programming Model (CAP)](https://cap.cloud.sap/docs/) framework.
+For this we recommend the best practices as they are used in our [`scp-cf-spring`](https://sap.github.io/cloud-sdk/docs/java/getting-started#generating-a-project-from-a-maven-archetype) Maven archetype.
 
 If not exist, add a `src/main/resources/logback-spring.xml` with the following contents:
 

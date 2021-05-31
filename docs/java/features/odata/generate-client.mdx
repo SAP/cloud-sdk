@@ -186,11 +186,13 @@ Now maven will run the generator within the `process-sources` phase which is exe
 The `<compileScope>` option instructs maven to add the generated code as sources for the compile phase.
 
 :::caution
-In most cases, you will have to override the generated service path in the code.
+
+Usually, you will have to override the generated service path in the code.
 By default, the generator will use the `namespace` value of the `<schema>` tag as the service name.
 The URL path will be built as `default-base-path` + `service-name`.
 If your service definition does not contain this value or the value does not match what is needed in the URL then you need to override the service path in the code.
 Use the `.withServicePath("/path/to/my/service")` option on the service class.
+
 :::
 
 ### Using the CLI
@@ -218,11 +220,13 @@ Use the `.withServicePath("/path/to/my/service")` option on the service class.
    For example, move them to the `application/src/main/java` folder.
 
 :::caution
-In most cases, you will have to override the generated service path in the code.
+
+Usually, you will have to override the generated service path in the code.
 By default, the generator will use the `namespace` value of the `<schema>` tag as the service name.
 The URL path will be built as `default-base-path` + `service-name`.
 If your service definition does not contain this value or the value does not match what is needed in the URL then you need to override the service path in the code.
 Use the `.withServicePath("/path/to/my/service")` option on the service class.
+
 :::
 
 ### Generate Clients Programmatically
@@ -280,14 +284,20 @@ Use the `.withServicePath("/path/to/my/service")` option on the service class.
 This should give you the generated classes in the desired folder.
 You can now proceed with using them to build requests.
 
-In case you run into issues with the above process: Double check your service and file names, check that the folders are set up correctly and that the service name mappings meet your expectations.
+In case you run into issues with the above process:
+
+- Double-check your service and file names
+- Check that the folders are set up correctly
+- The service name mappings meet your expectations
 
 :::caution
-In most cases, you will have to override the generated service path in the code.
+
+Usually, you will have to override the generated service path in the code.
 By default, the generator will use the `namespace` value of the `<schema>` tag as the service name.
 The URL path will be built as `default-base-path` + `service-name`.
 If your service definition does not contain this value or the value does not match what is needed in the URL then you need to override the service path in the code.
 Use the `.withServicePath("/path/to/my/service")` option on the service class.
+
 :::
 
 ## Available Parameters
@@ -300,7 +310,7 @@ The following parameters are available on the generator for both OData protocol 
 
 | Parameter                      | Default  | Description                                                                                                                                 |
 | :----------------------------- | :------: | :------------------------------------------------------------------------------------------------------------------------------------------ |
-| `<compileScope>`               |  `NONE`  | Adds the generated sources to the compile or test phase                                                                                     |
+| `<compileScope>`               |  `NONE`  | Adds the generated sources to the compilation or test phase                                                                                 |
 | `<copyrightHeader>`            |  `null`  | Copyright header to be added at the top of generated files                                                                                  |
 | `<deleteOutputDirectory>`      | `False`  | Target directory is deleted before code generation                                                                                          |
 | `<defaultBasePath>`            |    -     | Base path of the exposed API                                                                                                                |
