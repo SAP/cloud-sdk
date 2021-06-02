@@ -34,7 +34,7 @@ Tenant or principal information is not available or an incorrect tenant is used.
 
 **Possible causes:**
 
-- A subscriber based JWT is passed in but its validation fails, causing the SAP Cloud SDK to fall back to the provider account.
+- A subscriber based JWT is passed in, but its validation fails, causing the SAP Cloud SDK to fall back to the provider account.
   See [JWT validation fails](#jwt-validation-fails).
 
 - An operation is performed in an asynchronous manner without propagating the `ThreadContext`.
@@ -175,7 +175,7 @@ Your OData request returns with a 400 (bad request) or 500 (server error) HTTP c
 - The service may not be implemented correctly or deviate from the OData standard / conventions.
 
   Check the request being sent out ([looking at HTTP logs](./guides/logging-overview)) against the [OData documentation](https://www.odata.org/documentation/).
-  If the service deviates from OData conventions try using the more [low-level generic OData client](./features/odata/generic-untyped-odata-client) which gives you more flexibility to adapt requests.
+  If the service deviates from OData conventions, try using the more [low-level generic OData client](./features/odata/generic-untyped-odata-client) which gives you more flexibility to adapt requests.
 
 - The SAP Cloud SDK may send an incorrect OData request.
 
