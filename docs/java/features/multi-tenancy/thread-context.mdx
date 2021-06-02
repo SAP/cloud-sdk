@@ -35,8 +35,8 @@ To ensure different tenants and users are properly isolated in an application, t
 
 ## How Is a Thread Context Created?
 
-The SAP Cloud SDK provides a [RequestFilter](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/servlet/RequestAccessorFilter.html) that will listen to incoming HTTP requests.
-If the `Authorization` header contains a `JWT` from the [AppRouter](https://blogs.sap.com/2020/04/03/sap-application-router/) the filter will:
+The SAP Cloud SDK provides a [`RequestFilter`](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/servlet/RequestAccessorFilter.html) that will listen to incoming HTTP requests.
+If the `Authorization` header contains a `JWT` from the [`AppRouter`](https://blogs.sap.com/2020/04/03/sap-application-router/), the filter will:
 
 - Verify this token
 - Store it in the `ThreadContext` and
@@ -46,13 +46,17 @@ If the `Authorization` header contains a `JWT` from the [AppRouter](https://blog
 
 ### Accessing Information
 
-The Thread context can be accessed via the static [ThreadContextAccessor](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/thread/ThreadContextAccessor.html).
+The Thread context can be accessed via the static [`ThreadContextAccessor`](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/thread/ThreadContextAccessor.html).
 
-For the frequently needed _Tenant_, _Principal_ and _JWT_ there are also dedicated accessors: [TenantAccessor](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/tenant/TenantAccessor.html), [PrincipalAccessor](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html), [AuthTokenAccessor](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/security/AuthTokenAccessor.html).
+For the frequently needed _Tenant_, _Principal_ and _JWT_ there are also dedicated accessors:
+
+- [`TenantAccessor`](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/tenant/TenantAccessor.html)
+- [`PrincipalAccessor`](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html)
+- [`AuthTokenAccessor`](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/security/AuthTokenAccessor.html)
 
 ### Storing Information
 
-The [ThreadContext](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/thread/ThreadContext.html) allows for some manipulation by the application.
+The [`ThreadContext`](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/thread/ThreadContext.html) allows for some manipulation by the application.
 However, oftentimes it is more convenient to leverage the `executeWith...()` functionality offered by the dedicated accessors.
 
 Consider a scenario where some part of the code should run on behalf of a specific tenant.
@@ -63,12 +67,12 @@ TenantAccessor.executeWithTenant(customTenant, () -> doStuff());
 ```
 
 :::caution
-Be aware, that the _executeWith_ methods shown above only replaces the given property, but does not update properties derived from it.
+Be aware, that the `executeWith` methods shown above only replaces the given property, but does not update properties derived from it.
 
-Example: You have a special _AuthToken_, that you propagate with _AuthTokenAccessor.executeWithAuthToken_.
-Inside the given code block only the _AuthToken_ will be replaced, while e.g. the _Tenant_ is the same as in the original context.
+Example: You have a special `AuthToken`, that you propagate with `AuthTokenAccessor.executeWithAuthToken`.
+Inside the given code block only the `AuthToken` will be replaced, while e.g. the `Tenant` is the same as in the original context.
 
-If you want to start a fresh context based on a given _AuthToken_, for example accessing information of the provider tenant while in a subscriber context, have a look at this code:
+If you want to start a fresh context based on a given `AuthToken`, for example accessing information of the provider tenant while in a subscriber context, have a look at this code:
 
 ```java
 
@@ -91,8 +95,8 @@ Tenant retrieveProviderTenant()
 
 ### Running Asynchronous Operations
 
-As the name suggests the `ThreadContext` is bound to a Thread, more specifically to the one it was created.
-If asynchronous operations need to access the information it has to be propagated to the new Threads.
+As the name suggests the `ThreadContext` is bound to a thread, more specifically to the one it was created.
+If asynchronous operations need to access the information, it has to be propagated to the new threads.
 
 The following code achieves this:
 
@@ -106,7 +110,7 @@ invokeAsynchronously(operationWithContext);
 Take note that the `ThreadContextExecutor` is created _before_ performing the asynchronous operation.
 This is important because only at that time the context is available and will be propagated.
 
-A similar approach can be applied with the _Tenant_, _Principal_ and _AuthToken_ accessors.
+A similar approach can be applied with the `Tenant`, `Principal` and `AuthToken` accessors.
 This code runs an asynchronous operation with a dedicated tenant:
 
 ```java
@@ -116,7 +120,9 @@ invokeAsynchronously(operationWithContext);
 ```
 
 :::note
+
 Be cautious with long-running, asynchronous operations.
-A propagated Thread context will only persist as long as the Thread lives that it was created on.
-So when the parent Thread dies the context will cease to exist and no longer be available in any of the Threads.
+A propagated thread context will only persist as long as the thread lives that it was created on.
+So when the parent thread dies the context will cease to exist and no longer be available in any of the threads.
+
 :::
