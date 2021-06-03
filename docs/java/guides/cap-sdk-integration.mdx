@@ -19,12 +19,16 @@ image:
 This document outlines how you integrate the SAP Cloud SDK into an application based on the [SAP Cloud Application Programming Model](https://cap.cloud.sap/docs/) (referred to as CAP in the remainder).
 
 :::success Check out the tutorial as well
+
 While this document provides a general overview of this topic, we have published a practical [tutorial on SAP Developers](https://developers.sap.com/tutorials/cloudsdk-integrate-cap.html) which illustrates all steps on a comprehensive example.
+
 :::
 
 :::success Guide on the traditional Spring deployment
+
 We provide a [guide](spring-boot-war-deployment) on how to leverage the traditional Spring deployment in conjunction with CAP.
 That guide is applicable for your project if you need to invoke BAPIs via the SAP Java Connector library.
+
 :::
 
 ## Integration Steps
@@ -53,14 +57,18 @@ Here is the XML snippet:
 </dependencyManagement>
 ```
 
-:::success Use latest SAP Cloud SDK version
+:::success Use the latest SAP Cloud SDK version
+
 We recommend using the **latest** SAP Cloud SDK version always.
 Check out the [release notes](../release-notes-sap-cloud-sdk-for-java) to see the release history.
+
 :::
 
 :::note SAP Cloud SDK Modules Bill-of-Material
+
 By default, the SAP Cloud SDK archetypes reference the SAP Cloud SDK Bill-of-Material `sdk-bom`, which manages dependency versions for all SAP Cloud SDK modules and transitive dependencies.
 If you face dependency conflicts, you can instead try using the SAP Cloud SDK Modules Bill-of-Material `sdk-modules-bom` in the `dependencyManagement` section of your Maven POM file.
+
 :::
 
 ### Add the SAP Cloud SDK Dependencies
@@ -80,13 +88,17 @@ Add the respective SAP Cloud SDK dependencies to the POM file under the `srv` di
 ```
 
 :::note Version information controlled through the SAP Cloud SDK BOM
+
 Note that the `version` tags can be omitted, because the previously added the SAP Cloud SDK BOM controls the version of all the SAP Cloud SDK modules.
 That is, you only need to increase the version of the BOM and all modules get updated automatically.
+
 :::
 
 :::tip
+
 The two mentioned dependencies are modules that cover a broad range of possible the SAP Cloud SDK use cases.
 You may choose a more fine-grained selection of the SAP Cloud SDK dependencies according to your specific use case.
+
 :::
 
 ### Add the Integration Dependency
@@ -114,6 +126,8 @@ We'll annotate the Spring Boot application class which is annotated with `@Sprin
 Make sure that you also add the package name of your application.
 
 :::success Integration finished
+
 Now the SAP Cloud SDK is integrated with the CAP application.
 You can go ahead using the SAP Cloud SDK features, such as querying OData services.
+
 :::
