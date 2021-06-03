@@ -30,7 +30,7 @@ The advantage of that modern deployment form is that the application can be star
 This guide is applicable to all Spring-based Java projects which use the modern deployment of Spring as jar file.
 That comprises in the first place any project using the [new CAP stack](https://cap.cloud.sap/docs/) as well as the [Spring Boot Maven archetype](https://search.maven.org/artifact/com.sap.cloud.sdk.archetypes/scp-cf-spring) of the SAP Cloud SDK.
 
-The problem with the modern deployment is that the [SAP Java Connector](https://support.sap.com/en/product/connectors/jco.html) library cannot be used when the application gets deployed as war file.
+The problem with the modern deployment is that the [SAP Java Connector](https://support.sap.com/en/product/connectors/jco.html) library cannot be used when the application gets deployed as jar file.
 That results in runtime exceptions like `java.lang.NoClassDefFoundError: com/sap/conn/jco/JCoException`.
 
 To overcome this problem, we'll outline how to adjust your project to leverage the traditional Spring deployment instead.
@@ -39,7 +39,7 @@ To overcome this problem, we'll outline how to adjust your project to leverage t
 
 Perform the following steps to switch your project from using the modern to the traditional Spring deployment.
 
-### Change Maven Packacking
+### Change Maven Packaging
 
 In your `pom.xml`, change the packaging setting from `jar` to `war`.
 
@@ -52,8 +52,10 @@ In your `pom.xml`, change the packaging setting from `jar` to `war`.
 ```
 
 :::tip Use the right `pom.xml`
-When your project uses multiple Maven modules, you need to choose the pom.xml which contains your application code.
-For instance, in a CAP project use the pom.xml of the `srv` module.
+
+When your project uses multiple Maven modules, you need to choose the `pom.xml` that contains your application code.
+For instance, in a CAP project use the `pom.xml` of the `srv` module.
+
 :::
 
 ### Add Maven WAR Plugin
@@ -73,10 +75,12 @@ Add the Maven WAR plugin to the `pom.xml`:
 ```
 
 :::tip Use the latest plugin version
-We recommend you use always the [latest version](https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-war-plugin) of this Maven plugin.
+
+We recommend you use the [latest version](https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-war-plugin) of this Maven plugin.
+
 :::
 
-### Let Application Class Inherit from SpringBootServletInitializer
+### Let Application Class Inherit from `SpringBootServletInitializer`
 
 Make your application class a subclass of the class `SpringBootServletInitializer`.
 

@@ -1,12 +1,13 @@
-A changeset is a collection of HTTP `POST`, `PUT`, `PATCH` and `DELETE` operations - requests built by any [CreateRequestBuilder](#create-request-builder), [UpdateRequestBuilder](#update-request-builder) and [DeleteRequestBuilder](#delete-request-builder) in terms of the SAP Cloud SDK.
+A changeset is a collection of HTTP `POST`, `PUT`, `PATCH` and `DELETE` operations - requests built by any [`CreateRequestBuilder`](#create-request-builder), [`UpdateRequestBuilder`](#update-request-builder) and [`DeleteRequestBuilder`](#delete-request-builder) in terms of the SAP Cloud SDK.
 The order of execution within a changeset is not defined.
 This differs from the whole batch request itself, where the order is defined.
-Therefore the requests within a changeset should not depend on each other.
-If the execution of any of the requests within a changeset fails, the whole changeset will be reflected as an error in the response and will not be applied, much like a database transaction.
+Therefore, the requests within a changeset should not depend on each other.
+If the execution of any request within a changeset fails, the whole changeset will be reflected as an error in the response.
+The changeset will not be applied, much like a database transaction.
 
 Change requests cannot be passed to a batch request directly.
 They have to be combined in a changeset, which in turn can be passed to the batch request.
-Once a batch request is executed it returns a list of `BatchResponse`s.
+Once a batch request is executed, it returns a list of `BatchResponse`s.
 Those contain the raw response information of each subrequest.
 The response to a changeset request can either be a collection of the subresponses to the subrequests of the changeset of type `WriteResponses` or an `ErrorResponse`.
 To determine if a request was successful use `.isSuccess()`.
