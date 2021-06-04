@@ -21,7 +21,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 ## Build and Execute OData Requests With the Typed OData Client
 
-The typed OData v2 client allows to build type-safe OData v2 requests for a given service.
+The typed OData v2 client allows building type-safe OData v2 requests for a given service.
 The Java classes represent the _data model_ and the available _operations_ of the service.
 As a consequence all requests that are built through the typed OData v2 client are not only _syntactically valid_ but also _semantically valid_.
 
@@ -51,7 +51,7 @@ Consequently, the APIs of the old OData client have been deprecated.
 
 ### The New Improved Client
 
-As of SAP Cloud SDK `3.29.1` we offer a generally available improved OData client.
+As of SAP Cloud SDK `3.29.1`, we offer a generally available improved OData client.
 
 - High-performance thanks to optimized handling of metadata (fewer network requests)
 - Developed fully _In house_ and shares code with OData v4 client
@@ -61,7 +61,7 @@ As of SAP Cloud SDK `3.29.1` we offer a generally available improved OData clien
 
 ### The Deprecated Old Client
 
-As of SAP Cloud SDK `3.29.1` we have deprecated the old OData client.
+As of SAP Cloud SDK `3.29.1`, we have deprecated the old OData client.
 
 - Stable and well tested
 - Based on 3rd party dependencies, which slows down the release of advanced features
@@ -74,8 +74,10 @@ As of SAP Cloud SDK `3.29.1` we have deprecated the old OData client.
 - For existing code, we recommend [adjusting your code](#switch-to-improved-odata-vdm-beta) to switch to the new OData client.
 
 :::tip use Tabs to see the API difference
+
 Toggle between version Tabs in this document to see the API difference between these two OData v2 clients.
 Where API is the same we provide a universal code snippet
+
 :::
 
 ## Using the Fluent API
@@ -99,15 +101,15 @@ result = service.operation()
     .execute(destination);
 ```
 
-- _operation_ corresponds to the service's capabilities for entities e.g. `createEntity` or `readEntities`.
-- _withParameter_ corresponds to:
+- `operation` corresponds to the service's capabilities for entities e.g. `createEntity` or `readEntities`.
+- `withParameter` corresponds to:
   - OData query parameters e.g. `filter` or `orderby`
   - Or other modifiers like custom headers
 - Which OData parameters are available depends on the operation.
   For example, when updating entities the `$filter` parameter is not available.
 
 Below different OData features are documented using the [Business Partner Service](https://api.sap.com/api/API_BUSINESS_PARTNER/resource) on SAP S/4HANA as an example.
-It is represented by the `BusinessPartnerService` class which is part of the pre-generated SAP S/4HANA Virtual Data Model (VDM). The following code snippets assume that an instance of this service is set up:
+It is represented by the `BusinessPartnerService` class which is part of the pregenerated SAP S/4HANA Virtual Data Model (VDM). The following code snippets assume that an instance of this service is set up:
 
 ```java
 BusinessPartnerService service = new DefaultBusinessPartnerService();
@@ -140,7 +142,7 @@ Request parameters:
 
 - All operations allow for adding custom headers via `withHeader(...)`
 - Update operations allow to set either `modifyingEntity()` or `replacingEntity()` which will result in `HTTP PATCH` or `HTTP PUT` respectively.
-  By default entities are modified via `PATCH`.
+  By default, entities are modified via `PATCH`.
 
 #### Handling of ETags
 
@@ -219,7 +221,7 @@ However, the create request will be made without a CSRF token if none could be o
 
 ### Select
 
-When reading entities the API offers `select( ... )` on the builders.
+When reading entities, the API offers `select( ... )` on the builders.
 Through it, the query parameters `$select` and `$expand` are set.
 It takes in the properties of the entity being queried.
 Primitive properties are added to `$select` while complex and navigational properties are added to `$expand`.
@@ -300,7 +302,7 @@ $select=FirstName,to_BusinessPartnerAddress/AddressID,to_BusinessPartnerAddress/
 
 ### Filter
 
-When operating on a collection of entities the API offers `filter( ... )` on the builders.
+When operating on a collection of entities, the API offers `filter( ... )` on the builders.
 It directly corresponds to the `$filter` parameter of the request.
 Filters are also built via the static property fields on entities.
 
@@ -387,12 +389,12 @@ Refer to the [official OData V2 spec](https://www.odata.org/documentation/odata-
 The `service` object offers the method `batch` which allows access to the batch-related methods that help build the batch request.
 
 Multiple single requests like `createBusinessPartnerAddress` and others can be wrapped into an [OData BATCH ChangeSet](https://www.odata.org/documentation/odata-version-2-0/batch-processing/).
-OData BATCH ChangeSets are meant to wrap transactional requests together for better performance.
-OData Function Import can be also used inside of OData Batch ChangeSets, for that use the method `addFunctionImport(...)`.
+OData BATCH changesets are meant to wrap transactional requests together for better performance.
+OData Function Import can be also used inside OData Batch changesets, for that use the method `addFunctionImport(...)`.
 Each changeset is opened with `beginChangeSet` and closed with `endChangeSet`.
 You can wrap multiple changesets into one batch request.
 
-Non-modification or in other words Read requests can be added outside of changesets with the `addReadOperations` method.
+Non-modification or in other words Read requests can be added outside changesets with the `addReadOperations` method.
 
 Use `executeRequest` to issue the batch request to the remote system.
 We receive an instance of `BatchResponse` as the result object.
@@ -494,8 +496,8 @@ The SAP Cloud SDK supports different strategies for updating entities which diff
 :::info
 To update an entity it should first be retrieved from the service.
 This ensures the latest state of the entity is updated.
-Otherwise updating with old data could erase changes that have been made to the entity in the mean time.
-Many services will enforce this behaviour with optimistic locking mechanisms.
+Otherwise, updating with old data could erase changes that have been made to the entity in the meantime.
+Many services will enforce this behavior with optimistic locking mechanisms.
 Refer to the [section about ETags for details](#handling-of-etags).
 :::
 
@@ -527,7 +529,7 @@ service.updateBusinessPartner(partner)
 The _replacing entity update strategy_ attempts to replace the full entity in the remote system.
 It issues a PUT request and submits all fields in the update request, regardless of any field changes.
 
-This update strategy can be explicitly chosen invoking the method `replacingEntity()` while building the update request.
+This update strategy can be explicitly chosen to invoke the method `replacingEntity()` while building the update request.
 
 ```java
 service.updateBusinessPartner(partner)
@@ -677,7 +679,7 @@ This reduces initial network load and improves overall response times.
 If the payload of an OData response contains a link including a `$skiptoken`, then it indicates a next page to the result-set.
 The iterable result-set is a consistent snapshot of the data, it can not change between reading individual pages.
 
-In comparison the OData consumer may use query options `$top` and `$skip` (client-driven paging) to read partial data from the result-set, but relying on a consistent state while browsing through the data can be problematic.
+In comparison, the OData consumer may use query options `$top` and `$skip` (client-driven paging) to read partial data from the result-set, but relying on a consistent state while browsing through the data can be problematic.
 Between individual requests, another user could delete or add an item.
 This would result in an inconsistent aggregation of data.
 
@@ -740,7 +742,7 @@ final BusinessPartner partner = service.createBusinessPartner(partner)
                                        .getModifiedEntity();
 ```
 
-- `executeRequest` throws the runtime exception `ODataException` and respective sub classes.
+- `executeRequest` throws the runtime exception `ODataException` and respective subclasses.
   Hence, adjust your exception handling as described under the tab _OData V2 (Beta)_ in the section [Error Handling](#error-handling).
   Note that any `ErrorResultHandler` registered by `withErrorHandler()` is not considered.
 - Remove any call to `cachingMetadata()` and `withoutCachingMetadata()` as they are obsolete.

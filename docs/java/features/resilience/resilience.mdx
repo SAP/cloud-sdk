@@ -127,10 +127,12 @@ In case your operation should run asynchronously we highly recommend you leverag
 The decorator will ensure the [Thread Context](../multi-tenancy/thread-context.mdx) with Tenant and Principal information is propagated correctly to new Threads.
 
 :::note
+
 Note that the Resilience Decorator will try to propagate the current [Thread Context](../multi-tenancy/thread-context.mdx) at the _time the decorator is invoked_.
 This is important when you are decorating a Callable or Supplier and running it later.
 The Thread Context must be available whenever `decorateCallable` or `decorateSupplier` is evaluated.
-If the call to `ResilienceDecorator` should take place asynchronously you should [follow these steps](../multi-tenancy/thread-context.mdx#running-asynchronous-operations) to ensure the Thread Context is available.
+If the call to `ResilienceDecorator` should take place asynchronously, you should [follow these steps](../multi-tenancy/thread-context.mdx#running-asynchronous-operations) to ensure the Thread Context is available.
+
 :::
 
 #### Failures and Fallbacks
@@ -208,7 +210,7 @@ Other than no isolation there are essentially two modes for tenant and/or princi
   </tbody>
 </table>
 
-Details can be found on the API reference of [ResilienceIsolationMode](https://help.sap.com/http.svc/rc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceIsolationMode.html).
+Details can be found on the API reference of [`ResilienceIsolationMode`](https://help.sap.com/http.svc/rc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceIsolationMode.html).
 
 ## Resilience Capabilities
 

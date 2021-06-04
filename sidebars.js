@@ -156,7 +156,12 @@ module.exports = {
             items: [
               'js/features/openapi/overview',
               'js/features/openapi/generate-openapi-client',
-              'js/features/openapi/execute-openapi-request'
+              'js/features/openapi/execute-openapi-request',
+              {
+                type: 'category',
+                label: 'Pregenerated Clients',
+                items: ['js/features/openapi/pregenerated-clients/workflow']
+              }
             ]
           },
           {
@@ -187,9 +192,7 @@ module.exports = {
       {
         type: 'category',
         label: 'Extensions',
-        items: [
-          'js/extensions/currency-conversion'
-        ]
+        items: ['js/extensions/currency-conversion']
       },
       {
         type: 'category',

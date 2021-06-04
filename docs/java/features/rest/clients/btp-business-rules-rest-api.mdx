@@ -137,7 +137,7 @@ You can refer to the Java client library for the SAP BTP Business Rules service 
 </dependency>
 ```
 
-After adding the dependency to your `pom.xml` file run `mvn clean install` to let `Maven` install it.
+After adding the dependency to your `pom.xml` file, run `mvn clean install` to let `Maven` install it.
 
 ### Invoke the Java Client Library
 
@@ -162,7 +162,7 @@ final HttpDestination ruleExecutionDestination =
 
 :::caution
 
-The `ScpCfServiceDestinationLoader.getDestinationForService` API currently only works out of the box for a handfull of services.
+The `ScpCfServiceDestinationLoader.getDestinationForService` API currently only works out of the box for a handful of services.
 For other services, the alternative would be to create a Destination manually in CF using values in the `VCAP_SERVICES` and then accessing the destination using the `DestinationAccessor`.
 For details refer to [Additional information](btp-business-rules-rest-api#additional-information) section.
 
@@ -190,7 +190,7 @@ allProjects.forEach(project -> {
 });
 ```
 
-You can check the SAP BTP Business Rules API's model definition on the [SAP API Business Hub](https://api.sap.com/package/SAPCPBusinessRulesAPIs?section=Artifacts) or simply use your IDE to discover available properties via its auto-complete function.
+You can check the SAP BTP Business Rules API's model definition on the [SAP API Business Hub](https://api.sap.com/package/SAPCPBusinessRulesAPIs?section=Artifacts) or use your IDE to discover available properties via its auto-complete function.
 
 ## Capabilities and Limitations
 
@@ -228,7 +228,7 @@ Once the app is bound to the Business Rules service instance and app deployment 
 You should see the service instance you created along with the information that is bound to your application.
 
 Click on the service instance name, for example `my-business-rules`.
-On the right hand side, you can see all apps that are bound to that service instance along with a button `View Credentials`.
+On the right-hand side, you can see all apps that are bound to that service instance along with a button `View Credentials`.
 Make sure that the entry that belongs to your app is selected in the table below, given that multiple apps are bound to the same service instance, and click the `View Credentials` button.
 
 Consider the `JSON` content in the new pop-up window.
@@ -261,7 +261,7 @@ Here is a quick example:
 }
 ```
 
-Next look carefully at the `JSON` content and collect the values for the following `JSON` keys:
+Next, look at the `JSON` content and collect the values for the following `JSON` keys:
 
 - `rule_repository_url` (this one is needed if you want to use the Rule Authoring API)
 - `rule_runtime_url` (this one is needed if you want to use the Rule Execution API)
@@ -285,8 +285,10 @@ Go to your CF subaccount, navigate to `Connectivity\Destinations` in the left-ha
 - Token Service URL: The value of `url` appended by `/oauth/token?grant_type=client_credentials`
 
 :::note Rule Execution Destination
+
 The above example shows how to configure the destination for the Rule Authoring API.
-You can configure the destination to point to the Rule Execution API by simply adapting the Name, the URL, and the Token Service URL fields accordingly.
+You can configure the destination to point to the Rule Execution API by adapting the Name, the URL, and the Token Service URL fields accordingly.
+
 :::
 
 Click Save.
@@ -304,4 +306,4 @@ final String destinationName = "Business-Rules-Authoring-Api";
 final HttpDestination ruleAuthoringDestination = DestinationAccessor.getDestination(destinationName).asHttp();
 ```
 
-That's it, the invocation to the java client library would remain the [same](btp-business-rules-rest-api#invoke-the-apis) and no more further changes are required.
+That's it, the invocation to the java client library would remain the [same](btp-business-rules-rest-api#invoke-the-apis) and no more changes are required.

@@ -67,15 +67,17 @@ const myDest:Destination = {
 When you execute `npm run serve` your project is compiled and hosted on a local server.
 
 :::note
+
 When you trigger a request from a browser to the remote system all modern browsers will block this to ensure [same origin policy](https://en.wikipedia.org/wiki/Same-origin_policy).
 One simple way to overcome this issue locally is to disable the web security of your browser temporarily (e.g. --disable-web-security for Chrome).
 Alternatively, you can also create a second localhost proxy server that adds the `access-allow-origin-header` to the request.
+
 :::
 
 ## Run on SAP BTP, Cloud Foundry Environment
 
 For productive usage, the methods mentioned above for running locally are of course not needed.
-You simply configure the `xs-app.json` of the used app-router with an entry like this:
+You configure the `xs-app.json` of the used app-router with an entry like this:
 
 ```
 {
@@ -85,7 +87,7 @@ You simply configure the `xs-app.json` of the used app-router with an entry like
 }
 ```
 
-and then in your application simply define the destination as:
+and then in your application define the destination as:
 
 ```
 import {Destination} from '@sap-cloud-sdk/core'
@@ -98,14 +100,18 @@ const myDest:Destination = {
 The created request to `/REMOTE-SYSTEM-IDENTIFIER/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner` will be matched by the app-router and the destination with the given URL and credentials is used.
 
 :::note
+
 This approach does not support principal propagation to On-premise systems.
 For this you need a JWT and need to include the proper header fields defining the user.
 See the documentation on [On-premise systems](../features/connectivity/on-premise.mdx) for details.
+
 :::
 
 :::note
+
 With webpack it is possible to [load resources](https://webpack.js.org/plugins/normal-module-replacement-plugin/) for local or productive usage.
-Using such a switch you can easily adjust the value of the destination for the two cases.
+Using such a switch you can adjust the value of the destination for the two cases.
+
 :::
 
 ## Workaround
@@ -149,7 +155,7 @@ module.exports = {
    "builder": "@angular-builders/custom-webpack:dev-server",
 ```
 
-- In the package.json exclude the node modules, that do not exist in the browser:
+- In the `package.json` exclude the node modules, that do not exist in the browser:
 
 ```
 "browser": {
