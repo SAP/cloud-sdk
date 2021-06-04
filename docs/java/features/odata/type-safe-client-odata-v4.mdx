@@ -241,6 +241,92 @@ service.getAllBusinessPartner()
     .execute(destination);
 ```
 
+### OData Functions and Actions
+
+OData defines bound and unbound [functions and actions](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_Operations).
+
+#### Unbound Operations
+
+Unbound functions and actions can be performed via their respective methods on the service:
+
+```java
+service.myFunction("paramValue1", "paramValue2")
+      .execute(destination);
+```
+
+#### Bound Operations
+
+Functions and actions bound to entity types can be invoked by navigating to any instance or collection of the entity type on the service.
+
+For functions use `applyFunction`:
+
+```java
+Entity myEntity;
+service.forEntity(myEntity)
+      .applyFunction(Entity.myFunction())
+      .execute(destination);
+```
+
+Similarly, for actions use `applyAction`:
+
+```java
+Entity myEntity;
+service.forEntity(myEntity)
+      .applyAction(Entity.myAction())
+      .execute(destination);
+```
+
+:::tip Obtaining an Entity to Operate on
+To get an entity object to operate on it is generally recommended to download it from the service first via its respective `getByKey` method.
+Fetching an entity will also ensure that ETag is handled if OData Action is invoked, which often leads to a change of a state of an entity.
+
+Another way is to use a builder on an Entity object to create an instance if you are aware of the key properties that are required.
+:::
+
+#### Bound Operations on Collections
+
+Functions and actions may also be bound to collections of entities.
+They are also invoked via `applyFunction` and `applyAction` but on the `service` instance itself.
+
+Furthermore, OData allows invoking bound operations not only on entities but also on navigation properties.
+The API allows you to navigate to any navigation property of an entity to invoke an operation:
+
+```java
+Entity myEntity;
+service.forEntity(myEntity)
+      .navigateTo(Entity.NAVIGATION_PROPERTY)
+      .applyFunction(NavigationEntity.myFunction())
+      .execute(destination);
+```
+
+#### Composable Functions
+
+Finally, functions may be composable.
+If `IsComposable` is set to `true` in the service metadata the service allows to use the result of a function within another operation.
+
+Consider the following request:
+
+```
+GET /Entities('my-entity')/ComputeRelatedEntity()/EntityPropertyList?$top=5
+```
+
+The service will first perform the function `ComputeRelatedEntity` and then access the `EntityPropertyList` property of the result entity.
+Then the top five elements are returned.
+
+Such a request can be built with the API as follows:
+
+```java
+Entity myEntity;
+service.forEntity(myEntity)
+      .withFunction(Entity.computeRelatedEntity())
+      .navigateTo(RelatedEntity.ENTITY_PROPERTY_LIST)
+      .getAll()
+      .top(5)
+      .execute(destination);
+```
+
+For more details on the API see also the section about [operating on navigation properties](#navigation-properties) directly.
+
 ### Batch Requests
 
 Batch requests allow wrapping multiple OData requests into one single batch call.
