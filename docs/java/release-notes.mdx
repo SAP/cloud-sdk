@@ -22,7 +22,8 @@ import MvnBadge from '../../src/sap/sdk-java/MvnBadge';
 
 ## Should I update?
 
-We highly recommend regularly updating to the latest SAP Cloud SDK version. It will help you:
+We highly recommend regularly updating to the latest SAP Cloud SDK version.
+It will help you:
 
 - Ensure access to the latest Cloud SDK features
 - Keep up with the latest changes in SAP Cloud Platform
@@ -53,6 +54,166 @@ To continue using the latest features outlined in the release notes for version 
 
 ### Fixed issues
 -->
+
+## 3.46.0 - June 3, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.46.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+
+### Compatibility Notes
+
+- We updated the (OData V2) Trial Balance - Read (`C_TRIALBALANCE_CDS`) VDM to the [newest release 2105 of SAP S/4HANA Cloud](https://news.sap.com/2021/05/sap-s4hana-cloud-release-2105/)
+  
+  **Caution:** The service introduced some intended **breaking changes** with the latest update which are now, in consequence, also present in the type-safe client (VDM) by the SDK.
+
+### New Functionality
+
+- The type-safe client (VDM) for OData V4 now gives access to bound functions and actions.
+  Entities will now expose all operations bound to their type on their class.
+  
+  For example assume there is a function `IsHappy` defined for an entity `Person`, then you can use:
+  ```java
+  service.forEntity(person)
+        .applyFunction(Person.isHappy());
+  ```
+  In case the function is bound to a collection use e.g.:
+  ```java
+  service.applyFunction(Person.AreAllHappy());
+  ```
+  Furthermore, if a function is marked by the service as `composable` you can also apply an operation to the result of a function directly:
+  ```java
+  service.forEntity(person)
+        .withFunction(Person.getBestFriend())
+        .navigateTo(Person.FRIENDS)
+        .getAll();
+  ```
+  
+  The creation of the new operation types is enabled in the OData V4 generator as well.
+  Check out the full [documentation of the feature](https://sap.github.io/cloud-sdk/docs/java/features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java#odata-functions-and-actions) for more information.
+  
+- We updated the [OData type-safe client also known as the VDM](https://sap.github.io/cloud-sdk/docs/java/features/odata/overview/) to the newest release FPS2 of SAP S/4HANA on-premise 2020. This also includes completely new services added (available as usual in packages `com.sap.cloud.sdk.s4hana.onpremise.v2020.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.onpremise.v2020.datamodel.odatav4.services`), new operations in previously existing services, and new entity types.
+
+### Improvements
+
+- We increased the default application memory setting for archetypes `scp-cf-tomee` and `scp-cf-spring` from `1024M` to `1500M`.
+  This mitigates potential deployment errors due to the latest extensions in the VDM modules.
+
+- Dependency Updates:
+  - Update Fabric SDK Java from `2.2.5` to `2.2.6`
+  - Update JUnit Jupiter from `5.7.1` to `5.7.2`
+  - Update Netty from `4.1.63.Final` to `4.1.64.Final`
+  - Update Json Sanitizer from `1.2.2` to `1.2.3`
+  - Update PMD from `6.33.0` to `6.34.0`
+  - Update jOOR from `0.9.13` to `0.9.14`
+  - Update Java JWT from `3.15.0` to `3.16.0`
+  - Update Error Prone from `2.6.0` to `2.7.1`
+  - Update AMQP Client from `5.11.0` to `5.12.0`
+  - Update Reactor from `3.4.5` to `3.4.6`
+  - Update Wiremock from `2.27.2` to `2.28.0`
+  - Update Protobuf from `3.15.8` to `3.17.0`
+
+## 3.45.0 - May 20, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.45.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+
+### New Functionality
+
+- Function import calls in OData V2 using the HTTP POST method can now be embedded in batch requests.
+  Within the batch request, the function import call is wrapped inside a change set since function imports can also alter business data.
+  You can execute a batch request containing a function import call as follows:
+
+  ```java
+  service.batch()
+    .beginChangeSet()
+    .addFunctionImport(service.callSomeFunction())
+    .endChangeSet()
+    .executeRequest(destination);
+  ```
+
+- For the [Generic OData Client](https://sap.github.io/cloud-sdk/docs/java/features/odata/generic-untyped-odata-client) filterable values and fields can now use the `in` operator in expressions.
+
+  ```java
+  StructuredQuery query;
+
+  // Age in (40,41,42)
+  query.filter(FieldReference.of("Age").in( 40,41,42 ));
+
+  // BestFriend in Friends
+  query.filter(FieldReference.of("BestFriend").in( FieldReference.of("Friends").asCollection()) );
+
+  // 'Green' in Colors
+  query.filter(ValueString.literal("Green").in( FieldReference.of("Colors").asCollection()) );
+  ```
+
+- For the [OData V4 Typed Client](https://sap.github.io/cloud-sdk/docs/java/features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java) filterable fields can now use the `in` operator in expressions.
+
+  ```java
+  GetAllRequestBuilder<Person> request;
+
+  // Age in (40,41,42)
+  request.filter(Person.AGE.in(40,41,42));
+
+  // BestFriend in Friends
+  query.filter(Person.TO_BEST_FRIEND.in( Person.TO_FRIENDS ) );
+  ```
+
+- Add new module `btp-business-rules` for out-of-the-box support of
+
+  - the [SAP Business Rules Authoring](https://api.sap.com/api/SAP_CF_BusinessRules_Repository/resource) service,
+
+  ```java
+  // requires dependency com.sap.cloud.sdk.services:btp-business-rules
+  HttpDestination authoringDestination =
+    ScpCfServiceDestinationLoader
+        .getDestinationForService(
+            ScpCfServiceDestinationLoader.CfServices.BUSINESS_RULES_AUTHORING,
+            "my-business-rules");
+
+  ProjectsApi projectsApi = new ProjectsApi(authoringDestination);
+  List<ProjectVersionObject> allProjects = projectsApi.readProjects();
+  ```
+
+  - and the [SAP Business Rules Execution](https://api.sap.com/api/SAP_CF_BusinessRules_Runtime_V2/resource) service.
+
+  ```java
+  // requires dependency com.sap.cloud.sdk.services:btp-business-rules
+  HttpDestination executionDestination =
+    ScpCfServiceDestinationLoader
+        .getDestinationForService(
+            ScpCfServiceDestinationLoader.CfServices.BUSINESS_RULES_EXECUTION,
+            "my-business-rules");
+
+  DeployUndeployRuleServiceApi deployService = new DeployUndeployRuleServiceApi(executionDestination);
+  List<WorkingsetRuleServiceDefinitionResult> deployedWorkingSets = deployService.readWorkingsetRuleServices();
+  ```
+
+- We updated the [OData type-safe client also known as a VDM](https://sap.github.io/cloud-sdk/docs/java/features/odata/overview/) to the [newest release 2105 of SAP S/4HANA Cloud](https://news.sap.com/2021/05/sap-s4hana-cloud-release-2105/).
+  This includes completely new services (available as usual in packages `com.sap.cloud.sdk.s4hana.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types.
+  The following two services were however not updated:
+  - (OData V2) Trial Balance - Read - `C_TRIALBALANCE_CDS`
+  - (OData V4) Bank - `BANK_0001`
+
+### Improvements
+
+- Using a Swagger file to generate OData V4 entity classes will now mark entities accessible on service root path as `VdmEntitySet`.
+  This enables the experimental API to [query the OData service over navigation properties directly](https://sap.github.io/cloud-sdk/docs/java/features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java#navigation-properties).
+  This feature was originally enabled for entities generated by EDMX metadata files in version [`3.20.0`](https://sap.github.io/cloud-sdk/docs/java/release-notes-sap-cloud-sdk-for-java#3200).
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update BTP Neo Tomcat 8 SDK from `3.124.9.2` to `3.127.13.3`
+    - Update Neo JavaEE 7 SDK from `1.95.7` to `1.96.13.1`
+    - Update BTP CF Logging from `3.3.0` to `3.4.0`
+  - Other dependency updates:
+    - Minor version updates:
+      - Update JSON Smart from `2.4.2` to `2.4.7`
+      - Update Togglz from `2.9.6` to `2.9.8`
+      - Update Fabric Gateway Java from `2.2.1` to `2.2.2`
+      - Update jOOQ from `3.14.8` to `3.14.9`
+      - Update Hibernate Core from `5.4.39.Final` to `5.4.40.Final`
+
+### Fixed issues
+
+- Using `null` in OData v2 filter expressions does no longer lead to a `NullPointerException` when executing the request.
+- Fix an edge case where some `BigDecimal` values where not serialized correctly in OData V2 requests.
 
 ## 3.44.1 - May 6, 2021
 
@@ -302,7 +463,7 @@ The collection of released S/4HANA Cloud client libraries from the SAP Cloud SDK
 
 ### Compatibility Notes
 
-As part of the update of the pre-generated type-safe client for SAP S/4HANA On-premise, we encountered the following changes:
+As part of the update of the pregenerated type-safe client for SAP S/4HANA On-premise, we encountered the following changes:
 
 - The following methods of the OData v4 service `ContractAccountingBusinessPartnerPaymentService` have been renamed:
 
@@ -836,7 +997,7 @@ The following changes apply to experimental functionality of the SAP Cloud SDK:
 ### New Functionality
 
 - Update the OData client library to the [newest release 2011 of SAP S/4HANA Cloud](https://news.sap.com/2020/10/sap-s4hana-cloud-release-2011-customer-driven-innovation/). This includes completely new services (available as usual in packages [com.sap.cloud.sdk.s4hana.datamodel.odata.services](https://help.sap.com/doc/f08906c8d31640d583a106325f6a8184/1.0/en-US/com/sap/cloud/sdk/s4hana/datamodel/odata/services/package-summary.html) and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types. The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
-- Released new pre-generated type-safe client libraries for the OData v4 services in the [latest RTC release 2020 of SAP S/4HANA On-premise](https://blogs.sap.com/2020/10/07/sap-s-4hana-2020-release/)
+- Released new pregenerated type-safe client libraries for the OData v4 services in the [latest RTC release 2020 of SAP S/4HANA On-premise](https://blogs.sap.com/2020/10/07/sap-s-4hana-2020-release/)
 - The untyped, generic OData client and OData V4 client now support `Edm.Binary` as value type for Entity properties. In Java, this type is conveniently represented as `byte[]`. The OData V4 generator will now generate affected services without raising a warning. Generated entities that have binary properties now have static accessors to the respective fields, similar to the other entity properties. OData filter expressions for binary properties can be created.
 - Add generated service `DocumentComplianceElectronicDocumentFileService` for API [`ELECTRONICDOCFILE_0001`](https://api.sap.com/api/ELECTRONICDOCFILE_0001)
 
@@ -861,7 +1022,7 @@ The following changes apply to experimental functionality of the SAP Cloud SDK:
 ### New Functionality
 
 - Generated OData V4 client library service types provide a new method `batch()` to conveniently create instances of `BatchRequestBuilder`. It can be used to combine multiple reading and modifying OData operations into one OData Batch request.
-- We released new pre-generated type-safe client libraries (also known as the Virtual Data Model - VDM) for the [latest RTC release 2020 of SAP S/4HANA On-premise](https://blogs.sap.com/2020/10/07/sap-s-4hana-2020-release/). Except for the following services, everything else available in [SAP API Business Hub for SAP S/4HANA On-Premise 2020](https://api.sap.com/package/S4HANAOPAPI?section=Artifacts) are available:
+- We released new pregenerated type-safe client libraries (also known as the Virtual Data Model - VDM) for the [latest RTC release 2020 of SAP S/4HANA On-premise](https://blogs.sap.com/2020/10/07/sap-s-4hana-2020-release/). Except for the following services, everything else available in [SAP API Business Hub for SAP S/4HANA On-Premise 2020](https://api.sap.com/package/S4HANAOPAPI?section=Artifacts) are available:
   - [Settlement Document](https://api.sap.com/api/OP_API_SETTLMT_DOC_0001/resource)
   - [Settlement Process Type - Read](https://api.sap.com/api/OP_API_SETTLMT_PROC_TYPE_0001/resource)
   - [Responsibility Management Team Configurations - Read](https://api.sap.com/api/OP_API_RESPYM_TEAM_CONFIG_SRV_0001/resource)
@@ -1096,7 +1257,7 @@ final DefaultHttpDestination defaultHttpDestination =
 
 ---
 
-- **We released a regular update for pre-generated type-safe client libraries (also known as VDM) for the [latest RTC release 2008 of SAP S/4HANA Cloud](https://news.sap.com/2020/08/sap-s4hana-cloud-release-2008-stay-ahead-change/).**
+- **We released a regular update for pregenerated type-safe client libraries (also known as VDM) for the [latest RTC release 2008 of SAP S/4HANA Cloud](https://news.sap.com/2020/08/sap-s4hana-cloud-release-2008-stay-ahead-change/).**
   - The update covers all the changes to existing services and introduces new ones. You'll find them in `com.sap.cloud.sdk.s4hana.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`. Below is the quick reference on difference and compatibility between 2005 and current 2008 of SAP S/4HANA Cloud releases:
   - These deprecated OData **services are no longer allowed**:
     - Removed deprecated `ChangeMasterService`, use the successor "[ChangeMasterServiceV2Service](https://api.sap.com/api/API_CHANGEMASTER_0002/resource)" instead.

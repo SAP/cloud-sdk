@@ -16,11 +16,9 @@ keywords:
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-## Introduction
-
 The SAP Cloud SDK for JavaScript offers a convenient way to connect to various systems offering public APIs.
 The most famous one is SAP S/4HANA which comes in two flavors Cloud and On-premise.
-We pre-generate type-safe clients for SAP S/4HANA APIs and publish them to [npm](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*) for your convenience.
+We pregenerate type-safe clients for SAP S/4HANA APIs and publish them to [npm](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*) for your convenience.
 
 For different systems like SAP SuccessFactors, SAP Cloud for Customer, and many others you can generate a type-safe client yourself.
 All you have to do it look up an API definition on [SAP API BusinessHub](https://api.sap.com/) and invoke a [generator](../odata/generate-typed-odata-v2-and-v4-client-for-javascript-and-typescript) supplied with [SAP Cloud SDK for JavaScript](https://github.com/SAP/cloud-sdk-js).
@@ -40,7 +38,7 @@ BusinessPartner.requestBuilder()
 ```
 
 The SAP Cloud SDK does a lot of heavy lifting under the hood to take care of complexity so that you can fully concentrate on your app's logic.
-A detailed step by step guide on using a type-safe client is provided in this [tutorial series](https://developers.sap.com/group.s4sdk-js-cloud-foundry.html).
+A detailed step-by-step guide on using a type-safe client is provided in this [tutorial series](https://developers.sap.com/group.s4sdk-js-cloud-foundry.html).
 
 **To name a few things handled by SAP Cloud SDK for JavaScript:**
 
@@ -48,13 +46,13 @@ A detailed step by step guide on using a type-safe client is provided in this [t
 - Handling of ETag
 - Handling of CSRF token
 - Serializing and deserializing the request
-- And more...
+- And more
 
 In this document, we focus on the **proxy** part and explain how proxies are handled by the SAP Cloud SDK.
 
 ## What Kind of Proxies are There?
 
-Before we get into the details it is important to have an overview of the different proxy types.
+Before we get into the details, it is important to have an overview of the different proxy types.
 There are two possible types of proxies:
 
 1. A local proxy running on the cloud platform that connects to SAP S/4HANA On-premise systems.
@@ -66,7 +64,7 @@ There are two possible types of proxies:
 ## Manual Configuration
 
 In the `execute()` you can either give an object containing the destination name or you can configure the full destination manually.
-If you provide the destination name the SAP Cloud SDK will try to lookup as described [here](destination.mdx).
+If you provide the destination name the SAP Cloud SDK will try to look up as described [here](destination.mdx).
 
 In productive use, the manual configuration will not be useful, but for testing, it might be valuable.
 The destination object contains a field `proxyConfiguration` in which you can configure a proxy.
@@ -101,12 +99,12 @@ This property can have two values: `Internet` and `OnPremise`:
 
 <img alt="Destination in CF" src={useBaseUrl('img/proxyTypeDestination.png')} />
 
-If `OnPremise` is selected it is assumed that this destination points to an SAP S/4HANA On-premise system.
+If `OnPremise` is selected, it is assumed that this destination points to an SAP S/4HANA On-premise system.
 In this case, you need the connectivity proxy.
 The SAP Cloud SDK will request the proxy host and port from the connectivity service and make a request using this proxy.
 From there the request will pass via the **SAP Cloud Connector** to the SAP S/4HANA On-premise system.
 
-If `Internet` is selected it is assumed that this destination points to something on the Internet and in most cases, no proxy is needed.
+If `Internet` is selected it is assumed that this destination points to something on the Internet and usually no proxy is needed.
 However, if a proxy is needed to reach this destination it is configured in the following way.
 
 The SAP Cloud SDK considers the environment variables `HTTP_PROXY` and `HTTPS_PROXY`.
@@ -121,7 +119,8 @@ The value of the two proxy variables is just a simple string following this patt
 
 The user and password are optional and if they are left out no authentication header is added.
 The protocol is also optional and the default value is `http` since most proxies do not use an encryption layer for communication.
-The default for the port is `80` for `http` and `443` for `https`. Example of a valid values would be:
+The default for the port is `80` for `http` and `443` for `https`.
+Example of valid values would be:
 
 ```bash script
 http://John:SecurePassword@some.host.com:1234
@@ -131,7 +130,9 @@ some.host.com -> will use http and 80 as default
 ```
 
 :::note
+
 If you use any special character in your username or password you need to encode them using [percent encoding](https://en.wikipedia.org/wiki/Percent-encoding)
+
 :::
 
 Since environment variables are a global setting, it might become necessary to exclude some destinations from using the proxy.
@@ -145,7 +146,7 @@ The SAP Cloud SDK uses axios to execute `http` requests.
 In principle axios should support web proxies based on the environment variables.
 However, we found that the request URL using a proxy was not correctly constructed and for the connectivity proxy, an entry point was necessary anyhow.
 
-Hence, the SAP Cloud SDK switches off the build-in proxy handling by axios completely by using:
+Hence, the SAP Cloud SDK switches off the built-in proxy handling by axios completely by using the following axios request configuration.
 
 ```json
 {
@@ -153,7 +154,6 @@ Hence, the SAP Cloud SDK switches off the build-in proxy handling by axios compl
 }
 ```
 
-in the axios request configuration.
 If a proxy becomes necessary or is configured by the discussed environment variables the SAP Cloud SDK builds directly the `http-agent` or `https-agent`:
 
 ```json
