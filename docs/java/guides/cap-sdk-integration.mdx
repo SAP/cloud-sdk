@@ -136,9 +136,9 @@ You need to use the `ThreadContextExecutor` from the SAP Cloud SDK (refer to the
 Example:
 ```java
 final ThreadContextExecutor threadContextExecutor = new ThreadContextExecutor();
-final RequestContextRunner capContextRunner = cdsRuntime.requestContext();
+final RequestContextRunner cdsContextRunner = context.getCdsRuntime().requestContext();
 
-final Callable<Boolean> task = () -> capContextRunner.run(context ->
+final Callable<Boolean> task = () -> cdsContextRunner.run(context ->
                                         threadContextExecutor.execute(() -> ... ));
 ```
 
