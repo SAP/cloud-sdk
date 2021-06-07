@@ -327,6 +327,30 @@ service.forEntity(myEntity)
 
 For more details on the API see also the section about [operating on navigation properties](#navigation-properties) directly.
 
+### Accessing Extensible or Custom Fields
+The concept of **In-app Extensibility** allows users to introduce additional fields to an existing S/4 service.
+To consume and work with such custom fields in your application code, SAP Cloud SDK introduces the concept of custom fields.
+
+You can set custom fields on an entity through the `.setCustomField` method and read the value in the entity using `.getCustomField(fieldName)`
+
+```java
+businessPartner.setCustomField("remarks", "");
+businessPartner.setCustomField("shoeSize", 10);
+
+final String remarks = businessPartner.getCustomField("remarks");
+final int shoeSize = businessPartner.getCustomField("shoeSize");
+```
+If you don't know the name of the custom fields added by the customer, you can still use `getCustomFieldNames()` to obtain the set of custom fields introduced and use this set further on to pull values from the entity.
+For e.g.
+
+```java
+final Set<String> customfieldNames = businessPartner.getCustomFieldNames();
+
+for(String customFieldName: customfieldNames){
+    final Object customField = businessPartner.getCustomField(customFieldName);
+ }
+```
+
 ### Batch Requests
 
 Batch requests allow wrapping multiple OData requests into one single batch call.
