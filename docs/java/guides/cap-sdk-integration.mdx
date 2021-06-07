@@ -125,6 +125,24 @@ We'll annotate the Spring Boot application class which is annotated with `@Sprin
 
 Make sure that you also add the package name of your application.
 
+
+### Wrap Asynchronous Calls
+
+If your app uses asynchronous calls which spawn new threads or reuse pooled threads, the call must be decorated with the respective wrapper classes.
+This decoration is required to forward thread-specific information from the calling thread to the asynchronously running thread.
+
+You need to use the `ThreadContextExecutor` from the SAP Cloud SDK (refer to the [ThreadContext documentation](https://sap.github.io/cloud-sdk/docs/java/features/multi-tenancy/multi-tenancy-thread-context/#what-is-a-thread-context)) in conjunction with the `RequestContextRunner` from [CAP](https://cap.cloud.sap/docs/java/provisioning-api#threading-requestcontext).
+
+Example:
+```java
+final EventContext context;
+final ThreadContextExecutor threadContextExecutor = new ThreadContextExecutor();
+final RequestContextRunner cdsContextRunner = context.getCdsRuntime().requestContext();
+
+final Callable<Object> task = () -> cdsContextRunner.run(context ->
+                                        threadContextExecutor.execute(() -> ... ));
+```
+
 :::success Integration finished
 
 Now the SAP Cloud SDK is integrated with the CAP application.
