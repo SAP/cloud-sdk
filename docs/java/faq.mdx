@@ -79,6 +79,55 @@ These errors are not always caused by flaws in the SAP Cloud SDK as we often see
 Some of them even have known flaws for which we have workarounds.
 If you can't solve your issue via debugging and experimenting, please, report your incident via [Stack Overflow](https://stackoverflow.com/questions/tagged/sap-cloud-sdk) or our GitHub repositories.
 
+
+### How am I supposed to use the OData Attachment Service?
+
+You are trying to use the virtual data model for [AttachmentService](https://api.sap.com/api/API_CV_ATTACHMENT_SRV/overview) as provided by the SAP Cloud SDK, however it's not possible to run the request successfully, the attachments will not be uploaded.
+This is caused by an outdated specification, for which the Java classes are automatically generated.
+As a consequece the generated `AttachmentService` interface and `DefaultAttachmentService` implementation cannot be used reliably.
+
+We recommend the following manual requests instead - without our convenience API:
+
+1. Request CSRF token with HEAD request.
+2. Upload Attachment with POST requset.
+
+```java
+// Resolve HttpClient instance
+HttpDestination destination;
+HttpClient httpClient = HttpClientAccessor.getHttpClient(destination);
+
+// Resolve CSRF token, internally runs HEAD request
+String csrfToken = new DefaultCsrfTokenRetriever()
+    .retrieveCsrfToken(httpClient, AttachmentService.DEFAULT_SERVICE_PATH)
+    .getToken();
+
+// Prepare attachment for HTTP request
+InputStream inStream; 
+HttpEntity attachmentEntity = new InputStreamEntity(inStream); // alternatively, new FileEntity(File)
+
+// Prepare attachment creation request
+HttpPost create = new HttpPost(AttachmentService.DEFAULT_SERVICE_PATH + "/AttachmentContentSet");
+create.setEntity(attachmentEntity);
+create.setHeader(DefaultCsrfTokenRetriever.X_CSRF_TOKEN_HEADER_KEY, csrfToken);
+create.setHeader("Content-Type", "image/jpeg");
+create.setHeader("Slug", "'filename.jpg'");
+create.setHeader("BusinessObjectTypeName", "'ObjectTypeName'");
+create.setHeader("LinkedSAPObjectKey", "'ObjectKey'");
+
+// Send attachment creation request
+HttpResponse response = httpClient.execute(create);
+
+// Parse response
+String responseText = EntityUtils.toString(response.getEntity());
+```
+
+Once you've decided on `InputStream` or `File` as underlying data type for `HttpEntity`, you need to apply values for HTTP headers `x-csrf-token`, `Content-Type`, `Slug`, `BusinessObjectTypeName` and `LinkedSAPObjectKey`. The last three header values are **required** to be wrapped in single-quotes `'`.
+
+Please note, depending on the file size, a request may take several seconds to minutes.
+This suggested HTTP interaction is the [officially documented](https://help.sap.com/viewer/7489fa08cede494cbdf08fa3651598af/2105.500/en-US/63259b6826174573bc32f2e1d1609cd9.html) approach.
+It's not considered a workaround.
+
+
 ## Open API Related Questions
 
 ### Do You Support RESTful Services?
