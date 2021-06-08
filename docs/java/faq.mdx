@@ -86,46 +86,61 @@ You are trying to use the virtual data model for [AttachmentService](https://api
 This is caused by an outdated specification, for which the Java classes are automatically generated.
 As a consequence the generated `AttachmentService` interface and `DefaultAttachmentService` implementation cannot be used reliably.
 
-We recommend the following manual requests instead - without our convenience API:
-
-1. Request CSRF token with HEAD request.
-2. Upload Attachment with POST request.
-
-```java
-// Resolve HttpClient instance
-HttpDestination destination;
-HttpClient httpClient = HttpClientAccessor.getHttpClient(destination);
-
-// Resolve CSRF token, internally runs HEAD request
-String csrfToken = new DefaultCsrfTokenRetriever()
-    .retrieveCsrfToken(httpClient, AttachmentService.DEFAULT_SERVICE_PATH)
-    .getToken();
-
-// Prepare attachment for HTTP request
-InputStream inStream; 
-HttpEntity attachmentEntity = new InputStreamEntity(inStream); // alternatively, new FileEntity(File)
-
-// Prepare attachment creation request
-HttpPost create = new HttpPost(AttachmentService.DEFAULT_SERVICE_PATH + "/AttachmentContentSet");
-create.setEntity(attachmentEntity);
-create.setHeader(DefaultCsrfTokenRetriever.X_CSRF_TOKEN_HEADER_KEY, csrfToken);
-create.setHeader("Content-Type", "image/jpeg");
-create.setHeader("Slug", "'filename.jpg'");
-create.setHeader("BusinessObjectTypeName", "'ObjectTypeName'");
-create.setHeader("LinkedSAPObjectKey", "'ObjectKey'");
-
-// Send attachment creation request
-HttpResponse response = httpClient.execute(create);
-
-// Parse response
-String responseText = EntityUtils.toString(response.getEntity());
-```
-
-Once you've decided on `InputStream` or `File` as underlying data type for `HttpEntity`, you need to apply values for HTTP headers `x-csrf-token`, `Content-Type`, `Slug`, `BusinessObjectTypeName` and `LinkedSAPObjectKey`. The last three header values are **required** to be wrapped in single-quotes `'`.
-
-Please note, depending on the file size, a request may take several seconds to minutes.
-This suggested HTTP interaction is the [officially documented](https://help.sap.com/viewer/7489fa08cede494cbdf08fa3651598af/2105.500/en-US/63259b6826174573bc32f2e1d1609cd9.html) approach.
-It's not considered a workaround.
+<details>
+  <summary>We recommend running manual requests instead. (click)</summary>
+  
+  
+  1. Request CSRF token with HEAD request.
+  2. Upload Attachment with POST request.
+  
+  ```java
+  // Resolve HttpClient instance
+  HttpDestination destination;
+  HttpClient httpClient = HttpClientAccessor.getHttpClient(destination);
+  
+  // Resolve CSRF token, internally runs HEAD request
+  String csrfToken = new DefaultCsrfTokenRetriever()
+      .retrieveCsrfToken(httpClient, AttachmentService.DEFAULT_SERVICE_PATH)
+      .getToken();
+  
+  // Prepare attachment for HTTP request
+  InputStream inStream; 
+  HttpEntity attachmentEntity = new InputStreamEntity(inStream); // alternatively, new FileEntity(File)
+  
+  // Prepare attachment creation request
+  HttpPost create = new HttpPost(AttachmentService.DEFAULT_SERVICE_PATH + "/AttachmentContentSet");
+  create.setEntity(attachmentEntity);
+  create.setHeader(DefaultCsrfTokenRetriever.X_CSRF_TOKEN_HEADER_KEY, csrfToken);
+  create.setHeader("Content-Type", "image/jpeg");
+  create.setHeader("Slug", "'filename.jpg'");
+  create.setHeader("BusinessObjectTypeName", "'ObjectTypeName'");
+  create.setHeader("LinkedSAPObjectKey", "'ObjectKey'");
+  
+  // Send attachment creation request
+  HttpResponse response = httpClient.execute(create);
+  
+  // Parse response
+  String responseText = EntityUtils.toString(response.getEntity());
+  ```
+  
+  Once you've decided on `InputStream` or `File` as underlying data type for `HttpEntity`, you need to apply values for HTTP headers `x-csrf-token`, `Content-Type`, `Slug`, `BusinessObjectTypeName` and `LinkedSAPObjectKey`. The last three header values are **required** to be wrapped in single-quotes `'`.
+  
+  Please note, depending on the file size, a request may take several seconds to minutes.
+  This suggested HTTP interaction is the [officially documented](https://help.sap.com/viewer/7489fa08cede494cbdf08fa3651598af/2105.500/en-US/63259b6826174573bc32f2e1d1609cd9.html) approach.
+  It's not considered a workaround.
+  
+  In case you want to deserialize the JSON from `responseTest` variable, then run the following code:
+  
+  ```java
+  // Deserialize the AttachmentContent object
+  TypeToken<Map<String, AttachmentContent>> responseType = new TypeToken<Map<String, AttachmentContent>>() {
+  };
+  Map<String, AttachmentContent> responseObject = new Gson().fromJson(responseText, responseType.getType());
+  AttachmentContent result = responseObject.get("d");
+  ```
+  
+  
+</details>
 
 
 ## Open API Related Questions
