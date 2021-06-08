@@ -80,16 +80,16 @@ Some of them even have known flaws for which we have workarounds.
 If you can't solve your issue via debugging and experimenting, please, report your incident via [Stack Overflow](https://stackoverflow.com/questions/tagged/sap-cloud-sdk) or our GitHub repositories.
 
 
-### How am I supposed to use the OData Attachment Service?
+### How To Use the OData Attachment Service?
 
 You are trying to use the virtual data model for [AttachmentService](https://api.sap.com/api/API_CV_ATTACHMENT_SRV/overview) as provided by the SAP Cloud SDK, however it's not possible to run the request successfully, the attachments will not be uploaded.
 This is caused by an outdated specification, for which the Java classes are automatically generated.
-As a consequece the generated `AttachmentService` interface and `DefaultAttachmentService` implementation cannot be used reliably.
+As a consequence the generated `AttachmentService` interface and `DefaultAttachmentService` implementation cannot be used reliably.
 
 We recommend the following manual requests instead - without our convenience API:
 
 1. Request CSRF token with HEAD request.
-2. Upload Attachment with POST requset.
+2. Upload Attachment with POST request.
 
 ```java
 // Resolve HttpClient instance
