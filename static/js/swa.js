@@ -5,6 +5,7 @@ var swa = {
   // set this to a function that returns the identifier of the tracked user
   loggingEnabled: true,
   consentDeferTimeout: '864000',
+  clicksEnabled: true,
   consentStyle: 'popup'
 };
 (function () {
