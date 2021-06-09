@@ -9,7 +9,7 @@ const DocsRating = ({ label }) => {
   const giveFeedback = value => {
 
    if (swa && swa.hasOwnProperty("trackCustomEvent")) {
-     swa.trackCustomEvent("collectFeedback", "Generate-typed-client", value);
+     swa.trackCustomEvent("collectFeedback", value);
      }
      setHaveVoted(true);
   };
