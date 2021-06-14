@@ -6,7 +6,7 @@ function BuildBadge({ align }) {
       <a
         target="_blank"
         rel="noopener noreferrer"
-        href="https://github.com/SAP/cloud-sdk"
+        href="https://github.com/SAP/cloud-sdk-js"
       >
         <img
           src="https://github.com/SAP/cloud-sdk-js/workflows/build/badge.svg"
