@@ -268,6 +268,12 @@ service.forEntity(myEntity)
       .execute(destination);
 ```
 
+This will invoke the following HTTP call, assuming that `myEntity` is identified by `"my-entity"`:
+
+```txt
+GET /service-root/Entity('my-entity')/MyNamespace.MyFunction()
+```
+
 Similarly, for actions use `applyAction`:
 
 ```java
@@ -287,7 +293,18 @@ Another way is to use a builder on an Entity object to create an instance if you
 #### Bound Operations on Collections
 
 Functions and actions may also be bound to collections of entities.
-They are also invoked via `applyFunction` and `applyAction` but on the `service` instance itself.
+They are also invoked via `applyFunction` and `applyAction` but on the `service` instance itself:
+
+```java
+service.applyAction(Entity.myAction())
+      .execute(destination);
+```
+
+This will invoke the following HTTP call:
+
+```txt
+POST /service-root/Entity/MyNamespace.MyAction()
+```
 
 Furthermore, OData allows invoking bound operations not only on entities but also on navigation properties.
 The API allows you to navigate to any navigation property of an entity to invoke an operation:
@@ -298,6 +315,12 @@ service.forEntity(myEntity)
       .navigateTo(Entity.NAVIGATION_PROPERTY)
       .applyFunction(NavigationEntity.myFunction())
       .execute(destination);
+```
+
+This would yield:
+
+```txt
+GET /service-root/Entity('my-entity')/NavigationProperty/MyNamespace.MyFunction()
 ```
 
 #### Composable Functions
