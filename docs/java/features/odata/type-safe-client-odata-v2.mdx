@@ -400,6 +400,37 @@ for(String customFieldName: customfieldNames){
  }
 ```
 
+The accessors for custom fields respect multitenancy, for e.g. `getCustomFieldNames()` would only fetch custom field names available in the context of the current tenant.
+
+### Using Custom Fields in system query options
+You can also pass custom fields to select or filter system query options.
+
+<Tabs groupId="customField" defaultValue="v2" values={[ { label: 'OData V2', value: 'v2', }, { label: 'OData V2 (Deprecated)', value: 'v2-deprecated', } ]}>
+
+For e.g.
+
+<TabItem value="v2-deprecated">
+
+```java
+service().getAllBusinessPartner()
+         .select(new BusinessPartnerField<>("ShoeSize"),()->"AnotherCustomField")
+         .filter(new BusinessPartnerField<>("Shoesize").eq(42))
+         .execute(destination)
+```
+</TabItem>
+
+<TabItem value="v2">
+
+```java
+service().getAllBusinessPartner()
+         .select(new BusinessPartnerField<>("ShoeSize"),()->"AnotherCustomField")
+         .filter(new BusinessPartnerField<>("Shoesize").eq(42))
+         .executeRequest(destination)
+```
+</TabItem>
+</Tabs>
+
+Please be aware that such an example can work for all tenants only if `ShoeSize`, `AnotherCustomField` custom fields has been defined by all tenants.
 
 ### Batch Requests
 
