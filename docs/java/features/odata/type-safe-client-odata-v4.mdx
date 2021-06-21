@@ -381,7 +381,7 @@ You can also pass custom fields to select or filter system query options:
 ```java
 service().getAllBusinessPartner()
          .select(new BusinessPartnerField<>(new SimpleProperty.NumericInteger<>(BusinessPartner.class, "ShoeSize"),()->"AnotherCustomField")
-         .filter(new SimpleProperty.String<>(BusinessPartner.class, "ShoeSize").equalTo("42"))
+         .filter(new SimpleProperty.NumericInteger<>(BusinessPartner.class, "ShoeSize").equalTo(42))
          .execute(destination)
 ```
 
