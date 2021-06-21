@@ -83,7 +83,7 @@ Using the [`SAMLAssertion`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc7
 This is, because upon authentication at the target system, a session cookie is returned, which is stored within the used `HttpClient` instance.
 For subsequent calls, the service then expects authenticated clients to include their session cookie.
 To not loose the session in between requests, the SAP Cloud SDK offers the `TimeScopedHttpClientCache` (as opposed to the `RequestScopedHttpClientCache`, which is used by default).
-Switching the cache can be down as follows:
+Switching the cache can be done as follows:
 
 ```java
 // run this code once in a setup step, afterwards HttpClient instances are kept for 5 minutes
