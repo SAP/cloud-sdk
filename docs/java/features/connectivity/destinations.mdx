@@ -77,6 +77,26 @@ DestinationAccessor.getLoader().tryGetDestination(destinationName, options);
 
 See the section on [destination options](#building-destination-options) below.
 
+### Using the SAMLAssertion Authentication Type
+
+Using the [`SAMLAssertion`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/d81e1683bd434823abf3ceefc4ff157f.html) authentication types requires a different caching strategy for `HttpClient`s.
+This is, because upon authentication at the target system, a session cookie is returned, which is stored within the used `HttpClient` instance.
+For subsequent calls, the service then expects authenticated clients to include their session cookie.
+To not loose the session in between requests, the SAP Cloud SDK offers the `TimeScopedHttpClientCache` (as opposed to the `RequestScopedHttpClientCache`, which is used by default).
+Switching the cache can be down as follows:
+
+```java
+// run this code once in a setup step, afterwards HttpClient instances are kept for 5 minutes
+HttpClientAccessor.setHttpClientCache(new TimeScopedHttpClientCache(5, TimeUnit.MINUTES));
+```
+
+:::note Hint
+
+The cached `HttpClient` instances are also isolated based on the tenant and principal.
+
+:::
+
+
 ## Decorating Destinations
 
 Depending on the use case, one needs to wrap the accessed destination before issuing a request to a system.
