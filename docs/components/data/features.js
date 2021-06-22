@@ -56,7 +56,7 @@ export const features = [
     },
     js: {
       status: ':heavy_check_mark:',
-      docsLink: `[docs](${baseUrl}/js/features/odata/type-safe-client-odata-v2.mdx)`,
+      docsLink: `[docs](${baseUrl}/js/features/odata/use-odata-v2-type-safe-client-for-javascript-typescript)`,
       note: ''
     }
   },
