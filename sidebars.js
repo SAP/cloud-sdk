@@ -9,8 +9,6 @@ module.exports = {
       'overview/who-uses-sap-cloud-sdk',
       'overview/frequently-asked-questions-about-sap-cloud-sdk',
       'overview/get-support'
-      // 'overview/key-features'
-      // 'overview/what-is-new'
     ],
     Java: [
       'java/overview-cloud-sdk-for-java',
@@ -72,19 +70,6 @@ module.exports = {
           }
         ]
       },
-      //   {
-      //     type: 'category',
-      //     label: 'Advanced features',
-      //     items: [
-      //       'untyped-client',
-      //       'odata-helper-classes',
-      //       'utility-classes',
-      //       'open-api-client',
-      //       'sdk-as-a-service',
-      //       ''
-      //     ]
-      //   },
-      //   'client-libraries',
       {
         type: 'category',
         label: 'Guides',
