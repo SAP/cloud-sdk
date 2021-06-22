@@ -413,7 +413,8 @@ You can also pass custom fields to select or filter system query options:
 
 ```java
 service().getAllBusinessPartner()
-         .select(new BusinessPartnerField<>("ShoeSize"),()->"AnotherCustomField")
+         .select(new BusinessPartnerField<>("ShoeSize"))
+         .select(()->"AnotherCustomField"))
          .filter(new BusinessPartnerField<>("Shoesize").eq(42))
          .execute(destination)
 ```
@@ -423,7 +424,8 @@ service().getAllBusinessPartner()
 
 ```java
 service().getAllBusinessPartner()
-         .select(new BusinessPartnerField<>("ShoeSize"),()->"AnotherCustomField")
+         .select(new BusinessPartnerField<>("ShoeSize"))
+         .select(()->"AnotherCustomField")
          .filter(new BusinessPartnerField<>("Shoesize").eq(42))
          .executeRequest(destination)
 ```
