@@ -15,6 +15,7 @@ keywords:
 <!-- vale off -->
 
 import MvnBadge from '../../src/sap/sdk-java/MvnBadge';
+import DocsRating from '../../src/sap/common-utils/DocsRating';
 
 <div className="logo logo-java"> </div>
 
@@ -22,7 +23,8 @@ import MvnBadge from '../../src/sap/sdk-java/MvnBadge';
 
 ## Should I update?
 
-We highly recommend regularly updating to the latest SAP Cloud SDK version. It will help you:
+We highly recommend regularly updating to the latest SAP Cloud SDK version.
+It will help you:
 
 - Ensure access to the latest Cloud SDK features
 - Keep up with the latest changes in SAP Cloud Platform
@@ -53,6 +55,101 @@ To continue using the latest features outlined in the release notes for version 
 
 ### Fixed issues
 -->
+
+## 3.47.0 - June 17, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.47.0) | [Javadoc](https://help.sap.com/doc/80f27f1f2f0a474896c5cc73fa84499a/1.0/en-US/index.html)
+
+### New Functionality
+
+- We introduced the new API `Principal#getAuthorizationsByAudience` which returns the authorizations (scopes) of the principal grouped by their audience.
+
+### Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update BTP Neo Tomcat 8 SDK from `3.127.13.3` to `4.1.9`
+    - Update Neo JavaEE 7 SDK from `1.96.13.1` to `1.97.11`
+    - Update [SAP CP Spring XSUAA Security Library](https://github.com/SAP/cloud-security-xsuaa-integration/tree/master/spring-xsuaa) from `2.8.8` to `2.8.10`
+  - Other dependency updates:
+    - Update Protobuf Java from `3.17.0` to `3.17.1`
+    - Update Netty from `4.1.64.Final` to `4.1.65.Final`
+    - Update PMD from `6.34.0` to `6.35.0`
+    - Update Commons IO from `2.8.0` to `2.9.0`
+    - Update Gson from `2.8.6` to `2.8.7`
+    - Update Mockito from `3.9.0` to `3.10.0`
+    - Update jsonschema2pojo from `1.1.0` to `1.1.1`
+    - Update Hibernate Core from `5.4.31.Final` to `5.4.32.Final`
+    - Update Jetty from `9.4.39.v20210325` to `9.4.41.v20210516`
+    - Update Spring from `5.3.4` to `5.3.5`
+    - Update Spring Boot from `2.4.3` to `2.4.4`
+    - Update Json Path from `2.5.0` to `2.6.0`
+
+### Fixed issues
+
+- We fixed an issue in the Javadoc generation for the OData V4 type-safe client (VDM), which caused the content of the `Core.Description` annotation to be ignored.
+- We improved an exception message in both the OData V2 and V4 generator where an empty class name was subject to generation. This happens, for instance, if an entity type is named `Type`.
+
+## 3.46.0 - June 3, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.46.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+
+### Compatibility Notes
+
+- We updated the (OData V2) Trial Balance - Read (`C_TRIALBALANCE_CDS`) VDM to the [newest release 2105 of SAP S/4HANA Cloud](https://news.sap.com/2021/05/sap-s4hana-cloud-release-2105/)
+
+  **Caution:** The service introduced some intended **breaking changes** with the latest update which are now, in consequence, also present in the type-safe client (VDM) by the SDK.
+
+### New Functionality
+
+- The type-safe client (VDM) for OData V4 now gives access to bound functions and actions.
+  Entities will now expose all operations bound to their type on their class.
+
+  For example assume there is a function `IsHappy` defined for an entity `Person`, then you can use:
+
+  ```java
+  service.forEntity(person)
+        .applyFunction(Person.isHappy());
+  ```
+
+  In case the function is bound to a collection use e.g.:
+
+  ```java
+  service.applyFunction(Person.AreAllHappy());
+  ```
+
+  Furthermore, if a function is marked by the service as `composable` you can also apply an operation to the result of a function directly:
+
+  ```java
+  service.forEntity(person)
+        .withFunction(Person.getBestFriend())
+        .navigateTo(Person.FRIENDS)
+        .getAll();
+  ```
+
+  The creation of the new operation types is enabled in the OData V4 generator as well.
+  Check out the full [documentation of the feature](https://sap.github.io/cloud-sdk/docs/java/features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java#odata-functions-and-actions) for more information.
+
+- We updated the [OData type-safe client also known as the VDM](https://sap.github.io/cloud-sdk/docs/java/features/odata/overview/) to the newest release FPS2 of SAP S/4HANA on-premise 2020. This also includes completely new services added (available as usual in packages `com.sap.cloud.sdk.s4hana.onpremise.v2020.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.onpremise.v2020.datamodel.odatav4.services`), new operations in previously existing services, and new entity types.
+
+### Improvements
+
+- We increased the default application memory setting for archetypes `scp-cf-tomee` and `scp-cf-spring` from `1024M` to `1500M`.
+  This mitigates potential deployment errors due to the latest extensions in the VDM modules.
+
+- Dependency Updates:
+  - Update Fabric SDK Java from `2.2.5` to `2.2.6`
+  - Update JUnit Jupiter from `5.7.1` to `5.7.2`
+  - Update Netty from `4.1.63.Final` to `4.1.64.Final`
+  - Update Json Sanitizer from `1.2.2` to `1.2.3`
+  - Update PMD from `6.33.0` to `6.34.0`
+  - Update jOOR from `0.9.13` to `0.9.14`
+  - Update Java JWT from `3.15.0` to `3.16.0`
+  - Update Error Prone from `2.6.0` to `2.7.1`
+  - Update AMQP Client from `5.11.0` to `5.12.0`
+  - Update Reactor from `3.4.5` to `3.4.6`
+  - Update Wiremock from `2.27.2` to `2.28.0`
+  - Update Protobuf from `3.15.8` to `3.17.0`
 
 ## 3.45.0 - May 20, 2021
 
@@ -2526,3 +2623,5 @@ When defining destinations via the environment variable destinations, version 3.
 - Allow using any JSR-107 (JCache) compliant library for caching as part of resilience.
 - Allow nesting of ThreadContexts.
 - Improve log output on log level "debug" for DefaultMessageDelegator to improve error inspection in the messaging core module.
+
+<DocsRating />

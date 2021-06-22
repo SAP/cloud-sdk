@@ -16,10 +16,11 @@ keywords:
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import DocsRating from '../../../../src/sap/common-utils/DocsRating';
 
 The SAP Cloud SDK offers some basic functionality that helps with connecting to other systems and services like SAP S/4HANA Cloud.
 The SAP Cloud SDK introduces the general concept of a `Destination` which holds basic information about how to connect to such a system.
-That could for instance be a `url`, a user name, and password for basic authentication or some custom headers.
+That could for instance be a `url`, a username, and password for basic authentication or some custom headers.
 
 This concept is integrated with the [Destination Service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html) that is available on the SAP Business Technology Platform.
 If the application has a service binding to this service in place the SAP Cloud SDK will provide access to these destinations.
@@ -47,27 +48,27 @@ Cache entries will automatically be invalidated 5 minutes after their initial cr
 
 We provide support for the following authentication types on SAP BTP, Cloud Foundry environment.
 
-| Authentication Type                                                                                                                                                           | Parameter Name                                         |
-| :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------- |
-| [NoAuthentication](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/4e13a04147314e8e9e54321f25d93fdc.html)                                            | `AuthenticationType.NO_AUTHENTICATION`                 |
-| [BasicAuthentication](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/4e13a04147314e8e9e54321f25d93fdc.html)                                         | `AuthenticationType.BASIC_AUTHENTICATION`              |
-| [PrincipalPropogation](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/73194cc419894433994c5f0444b4c6a1.html)                                        | `AuthenticationType.PRINCIPAL_PROPAGATION`             |
-| [ClientCertificateAuthentication](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/4e13a04147314e8e9e54321f25d93fdc.html)                             | `AuthenticationType.CLIENT_CERTIFICATE_AUTHENTICATION` |
-| [AppToAppSSO](https://help.sap.com/viewer/b865ed651e414196b39f8922db2122c7/Cloud/en-US/e022a5eebaec4dbbabef7f5d60e13dd4.html?q=AppToAppSSO)                                   | `AuthenticationType.APP_TO_APP_SSO`                    |
-| [OAuth2ClientCredentials](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/4e1d742a3d45472d83b411e141729795.html)                                     | `AuthenticationType.OAUTH2_CLIENT_CREDENTIALS`         |
-| [OAuth2SAMLBearerAssertion](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/c69ea6aacd714ad2ae8ceb5fc3ceea56.html)                                   | `AuthenticationType.OAUTH2_SAML_BEARER_ASSERTION`      |
-| [OAuth2UserTokenExchange](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e3c333f9de6245fca326993f2397c13a.html)                                     | `AuthenticationType.OAUTH2_USER_TOKEN_EXCHANGE`        |
-| [OAuth2JWTBearer](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/283cd2d1c72147a18c69daf681650f07.html)                                             | `AuthenticationType.OAUTH2_JWT_BEARER`                 |
-| [SAPAssertionSSO](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/ceb8c4fa61e6443190185696c6d0342d.html)                                             | `AuthenticationType.SAP_ASSERTION_SSO`                 |
-| [InternalSystemAuthentication](https://help.sap.com/viewer/2d168c76daa1406b8567eee447eb1b2f/Cloud/en-US/a9c2c896be574077b56a7b2e2790e86c.html?q=InternalSystemAuthentication) | `AuthenticationType.INTERNAL_SYSTEM_AUTHENTICATION`    |
-| [OAuth2Password](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/452357cdd82a4c0ba6095b36c0057526.html)                                              | `AuthenticationType.OAUTH2_PASSWORD`                   |
-| [SAMLAssertion](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/d81e1683bd434823abf3ceefc4ff157f.html)                                               | `AuthenticationType.SAML_ASSERTION`                    |
+| Authentication Type                                                                                                                                                             | Parameter Name                                         |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :----------------------------------------------------- |
+| [`NoAuthentication`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/4e13a04147314e8e9e54321f25d93fdc.html)                                            | `AuthenticationType.NO_AUTHENTICATION`                 |
+| [`BasicAuthentication`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/4e13a04147314e8e9e54321f25d93fdc.html)                                         | `AuthenticationType.BASIC_AUTHENTICATION`              |
+| [`PrincipalPropogation`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/73194cc419894433994c5f0444b4c6a1.html)                                        | `AuthenticationType.PRINCIPAL_PROPAGATION`             |
+| [`ClientCertificateAuthentication`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/4e13a04147314e8e9e54321f25d93fdc.html)                             | `AuthenticationType.CLIENT_CERTIFICATE_AUTHENTICATION` |
+| [`AppToAppSSO`](https://help.sap.com/viewer/b865ed651e414196b39f8922db2122c7/Cloud/en-US/e022a5eebaec4dbbabef7f5d60e13dd4.html?q=AppToAppSSO)                                   | `AuthenticationType.APP_TO_APP_SSO`                    |
+| [`OAuth2ClientCredentials`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/4e1d742a3d45472d83b411e141729795.html)                                     | `AuthenticationType.OAUTH2_CLIENT_CREDENTIALS`         |
+| [`OAuth2SAMLBearerAssertion`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/c69ea6aacd714ad2ae8ceb5fc3ceea56.html)                                   | `AuthenticationType.OAUTH2_SAML_BEARER_ASSERTION`      |
+| [`OAuth2UserTokenExchange`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e3c333f9de6245fca326993f2397c13a.html)                                     | `AuthenticationType.OAUTH2_USER_TOKEN_EXCHANGE`        |
+| [`OAuth2JWTBearer`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/283cd2d1c72147a18c69daf681650f07.html)                                             | `AuthenticationType.OAUTH2_JWT_BEARER`                 |
+| [`SAPAssertionSSO`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/ceb8c4fa61e6443190185696c6d0342d.html)                                             | `AuthenticationType.SAP_ASSERTION_SSO`                 |
+| [`InternalSystemAuthentication`](https://help.sap.com/viewer/2d168c76daa1406b8567eee447eb1b2f/Cloud/en-US/a9c2c896be574077b56a7b2e2790e86c.html?q=InternalSystemAuthentication) | `AuthenticationType.INTERNAL_SYSTEM_AUTHENTICATION`    |
+| [`OAuth2Password`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/452357cdd82a4c0ba6095b36c0057526.html)                                              | `AuthenticationType.OAUTH2_PASSWORD`                   |
+| [`SAMLAssertion`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/d81e1683bd434823abf3ceefc4ff157f.html)                                               | `AuthenticationType.SAML_ASSERTION`                    |
 
 ### Integrated Multi-Tenancy
 
 By default, the `DestinationAccessor` is tenant aware.
-If a tenant is available it will be used to access the destination service on behalf of that tenant.
-If no destination is found in the tenant-specific destination service the SAP Cloud SDK will try to get it using the service binding of the application.
+If a tenant is available, it will be used to access the destination service on behalf of that tenant.
+If no destination is found in the tenant-specific destination service, the SAP Cloud SDK will try to get it using the service binding of the application.
 
 This default retrieval strategy can be overridden by passing options to the destination loader as follows:
 
@@ -76,6 +77,31 @@ DestinationAccessor.getLoader().tryGetDestination(destinationName, options);
 ```
 
 See the section on [destination options](#building-destination-options) below.
+
+### Using the SAMLAssertion Authentication Type
+
+Using the [`SAMLAssertion`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/d81e1683bd434823abf3ceefc4ff157f.html) authentication types requires a different caching strategy for `HttpClient`s.
+This is because upon authentication at the target system, a session cookie is returned, which is stored within the used `HttpClient` instance.
+For subsequent calls, the service then expects authenticated clients to include their session cookie.
+
+By default, the SAP Cloud SDK uses the `RequestScopedHttpClientCache` to store `HttpClient` instances for the duration of a specific (incoming) request.
+Using this default strategy results into deleting the `HttpClient` (together with the session cookie) that was used to authorize at the target system, once the initial request has been handled.
+To avoid authorizing over and over again, the SAP Cloud SDK offers the `TimeScopedHttpClientCache`, which keeps existing `HttpClient`s for a certain period of time.
+These instances are then automatically reused for consecutive (incoming) requests, so that the session is retained.
+
+Switching the cache can be done as follows:
+
+```java
+// run this code once in a setup step, afterwards HttpClient instances are kept for 5 minutes
+HttpClientAccessor.setHttpClientCache(new TimeScopedHttpClientCache(5, TimeUnit.MINUTES));
+```
+
+:::note Hint
+
+The cached `HttpClient` instances are also isolated based on the tenant and principal.
+
+:::
+
 
 ## Decorating Destinations
 
@@ -91,7 +117,7 @@ DestinationAccessor.getDestination("my-destination").asHttp();
 ```
 
 This method ensures that the required destination properties are all set to make the HTTP connection.
-With the resulting destination instance depending on the use case one can run HTTP queries for ODATA or REST.
+With the resulting destination instance depending on the use case one can run HTTP queries for OData or REST.
 
 ### BAPI Destinations
 
@@ -137,7 +163,7 @@ DestinationAccessor.getDestination("my-destination").asHttp();
 ```
 
 This helps with keeping production and test code nicely separated.
-There are more overloads of the mocking on the [MockUtil class](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/testutil/MockUtil.html) that you can use.
+There are more overloads of the mocking on the [`MockUtil` class](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/testutil/MockUtil.html) that you can use.
 Refer to [these tutorial steps](https://developers.sap.com/tutorials/s4sdk-odata-service-cloud-foundry.html#b77d53b0-2d8b-449c-9a9a-9df80ee09a4e) on how to mock destinations for local development and testing.
 
 ### Using Custom Destination Loaders
@@ -184,7 +210,7 @@ For each registered implementation it invokes the method `getHeaders(Destination
 
 ### Implement Own Header Provider
 
-#### Implement the Interface **DestinationHeaderProvider**
+#### Implement the Interface `DestinationHeaderProvider`
 
 To implement your custom destination header provider, you need to implement the interface `DestinationHeaderProvider`.
 The method `getHeaders` provides access to the request specific context.
@@ -209,7 +235,7 @@ public List<Header> getHeaders( @Nonnull final DestinationRequestContext request
 
 #### Make Interface Implementation Accessible
 
-The SAP Cloud SDK uses the [Service Loader](https://docs.oracle.com/javase/7/docs/api/java/util/ServiceLoader.html) mechanism of Java to lookup the `DestinationHeaderProvider` implementations at runtime.
+The SAP Cloud SDK uses the [Service Loader](https://docs.oracle.com/javase/7/docs/api/java/util/ServiceLoader.html) mechanism of Java to look up the `DestinationHeaderProvider` implementations at runtime.
 To let your custom implementation be found, you need to provide a configuration file as resource in the folder `META-INF/services`.
 Name this resource file as the interface `com.sap.cloud.sdk.cloudplatform.connectivity.DestinationHeaderProvider` and mention the fully-qualified class name of your custom implementation.
 You can refer to several implementations by putting their fully qualified class names on separate lines.
@@ -245,7 +271,7 @@ In the above call `destinationLoader` needs to be an instance of `ScpCfDestinati
 
 #### Configuring Timeout Durations When Querying the Destination Service on Cloud Foundry
 
-By default, the [TimeLimiter resilience pattern](/cloud-sdk/docs/java/features/resilience/resilience#resilience-capabilities) aborts requests to the Destination Service on Cloud Foundry after 6 seconds.
+By default, the [`TimeLimiter` resilience pattern](/cloud-sdk/docs/java/features/resilience/resilience#resilience-capabilities) aborts requests to the Destination Service on Cloud Foundry after 6 seconds.
 If your app requires more time when fetching destinations, you may create your own `ScpCfDestinationLoader` instance by:
 
 ```java
@@ -281,7 +307,7 @@ For a provider/subscriber setup, a [retrieval strategy](https://help.sap.com/doc
 
 - `ALWAYS_SUBSCRIBER` (default)
 - `ALWAYS_PROVIDER`
-- `SUBSCRIBER_THEN_PROVIDER`.
+- `SUBSCRIBER_THEN_PROVIDER`
 
 Here is an example for `SUBSCRIBER_THEN_PROVIDER` option:
 
@@ -299,7 +325,7 @@ You can similarly use other retrieval options.
 
 ## Configure HTTP Destinations for Local Deployment
 
-When testing your app on localhost instead of SAP BTP you require some configuration steps to make the destination retrieval work.
+When testing your app on localhost instead of SAP BTP, you require some configuration steps to make the destination retrieval work.
 
 :::note HTTP Destinations
 This section refers to the maintenance of HTTP destinations.
@@ -307,16 +333,18 @@ Refer to the documentation about [BAPI/RFC communication](../bapi-and-rfc/overvi
 :::
 
 :::note Works for SAP Business Application Studio too
+
 The configuration procedures outlined here work too when you launch your app "locally" inside SAP Business Application Studio.
 It does not matter that the app does not run on your own machine.
+
 :::
 
 To better understand the configuration steps, we'll outline shortly how destination retrieval works when running your app on SCP.
-Thereafter we'll outline the configuration procedures in detail.
+Thereafter, we'll outline the configuration procedures in detail.
 
 ### Background: Destination Retrieval on SAP Business Technology Platform
 
-By default the SAP Cloud SDK uses a set of so-called destination loaders in a given order when searching for a destination via the `DestinationAccessor` API:
+By default, the SAP Cloud SDK uses a set of so-called destination loaders in a given order when searching for a destination via the `DestinationAccessor` API:
 
 ```java
 DestinationAccessor.tryGetDestination("MyDestination");
@@ -373,7 +401,7 @@ Configuration of SAP BTP connectivity services is not needed.
 All you have to do is creating a destination via environment variable `destinations`.
 :::
 
-##### Maintain VCAP_SERVICES
+##### Maintain `VCAP_SERVICES`
 
 How to create the `VCAP_SERVICES` representation depends on whether the Cloud Application Programming (CAP) Model is used.
 
@@ -460,7 +488,7 @@ final Map<String, String> mapping =
         "credentials.endpoints.token_url");
 ```
 
-`ScpCfServiceDestinationLoader.buildClientCredentialsMapping` creates a mapping for loading a destination and provides JSON paths for all required destination properties.
+The `ScpCfServiceDestinationLoader.buildClientCredentialsMapping` method creates a mapping for loading a destination and provides JSON paths for all required destination properties.
 
 ```java
 final HttpDestination destination =
@@ -485,7 +513,7 @@ final HttpDestination destination =
 
 The SAP BTP connectivity service builds the connection between SAP BTP and the On-premise network.
 That is why it has strong built-in restrictions to allow it only to be called from within SCP.
-If you would call the connectivity service from your local machine, you would encounter a connection timeout.
+If you call the connectivity service from your local machine, you will encounter a connection timeout.
 We'll therefore apply port forwarding via SSH to simulate that your localhost plays the cloud app.
 
 - Deploy your app to the SAP BTP once.
@@ -516,3 +544,4 @@ cf ssh app-name -L proxy-port:proxy-host:proxy-port
 :::success Ready
 Now your local setup is ready to consume an On-premise HTTP destination.
 :::
+<DocsRating />

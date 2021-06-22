@@ -15,7 +15,7 @@ It has moved [here](https://github.com/SAP/cloud-sdk-js).
 
 - [SAP Cloud SDK for Java](https://github.com/SAP/cloud-sdk/issues)
 - [SAP Cloud SDK for JavaScript / TypeScript](https://github.com/SAP/cloud-sdk-js/issues/new/choose)
-- [Documentation portal](https://github.com/SAP/cloud-sdk/issues)
+- [Documentation portal](https://sap.github.io/cloud-sdk/)
 
 ## Contributing
 

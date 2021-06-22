@@ -18,6 +18,8 @@ keywords:
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import useBaseUrl from '@docusaurus/useBaseUrl';
+import NotImplemented from '../../../components/NotImplemented.js';
+import DocsRating from '../../../../src/sap/common-utils/DocsRating';
 
 ## Build and Execute OData Requests With the Typed OData Client
 
@@ -57,8 +59,8 @@ result = service.operation()
     .execute(destination);
 ```
 
-- _operation_ corresponds to the service's capabilities for entities e.g. `createEntity` or `readEntities`.
-- _withParameter_ corresponds to:
+- `operation` corresponds to the service's capabilities for entities e.g. `createEntity` or `readEntities`.
+- `withParameter` corresponds to:
   - OData v4 query parameters e.g. `filter` or `orderby`
   - Or other modifiers like custom headers
 - Which OData v4 parameters are available depends on the operation.
@@ -98,8 +100,8 @@ Query parameters:
 Request parameters:
 
 - Update operations allow to set either `modifyingEntity()` or `replacingEntity()` which will result in `HTTP PATCH` or `HTTP PUT` respectively.
-  By default entities are modified via `PATCH`.
-- Update and delete operations allow to modify how ETags are handled:
+  By default, entities are modified via `PATCH`.
+- Update and delete operations allow modifying how ETags are handled:
   - By default, an ETag is sent if one is present on the entity being modified.
   - `matchAnyVersionIdentifier()` will instead always send a `*` which acts as a wildcard to match all ETags.
   - `ignoreAnyVersionIdentifier()` will ensure that no ETag is sent.
@@ -137,7 +139,7 @@ However, the create request will be made without a CSRF token if none could be o
 
 ### Select
 
-When reading entities the API offers `select( ... )` on the builders.
+When reading entities, the API offers `select( ... )` on the builders.
 Through it, the query parameters `$select` and `$expand` are set.
 It takes in the properties of the entity being queried.
 Primitive properties are added to `$select` while complex and navigational properties are added to `$expand`.
@@ -181,7 +183,7 @@ $expand=to_BusinessPartnerAddress($select=CityCode,Country;$filter=CityCode eq '
 
 ### Filter
 
-When operating on a collection of entities the API offers `filter( ... )` on the builders.
+When operating on a collection of entities, the API offers `filter( ... )` on the builders.
 It directly corresponds to the `$filter` parameter of the request.
 Filters are also built via the static property fields on entities.
 
@@ -241,6 +243,115 @@ service.getAllBusinessPartner()
     .execute(destination);
 ```
 
+### OData Functions and Actions
+
+OData defines bound and unbound [functions and actions](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_Operations).
+
+#### Unbound Operations
+
+Unbound functions and actions can be performed via their respective methods on the service:
+
+```java
+service.myFunction("paramValue1", "paramValue2")
+      .execute(destination);
+```
+
+#### Bound Operations
+
+Functions and actions bound to entity types can be invoked by navigating to any instance or collection of the entity type on the service.
+
+For functions use `applyFunction`:
+
+```java
+Entity myEntity;
+service.forEntity(myEntity)
+      .applyFunction(Entity.myFunction())
+      .execute(destination);
+```
+
+This will invoke the following HTTP call, assuming that `myEntity` is identified by `"my-entity"`:
+
+```txt
+GET /service-root/Entity('my-entity')/MyNamespace.MyFunction()
+```
+
+Similarly, for actions use `applyAction`:
+
+```java
+Entity myEntity;
+service.forEntity(myEntity)
+      .applyAction(Entity.myAction())
+      .execute(destination);
+```
+
+:::tip Obtaining an Entity to Operate on
+To get an entity object to operate on it is generally recommended to download it from the service first via its respective `getByKey` method.
+Fetching an entity will also ensure that ETag is handled if OData Action is invoked, which often leads to a change of a state of an entity.
+
+Another way is to use a builder on an Entity object to create an instance if you are aware of the key properties that are required.
+:::
+
+#### Bound Operations on Collections
+
+Functions and actions may also be bound to collections of entities.
+They are also invoked via `applyFunction` and `applyAction` but on the `service` instance itself:
+
+```java
+service.applyAction(Entity.myAction())
+      .execute(destination);
+```
+
+This will invoke the following HTTP call:
+
+```txt
+POST /service-root/Entity/MyNamespace.MyAction()
+```
+
+Furthermore, OData allows invoking bound operations not only on entities but also on navigation properties.
+The API allows you to navigate to any navigation property of an entity to invoke an operation:
+
+```java
+Entity myEntity;
+service.forEntity(myEntity)
+      .navigateTo(Entity.NAVIGATION_PROPERTY)
+      .applyFunction(NavigationEntity.myFunction())
+      .execute(destination);
+```
+
+This would yield:
+
+```txt
+GET /service-root/Entity('my-entity')/NavigationProperty/MyNamespace.MyFunction()
+```
+
+#### Composable Functions
+
+Finally, functions may be composable.
+If `IsComposable` is set to `true` in the service metadata the service allows to use the result of a function within another operation.
+
+Consider the following request:
+
+```
+GET /Entities('my-entity')/ComputeRelatedEntity()/EntityPropertyList?$top=5
+```
+
+The service will first perform the function `ComputeRelatedEntity` and then access the `EntityPropertyList` property of the result entity.
+Then the top five elements are returned.
+
+Such a request can be built with the API as follows:
+
+```java
+Entity myEntity;
+service.forEntity(myEntity)
+      .withFunction(Entity.computeRelatedEntity())
+      .navigateTo(RelatedEntity.ENTITY_PROPERTY_LIST)
+      .getAll()
+      .top(5)
+      .execute(destination);
+```
+
+For more details on the API see also the section about [operating on navigation properties](#navigation-properties) directly.
+
 ### Batch Requests
 
 Batch requests allow wrapping multiple OData requests into one single batch call.
@@ -256,7 +367,7 @@ The described API is subject to change
 The `service` object offers the method `batch` which allows access to the batch-related methods that help build the batch request.
 
 Multiple single requests (like `createBusinessPartnerRequest`) can be wrapped into so-called changesets.
-A changeset can be added by `addChangeset` and the corresponding create, update or delete operations can be passed as parameters into it.
+A changeset can be added by `addChangeset` and the corresponding create, update, or delete operations can be passed as parameters into it.
 You can wrap multiple changesets into one batch request.
 Similarly, retrieve operations can be added to the batch request by using `addReadOperations`.
 
@@ -295,7 +406,7 @@ BusinessPartner readByKeyResult = response.getReadResult(getBusinessPartnerByKey
 ```
 
 Per the OData specification, either all operations or none within the same changeset are successful.
-Hence, if the changeset was a failure then evaluating the result of any of the contained requests will contain the failure of the changeset.
+Hence, if the changeset was a failure then evaluating the result of the contained requests will contain the failure of the changeset.
 
 ## Entity Update Strategies
 
@@ -304,8 +415,8 @@ The SAP Cloud SDK supports different strategies for updating entities which diff
 :::info
 To update an entity it should first be retrieved from the service.
 This ensures the latest state of the entity is updated.
-Otherwise updating with old data could erase changes that have been made to the entity in the mean time.
-Many services will enforce this behaviour with optimistic locking mechanisms.
+Otherwise, updating with old data could erase changes that have been made to the entity in the meantime.
+Many services will enforce this behavior with optimistic locking mechanisms.
 Refer to the [section about ETags for details](#handling-of-etags).
 :::
 
@@ -453,7 +564,7 @@ This reduces initial network load and improves overall response times.
 If the payload of an OData response contains a link including a `$skiptoken`, then it indicates a next page to the result-set.
 The iterable result-set is a consistent snapshot of the data, it can not change between reading individual pages.
 
-In comparison the OData consumer may use query options `$top` and `$skip` (client-driven paging) to read partial data from the result-set, but relying on a consistent state while browsing through the data can be problematic.
+In comparison, the OData consumer may use query options `$top` and `$skip` (client-driven paging) to read partial data from the result-set, but relying on a consistent state while browsing through the data can be problematic.
 Between individual requests, another user could delete or add an item.
 This would result in an inconsistent aggregation of data.
 
@@ -499,3 +610,19 @@ Iterable<List<BusinessPartner>> iterablePagesOfEntities = service
 :::caution
 Please note that the OData service is not obliged to respect this setting.
 :::
+
+## Asynchronous OData API Calls
+
+<NotImplemented />
+
+The [OData v4 standard ](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_AsynchronousRequests) has introduced means for server-side asynchronous requests.
+This feature is also supported in the [SAP Gateway Foundation](https://help.sap.com/viewer/DRAFT/68bf513362174d54b58cddec28794093/202009.latest/en-US/b9c4dd6344694418b94c4bb3bdebfee1.html).
+At the moment the SAP Cloud SDK for Java does not provide a typed API to make such requests.
+However, you can leverage our [Generic OData Client](generic-odata-client.mdx) to simplify the logic of making such requests.
+
+:::note Process Synchronous OData Request in Asynchronous Fashion on the client side
+
+You can leverage `queueCallable` from our [resilience API](../resilience/resilience.mdx#execution-variants) to run multiple OData requests in asynchronous & non-blocking way on the **client side**.
+
+:::
+<DocsRating />

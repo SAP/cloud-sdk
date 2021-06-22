@@ -13,8 +13,9 @@ keywords:
   - cache
   - JCache
   - CacheConfiguration
-image:
+
 ---
+import DocsRating from '../../../../src/sap/common-utils/DocsRating';
 
 Caching may improve your application's performance and responsiveness to your consumers.
 The SAP Cloud SDK for Java provides abstractions for caching that make it easy to integrate caching into an application with almost no configuration overhead.
@@ -47,7 +48,7 @@ Otherwise, you will face a runtime exception.
 ### Creating a Cache Configuration
 
 As described in our [Resilience section](https://sap.github.io/cloud-sdk/docs/java/features/resilience/resilience) the SAP Cloud SDK allows you to run any code in the context of one or more resilience patterns.
-Caching is also a resilience pattern so you can leverage the same API to build and apply a `CacheConfiguration`.
+Caching is also a resilience pattern, so you can leverage the same API to build and apply a `CacheConfiguration`.
 
 ```java
 CacheConfiguration cacheConfig = CacheConfiguration
@@ -104,8 +105,8 @@ How this timeout is applied can be configured through the [Expiration Strategy](
 By default, a cache entry is cleared once the configured duration has passed since the entry was created.
 
 Finally, parameters can be listed that further refine the caching functionality.
-Parameters values will be attached to the cache key.
-When the cache is accessed only entries with matching parameter values will be returned.
+Parameter values will be attached to the cache key.
+When the cache is accessed, only entries with matching parameter values will be returned.
 
 ```java
 // Set a parameter value
@@ -170,14 +171,14 @@ See the section on isolation levels under [Resilience](https://sap.github.io/clo
 ### Removing Cache Entries Manually
 
 The SAP Cloud SDK offers different possibilities to let you remove cached entries manually.
-First of all, you may remove individual cache entries by:
+First, you may remove individual cache entries by:
 
 ```java
 // respect tenant/principal and parameter isolation
 ResilienceDecorator.clearCache(resilienceConfig);
 ```
 
-This operation is implicitly tenant/principal aware and also considers parameters defined in the `CacheConfiguration` when choosing which entries to remove.
+This operation is implicitly tenant-aware/principal-aware and also considers parameters defined in the `CacheConfiguration` when choosing which entries to remove.
 
 Furthermore, should you need to remove all entries from a cache, you may use:
 
@@ -195,7 +196,7 @@ It intentionally ignores the isolation mode and, in consequence, affects all ten
 
 ## Advanced Cache Manipulation
 
-To get hold of the created cache instance and to use it for advanced operations like for e.g registering [event listeners](https://www.baeldung.com/jcache#listeners) you can use JCache API:
+To get hold of the created cache instance and to use it for advanced operations like for e.g. registering [event listeners](https://www.baeldung.com/jcache#listeners) you can use JCache API.
 
 ```java
 final Cache<SomeCacheKey, SomeResult> cache = Caching.getCachingProvider()
@@ -204,5 +205,6 @@ final Cache<SomeCacheKey, SomeResult> cache = Caching.getCachingProvider()
                                                      .registerCacheEntryListener(SimpleCacheEntryListener); //Registers the event listener
 ```
 
-where `SimpleCacheEntryListener` is a class that implements the interfaces of the required events with respect to cache defined in [EventType](https://javadoc.io/doc/javax.cache/cache-api/latest/javax/cache/event/EventType.html).
+`SimpleCacheEntryListener` is a class that implements the interfaces of the required events with respect to cache defined in [`EventType`](https://javadoc.io/doc/javax.cache/cache-api/latest/javax/cache/event/EventType.html).
 Note that the identifier of the resilience configuration is also the identifier of the cache associated with it.
+<DocsRating />

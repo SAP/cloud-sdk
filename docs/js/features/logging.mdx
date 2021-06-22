@@ -12,6 +12,7 @@ keywords:
   - exception
   - logging
 ---
+import DocsRating from '../../../src/sap/common-utils/DocsRating';
 
 ## Creating a Logger
 
@@ -91,7 +92,7 @@ try {
 
 You can disable this functionality with the `disableExceptionLogger()` method.
 
-## What Happens under the Hood
+## What Happens Under the Hood
 
 The SAP Cloud SDK logger instances are based on [winston](https://github.com/winstonjs/winston).
 A `logger` instance is created from a central container which knows all existing loggers.
@@ -113,7 +114,9 @@ unmuteLogger(); //unmute all loggers
 Besides a log level, each logger contains a `format` and `transports`.
 The SAP Cloud SDK sets [default values](https://github.com/SAP/cloud-sdk-js/blob/c8f11d600efbc28b6f6a89dec8552c518e204a0b/packages/util/src/logger/cloud-sdk-logger.ts#L97-L123) for these parts.
 
-The transport is set to `console` and the format is set to [local](https://github.com/SAP/cloud-sdk-js/blob/main/packages/util/src/logger/format/local.ts) or [kibana](https://github.com/SAP/cloud-sdk-js/blob/main/packages/util/src/logger/format/kibana.ts).
+The transport is set to `console` and the format is set to [local](https://github.com/SAP/cloud-sdk-js/blob/main/packages/util/src/logger/format/local.ts) or [`kibana`](https://github.com/SAP/cloud-sdk-js/blob/main/packages/util/src/logger/format/kibana.ts).
 If `VCAP_SERVICE` variables are present in the environment variables the `kibana` format is used, because the SAP Cloud SDK assumes your application is running on Cloud Foundry.
 
 In case you see a need for higher flexibility of the logging instance feel free to create an issue in our [repository](https://github.com/SAP/cloud-sdk-js) or make a contribution
+
+<DocsRating />

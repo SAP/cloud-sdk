@@ -13,10 +13,11 @@ keywords:
   - JavaScript
   - TypeScript
 ---
+import DocsRating from '../../../../src/sap/common-utils/DocsRating';
 
 ## Introduction
 
-Most applications developed on SAP Business Technology Platform (SCP) will integrate in some way with other LoB solutions and systems.
+Most applications developed on SAP Business Technology Platform (SCP) will integrate in some way with other line of business solutions and systems.
 Integration means the exchange of data and it is necessary to abstract the details on the data exchange from your codebase.
 The reasons for this abstraction are manifold: URLs defining a resource may change, authentication information should not be part of code, in case of a multi-customer application the locations depends on the customer, etc.
 
@@ -26,9 +27,9 @@ This object can be obtained at runtime of the application and contains informati
 - URL
 - Authentication
 - Proxy Settings (see the [proxy documentation](./proxy.mdx) for more details)
-- ...
+- and others
 
-The SAP Cloud SDK helps you receiving this object and provides also options for local testing outside the SCP.
+The SAP Cloud SDK helps you receive this object and provides also options for local testing outside the SCP.
 
 The SAP Cloud SDK provides a generator to create a client or data model based on a service definition.
 For SAP S/4HANA this client has been created and published to npm.
@@ -43,11 +44,11 @@ BusinessPartner.requestBuilder()
   .execute(yourDestination);
 ```
 
-where `yourDestination` is a [`Destination` object](pathname:///api/1.32.0/interfaces/sap_cloud_sdk_core.destination).
+`yourDestination` is a [`Destination` object](pathname:///api/1.32.0/interfaces/sap_cloud_sdk_core.destination).
 In principle, you could create a destination object yourself or read it from somewhere and then pass it to the `execute()` method.
 However, this would not be very flexible and convenient as discussed above.
 The SAP Cloud SDK provides some help for this problem.
-If just a destinationName is provided i.e.:
+If just a `destinationName` is provided i.e.:
 
 ```js
 .execute({"destinationName": 'myDestination'})
@@ -97,7 +98,7 @@ The advantage of files is that they can be excluded from the repository since th
 
 The service credentials, in other words `VCAP_SERVICES` environment variables, may contain a destination.
 If you want to use this information, the name of the service instance must be provided as the destination name.
-Currently two services types are supported out of the box `business-logging` and `s4-hana-cloud` with the following transformation functions:
+Currently, two services types are supported out of the box `business-logging` and `s4-hana-cloud` with the following transformation functions:
 
 ```js
 //business-logging
@@ -142,9 +143,9 @@ For a simple service, this would be the end of the story.
 
 However, the destination service is special in a way that it is a `tenant aware service`.
 Such services make it possible to build multi-tenant applications.
-So what defines a tenant aware service?
+So, what defines a tenant aware service?
 
-Assume you want to build a simple application showing the 5 newest business-partner in an S/4 system.
+Assume you want to build a simple application showing the 5 newest business-partner in an SAP S/4HANA system.
 You want to offer this application as a service to customers.
 Of course, you want to make this service cost-efficient and host it only once and let multiple customers use it.
 This leads now naturally to the requirement that your service needs to return the data related to the specific customers.
@@ -184,22 +185,24 @@ The selection strategy can be passed as an optional argument to the `.execute()`
 The default value is `subscriberFirst`.
 The selection strategies can be used to control for which account a destination lookup is attempted:
 
-- AlwaysSubscriber: Only try to get destinations from the subscriber account.
+- `AlwaysSubscriber`: Only try to get destinations from the subscriber account.
   A valid JWT is mandatory to receive something.
-- AlwaysProvider: Only try to get destination from the provider account.
+- `AlwaysProvider`: Only try to get destination from the provider account.
   A JWT is not needed.
   Even if you present a subscriber JWT the provider destination will be returned if present.
-- SubscriberFirst: Tries to get from the subscriber first using the JWT.
-  If no valid JWT is provided or the destination is not found it tries the provider as described for alwaysProvider.
+- `SubscriberFirst`: Tries to get from the subscriber first using the JWT.
+  If no valid JWT is provided or the destination is not found it tries the provider as described for `AlwaysProvider`.
 
 :::note
+
 One aspect has been left out for simplicity.
 In principle, it is possible to define destinations not only on the account level but also on the destination service level.
 These destinations are called `instance destinations` since they are tied to a service binding called instance on SCP.
 In every request, these destinations are added to the destinations returned by the destination service.
+
 :::
 
-#### Destination Lookup without a JWT
+#### Destination Lookup Without a JSON Web Token
 
 There are situations where you do not have a JWT issued by the XSUAA but need to look a destination up e.g. in background processes.
 In such situations the property `iss` of the `DestinationAccessorOptions` can be used:
@@ -209,16 +212,20 @@ In such situations the property `iss` of the `DestinationAccessorOptions` can be
   { destinationName: 'myDestination' },
   { iss: yourIssuerValue }
  )
+```
 
 The value for `iss` is supposed to be the same as in a JWT issued from the XSUAA e.g. `https://yourSubdomain.localhost:8080/uaa/oauth/token`.
 In principle only the host of the URL is relevant but since the same parsing and replacement methods are used for the JWT handling, the URL has to be provided in the format above.
 
 :::note
-If a JWT is used in the destination lookup a validation of the provided token is performed.
+
+If a JWT is used in the destination lookup, a validation of the provided token is performed.
 This validation ensures that the JWT has not been manipulated.
 If only the `iss` is provided no such validation is performed.
 Note that the given subdomain value defines from which tenant destinations are fetched.
 So a wrong value may break the isolation for tenants.
 It is your responsibility as a developer to ensure that the provided value for the `iss` property is valid.
+
 :::
-```
+
+<DocsRating />

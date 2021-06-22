@@ -15,11 +15,12 @@ keywords:
 ---
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
+import DocsRating from '../../../src/sap/common-utils/DocsRating';
 
 ## What is the Business Application Studio?
 
-The Business Application Studio (BAS) is a development environment offered as a service on the SAP BTP, Cloud Foundry (CF) environment .
-You can simply subscribe to the BAS and from there quickly start developing without installing node, git, Visual Studio Code, or other tools.
+The Business Application Studio (BAS) is a development environment offered as a service on the SAP BTP, Cloud Foundry (CF) environment.
+You can subscribe to the BAS and from there quickly start developing without installing node, git, Visual Studio Code, or other tools.
 The solution looks and feels like Visual Studio Code, which is no surprise since it is based on [Eclipse Theia](https://theia-ide.org/), the open source version of Visual Studio Code.
 
 However, SAP added a few useful features to the BAS.
@@ -80,7 +81,7 @@ You can test this flow by using a simple `curl` command without any code.
 curl <destinationName>.dest/path/to/service
 ```
 
-So if your destination is called `S4H_Test.dest` and you want to query the catalogue service the command would be:
+So if your destination is called `S4H_Test.dest` and you want to query the catalog service the command would be:
 
 ```bash
 curl -v -i "S4H_Test.dest/sap/opu/odata/iwfnd/catalogservice;v=2/ServiceCollection?%24top=1"
@@ -210,7 +211,7 @@ process.env.no_proxy = process.env.no_proxy  + ",<YourDestinationUrl>"
 
 Cloud systems are reachable via the internet and you do not need any cloud connector to reach them.
 The same is true for the destination service of the SAP Business Technology Platform.
-Hence you can use the same approach locally and in production.
+Hence, you can use the same approach locally and in production.
 
 ### Prerequisite: Service Setup
 
@@ -233,8 +234,10 @@ This means that flows like `OAuth2SAMLBearerAssertion` and `OAuth2UserTokenExcha
 This is possible in principle, but difficult within the local development environment.
 We recommend creating dedicated development destinations with authentications flows like:
 
-- OAuth2ClientCredentials
-- BasicAuthentication
-- ClientCertificateAuthentication (here we wait for a fix on the [http-proxy-agent](https://github.com/TooTallNate/node-https-proxy-agent/pull/111) or you have to disable the proxy
+- `OAuth2ClientCredentials`
+- `BasicAuthentication`
+- `ClientCertificateAuthentication` (here we wait for a fix on the [http-proxy-agent](https://github.com/TooTallNate/node-https-proxy-agent/pull/111) or you have to disable the proxy
 
 Note that for the connection to the cloud system the destinations do not need the two properties `WebIDEEnabled` and `HTML5.DynamicDestination`, because the BAS connectivity proxy is not needed.
+
+<DocsRating />

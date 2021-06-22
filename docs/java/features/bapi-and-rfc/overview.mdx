@@ -16,6 +16,7 @@ keywords:
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import DocsRating from '../../../../src/sap/common-utils/DocsRating';
 
 ## What Is A BAPI? What Is An RFC Module?
 
@@ -66,8 +67,8 @@ We build an app that we deploy to the SAP BTP, Cloud Foundry environment.
 This app exposes a servlet which invokes a BAPI to retrieve cost center information from e.g. SAP S/4HANA.
 The servlet has two input parameters which we supply in the query string:
 
-- _destinationName_: Defines which SAP BTP destination to use for connecting to SAP S/4HANA.
-- _controllingArea_: Defines the controlling area for the cost center retrieval.
+- `destinationName`: Defines which SAP BTP destination to use for connecting to SAP S/4HANA.
+- `controllingArea`: Defines the controlling area for the cost center retrieval.
 
 The app retrieves the SAP BTP destination with SAP Cloud SDK core capabilities, creates a BAPI request, and issues that to SAP S/4HANA through the SAP Cloud Connector.
 We use the SAP Cloud Connector to access an SAP S/4HANA On-premise system.
@@ -102,7 +103,8 @@ public class CostCenter {
 
 ```
 
-The annotation `@Value` is a class-level annotation that comes from [Lombok](https://projectlombok.org/), check outs its [documentation](https://projectlombok.org/features/Value) when curious.
+The annotation `@Value` is a class-level annotation that comes from [Lombok](https://projectlombok.org/).
+Check out its [documentation](https://projectlombok.org/features/Value) if you are curious.
 
 We annotate every class member with `@ElementName` declaring the respective ABAP field name.
 The SAP Cloud SDK uses this metadata to map the ABAP field to the Java field.
@@ -137,7 +139,7 @@ protected void doGet(final HttpServletRequest request, final HttpServletResponse
 ...
 ```
 
-Thereafter we instruct the SAP Cloud SDK to retrieve the SAP BTP destination per the provided name.
+Thereafter, we instruct the SAP Cloud SDK to retrieve the SAP BTP destination per the provided name.
 
 ```java
 final Destination destination = DestinationAccessor.getDestination(destinationName);
@@ -173,7 +175,7 @@ Using `withTable` allows us to access the table parameter result after BAPI proc
 If we would not call this method, the SAP Cloud SDK would ignore this tables parameter from the BAPI response, even though it contains some data.
 Again, the second parameter is the ABAP data type.
 
-The invocation of method `withTableAsReturn` instructs the SAP Cloud SDK to treat the tables parameter with the name `BAPIRET2` as BAPI result table.
+The invocation of method `withTableAsReturn` instructs the SAP Cloud SDK to treat the tables' parameter with the name `BAPIRET2` as BAPI result table.
 We'll see later how that helps us access the BAPI result in Java.
 
 The BAPI invocation gets finished with a call to `.execute(destination)`.
@@ -276,7 +278,7 @@ Official tutorials for setting up these scenarios can be found [here](https://he
 
 If tenant-aware access of JCo and its required microservices or Principal Propagation want to be achieved, it is required that the app is invoked with a JWT containing the user context.
 For that, securing the backend with an app router is required.
-Follow [this tutorial](https://developers.sap.com/tutorials/s4sdk-secure-cloudfoundry.html) to setup the app router.
+Follow [this tutorial](https://developers.sap.com/tutorials/s4sdk-secure-cloudfoundry.html) to set up the app router.
 
 Furthermore, if you want to call JCo from any newly created thread, please check out the documentation [here](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/b14eeb94be944c62a5880bde50c59aef.html).
 Be aware to exclude the `java-api` artifact, since this is transitively included with the SAP Cloud SDK!
@@ -293,7 +295,7 @@ Navigate to `Connectivity` -> `Destinations` and create a new RFC destination wi
 - _Name_: `BAPI-TEST` (you can also choose your own name)
 - _Type_: `RFC`
 - _ProxyType_: `OnPremise`
-- _User_: Enter the SAP S/4HANA user name
+- _User_: Enter the SAP S/4HANA username
 - _Password_: Enter the SAP S/4HANA password
 - _Additional properties_:
   - `jco.client.ashost`: Enter the SAP S/4HANA hostname
@@ -303,7 +305,9 @@ Navigate to `Connectivity` -> `Destinations` and create a new RFC destination wi
 For performance improvements of your app, please consider using optional properties such as `jco.client.serialization_format` (see further in [JCo documentation](https://support.sap.com/en/product/connectors/jco.html)).
 
 :::info
+
 This destination setup is exemplary for accessing an On-premise SAP S/4HANA system directly, if you want to access it e.g. via message server logon or you want to access a cloud system via WebSocketRFC, please adapt the properties as described in the [official documentation](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/ab6eac92978f469e9eabe3d477ca2411.html).
+
 :::
 
 ### Call the Test App
@@ -311,7 +315,7 @@ This destination setup is exemplary for accessing an On-premise SAP S/4HANA syst
 Our test app has the two servlet parameters `destinationName` and `controllingArea`.
 Suppose our destination has the name `BAPI-TEST` and we intend to read cost centers from controlling area `0001`, we'd call the test app with the relative path `hello?destinationName=BAPI-TEST&controllingArea=0001`.
 
-Access the test app through your browser with the address comprising of the full hostname plus the relative path.
+Access the test app through your browser with the address consisting of the full hostname plus the relative path.
 You should see the login prompt of the protected backend.
 After authentication, the servlet is invoked and you should see the servlet response printing the cost center details.
 
@@ -332,7 +336,7 @@ new BapiRequest("BAPI_DEMO", true)
     .end();
 ```
 
-### Recursive tables and structures in parameters of a BapiRequest
+### Recursive Tables and Structures in Parameters of a BapiRequest
 
 The following example demonstrates the API for recursive tables and structures in parameters of `BapiRequest` for both protocols: _JCo_ and _SOAP_.
 
@@ -447,7 +451,7 @@ Some configuration steps differ depending on which Maven archetype (Spring or To
 
 #### Download and Install JCo Library
 
-- Download the JCO library from the official [product page](https://support.sap.com/en/product/connectors/jco.html).
+- Download the JCo library from the official [product page](https://support.sap.com/en/product/connectors/jco.html).
 - Extract the downloaded archive and note the JCo version (e.g., `3.1.2`) from the `Readme.txt` file.
 - Install the JAR file to your local Maven cache by running the following command:
   :::tip
@@ -582,7 +586,9 @@ JCo considers the system property `jco.destinations.dir` to look for destination
 The property value must be the directory where the destination file resides.
 
 :::note
+
 Note that the system property must point to the directory, not to the Destination file.
+
 :::
 
 You can set the property in your Java code like so:
@@ -637,7 +643,7 @@ set destinations=[{name: "destinationName"}]
 
 <TabItem value="mac">
 
-You can set the destinations environment variable by the following command:
+You can set the destinations' environment variable by the following command:
 
 ```
 export destinations=[{name: "destinationName"}]
@@ -678,3 +684,5 @@ Then, access the HTTP endpoint exposed by your app.
 JCo supports RFC calls from the client-side via web sockets as of version `3.1.2`.
 For this scenario, a certain configuration is required within the SAP ERP system as well as new RFC destination properties must be configured.
 Download the JCo package from [JCo product website](https://support.sap.com/jco) and check out the contained release notes for further details.
+
+<DocsRating />

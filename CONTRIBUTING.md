@@ -30,16 +30,20 @@ Feel free to also check this [guide on mindful writing](https://sap.github.io/cl
 
 ## Dos and Don'ts
 
+<!-- vale off -->
+
 - Be concise.
-- Put each sentence on it's own line to keep the changelogs clean.
+- Put each sentence on its own line to keep the changelogs clean.
 - Avoid abbreviations or introduce them unless it's obvious and widely adopted.
 - Don't sell your features, explain them.
 - Use simple words and short sentences.
 - Avoid statements about the complexity (e.g. "simply do this") as it can be discouraging for less-experienced readers.
 - Add meaningful examples wherever possible.
-- Add links whenever you mention a third party resources.
+- Add links whenever you mention a third party resource.
 - Build upon already available content and use it for reference.
 - Write incrementally.
+
+<!-- vale on -->
 
 ## Linting and Formatting
 
