@@ -4,6 +4,7 @@ import CustomRequestConfigNoteContent from './custom-request-config-note.mdx';
 import ExecuteRawOverviewContent from './execute-raw-overview.mdx';
 import ExecuteRawUseCasesContent from './execute-raw-use-cases.mdx';
 import SkipCsrfContent from './skip-csrf-token.mdx';
+import DocsRating from '../../../../src/sap/common-utils/DocsRating';
 
 export function CustomRequestConfig() {
   return <CustomRequestConfigContent />;
@@ -24,3 +25,5 @@ export function ExecuteRawUseCases() {
 export function SkipCsrf() {
   return <SkipCsrfContent />;
 }
+
+<DocsRating />

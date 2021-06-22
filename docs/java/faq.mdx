@@ -13,6 +13,7 @@ keywords:
   - cloud sdk
   - sap cloud sdk
 ---
+import DocsRating from '../../src/sap/common-utils/DocsRating';
 
 ## General Questions
 
@@ -79,7 +80,6 @@ These errors are not always caused by flaws in the SAP Cloud SDK as we often see
 Some of them even have known flaws for which we have workarounds.
 If you can't solve your issue via debugging and experimenting, please, report your incident via [Stack Overflow](https://stackoverflow.com/questions/tagged/sap-cloud-sdk) or our GitHub repositories.
 
-
 ### How To Use the OData Attachment Service?
 
 You are trying to use the virtual data model for [AttachmentService](https://api.sap.com/api/API_CV_ATTACHMENT_SRV/overview) as provided by the SAP Cloud SDK, however it's not possible to run the request successfully, the attachments will not be uploaded.
@@ -123,8 +123,9 @@ HttpResponse response = httpClient.execute(create);
 // Parse response
 String responseText = EntityUtils.toString(response.getEntity());
 ```
-  
+
 Once you've decided on `InputStream` or `File` as underlying data type for `HttpEntity`, you need to apply values for HTTP headers:
+
 - `x-csrf-token` - value from previous HEAD request
 - `Content-Type` - value depending on file
 - `Slug` - value in single-quotes `'`
@@ -146,7 +147,6 @@ AttachmentContent result = responseObject.get("d");
 ```
 
 </details>
-
 
 ## Open API Related Questions
 
@@ -172,3 +172,4 @@ Let us know if you miss functionality of the SAP BTP for the Cloud Foundry envir
 We still provide full support for SAP Business Technology Platform Neo.
 However, we do not recommend starting new projects with SAP BTP for the Neo environment, as the Cloud Foundry environment is better suited for apps and SAP S/4HANA extension development.
 Also, for Neo we provide out-of-the-box support with only servlet based applications and not spring based applications.
+<DocsRating />
