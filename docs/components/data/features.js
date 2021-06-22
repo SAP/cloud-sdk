@@ -70,7 +70,7 @@ export const features = [
     },
     js: {
       status: ':heavy_check_mark:',
-      docsLink: `[docs](${baseUrl}/js/features/odata/type-safe-client-odata-v4.mdx)`,
+      docsLink: `[docs](${baseUrl}/js/features/odata/use-odata-v4-type-safe-client-for-javascript-typescript)`,
       note: ''
     }
   },
