@@ -85,7 +85,7 @@ This is because upon authentication at the target system, a session cookie is re
 For subsequent calls, the service then expects authenticated clients to include their session cookie.
 
 By default, the SAP Cloud SDK uses the `RequestScopedHttpClientCache` to store `HttpClient` instances for the duration of a specific (incoming) request.
-Using this default strategy results into deleting the `HttpClient` (together with the session cookie) that was used to auhtorize at the target system, once the initial request has been handled.
+Using this default strategy results into deleting the `HttpClient` (together with the session cookie) that was used to authorize at the target system, once the initial request has been handled.
 To avoid authorizing over and over again, the SAP Cloud SDK offers the `TimeScopedHttpClientCache`, which keeps existing `HttpClient`s for a certain period of time.
 These instances are then automatically reused for consecutive (incoming) requests, so that the session is retained.
 
