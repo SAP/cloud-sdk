@@ -62,34 +62,39 @@ To continue using the latest features outlined in the release notes for version 
 ### Compatibility Notes
 
 - We updated the (OData V2) Trial Balance - Read (`C_TRIALBALANCE_CDS`) VDM to the [newest release 2105 of SAP S/4HANA Cloud](https://news.sap.com/2021/05/sap-s4hana-cloud-release-2105/)
-  
+
   **Caution:** The service introduced some intended **breaking changes** with the latest update which are now, in consequence, also present in the type-safe client (VDM) by the SDK.
 
 ### New Functionality
 
 - The type-safe client (VDM) for OData V4 now gives access to bound functions and actions.
   Entities will now expose all operations bound to their type on their class.
-  
+
   For example assume there is a function `IsHappy` defined for an entity `Person`, then you can use:
+
   ```java
   service.forEntity(person)
         .applyFunction(Person.isHappy());
   ```
+
   In case the function is bound to a collection use e.g.:
+
   ```java
   service.applyFunction(Person.AreAllHappy());
   ```
+
   Furthermore, if a function is marked by the service as `composable` you can also apply an operation to the result of a function directly:
+
   ```java
   service.forEntity(person)
         .withFunction(Person.getBestFriend())
         .navigateTo(Person.FRIENDS)
         .getAll();
   ```
-  
+
   The creation of the new operation types is enabled in the OData V4 generator as well.
   Check out the full [documentation of the feature](https://sap.github.io/cloud-sdk/docs/java/features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java#odata-functions-and-actions) for more information.
-  
+
 - We updated the [OData type-safe client also known as the VDM](https://sap.github.io/cloud-sdk/docs/java/features/odata/overview/) to the newest release FPS2 of SAP S/4HANA on-premise 2020. This also includes completely new services added (available as usual in packages `com.sap.cloud.sdk.s4hana.onpremise.v2020.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.onpremise.v2020.datamodel.odatav4.services`), new operations in previously existing services, and new entity types.
 
 ### Improvements
