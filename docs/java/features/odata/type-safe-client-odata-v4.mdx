@@ -352,6 +352,45 @@ service.forEntity(myEntity)
 
 For more details on the API see also the section about [operating on navigation properties](#navigation-properties) directly.
 
+### Accessing Extensible or Custom Fields
+The concept of **In-app Extensibility** allows users to introduce additional fields to an existing SAP S/4HANA service.
+To consume and work with such custom fields in your application code, SAP Cloud SDK introduces the concept of custom fields.
+
+You can set custom fields on an entity through the `.setCustomField` method and read the value in the entity using `.getCustomField(fieldName)`
+
+```java
+businessPartner.setCustomField("shoeSize", 10);
+
+final int shoeSize = businessPartner.getCustomField("shoeSize");
+```
+If you are unsure about the custom fields added by the customer, you can still use `getCustomFieldNames()` to obtain the set of custom fields introduced.
+Use this set further on to pull values from the entity.
+
+For e.g.
+
+```java
+final Set<String> customfieldNames = businessPartner.getCustomFieldNames();
+
+for(String customFieldName: customfieldNames){
+    final Object customField = businessPartner.getCustomField(customFieldName);
+ }
+```
+The accessors for custom fields respect multitenancy.
+`getCustomFieldNames()`, for example, fetches only custom field names available in the context of the current tenant.
+
+#### Using Custom Fields in system query options
+You can also pass custom fields to select or filter system query options:
+
+```java
+service().getAllBusinessPartner()
+         .select(new BusinessPartnerField<>(new SimpleProperty.NumericInteger<>(BusinessPartner.class, "ShoeSize"))
+         .select(() -> "AnotherCustomField")
+         .filter(new SimpleProperty.NumericInteger<>(BusinessPartner.class, "ShoeSize").equalTo(42))
+         .execute(destination)
+```
+
+Please be aware that such an example can work for all tenants only if `ShoeSize` and `AnotherCustomField` are custom fields that have been defined by all tenants.
+
 ### Batch Requests
 
 Batch requests allow wrapping multiple OData requests into one single batch call.
