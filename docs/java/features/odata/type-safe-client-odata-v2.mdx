@@ -390,7 +390,9 @@ businessPartner.setCustomField("shoeSize", 10);
 
 final int shoeSize = businessPartner.getCustomField("shoeSize");
 ```
-If you don't know the name of the custom fields added by the customer, you can still use `getCustomFieldNames()` to obtain the set of custom fields introduced and use this set further on to pull values from the entity.
+If you are unsure about the custom fields added by the customer, you can still use `getCustomFieldNames()` to obtain the set of custom fields introduced.
+Use this set further on to pull values from the entity.
+
 For e.g.
 
 ```java
@@ -404,7 +406,7 @@ for(String customFieldName: customfieldNames){
 The accessors for custom fields respect multitenancy.
 `getCustomFieldNames()`, for example, fetches only custom field names available in the context of the current tenant.
 
-### Using Custom Fields in system query options
+#### Using Custom Fields in system query options
 You can also pass custom fields to select or filter system query options:
 
 <Tabs groupId="odataProtocol" defaultValue="v2" values={[ { label: 'OData V2', value: 'v2', }, { label: 'OData V2 (Deprecated)', value: 'v2-deprecated', } ]}>
