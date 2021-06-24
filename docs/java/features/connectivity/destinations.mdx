@@ -264,7 +264,7 @@ In case there is a destination available on both the levels with the same name, 
 Below is the sample call to `tryGetAllDestinations`:
 
 ```java
-final Try<Iterable<ScpCfDestination>> destinations = destinationLoader.tryGetAllDestinations(options);
+Try<Iterable<ScpCfDestination>> destinations = destinationLoader.tryGetAllDestinations(options);
 ```
 
 In the above call `destinationLoader` needs to be an instance of `ScpCfDestinationLoader`.
@@ -276,7 +276,7 @@ If your app requires more time when fetching destinations, you may create your o
 
 ```java
 // Allow requests to take up to 10 seconds instead of just 6
-final DestinationLoader destinationLoader = new ScpCfDestinationLoader(Duration.ofSecond(10));
+DestinationLoader destinationLoader = new ScpCfDestinationLoader(Duration.ofSecond(10));
 ```
 
 This operation overrides the default timeout duration so that you are free to choose whatever value fits your needs.
@@ -300,7 +300,7 @@ It defines how Destinations Service is queried.
 In a simple application without provider/subscriber setup, your initial configuration is as simple as:
 
 ```java
-final DestinationOptions options = DestinationOptions.builder().build();
+DestinationOptions options = DestinationOptions.builder().build();
 ```
 
 For a provider/subscriber setup, a [retrieval strategy](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/connectivity/ScpCfDestinationRetrievalStrategy.html) must be chosen according to your particular use case from:
@@ -312,16 +312,40 @@ For a provider/subscriber setup, a [retrieval strategy](https://help.sap.com/doc
 Here is an example for `SUBSCRIBER_THEN_PROVIDER` option:
 
 ```java
-final DestinationOptions options =
-          DestinationOptions
-              .builder()
-              .augmentBuilder(
-                  ScpCfDestinationOptionsAugmenter.augmenter().retrievalStrategy(
-                      ScpCfDestinationRetrievalStrategy.SUBSCRIBER_THEN_PROVIDER))
-              .build();
+DestinationOptions options =
+    DestinationOptions
+        .builder()
+        .augmentBuilder(
+            ScpCfDestinationOptionsAugmenter
+                .augmenter()
+                .retrievalStrategy(ScpCfDestinationRetrievalStrategy.SUBSCRIBER_THEN_PROVIDER))
+        .build();
 ```
 
-You can similarly use other retrieval options.
+Besides the retreival strategy, the SAP Cloud SDK also offers a _token exchange strategy_ that lets you change the behavior when authentication requires an user token exchange.
+There are three different options available:
+
+- `LOOKUP_THEN_EXCHANGE` (default)
+- `LOOKUP_ONLY`
+- `EXCHANGE_ONLY`
+
+By default, the SAP Cloud SDK first performs a "look up" request against the destination service, which yields the destination.
+This is needed to get the authentication type configured in the destination, which might then require an user token exchange.
+
+In special cases, for example, if you know that the destination you are about to retrieve requires an user token exchange, performance can be improved by skipping the initial "look up" request like so:
+
+```java
+DestinationOptions options =
+    DestinationOptions
+        .builder()
+        .augmentBuilder(
+            ScpCfDestinationOptionsAugmenter
+                .augmenter()
+                .tokenExchangeStrategy(ScpCfDestinationTokenExchangeStrategy.EXCHANGE_ONLY))
+        .build();
+
+Try<Destination> destination = DestinationAccessor.getLoader().tryGetDestination("MyDestination", options);
+```
 
 ## Configure HTTP Destinations for Local Deployment
 
