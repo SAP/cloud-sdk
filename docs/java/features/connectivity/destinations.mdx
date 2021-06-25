@@ -329,8 +329,8 @@ There are three different options available:
 - `LOOKUP_ONLY`
 - `EXCHANGE_ONLY`
 
-By default, the SAP Cloud SDK first performs a "look up" request against the destination service, which yields the destination.
-This is needed to get the authentication type configured in the destination, which might then require a user token exchange.
+By default, the SAP Cloud SDK first looks up the destination on the destination service and evaluates the authentication type.
+If the authentication type requires a user token exchange the SAP Cloud SDK immediately performs that exchange.
 
 If you know that the destination you are about to retrieve requires a user token exchange you can improve performance by skipping the initial "look up" request like so:
 
