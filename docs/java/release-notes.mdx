@@ -71,7 +71,8 @@ The dependency is used in a Maven plugin and hence there is no harm during the r
 ### Compatibility Notes
 
 - We refactored the way Java names (e.g., for classes, methods, fields, etc.) are being generated in both the OData V2 and the OData V4 VDM generator.
-  This refactoring aims to grant more power over what names are to be used in the VDM to implementations of the `NamingStrategy` interface. <br>
+  This refactoring aims to grant more power over what names are to be used in the VDM to implementations of the `NamingStrategy` interface.
+
   Hereby, we changed the following interfaces and classes in an incompatible way:
   * The `NamingStrategy` interface has been redesigned entirely, leading to compilation errors for existing implementations.
   * The `DefaultNamingStrategy` has been renamed to `S4HanaNamingStrategy`. It stays the default value for the generator, though.
@@ -83,9 +84,9 @@ The dependency is used in a Maven plugin and hence there is no harm during the r
   * `AbstractNamingStrategy`
   * `S4HanaNamingStrategy`
   
-  **Users of the Maven Plugin or the CLI variant of the generators are (most likely) not affected by any incompatible changes.** <br>
+  **Users of the Maven Plugin or the CLI variant of the generators are (most likely) not affected by any incompatible changes.**
   
-- We fixed a typo in the `com.sap.cloud.sdk.datamodel.odata.utility` (previously `utililty`) package name. <br>
+- We fixed a typo in the `com.sap.cloud.sdk.datamodel.odata.utility` (previously `utililty`) package name.
   The only class affected by this change is the `LegacyClassScanner`, which is meant for internal usage only.
 
 
