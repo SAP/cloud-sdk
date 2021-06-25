@@ -56,6 +56,84 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed issues
 -->
 
+## 3.48.0 - July 1, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.48.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+
+### Known issues
+
+- The module `usage-analytics` uses the dependency `org.jdom:jdom:2.0.6` which is affected by the vulnerability [CVE-2021-33813](https://nvd.nist.gov/vuln/detail/CVE-2021-33813).
+There was no fixed dependency version available at the release date.
+We'll update this dependency once a secure version is available.  
+The dependency is used in a Maven plugin and hence there is no harm during the runtime of any BTP application.
+
+
+### Compatibility Notes
+
+- We refactored the way Java names (e.g., for classes, methods, fields, etc.) are being generated in both the OData V2 and the OData V4 VDM generator.
+  This refactoring aims to grant more power over what names are to be used in the VDM to implementations of the `NamingStrategy` interface. <br>
+  Hereby, we changed the following interfaces and classes in an incompatible way:
+  * The `NamingStrategy` interface has been redesigned entirely, leading to compilation errors for existing implementations.
+  * The `DefaultNamingStrategy` has been renamed to `S4HanaNamingStrategy`. It stays the default value for the generator, though.
+  * The `DefaultNamingStrategy.NameSource` enumeration has been moved to the package rather than being nested inside a class.
+  
+  Additionally, the entire logic, which consists of the items listed below, has been moved to the `com.sap.cloud.sdk.datamodel.odata.utility` package:
+  * `NameSource`
+  * `NamingStrategy`
+  * `AbstractNamingStrategy`
+  * `S4HanaNamingStrategy`
+  
+  **Users of the Maven Plugin or the CLI variant of the generators are (most likely) not affected by any incompatible changes.** <br>
+  
+- We fixed a typo in the `com.sap.cloud.sdk.datamodel.odata.utility` (previously `utililty`) package name. <br>
+  The only class affected by this change is the `LegacyClassScanner`, which is meant for internal usage only.
+
+
+### New Functionality
+
+- We added the `ScpCfDestinationTokenExchangeStrategy`, which can be used to change the user token exchange behavior when retrieving destinations on BTP Cloud Foundry.
+  
+  By default, the `ScpCfDestinationLoader` always performs an initial "look up" request against the destination service.
+  This is needed to get the authentication type configured in the destination, which might then require a user token exchange to authenticate at the target system.
+  
+  The newly added `ScpCfDestinationTokenExchangeStrategy` allows users to skip either the initial "look up" to increase performance, or the user token exchange:
+
+  ```Java
+  // configure the ScpCfDestinationLoader to perform the user token exchange immediately
+  DestinationOptions options =
+    DestinationOptions
+        .builder()
+        .augmentBuilder(
+            ScpCfDestinationOptionsAugmenter.augmenter().tokenExchangeStrategy(
+                ScpCfDestinationTokenExchangeStrategy.EXCHANGE_ONLY))
+        .build();
+
+  Try<Destination> destination = DestinationAccessor.getLoader().tryGetDestination("MyDestination", options);
+  ```
+
+- The OData V4 Generator now supports parameter reordering also on bound operations (both functions and actions).
+  The generator will now maintain the parameter order of a previously generated VDM, even if the parameter ordering in the EDMX changes.
+
+### Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update Neo JavaEE 7 SDK from `1.97.11` to `1.98.8`
+  - Other dependency updates:
+    - Minor version updates:
+        - Update Caffeine from `2.9.0` to `2.9.1`
+        - Update Commons IO from `2.9.0` to `2.10.0`
+        - Update Eclipse Link from `2.7.7` to `2.7.8`
+        - Update Mockito from `3.10.0` to `3.11.1`
+        - Update Protobuf from `3.17.1` to `3.17.3`
+        - Update Bouncycastle from `1.68` to `1.69`
+        - Update Wiremock from `2.28.0` to `2.28.1`
+
+### Fixed issues
+
+- We fixed an issue with the OData V4 VDM where bound operations on entity sets would target an incorrect URL.
+- We fixed an issue in both the OData V2 and V4 VDM generators where certain OpenAPI fields on a path item led to a generator warning and caused the generation to fail if the flag `fail-on-warning` was activated.
+
 ## 3.47.0 - June 17, 2021
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.47.0) | [Javadoc](https://help.sap.com/doc/80f27f1f2f0a474896c5cc73fa84499a/1.0/en-US/index.html)
