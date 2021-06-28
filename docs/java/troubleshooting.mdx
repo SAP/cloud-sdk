@@ -185,4 +185,21 @@ Your OData request returns with a 400 (bad request) or 500 (server error) HTTP c
 
   In addition, you can leverage the [low-level generic OData client](./features/odata/generic-untyped-odata-client) which gives you more flexibility to adapt requests to overcome potential issues with the typed APIs.
 
+## `java.lang.IllegalArgumentException: JClass name empty`
+
+:::info **Symptoms**
+While generating a type-safe API client for an OData service, you encounter the exception message `"java.lang.IllegalArgumentException: JClass name empty"`.
+:::
+
+**Possible causes:**
+
+- The service specification (`EDMX` file) contains an entity that is named `Type`, `Type_`, or just `_`.
+
+  By default, both the OData V2 and V4 VDM generators use the `S4HanaNamingStrategy` to generate valid Java names from the given service specification.
+  Hereby, it removes pre- and suffixes that are commonly used in SAP service specifications, such as the suffixes `Type` and `_` for entities.
+  In special cases, where an entity name consist of those suffixes only, that logic leads to the generation of an empty class name, which, in turn, then results in the observed exception.
+
+  To solve that issue, you can change the naming strategy used by the generator.
+  The SAP Cloud SDK additionally includes the `com.sap.cloud.sdk.datamodel.odata.utility.SimpleNamingStrategy` out-of-the-box, which does not perform any unnecessary pre- and suffix removal.
+
 <DocsRating />
