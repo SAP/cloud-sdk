@@ -16,4 +16,3 @@ export function SkipCsrfExample() {
 export function Etag() {
   return <EtagContent />;
 }
-<DocsRating />

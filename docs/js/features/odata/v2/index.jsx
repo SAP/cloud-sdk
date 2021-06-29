@@ -5,4 +5,3 @@ import DocsRating from '../../../../../src/sap/common-utils/DocsRating';
 export function Select() {
   return <SelectContent />;
 }
-<DocsRating />

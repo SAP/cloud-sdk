@@ -26,5 +26,3 @@ export function FilterOneToOne() {
 export function FilterFunctions() {
   return <FilterFunctionsContent />;
 }
-
-<DocsRating />

@@ -26,4 +26,3 @@ export function SkipCsrf() {
   return <SkipCsrfContent />;
 }
 
-<DocsRating />
