@@ -5,8 +5,10 @@ import DocsRating from '../sap/common-utils/DocsRating'
 export default function TOC(props) {
   return (
     <>
-      <OriginalTOC {...props} />
-      <DocsRating />
+      <div class="toc-wrapper">
+        <OriginalTOC {...props} />
+        <DocsRating />
+      </div>
     </>
   );
 }
