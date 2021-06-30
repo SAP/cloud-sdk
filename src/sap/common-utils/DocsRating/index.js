@@ -20,7 +20,7 @@ const DocsRating = ({ label }) => {
                 'Thanks for giving feedback!'
             ) : (
                 <>
-                    Is this page useful?
+                    Rate this page
                     <svg
                         className="i_negative"
                         alt="Dislike"
