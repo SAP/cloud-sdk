@@ -1,22 +1,25 @@
-import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import './docRating.css';
+import DocsRatingContext from './DocsRatingContext';
 <script src="https://sap.github.io/cloud-sdk/js/swa.js"></script>
 
-const DocsRating = ({ label }) => {
+const DocsRating = () => {
 
-    const [haveVoted, setHaveVoted] = useState(false);
+    const site = window.location.pathname;
+    const { ratedSites, addRatedSite } = useContext(DocsRatingContext);
+    const hasBeenRated = ratedSites.includes(site);
+
     const giveFeedback = value => {
 
         if (swa && swa.hasOwnProperty("trackCustomEvent")) {
             swa.trackCustomEvent("collectFeedback", value);
         }
-        setHaveVoted(true);
+        addRatedSite(site);
     };
 
     return (
         <div className="docsRating">
-            {haveVoted ? (
+            {hasBeenRated ? (
                 'Thanks for giving feedback!'
             ) : (
                 <>
