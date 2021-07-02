@@ -1,3 +1,4 @@
+import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 import React, { useContext } from 'react';
 import './docRating.css';
 import DocsRatingContext from './DocsRatingContext';
@@ -5,7 +6,7 @@ import DocsRatingContext from './DocsRatingContext';
 
 const DocsRating = () => {
 
-    const site = window.location.pathname;
+    const site = typeof window === 'undefined' ? "" : window.location.pathname; // workaround for docusaurus build stage
     const { ratedSites, addRatedSite } = useContext(DocsRatingContext);
     const hasBeenRated = ratedSites.includes(site);
 
