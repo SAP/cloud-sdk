@@ -4,6 +4,7 @@ import SkipContent from './skip.mdx';
 import FilterContent from './filter.mdx';
 import FilterOneToOneContent from './filter-one-to-one.mdx';
 import FilterFunctionsContent from './filter-functions.mdx';
+import DocsRating from '../../../../../../src/sap/common-utils/DocsRating';
 
 
 export function Top() {
@@ -25,3 +26,5 @@ export function FilterOneToOne() {
 export function FilterFunctions() {
   return <FilterFunctionsContent />;
 }
+
+<DocsRating />

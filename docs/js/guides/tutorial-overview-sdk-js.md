@@ -6,6 +6,7 @@ hide_table_of_contents: false
 sidebar_label: Tutorials Overview
 description: This document will give you an overview of the different tutorials for the SAP Cloud SDK for JavaScript.
 ---
+import DocsRating from '../../../src/sap/common-utils/DocsRating';
 
 To give you a quick and easy start to developing with the SAP Cloud SDK for JavaScript, we created a set of comprehensive tutorials.
 They'll help you kick-start your project and get you up to speed with the most frequent use-cases and valuable features of the SAP Cloud SDK.
@@ -75,3 +76,5 @@ Use the links below to quickly access your favorite tutorial and refresh your kn
 
 11. [Send Multiple OData Requests in Batch Mode with SAP Cloud SDK's Virtual Data Model](https://developers.sap.com/tutorials/cloudsdk-js-odata-batch-changeset.html)
     Build and execute OData batch requests for writing and retrieving data with the SAP Cloud SDK's Virtual Data Model in your Address Manager application.
+
+<DocsRating />
