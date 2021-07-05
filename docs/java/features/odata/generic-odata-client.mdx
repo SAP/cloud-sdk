@@ -46,13 +46,12 @@ Requests are represented by dedicated request classes for each operation.
 For example to read a collection of entities use:
 
 ```java
-new ODataRequestRead(servicePath, entityName, encodedQuery, ODataProtocol.V4);
-// e.g.
-new ODataRequestRead("/path/to/service", "A_Entity", "$select=Foo%20Bar", ODataProtocol.V4);
+StructuredQuery query = StructuredQuery.onEntity("A_Entity", ODataProtocol.V4);
+new ODataRequestRead("/path/to/service", query);
 ```
 
 :::tip
-Encoded queries can be created conveniently as described in [Building Queries below](#building-queries).
+Queries can be created conveniently as described in [Building Queries below](#building-queries).
 :::
 
 **Other Operations:**
