@@ -17,7 +17,6 @@ keywords:
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-import DocsRating from '../../../../src/sap/common-utils/DocsRating';
 
 The OData Generator allows for generating Java classes from the metadata of an OData service.
 These classes which are referred to as _typed OData client_ provide type-safe access to the service.
@@ -382,4 +381,16 @@ More details can be found on the Javadoc ([OData v2](https://help.sap.com/doc/b5
 </TabItem>
 </Tabs>
 
-<DocsRating />
+### Available Naming Strategies
+
+The SAP Cloud SDK offers two different naming strategies that can be used out-of-the-box:
+
+- `com.sap.cloud.sdk.datamodel.odata.utility.S4HanaNamingStrategy` (default)
+- `com.sap.cloud.sdk.datamodel.odata.utility.SimpleNamingStrategy`
+
+While both strategies, of course, generate syntactically valid Java names, the `S4HanaNamingStrategy` tries to make the names as aligned with common Java coding convention as possible.
+This is achieved by stripping away common pre- and suffixes used in SAP service specifications, such as the prefix `SAP_` or the suffix `Type`.
+Furthermore, some names are even extended by, for example, adding the prefix `to` to indicate a navigation property.
+
+In contrast to that, the `SimpleNamingStrategy` performs only the bare minimum of modifications to convert the specified names into valid Java syntax.
+

@@ -16,7 +16,6 @@ keywords:
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
-import DocsRating from '../../../../src/sap/common-utils/DocsRating';
 
 The SAP Cloud SDK offers some basic functionality that helps with connecting to other systems and services like SAP S/4HANA Cloud.
 The SAP Cloud SDK introduces the general concept of a `Destination` which holds basic information about how to connect to such a system.
@@ -264,7 +263,7 @@ In case there is a destination available on both the levels with the same name, 
 Below is the sample call to `tryGetAllDestinations`:
 
 ```java
-final Try<Iterable<ScpCfDestination>> destinations = destinationLoader.tryGetAllDestinations(options);
+Try<Iterable<ScpCfDestination>> destinations = destinationLoader.tryGetAllDestinations(options);
 ```
 
 In the above call `destinationLoader` needs to be an instance of `ScpCfDestinationLoader`.
@@ -276,7 +275,7 @@ If your app requires more time when fetching destinations, you may create your o
 
 ```java
 // Allow requests to take up to 10 seconds instead of just 6
-final DestinationLoader destinationLoader = new ScpCfDestinationLoader(Duration.ofSecond(10));
+DestinationLoader destinationLoader = new ScpCfDestinationLoader(Duration.ofSecond(10));
 ```
 
 This operation overrides the default timeout duration so that you are free to choose whatever value fits your needs.
@@ -300,7 +299,7 @@ It defines how Destinations Service is queried.
 In a simple application without provider/subscriber setup, your initial configuration is as simple as:
 
 ```java
-final DestinationOptions options = DestinationOptions.builder().build();
+DestinationOptions options = DestinationOptions.builder().build();
 ```
 
 For a provider/subscriber setup, a [retrieval strategy](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/connectivity/ScpCfDestinationRetrievalStrategy.html) must be chosen according to your particular use case from:
@@ -312,16 +311,40 @@ For a provider/subscriber setup, a [retrieval strategy](https://help.sap.com/doc
 Here is an example for `SUBSCRIBER_THEN_PROVIDER` option:
 
 ```java
-final DestinationOptions options =
-          DestinationOptions
-              .builder()
-              .augmentBuilder(
-                  ScpCfDestinationOptionsAugmenter.augmenter().retrievalStrategy(
-                      ScpCfDestinationRetrievalStrategy.SUBSCRIBER_THEN_PROVIDER))
-              .build();
+DestinationOptions options =
+    DestinationOptions
+        .builder()
+        .augmentBuilder(
+            ScpCfDestinationOptionsAugmenter
+                .augmenter()
+                .retrievalStrategy(ScpCfDestinationRetrievalStrategy.SUBSCRIBER_THEN_PROVIDER))
+        .build();
 ```
 
-You can similarly use other retrieval options.
+Besides the retrieval strategy, the SAP Cloud SDK also offers a _token exchange strategy_ that lets you change the behavior when authentication requires a user token exchange.
+There are three different options available:
+
+- `LOOKUP_THEN_EXCHANGE` (default)
+- `LOOKUP_ONLY`
+- `EXCHANGE_ONLY`
+
+By default, the SAP Cloud SDK first looks up the destination on the destination service and evaluates the authentication type.
+If the authentication type requires a user token exchange the SAP Cloud SDK immediately performs that exchange.
+
+If you know that the destination you are about to retrieve requires a user token exchange you can improve performance by skipping the initial "look up" request like so:
+
+```java
+DestinationOptions options =
+    DestinationOptions
+        .builder()
+        .augmentBuilder(
+            ScpCfDestinationOptionsAugmenter
+                .augmenter()
+                .tokenExchangeStrategy(ScpCfDestinationTokenExchangeStrategy.EXCHANGE_ONLY))
+        .build();
+
+Try<Destination> destination = DestinationAccessor.getLoader().tryGetDestination("MyDestination", options);
+```
 
 ## Configure HTTP Destinations for Local Deployment
 
@@ -544,4 +567,3 @@ cf ssh app-name -L proxy-port:proxy-host:proxy-port
 :::success Ready
 Now your local setup is ready to consume an On-premise HTTP destination.
 :::
-<DocsRating />
