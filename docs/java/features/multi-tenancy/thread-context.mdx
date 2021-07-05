@@ -17,7 +17,6 @@ keywords:
   - principal
   - JWT
   - AuthToken
-
 ---
 
 ## What Is a Thread Context?
@@ -119,7 +118,7 @@ Callable operationWithTenant = TenantAccessor.executeWithTenant(customTenant, ()
 invokeAsynchronously(operationWithContext);
 ```
 
-:::note
+:::danger Thread Lifecycle
 
 Be cautious with long-running, asynchronous operations.
 A propagated thread context will only persist as long as the thread lives that it was created on.
