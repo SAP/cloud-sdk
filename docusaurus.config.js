@@ -217,3 +217,11 @@ module.exports = {
   ],
   customFields: {}
 };
+
+const docsOptions = {
+  versions: {
+    current: {
+      banner: 'none'
+    }
+  }
+}
