@@ -58,6 +58,33 @@ You can also create an issue on the SAP Cloud SDK external GitHub repository or 
 
 Choose `XX-S4C-SDK` if you are reporting an issue via Service Now.
 
+### How Do I Remotely Debug My App on SAP BTP Cloud Foundry?
+
+Use these CF CLI instructions to activate debugging for your App.
+
+**TomEE (when using SAP Java Buildpack)**
+```bash
+cf ssh application -c "export JAVA_PID=`ps -C java -o pid=` && app/META-INF/.sap_java_buildpack/sap_machine_jdk/bin/jcmd $JAVA_PID VM.start_java_debugging"
+cf ssh application -N -T -L 8000:localhost:8000
+```
+
+**Spring**
+```bash
+cf set-env application JBP_CONFIG_DEBUG "{enabled: true}"
+cf restage application
+cf ssh -N -T -L 8000:localhost:8000 application
+```
+
+Check out this [blog post](https://blogs.sap.com/2019/07/24/remote-debugging-on-cloud-foundry/) for step-by-step remote debugging instructions.
+You'll also learn how to get debug information into IntelliJ IDEA. 
+
+:::warning warning
+
+Do not forget to revert any changes you made to your `mta.yml` (and/or environment) after your debugging session.
+We strongly discourage users from running productive applications in debug mode!
+
+:::
+
 ## OData Related Questions
 
 ### What Versions of OData Protocol Do You Support?
