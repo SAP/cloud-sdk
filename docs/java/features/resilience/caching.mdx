@@ -169,7 +169,7 @@ See the section on isolation levels under [Resilience](https://sap.github.io/clo
 
 ### Removing Cache Entries Manually
 
-The SAP Cloud SDK offers different possibilities to let you remove cached entries manually.
+The SAP Cloud SDK offers different possibilities to manually remove cached entries.
 First, you may remove individual cache entries by:
 
 ```java
@@ -192,6 +192,35 @@ This operation is intended to delete **all** cache entries associated with the g
 It intentionally ignores the isolation mode and, in consequence, affects all tenants and principals.
 
 :::
+
+If you need fine-grained influence on which cache entries to remove, you may write your custom `CacheFilter`.
+
+
+```java
+// CacheFilter which matches all cache entries belonging to tenant "tenant1"
+CacheFilter tenantFilter = (( configuration, cacheKey, cacheEntry ) -> cacheKey.getTenantId().get().equals("tenant1"));
+
+// clears all cache entries which match the provided CacheFilter, in this example all cache entries for "tenant1"
+ResilienceDecorator.clearCache(resilienceConfig, tenantFilter);
+```
+
+You can even utilize multiple `CacheFilter` instances for the cache clearing:
+
+```java
+// CacheFilter which matches all cache entries belonging to tenant "tenant1"
+CacheFilter tenantFilter = (( configuration, cacheKey, cacheEntry ) -> cacheKey.getTenantId().isDefined() && cacheKey.getTenantId().get().equals("tenant1"));
+
+// CacheFilter which matches all cache entries belonging to principal "principal1"
+CacheFilter principalFilter = (( configuration, cacheKey, cacheEntry ) -> cacheKey.getPrincipalId().isDefined() && cacheKey.getPrincipalId().get().equals("principal1"));
+
+// clears all cache entries which match the provided CacheFilter instanes
+ResilienceDecorator.clearCache(resilienceConfig, tenantFilter, principalFilter);
+```
+All provided cache filters are invoked in the given order.
+This approach disregards the built-in tenant/principal and parameter isolation and solely considers the provided cache filters.
+
+
+
 
 ## Advanced Cache Manipulation
 
