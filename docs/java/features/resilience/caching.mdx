@@ -195,7 +195,6 @@ It intentionally ignores the isolation mode and, in consequence, affects all ten
 
 If you need fine-grained influence on which cache entries to remove, you may write your custom `CacheFilter`.
 
-
 ```java
 // CacheFilter which matches all cache entries belonging to tenant "tenant1"
 CacheFilter tenantFilter = ( configuration, cacheKey, cacheEntry ) -> cacheKey.getTenantId().isDefined() && cacheKey.getTenantId().get().equals("tenant1");
@@ -203,7 +202,6 @@ CacheFilter tenantFilter = ( configuration, cacheKey, cacheEntry ) -> cacheKey.g
 // clears all cache entries which match the provided CacheFilter, in this example all cache entries for "tenant1"
 ResilienceDecorator.clearCache(resilienceConfig, tenantFilter);
 ```
-
 You can even combine multiple `CacheFilter` instances for the cache clearing:
 
 ```java
@@ -249,10 +247,6 @@ CacheFitler matchesMytenant = CacheFilter.keyMatchesTenant(myTenant);
 Principal myPrincipal = obtainPrincipal();
 CacheFitler matchesMyPrincipal = CacheFilter.keyMatchesPrincipal(myPrincipal);
 ```
-
-
-
-
 
 ## Advanced Cache Manipulation
 
