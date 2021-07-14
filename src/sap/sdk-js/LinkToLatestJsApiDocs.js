@@ -1,14 +1,9 @@
 import React from 'react';
 import JsSdkVersionList from '../../../static/api/versions';
+import Link from '@docusaurus/Link';
 
 function LinkToLatestJsApiDocs({ slug, name }) {
-  return (
-    <a
-      href={`https://sap.github.io/cloud-sdk/api/${JsSdkVersionList[0]}/${slug}`}
-    >
-      {name}
-    </a>
-  );
+  return <Link to={`/api/${JsSdkVersionList[0]}/${slug}`}>{name}</Link>;
 }
 
 export default LinkToLatestJsApiDocs;
