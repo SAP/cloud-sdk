@@ -17,9 +17,7 @@ keywords:
   - principal
   - JWT
   - AuthToken
-
 ---
-import DocsRating from '../../../../src/sap/common-utils/DocsRating';
 
 ## What Is a Thread Context?
 
@@ -120,11 +118,10 @@ Callable operationWithTenant = TenantAccessor.executeWithTenant(customTenant, ()
 invokeAsynchronously(operationWithContext);
 ```
 
-:::note
+:::danger Thread Lifecycle
 
 Be cautious with long-running, asynchronous operations.
 A propagated thread context will only persist as long as the thread lives that it was created on.
 So when the parent thread dies the context will cease to exist and no longer be available in any of the threads.
 
 :::
-<DocsRating />
