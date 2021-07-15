@@ -5,11 +5,12 @@ module.exports = {
     'The one-stop shop for developing and extending SAP applications in the cloud.',
   url: 'https://sap.github.io',
   baseUrl: '/cloud-sdk/',
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   organizationName: 'SAP',
   projectName: 'cloud-sdk',
+  trailingSlash: false,
   themeConfig: {
     prism: {
       additionalLanguages: ['powershell', 'java', 'groovy'],
@@ -62,8 +63,7 @@ module.exports = {
             },
             {
               label: ' GitHub Java',
-              href:
-                'https://github.com/SAP/cloud-sdk/issues/new?assignees=&labels=Java&template=sap-cloud-sdk-for-java-issue.md&title='
+              href: 'https://github.com/SAP/cloud-sdk/issues/new?assignees=&labels=Java&template=sap-cloud-sdk-for-java-issue.md&title='
             },
             {
               label: 'Support Details',
@@ -85,8 +85,7 @@ module.exports = {
             },
             {
               label: 'JS/TS Client Libraries',
-              to:
-                'docs/js/release-notes-sap-cloud-sdk-for-javascript-and-typescript'
+              to: 'docs/js/release-notes-sap-cloud-sdk-for-javascript-and-typescript'
             }
           ]
         },
@@ -140,8 +139,7 @@ module.exports = {
             },
             {
               label: 'SAP Cloud SDK Tutorials',
-              href:
-                'https://developers.sap.com/tutorial-navigator.html?tag=products:technology-platform/sap-cloud-sdk/sap-cloud-sdk'
+              href: 'https://developers.sap.com/tutorial-navigator.html?tag=products:technology-platform/sap-cloud-sdk/sap-cloud-sdk'
             }
           ]
         },
@@ -162,8 +160,7 @@ module.exports = {
             },
             {
               label: 'SAP Cloud SDK on SAP Help',
-              href:
-                'https://help.sap.com/viewer/product/SAP_CLOUD_SDK/1.0/en-US?task=discover_task'
+              href: 'https://help.sap.com/viewer/product/SAP_CLOUD_SDK/1.0/en-US?task=discover_task'
             }
           ]
         },
@@ -204,8 +201,7 @@ module.exports = {
         },
         sitemap: {
           changefreq: 'weekly',
-          priority: 0.5,
-          trailingSlash: false
+          priority: 0.5
         }
       }
     ]
