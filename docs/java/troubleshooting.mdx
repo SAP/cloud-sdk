@@ -205,7 +205,7 @@ While generating a type-safe API client for an OData service, you encounter the 
 ## `DestinationAccessException: Failed to read authentication token. The destination service responded with an error: Could not verify the provided CSRF token because your session was not found`
 
 :::info **Symptoms**
-When running `Destination#asHttp()` you encounter exception message like `"DestinationAccessException: Failed to read authentication token. The destination service responded with an error: Could not verify the provided CSRF token because your session was not found"`.
+When running `Destination#asHttp()` you encounter an exception message like `"DestinationAccessException: Failed to read authentication token. The destination service responded with an error: Could not verify the provided CSRF token because your session was not found"`.
 :::
 
 **Possible causes:**
@@ -213,5 +213,5 @@ When running `Destination#asHttp()` you encounter exception message like `"Desti
 - The Destination Service on Cloud Foundry is unable to generate an authentication token that will be used in later requests.
   In the service configuration, the destination entry references a token service endpoint that could not communicate correctly with the Destination Service.
 
-  To solve that issue, please check every field in the destination configuration.
+  To solve that issue, please check every field in the destination configuration for valid input.
   The value for field "Token Service URL" may require the full service endpoint path, including e.g. `/oauth/token`.
