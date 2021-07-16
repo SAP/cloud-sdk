@@ -200,3 +200,18 @@ While generating a type-safe API client for an OData service, you encounter the 
 
   To solve that issue, you can change the naming strategy used by the generator.
   The SAP Cloud SDK additionally includes the `com.sap.cloud.sdk.datamodel.odata.utility.SimpleNamingStrategy` out-of-the-box, which does not perform any unnecessary pre- and suffix removal.
+
+
+## `DestinationAccessException: Failed to read authentication token. The destination service responded with an error: Could not verify the provided CSRF token because your session was not found`
+
+:::info **Symptoms**
+When running `Destination#asHttp()` you encounter exception message like `"DestinationAccessException: Failed to read authentication token. The destination service responded with an error: Could not verify the provided CSRF token because your session was not found"`.
+:::
+
+**Possible causes:**
+
+- The Destination Service on Cloud Foundry is unable to generate an authentication token that will be used in later requests.
+  In the service configuration, the destination entry references a token service endpoint that could not communicate correctly with the Destination Service.
+
+  To solve that issue, please check every field in the destination configuration.
+  The value for field "Token Service URL" may require the full service endpoint path, including `/oauth/token`
