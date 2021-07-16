@@ -168,6 +168,7 @@ module.exports = {
         type: 'category',
         label: 'Guides',
         items: [
+          'js/guides/migrate-sdk-application-from-btp-cf-to-kubernetes',
           'js/guides/migrate-to-open-source-version-of-cloud-sdk-for-javascript-typescript',
           'js/guides/bas-external-system',
           'js/guides/tutorial-overview-sdk-js',
