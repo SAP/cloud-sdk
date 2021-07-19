@@ -3,7 +3,9 @@ import JsSdkVersionList from '../../../static/api/versions';
 import Link from '@docusaurus/Link';
 
 function LinkToLatestJsApiDocs({ slug, name }) {
-  return <Link to={`/api/${JsSdkVersionList[0]}/${slug}`}>{name}</Link>;
+  return (
+    <a href={`/cloud-sdk/api/${JsSdkVersionList[0]}/${slug}.html`}>{name}</a>
+  );
 }
 
 export default LinkToLatestJsApiDocs;
