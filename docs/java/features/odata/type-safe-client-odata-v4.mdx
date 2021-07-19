@@ -381,8 +381,8 @@ The accessors for custom fields respect multitenancy.
 You can also pass custom fields to select or filter system query options:
 
 ```java
-service().getAllBusinessPartner()
-         .select(new BusinessPartnerField<>(new SimpleProperty.NumericInteger<>(BusinessPartner.class, "ShoeSize"))
+service.getAllBusinessPartner()
+         .select(new SimpleProperty.NumericInteger<>(BusinessPartner.class, "ShoeSize"))
          .select(() -> "AnotherCustomField")
          .filter(new SimpleProperty.NumericInteger<>(BusinessPartner.class, "ShoeSize").equalTo(42))
          .execute(destination)
