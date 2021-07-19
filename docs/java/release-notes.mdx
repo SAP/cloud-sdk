@@ -55,6 +55,48 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed issues
 -->
 
+## 3.49.0 - July 15, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.49.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+
+### Known issues
+
+- The module `com.sap.cloud.sdk.frameworks:cxf` uses the Apache CXF dependencies of version `3.3.10` which is affected by vulnerabilities [CVE-2021-30468](https://nvd.nist.gov/vuln/detail/CVE-2021-30468).
+  Currently, this module is not consumed in other Cloud SDK modules.
+  Use of the SAP Cloud SDK doesn't compromise your application runtime unless you consume this module in your code directly.
+
+### New Functionality
+
+- We added a new `SimpleNamingStrategy`, which, in contrast to our `S4HanaNamingStrategy`, does not apply any unnecessary modifications to the generated names.
+- We added the option to specify additional properties for the OpenAPI generator.
+  The Maven plugin and CLI now accept a list of additional properties as described [here](https://sap.github.io/cloud-sdk/docs/java/features/rest/generate-rest-client#available-parameters).
+
+### Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update Neo JavaEE 7 SDK from `1.98.8` to `1.100.7`
+    - Update BTP Neo Tomcat 8 SDK from `4.1.9` to `4.2.4`
+    - Update [SAP CP Spring XSUAA Security Library](https://github.com/SAP/cloud-security-xsuaa-integration/tree/master/spring-xsuaa) from `2.8.10` to `2.9.0`
+  - Other dependency updates:
+    - Major version updates:
+      - Update transitive asm dependency from `7.0` to `9.0`
+    - Minor version updates:
+      - Update Slf4j from `1.7.30` to `1.7.31`
+      - Update Caffeine from `2.9.1` to `2.9.2`
+      - Update Java JWT from `3.16.0` to `3.17.0`
+      - Update Resilience4j from `1.7.0` to `1.7.1`
+      - Update Mockito from `3.11.1` to `3.11.2`
+      - Update Fabric SDK from `2.2.6` to `2.2.7`
+      - Update Spring from `5.3.5` to `5.3.7`
+      - Update Spring Boot from `2.4.4` to `2.5.0`
+      - Update Spring security from `5.4.5` to `5.5.1`
+      - Update Eclipse Link from `2.7.8` to `2.7.9`
+
+### Fixed issues
+
+- We fixed an issue where OData batch requests could not be build in case the service bath did not start with a leading forward slash.
+
 ## 3.48.0 - July 1, 2021
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.48.0)

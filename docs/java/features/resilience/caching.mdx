@@ -223,14 +223,14 @@ ResilienceDecorator.clearCache(resilienceConfig, combinedAndFilter);
 
 This approach disregards the built-in tenant/principal and parameter isolation and solely considers the provided cache filters.
 
-The SDK provides prepared cache filters you can reuse for matching on tenant, principal or parameters.
+The SAP Cloud SDK provides prepared cache filters you can reuse for matching on tenant, principal or parameters.
 
 ```java
 CacheFilter matchesCurrentParameters = CacheFilter.keyMatchesParameters();
 
-CacheFitler matchesCurrentTenant = CacheFilter.keyMatchesTenant();
+CacheFilter matchesCurrentTenant = CacheFilter.keyMatchesTenant();
 
-CacheFitler matchesCurrentPrincipal = CacheFilter.keyMatchesPrincipal();
+CacheFilter matchesCurrentPrincipal = CacheFilter.keyMatchesPrincipal();
 ```
 
 Note that these built-in cache filters determine the tenant, the principal and the parameters to match respecting the `ResilienceConfiguration` of the cache.
@@ -242,10 +242,10 @@ Iterable<Object> myParameters = obtainParameters();
 CacheFilter matchesMyParameters = CacheFilter.keyMatchesParameters(parameters);
 
 Tenant myTenant = obtainTenant();
-CacheFitler matchesMytenant = CacheFilter.keyMatchesTenant(myTenant);
+CacheFilter matchesMytenant = CacheFilter.keyMatchesTenant(myTenant);
 
 Principal myPrincipal = obtainPrincipal();
-CacheFitler matchesMyPrincipal = CacheFilter.keyMatchesPrincipal(myPrincipal);
+CacheFilter matchesMyPrincipal = CacheFilter.keyMatchesPrincipal(myPrincipal);
 ```
 
 ## Advanced Cache Manipulation
