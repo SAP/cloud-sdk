@@ -13,60 +13,62 @@ keywords:
   - JavaScript
   - TypeScript
 ---
+
 import LinkToLatestJsApiDocs from '../../../../src/sap/sdk-js/LinkToLatestJsApiDocs';
 
-## Introduction
-
-Most applications developed on SAP Business Technology Platform (SCP) will integrate in some way with other line of business solutions and systems.
-Integration means the exchange of data and it is necessary to abstract the details on the data exchange from your codebase.
-The reasons for this abstraction are manifold: URLs defining a resource may change, authentication information should not be part of code, in case of a multi-customer application the locations depends on the customer, etc.
-
-On SAP BTP this abstraction is provided by a so-called destination object.
-This object can be obtained at runtime of the application and contains information like:
+Many applications on SAP Business Technology Platform (SAP BTP) communicate with other systems, e.g. line of business solutions.
+SAP BTP provides the concept of _destinations_ for convenient communication between SAP BTP and other systems.
+A destination is an object with the following information, among others:
 
 - URL
-- Authentication
-- Proxy Settings (see the [proxy documentation](./proxy.mdx) for more details)
-- and others
+- authentication configuration
+- [proxy settings](./proxy.mdx)
 
-The SAP Cloud SDK helps you receive this object and provides also options for local testing outside the SCP.
+Destinations are managed separately from applications on SAP BTP and can be retrieved through the destination service at runtime.
+The reasons to separate destinations and application are manifold:
 
-The SAP Cloud SDK provides a generator to create a client or data model based on a service definition.
-For SAP S/4HANA this client has been created and published to npm.
-In this [tutorial series](https://developers.sap.com/group.s4sdk-js-cloud-foundry.html) a detailed step-by-step guide on how to use the data model is presented.
-A simple request to receive some business-partners from an SAP S/4HANA system would look like:
+- You can securely store authentication information that should not be part of application code.
+- You can update changing resource locations without updating applications.
+- Different customers may want to configure different systems.
+- Multiple applications might want to access the same systems.
 
-```js
-BusinessPartner.requestBuilder()
-  .getAll()
-  .filter(BusinessPartner.BUSINESS_PARTNER_CATEGORY.equals('1'))
-  .top(5)
-  .execute(yourDestination);
+The SAP Cloud SDK helps you to authenticate against the destination service and retrieve destinations in your application.
+
+The following example shows a request against the Business Partner service with the SAP Cloud SDK to retrieve the top 5 business partners:
+
+```ts
+BusinessPartner.requestBuilder().getAll().top(5).execute(myDestination);
 ```
 
-`yourDestination` is a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_core.destination" name="Destination object" />.
-In principle, you could create a destination object yourself or read it from somewhere and then pass it to the `execute()` method.
-However, this would not be very flexible and convenient as discussed above.
-The SAP Cloud SDK provides some help for this problem.
-If just a `destinationName` is provided i.e.:
+`myDestination` is an SAP Cloud SDK representation of a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_core.destination" name="destination" />.
+The given request is executed against `myDestination`.
 
-```js
-.execute({"destinationName": 'myDestination'})
+## Creating destinations manually
+
+You can construct a destination object manually and pass the destination information directly the `execute()` method.
+The minimal requirement towards a manually constructed destination is that you provide a `url`.
+
+```ts
+.execute({ url: 'https://example.com'})
 ```
 
-The SAP Cloud SDK tries to look the destination up for you.
-The details of this process are explained in the next chapters.
+This, however, is not recommended for productive use as you would loose the benefits of separating destinations from applications.
 
-## The Lookup Flow
+## Referencing destinations by name
 
-When given a `destinationName` the SAP Cloud SDK tries three things to find a destination:
+Instead of defining your destination manually, you can reference it by a name:
 
-1. Checking local environment variables
-2. Checking a service binding environment variables
-3. Using the destination service
+```ts
+.execute({ destinationName: 'myDestination' })
+```
 
-Once a destination is found, the flow is stopped and the destination is returned.
-So local environment beats service binding beats destination service in case all contain a destination with the given name.
+The SAP Cloud SDK searches for the destination with the given name in the following locations, in order:
+
+1. local environment variables
+2. service binding environment variables
+3. SAP BTP's destination service
+
+In case the same destination name occurs in multiple of the locations, destinations defined in local environment precede service bindings, which in turn precede the destination service.
 
 ### Local Environment Variable
 
@@ -100,7 +102,7 @@ The service credentials, in other words `VCAP_SERVICES` environment variables, m
 If you want to use this information, the name of the service instance must be provided as the destination name.
 Currently, two services types are supported out of the box `business-logging` and `s4-hana-cloud` with the following transformation functions:
 
-```js
+```ts
 //business-logging
 (serviceBinding) => {
     url: serviceBinding.credentials.writeUrl,
@@ -159,7 +161,7 @@ In the following the term `subscriber account` will be used for the accounts usi
 After this little definition detour, let's go back to the destination service and the SAP Cloud SDK.
 For simplicity an optional argument of the destination lookup has been neglected in the beginning:
 
-```js
+```ts
 .execute({destinationName: 'myDestination', jwt: 'yourJWT'})
 ```
 
@@ -177,7 +179,7 @@ The lookup process done by the SAP Cloud SDK involves the following steps:
 If no token is given or the destination is not found in the subscriber account the provider account is used as a fallback.
 To control this fallback behavior a selection strategy can be passed to the destination lookup:
 
-```js
+```ts
 .execute({destinationName: 'myDestination', jwt: 'yourJWT'},{selectionStrategy:'alwaysSubscriber'})
 ```
 
@@ -198,7 +200,7 @@ The selection strategies can be used to control for which account a destination 
 
 One aspect has been left out for simplicity.
 In principle, it is possible to define destinations not only on the account level but also on the destination service level.
-These destinations are called `instance destinations` since they are tied to a service binding called instance on SCP.
+These destinations are called `instance destinations` since they are tied to a service binding called instance on BTP.
 In every request, these destinations are added to the destinations returned by the destination service.
 
 :::
@@ -208,7 +210,7 @@ In every request, these destinations are added to the destinations returned by t
 There are situations where you do not have a JWT issued by the XSUAA but need to look a destination up e.g. in background processes.
 In such situations the property `iss` of the `DestinationAccessorOptions` can be used:
 
-```js
+```ts
 .execute(
   { destinationName: 'myDestination' },
   { iss: yourIssuerValue }
@@ -227,4 +229,24 @@ Note that the given subdomain value defines from which tenant destinations are f
 So a wrong value may break the isolation for tenants.
 It is your responsibility as a developer to ensure that the provided value for the `iss` property is valid.
 
+:::
+
+### Additional headers and query parameters on destinations
+
+The destination service has a convention to define static headers and query parameters on destinations.
+Create additional properties in your destination and define their values as follows:
+
+- `URL.headers.<header-key>` for headers
+- `URL.queries.<query-key>` for query parameters
+
+For every header or query parameter create on additional property and replace `<header-key>` or `<query-key>` with the name of your header or query parameter and set the according value.
+The SAP Cloud SDK adds those additional headers and query parameter for every communication with the given destination.
+
+:::note
+
+Other headers or query parameters built by the SDK are overwritten by additional headers and query parameters on the destination.
+Custom headers and query parameters, however precede the additional properties.
+
+**Header names** keep their casing but overwrite other headers independent of casing, e.g. `AUTHORIZATION` overwrites `authorization`.
+This does not apply to query **parameter names**`.
 :::
