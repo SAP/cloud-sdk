@@ -15,12 +15,10 @@ keywords:
 # How to migrate a CloudFoundry application to a Kubernetes Cluster
 In this how-to, we will show step by step how you can migrate an application from CloudFoundry to Kubernetes.
 
-<!-- To me it looks like the important step of containerising and deploying the app to the cluster is missing in this list -->
-
 Roughly, it comprises of three steps:
 1. First we decide what kind of environment to use. 
 2. Then we prepare and setup our cluster with the sufficient services and service bindings.
-3. Finally, we adapt our application to consume services from within our Kubernetes cluster.
+3. Finally, we adapt our application to deploy to Kubernetes and consume services from within our Kubernetes cluster.
 
 - [Short PoC Environment](#short-poc-environments)
   - If you only do a short PoC this kind of environment will be sufficient for you. But it is not recommended for future use or long running PoCs.
@@ -484,6 +482,7 @@ Next you can see in the `spec.tls.hosts` part that we expose 2 routes, the first
 Also, notice we specified `secretName: secret-tls`, in this secret, all TLS certificates will be saved by `Gardener`. Finally look at how we serve our service at the root of our subdomain, this way the service is exposed to the internet.
 
 After a short delay, you should now have the mentioned routes as well as valid TLS.
+
 ## Configure Basic Auth
 In case your application may doesn't have built in authentication, you can add basic auth in front of your Ingress.
 1. Create a htpasswd file
@@ -498,8 +497,8 @@ htpasswd -c auth username
 kubectl create secret generic <secret-name> --from-file=auth
 ```
 
-Finally add annotations to your Ingress, if we use the previous example,
-it should look like this
+3. Add annotations to your Ingress, if we use the previous example, it should look like the following:
+
 ```
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -528,25 +527,6 @@ spec:
             port:
               number: 8080
 ```
+
 Notice how `ingress-gate-auth` is just the secret name containing our password and the text following the annotation `nginx.ingress.kubernetes.io/auth-realm:` only contains a message which is prompted when asking for the credentials for the basic authentication.
 Your basic authentication should now be functional and opening any path should open a authentication window.
-
-
-## OnPremise Connectivity
-On
-### Basic Auth
-### Prerequisites
-helm
-docker
-
-- Enable TLS for connectivitytunnel route
-Write values yaml, 
-- Use config guide
-- Explain our example
-- Use operational mode docs
-- May need to add CA cert to the JVM trust store of SCC
-  - Explain briefly how that is done
-- Create proxy, create binding, create json secret as base64
-- Create secrets for values yaml
-- Add to deployment
-- Add host and port to secret containing the binding
