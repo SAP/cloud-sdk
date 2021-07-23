@@ -55,6 +55,42 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed issues
 -->
 
+## 3.50.0 - July 29, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.50.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+
+### Known issues
+
+- The vulnerability [CVE-2021-2629](https://nvd.nist.gov/vuln/detail/CVE-2021-26291) refers to the non-encrypted access to Maven repositories which eases man-in-the-middle attacks where an attacker manipulates a repository.
+  Maven `3.8.1` changed the default behaviour to no longer follow non-encrypted repository URLs.
+  The SAP Cloud SDK uses Maven libraries in the version `3.6.0`, mainly since we release Maven plugins.
+  An update to the latest Maven version is planned in the backlog.
+  An internal analysis revealed that there is no direct harm for BTP applications.
+  To minimize the attack vector, we recommend to developers to use Maven `3.8.1` or later on their development machines.
+
+### Compatibility Notes
+
+- Mitigate [CVE-2021-35515](https://nvd.nist.gov/vuln/detail/CVE-2021-35515) by update to secure version of `org.apache.commons:commons-compress` in SDK module `blockchain-client-fabric`.
+
+### New Functionality
+
+- We introduced the API `ResilienceDecorator.clearCache(ResilienceConfiguration, CacheFilter)` which allows to pass a `CacheFilter` instance.
+This allows fine-grained influence on which cache entries shall be cleared from the cache.
+You can combine multiple cache filters to a disjunction by calling `CacheFilter.or(firstFilter, secondFilter)` or to a conjunction by calling `CacheFilter.and(firstFilter, secondFilter)`.  
+- The OData V4 generator now supports the generation of actions with non-primitive value types, i.e. entity, complex, enum and collection value types. 
+
+### Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update BTP CF Logging from `3.4.0` to `3.5.0`
+    - Update [XSUAA Token Client and Token Flow API](https://github.com/SAP/cloud-security-xsuaa-integration/tree/master/token-client) from `2.9.0` to `2.10.2`
+  - Other dependency updates:
+    - Minor version updates:
+        - Update Java JWT from `3.17.0` to `3.18.1`
+        - Update Jackson from `2.12.3` to `2.12.4`
+        - Update Spring from `5.3.7` to `5.3.8`
+
 ## 3.49.0 - July 15, 2021
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.49.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
