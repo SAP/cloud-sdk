@@ -41,7 +41,7 @@ Once that is done, access the binding (which is in JSON format) and create a sec
 
 The secret has to be in YAML format like the following example:
 
-```
+```yaml
 apiVersion: v1
 kind: Secret
 metadata:
@@ -92,7 +92,8 @@ Save the `service-manager-credentials.txt` somewhere save, as you will need it l
 To make the services available to us we need to register the service broker, in CloudFoundry called `Service Manager` to the service catalog `svcat`.
 
 To do this with the `Service Manager`, we just need to install the service-broker-proxy with the following code:
-```
+
+```bash
 helm repo add peripli 'https://peripli.github.io'
 
 kubectl create namespace service-broker-proxy
@@ -109,7 +110,8 @@ Once the proxy is working use `svcat marketplace`, all CloudFoundry services sho
 
 ### Create and Bind Services
 Now we can create service instances with the service catalog, first let's create the destination service
-```
+
+```bash
 svcat provision destination-service --class destination --plan lite
 ```
 
@@ -117,13 +119,13 @@ Notice how `destination-service` is just the name we give this particular servic
 
 Now we could also create an XSUAA
 
-```
+```bash
 svcat provision xsuaa-service --class xsuaa --plan broker
 ```
 
 Finally we just need to bind the services to make them available to our application.
 
-```
+```bash
 svcat bind destination-service
 svcat bind xsuaa-service
 ```
@@ -144,19 +146,19 @@ With the service operator, all services are deployed via yaml files, which makes
 To use the operator, you need at least basic TLS with a self-signed issuer,
 for this, first you need to install the `cert-manager`, use
 
-```
+```bash
 kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.4.0/cert-manager.yaml
 ```
 
 to deploy the `cert-manager` into your cluster then install the `cert-manager` CRDs with
 
-```
+```bash
 kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.4.0/cert-manager.crds.yaml
 ```
 
 finally, add a self-signed issuer to your cluster for this you can use the following yaml:
 
-```
+```yaml
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
@@ -176,7 +178,7 @@ After you deployed the self-signed issuer, the operator is ready for deployment.
 To do this, first create a `Service Manager` instance in CloudFoundry with the `service-operator-access` plan.
 After you've created an instance, you need to create a binding, when you obtain it, it should look similar to this:
 
-```
+```JSON
  {
      "clientid": "<clientid>",
      "clientsecret": "<clientsecret>",
@@ -188,7 +190,7 @@ After you've created an instance, you need to create a binding, when you obtain 
 
 Once you have the binding use helm to deploy the operator:
 
-```
+```bash
 helm upgrade --install sapbtp-operator https://github.com/SAP/sap-btp-service-operator/releases/download/<release>/sapbtp-operator-<release>.tgz \
     --create-namespace \
     --namespace=sapbtp-operator \
@@ -205,7 +207,7 @@ Here is an example creating and binding a destination service:
 
 Creating an instance:
 
-```
+```yaml
 apiVersion: services.cloud.sap.com/v1alpha1
 kind: ServiceInstance
 metadata:
@@ -216,7 +218,8 @@ spec:
 ```
 
 Binding the instance:
-```
+
+```yaml
 apiVersion: services.cloud.sap.com/v1alpha1
 kind: ServiceBinding
 metadata:
@@ -240,7 +243,7 @@ end-to-end application.
 For this example, we will take a look at our [e2e Kubernetes app](https://github.tools.sap/cloudsdk/k8s-e2e-app) app.
 To figure out what has to be migrated we just have to take a look at the `manifest.yml`
 
-```
+```yaml
 applications:
   - name: k8s-e2e-app
     path: deployment/
@@ -264,7 +267,7 @@ This information is very important in the following steps
 ### Dockerfile
 First we need to create a `Dockerfile`, because all applications are run in `Pods` in Kubernetes, these `Pods` do all require Docker images.
 
-```
+```Dockerfile
 FROM node:12-alpine
 
 WORKDIR /workdir
@@ -282,7 +285,7 @@ Here we use the information from the `manifest.yml`, such as the node environmen
 ### Deployment Yaml
 Next we need to create a `deployment.yml` that contains the resources the application needs, the docker image, as well as registry secrets (in case your image was pushed to a private repository), and most importantly the service bindings we previously created.
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -331,7 +334,7 @@ From the `manifest.yml` we know that the app roughly needed 256MB of RAM on Clou
 
 Notice that we used `imagePullSecrets`, which is using the `regcred` secret, the `regcred` secret contains our own registry credentials that we previously bound as a secret, you can do this either by writing a `secret.yml` or directly in the cli (though this will be in your `.bashrc`) like this:
 
-```
+```bash
 kubectl create secret docker-registry regcred \
   --docker-username=<name \
   --docker-password=<password> \
@@ -343,21 +346,21 @@ To do this we use  `volumes` and `volumeMounts`.
 
 It should follow this structure for `volumes`:
 
-```
-        volumes:
-        - name: <some-volume-name>
-          secret:
-            secretName: <name-of-service-binding>
+```yaml
+volumes:
+- name: <some-volume-name>
+  secret:
+    secretName: <name-of-service-binding>
 ```
 
 Here we make a secret (in this case a service binding) available as a volume.
 Next we need to mount this secret at a very specific path for it to be usable by us, for this we follow the `xsenv` path conventions.
 
-```
-        volumeMounts:
-          - name: <volume-name>
-            mountPath: "/etc/secrets/sapcp/<service>/<service-name>" 
-            readOnly: true
+```yaml
+volumeMounts:
+  - name: <volume-name>
+    mountPath: "/etc/secrets/sapcp/<service>/<service-name>" 
+    readOnly: true
 ```
 
 ###  Deploy and Expose your application
@@ -384,9 +387,7 @@ In order to automatically deploy into the K8s cluster, two things are needed:
 1. Automatic build and deployment of the docker image into the docker repository
 2. Automatic re-start of the Kubernetes deployment
 
-Step (1) can be achieved by building and pushing the docker image with a technical user. 
-For the SDK teams we have our own docker repository that should be used: `docker-cloudsdk.docker.repositories.sap.ondemand.com`
-
+Step (1) can be achieved by building and pushing the docker image with a technical user.
 For Step (2) we need a technical user that is entitled to manage the cluster deployment.
 
 1. [Create a service account](https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/) in your cluster
@@ -395,7 +396,7 @@ For Step (2) we need a technical user that is entitled to manage the cluster dep
 4. Obtain the cluster api endpoint via `kubectl cluster-info` 
 
 You can now use the service account in your automation to connect to the cluster:
-```
+```bash
 kubectl config set-cluster gardener --server=<your-cluster-api-endpoint>
 kubectl config set-context gardener --cluster=gardener
 kubectl config use-context gardener
@@ -420,7 +421,7 @@ In `Gardener` you can already specify your desired domain and the TLS will be ma
 
 First create a service that contains your deployment, as well as the exposed port of your application, for example us this:
 
-```
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -436,20 +437,21 @@ spec:
 Next, check your shoot-cluster YAML for the currently configured DNS,
 it should be a field that looks like this:
 
-```
+```yaml
 spec:
   dns:
     domain: cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
 ```
 
 since you have the NGINX Ingress enabled, all your desired domains have to follow the pattern `*.ingress.<your-dns>`, for example 
-```
+
+```yaml
 e2e.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
 ```
 
 This is how your Ingress file should look like:
 
-```
+```yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -487,19 +489,19 @@ After a short delay, you should now have the mentioned routes as well as valid T
 In case your application may doesn't have built in authentication, you can add basic auth in front of your Ingress.
 1. Create a htpasswd file
 
-```
+```bash
 htpasswd -c auth username
 ```
 
 2. Create a secret out of this file
 
-```
+```bash
 kubectl create secret generic <secret-name> --from-file=auth
 ```
 
 3. Add annotations to your Ingress, if we use the previous example, it should look like the following:
 
-```
+```yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
