@@ -45,7 +45,7 @@ BusinessPartner.requestBuilder()
   .execute(yourDestination);
 ```
 
-`yourDestination` is a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_core.destination" name="Destination object" />.
+`yourDestination` is a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_core.Destination" name="Destination object" />.
 In principle, you could create a destination object yourself or read it from somewhere and then pass it to the `execute()` method.
 However, this would not be very flexible and convenient as discussed above.
 The SAP Cloud SDK provides some help for this problem.
@@ -73,11 +73,11 @@ So local environment beats service binding beats destination service in case all
 
 This option is present for deployment and testing in a local environment outside the SAP BTP where no destination services are available.
 If a `destinations` environment variable is present it will be used for the destination lookup as described above.
-The value is expected to be a stringified JSON array, where the items adhere to the <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_core.destination" name="Destination interface" />.
+The value is expected to be a stringified JSON array, where the items adhere to the <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_core.Destination" name="Destination interface" />.
 Example: `"[{name: 'TESTINATION', url: 'http://url.hana.ondemand.com', username: 'DUMMY', password: 'dummy'}]"`.
 
 The SAP Cloud SDK provides a `setTestDestination(destination)` function to add a destination to the environment variable for the current process programmatically.
-It takes a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_core.destination" name="destination object" />, transforms it to a JSON object, and adds it to `process.env.destinations`.
+It takes a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_core.Destination" name="destination object" />, transforms it to a JSON object, and adds it to `process.env.destinations`.
 
 ```ts
 import { setTestDestination } from '@sap-cloud-sdk/test-util';
