@@ -532,3 +532,158 @@ spec:
 
 Notice how `ingress-gate-auth` is just the secret name containing our password and the text following the annotation `nginx.ingress.kubernetes.io/auth-realm:` only contains a message which is prompted when asking for the credentials for the basic authentication.
 Your basic authentication should now be functional and opening any path should open a authentication window.
+
+## OnPremise Connectivity
+:::danger
+OnPremise connectivity in Kubernetes is currently only available internally, though this will change in the near future.
+This documentation is therefore only ment for internal users.
+:::
+
+To connect to OnPremise systems inside a Kubernetes cluster, you need to use the `Connectivity Proxy`.
+The following guide will show you what has to be done to create and use it.
+
+### Basic Auth
+1. You need to create a route the `Connectivity Proxy` will use, this route needs to have TLS enabled, to do so in Gardener, refer to our [Configure TLS and obtain a Domain in Gardener](#configure-tls-and-obtain-a-domain-in-gardener) section or if you are using a different cluster, to the general [Kubernetes documentation](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/).
+
+Here is an example where we add our custom route `connectivitytunnel.*` to our TLS section, in Gardener this creates a certificate for this route automatically.
+
+```yaml
+spec:
+  tls:
+  - hosts:
+    - cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+    - e2e.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+    - connectivitytunnel.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+    secretName: secret-tls
+```
+
+2. Now we need to add our CA certificate to the JVM trust store of the `Cloud Connector`, the CA certificate is stored in the TLS secret, in our case we named it `secret-tls`.
+To get the information inside the secret you can use the following code snippet:
+
+```bash
+kubectl get secret <secret-name> -o go-template='
+{{range $k,$v := .data}}{{printf "%s: " $k}}{{if not $v}}{{$v}}{{else}}{{$v | base64decode}}{{end}}{{"\n"}}{{end}}'
+```
+
+In there should be a block prefixed with `ca.crt` copy this certificate into a file and then follow [this guide](https://connect2id.com/blog/importing-ca-root-cert-into-jvm-trust-store).
+
+3. Create and bind the connectivity service with the `connectivty_proxy` plan, refer to the guide of us that is fitting your environment.
+If you use the PoC environment just save the binding as a secret, use the below example, otherwise you need to retrieve the binding first and then format it in `JSON` to save it as a secret, for that you need to retrieve the secret's content first, you can use the previous code snippet for that.
+
+Then save the `JSON` in a secret here is an example:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: connectivity-proxy-service-key
+type: Opaque
+stringData:
+  connectivity_key: '{
+    "clientid": "<client-id>",
+    "clientsecret": "<clientsecret>",
+    "xsappname": "<xsappname>",
+    "connectivity_service": {
+        "CAs_path":"/api/v1/CAs",
+        "CAs_signing_path":"/api/v1/CAs/signing",
+        "api_path":"/api/v1",
+        "tunnel_path":"/api/v1/tunnel",
+        "url":"https://connectivity.cf.sap.hana.ondemand.com"
+    },
+    "subaccount_id": "<subaccount_id",
+    "subaccount_subdomain": "<subaccount_subdomain>",
+    "token_service_domain": "<token_service_domain">",
+    "token_service_url": "<token_service_url>",
+    "token_service_url_pattern": "https://{tenant}.authentication.sap.hana.ondemand.com/oauth/token",
+    "token_service_url_pattern_tenant_key": "subaccount_subdomain"
+}'
+```
+
+Note that we used the `stringData` instead of `data` field, this way the content is base64 encoded for us and we don't have to do it ourselves.
+This is a requirement of the connectivity proxy, since it can't consume the data of the secret in YAML format _yet_.
+
+4. Now we need to download the CA certificate of the connectivity service and create a secret containing:
+- The CA certificate of the connectivity service
+- Our private key
+- Our public certificate
+
+The private key and public certificate are also stored in our TLS secret, use the previous code snippet to retrieve it from the secret and save them in seperate files.
+Finally download the CA certificate with the following line:
+
+```bash
+curl https://connectivity.cf.sap.hana.ondemand.com/api/v1/CAs/signing -o connectivity_ca.crt
+```
+
+Now you can create the secret with this command:
+
+```bash
+kubectl create secret generic connectivity-tls --from-file=ca.crt=<your-connectivity-ca.crt> --from-file=tls.key=<your-private.key> --from-file=tls.crt=<your-public.crt> --namespace default
+```
+
+5. Create a secret that contains credentials which have access to the docker image that the `Connectivity Proxy` is using.
+
+The image is located here: `deploy-releases.docker.repositories.sap.ondemand.com`
+
+To create the registry secret use the following command:
+
+```bash 
+kubectl create secret docker-registry <your-registry-secret> \                                                                                                   ✔  12402  13:33:05
+  --docker-username=<your-username> \
+  --docker-password=<your-password> \
+  --docker-server=deploy-releases.docker.repositories.sap.ondemand.com
+```
+
+6. Create a `values.yml` containing the configuration that suites your desired operational mode, for the available operational modes refer to the [documentation](https://wiki.wdf.sap.corp/wiki/display/NGP/Operational+modes#Operationalmodes-Singletenantinatrustedenvironment).
+For the specific content of the configuration refer to the [configuration guide](https://wiki.wdf.sap.corp/wiki/pages/viewpage.action?spaceKey=NGP&title=Configuration+guide).
+
+Here is an example for the `Single tenant in a trusted environment` mode:
+
+```yaml
+deployment:
+  replicaCount: 1
+  image:
+    pullSecret: "proxy-secret"
+ingress:
+  tls:
+    secretName: "connectivity-tls"
+config:
+  integration:
+    auditlog:
+      mode: console
+    connectivityService:
+      serviceCredentialsKey: "connectivity_key"
+  tenantMode: dedicated
+  subaccountId: "<subaccount-id>"
+  subaccountSubdomain: "<subaccount-domain>"
+  servers:
+    businessDataTunnel:
+      externalHost: "connectivitytunnel.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com"
+      externalPort: 443
+    proxy:
+      rfcAndLdap:
+        enabled: true
+        enableProxyAuthorization: false
+      http:
+        enabled: true
+        enableProxyAuthorization: false
+        enableRequestTracing: true
+      socks5:
+        enableProxyAuthorization: false
+```
+
+7. For your application to reach OnPremise destinations, it needs the proxy settings, currently these have to be added manually to the secret containing the service binding.
+
+To do this, use the following code snippet:
+
+```bash
+kubectl edit secret <binding-name>
+```
+
+Now you have to add the fields `onpremise_proxy_host` and `onpremise_proxy_port` containing the host and port, e.g. `connectivity-proxy.<namespace>`(in our case `connectivity-proxy.default`) and port, e.g. `20003`.
+Be aware that the values have to be encoded in base64, for example:
+```yaml
+onpremise_proxy_host: Y29ubmVjdGl2aXR5LXByb3h5LmRlZmF1bHQ=
+onpremise_proxy_port: MjAwMDM=
+```
+
+8. Finally, add the binding to your `deployment.yml`, the same way you would add any other binding.
