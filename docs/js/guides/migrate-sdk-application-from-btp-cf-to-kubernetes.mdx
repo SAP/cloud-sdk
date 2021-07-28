@@ -1,7 +1,7 @@
 ---
-title: Migrate a JS SDK App from BT CF to Kubernetes
+title: Migrate a JS SDK App from SAP BTP CF to Kubernetes
 sidebar_label: Migrate to Kubernetes
-description: Bla-bla-bla-kubernetes (Tom)
+description: Learn how to migrate your application from SAP BTP Cloud Foundry to Kubernetes.
 keywords:
   - sap
   - cloud
@@ -13,7 +13,7 @@ keywords:
 ---
 
 # How to Migrate a CloudFoundry Application to a Kubernetes Cluster
-In this how-to, we will show step by step how you can migrate an application from CloudFoundry to Kubernetes.
+In this how-to, we will show step by step how to migrate an application from CloudFoundry to Kubernetes.
 
 It comprises of three steps:
 1. First we decide what kind of environment to use. 
@@ -21,28 +21,28 @@ It comprises of three steps:
 3. Finally, we adapt our application to deploy to Kubernetes and consume services from within our Kubernetes cluster.
 
 Choose the environment that satisfies your requirements:
-- [Short PoC Environment](#short-poc-environments)
-  - If you only do a short PoC this kind of environment will be sufficient for you. 
-    But it is not recommended for future use or long running PoCs.
+- [Simple PoC Environment](#simple-poc-environments)
+  - If you only do a simple PoC this kind of environment will be sufficient for you. 
+    It's not recommended for productive use or long-running PoCs.
 - [Staging Environments](#staging-environments)
-  - For staging environments we will take a look at a way to create and bind services manually.
+  - For staging environments, we will take a look at a way to create and bind services manually.
     This is primarily meant to try out different service setups.
 - [Production Environments](#production-environments)
-  - For production environments we will take a look at a way to create and bind services with reproducibility, longevity and developer simplicity in mind.
+  - For production environments, we will take a look at a way to create and bind services with reproducibility, longevity, and developer simplicity in mind.
 
 
-## Short PoC Environments
-For a short PoC we can create and bind services in CloudFoundry, or preferably even use already existing service bindings.
+## Simple PoC Environments
+For a simple PoC, we can create and bind services in CloudFoundry, or preferably even use already existing service bindings.
 
 ### Prerequisites
 - [`kubectl`](https://kubernetes.io/docs/tasks/tools/)
 - [docker](https://docs.docker.com/get-docker/)
 
 ### Create and Bind Services
-If you want to create and bind _new_ services, you can deploy a `hello-world` app to CloudFoundry and then bind services to this app.
-Once that is done, access the binding (which is in JSON format) and create a secret in Kubernetes out of it.
+If you want to create and bind _new_ services, you can deploy a `hello-world` app to SAP BTP Cloud Foundry and then bind services to this app.
+Once that is done, access and copy the JSON representation of the bindings and create a secret in Kubernetes out of them.
 
-The secret has to be in YAML format like the following example:
+The secret has to be in YAML format like in the example below. Use the values from service binding's JSON data to fill respective fields.
 
 ```yaml
 apiVersion: v1
@@ -66,9 +66,11 @@ stringData:
 
 Once you are done use `kubectl apply -f <your-binding>.yml` to create the secret in your cluster.
 
-Now let's take a look how to adapt our application to consume services and deploy to Kubernetes, for this switch over to the [Deploy to Kubernetes](#deploy-to-kubernetes) section.
+Now let's take a look at how to adapt our application to consume services and deploy to Kubernetes. For this jump over to the [Deploy to Kubernetes](#deploy-to-kubernetes) section.
+
 ## Staging Environments
-For a staging environment where you may just want to try out different services or service configurations it is fine to use the following setup.
+For a staging environment where you may just want to try out different services or service configurations, it is fine to use the following setup.
+
 ### Prerequisites
 - [`smctl`](https://github.com/Peripli/service-manager-cli)
 - [svcat](https://svc-cat.io/docs/cli/)
@@ -79,9 +81,9 @@ For a staging environment where you may just want to try out different services 
 ### Configure the Service Manager
 First, create a Service Manager instance in CloudFoundry with the `subaccount-admin` plan. 
 
-To be able to use the Service Manager, you (or your peers) need to have the right privileges in CloudFoundry, for this you need to follow this:
+To be able to use the Service Manager, you will need to have sufficient privileges in the SAP BTP Cloud Foundry. To get them to follow the steps below:
 
-In the SAP Cloud Platform cockpit, navigate to your subaccount and choose Security → Trust Configuration → SAP ID Service.
+In the SAP Cloud Platform cockpit, navigate to your `subaccount` and choose **Security → Trust Configuration → SAP ID Service**.
 Assign the `Subaccount Service Administrator` role collection to your email address.
 
 Next you need to login to the service manager control and register your cluster
@@ -89,7 +91,7 @@ Next you need to login to the service manager control and register your cluster
 smctl login -a https://service-manager.<cf-api-end-point> --param subdomain=<your-cf-subdomain>
 smctl register-platform <name-you-want-to-give-the-cluster> kubernetes > service-manager-credentials.txt
 ```
-Save the `service-manager-credentials.txt` somewhere save, as you will need it later on, especially the username and password.
+The `service-manager-credentials.txt` is sensitive data, keep it in a safe place. You will need it later on, especially the `username` and `password`.
 
 ### Broker Registration
 To make the services available to us we need to register the service broker, in CloudFoundry called `Service Manager` to the service catalog `svcat`.
