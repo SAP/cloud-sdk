@@ -94,9 +94,9 @@ smctl register-platform <name-you-want-to-give-the-cluster> kubernetes > service
 The `service-manager-credentials.txt` is sensitive data, keep it in a safe place. You will need it later on, especially the `username` and `password`.
 
 ### Broker Registration
-To make the services available to us we need to register the service broker, in CloudFoundry called `Service Manager` to the service catalog `svcat`.
+To make the services available in the Kubernetes cluster we need to register a service broker, in the SAP BTP Cloud Foundry named `Service Manager`, to the service catalog `svcat`.
 
-To do this with the `Service Manager`, we just need to install the service-broker-proxy with the following code:
+To access the `Service Manager` on BTP CF, we need to install the `service-broker-proxy` in our K8s cluster. Here's how you do it:
 
 ```bash
 helm repo add peripli 'https://peripli.github.io'
@@ -110,8 +110,8 @@ helm install service-broker-proxy peripli/service-broker-proxy-k8s \
   --set sm.user=<service-manager-user> \
   --set sm.password=<service-manager-password>
 ```
-After installing the proxy you have to wait a few seconds until the it is fully operational.
-Once the proxy is working use `svcat marketplace`, all CloudFoundry services should now be listed.
+After installing the proxy you have to wait a few seconds until it is fully operational.
+Once the proxy is up, try running `svcat marketplace`, all the services available on SAP BTP CF should now be listed.
 
 ### Create and Bind Services
 Now we can create service instances with the service catalog, first let's create the destination service
@@ -120,7 +120,7 @@ Now we can create service instances with the service catalog, first let's create
 svcat provision destination-service --class destination --plan lite
 ```
 
-Notice how `destination-service` is just the name we give this particular service instance, it could be anything.
+Notice how `destination-service` is just the name we give to this particular service instance, it could be anything.
 
 Now we could also create an XSUAA
 
@@ -128,7 +128,7 @@ Now we could also create an XSUAA
 svcat provision xsuaa-service --class xsuaa --plan broker
 ```
 
-Finally we just need to bind the services to make them available to our application.
+Finally, we just need to bind the services to make them available to our application.
 
 ```bash
 svcat bind destination-service
@@ -535,16 +535,16 @@ spec:
               number: 8080
 ```
 
-Notice how `ingress-gate-auth` is just the secret name containing our password and the text following the annotation `nginx.ingress.kubernetes.io/auth-realm:` only contains a message which is prompted when asking for the credentials for the basic authentication.
+Notice how `ingress-gate-auth` is just the secret name containing our password and the text following the annotation `nginx.ingress.kubernetes.io/auth-realm:` only contains a message, which is prompted when asking for the credentials for the basic authentication.
 Your basic authentication should now be functional and opening any path should open a authentication window.
 
-## OnPremise Connectivity
+## On-Premise Connectivity
 :::danger
-OnPremise connectivity in Kubernetes is currently only available internally, though this will change in the near future.
-This documentation is therefore only ment for internal users.
+On-Premise connectivity in Kubernetes is currently only available internally, though this will change in the near future.
+This documentation is therefore only meant for internal users.
 :::
 
-To connect to OnPremise systems inside a Kubernetes cluster, you need to use the `Connectivity Proxy`.
+To connect to On-Premise systems inside a Kubernetes cluster, you need to use the `Connectivity Proxy`.
 The following guide will show you what has to be done to create and use it.
 
 ### Basic Auth
@@ -612,7 +612,7 @@ This is a requirement of the connectivity proxy, since it can't consume the data
 - Our private key
 - Our public certificate
 
-The private key and public certificate are also stored in our TLS secret, use the previous code snippet to retrieve it from the secret and save them in seperate files.
+The private key and public certificate are also stored in our TLS secret, use the previous code snippet to retrieve it from the secret and save them in separate files.
 Finally download the CA certificate with the following line:
 
 ```bash
@@ -676,7 +676,7 @@ config:
         enableProxyAuthorization: false
 ```
 
-7. For your application to reach OnPremise destinations, it needs the proxy settings, currently these have to be added manually to the secret containing the service binding.
+7. For your application to reach On-Premise destinations, it needs the proxy settings, currently these have to be added manually to the secret containing the service binding.
 
 To do this, use the following code snippet:
 
