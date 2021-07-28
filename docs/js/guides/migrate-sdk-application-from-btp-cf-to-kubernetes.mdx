@@ -12,18 +12,21 @@ keywords:
   - kubernetes
 ---
 
-# How to migrate a CloudFoundry application to a Kubernetes Cluster
+# How to Migrate a CloudFoundry Application to a Kubernetes Cluster
 In this how-to, we will show step by step how you can migrate an application from CloudFoundry to Kubernetes.
 
-Roughly, it comprises of three steps:
+It comprises of three steps:
 1. First we decide what kind of environment to use. 
 2. Then we prepare and setup our cluster with the sufficient services and service bindings.
 3. Finally, we adapt our application to deploy to Kubernetes and consume services from within our Kubernetes cluster.
 
+Choose the environment that satisfies your requirements:
 - [Short PoC Environment](#short-poc-environments)
-  - If you only do a short PoC this kind of environment will be sufficient for you. But it is not recommended for future use or long running PoCs.
+  - If you only do a short PoC this kind of environment will be sufficient for you. 
+    But it is not recommended for future use or long running PoCs.
 - [Staging Environments](#staging-environments)
-  - For staging environments we will take a look at a way to create and bind services manually. This is primarily meant to try out different service setups.
+  - For staging environments we will take a look at a way to create and bind services manually.
+    This is primarily meant to try out different service setups.
 - [Production Environments](#production-environments)
   - For production environments we will take a look at a way to create and bind services with reproducibility, longevity and developer simplicity in mind.
 
@@ -32,11 +35,11 @@ Roughly, it comprises of three steps:
 For a short PoC we can create and bind services in CloudFoundry, or preferably even use already existing service bindings.
 
 ### Prerequisites
-- [kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [`kubectl`](https://kubernetes.io/docs/tasks/tools/)
 - [docker](https://docs.docker.com/get-docker/)
 
-### Create and bind services
-If you want to create and bind _new_ services, simply deploy a hello-world app to CloudFoundry and then bind services to this app.
+### Create and Bind Services
+If you want to create and bind _new_ services, you can deploy a `hello-world` app to CloudFoundry and then bind services to this app.
 Once that is done, access the binding (which is in JSON format) and create a secret in Kubernetes out of it.
 
 The secret has to be in YAML format like the following example:
@@ -67,7 +70,7 @@ Now let's take a look how to adapt our application to consume services and deplo
 ## Staging Environments
 For a staging environment where you may just want to try out different services or service configurations it is fine to use the following setup.
 ### Prerequisites
-- [smctl](https://github.com/Peripli/service-manager-cli)
+- [`smctl`](https://github.com/Peripli/service-manager-cli)
 - [svcat](https://svc-cat.io/docs/cli/)
 - [helm](https://helm.sh/docs/intro/install/)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
@@ -81,7 +84,7 @@ To be able to use the Service Manager, you (or your peers) need to have the righ
 In the SAP Cloud Platform cockpit, navigate to your subaccount and choose Security → Trust Configuration → SAP ID Service.
 Assign the `Subaccount Service Administrator` role collection to your email address.
 
-Next you need to login to the service manager ctl and register your cluster
+Next you need to login to the service manager control and register your cluster
 ```
 smctl login -a https://service-manager.<cf-api-end-point> --param subdomain=<your-cf-subdomain>
 smctl register-platform <name-you-want-to-give-the-cluster> kubernetes > service-manager-credentials.txt
@@ -134,7 +137,7 @@ Now let's take a look how to adapt our application to consume services and deplo
 
 ## Production Environments
 For production environments where you need transparency and reproducibility of the services that are running in your cluster, you should use the service operator. 
-With the service operator, all services are deployed via yaml files, which makes the management of services a lot easier in the longterm.
+With the service operator, all services are deployed via YAML files, which makes the management of services a lot easier in the long term.
 
 ### Prerequisites
 - [helm](https://helm.sh/docs/intro/install/)
@@ -200,7 +203,7 @@ helm upgrade --install sapbtp-operator https://github.com/SAP/sap-btp-service-op
     --set manager.secret.tokenurl=<url>
 ```
 
-### Create and bind services
+### Create and Bind Services
 Now that the operator is running in your cluster, you can create services just like you would in CloudFoundry, but instead of the CloudFoundry UI, you need to use YAML files.
 
 Here is an example creating and binding a destination service:
@@ -332,7 +335,7 @@ spec:
 
 From the `manifest.yml` we know that the app roughly needed 256MB of RAM on CloudFoundry, since we can't tell yet how many resources the app needs on Kubernetes, just take it as a bare minimum (in the `requests` part) and make it possible to scale up with the `limits` part (in this case up to 512MB of RAM).
 
-Notice that we used `imagePullSecrets`, which is using the `regcred` secret, the `regcred` secret contains our own registry credentials that we previously bound as a secret, you can do this either by writing a `secret.yml` or directly in the cli (though this will be in your `.bashrc`) like this:
+Notice that we used `imagePullSecrets`, which is using the `regcred` secret, the `regcred` secret contains our own registry credentials that we previously bound as a secret, you can do this either by writing a `secret.yml` or directly in the CLI (though this will be in your `.bashrc`) like this:
 
 ```bash
 kubectl create secret docker-registry regcred \
