@@ -384,6 +384,7 @@ The SAP Cloud SDK for Java also allows for providing custom filter expressions.
 This is useful for instance when the fields to filter by are not known at design time and have to be passed dynamically.
 
 For example, to filter based on a field `ShoeSize` use:
+
 ```java
 ValueBoolean filterExpression = FieldReference.of("ShoeSize").equalTo(42);
 UncheckedFilterExpression<MyEntity> customFilter =
@@ -394,11 +395,13 @@ myService.getAllBusinessPartner().filter(customFilter).executeRequest(destinatio
 ```
 
 Which produces the HTTP query:
+
 ```
 ?$filter=(ShoeSize eq 42)
 ```
 
 ### Accessing Extensible or Custom Fields
+
 The concept of **In-app Extensibility** allows users to introduce additional fields to an existing SAP S/4HANA service.
 To consume and work with such custom fields in your application code, SAP Cloud SDK introduces the concept of custom fields.
 
@@ -409,6 +412,7 @@ businessPartner.setCustomField("shoeSize", 10);
 
 final int shoeSize = businessPartner.getCustomField("shoeSize");
 ```
+
 If you are unsure about the custom fields added by the customer, you can still use `getCustomFieldNames()` to obtain the set of custom fields introduced.
 Use this set further on to pull values from the entity.
 
@@ -426,10 +430,10 @@ The accessors for custom fields respect multitenancy.
 `getCustomFieldNames()`, for example, fetches only custom field names available in the context of the current tenant.
 
 #### Using Custom Fields in System Query Options
+
 You can also pass custom fields to select or filter system query options:
 
 <Tabs groupId="odataProtocol" defaultValue="v2" values={[ { label: 'OData V2', value: 'v2', }, { label: 'OData V2 (Deprecated)', value: 'v2-deprecated', } ]}>
-
 
 <TabItem value="v2-deprecated">
 
@@ -440,6 +444,7 @@ service().getAllBusinessPartner()
          .filter(new BusinessPartnerField<>("Shoesize").eq(42))
          .execute(destination)
 ```
+
 </TabItem>
 
 <TabItem value="v2">
@@ -451,6 +456,7 @@ service().getAllBusinessPartner()
          .filter(new BusinessPartnerField<>("Shoesize").eq(42))
          .executeRequest(destination)
 ```
+
 </TabItem>
 </Tabs>
 

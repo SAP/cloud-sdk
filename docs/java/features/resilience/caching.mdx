@@ -13,7 +13,6 @@ keywords:
   - cache
   - JCache
   - CacheConfiguration
-
 ---
 
 Caching may improve your application's performance and responsiveness to your consumers.
@@ -193,7 +192,9 @@ It intentionally ignores the isolation mode and, in consequence, affects all ten
 
 :::
 
-If you need fine-grained control over which cache entries to clear, you may write your custom `CacheFilter`.
+#### Precise Control Over Cache Entries via `CacheFilter`
+
+If you need fine-grained control over which cache entries to clear, you may create your custom `CacheFilter`.
 
 ```java
 // CacheFilter which matches all cache entries belonging to tenant "tenant1"
@@ -202,6 +203,7 @@ CacheFilter tenantFilter = ( configuration, cacheKey, cacheEntry ) -> cacheKey.g
 // clears all cache entries which match the provided CacheFilter, in this example all cache entries for "tenant1"
 ResilienceDecorator.clearCache(resilienceConfig, tenantFilter);
 ```
+
 You can even combine multiple `CacheFilter` instances for the cache clearing:
 
 ```java
