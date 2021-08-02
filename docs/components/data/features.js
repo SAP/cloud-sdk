@@ -85,7 +85,7 @@ export const features = [
     js: {
       status: ':x:',
       docsLink: ``,
-      note: 'We expose [gelneric HTTP client](${baseUrl}/js/features/connectivity/generic-http-client) aware of connectivity abstractions'
+      note: `We expose [generic HTTP client](${baseUrl}/js/features/connectivity/generic-http-client) aware of connectivity abstractions`
     }
   },
   {

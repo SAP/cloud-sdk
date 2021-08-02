@@ -11,20 +11,20 @@ import Seo from '@theme/Seo';
 import LastUpdated from '@theme/LastUpdated';
 import TOC from '@theme/TOC';
 import EditThisPage from '@theme/EditThisPage';
-import {MainHeading} from '@theme/Heading';
+import { MainHeading } from '@theme/Heading';
 import clsx from 'clsx';
 import styles from './styles.module.css';
-import {useActivePlugin, useVersions} from '@theme/hooks/useDocs';
+import { useActivePlugin, useVersions } from '@theme/hooks/useDocs';
 import DocsRating from '../../sap/common-utils/DocsRating';
 
 function DocItem(props) {
-  const {content: DocContent, versionMetadata} = props;
-  const {metadata, frontMatter} = DocContent;
+  const { content: DocContent, versionMetadata } = props;
+  const { metadata, frontMatter } = DocContent;
   const {
     image,
     keywords,
     hide_title: hideTitle,
-    hide_table_of_contents: hideTableOfContents,
+    hide_table_of_contents: hideTableOfContents
   } = frontMatter;
   const {
     description,
@@ -32,10 +32,10 @@ function DocItem(props) {
     editUrl,
     lastUpdatedAt,
     formattedLastUpdatedAt,
-    lastUpdatedBy,
+    lastUpdatedBy
   } = metadata;
-  const {pluginId} = useActivePlugin({
-    failfast: true,
+  const { pluginId } = useActivePlugin({
+    failfast: true
   });
   const versions = useVersions(pluginId); // If site is not versioned or only one version is included
   // we don't show the version badge
@@ -54,15 +54,16 @@ function DocItem(props) {
           title,
           description,
           keywords,
-          image,
+          image
         }}
       />
 
       <div className="row">
         <div
           className={clsx('col', {
-            [styles.docItemCol]: !hideTableOfContents,
-          })}>
+            [styles.docItemCol]: !hideTableOfContents
+          })}
+        >
           <DocVersionBanner versionMetadata={versionMetadata} />
           <div className={styles.docItemContainer}>
             <article>
@@ -92,8 +93,8 @@ function DocItem(props) {
 
               <div className="margin-vert--xl">
                 <div className={styles.docsRatingContainerBottom}>
-                    <DocsRating />
-                  </div>
+                  <DocsRating />
+                </div>
               </div>
               {(editUrl || lastUpdatedAt || lastUpdatedBy) && (
                 <footer className="row docusaurus-mt-lg">
