@@ -15,6 +15,7 @@ keywords:
 ---
 
 import LinkToLatestJsApiDocs from '../../../../src/sap/sdk-js/LinkToLatestJsApiDocs';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
 Many applications on SAP Business Technology Platform (SAP BTP) communicate with other systems, e.g. line of business solutions.
 SAP BTP provides the concept of _destinations_ for convenient communication between SAP BTP and other systems.
@@ -235,13 +236,22 @@ It is your responsibility as a developer to ensure that the provided value for t
 ### Additional headers and query parameters on destinations
 
 The destination service has a convention to define static headers and query parameters on destinations.
-Create additional properties in your destination and define their values as follows:
+Create additional properties in your destination in the SAP BTP cockpit and define their values as follows:
 
 - `URL.headers.<header-key>` for headers
 - `URL.queries.<query-key>` for query parameters
 
-For every header or query parameter create an additional property and replace `<header-key>` and `<query-key>` with the name of your header or query parameter and set the respective value.
-The SAP Cloud SDK adds those additional headers and query parameter for every communication with the given destination.
+Replace `<header-key>` and `<query-key>` with the name of your headers or query parameters and set the respective values.
+
+<img
+  alt="Additional properties on destination"
+  src={useBaseUrl('img/destination-additional-properties.png')}
+  class="center"
+/>
+
+In the example above, the destination has an `apiKey` header with the value `<my-api-key>` and a `language` query parameter with the value `EN`.
+
+The SAP Cloud SDK adds those additional headers and query parameters for every communication with the given destination.
 
 :::note
 
