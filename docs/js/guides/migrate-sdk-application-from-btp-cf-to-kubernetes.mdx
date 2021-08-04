@@ -65,7 +65,8 @@ stringData:
 
 Once you are done, run `kubectl apply -f <your-binding>.yml` to create the secret in your cluster.
 
-Now let's take a look at how we adapt our application to deploy it to Kubernetes and make it consume services from inside of a Kubernetes cluster.  For this jump over to the [Deploy to Kubernetes](#deploy-to-kubernetes) section.
+Now let's take a look at how we adapt our application to deploy it to Kubernetes and make it consume services from inside of a Kubernetes cluster.
+For this jump over to the [Deploy to Kubernetes](#deploy-to-kubernetes) section.
 
 ## Staging Environments
 For a staging environment where you want to try out different services or experiment with service configurations, it is fine to use the following setup.
@@ -96,7 +97,8 @@ The `service-manager-credentials.txt` is sensitive data, keep it in a safe place
 To make the services available in the Kubernetes cluster we need to register a service broker into the Service Catalog of our Kubernetes cluster.  In SAP BTP Cloud Foundry the role of a service broker is fulfilled by the `Service Manager`.
 Register it using the Service Catalog CLI, `svcat`.
 
-To access the `Service Manager` on BTP CF, we need to install the `service-broker-proxy` in our K8s cluster. Here's how you do it:
+To access the `Service Manager` on SAP BTP CF, we need to install the `service-broker-proxy` in our K8s cluster.
+Here's how you do it:
 
 ```bash
 helm repo add peripli 'https://peripli.github.io'
@@ -137,7 +139,8 @@ svcat bind destination-service
 svcat bind xsuaa-service
 ```
 
-Now let's take a look at how we adapt our application to deploy it to Kubernetes and make it consume services from inside of a Kubernetes cluster.  For this jump over to the [Deploy to Kubernetes](#deploy-to-kubernetes) section.
+Now let's take a look at how we adapt our application to deploy it to Kubernetes and make it consume services from inside of a Kubernetes cluster. 
+For this jump over to the [Deploy to Kubernetes](#deploy-to-kubernetes) section.
 
 ## Production Environments
 For production environments, you need a reliable and reproducible way of configuring which services are running in your cluster.
@@ -245,7 +248,8 @@ Make sure it matches exactly to the `spec -> serviceInstanceName` field in the b
 
 Follow this pattern for all services your application needs to create and bind.
 
-Now let's take a look at how we adapt our application to deploy it to Kubernetes and make it consume services from inside of a Kubernetes cluster.  For this jump over to the [Deploy to Kubernetes](#deploy-to-kubernetes) section.
+Now let's take a look at how we adapt our application to deploy it to Kubernetes and make it consume services from inside of a Kubernetes cluster.
+For this jump over to the [Deploy to Kubernetes](#deploy-to-kubernetes) section.
 
 ## Deploy to Kubernetes
 To deploy an application to Kubernetes we have to take a look at two things:
