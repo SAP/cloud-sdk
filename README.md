@@ -1,5 +1,7 @@
 # SAP Cloud SDK documentation and support portal
 
+[![REUSE status](https://api.reuse.software/badge/github.com/SAP/cloud-sdk)](https://api.reuse.software/info/github.com/SAP/cloud-sdk)
+
 This repository contains:
 
 - Sources for the [SAP Cloud SDK Documentation](https://sap.github.io/cloud-sdk/)
