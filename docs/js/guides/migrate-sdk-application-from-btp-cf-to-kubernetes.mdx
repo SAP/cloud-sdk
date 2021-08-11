@@ -43,7 +43,7 @@ If you want to create and bind _new_ services, you can deploy a `hello-world` ap
 Once that is done, access and copy the JSON representation of the bindings and create a secret in Kubernetes out of them.
 
 The secret has to be in YAML format like in the example below. 
-Use the values from service binding's JSON data to replace the corresponding value in the stringData section of the YAML.
+Use the values from service binding's JSON data to replace the corresponding value in the `stringData` section of the YAML.
 
 ```yaml
 apiVersion: v1
@@ -67,7 +67,7 @@ stringData:
 
 Once you are done, run `kubectl apply -f <your-binding>.yml` to create the secret in your cluster.
 
-Now let's take a look at how we adapt our application to deploy it to Kubernetes and make it consume services from inside of a Kubernetes cluster.
+Now let's take a look at how we adapt our application to deploy it to Kubernetes and how it can consume services from inside of a Kubernetes cluster.
 For this jump over to the [Deploy to Kubernetes](#deploy-to-kubernetes) section.
 
 ## Staging Environments
@@ -102,7 +102,7 @@ To make the services available in the Kubernetes cluster, we need to register a 
 In SAP BTP Cloud Foundry the role of a service broker is fulfilled by the `Service Manager`.
 Register it using the Service Catalog CLI, `svcat`.
 
-To access the `Service Manager` on SAP BTP CF, we need to install the `service-broker-proxy` in our K8s cluster.
+To access the `Service Manager` on SAP BTP CF, we need to install the `service-broker-proxy` in our Kubernetes (K8s) cluster.
 Here's how you do it:
 
 ```bash
@@ -267,7 +267,7 @@ To deploy an application to Kubernetes we have to take a look at two things:
 We'll use our example application to demonstrate this.
 
 ### Example Application
-Here's the example application we're going to use: [Kubernetes app](https://github.tools.sap/cloudsdk/k8s-e2e-app) app.
+Here's the example application we're going to use: [Kubernetes app](https://github.tools.sap/cloudsdk/k8s-e2e-app).
 To figure out what has to be migrated we just have to take a look at the `manifest.yml`.
 
 ```yaml
@@ -535,7 +535,7 @@ Finally look at how we serve our service at the root of our subdomain, this way 
 After a short delay, you should be able to access the mentioned domains via a valid TLS.
 
 ## Configure Basic Authentication
-In case your application may doesn't have built-in authentication, you can add basic authentication in front of your Ingress.
+In case your application doesn't have built-in authentication, you can add basic authentication in front of your Ingress with the following steps:
 1. Create a `htpasswd` file
 
 ```bash
