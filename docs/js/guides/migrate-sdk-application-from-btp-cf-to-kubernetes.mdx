@@ -81,9 +81,9 @@ For a staging environment where you want to try out different services or experi
 - [`docker`](https://docs.docker.com/get-docker/)
 
 ### Configure the Service Manager
-First, create a Service Manager instance in CloudFoundry with the `subaccount-admin` plan. 
+First, create a service manager instance in CloudFoundry with the `subaccount-admin` plan. 
 
-To be able to create a Service Manager, you will need sufficient privileges in the SAP BTP Cloud Foundry.
+To be able to create a service manager, you will need sufficient privileges in the SAP BTP Cloud Foundry.
 Follow the steps below to get them:
 
 In the SAP BTP cockpit, navigate to your `subaccount` and choose **Security → Trust Configuration → SAP ID Service**.
@@ -98,7 +98,7 @@ The `service-manager-credentials.txt` contains sensitive data, keep it in a safe
 You will need the `username` and `password` later on.
 
 ### Service Broker Registration
-To make the services available in the Kubernetes cluster we need to register a service broker into the Service Catalog of our Kubernetes cluster.
+To make the services available in the Kubernetes cluster, we need to register a service broker into the Service Catalog of our Kubernetes cluster.
 In SAP BTP Cloud Foundry the role of a service broker is fulfilled by the `Service Manager`.
 Register it using the Service Catalog CLI, `svcat`.
 
@@ -194,7 +194,7 @@ spec:
 ```
 
 After you deployed the self-signed certificate issuer, we can start steps to deploy a service operator instance.
-- First, we create a `Service Manager` instance in SAP BTP CF with the `service-operator-access` plan.
+- First, we create a service manager instance in SAP BTP CF with the `service-operator-access` plan.
 - After creating an instance we also need to bind it.
   The binding `JSON` should look similar to this:
 
@@ -208,7 +208,7 @@ After you deployed the self-signed certificate issuer, we can start steps to dep
  }
 ```
 
-Once you have the data from the Service Manager's binding, provide it to `helm` and deploy the service operator.
+Once you have the data from the service manager's binding, provide it to `helm` and deploy the service operator.
 Helm is a package manager for Kubernetes.
 
 ```bash
