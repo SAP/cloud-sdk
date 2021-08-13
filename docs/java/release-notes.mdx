@@ -61,11 +61,13 @@ To continue using the latest features outlined in the release notes for version 
 
 ### Compatibility Notes
 
-- As part of the update of the OData VDM to SAP S/4HANA Cloud 2108 a few operations were removed. The operations were never supported by the S/4 system (like CRUD support for some entities), so no existing functionality is affected. The following services are affected:
-  - (OData V4) _Handling Unit Item – Create_ - `HANDLINGUNIT_0001`
-
-- As part of the update of the OData VDM to SAP S/4HANA Cloud 2108 the `SAP__Message` class was updated in a breaking manner. Here, the `numericSeverity` property was changed from `Short` to `Integer`. This affects multiple OData V4 services.
-  - _Note_: This change is likely to be reverted in the future.
+- While updating the OData client libraries (VDM) to match the latest SAP S/4HANA Cloud 2108 release we identified the following breaking changes:
+  - Affected service ID: `HANDLINGUNIT_0001`. In the OData V4 service _Handling Unit Item_ the `Create` operation was removed.
+  No existing functionality is affected because this operation has never been supported by S/4HANA.
+  - `SAP__Message` class was updated in a breaking manner.
+  Its `numericSeverity` property was changed from `Short` to `Integer`.
+  This affects multiple OData V4 services.
+  _Note_: This change is likely to be reverted in the future. We'll separately communicate about this in the release notes.
 
 ### New Functionality
 
