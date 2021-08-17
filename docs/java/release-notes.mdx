@@ -63,32 +63,33 @@ To continue using the latest features outlined in the release notes for version 
 
 - While updating the OData client libraries (VDM) to match the latest SAP S/4HANA Cloud 2108 release we identified the following breaking changes:
   - Affected service ID: `HANDLINGUNIT_0001`. In the OData V4 service _Handling Unit Item_ the `Create` operation was removed.
-  No existing functionality is affected because this operation has never been supported by S/4HANA.
+    No existing functionality is affected because this operation has never been supported by S/4HANA.
   - `SAP__Message` class was updated in a breaking manner.
-  Its `numericSeverity` property was changed from `Short` to `Integer`.
-  This affects multiple OData V4 services.
-  _Note_: This change is likely to be reverted in the future. We'll separately communicate about this in the release notes.
+    Its `numericSeverity` property was changed from `Short` to `Integer`.
+    This affects multiple OData V4 services.
+    _Note_: This change is likely to be reverted in the future. We'll separately communicate about this in the release notes.
 
 ### New Functionality
 
 - The SAP Cloud SDK now provides out-of-the-box support for the [Identity Authentication Service](https://help.sap.com/viewer/6d6d63354d1242d185ab4830fc04feb1/Cloud/en-US/27882717f44b445fa287936c6f43dc1f.html) (IAS). Here's the list of accessors that are currently able to handle JWTs authored by the IAS service:
+
   - AuthTokenAccessor
   - TenantAccessor
   - PrincipalAccessor
 
-- We updated the pregenerated OData V2 and V4 type-safe clients libraries for the [latest 2108 release of SAP S/4HANA Cloud](https://news.sap.com/2021/08/sap-s4hana-cloud-2108-engineering-innovations/). 
-After updating your dependencies you'll find the latest version of S/4HANA Cloud services, operations, and entities in 
+- We updated the pregenerated OData V2 and V4 type-safe clients libraries for the [latest 2108 release of SAP S/4HANA Cloud](https://news.sap.com/2021/08/sap-s4hana-cloud-2108-engineering-innovations/).
+  After updating your dependencies you'll find the latest version of S/4HANA Cloud services, operations, and entities in
 - `com.sap.cloud.sdk.s4hana.datamodel.odata.services`
 - `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`
-Find details of OData services supported by the SAP Cloud SDK in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/products/SAPS4HANACloud/overview).
-We excluded the following services from the latest release because of identified breaking changes:
+  Find details of OData services supported by the SAP Cloud SDK in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/products/SAPS4HANACloud/overview).
+  We excluded the following services from the latest release because of identified breaking changes:
   - (OData V2) _Maintenance Item_ - `API_MAINTENANCEITEM`
   - (OData V2) _Maintenance Plan_ - `API_MAINTENANCEPLAN`
   - (OData V2) _Bills of Material_ - `API_BILL_OF_MATERIAL_SRV_0002`
   - (OData V2) _Service Order_ - `API_SERVICE_ORDER_SRV`
   - (OData V4) _Supplier Item_ - `SUPPLIERITEM_0001`
-We are working with the S/4HANA team to make sure the changes are intended and plan to add these services in the following releases. We'll communicate it explicitly in the release notes.
-Let us know via [support](https://sap.github.io/cloud-sdk/docs/overview/get-support) if you have any deadlines related to the consumption of those services.
+    We are working with the S/4HANA team to make sure the changes are intended and plan to add these services in the following releases. We'll communicate it explicitly in the release notes.
+    Let us know via [support](https://sap.github.io/cloud-sdk/docs/overview/get-support) if you have any deadlines related to the consumption of those services.
 
 ### Improvements
 
@@ -121,10 +122,10 @@ Let us know via [support](https://sap.github.io/cloud-sdk/docs/overview/get-supp
 
 ### New Functionality
 
-- We introduced a new API to give you precise control over discarding cache entries by passing a `CacheFilter` instance to your resilience configuration like this `ResilienceDecorator.clearCache(ResilienceConfiguration, CacheFilter)`. 
-You can combine multiple cache filters to a disjunction or conjunction by calling `CacheFilter.or(firstFilter, secondFilter)` or `CacheFilter.and(firstFilter, secondFilter)` respectively. 
-Check more examples on how to leverage`CacheFilter` in the [detailed feature documentation](features/resilience/caching.mdx#precise-control-over-cache-entries-via-cachefilter). 
-- The OData V4 generator now supports the generation of actions with non-primitive value types, i.e. `Entity`, `Complex type`, `Enum`, and collection-based types. 
+- We introduced a new API to give you precise control over discarding cache entries by passing a `CacheFilter` instance to your resilience configuration like this `ResilienceDecorator.clearCache(ResilienceConfiguration, CacheFilter)`.
+  You can combine multiple cache filters to a disjunction or conjunction by calling `CacheFilter.or(firstFilter, secondFilter)` or `CacheFilter.and(firstFilter, secondFilter)` respectively.
+  Check more examples on how to leverage`CacheFilter` in the [detailed feature documentation](features/resilience/caching.mdx#precise-control-over-cache-entries-via-cachefilter).
+- The OData V4 generator now supports the generation of actions with non-primitive value types, i.e. `Entity`, `Complex type`, `Enum`, and collection-based types.
 
 ### Improvements
 
@@ -134,9 +135,9 @@ Check more examples on how to leverage`CacheFilter` in the [detailed feature doc
     - Update [XSUAA Token Client and Token Flow API](https://github.com/SAP/cloud-security-xsuaa-integration/tree/master/token-client) from `2.9.0` to `2.10.2`
   - Other dependency updates:
     - Minor version updates:
-        - Update Java JWT from `3.17.0` to `3.18.1`
-        - Update Jackson from `2.12.3` to `2.12.4`
-        - Update Spring from `5.3.7` to `5.3.8`
+      - Update Java JWT from `3.17.0` to `3.18.1`
+      - Update Jackson from `2.12.3` to `2.12.4`
+      - Update Spring from `5.3.7` to `5.3.8`
 
 ## 3.49.0 - July 15, 2021
 
