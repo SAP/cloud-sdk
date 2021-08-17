@@ -1,0 +1,126 @@
+---
+id: upgrade-strategy
+title: Upgrade Strategy for the SAP Cloud SDK for JavaScript
+sidebar_label: Upgrade Strategy
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+---
+
+# Upgrade Strategy for the SAP Cloud SDK for JavaScript
+
+The SAP Cloud SDK for JavaScript was released over 2 years ago in March 2019.
+Since then, we have collected ideas that will help speed up development and introduce valuable features, but require breaking changes.
+We will outline our plans regrading the schedule for major releases, SAP Cloud SDK version 2 and developer support in this document.
+
+:::info
+
+This upgrade strategy only applies to the SAP Cloud SDK for JavaScript and is not applicable to the SAP Cloud SDK for Java!
+
+:::
+
+## Abstract
+
+- We will release a new major version every 6 to 12 months with version 2 expected January 2022
+- We will ensure that upgrading will take minimal effort and provide a step-by-step guide
+- We will provide new fixes and features only for the most current version of the SAP Cloud SDK
+
+## What Will Happen?
+
+Our mission is to help you develop cloud-based apps and extensions to SAP solutions.
+So far, we always stayed backwards compatible to avoid migration efforts for you.
+This has been the right strategy until now, but some past decisions are slowing or preventing progress.
+Making these changes will have many benefits for the usability of the SAP Cloud SDK and our development speed.
+
+With this document, we want to share our plans regarding timeline, content and support.
+Following our mission, we want to make upgrading as easy as possible.
+Please [reach out to us](https://github.com/SAP/cloud-sdk-js/discussions) if you have feedback, suggestions or improvements!
+
+## When Will This Happen?
+
+The preliminary timeline looks as follows:
+
+1. September/October: Start of development
+2. November: Publish beta versions and start of feedback cycle
+3. December: Publish release candidate
+4. January 2022: Release of SAP Cloud SDK 2.0.0
+
+We will continuously publish beta versions and would appreciate feedback on these releases.
+This feedback will be included in later beta releases.
+Once all features are implemented, a release candidate will be published for end-to-end evaluation.
+The final release will happen after the evaluation of the release candidate is completed.
+
+During this time, we may postpone changes that have a workaround or are not time sensitive.
+Important and time sensitive issues will, of course, be resolved within our usual response time.
+
+We will continuously release new major versions aiming for a 6 to 12 months cycle.
+Between these major releases, we will continue with a biweekly release cycle to deliver non-breaking changes.
+
+## What Will Change in Version 2?
+
+The preliminary list of changes are:
+
+### Replace `Moment.js` With a Flexible Middleware Approach for Deserialization
+
+`Moment.js` used to be somewhat of a standard for JavaScript date handling, but is now in [maintenance mode](https://www.npmjs.com/package/moment#project-status).
+It is also a rather large dependency and not optimized for tree shaking.
+We will remove the direct dependency to `Moment.js` and allow you to choose a middleware that suits your project.
+We will provide a few popular options including a `Moment.js`-based middleware for the easiest possible migration.
+This gives you flexibility while reducing package size dramatically.
+
+### Split Packages and Export Only the Public Interface
+
+The SAP Cloud SDK for JavaScript exports many functions that are used across our packages, but are not supposed to be part of the public interface.
+We will clean up these exports and are expecting a better experience when using IntelliSense or similar autocompletion tools.
+As long as you don't use undocumented methods, this change should not need any migration.
+
+### Increase Compilation Target to ECMAScript 2019
+
+We are currently compiling to meet the ECMAScript 5 standard.
+This is not needed anymore as `Node.js` fully supports ECMAScript 2019 in both the Maintenance LTS (v12) and Active LTS (v14).
+We expect a reduction in package size and a slight performance improvement.
+No changes to your projects will be necessary unless it depends on ECMAScript 5 compatibility.
+
+### Remove Deprecated Functionality
+
+We marked outdated functionality as deprecated.
+These functions will be removed during the major version increase.
+We expect a minor reduction in package size.
+If you still use a deprecated function, you should start replacing any occurrence with the proposed alternative as mentioned in the release notes.
+
+## What Will the Upgrade Look Like?
+
+Applying an upgrade is additional effort.
+We want to minimize this.
+Our team will provide a detailed upgrade guide for each major version release.
+The guide will include step-by-step changes to resolve any incompatibilities.
+Following these steps should be possible in less than a day, no matter the project size.
+
+:::tip Looking For Feedback
+
+To achieve this, we will need your feedback during beta and release candidate phase.
+Please let us know if you want to collaborate with us on finding problems and solutions for the upgrade guide.
+
+:::
+
+## Will Old Major Versions Be Updated?
+
+We decided that we will not provide bug fixes or features for older versions.
+The SAP Cloud SDK is an open source project and everyone is welcome to contribute, but we are a small team with limited time.
+As more major versions are released, the complexity for maintenance and support increases dramatically.
+
+Our team will provide bug fixes and features only in the newest version.
+We recommend you upgrade early to get access to any new fixes and features.
+If something is not covered in our upgrade guide or otherwise prevents you from upgrading, we will happily support you to resolve that issue.
+
+## Onward
+
+We are looking forward to the next major release.
+This first release has some features and many changes behind the scenes.
+It will give us more freedom to provide new features and reduce technical debt to accelerate our development.
+We are hoping everything will go smooth, but we are also looking forward to your feedback.
+It's the only way we can ensure that the next upgrade will be even better!
