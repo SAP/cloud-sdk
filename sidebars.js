@@ -110,6 +110,7 @@ module.exports = {
     JavaScript: [
       'js/overview-cloud-sdk-for-javascript',
       'js/getting-started',
+      'js/announcing-version-2',
       'js/upgrade-strategy',
       {
         type: 'category',
