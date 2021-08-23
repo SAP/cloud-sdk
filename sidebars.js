@@ -182,13 +182,13 @@ module.exports = {
       },
       {
         type: 'category',
-        label: 'Video Tutorials',
-        items: ['js/video/demo-of-cloud-sdk-for-javascript-with-calm-and-cap']
+        label: 'Releases',
+        items: ['js/release-policy', 'js/announcing-version-2']
       },
       {
         type: 'category',
-        label: 'Releases',
-        items: ['js/release-policy', 'js/announcing-version-2']
+        label: 'Video Tutorials',
+        items: ['js/video/demo-of-cloud-sdk-for-javascript-with-calm-and-cap']
       },
       'js/api',
       'js/release-notes-sap-cloud-sdk-for-javascript-and-typescript',
