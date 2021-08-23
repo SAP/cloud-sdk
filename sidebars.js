@@ -110,8 +110,6 @@ module.exports = {
     JavaScript: [
       'js/overview-cloud-sdk-for-javascript',
       'js/getting-started',
-      'js/announcing-version-2',
-      'js/upgrade-strategy',
       {
         type: 'category',
         label: 'Features',
@@ -186,6 +184,11 @@ module.exports = {
         type: 'category',
         label: 'Video Tutorials',
         items: ['js/video/demo-of-cloud-sdk-for-javascript-with-calm-and-cap']
+      },
+      {
+        type: 'category',
+        label: 'Releases',
+        items: ['js/release-policy', 'js/announcing-version-2']
       },
       'js/api',
       'js/release-notes-sap-cloud-sdk-for-javascript-and-typescript',
