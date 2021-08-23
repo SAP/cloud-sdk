@@ -35,14 +35,23 @@ The reasons to separate destinations and application are manifold:
 
 The SAP Cloud SDK helps you to authenticate against the destination service and retrieve destinations into your application.
 
-The following example shows a request against the Business Partner service with the SAP Cloud SDK to retrieve the top 5 business partners:
+The SAP Cloud SDK supports [OData](../odata/overview.mdx) and [OpenApi](../openapi/overview.mdx) services.
+For both service types the `execute()` methods triggers a request to a target system:
 
 ```ts
-BusinessPartner.requestBuilder().getAll().top(5).execute(myDestination);
+//OData
+const responseOData = await BusinessPartner.requestBuilder()
+  .getAll()
+  .execute(myDestination);
+//OpenApi
+const responseOpenApi = await MyApi.myFunction().execute(myDestination);
 ```
 
 `myDestination` is an SAP Cloud SDK representation of a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_core.Destination" name="destination" />.
 The given request is executed against `myDestination`.
+
+For the rest of the document, we will discuss the different options on destination lookup.
+All statements equally apply to OData and OpenAPI based services.
 
 ## Creating Destinations Manually
 
