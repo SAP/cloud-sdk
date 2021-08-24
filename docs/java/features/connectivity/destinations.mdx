@@ -206,6 +206,9 @@ The SAP Cloud SDK offers the interface `DestinationHeaderProvider` which defines
 At runtime, while preparing an outbound request, the SAP Cloud SDK will use all implementations of that interface which have been registered via the Java ServiceLoader mechanism (see below).
 For each registered implementation it invokes the method `getHeaders(DestinationRequestContext)` and appends the returned headers to the currently prepared request.
 
+You can also add headers to a specific destination using properties so they will be always included when calling the target system.
+
+
 ### Implement Own Header Provider
 
 #### Implement the Interface `DestinationHeaderProvider`
@@ -251,12 +254,51 @@ For example, if your custom implementation is named `ApiTokenHeaderProvider` in 
   com.example.ApiTokenHeaderProvider
   ```
 
+### Add Headers via Destination Properties
+To include headers into every call to a target system you can define them as properties on the destination.
+The method `.property` can be called on the destination. 
+Using the "URL.headers." prefix for the key argument enables that key-value pair to be considered as a header.
+Only the remaining part of the key will be used.
+
+Here is one simple example implementation which adds the ("key1", "value1") header to every call to the destination:
+
+```java
+destination =
+            DefaultHttpDestination
+                .builder(server.baseUrl())
+                .property("URL.headers.key1", "value1")
+                .build();
+```
+
+## Provide Headers for Destinations
+
+### How It Works
+
+You can add query parameters to a specific destination using properties so they will always be included in the query string when calling the target system.
+
+### Add Query Parameters via Destination Properties
+To include query parameters in the query string when calling to a target system you can define them as properties on the destination.
+The method `.property` can be called on the destination. 
+Using the "URL.queries." prefix for the key argument enables that key-value pair to be considered as query parameters.
+Only the remaining part of the key will be used.
+
+Here is one simple example implementation which adds "key1=value1" to the query string when calling the destination:
+
+```java
+destination =
+            DefaultHttpDestination
+                .builder(server.baseUrl())
+                .property("URL.queries.key1", "value1")
+                .build();
+```
+
 ## Retrieving Destinations
 
 ### Get All Destinations From the Destination Service on Cloud Foundry
 
 To fetch all destinations from the Destination Service, you need to make a call to `tryGetAllDestinations`.
-The method queries the [Destination Service API](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview) and retrieves all the destinations available at the service instance and sub-account level.
+The method queries the [
+Service API](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview) and retrieves all the destinations available at the service instance and sub-account level.
 In case there is a destination available on both the levels with the same name, then this method prioritizes the destination at the service instance level.
 
 Below is the sample call to `tryGetAllDestinations`:
@@ -570,3 +612,5 @@ cf ssh app-name -L proxy-port:proxy-host:proxy-port
 :::success Ready
 Now your local setup is ready to consume an On-premise HTTP destination.
 :::
+
+
