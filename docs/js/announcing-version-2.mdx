@@ -1,0 +1,97 @@
+---
+title: SAP Cloud SDK for JavaScript 2.x - Announce New Major Release
+sidebar_label: Announcing Version 2.x
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+  - version 2
+  - announcement
+  - upgrade
+  - migration
+---
+
+:::info relevance
+
+This announcement only applies to the SAP Cloud SDK for JavaScript.
+It is not relevant for the SAP Cloud SDK for Java.
+
+:::
+
+:::tip Release Policy
+
+Check our [general release policy](release-policy.mdx).
+
+:::
+
+## Timeline for the Version 2.x
+
+The planned timeline looks as follows:
+
+1. September/October: Start of development
+2. November: Publish beta versions and start of feedback cycle
+3. December: Publish release candidate
+4. January 2022: Release of SAP Cloud SDK 2.0.0
+
+- We will continuously publish beta versions and would appreciate feedback from early adopters.
+- Constructive suggestions will be included in the ongoing beta releases.
+- Once the [scope of version 2.x](#what-will-change-in-version-2) is implemented, a release candidate will be published for end-to-end evaluation.
+- The final release will happen after the evaluation of the release candidate is completed.
+
+:::info
+
+During development time, we may postpone changes that have a workaround in version 1.x or are not time-critical.
+Important and time-critical issues will be resolved within our usual SLA.
+
+:::
+
+## What Will Change in Version 2?
+
+The planned list of changes is:
+
+### Replace `Moment.js` With a Flexible Middleware Approach for Deserialization
+
+`Moment.js` used to be somewhat of a standard for JavaScript date handling, but is now in [maintenance mode](https://www.npmjs.com/package/moment#project-status).
+It is also a rather large dependency and not optimized for tree shaking.
+We will remove the direct dependency to `Moment.js` and allow you to choose a middleware that suits your project.
+We will provide a few popular options including a `Moment.js` - based middleware for the easiest possible migration.
+This gives you flexibility while reducing package size dramatically.
+
+### Split Packages and Export Only the Public Interface
+
+The SAP Cloud SDK for JavaScript exports many functions that are used across our packages, but are not supposed to be part of the public interface.
+We will clean up these exports and are expecting a better experience when using IntelliSense or similar auto-completion tools.
+As long as you don't use undocumented methods, this change should not need any changes on your side.
+
+### Increase Compilation Target to ECMAScript 2019
+
+We are currently compiling to meet the ECMAScript 5 standard.
+This is not needed anymore as `Node.js` fully supports ECMAScript 2019 in both the Maintenance LTS (v12) and Active LTS (v14).
+We expect a reduction in package size and a slight performance improvement.
+No changes to your projects will be necessary unless it depends on ECMAScript 5 compatibility.
+
+### Remove Deprecated Functionality
+
+We marked outdated functionality as deprecated.
+These functions will be removed during the major version increase.
+We expect a minor reduction in package size.
+If you still use a deprecated function, you should start replacing any occurrence with the proposed alternative as mentioned in the release notes.
+
+## What Will the Upgrade Look Like?
+
+Applying an upgrade is an additional effort.
+We want to minimize this effort on the customer's side.
+Our team will provide a detailed upgrade guide for each major release.
+The guide will include step-by-step changes to resolve any incompatibilities.
+Upgrading should be possible in less than a day regardless of the project size.
+
+:::tip Looking For Feedback
+
+To achieve this, we will need your feedback during the beta and release candidate phase.
+Please let us know if you want to collaborate with us on finding problems and solutions for the upgrade guide.
+[Reach out to us](https://github.com/SAP/cloud-sdk-js/discussions/1518) with your feedback, suggestions, or improvement ideas.
+
+:::

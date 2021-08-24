@@ -182,6 +182,11 @@ module.exports = {
       },
       {
         type: 'category',
+        label: 'Releases',
+        items: ['js/release-policy', 'js/announcing-version-2']
+      },
+      {
+        type: 'category',
         label: 'Video Tutorials',
         items: ['js/video/demo-of-cloud-sdk-for-javascript-with-calm-and-cap']
       },
