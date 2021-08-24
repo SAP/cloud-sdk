@@ -254,12 +254,13 @@ For example, if your custom implementation is named `ApiTokenHeaderProvider` in 
   ```
 
 ### Add Headers via Destination Properties
-To include headers into every call to a target system you can define them as properties on the destination.
-The method `.property` can be called on the destination. 
-Using the "URL.headers." prefix for the key argument enables that key-value pair to be considered as a header.
-Only the remaining part of the key will be used.
 
-Here is one simple example implementation which adds the ("key1", "value1") header to every call to the destination:
+To include headers into every call to a target system you can define them as properties on the destination.
+The method `.property()` can be called on the destination.
+Using the "URL.headers." prefix for the key argument makes the key-value pair considered as a header.
+Only the remaining part of the key will be used to create the header.
+
+Here is one example implementation which adds the ("key1", "value1") header to every call to the destination:
 
 ```java
 destination =
@@ -273,14 +274,15 @@ destination =
 
 ### How It Works
 
-You can add query parameters to a specific destination using properties. 
+You can add query parameters to a specific destination using properties.
 So they will always be included in the query string when calling the target system.
 
 ### Add Query Parameters via Destination Properties
+
 To include query parameters in the query string when calling to a target system you can define them as properties on the destination.
-The method `.property` can be called on the destination. 
-Using the "URL.queries." prefix for the key argument enables that key-value pair to be considered as query parameters.
-Only the remaining part of the key will be used.
+The method `.property()` can be called on the destination.
+Using the "URL.queries." prefix for the key argument makes the key-value pair considered as query parameters.
+Only the remaining part of the key will be used in the query string.
 
 Here is one simple example implementation which adds "key1=value1" to the query string when calling the destination:
 
