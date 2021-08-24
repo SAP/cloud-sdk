@@ -11,7 +11,8 @@ keywords:
   - JavaScript
   - TypeScript
 ---
-import useBaseUrl from '@docusaurus/useBaseUrl';
+
+import LinkToLatestJsApiDocs from '../../../../src/sap/sdk-js/LinkToLatestJsApiDocs';
 
 ## What Is the Generic HTTP Client?
 
@@ -22,7 +23,7 @@ For the final HTTP calls, we have decided to use the axios library.
 
 <img
   alt="The layers of HTTP clients in the SDK."
-  src={useBaseUrl('img/odata-client-layers.png')}
+  src={require('@site/static/img/odata-client-layers.png').default}
   class="center"
   width="50%"
 />
@@ -62,17 +63,17 @@ executeHttpRequest(destination, requestConfig, httpRequestOptions);
 
 The `destination` argument is either a full destination object you have already fetched or an object containing a destination name and JWT.
 In the latter case the SAP Cloud SDK [fetches the destination](../connectivity/destination.mdx) for you.
-The [request configuration](pathname:///api/1.28.1/interfaces/sap_cloud_sdk_core.httprequestconfig) argument contains the request configuration.
+The <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_core.HttpRequestConfig" name="request configuration" /> argument contains the request configuration.
 A minimal configuration would look like this:
 
 ```JSON
 {
-     method: 'get',
-     params: {
-          a: 'a',
-          b: 'b'
-     },
-    ...
+  method: 'get',
+  params: {
+    a: 'a',
+    b: 'b'
+  },
+  ...
 }
 ```
 

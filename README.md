@@ -1,5 +1,7 @@
 # SAP Cloud SDK documentation and support portal
 
+[![REUSE status](https://api.reuse.software/badge/github.com/SAP/cloud-sdk)](https://api.reuse.software/info/github.com/SAP/cloud-sdk)
+
 This repository contains:
 
 - Sources for the [SAP Cloud SDK Documentation](https://sap.github.io/cloud-sdk/)
@@ -7,9 +9,9 @@ This repository contains:
 
 For the [Support](https://github.com/SAP/cloud-sdk-js/issues) on SAP Cloud SDK for JavaScript us this [repository](https://github.com/SAP/cloud-sdk-js).
 
-## Looking for the SAP Cloud SDK for JavaScript / TypeScript?
+## Looking for the repository of the SAP Cloud SDK for JavaScript / TypeScript?
 
-It has moved [here](https://github.com/SAP/cloud-sdk-js).
+Find it here [here](https://github.com/SAP/cloud-sdk-js).
 
 ## Getting Support
 

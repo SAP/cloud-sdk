@@ -101,7 +101,6 @@ The cached `HttpClient` instances are also isolated based on the tenant and prin
 
 :::
 
-
 ## Decorating Destinations
 
 Depending on the use case, one needs to wrap the accessed destination before issuing a request to a system.
@@ -302,6 +301,8 @@ In a simple application without provider/subscriber setup, your initial configur
 DestinationOptions options = DestinationOptions.builder().build();
 ```
 
+##### Retrieval Strategy Options
+
 For a provider/subscriber setup, a [retrieval strategy](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/connectivity/ScpCfDestinationRetrievalStrategy.html) must be chosen according to your particular use case from:
 
 - `ALWAYS_SUBSCRIBER` (default)
@@ -321,7 +322,9 @@ DestinationOptions options =
         .build();
 ```
 
-Besides the retrieval strategy, the SAP Cloud SDK also offers a _token exchange strategy_ that lets you change the behavior when authentication requires a user token exchange.
+##### Token Exchange Options
+
+Besides the retrieval strategy, the SAP Cloud SDK also offers a [token exchange strategy](https://help.sap.com/doc/69f4a2d15d9b404fac06e968f0633d98/1.0/en-US/com/sap/cloud/sdk/cloudplatform/connectivity/ScpCfDestinationTokenExchangeStrategy.html) that lets you change the behavior when authentication requires a user token exchange.
 There are three different options available:
 
 - `LOOKUP_THEN_EXCHANGE` (default)

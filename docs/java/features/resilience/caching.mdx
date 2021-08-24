@@ -13,7 +13,6 @@ keywords:
   - cache
   - JCache
   - CacheConfiguration
-
 ---
 
 Caching may improve your application's performance and responsiveness to your consumers.
@@ -169,7 +168,7 @@ See the section on isolation levels under [Resilience](https://sap.github.io/clo
 
 ### Removing Cache Entries Manually
 
-The SAP Cloud SDK offers different possibilities to let you remove cached entries manually.
+The SAP Cloud SDK offers different possibilities to manually remove cached entries.
 First, you may remove individual cache entries by:
 
 ```java
@@ -192,6 +191,64 @@ This operation is intended to delete **all** cache entries associated with the g
 It intentionally ignores the isolation mode and, in consequence, affects all tenants and principals.
 
 :::
+
+#### Precise Control Over Cache Entries via `CacheFilter`
+
+If you need fine-grained control over which cache entries to clear, you may create your custom `CacheFilter`.
+
+```java
+// CacheFilter which matches all cache entries belonging to tenant "tenant1"
+CacheFilter tenantFilter = ( configuration, cacheKey, cacheEntry ) -> cacheKey.getTenantId().isDefined() && cacheKey.getTenantId().get().equals("tenant1");
+
+// clears all cache entries which match the provided CacheFilter, in this example all cache entries for "tenant1"
+ResilienceDecorator.clearCache(resilienceConfig, tenantFilter);
+```
+
+You can even combine multiple `CacheFilter` instances for the cache clearing:
+
+```java
+// CacheFilter which matches all cache entries belonging to tenant "tenant1"
+CacheFilter tenantFilter = ( configuration, cacheKey, cacheEntry ) -> cacheKey.getTenantId().isDefined() && cacheKey.getTenantId().get().equals("tenant1");
+
+// CacheFilter which matches all cache entries belonging to principal "principal1"
+CacheFilter principalFilter = ( configuration, cacheKey, cacheEntry ) -> cacheKey.getPrincipalId().isDefined() && cacheKey.getPrincipalId().get().equals("principal1");
+
+// Combining two filters with CacheFilter.and(...) to a conjunction
+CacheFilter combinedAndFilter = CacheFilter.and(tenantFilter, principalFilter);
+
+// Combining two filters with CacheFilter.or(...) to a disjunction
+CacheFilter combinedOrFilter = CacheFilter.or(tenantFilter, principalFilter);
+
+// clears all cache entries which match the provided CacheFilter instance
+ResilienceDecorator.clearCache(resilienceConfig, combinedAndFilter);
+```
+
+This approach disregards the built-in tenant/principal and parameter isolation and solely considers the provided cache filters.
+
+The SAP Cloud SDK provides prepared cache filters you can reuse for matching on tenant, principal or parameters.
+
+```java
+CacheFilter matchesCurrentParameters = CacheFilter.keyMatchesParameters();
+
+CacheFilter matchesCurrentTenant = CacheFilter.keyMatchesTenant();
+
+CacheFilter matchesCurrentPrincipal = CacheFilter.keyMatchesPrincipal();
+```
+
+Note that these built-in cache filters determine the tenant, the principal and the parameters to match respecting the `ResilienceConfiguration` of the cache.
+
+Additionally, you can create cache filters for a certain tenant, principal or certain parameters as well.
+
+```java
+Iterable<Object> myParameters = obtainParameters();
+CacheFilter matchesMyParameters = CacheFilter.keyMatchesParameters(parameters);
+
+Tenant myTenant = obtainTenant();
+CacheFilter matchesMytenant = CacheFilter.keyMatchesTenant(myTenant);
+
+Principal myPrincipal = obtainPrincipal();
+CacheFilter matchesMyPrincipal = CacheFilter.keyMatchesPrincipal(myPrincipal);
+```
 
 ## Advanced Cache Manipulation
 
