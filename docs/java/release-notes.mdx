@@ -55,6 +55,43 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed issues
 -->
 
+## 3.52.0 - August 26, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.52.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+
+### New Functionality
+
+- We enabled support for certificate-based authorization (mTLS) for services on Cloud Foundry.
+  - If the service binding has a property `credentials: { credential-type: x509 }` then this is an indicator for the new authorization method.
+  - Please note: an information message is being logged with WARN log level from an internal library.
+    However, the logic is safe to use, the message will be removed in the near future.
+
+- We enabled the usage of certificate without password protection for the Destination Service on Cloud Foundry.
+
+- We updated the remaining OData VDM services to the [newest release 2108 of SAP S/4HANA Cloud](https://news.sap.com/2021/08/sap-s4hana-cloud-2108-engineering-innovations/). Operations and datatypes of the following services may have faced backwards-incompatible changes, that can be explored in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/products/SAPS4HANACloud/overview):
+  - (OData V2) _Maintenance Item_ - `API_MAINTENANCEITEM`
+  - (OData V2) _Maintenance Plan_ - `API_MAINTENANCEPLAN`
+  - (OData V2) _Bills of Material_ - `API_BILL_OF_MATERIAL_SRV_0002`
+  - (OData V2) _Service Order_ - `API_SERVICE_ORDER_SRV`
+  - (OData V4) _Supplier Item_ - `SUPPLIERITEM_0001`
+
+### Improvements
+
+- Dependency updates:
+  - Update BTP Neo Tomcat 8 SDK from `4.5.3` to `4.6.5`
+  - Update [XSUAA Token Client and Token Flow API](https://github.com/SAP/cloud-security-xsuaa-integration/tree/master/token-client) from `2.10.2` to `2.10.3`
+  - Update Neo JavaEE 7 SDK from `1.101.4` to `1.102.5`
+  - Update Error Prone from `2.8.0` to `2.8.1`
+  - Update PMD from `6.36.0` to `6.37.0`
+  - Update Wiremock from `2.29.1` to `2.30.0`
+  - Update ASM from `9.0` to `9.2`
+  - Update Spring from `5.3.8` to `5.3.9`
+  - Update Spring Boot from `2.5.0` to `2.5.3`
+  - Update Commons CSV from `1.8` to `1.9.0`
+  - Update Hibernate Core from `5.5.4.Final` to `5.5.6`
+  - Update Logback from `1.2.3` to `1.2.5`
+
+
 ## 3.51.0 - August 12, 2021
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.51.0) | [Javadoc](https://help.sap.com/doc/0d9c3f5f8d874f99a32444910d7a3504/1.0/en-US/index.html)
