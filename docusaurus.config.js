@@ -1,7 +1,7 @@
 const { ProvidePlugin } = require('webpack');
 
-// We have to polyfill some Node APIs because of Docusaurus migrated to Webpak 5
-// This is mainly required because of remark related modules which doesn't load otherwise
+// We have to polyfill some Node APIs because Docusaurus migrated to Webpack 5
+// This is mainly required because of remark related modules which don't load otherwise
 // Also process is required for local runs
 class ESMPolyfillWrapper {
   apply(compiler) {
