@@ -26,9 +26,9 @@ Currently being limited to `XSUAA`, support exists but is not tested extensively
 Mutual `TLS` or `mTLS` for short is a method for mutual authentication.
 It ensures that before proceeding with the `HTTP` exchange both the client and the server each mutually verify each other's identities by the use of `X.509` certificates.
 
-## Usage of `client_secret` and shortcomings
+## Usage of `client credentials` and shortcomings
 When a service or an application is protected using [`XSUAA`](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/6373bb7a96114d619bfdfdc6f505d1b9.html), we need to obtain an access token from `XSUAA` to access the service or application.
-To obtain an access token or `JWT`, first we extract the `clientid`, `clientsecret` and `uri` from the environment variable of the service binding and then using the `url` from `xsuaa` service binding, trigger a [`Client credentials token flow`](https://github.com/SAP/cloud-security-xsuaa-integration/tree/main/token-client) to obtain a `JWT`.
+To obtain an access token or `JWT`, first we extract the `clientid`, `clientsecret` and `uri` from the service binding and then using the `url` from `xsuaa` service binding, trigger a [`Client credentials token flow`](https://github.com/SAP/cloud-security-xsuaa-integration/tree/main/token-client) to obtain a `JWT`.
 
 Please note that the process of obtaining the `JWT` was internally carried out by the SAP Cloud SDK and developers need not worry about doing this explicitly.
 Now, adding this obtained `JWT` as an `Authorisation` header to the request to the service, ensures that your request gets authorised and authenticated.
@@ -39,9 +39,10 @@ With the use of certificates the risk of leaking powerful technical user credent
 ## Certificate based Authentication for services (Soon to be default)
 To adhere to the latest recommended security best practices by SAP, some re-use and kernel services have enabled certificate based authentication.
 As a consequence, SAP Cloud SDK also supports certificate based authentication while accessing these services.
+In general, if a service binding has a property `credentials: { credential-type: x509 }` then this is an indication that certificate based authentication can be used to access the service.
 
-XSUAA service is one among the services that has enabled certificate based authentication.
-This means that in the environment variable of the service binding in addition to the `client_secret` you will also find a `certificate` entry now.
+`XSUAA` service is one among the services that has enabled certificate based authentication.
+This means that in the service binding in addition to the `client_secret` you will also find a `certificate` and `key` entry now.
 For e.g.
 ```
 {
@@ -51,20 +52,45 @@ For e.g.
 				"label": "xsuaa",
 				...
 				"credentials": {
+				    ...
+				    "credential-type": "x509"
 					"clientid": "fictional-client-id",
 					"clientsecret": "fictional-secret",
 					"certificate": "-----BEGIN CERTIFICATE-----fictional-certificate-----END CERTIFICATE-----\n",
 					"key": "key"
+					...
 				},
 			}
 		]
 	}
 }
 ```
-This certificate would now be used to establish a secure session to obtain the `JWT` instead of the `clientsecret` used previously.
-Please note that the process of obtaining the `JWT` is still internally carried out by the SAP Cloud SDK, we just use the `certificate` now if the binding contains the `certificate`.
+This certificate would now be used to establish a secure session to obtain the `JWT` instead of the client credentials token flow used previously.
+Please note that the process of obtaining the `JWT` is still internally carried out by the SAP Cloud SDK, we just use the `certificate` for this process now if the binding contains the `certificate`.
 
-:::info
-SAP Cloud SDK currently only supports XSUAA managed certificates.
+## Validity of certificates
+The `X.509` certificates used in the service binding could either be external or `XSUAA` managed.
+
+:::caution
+
+By default `XSUAA` managed certificates are only valid for 7 days and to obtain a new certificate, deletion and re-creation of service binding is required.
+The application also needs to be restarted to update the service binding.
+
 :::
+
+To extend the validity of the `XSUAA` managed certificate you could use parameters while creating a service binding.
+
+`cf bind-service myapp myservice -c parameters.json`
+
+```json
+{
+  "credential-type": "x509",
+  "x509": {
+    "key-length": 2048,
+    "validity": 365,
+    "validity-type": "DAYS"
+  }
+}
+```
+This way you can extend the validity of the generated `certificate` to a maximum of one year.
 
