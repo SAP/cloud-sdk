@@ -54,6 +54,7 @@ module.exports = {
               'java/features/connectivity/sdk-connectivity-destination-service',
               'java/features/connectivity/sdk-connectivity-http-client',
               'java/features/connectivity/sdk-connectivity-mtls'
+
             ]
           },
           {
