@@ -30,7 +30,7 @@ It ensures that before proceeding with the `HTTP` exchange both the client and t
 When a service or an application is protected using [`XSUAA`](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/6373bb7a96114d619bfdfdc6f505d1b9.html), we need to obtain an access token from `XSUAA` to access the service or application.
 To obtain an access token or `JWT`, first we extract the `clientid`, `clientsecret` and `uri` from the service binding and then using the `url` from `xsuaa` service binding, trigger a [`Client credentials token flow`](https://github.com/SAP/cloud-security-xsuaa-integration/tree/main/token-client) to obtain a `JWT`.
 
-Please note that the process of obtaining the `JWT` was internally carried out by the SAP Cloud SDK and developers need not worry about doing this explicitly.
+Please note that the process of obtaining the `JWT` is internally carried out by the SAP Cloud SDK and developers need not worry about doing this explicitly.
 Now, adding this obtained `JWT` as an `Authorisation` header to the request to the service, ensures that your request gets authorised and authenticated.
 
 However there is always the inherent risk that these credentials may get leaked.
