@@ -206,6 +206,9 @@ The SAP Cloud SDK offers the interface `DestinationHeaderProvider` which defines
 At runtime, while preparing an outbound request, the SAP Cloud SDK will use all implementations of that interface which have been registered via the Java ServiceLoader mechanism (see below).
 For each registered implementation it invokes the method `getHeaders(DestinationRequestContext)` and appends the returned headers to the currently prepared request.
 
+You can also add headers to a specific destination using properties so they will be always included when calling the target system.
+See the [relevant](#add-headers-via-destination-properties) section below.
+
 ### Implement Own Header Provider
 
 #### Implement the Interface `DestinationHeaderProvider`
@@ -250,6 +253,46 @@ For example, if your custom implementation is named `ApiTokenHeaderProvider` in 
   ```
   com.example.ApiTokenHeaderProvider
   ```
+
+### Add Headers via Destination Properties
+
+Here is one example implementation which adds the ("key1", "value1") header to every call to the destination:
+
+```java
+destination =
+            DefaultHttpDestination
+                .builder(server.baseUrl())
+                .property("URL.headers.key1", "value1")
+                .build();
+```
+
+To include headers into every call to a target system you can define them as properties on the destination.
+It can be a destination object that you defined in the Cloud Foundry Cockpit, or one you built in code via a destination builder.
+For that, call the `.property()` method on the destination.
+It expects a key-value pair with a key formatted as `URL.headers.<key>` and an arbitrary value string.
+
+## Provide Query Parameters for Destinations
+
+### How It Works
+
+You can add query parameters to a specific destination using properties.
+So they will always be included in the query string when calling the target system.
+
+### Add Query Parameters via Destination Properties
+
+Here is one simple example implementation which adds "key1=value1" to the query string when calling the destination:
+
+```java
+destination =
+            DefaultHttpDestination
+                .builder(server.baseUrl())
+                .property("URL.queries.key1", "value1")
+                .build();
+```
+
+To include query parameters in the query string when calling to a target system you can define them as properties on the destination.
+For that, call the `.property()` method on the destination.
+It expects a key-value pair with a key formatted as `URL.headers.<key>` and an arbitrary value string.
 
 ## Retrieving Destinations
 
@@ -399,6 +442,12 @@ Here is an example value:
 :::tip Multiple Destinations
 You can configure multiple destinations with that approach.
 Note that the value of the environment variable is a JSON array, so you can add further entries into it.
+:::
+
+:::tip (Beta) AuthToken Forwarding
+Sometimes you might want to forward the value of the `Authorization` header on the current request directly to the target system.
+For that you can add the property `"forwardAuthToken": "true"` to your destination.
+This will forward the header, without any additional changes, to the specified target system.
 :::
 
 #### SAP Business Technology Platform Destination Service
