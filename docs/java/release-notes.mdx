@@ -62,12 +62,12 @@ To continue using the latest features outlined in the release notes for version 
 ### Known Issues
 
 - The Java HTML parser [`jsoup`](https://jsoup.org/) is used in a version which contains the vulnerability [CVE-2021-37714](https://cve.report/CVE-2021-37714).
-We plan to remove this dependency in future versions of the Cloud SDK.
-
+  We plan to remove this dependency in future versions of the Cloud SDK.
 
 ### New Functionality
 
 - We enabled support for certificate-based authentication for services on Cloud Foundry which allows services to use Mutual Transport Layer Security or mTLS instead of providing client credentials. In the future, this will become the default authentication method on the BTP Cloud Foundry.
+
   - If the service binding has a property `credentials: { credential-type: x509 }` then this is an indicator for the new authentication method.
   - Please note: you might see `WARN` messages in the logs. These are produced by the Java Security Library that we use as a dependency. We verified the logic with the library publisher and it's safe to use. The false log message is soon to be removed.
 
@@ -95,7 +95,6 @@ We plan to remove this dependency in future versions of the Cloud SDK.
   - Update Commons CSV from `1.8` to `1.9.0`
   - Update Hibernate Core from `5.5.4.Final` to `5.5.6`
   - Update Logback from `1.2.3` to `1.2.5`
-
 
 ## 3.51.0 - August 12, 2021
 
