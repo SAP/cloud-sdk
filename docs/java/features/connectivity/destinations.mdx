@@ -267,9 +267,8 @@ destination =
 
 To include headers into every call to a target system you can define them as properties on the destination.
 It can be a destination object that you defined in the Cloud Foundry Cockpit, or one you built in code via a destination builder.
-The method `.property()` can be called on the destination.
-Using the "URL.headers." prefix for the key argument makes the key-value pair considered as a header.
-Only the remaining part of the key will be used to create the header.
+For that, call the `.property()` method on the destination.
+It expects a key-value pair with a key formatted as `URL.headers.<key>` and an arbitrary value string.
 
 ## Provide Query Parameters for Destinations
 
@@ -291,9 +290,8 @@ destination =
 ```
 
 To include query parameters in the query string when calling to a target system you can define them as properties on the destination.
-The method `.property()` can be called on the destination.
-Using the "URL.queries." prefix for the key argument makes the key-value pair considered as query parameters.
-Only the remaining part of the key will be used in the query string.
+For that, call the `.property()` method on the destination.
+It expects a key-value pair with a key formatted as `URL.headers.<key>` and an arbitrary value string.
 
 ## Retrieving Destinations
 
