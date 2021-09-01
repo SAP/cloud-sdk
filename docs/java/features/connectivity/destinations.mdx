@@ -401,6 +401,14 @@ You can configure multiple destinations with that approach.
 Note that the value of the environment variable is a JSON array, so you can add further entries into it.
 :::
 
+:::tip AuthToken Forwarding
+Sometimes you might want to forward the value of the `Authorization` header on the current request directly to the target system.
+For that you can add the property `"forwardAuthToken": "true"` to your destination.
+This will forward the header, without any additional changes, to the specified target system.
+:::
+
+
+
 #### SAP Business Technology Platform Destination Service
 
 If the previous lookup was not successful, the next destination loaders examine the environment variable `VCAP_SERVICES` to see if the SAP BTP destination service is bound.
