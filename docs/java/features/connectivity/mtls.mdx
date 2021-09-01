@@ -30,7 +30,7 @@ It ensures that before proceeding with the `HTTP` exchange both the client and t
 
 ## Usage of Client Credentials and Shortcomings
 If a service or an application is protected using [`XSUAA`](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/6373bb7a96114d619bfdfdc6f505d1b9.html), an access token from `XSUAA` is required to access the protected service or application.
-To obtain an access token or `JWT`, first we extract the `clientid`, `clientsecret` and `uri` from the service binding and then using the `url` from `xsuaa` service binding, trigger a [`token flow`](https://github.com/SAP/cloud-security-xsuaa-integration/tree/main/token-client) to obtain a `JWT`.
+To obtain an access token or `JWT`, first the `clientid`, `clientsecret` and `uri` is extracted from the service binding and then using the `url` from `xsuaa` service binding, a [`token flow`](https://github.com/SAP/cloud-security-xsuaa-integration/tree/main/token-client) is triggered to obtain a `JWT`.
 
 Please note that the process of obtaining the `JWT` is internally carried out by the SAP Cloud SDK and application developers do not need to worry about doing this explicitly.
 Now, adding this obtained `JWT` as an `Authorization` header to the request to the service, ensures that your request gets authorized and authenticated.
@@ -73,7 +73,8 @@ Example:
 }
 ```
 This certificate would now be used to establish a secure session to obtain the `JWT` instead of the client credentials token flow used previously.
-Please note that the process of obtaining the `JWT` is still internally carried out by the SAP Cloud SDK, we just use the `certificate` for this process now if the binding contains the `certificate`.
+Please note that the process of obtaining the `JWT` is still internally carried out by the SAP Cloud SDK.
+The only difference is that `certificate` is being used for this process now if the binding contains the `certificate`.
 
 ## Validity of Certificates
 The `X.509` certificates used in the service binding could either be external or `XSUAA` managed.
