@@ -17,10 +17,12 @@ keywords:
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-The SAP Cloud SDK now supports certificate based authentication while establishing connections to other cloud services.
-:::info
-Currently being limited to `XSUAA`, support exists but is not tested extensively yet for `Destination` and `Connectivity` services.
+:::danger
+Currently support for Certificate based Authentication from SAP Cloud SDK is limited to `XSUAA` service.
+Support exists but is not tested extensively yet for `Destination` and `Connectivity` services.
 :::
+
+The SAP Cloud SDK now supports certificate based authentication while establishing connections to other cloud services.
 
 ## Why mTLS
 Mutual `TLS` or `mTLS` for short is a method for mutual authentication.
@@ -76,7 +78,7 @@ Please note that the process of obtaining the `JWT` is still internally carried 
 ## Validity of Certificates
 The `X.509` certificates used in the service binding could either be external or `XSUAA` managed.
 
-:::caution
+:::danger
 
 By default `XSUAA` managed certificates are valid only for 7 days.
 To obtain a new certificate, deletion and re-creation of service binding is required.
@@ -99,7 +101,6 @@ To extend the validity of the `XSUAA` managed certificate you could use paramete
 }
 ```
 This way you can extend the validity of the generated `certificate` to a maximum of one year.
-You can find more details on X.509 certificates [here](https://github.wdf.sap.corp/pages/CPSecurity/Knowledge-Base/03_ApplicationSecurity/X509Authentication/).
 
 ## Sticking to Client Credentials
 If you do not want to use Certificate based Authentication to obtain your `JWT`s and still want to continue using Client Credentials you can do that by configuring your service instances.
@@ -107,6 +108,6 @@ Ensure that your `xs-security.json` contains the `instance-secret` as the first 
 
 ```json
 "oauth2-configuration": {
-  "credential-types": ["instance-secret",...]
+  "credential-types": ["instance-secret"]
 }
 ```
