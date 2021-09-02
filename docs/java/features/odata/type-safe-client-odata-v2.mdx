@@ -479,6 +479,12 @@ Each changeset is opened with `beginChangeSet` and closed with `endChangeSet`.
 You can wrap multiple changesets into one batch request.
 
 Non-modification or in other words Read requests can be added outside changesets with the `addReadOperations` method.
+:::note
+
+Please be aware that function imports using GET cannot be included inside a Batch changeset using `addFunctionImport(...)`
+Add them into batch requests outside changesets using `addReadOperations` method.
+
+:::
 
 Use `executeRequest` to issue the batch request to the remote system.
 We receive an instance of `BatchResponse` as the result object.
@@ -489,6 +495,7 @@ BusinessPartnerAddress addressToCreate2;
 
 BusinessPartnerFluentHelper requestTenEntities = service.getAllBusinessPartner().top(10);
 BusinessPartnerByKeyFluentHelper requestSingleEntity = service.getBusinessPartnerByKey("bupa9000");
+BusinessPartnerFictionalFluentHelper callFictionalFunction = service.fictionalFunction(); //Assuming this fictional function import uses GET
 
 BatchResponse result =
     service
@@ -499,6 +506,7 @@ BatchResponse result =
         .endChangeSet()
         .addReadOperations(requestTenEntities)
         .addReadOperations(requestSingleEntity)
+        .addReadOperations(fictionalFunction)
         .executeRequest(destination);
 ```
 
@@ -568,7 +576,10 @@ Use the method `getReadResult` to extract the deserialized response of a given r
 ```java
 List<BusinessPartner> entities = result.getReadResult(requestTenEntities);
 BusinessPartner entity = result.getReadResult(requestSingleEntity);
+List<functionResult> functionResult = result.getReadResult(callFictionalFunction);
 ```
+
+You can use the same methods to extract deserialized responses of function imports that use GET.
 
 Instead of an index to indicate the batch position, the API expects the original request reference.
 The request-response mapping and deserialization are happening internally.
