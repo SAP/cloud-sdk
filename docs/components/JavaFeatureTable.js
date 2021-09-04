@@ -19,7 +19,7 @@ export default function JavaFeatureTable() {
     <>
       <ReactMarkdown plugins={[gfm, emoji]}>
         **Legend:** :heavy_check_mark: - Generally Available, :x: - Not
-        Available, :cog: - Beta, :date: - Planned
+        Available, :gear: - Beta, :date: - Planned
       </ReactMarkdown>
       <Table columns={columns} data={data} />
     </>
