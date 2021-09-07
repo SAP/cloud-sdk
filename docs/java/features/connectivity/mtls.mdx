@@ -14,27 +14,19 @@ keywords:
   - connectivity
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-:::danger
-
-Currently, support for Certificate-based Authentication from SAP Cloud SDK is fully end-to-end tested only with the `XSUAA` service.
-`Destination` and `Connectivity` services should also work but are not yet fully tested.
-
-:::
-
 The SAP Cloud SDK supports certificate-based authentication while establishing connections to other cloud services like `XSUAA` or `Destination` service.
 
-## Why mTLS
+## Why Certificate-based Authentication (mTLS)
+
 Mutual `TLS` or `mTLS` for short is a method for mutual authentication.
 It ensures that before proceeding with the `HTTP` exchange both the client and the server each mutually verify each other's identities by the use of `X.509` certificates.
-Using Certificate-based authentication ensures that we overcome the shortcomings of using Client credentials.
+Using Certificate-based authentication ensures that we overcome the shortcomings of authenticating with client credentials.
 
 ## Shortcomings of Client Credentials
+
 Let's take an example of a service or an application protected by [`XSUAA`](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/6373bb7a96114d619bfdfdc6f505d1b9.html).
 To access the service or application, you'll need a `JWT`.
-You will usually fetch a `JWT` by providing `clientid`, `clientsecret` and `uri` stored in your service bindings to run a [`token retrieval flow`](https://github.com/SAP/cloud-security-xsuaa-integration/tree/main/token-client) 
+You will usually fetch a `JWT` by providing `clientid`, `clientsecret` and `uri` stored in your service bindings to run a [`token retrieval flow`](https://github.com/SAP/cloud-security-xsuaa-integration/tree/main/token-client)
 
 The use of `client credentials` has an inherent risk of these credentials being leaked, especially as they are not frequently rotated.
 Leaking the credentials of a technical user into the hands of an attacker can cause a lot of harm and stay long unnoticed.
@@ -50,9 +42,6 @@ We automatically add fetched `JWT` to the `Authorization` header when requesting
 
 ## Certificate-based Authentication for Services
 
-:::info Hint
-Certificate-based authentication is presumably going to be the default authentication mechanism on SAP BTP Cloud Foundry, Canary landscape starting from Sept. 13th 2021.
-:::
 To adhere to the latest recommended security best practices by SAP, some re-use and kernel services have enabled certificate-based authentication.
 As a consequence, SAP Cloud SDK also supports certificate-based authentication while accessing these services.
 If a service binding has a property `credentials: { credential-type: x509 }` then this is an indication that you can use certificate-based authentication to access the service.
@@ -60,6 +49,7 @@ If a service binding has a property `credentials: { credential-type: x509 }` the
 `XSUAA` service is one of the services that has enabled certificate-based authentication.
 This means that in the service binding in addition to the `client_secret` you will also find `certificate` and `key` entries now.
 Example:
+
 ```
 {
     "VCAP_SERVICES": {
@@ -81,23 +71,28 @@ Example:
 	}
 }
 ```
+
 This certificate would now be used to establish a secure session to obtain the `JWT` instead of the client credentials token flow used previously.
 The SAP Cloud SDK will as before fetch the `JWT` for you.
 The only difference is that the `certificate` from your service binding is used to authenticate the client.
 
-## Validity of Certificates
+## Default Validity Period of Certificates
+
 The `X.509` certificates used in the service binding could either be external or `XSUAA` managed.
+By default `XSUAA` managed certificates are valid only for **7 days**.
+Your calls to the `XSUAA` to fetch a `JWT` will fail after your certificate expires.
 
-:::danger short certificate validity period
+:::warn certificate renewal process
 
-By default `XSUAA` managed certificates are valid only for 7 days.
-To obtain a new certificate, deletion and re-creation of service binding are required.
+To obtain a new certificate, you'll have to delete and re-create a service binding.
 The application also needs to be restarted to use the updated service binding.
-Your call to the `XSUAA` to fetch a `JWT` will fail after your certificate expires.
 
 :::
 
-To extend the validity of the `XSUAA` managed certificate you could use parameters while creating a service binding.
+### Extending the Validity of a Certificate
+
+For less frequent certificate rotation you can extend its validity to a maximum of 1 year.
+For the `XSUAA` managed certificate use parameters below when creating a service binding.
 
 `cf bind-service myapp myservice -c parameters.json`
 
@@ -111,10 +106,17 @@ To extend the validity of the `XSUAA` managed certificate you could use paramete
   }
 }
 ```
-This way you can extend the validity of the generated `certificate` to a maximum of one year.
+
+:::note
+
+With longer certificate validity there's a danger that compromised certificate might go unnoticed for a significant period of time.
+This significantly increases potential damage to a compromised system.
+
+:::
 
 ## Sticking to Client Credentials
-If you prefer to continue using **Client Credentials** instead of **Certificate-based Authentication**, make sure your `xs-security.json` contains the `instance-secret` as the first entry in the property `credential-types`. 
+
+If you prefer to continue using **Client Credentials** instead of **Certificate-based Authentication**, make sure your `xs-security.json` contains the `instance-secret` as the first entry in the property `credential-types`.
 
 ```json
 "oauth2-configuration": {
