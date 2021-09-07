@@ -31,15 +31,21 @@ Mutual `TLS` or `mTLS` for short is a method for mutual authentication.
 It ensures that before proceeding with the `HTTP` exchange both the client and the server each mutually verify each other's identities by the use of `X.509` certificates.
 
 ## Usage of Client Credentials and Shortcomings
-If a service or an application is protected using [`XSUAA`](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/6373bb7a96114d619bfdfdc6f505d1b9.html), an access token from `XSUAA` is required to access the protected service or application.
-To obtain an access token or `JWT`, first the `clientid`, `clientsecret` and `uri` is extracted from the service binding and then using the `url` from `xsuaa` service binding, a [`token flow`](https://github.com/SAP/cloud-security-xsuaa-integration/tree/main/token-client) is triggered to obtain a `JWT`.
+To access a service protected by the  [`XSUAA`](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/6373bb7a96114d619bfdfdc6f505d1b9.html) you'll need a `JWT`.
+You will usually fetch a `JWT` by providing `clientid`, `clientsecret` and `uri` stored in your service bindings to run a [`token retrieval flow`](https://github.com/SAP/cloud-security-xsuaa-integration/tree/main/token-client) 
 
-Please note that the process of obtaining the `JWT` is internally carried out by the SAP Cloud SDK and application developers do not need to worry about doing this explicitly.
-Now, adding this obtained `JWT` as an `Authorization` header to the request to the service, ensures that your request gets authorized and authenticated.
+The use of `client credentials` has an inherent risk of these credentials being leaked. 
+Especially if they are not frequently rotated.
+Leaking the credentials of a technical user into the hands of an attacker can cause a lot of harm and stay long unnoticed.
+The use of certificate-based authentication to fetch the JWT-token from the `XSUAA` significantly reduces the risk of leaking secrets and makes rotating them easier.
 
-However there is always the inherent risk that these credentials may get leaked.
-These credentials are typically not frequently changed as well.
-With the use of certificates the risk of leaking powerful technical user credentials can be mitigated.
+:::note
+
+The SAP Cloud SDK automatically fetches the `JWT` for you.
+Application developers do not need to worry about doing it themselves.
+We automatically add fetched `JWT` to the `Authorization` header when requesting a service to ensures that the request gets authenticated and authorized.
+
+:::
 
 ## Certificate Based Authentication for Services
 
