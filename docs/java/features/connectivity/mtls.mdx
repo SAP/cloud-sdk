@@ -3,7 +3,7 @@ id: sdk-connectivity-mtls
 title: Certificate-Based Authentication Using SAP Cloud SDK
 hide_title: false
 hide_table_of_contents: false
-sidebar_label: Certificate Based Authentication
+sidebar_label: Certificate-based Authentication
 description: This article describes how the SAP Cloud SDK for Java can be used to establish connections to other cloud services using mTLS
 keywords:
   - sap
@@ -29,14 +29,14 @@ The SAP Cloud SDK supports certificate-based authentication while establishing c
 ## Why mTLS
 Mutual `TLS` or `mTLS` for short is a method for mutual authentication.
 It ensures that before proceeding with the `HTTP` exchange both the client and the server each mutually verify each other's identities by the use of `X.509` certificates.
+Using Certificate-based authentication ensures that we overcome the shortcomings of using Client credentials.
 
 ## Shortcomings of Client Credentials
 Let's take an example of a service or an application protected by [`XSUAA`](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/6373bb7a96114d619bfdfdc6f505d1b9.html).
 To access the service or application, you'll need a `JWT`.
 You will usually fetch a `JWT` by providing `clientid`, `clientsecret` and `uri` stored in your service bindings to run a [`token retrieval flow`](https://github.com/SAP/cloud-security-xsuaa-integration/tree/main/token-client) 
 
-The use of `client credentials` has an inherent risk of these credentials being leaked. 
-Especially if they are not frequently rotated.
+The use of `client credentials` has an inherent risk of these credentials being leaked, especially as they are not frequently rotated.
 Leaking the credentials of a technical user into the hands of an attacker can cause a lot of harm and stay long unnoticed.
 The use of certificate-based authentication to fetch the JWT-token from the `XSUAA` significantly reduces the risk of leaking secrets and makes rotating them easier.
 
@@ -48,10 +48,10 @@ We automatically add fetched `JWT` to the `Authorization` header when requesting
 
 :::
 
-## Certificate Based Authentication for Services
+## Certificate-based Authentication for Services
 
 :::info Hint
-Certificate based authentication is presumably going to be the default authentication mechanism on SAP BTP Cloud Foundry, Canary landscape starting from Sept. 13th 2021.
+Certificate-based authentication is presumably going to be the default authentication mechanism on SAP BTP Cloud Foundry, Canary landscape starting from Sept. 13th 2021.
 :::
 To adhere to the latest recommended security best practices by SAP, some re-use and kernel services have enabled certificate-based authentication.
 As a consequence, SAP Cloud SDK also supports certificate-based authentication while accessing these services.
