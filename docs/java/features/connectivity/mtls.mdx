@@ -60,7 +60,7 @@ If a service binding has a property `credentials: { credential-type: x509 }` the
 This means that in the service binding in addition to the `client_secret` you will also find `certificate` and `key` entries now.
 Example:
 
-```
+```json
 {
     "VCAP_SERVICES": {
 		"xsuaa": [
@@ -93,10 +93,22 @@ By default `XSUAA` managed certificates are valid only for **7 days**.
 Your calls to the `XSUAA` to fetch a `JWT` will fail after your certificate expires.
 
 You can verify this by looking at the logs of your application, you should see
-```java
-[APP/PROC/WEB/0] OUT Caused by: com.sap.cloud.sdk.cloudplatform.security.exception.TokenRequestFailedException: com.sap.cloud.security.xsuaa.tokenflows.TokenFlowException: Error requesting technical user token with grant_type 'client_credentials': Error retrieving JWT token. Server URI https://**<subdomain>.authentication.cert.<landscape domain>**/oauth/token. Http status code 400. Response body '400 Bad Request: TLS handshake failed.
+```
+[APP/PROC/WEB/0] OUT Caused by: com.sap.cloud.sdk.cloudplatform.security.exception.TokenRequestFailedException:
+com.sap.cloud.security.xsuaa.tokenflows.TokenFlowException:
+Error requesting technical user token with grant_type 'client_credentials':
+Error retrieving JWT token. Server URI https://<subdomain>.authentication.cert.<landscape domain>/oauth/token.
+Http status code 400. Response body '400 Bad Request: TLS handshake failed.
+
 [APP/PROC/WEB/0] OUT ssl_c_err: X509_V_ERR_CERT_HAS_EXPIRED
 ```
+Don't get confused with the grant_type of `client_credentials` in the log, this is expected.
+
+For `X.509` certificate-based authentication, the token retrieval end point will look like
+`https://<subdomain>.authentication.cert.<landscape domain>/oauth/token`.
+Notice that the endpoint contains **cert** .
+
+For Client credentials based authentication, the end point would have looked like: `https://<subdomain>.authentication.<landscape domain>/oauth/token`
 
 :::danger certificate renewal process
 
