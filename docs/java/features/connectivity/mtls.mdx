@@ -13,6 +13,11 @@ keywords:
   - java
   - connectivity
 ---
+:::caution
+
+Currently, support for Certificate-based Authentication from SAP Cloud SDK is fully end-to-end tested only with the `XSUAA` service.
+`Destination` and `Connectivity` services should also work but are not yet fully tested.
+:::
 
 The SAP Cloud SDK supports certificate-based authentication while establishing connections to other cloud services like `XSUAA` or `Destination` service.
 
@@ -36,11 +41,15 @@ The use of certificate-based authentication to fetch the JWT-token from the `XSU
 
 The SAP Cloud SDK automatically fetches the `JWT` for you.
 Application developers do not need to worry about doing it themselves.
-We automatically add fetched `JWT` to the `Authorization` header when requesting a service to ensures that the request gets authenticated and authorized.
+We automatically add fetched `JWT` to the `Authorization` header when requesting a service to ensure that the request gets authenticated and authorized.
 
 :::
 
 ## Certificate-based Authentication for Services
+
+:::info Hint
+Certificate-based authentication is presumably going to be the default authentication mechanism on SAP BTP Cloud Foundry, Canary landscape starting from Sept. 13th 2021.
+:::
 
 To adhere to the latest recommended security best practices by SAP, some re-use and kernel services have enabled certificate-based authentication.
 As a consequence, SAP Cloud SDK also supports certificate-based authentication while accessing these services.
@@ -82,7 +91,7 @@ The `X.509` certificates used in the service binding could either be external or
 By default `XSUAA` managed certificates are valid only for **7 days**.
 Your calls to the `XSUAA` to fetch a `JWT` will fail after your certificate expires.
 
-:::warn certificate renewal process
+:::danger certificate renewal process
 
 To obtain a new certificate, you'll have to delete and re-create a service binding.
 The application also needs to be restarted to use the updated service binding.
@@ -92,7 +101,7 @@ The application also needs to be restarted to use the updated service binding.
 ### Extending the Validity of a Certificate
 
 For less frequent certificate rotation you can extend its validity to a maximum of 1 year.
-For the `XSUAA` managed certificate use parameters below when creating a service binding.
+For the `XSUAA` managed certificate use parameters below while creating a service binding.
 
 `cf bind-service myapp myservice -c parameters.json`
 
