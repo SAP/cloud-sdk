@@ -92,6 +92,12 @@ The `X.509` certificates used in the service binding could either be external or
 By default `XSUAA` managed certificates are valid only for **7 days**.
 Your calls to the `XSUAA` to fetch a `JWT` will fail after your certificate expires.
 
+You can verify this by looking at the logs of your application, you should see
+```java
+[APP/PROC/WEB/0] OUT Caused by: com.sap.cloud.sdk.cloudplatform.security.exception.TokenRequestFailedException: com.sap.cloud.security.xsuaa.tokenflows.TokenFlowException: Error requesting technical user token with grant_type 'client_credentials': Error retrieving JWT token. Server URI https://**<subdomain>.authentication.cert.<landscape domain>**/oauth/token. Http status code 400. Response body '400 Bad Request: TLS handshake failed.
+[APP/PROC/WEB/0] OUT ssl_c_err: X509_V_ERR_CERT_HAS_EXPIRED
+```
+
 :::danger certificate renewal process
 
 To obtain a new certificate, you will have to delete and re-create a service binding.
