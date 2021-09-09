@@ -26,17 +26,17 @@ The SAP Cloud SDK supports certificate-based authentication while establishing c
 
 Mutual `TLS` or `mTLS` for short is a method for mutual authentication.
 It ensures that before proceeding with the `HTTP` exchange both the client and the server each mutually verify each other's identities by the use of `X.509` certificates.
-Using Certificate-based authentication ensures in overcoming the shortcomings of authenticating with client credentials.
+Using Certificate-based authentication ensures in overcoming the shortcomings of authenticating with `clientsecret`.
 
-## Shortcomings of Client Credentials
+## Shortcomings of Using Secret for Token Retrieval
 
 Let's take an example of a service or an application protected by [`XSUAA`](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/6373bb7a96114d619bfdfdc6f505d1b9.html).
 To access the service or application, you'll need a `JWT`.
-You will usually fetch a `JWT` by providing `clientid`, `clientsecret` and `uri` stored in your service bindings to run a [`token retrieval flow`](https://github.com/SAP/cloud-security-xsuaa-integration/tree/main/token-client)
+You will usually fetch a `JWT` by providing `clientid`, `clientsecret` and `uri` stored in your service binding to run a [`token retrieval flow`](https://github.com/SAP/cloud-security-xsuaa-integration/tree/main/token-client) say for e.g. `client`
 
-The use of `client credentials` has an inherent risk of these credentials being leaked, especially as they are not frequently rotated.
-Leaking the credentials of a technical user into the hands of an attacker can cause a lot of harm and stay long unnoticed.
-The use of certificate-based authentication to fetch the JWT-token from the `XSUAA` significantly reduces the risk of leaking secrets and makes rotating them easier.
+The use of `clientsecret` has an inherent risk of these credentials being leaked, especially as they are not frequently rotated.
+Leaking these credentials into the hands of an attacker can cause a lot of harm and stay long unnoticed.
+The use of certificate-based authentication to fetch the `JWT` from `XSUAA` significantly reduces the risk of leaking secrets and makes rotating them easier.
 
 :::note
 
@@ -81,7 +81,7 @@ Example:
 }
 ```
 
-This certificate would now be used to establish a secure session to obtain the `JWT` instead of the client credentials token flow used previously.
+This certificate would now be used in place of `clientsecret` to obtain the `JWT` using [`XSUAA` token retrieval flows](https://github.com/SAP/cloud-security-xsuaa-integration/tree/main/token-client).
 The SAP Cloud SDK will as before fetch the `JWT` for you.
 The only difference is that the `certificate` from your service binding is used to authenticate the client.
 
@@ -109,7 +109,7 @@ For `X.509` certificate-based authentication, the token retrieval end point will
 `https://<subdomain>.authentication.cert.<landscape domain>/oauth/token`.
 Notice that the endpoint contains **cert** .
 
-For Client credentials based authentication, the end point would have looked like: `https://<subdomain>.authentication.<landscape domain>/oauth/token`
+For authentication based on `clientsecret`, the end point would have looked like: `https://<subdomain>.authentication.<landscape domain>/oauth/token`
 
 :::caution certificate renewal process
 
@@ -143,9 +143,9 @@ This significantly increases potential damage to a compromised system.
 
 :::
 
-## Sticking to Client Credentials
+## Sticking to Using Secret for Token Retrieval
 
-If you prefer to continue using **Client Credentials** instead of **Certificate-based Authentication**, make sure your `xs-security.json` contains the `instance-secret` as the first entry in the property `credential-types`.
+If you prefer to continue using **ClientSecret** instead of **Certificate-based Authentication**, make sure your `xs-security.json` contains the `instance-secret` as the first entry in the property `credential-types`.
 
 ```json
 "oauth2-configuration": {
