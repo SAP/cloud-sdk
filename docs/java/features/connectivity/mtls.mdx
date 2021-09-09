@@ -40,8 +40,11 @@ The use of certificate-based authentication to fetch the JWT-token from the `XSU
 
 :::note
 
-The SAP Cloud SDK automatically fetches the `JWT` for you.
-It also automatically adds the fetched `JWT` to the `Authorization` header when requesting a service to ensure that the request gets authenticated and authorized.
+The SAP Cloud SDK automatically
+
+- Fetches the `JWT` for you
+- Adds the fetched `JWT` to the `Authorization` header when requesting a service to ensure that the request gets authenticated and authorized.
+
 Application developers do not need to worry about doing any of this themselves.
 
 :::
@@ -89,6 +92,7 @@ By default `XSUAA` managed certificates are valid only for **7 days**.
 Your calls to the `XSUAA` to fetch a `JWT` will fail after your certificate expires.
 
 You can verify this by looking at the logs of your application, you should see
+
 ```
 [APP/PROC/WEB/0] OUT Caused by: com.sap.cloud.sdk.cloudplatform.security.exception.TokenRequestFailedException:
 com.sap.cloud.security.xsuaa.tokenflows.TokenFlowException:
@@ -98,6 +102,7 @@ Http status code 400. Response body '400 Bad Request: TLS handshake failed.
 
 [APP/PROC/WEB/0] OUT ssl_c_err: X509_V_ERR_CERT_HAS_EXPIRED
 ```
+
 Don't get confused with the grant_type of `client_credentials` in the log, this is expected.
 
 For `X.509` certificate-based authentication, the token retrieval end point will look like
