@@ -116,7 +116,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
       ```
   Both of those settings will cause the destination to take the value of the `Authorization` HTTP header contained in the current HTTP request for every request to the specified target system.
   
-  **Note:** This means that token set via the `AuthTokenAccessor.executeWith(...)` will **not** be forwarded to the target system. 
+  **Note:** The settings above will override a token set with `AuthTokenAccessor.executeWith(...)`. Moreover, authentication tokens set via `AuthTokenAccessor.executeWith(...)` will **not** be forwarded to the target system. 
 
 - We now support adding headers to a specific destination using properties, so they will always be included when calling the target system. 
   Usage: `.property("URL.headers.foo1", "bar1")`. Relevant section in documentation: [SDK Docs](https://sap.github.io/cloud-sdk/docs/java/features/connectivity/sdk-connectivity-destination-service#provide-headers-for-destinations).
