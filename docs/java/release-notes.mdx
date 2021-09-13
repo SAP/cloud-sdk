@@ -55,6 +55,100 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed issues
 -->
 
+## 3.53.0 - September, 13, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.53.0) | [Javadoc](https://help.sap.com/doc/0d9c3f5f8d874f99a32444910d7a3504/1.0/en-US/index.html)
+
+
+## Compatibility Notes
+
+- The Java HTML parser [`jsoup`](https://jsoup.org/) is no longer part of our implicit dependency management.
+  If your application relies on the version provided by Cloud SDK, please consider declaring the dependency version yourself.
+  The latest version can be found in [Maven Central](https://search.maven.org/artifact/org.jsoup/jsoup).
+
+
+## New Functionality
+
+- We added convenience methods for `null` comparison in our _OData_ API to avoid unnecessary null-casting:
+  - `Entity.FIELD_NAME.equalToNull()` - _OData V4 VDM_ / _Generic OData Client_
+  - `Entity.FIELD_NAME.notEqualToNull()` - _OData V4 VDM_ / _Generic OData Client_
+  - `Entity.FIELD_NAME.eqNull()` - _OData V2 VDM_
+  - `Entity.FIELD_NAME.neNull()` - _OData V2 VDM_
+
+- We now support function import calls in OData V2 using the HTTP GET method inside batch requests. Within the batch request, the function import call can be added to the `addReadOperations()` method. 
+You can execute a batch request containing a function import call as follows:
+```java
+singleValueReturnFunction = service.callSomeFunction();
+service.batch()
+  .addReadOperations(singleValueReturnFunction)
+  .executeRequest(destination);
+```
+You can read the response of the function by:
+```java
+functionResult = batchResponse.getReadResult(singleValueReturnFunction);
+```
+You can also add functions that return a collection inside batch requests and parse the results in similar manner.
+
+- (Beta) Reading destinations from environment variables now allows you to configure authorization token forwarding to the target system.
+  This can be activated in the following ways
+  1. Setting the `authentication` property directly:
+      ```
+      [
+        {
+          "type": "HTTP",
+          "name": "destinationName",
+          "url": "https://URL",
+          "authentication": "TokenForwarding"
+        }
+      ]
+      ```
+  2. Adding the property `forwardAuthToken=true`, as already known from the approuter:
+      ```
+      [
+        {
+          "type": "HTTP",
+          "name": "destinationName",
+          "url": "https://URL",
+          "forwardAuthToken": true
+        }
+      ]
+      ```
+  Both of those settings will cause the destination to take the value of the `Authorization` HTTP header contained in the current HTTP request for every request to the specified target system.
+  
+  **Note:** This means that token set via the `AuthTokenAccessor.executeWith(...)` will **not** be forwarded to the target system. 
+
+- We now support adding headers to a specific destination using properties, so they will always be included when calling the target system. 
+  Usage: `.property("URL.headers.foo1", "bar1")`. Relevant section in documentation: [SDK Docs](https://sap.github.io/cloud-sdk/docs/java/features/connectivity/sdk-connectivity-destination-service#provide-headers-for-destinations).
+  
+- We now support adding query parameters to a specific destination using properties.
+  They will always be included in the query string when calling the target system.
+  The query values should be provided without encoding. They will be encoded in the query string.
+  Example usage: `.property("URL.queries.airport", "Köln Bonn")`. The query string will include `airport=K%C3%B6ln%20Bonn`. 
+  Relevant section in documentation: [SDK Docs](https://sap.github.io/cloud-sdk/docs/java/features/connectivity/sdk-connectivity-destination-service#add-query-parameters-via-destination-properties)
+  
+## Improvements
+
+- `HttpClientFactory` is now a `@FunctionalInterface`. With that, (ad-hoc) instances can conveniently be constructed using simply a lambda expression like so: `HttpClientFactory factory = destination -> HttpClients.createDefault();`.
+- Removed unnecessary warning messages when not having an XSUAA or IAS service bound to the application.
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update BTP Neo Tomcat 8 SDK from `4.6.5` to `4.7.9`
+    - Update [XSUAA Token Client and Token Flow API](https://github.com/SAP/cloud-security-xsuaa-integration/tree/master/token-client) from `2.10.3` to `2.10.5`
+    - Update Neo JavaEE 7 SDK from `1.102.5` to `1.103.10`
+  - Other dependency updates:
+    - Minor version updates:
+      - Update Spring from `5.3.8` to `5.3.9`
+      - Update GSON from `2.8.7` to `2.8.8`
+      - Update Togglz from `2.9.8` to `2.9.9`
+      - Update Mockito from `3.11.2` to `3.12.3`
+      - Update Spring Security from `5.5.1` to `5.5.2`
+
+## Fixed Issues
+
+- We fixed an issue where HTTP header keys of an OData response were not handled case-insensitive, causing problems with 
+  processing those responses. This is fixed now and should handle headers the same way, regardless of capitalization.
+
 ## 3.52.0 - August 26, 2021
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.52.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
