@@ -253,12 +253,12 @@ export const features = [
     java: {
       status: NO,
       docsLink: '',
-      note: ''
+      note: 'Not in the scope'
     },
     js: {
       status: NO,
       docsLink: '',
-      note: ''
+      note: 'Not in the scope'
     }
   },
   {

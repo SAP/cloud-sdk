@@ -54,7 +54,6 @@ module.exports = {
               'java/features/connectivity/sdk-connectivity-destination-service',
               'java/features/connectivity/sdk-connectivity-http-client',
               'java/features/connectivity/sdk-connectivity-mtls'
-
             ]
           },
           {
@@ -70,6 +69,16 @@ module.exports = {
               'java/features/resilience/caching'
             ]
           }
+        ]
+      },
+      {
+        type: 'category',
+        label: 'Supported Environments',
+        items: [
+          'java/environments/sap-btp-environments-overview',
+          'java/environments/sap-btp-cloud-foundry-environment',
+          'java/environments/sap-btp-kubernetes-environment-with-sap-gardener',
+          'java/environments/sap-btp-kyma-environment'
         ]
       },
       {
