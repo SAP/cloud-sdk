@@ -167,3 +167,32 @@ export const ODataFeatureTableLayout = [
     ]
   }
 ];
+
+export const BTPEnvironmentsJava = [
+  {
+    Header: 'Environment',
+    columns: [
+      {
+        Header: 'Name',
+        accessor: 'name'
+      }
+    ]
+  },
+  {
+    Header: 'SAP Cloud SDK Java',
+    columns: [
+      {
+        Header: 'Status',
+        accessor: 'java.status'
+      },
+      {
+        Header: 'Docs',
+        accessor: 'java.docsLink'
+      },
+      {
+        Header: 'Notes',
+        accessor: 'java.note'
+      }
+    ]
+  }
+];
