@@ -52,7 +52,7 @@ export const features = [
     }
   },
   {
-    name: '[OData v2 type-safe client](https://www.odata.org/documentation/odata-version-2-0/)',
+    name: '[OData v2 typed client](https://www.odata.org/documentation/odata-version-2-0/)',
     category: 'OData',
     java: {
       status: YES,
@@ -66,7 +66,7 @@ export const features = [
     }
   },
   {
-    name: '[OData v4 type-safe client](https://www.odata.org/documentation/)',
+    name: '[OData v4 typed client](https://www.odata.org/documentation/)',
     category: 'OData',
     java: {
       status: YES,
@@ -80,7 +80,7 @@ export const features = [
     }
   },
   {
-    name: 'Generic OData client',
+    name: 'Generic not typed OData client',
     category: 'OData',
     java: {
       status: YES,
@@ -108,7 +108,7 @@ export const features = [
     }
   },
   {
-    name: 'OpenAPI 2.0 type-safe client',
+    name: 'OpenAPI 2.0 typed client',
     category: 'OpenAPI',
     java: {
       status: YES,
@@ -122,7 +122,7 @@ export const features = [
     }
   },
   {
-    name: 'OpenAPI 3.0 type-safe client',
+    name: 'OpenAPI 3.0 typed client',
     category: 'OpenAPI',
     java: {
       status: YES,
@@ -193,10 +193,10 @@ export const features = [
   },
   {
     name: '[BTP Cloud Foundry Environment](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/9c7092c7b7ae4d49bc8ae35fdd0e0b18.html)',
-    category: 'Runtime',
+    category: 'Environment',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/guides/cf-deploy)`,
+      docsLink: `[docs](${baseUrl}/java/environments/sap-btp-cloud-foundry-environment)`,
       note: ''
     },
     js: {
@@ -207,10 +207,11 @@ export const features = [
   },
   {
     name: '[Kubernetes with SAP Gardener](https://gardener.cloud/)',
-    category: 'Runtime',
+    category: 'Environment',
     java: {
-      status: PLANNED,
-      docsLink: '',
+      status: YES,
+      docsLink:
+        '[docs](`$(baseUrl)/java/environments/sap-btp-kubernetes-environment-with-sap-gardener`)',
       note: ''
     },
     js: {
@@ -220,8 +221,50 @@ export const features = [
     }
   },
   {
+    name: '[BTP Kyma Environment](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/468c2f3c3ca24c2c8497ef9f83154c44.html)',
+    category: 'Environment',
+    java: {
+      status: PLANNED,
+      docsLink: `[docs](${baseUrl}/java/environments/sap-btp-kyma-environment)`,
+      note: `[Kyma Open Source project](https://kyma-project.io/)`
+    },
+    js: {
+      status: PLANNED,
+      docsLink: `[docs](${baseUrl}/js/getting-started#deploy-the-project-on-sap-btp-cloud-foundry)`,
+      note: ''
+    }
+  },
+  {
+    name: 'Deploy with Confidence',
+    category: 'Environment',
+    java: {
+      status: YES,
+      docsLink: ``,
+      note: `Internal only or allow listed`
+    },
+    js: {
+      status: NO,
+      docsLink: ``,
+      note: FEATURE_REQUEST
+    }
+  },
+  {
+    name: '[SAP BTP ABAP Environent](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/11d62652aa2b4600a0fa136de0789648.html)',
+    category: 'Environment',
+    java: {
+      status: NO,
+      docsLink: '',
+      note: 'Not in the scope'
+    },
+    js: {
+      status: NO,
+      docsLink: '',
+      note: 'Not in the scope'
+    }
+  },
+  {
     name: '[BTP Neo Environment](https://help.sap.com/viewer/ea72206b834e4ace9cd834feed6c0e09/Cloud/en-US)',
-    category: 'Runtime',
+    category: 'Environment',
     java: {
       status: YES,
       docsLink: `[docs](${baseUrl}/java/guides/tutorial-overview-sdk-java/#groups-for-neo)`,
@@ -234,7 +277,35 @@ export const features = [
     }
   },
   {
-    name: '[BTP CF Destinations](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html)',
+    name: '[BTP CF Connectivity Service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/313b215066a8400db461b311e01bd99b.html)',
+    category: 'Connectivity',
+    java: {
+      status: YES,
+      docsLink: `[docs](${baseUrl}/java/features/connectivity/sdk-connectivity-destination-service)`,
+      note: ''
+    },
+    js: {
+      status: YES,
+      docsLink: `[docs](${baseUrl}/js/features/connectivity/destination)`,
+      note: ''
+    }
+  },
+  {
+    name: '[BTP CF Destination Service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html)',
+    category: 'Connectivity',
+    java: {
+      status: YES,
+      docsLink: `[docs](${baseUrl}/java/features/connectivity/sdk-connectivity-destination-service)`,
+      note: ''
+    },
+    js: {
+      status: YES,
+      docsLink: `[docs](${baseUrl}/js/features/connectivity/destination)`,
+      note: ''
+    }
+  },
+  {
+    name: '[BTP CF XSUAA Service](https://sap.github.io/cloud-sdk/docs/java/guides/cloud-foundry-xsuaa-service)',
     category: 'Connectivity',
     java: {
       status: YES,
@@ -362,20 +433,6 @@ export const features = [
   {
     name: 'MDI',
     category: 'MDI',
-    java: {
-      status: YES,
-      docsLink: ``,
-      note: `Internal only or allow listed`
-    },
-    js: {
-      status: NO,
-      docsLink: ``,
-      note: FEATURE_REQUEST
-    }
-  },
-  {
-    name: 'Deploy with Confidence',
-    category: 'Runtimes',
     java: {
       status: YES,
       docsLink: ``,
