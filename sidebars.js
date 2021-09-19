@@ -73,7 +73,7 @@ module.exports = {
       },
       {
         type: 'category',
-        label: 'Supported Environments',
+        label: 'Environments',
         items: [
           'java/environments/sap-btp-environments-overview',
           'java/environments/sap-btp-cloud-foundry-environment',
