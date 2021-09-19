@@ -52,7 +52,7 @@ export const features = [
     }
   },
   {
-    name: '[OData v2 type-safe client](https://www.odata.org/documentation/odata-version-2-0/)',
+    name: '[OData v2 typed client](https://www.odata.org/documentation/odata-version-2-0/)',
     category: 'OData',
     java: {
       status: YES,
@@ -66,7 +66,7 @@ export const features = [
     }
   },
   {
-    name: '[OData v4 type-safe client](https://www.odata.org/documentation/)',
+    name: '[OData v4 typed client](https://www.odata.org/documentation/)',
     category: 'OData',
     java: {
       status: YES,
@@ -80,7 +80,7 @@ export const features = [
     }
   },
   {
-    name: 'Generic OData client',
+    name: 'Generic not typed OData client',
     category: 'OData',
     java: {
       status: YES,
@@ -108,7 +108,7 @@ export const features = [
     }
   },
   {
-    name: 'OpenAPI 2.0 type-safe client',
+    name: 'OpenAPI 2.0 typed client',
     category: 'OpenAPI',
     java: {
       status: YES,
@@ -122,7 +122,7 @@ export const features = [
     }
   },
   {
-    name: 'OpenAPI 3.0 type-safe client',
+    name: 'OpenAPI 3.0 typed client',
     category: 'OpenAPI',
     java: {
       status: YES,
@@ -196,7 +196,7 @@ export const features = [
     category: 'Environment',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/guides/cf-deploy)`,
+      docsLink: `[docs](${baseUrl}/java/environments/sap-btp-cloud-foundry-environment)`,
       note: ''
     },
     js: {
@@ -210,7 +210,8 @@ export const features = [
     category: 'Environment',
     java: {
       status: YES,
-      docsLink: '',
+      docsLink:
+        '[docs](`$(baseUrl)/java/environments/sap-btp-kubernetes-environment-with-sap-gardener`)',
       note: ''
     },
     js: {
@@ -224,7 +225,7 @@ export const features = [
     category: 'Environment',
     java: {
       status: PLANNED,
-      docsLink: `[docs](${baseUrl}/java/guides/cf-deploy)`,
+      docsLink: `[docs](${baseUrl}/java/environments/sap-btp-kyma-environment)`,
       note: `[Kyma Open Source project](https://kyma-project.io/)`
     },
     js: {
