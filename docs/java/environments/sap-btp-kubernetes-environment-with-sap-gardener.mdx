@@ -21,40 +21,100 @@ It helps create and manage multiple Kubernetes clusters with less effort by abst
 
 ![Gardener](https://gardener.cloud/images/lp/lp-gardener-diagram.svg)
 
-## The SAP Cloud SDK Features Supported on SAP Gardener
+## SAP Cloud SDK Features Supported on SAP Gardener
 
-The SAP Cloud SDK supports SAP Gardener-based Kubernetes clusters out of the box.
-The following SAP Cloud SDK features are available in this environment:
+As of version `3.55.0` the SAP Cloud SDK supports SAP Gardener-based Kubernetes clusters out of the box.
 
-- Let's create a list of features that we usually port to different environments.
-- The list below is only for inspiration.
-    You know for what we are creating the tests.
-- Consume SAP BTP services like Destination, Connectivity, IAS, XSUAA, and others.
-- Connect to and consume services from SAP S/4HANA Cloud
-- Connect to and consume services from SAP S/4HANA On-Premise
-- Support for Multitenancy
-- Seamless use of typed clients provided by the SAP Cloud SDK
+The following features are covered:
 
-## Develop the SAP Cloud SDK Application on SAP Gardener
+- ✅ Consume SAP BTP services like Destination, Connectivity, IAS, XSUAA, and others.
+- ✅ Multitenancy
+- ✅ Resilience & Caching
+- ✅ Connect to and consume services from SAP S/4HANA Cloud
+- ❌ Connect to and consume services from SAP S/4HANA On-Premise
+- ✅ Seamless use of typed clients provided by the SAP Cloud SDK
+
+## Getting Started with the SAP Cloud SDK on Gardener
 
 This detailed guide will help get your SAP Cloud SDK Java application up and running in the SAP Gardener-based Kubernetes cluster.
 You can also use this guide to migrate your existing application to Kubernetes.
 
 ### Prerequisites
 
-You need:
-- A Gardener managed cluster
-- `kubectl` installed & configured for accessing the cluster
-- Docker & a publicly reachable Docker repository
-- A Spring Boot Application using the SAP Cloud SDK
-  - If you don't have one you can comfortably [create one from our archetypes](../getting-started)
+To follow this guide you will need:
+- A [Gardener](https://gardener.cloud/) managed cluster
+- The [SAP BTP Service Operator](https://github.com/SAP/sap-btp-service-operator/) installed in the Cluster
+- [Docker](https://www.docker.com/) and a publicly reachable Docker repository
+- A [Spring Boot](https://spring.io/projects/spring-boot) Application using the SAP Cloud SDK
+
+Check out the details below in case you are uncertain about any of the prerequisites.  
 
 <details>
-  <summary>Verify your Cluster Access</summary>
+  <summary>Gardener Cluster</summary>
 
+This guide assumes you have [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl) installed on your local machine and have it set up for cluster access.
+
+:::tip
 Running `kubectl cluster-info` should print out your cluster endpoints.
 
-In case you haven't set this up you can do so by downloading a kubeconfig file from your Gardener dashboard.
+In case you haven't set this up you can do so by downloading a `kubeconfig` from your Gardener dashboard.
+:::
+
+We also recommend to have an Ingress set up that exposes the application to the internet.
+You can read more about configuring an Ingress on the [Gardener documentation](https://gardener.cloud/docs/guides/applications/service-access/#loadbalancer-vs-ingress).
+</details>
+
+<details>
+  <summary>SAP BTP Service Operator</summary>
+
+This guide assumes you have the [SAP BTP Service Operator](https://help.sap.com/viewer/09cc82baadc542a688176dce601398de/Cloud/en-US/b5a35bfa87b5444080e6e6e6d361fa20.html) installed in your cluster.
+The operator is used to create and bind services instances. 
+The same can also be achieved via the [Service Catalog](https://help.sap.com/viewer/09cc82baadc542a688176dce601398de/Cloud/en-US/20195bf3b6e64189966e08f669c275e1.html).
+However, this guide will focus on the Service Operator usage.
+
+:::tip
+In case you don't have it installed please follow the [documentation](https://github.com/SAP/sap-btp-service-operator#sap-business-technology-platform-sap-btp-service-operator-for-kubernetes) to install it.
+:::
+
+</details>
+
+<details>
+  <summary>Docker</summary>
+
+This guide assumes you have [Docker](https://www.docker.com/) installed on your local machine.
+
+Furthermore, you need a **Docker repository** where you can store images.
+The repository needs to be publicly accessible in order for the cluster to access and download the Docker image we are going to create.
+
+In case you don't have such a repository yet we recommend either:
+- [Docker Hub](https://hub.docker.com/)
+- [Artifactory DMZ](https://common.repositories.cloud.sap/ui/) (for SAP internal developers)
+
+Access to images in a repository may be limited to authenticated and/or authorized users, depending on your configuration.
+
+Make sure you are logged in to your repository on your local machine by running:
+
+```bash
+docker login (your-repo) --username=(your-username)
+```
+
+And check your configuration with `cat ~/.docker/config.json`
+
+:::tip
+
+In case AuthN/AuthZ is required to download images make sure you have a [secret configured in your cluster](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line):
+
+```bash
+kubectl create secret docker-registry (name-of-the-secret) --docker-username=(username) --docker-password=(API-token) --docker-server=(your-repo)
+```
+:::
+
+</details>
+
+<details>
+  <summary>Application using the SAP Cloud SDK</summary>
+
+If you don't have an application already you can comfortably [create one from our archetypes](../getting-started).
 </details>
 
 ### Containerize the Application
@@ -62,14 +122,16 @@ In case you haven't set this up you can do so by downloading a kubeconfig file f
 To run on Kubernetes the application needs to be shipped in a container.
 For this guide we will be using Docker.
 
-Create a Dockerfile in the project root directory:
-```
+Create a `Dockerfile` in the project root directory:
+```dockerfile
 FROM openjdk:8-jdk-alpine
 ARG JAR_FILE=application/target/*.jar
 COPY ${JAR_FILE} app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
 EXPOSE 8080
 ```
+
+If needed update the `JAR_FILE` to point to your JAR file.
 
 Compile and push the image by running:
 
@@ -78,106 +140,220 @@ docker build -t <your-repo>/<your-image-name> .
 docker push <your-repo>/<your-image-name>
 ```
 
-<details>
-  <summary>Docker Repository Access</summary>
+:::tip
+You can find more information on how to containerize Spring Boot applications in [this guide](https://spring.io/guides/gs/spring-boot-docker/) (in particular, check the *Containerize It* section).
+:::
 
-You can use any publicly reachable repository.
-For example a personal Docker Hub account to get started or a repository on [https://common.repositories.cloud.sap](https://common.repositories.cloud.sap)
-
-Depending on your repository you may have to login first via `docker login`.
-In that case you also need to store a docker login secret on the Kubernetes cluster.
-</details>
+:::tip
+In case you are facing authorization issues when pushing to your repository refer to the dedicated section under [Prerequisites](#prerequisites).
+:::
 
 ### Create a Kubernetes Deployment
 
-Create a new `deployment.yml` file describing the Kubernetes deployment:
-
-```yml
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: my-app-deployment
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: my-app
-  template:
+1. Create a new YAML file describing the Kubernetes deployment:
+    
+    ```yml title="deployment.yml"
+    ---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: my-app-deployment
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: my-app
+      template:
+        metadata:
+          labels:
+            app: my-app
+        spec:
+          containers:
+            # Configure the docker image you just pushed to your repository here
+            - image: <your-repo>/<your-image>:latest
+              name: my-app
+              imagePullPolicy: Always
+              resources:
+                requests:
+                  memory: "1Gi"
+                  cpu: "2500m"
+                limits:
+                  memory: "1.5Gi"
+                  cpu: "750m"
+              # Volume mounts needed for injecting BTP service credentials
+              volumeMounts:
+          imagePullSecrets:
+            # In case your repositoriy requires a login reference your secret here
+            - name: <your-secret-for-docker-login>
+          # Volumes containing BTP serice credentials from secrets
+          volumes:
+    ---
+    apiVersion: v1
+    kind: Service
     metadata:
       labels:
         app: my-app
+      name: my-app
+      namespace: default
     spec:
-      containers:
-        # Configure the docker image you just pushed to your repository here
-        - image: <your-repo>/<your-image>:latest
-          name: my-app
-          imagePullPolicy: Always
-          resources:
-            requests:
-              memory: "1Gi"
-              cpu: "2500m"
-            limits:
-              memory: "1.5Gi"
-              cpu: "750m"
-      imagePullSecrets:
-        # In case your repositoriy requires a login reference your secret here
-        - name: <your-secret-for-docker-login>
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: my-app
-  name: my-app
-  namespace: default
-spec:
-  type: NodePort
-  ports:
-    - port: 8080
-  selector:
-    app: my-app
+      type: NodePort
+      ports:
+        - port: 8080
+      selector:
+        app: my-app
+    ```
+
+2. Install the configuration via `kubectl apply -f deployment.yml`.
+
+3. Monitor the status of the deployment by running: `kubectl get deployment my-app-deployment`.
+
+Eventually, you should see an output similar to:
+
+```bash
+$ kubectl get deployment sdkjava-test-app-deployment
+
+NAME                          READY   UP-TO-DATE   AVAILABLE   AGE
+sdkjava-test-app-deployment   1/1     1            1           72d
 ```
 
-Install the configuration via `kubectl apply -f deployment.yml`.
 
-Monitor the status of the deployment by running: `kubectl describe deployment my-app-deployment`
 
-<details>
-  <summary>Optional: Configure your application for access from outside the cluster</summary>
+### Create an Ingress
 
-In case you already have configured an Ingress for your cluster you can make your application accessible via that Ingress by adding a service to the `deployment.yml`:
+To make your application available from outside the cluster we will create an Ingress.
 
-```yml
+:::tip
+In case you already have an Ingress configured in your cluster only add the new `rule` for your new applications.
+
+You can read more about configuring an Ingress on the [Gardener documentation](https://gardener.cloud/docs/guides/applications/service-access/#loadbalancer-vs-ingress).
+:::
+
+Create a new YALM file containing the following Ingress configuration:
+
+```yml title="ingress.yml"
 ---
-apiVersion: v1
-kind: Service
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  labels:
-    app: my-app
-  name: my-app
+  name: ingress-router
   namespace: default
+  annotations:
+    cert.gardener.cloud/purpose: managed
 spec:
-  type: NodePort
-  ports:
-    - port: 8080
-  selector:
-    app: my-app
+  tls:
+  - hosts:
+    - "<your-cluster-host>"
+    - "*.ingress.<your-cluster-host>"
+    secretName: secret-tls
+  rules:
+  - host: "my-app.ingress.<your-cluster-host>"
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: my-app
+              port:
+                number: 8080
 ```
-</details>
 
-### Access the Application
+2. Install the configuration via `kubectl apply -f ingress.yml`.
+
+3. Verify the Ingress is up and running: `kubectl describe ingress ingress-router`
+
+You should see an entry with the path `/` pointing to the backend `my-app`.
+
+-> TODO: Explain TLS
 
 ### Bind SAP BTP Services to the Application
 
 The SAP Business Technology Platform offers various services that can be used by applications.
 To access services from a Kubernetes environment instances have to be created and bound to the application.
 
-There are multiple ways to achieve this.
-We recommend using the SAP BTP Service Operator to achieve this.
+For this guide we'll assume we want to use two services:
+1. Destination Service
+2. Identity and Authentication Service (IAS)
 
-:::note
+#### Bind the Destination Service
 
-::: 
+1. Create a new YAML file:
 
-### Configure Service Operator
+  ```yml title="destination-service.yaml"
+  ---
+  apiVersion: services.cloud.sap.com/v1alpha1
+  kind: ServiceInstance
+  metadata:
+      name: destination-service
+  spec:
+      serviceOfferingName: destination
+      servicePlanName: lite
+      externalName: default-destination-service
+  ---
+  apiVersion: services.cloud.sap.com/v1alpha1
+  kind: ServiceBinding
+  metadata:
+      name: my-destination-service-binding
+  spec:
+      serviceInstanceName: destination-service
+      secretName: my-destination-service-secret
+      secretKey: my-destination-service-key
+  ```
+
+2. Install the configuration via `kubectl apply -f destination-service.yml`.
+
+3. Monitor the status via `kubectl describe ServiceInstance destination-service`.
+    Eventually this should automatically create a Kubernetes secret named `my-destination-service-secret`.
+    This secret will contain the actual service binding information.
+
+4. Mount the `my-destination-service-secret` secret into the file system of the application as follows:
+    1. Find the empty list of `volumes` at the end of your `deployment.yml`.
+        Add a new volume, referencing the secret:
+        ```yml
+        - name: my-destination-service-binding-volume
+          secret:
+            secretName: my-destination-service-binding
+        ```
+    2. Mount this volume into the file system of your application.
+      Add it to the empty list of `volumeMounts` in the `container` section of your `deployment.yml`:
+      ```yml
+      - name: my-destination-service-binding-volume
+        mountPath: "/etc/secrets/sapcp/destination/my-destination-service-binding"
+        readOnly: true
+      ```
+
+5. Update the configuration via `kubectl apply -f deployment.yml`.
+
+#### Bind the Identity and Authentication Service
+
+1. Create a new `identity-service.yaml` file:
+
+  ```yml title="identity-service.yaml"
+  ---
+  apiVersion: services.cloud.sap.com/v1alpha1
+  kind: ServiceInstance
+  metadata:
+    name: my-identity-service
+  spec:
+    serviceOfferingName: identity
+    servicePlanName: application
+    parameters:
+      # Allowed redirect URIs in case you want to use an approuter behind an ingress for user login
+      # oauth2-configuration:
+      #  redirect-uris:
+      #    - https://*.ingress.<your-cluster-host>/login/callback
+      consumed-services: []
+      xsuaa-cross-consumption: true
+      multi-tenant: true
+  ---
+  apiVersion: services.cloud.sap.com/v1alpha1
+  kind: ServiceBinding
+  metadata:
+      name: my-ias-service-binding
+  spec:
+      serviceInstanceName: identity-service
+      secretName: my-ias-service-secret
+      secretKey: my-ias-service-key
+  ```
+
+2. Repeat the same steps 2-5 from the previous section, always replacing `destination` with `identity`.
