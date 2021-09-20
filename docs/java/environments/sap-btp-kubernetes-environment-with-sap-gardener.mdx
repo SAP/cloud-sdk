@@ -101,7 +101,6 @@ docker login (your-repo) --username=(your-username)
 And check your configuration with `cat ~/.docker/config.json`
 
 :::tip
-
 In case AuthN/AuthZ is required to download images make sure you have a [secret configured in your cluster](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line):
 
 ```bash
@@ -123,7 +122,7 @@ To run on Kubernetes the application needs to be shipped in a container.
 For this guide we will be using Docker.
 
 Create a `Dockerfile` in the project root directory:
-```dockerfile
+```dockerfile {2}
 FROM openjdk:8-jdk-alpine
 ARG JAR_FILE=application/target/*.jar
 COPY ${JAR_FILE} app.jar
@@ -133,16 +132,16 @@ EXPOSE 8080
 
 If needed update the `JAR_FILE` to point to your JAR file.
 
+:::tip
+You can find more information on how to containerize Spring Boot applications in [this guide](https://spring.io/guides/gs/spring-boot-docker/) (in particular, check the *Containerize It* section).
+:::
+
 Compile and push the image by running:
 
 ```bash
 docker build -t <your-repo>/<your-image-name> .
 docker push <your-repo>/<your-image-name>
 ```
-
-:::tip
-You can find more information on how to containerize Spring Boot applications in [this guide](https://spring.io/guides/gs/spring-boot-docker/) (in particular, check the *Containerize It* section).
-:::
 
 :::tip
 In case you are facing authorization issues when pushing to your repository refer to the dedicated section under [Prerequisites](#prerequisites).
@@ -152,7 +151,7 @@ In case you are facing authorization issues when pushing to your repository refe
 
 1. Create a new YAML file describing the Kubernetes deployment:
     
-    ```yml title="deployment.yml"
+    ```yml title="deployment.yml" {18,32}
     ---
     apiVersion: apps/v1
     kind: Deployment
@@ -209,28 +208,31 @@ In case you are facing authorization issues when pushing to your repository refe
 
 Eventually, you should see an output similar to:
 
-```bash
-$ kubectl get deployment sdkjava-test-app-deployment
+```
+$ kubectl get deployment my-app-deployment
 
-NAME                          READY   UP-TO-DATE   AVAILABLE   AGE
-sdkjava-test-app-deployment   1/1     1            1           72d
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+my-app-deployment   1/1     1            1           15s
 ```
 
+:::tip
+In case something went wrong use `kubectl describe` together with `deployment` or `pod` to get more information about the status of your application.
+:::
 
 
 ### Create an Ingress
 
 To make your application available from outside the cluster we will create an Ingress.
 
-:::tip
+:::note
 In case you already have an Ingress configured in your cluster only add the new `rule` for your new applications.
 
 You can read more about configuring an Ingress on the [Gardener documentation](https://gardener.cloud/docs/guides/applications/service-access/#loadbalancer-vs-ingress).
 :::
 
-Create a new YALM file containing the following Ingress configuration:
+Create a new YAML file containing the following Ingress configuration:
 
-```yml title="ingress.yml"
+```yml title="ingress.yml" {12-13,16}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -309,18 +311,21 @@ For this guide we'll assume we want to use two services:
 4. Mount the `my-destination-service-secret` secret into the file system of the application as follows:
     1. Find the empty list of `volumes` at the end of your `deployment.yml`.
         Add a new volume, referencing the secret:
-        ```yml
+
+        ```yml title="volumes:"
         - name: my-destination-service-binding-volume
           secret:
-            secretName: my-destination-service-binding
+            secretName: my-destination-service-secret
         ```
+
     2. Mount this volume into the file system of your application.
-      Add it to the empty list of `volumeMounts` in the `container` section of your `deployment.yml`:
-      ```yml
-      - name: my-destination-service-binding-volume
-        mountPath: "/etc/secrets/sapcp/destination/my-destination-service-binding"
-        readOnly: true
-      ```
+        Add it to the empty list of `volumeMounts` in the `container` section of your `deployment.yml`:
+
+        ```yml title="volumeMounts:"
+        - name: my-destination-service-binding-volume
+          mountPath: "/etc/secrets/sapcp/destination/my-destination-service
+          readOnly: true
+        ```
 
 5. Update the configuration via `kubectl apply -f deployment.yml`.
 
