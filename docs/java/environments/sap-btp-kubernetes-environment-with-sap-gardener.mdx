@@ -309,7 +309,8 @@ In case you started with an SAP Cloud SDK Archetype your should be greeted with 
 :::note
 In case you skipped setting up an Ingress before you can use port forwarding to access your application.
 
-Run `kubectl port-forward deployment my-app-deployment :8080`.
+Identify the pod name of your application with `kubectl get pods`.
+Then enable port forwarding to it by running: `kubectl port-forward (your-pod-name) 8080:8080`.
 With that you should be able to access the application on your `http://localhost:8080`
 :::
 
