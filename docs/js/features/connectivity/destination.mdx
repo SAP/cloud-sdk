@@ -107,6 +107,24 @@ At runtime, the SAP Cloud SDK will check the environment variable for a destinat
 Note that the SAP Cloud SDK offers also a `mockTestDestination()` method, which reads in a `systems.json` and `credentials.json` to create destinations.
 The advantage of files is that they can be excluded from the repository since they contain sensitive information.
 
+:::tip AuthToken Forwarding
+
+In most cases the destination service should be used in production to fetch destination including auth token.
+In case of frequent service to service communication, the destination service would mean a big overhead.
+You can use an environment destination to overcome this issue.
+Include the `forwardAuthToken` to the destination and your JWT will be forwarded directly as `Authorization` header to the target system.
+All you
+```ts
+setTestDestination({
+  name: 'FORWARD-DESTINATION',
+  url: 'https://mys4hana.com',
+  forwardAuthToken: true
+});
+
+MyReqeust.execute({destinationName: 'myDestination', jwt: 'yourJWT'})
+```
+:::
+
 ### Service Binding Environment Variables
 
 The service credentials, in other words `VCAP_SERVICES` environment variables, may contain a destination.
