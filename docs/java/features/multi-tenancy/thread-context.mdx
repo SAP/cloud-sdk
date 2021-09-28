@@ -33,14 +33,11 @@ This information is used throughout the SAP Cloud SDK to provide features like t
 To ensure different tenants and users are properly isolated in an application, this information is always limited to the thread it was created on unless it is explicitly passed on by the application (see [Propagating the Thread Context](#running-asynchronous-operations)).
 
 :::info
-The term _Tenant_ is a concept used by the XSUAA Service on SAP BTP to distinguish between different subaccounts of a multi-tenant application. 
-A _Tenant_ maps 1:1 to the multi-tenant application's subaccount where it is subscribed.
+Multi-tenancy describes the access of different, technically separated user-groups to the same instance of an application.
+These can be called Tenants (e.g. in the context of XSUAA) or Zones (e.g. in the context of IAS).
 
-An extension of the _Tenant_ concept is the _Zone_ concept introduced by the IAS Service on SAP BTP.
-It allows you to group multiple subaccounts into a single zone.
-
-For development purposes, there's currently no difference between _Zone_ and _Tenant_.
-That is why the SAP Cloud SDK for Java decided to use the term _Tenant_ to refer to both the XSUAA-based subaccount _Tenant_ and IAS-based _Zone_.
+The SAP Cloud SDK for Java uses the term _Tenant_ to abstract over both of them.
+This implies, that the _tenantId_ exposed in the _Tenant_ interface either returns the _tenantId_ or _zoneId_, depending on the context you are currently running in.
 :::
 
 ## How Is a Thread Context Created?
