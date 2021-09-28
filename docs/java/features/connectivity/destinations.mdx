@@ -468,13 +468,36 @@ See the example value above for reference.
 
 #### Destinations With Proxy Type `OnPremise`
 
-We have to some perform configuration steps to tell the SAP Cloud SDK how to access the SAP BTP destination service and connectivity service.
+To access the **Destination** and **Connectivity** service on SAP BTP we have to configure the SAP Cloud SDK accordingly.
 
 :::note Are your client and server located on the same Network?
 If your localhost (client) resides in the same network zone as the target system (server) you can access it directly.
 Configuration of SAP BTP connectivity services is not needed.
 All you have to do is creating a destination via environment variable `destinations`.
 :::
+
+##### Developing in Business Application Studio
+
+If you are developing an application in the **Business Application Studio (BAS)**, and want to reach On-Premise systems, perform the following steps:
+
+1. Make sure your BAS instance is part of the same CF space as your Cloud Connector.
+1. Add properties `WebIDEEnabled` and `HTML5.DynamicDestination` to your On-Premise destination with the value `true`.
+1. In BAS, configure your `destinations` environment variable as follows:
+
+```json
+[
+  {
+    "type": "HTTP",
+    "name": "<DESTINATION-NAME>",
+    "url": "http://<DESTINATION-NAME>.dest",
+    "ProxyHost": "localhost",
+    "ProxyPort": 8887
+  }
+]
+```
+
+Please refer to [the BAS connectivity guide](../../../js/guides/bas-external-system) created for the SAP Cloud SDK for JavaScript to get more information and a detailed description of the technical background. 
+The information there also applies to the SAP Cloud SDK for Java.
 
 ##### Maintain `VCAP_SERVICES`
 
