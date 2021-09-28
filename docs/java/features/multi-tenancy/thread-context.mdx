@@ -33,10 +33,10 @@ This information is used throughout the SAP Cloud SDK to provide features like t
 To ensure different tenants and users are properly isolated in an application, this information is always limited to the thread it was created on unless it is explicitly passed on by the application (see [Propagating the Thread Context](#running-asynchronous-operations)).
 
 :::info
-Multi-tenancy describes the access of different, technically separated user-groups to the same instance of an application.
-These can be called Tenants (e.g. in the context of XSUAA) or Zones (e.g. in the context of IAS).
+Multi-tenancy describes the access of different, technically separated user groups to the same instance of an application.
+In the terms of XSUAA service, these user groups are called Tenants, while in terms of Identity Authentication Service (IAS)  they are called Zones.
 
-The SAP Cloud SDK for Java uses the term _Tenant_ to abstract over both of them.
+The SAP Cloud SDK for Java uses the term _Tenant_ to refer to both XSUAA Tenants and IAS Zones.
 This implies, that the _tenantId_ exposed in the _Tenant_ interface either returns the _tenantId_ or _zoneId_, depending on the context you are currently running in.
 :::
 
