@@ -113,7 +113,7 @@ In most cases, the destination service should be used in production to fetch a d
 In the case of frequent service to service communication, requesting the destination service every time for a target-specific `JWT` would mean a big overhead.
 
 In such a case you can configure your destination targets to accept the initial request `JWT` and use this for all further calls.
-This makes the call to the destination service for a target specific token redundant.
+This makes the call to the destination service for a target-specific token redundant.
 If you configured your target system in such a way, you can use an environment destination to stop the destination lookup right away.
 Include the `forwardAuthToken` to the destination configuration and your initial `JWT` will be forwarded directly as `Authorization` header to the target systems without an extra round trip to the destination service.
 You can use the `setTestDestination()` method to set the destination in the environment variables:
