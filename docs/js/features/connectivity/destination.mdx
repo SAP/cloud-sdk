@@ -112,7 +112,7 @@ The advantage of files is that they can be excluded from the repository since th
 In most cases, the destination service should be used in production to fetch a destination including an authentication token.
 In the case of frequent service to service communication, requesting the destination service every time for a `JWT` would mean a big overhead.
 You can use an environment destination to overcome this issue.
-Include the `forwardAuthToken` to the destination and your JWT will be forwarded directly as `Authorization` header to the target system.
+Include the `forwardAuthToken` to the destination configuration and your `JWT` will be forwarded directly as `Authorization` header to all the target systems without an extra round trip to the destination service.
 All you
 ```ts
 setTestDestination({
