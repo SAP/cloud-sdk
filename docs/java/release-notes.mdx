@@ -67,7 +67,7 @@ To continue using the latest features outlined in the release notes for version 
 
 - Applications that use an **IAS** binding instead of XSUAA are now supported out of the box.
   - Incoming JWTs issued by IAS are validated and decoded
-  - In case no JWT is provided the SDK defaults to the zone ID of the provider tenant 
+  - In case no JWT is provided the SDK defaults to the zone ID of the provider tenant
   - Destination & Connectivity service can be accessed on behalf of the IAS tenant via zone ID
   - **Not supported:** JWTs issued by IAS can not yet be used for _Principal Propagation_ and _User Token Exchange_
   - Under the hood, the SDK now uses zone IDs to pass tenant information to both IAS and XSUAA. See the note under "Improvements"
@@ -75,7 +75,7 @@ To continue using the latest features outlined in the release notes for version 
 ### Improvements
 
 - Internally the SDK now passes the tenant information via zone ID (instead of subdomain) to the OAuth2 services XSUAA and IAS
-- Resolving the provider tenant no longer requires an internal HTTP request. 
+- Resolving the provider tenant no longer requires an internal HTTP request.
   Instead, the `VCAP_SERVICES` environment variable will be parsed at runtime for the necessary information.
 
 - Dependency Updates:
@@ -103,14 +103,14 @@ To continue using the latest features outlined in the release notes for version 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.53.0) | [Javadoc](https://help.sap.com/doc/0d9c3f5f8d874f99a32444910d7a3504/1.0/en-US/index.html)
 
 
-## Compatibility Notes
+### Compatibility Notes
 
 - The Java HTML parser [`jsoup`](https://jsoup.org/) is no longer part of our implicit dependency management.
   If your application relies on the version provided by Cloud SDK, please consider declaring the dependency version yourself.
   The latest version can be found in [Maven Central](https://search.maven.org/artifact/org.jsoup/jsoup).
 
 
-## New Functionality
+### New Functionality
 
 - We added convenience methods for `null` comparison in our _OData_ API to avoid unnecessary null-casting:
   - `Entity.FIELD_NAME.equalToNull()` - _OData V4 VDM_ / _Generic OData Client_
@@ -118,7 +118,7 @@ To continue using the latest features outlined in the release notes for version 
   - `Entity.FIELD_NAME.eqNull()` - _OData V2 VDM_
   - `Entity.FIELD_NAME.neNull()` - _OData V2 VDM_
 
-- We now support function import calls in OData V2 using the HTTP GET method inside batch requests. Within the batch request, the function import call can be added to the `addReadOperations()` method. 
+- We now support function import calls in OData V2 using the HTTP GET method inside batch requests. Within the batch request, the function import call can be added to the `addReadOperations()` method.
 You can execute a batch request containing a function import call as follows:
 ```java
 singleValueReturnFunction = service.callSomeFunction();
@@ -158,22 +158,22 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
       ]
       ```
   Both of those settings will cause the destination to take the value of the `Authorization` HTTP header contained in the current HTTP request for every request to the specified target system.
-  
-  **Note:** The settings above will override a token set with `AuthTokenAccessor.executeWith(...)`. Moreover, authentication tokens set via `AuthTokenAccessor.executeWith(...)` will **not** be forwarded to the target system. 
 
-- You can now add `headers` to a `destination` using the `property` method so that they will always be included when calling the target system. 
+  **Note:** The settings above will override a token set with `AuthTokenAccessor.executeWith(...)`. Moreover, authentication tokens set via `AuthTokenAccessor.executeWith(...)` will **not** be forwarded to the target system.
+
+- You can now add `headers` to a `destination` using the `property` method so that they will always be included when calling the target system.
   Here's an example of the `property` method call: `.property("URL.headers.foo1", "bar1")`. Find more details on setting properties [here](https://sap.github.io/cloud-sdk/docs/java/features/connectivity/sdk-connectivity-destination-service#provide-headers-for-destinations).
-  
+
 - You can now add query parameters to a destination using properties.
   They will always be included in the query string when calling the target system.
   The query values should be provided without encoding. They will be encoded in the query string by the SDK.
-  Example of adding a query parameter using `property` method: `.property("URL.queries.airport", "Köln Bonn")`. 
-  The rendered query string will look like: `airport=K%C3%B6ln%20Bonn`. 
+  Example of adding a query parameter using `property` method: `.property("URL.queries.airport", "Köln Bonn")`.
+  The rendered query string will look like: `airport=K%C3%B6ln%20Bonn`.
   Find more details on adding query parameters [here](https://sap.github.io/cloud-sdk/docs/java/features/connectivity/sdk-connectivity-destination-service#add-query-parameters-via-destination-properties).
-  
-## Improvements
 
-- `HttpClientFactory` is now a `@FunctionalInterface`. 
+### Improvements
+
+- `HttpClientFactory` is now a `@FunctionalInterface`.
 This let's you conveniently construct an instance of the `HttpClientFactory` using a simple lambda expression: `HttpClientFactory factory = destination -> HttpClients.createDefault();`.
 - We removed unnecessary warning messages when generated when an XSUAA or IAS service is not bound to an application.
 
@@ -190,9 +190,9 @@ This let's you conveniently construct an instance of the `HttpClientFactory` usi
       - Update Mockito from `3.11.2` to `3.12.3`
       - Update Spring Security from `5.5.1` to `5.5.2`
 
-## Fixed Issues
+### Fixed Issues
 
-- We fixed the issue where HTTP header keys of an OData response were not handled case-insensitive, causing problems with processing those responses. 
+- We fixed the issue where HTTP header keys of an OData response were not handled case-insensitive, causing problems with processing those responses.
 This is fixed now and should handle headers the same way, regardless of capitalization.
 
 ## 3.52.0 - August 26, 2021
@@ -370,7 +370,7 @@ This is fixed now and should handle headers the same way, regardless of capitali
 
 - The module `usage-analytics` uses the dependency `org.jdom:jdom:2.0.6` which is affected by the vulnerability [CVE-2021-33813](https://nvd.nist.gov/vuln/detail/CVE-2021-33813).
   There was no fixed dependency version available at the release date.
-  We'll update this dependency once a secure version is available.  
+  We'll update this dependency once a secure version is available.
   The dependency is used in a Maven plugin and hence there is no harm during the runtime of any BTP application.
 
 ### Compatibility Notes
