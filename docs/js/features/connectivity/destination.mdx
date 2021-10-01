@@ -117,6 +117,7 @@ This makes the call to the destination service for a target-specific token redun
 If you configured your target system in such a way, you put a destination in the local environment variables to stop the lookup right away.
 Include the `forwardAuthToken` to the destination configuration and your initial `JWT` will be forwarded directly as `Authorization` header to the target systems without an extra round trip to the destination service.
 You can use the `setTestDestination()` method to set the destination in the environment variables:
+
 ```ts
 setTestDestination({
   name: 'FORWARD-DESTINATION',
@@ -124,8 +125,9 @@ setTestDestination({
   forwardAuthToken: true
 });
 
-MyReqeust.execute({destinationName: 'myDestination', jwt: 'forwardedJwt'})
+MyReqeust.execute({ destinationName: 'myDestination', jwt: 'forwardedJwt' });
 ```
+
 :::
 
 Note that this approach is not suitable for multi-tenant scenarios, because only the destination service can return destinations for different tenants.
