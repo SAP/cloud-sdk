@@ -186,14 +186,14 @@ In case you are facing authorization issues when pushing to your repository refe
              resources:
                requests:
                  memory: '1Gi'
-                 cpu: '2500m'
+                 cpu: '500m'
                limits:
                  memory: '1.5Gi'
                  cpu: '750m'
              # Volume mounts needed for injecting BTP service credentials
              volumeMounts:
          imagePullSecrets:
-           # In case your repositoriy requires a login, reference your secret here
+           # In case your repository requires a login, reference your secret here
            - name: <your-secret-for-docker-login>
          # Volumes containing BTP serice credentials from secrets
          volumes:
@@ -240,7 +240,7 @@ In case you already have an Ingress configured in your cluster only add the new 
 You can read more about configuring an Ingress on the [Gardener documentation](https://gardener.cloud/docs/guides/applications/service-access/#loadbalancer-vs-ingress).
 :::
 
-Create a new YAML file containing the following Ingress configuration:
+1. Create a new YAML file containing the following Ingress configuration:
 
 ```yml title="ingress.yml" {12-13,16}
 ---
@@ -254,9 +254,9 @@ metadata:
 spec:
   tls:
     - hosts:
-  # - "<your-cluster-host>"
-  # - "*.ingress.<your-cluster-host>"
-  # secretName: secret-tls
+      # - "<your-cluster-host>"
+      # - "*.ingress.<your-cluster-host>"
+    # secretName: secret-tls
   rules:
     - host: 'my-app.ingress.<your-cluster-host>'
       http:
@@ -284,7 +284,7 @@ It is not strictly required for the rest of this guide.
 
 <details>
   <summary>Recommended: Configure TLS for your Ingress</summary>
-  
+
 Enable the NGINX Ingress add-on in your Gardener dashboard.
 The process may take a few minutes.
 Afterwards, you should see a domain in the dashboard as well as a Kubernetes secret `secret-tls`.
@@ -371,7 +371,7 @@ spec:
 
       ```yml title="volumeMounts:"
       - name: my-destination-service-binding-volume
-        mountPath: "/etc/secrets/sapcp/destination/my-destination-service
+        mountPath: '/etc/secrets/sapcp/destination/my-destination-service'
         readOnly: true
       ```
 
@@ -402,11 +402,11 @@ spec:
 apiVersion: services.cloud.sap.com/v1alpha1
 kind: ServiceBinding
 metadata:
-  name: my-ias-service-binding
+  name: my-identity-service-binding
 spec:
-  serviceInstanceName: identity-service
-  secretName: my-ias-service-secret
-  secretKey: my-ias-service-key
+  serviceInstanceName: my-identity-service
+  secretName: my-identity-service-secret
+  secretKey: my-identity-service-key
 ```
 
 2. Repeat the same steps 2-5 from the previous section, always replacing `destination` with `identity`.
