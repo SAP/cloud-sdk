@@ -779,12 +779,14 @@ To do this, use the following code snippet:
 kubectl edit secret <binding-name>
 ```
 
-Now you have to add the fields `onpremise_proxy_host` and `onpremise_proxy_port` and `url` containing the host and port, e.g. `connectivity-proxy.<namespace>`(in our case `connectivity-proxy.default`) and port, e.g. `20003`.
+Now you have to add the fields `onpremise_proxy_host` and `onpremise_proxy_port` and `url`. 
+The host has the pattern `connectivity-proxy.<namespace>`(in our case `connectivity-proxy.default`) and the port is by default `20003`, the `url` should contain the same value that `token_service_url` already does.
 Be aware that the values have to be encoded in base64, for example:
 
 ```yaml
 onpremise_proxy_host: Y29ubmVjdGl2aXR5LXByb3h5LmRlZmF1bHQ=
 onpremise_proxy_port: MjAwMDM=
+url: aHR0cHM6Ly9teS1hcGkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tCg==
 ```
 
 8. Finally, add the binding to your `deployment.yml`, the same way you would add any other binding.
