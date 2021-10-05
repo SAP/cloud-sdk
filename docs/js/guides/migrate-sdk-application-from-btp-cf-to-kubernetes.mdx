@@ -790,6 +790,7 @@ onpremise_proxy_port: MjAwMDM=
 8. Finally, add the binding to your `deployment.yml`, the same way you would add any other binding.
 
 ## Principal Propagation
+
 Similar to the SAP BTP CloudFoundry way of propagating a principal to handle multi-tenancy, you can also use the Application Router (AppRouter) in Kubernetes.
 
 1. You need an XSUAA instance that can redirect to a Kubernetes URI, for this the parameter `redirect-uris` is important, however if you use one parameter while creating a service, you have to use all of them.
@@ -810,31 +811,31 @@ spec:
     xsappname: kubernetes-xsuaa
     tenant-mode: dedicated
     scopes:
-    - name: "$XSAPPNAME.Callback"
-      description: "With this scope set, the callbacks for tenant onboarding, offboarding and getDependencies can be called."
-      grant-as-authority-to-apps :
-      - $XSAPPNAME(application,sap-provisioning,tenant-onboarding)
+      - name: '$XSAPPNAME.Callback'
+        description: 'With this scope set, the callbacks for tenant onboarding, offboarding and getDependencies can be called.'
+        grant-as-authority-to-apps:
+          - $XSAPPNAME(application,sap-provisioning,tenant-onboarding)
     role-templates:
-    - name: TOKEN_EXCHANGE
-      description: Token exchange
-      scope-references:
-      - uaa.user
-    - name: "MultitenancyCallbackRoleTemplate"
-      description: "Call callback-services of applications"
-      scope-references:
-      - "$XSAPPNAME.Callback"
+      - name: TOKEN_EXCHANGE
+        description: Token exchange
+        scope-references:
+          - uaa.user
+      - name: 'MultitenancyCallbackRoleTemplate'
+        description: 'Call callback-services of applications'
+        scope-references:
+          - '$XSAPPNAME.Callback'
     oauth2-configuration:
       grant-types:
-      - authorization_code
-      - client_credentials
-      - password
-      - refresh_token
-      - urn:ietf:params:oauth:grant-type:saml2-bearer
-      - user_token
-      - client_x509
-      - urn:ietf:params:oauth:grant-type:jwt-bearer
+        - authorization_code
+        - client_credentials
+        - password
+        - refresh_token
+        - urn:ietf:params:oauth:grant-type:saml2-bearer
+        - user_token
+        - client_x509
+        - urn:ietf:params:oauth:grant-type:jwt-bearer
       redirect-uris:
-      - https://*/**
+        - https://*/**
 ```
 
 2. Package the AppRouter as a `Dockerimage` so that it can run in Kubernetes, refer to the [documentation](https://blogs.sap.com/2020/04/03/sap-application-router/) to see how to configure an AppRouter.
@@ -843,49 +844,49 @@ spec:
 3. After creating a container image, create a `Deployment` and `Service` to run and expose the AppRouter, below are two examples for a AppRouter `Pod` and `Service`.
 
 First the `Deployment`:
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: approuter
   labels:
-      app: approuter
+    app: approuter
 spec:
   replicas: 1
   selector:
-      matchLabels:
-        app: approuter
+    matchLabels:
+      app: approuter
   template:
     metadata:
       labels:
         app: approuter
     spec:
       containers:
-      - image: docker-cloudsdk.docker.repositories.sap.ondemand.com/k8s-approuter:latest
-        resources:
+        - image: docker-cloudsdk.docker.repositories.sap.ondemand.com/k8s-approuter:latest
+          resources:
             requests:
-              memory: "256Mi"
-              cpu: "250m"
+              memory: '256Mi'
+              cpu: '250m'
             limits:
-              memory: "512Mi" 
-              cpu: "500m"
-        name: approuter
-        volumeMounts:
-          - name: xsuaa-volume
-            mountPath: "/etc/secrets/sapcp/xsuaa/operator-xsuaa-service"
-            readOnly: true
-        env:
-          - name: PORT
-            value: "5000"
-          - name: destinations
-            value: '[{"name":"backend", "url":"http://sdkjs-e2e-svc:8080/", "forwardAuthToken": true}]'
+              memory: '512Mi'
+              cpu: '500m'
+          name: approuter
+          volumeMounts:
+            - name: xsuaa-volume
+              mountPath: '/etc/secrets/sapcp/xsuaa/operator-xsuaa-service'
+              readOnly: true
+          env:
+            - name: PORT
+              value: '5000'
+            - name: destinations
+              value: '[{"name":"backend", "url":"http://sdkjs-e2e-svc:8080/", "forwardAuthToken": true}]'
       imagePullSecrets:
-      - name: regcred
+        - name: regcred
       volumes:
         - name: xsuaa-volume
           secret:
             secretName: operator-xsuaa-service
-
 ```
 
 Notice that we mount the XSUAA the same way we do for apps using the SAP Cloud SDK.
@@ -914,9 +915,9 @@ spec:
    Depending on your Ingress controller you have to use different annotations, for the NGINX Ingress controller use the following annotations for your Ingress:
 
 ```yaml
-    nginx.ingress.kubernetes.io/affinity: cookie
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
-    nginx.ingress.kubernetes.io/session-cookie-name: JSESSIONID
+nginx.ingress.kubernetes.io/affinity: cookie
+nginx.ingress.kubernetes.io/proxy-read-timeout: '600'
+nginx.ingress.kubernetes.io/session-cookie-name: JSESSIONID
 ```
 
 A complete example of an Ingress that only exposes the AppRouter and is using the annotations is shown in the following:
@@ -927,29 +928,28 @@ kind: Ingress
 metadata:
   name: sdkjs-e2e-ingress
   annotations:
-    nginx.ingress.kubernetes.io/affinity: "cookie"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
-    nginx.ingress.kubernetes.io/session-cookie-name: "JSESSIONID"
+    nginx.ingress.kubernetes.io/affinity: 'cookie'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '600'
+    nginx.ingress.kubernetes.io/session-cookie-name: 'JSESSIONID'
     cert.gardener.cloud/purpose: managed
 spec:
   tls:
-  - hosts:
-    - cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
-    - e2e.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
-    - connectivitytunnel.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
-    secretName: secret-tls
+    - hosts:
+        - cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+        - e2e.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+        - connectivitytunnel.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+      secretName: secret-tls
   rules:
-  - host: e2e.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: approuter-svc
-            port:
-              number: 8080
-
+    - host: e2e.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: approuter-svc
+                port:
+                  number: 8080
 ```
 
 5. Be aware that just like in SAP BTP CloudFoundry, you have to collect the principal's JWT from the authentication header in the request when executing on of the clients, here is an example utilizing our `retrieveJwt` function:
