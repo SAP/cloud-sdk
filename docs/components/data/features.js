@@ -249,20 +249,6 @@ export const features = [
     }
   },
   {
-    name: '[SAP BTP ABAP Environent](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/11d62652aa2b4600a0fa136de0789648.html)',
-    category: 'Environment',
-    java: {
-      status: NO,
-      docsLink: '',
-      note: 'Not in the scope'
-    },
-    js: {
-      status: NO,
-      docsLink: '',
-      note: 'Not in the scope'
-    }
-  },
-  {
     name: '[BTP Neo Environment](https://help.sap.com/viewer/ea72206b834e4ace9cd834feed6c0e09/Cloud/en-US)',
     category: 'Environment',
     java: {
@@ -274,6 +260,20 @@ export const features = [
       status: NO,
       docsLink: ``,
       note: 'Not recommended for new projects'
+    }
+  },
+  {
+    name: '[SAP BTP ABAP Environent](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/11d62652aa2b4600a0fa136de0789648.html)',
+    category: 'Environment',
+    java: {
+      status: NO,
+      docsLink: '',
+      note: 'Out of scope'
+    },
+    js: {
+      status: NO,
+      docsLink: '',
+      note: 'Out of scope'
     }
   },
   {
