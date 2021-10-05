@@ -771,7 +771,7 @@ config:
         enableProxyAuthorization: false
 ```
 
-7. For your application to reach On-Premise destinations, it needs the proxy settings as well as the token url, currently, these have to be added manually to the secret containing the service binding.
+7. For your application to reach On-Premise destinations, it needs the proxy settings as well as the token URL, currently, these have to be added manually to the secret containing the service binding.
 
 To do this, use the following code snippet:
 
@@ -790,7 +790,7 @@ onpremise_proxy_port: MjAwMDM=
 8. Finally, add the binding to your `deployment.yml`, the same way you would add any other binding.
 
 ## Principal Propagation
-Similar to the SAP BTP CloudFoundry way of propagating a principal to handle multi-tenancy, you can also use the Approuter in Kubernetes.
+Similar to the SAP BTP CloudFoundry way of propagating a principal to handle multi-tenancy, you can also use the Application Router (AppRouter) in Kubernetes.
 
 1. You need an XSUAA instance that can redirect to a Kubernetes URI, for this the parameter `redirect-uris` is important, however if you use one parameter while creating a service, you have to use all of them.
 
@@ -837,10 +837,10 @@ spec:
       - https://*/**
 ```
 
-2. Package the Approuter as a Dockerimage so that it can run in Kubernetes, refer to the [documentation](https://blogs.sap.com/2020/04/03/sap-application-router/) to see how to configure an Approuter.
-   In the xs-app.json, the approuter should point at the services running in your cluster, not the Ingress endpoint.
+2. Package the AppRouter as a `Dockerimage` so that it can run in Kubernetes, refer to the [documentation](https://blogs.sap.com/2020/04/03/sap-application-router/) to see how to configure an AppRouter.
+   In the `xs-app.json`, the Application Router should point at the services running in your cluster, not the Ingress endpoint.
 
-3. After creating a container image, create a `Deployment` and `Service` to run and expose the Approuter, below are two examples for a Approuter `Pod` and `Service`.
+3. After creating a container image, create a `Deployment` and `Service` to run and expose the AppRouter, below are two examples for a AppRouter `Pod` and `Service`.
 
 First the `Deployment`:
 ```yaml
@@ -907,9 +907,9 @@ spec:
     app: approuter
 ```
 
-4. Finally, configure the Ingress to be aware of the session-cookie created by the Approuter and point at the Approuter service.
-   To secure your application, you can also remove all previous routes that pointed at your application endpoints, and only expose them through the approuter, that way only users that are authenticated by your Identity Provider can access these endpoints.
-   For that you just need specifiy the service names in your approuters `xs-app.json` and remove the previous rules you created for these endpoints in the Ingress.
+4. Finally, configure the Ingress to be aware of the session-cookie created by the AppRouter and point at the AppRouter service.
+   To secure your application, you can also remove all previous routes that pointed at your application endpoints, and only expose them through the AppRouter, that way only users that are authenticated by your Identity Provider can access these endpoints.
+   For that you just need specify the service names in your AppRouter's `xs-app.json` and remove the previous rules you created for these endpoints in the Ingress.
 
    Depending on your Ingress controller you have to use different annotations, for the NGINX Ingress controller use the following annotations for your Ingress:
 
@@ -919,7 +919,7 @@ spec:
     nginx.ingress.kubernetes.io/session-cookie-name: JSESSIONID
 ```
 
-A complete example of an Ingress that only exposes the Approuter and is using the annotations is shown in the following:
+A complete example of an Ingress that only exposes the AppRouter and is using the annotations is shown in the following:
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -953,6 +953,7 @@ spec:
 ```
 
 5. Be aware that just like in SAP BTP CloudFoundry, you have to collect the principal's JWT from the authentication header in the request when executing on of the clients, here is an example utilizing our `retrieveJwt` function:
+
 ```JavaScript
 import { Injectable } from '@nestjs/common';
 import { BusinessPartner } from '@sap/cloud-sdk-vdm-business-partner-service';
