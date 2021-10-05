@@ -890,7 +890,8 @@ spec:
             secretName: operator-xsuaa-service
 ```
 
-Notice that we mount the XSUAA the same way we do for apps using the SAP Cloud SDK.
+You can see that we mount the XSUAA the same way we do for apps using the SAP Cloud SDK.
+Also, notice the way we reference the application running in our cluster, instead of an `Ingress` endpoint we directly point at the `Service`, this is possible because the AppRouter runs in our cluster and can therefore use the Kubernetes native `Service` discovery.
 
 And the `Service`:
 
