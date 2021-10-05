@@ -55,17 +55,60 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed issues
 -->
 
+## 3.54.0 - September 23, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.54.0) | [Javadoc](https://help.sap.com/doc/0d9c3f5f8d874f99a32444910d7a3504/1.0/en-US/index.html)
+
+### Known Issues
+
+- We are aware of the vulnerability [CVE-2021-37137](https://www.whitesourcesoftware.com/vulnerability-database/CVE-2021-37137) that affects [Netty](https://netty.io/news/2021/08/16/4-1-67-Final.html) in version `4.1.67.Final`. Unfortunately, we are not yet able to resolve that vulnerability due to [an issue](https://github.com/netty/netty/issues/11691) with the `4.1.68.Final` release of Netty, which prevents projects from compiling. We will update the related dependencies once the build issue has been resolved. The vulnerability affects only deprecated modules that are not recommended to use which significantly mitigates the risks for the SAP Cloud SDK's customers.
+
+### New Functionality
+
+- Applications that use an **IAS** binding instead of XSUAA are now supported out of the box.
+  - Incoming JWTs issued by IAS are validated and decoded
+  - In case no JWT is provided the SDK defaults to the zone ID of the provider tenant
+  - Destination & Connectivity service can be accessed on behalf of the IAS tenant via zone ID
+  - **Not supported:** JWTs issued by IAS can not yet be used for _Principal Propagation_ and _User Token Exchange_
+  - Under the hood, the SDK now uses zone IDs to pass tenant information to both IAS and XSUAA. See the note under "Improvements"
+
+### Improvements
+
+- Internally the SDK now passes the tenant information via zone ID (instead of subdomain) to the OAuth2 services XSUAA and IAS
+- Resolving the provider tenant no longer requires an internal HTTP request.
+  Instead, the `VCAP_SERVICES` environment variable will be parsed at runtime for the necessary information.
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update `com.sap.hcp.cf.logging:cf-java-logging-support-logback` from `3.5.1` to `3.5.2`
+    - Update `com.sap.cloud:neo-javaee7-wp-api` from `1.103.10` to `1.105.7`
+    - Update `com.sap.cloud:neo-java-web-api` from `4.7.9` to `4.9.4`
+  - Other dependency updates:
+    - Minor version updates:
+      - Update `org.hyperledger.fabric-sdk-java:fabric-sdk-java` from `2.2.7` to `2.2.8`
+      - Update `com.fasterxml.jackson:jackson-bom` from `2.12.4` to `2.12.5`
+      - Update `org.mockito:mockito-core` from `3.12.3` to `3.12.4`
+      - Update `net.sourceforge.pmd:pmd-core` from `6.37.0` to `6.38.0`
+      - Update `org.twdata.maven:mojo-executor` from `2.3.1` to `2.3.2`
+      - Update `org.xerial:sqlite-jdbc` from `3.36.0.1` to `3.36.0.3`
+      - Update `com.rabbitmq:aqmp-client` from `5.13.0` to `5.13.1`
+      - Update `org.hibernate:hibernate-core` from `5.5.6` to `5.5.7.Final`
+      - Update `org.codehaus.plexus:plexus-utils` from `3.4.0` to `3.4.1`
+      - Update `io.netty:netty-bom` from `4.1.66.Final` to `4.1.67.Final`
+      - Update `jakarta.activation:jakarta.activation-api` from `2.0.0` to `2.0.1`
+      - Update `com.github.tomakehurst:wiremock-jre8-standalone` from `2.30.1` to `2.31.0`
+
 ## 3.53.0 - September, 13, 2021
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.53.0) | [Javadoc](https://help.sap.com/doc/0d9c3f5f8d874f99a32444910d7a3504/1.0/en-US/index.html)
 
-## Compatibility Notes
+### Compatibility Notes
 
 - The Java HTML parser [`jsoup`](https://jsoup.org/) is no longer part of our implicit dependency management.
   If your application relies on the version provided by Cloud SDK, please consider declaring the dependency version yourself.
   The latest version can be found in [Maven Central](https://search.maven.org/artifact/org.jsoup/jsoup).
 
-## New Functionality
+### New Functionality
 
 - We added convenience methods for `null` comparison in our _OData_ API to avoid unnecessary null-casting:
 
@@ -108,7 +151,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
      ]
      ```
   2. Adding the property `forwardAuthToken=true`, as already known from the approuter:
-     ` [ { "type": "HTTP", "name": "destinationName", "url": "https://URL", "forwardAuthToken": true } ] `
+     `[ { "type": "HTTP", "name": "destinationName", "url": "https://URL", "forwardAuthToken": true } ]`
      Both of those settings will cause the destination to take the value of the `Authorization` HTTP header contained in the current HTTP request for every request to the specified target system.
 
   **Note:** The settings above will override a token set with `AuthTokenAccessor.executeWith(...)`. Moreover, authentication tokens set via `AuthTokenAccessor.executeWith(...)` will **not** be forwarded to the target system.
@@ -122,7 +165,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
   The rendered query string will look like: `airport=K%C3%B6ln%20Bonn`.
   Find more details on adding query parameters [here](https://sap.github.io/cloud-sdk/docs/java/features/connectivity/sdk-connectivity-destination-service#add-query-parameters-via-destination-properties).
 
-## Improvements
+### Improvements
 
 - `HttpClientFactory` is now a `@FunctionalInterface`.
   This let's you conveniently construct an instance of the `HttpClientFactory` using a simple lambda expression: `HttpClientFactory factory = destination -> HttpClients.createDefault();`.
@@ -141,7 +184,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
       - Update Mockito from `3.11.2` to `3.12.3`
       - Update Spring Security from `5.5.1` to `5.5.2`
 
-## Fixed Issues
+### Fixed Issues
 
 - We fixed the issue where HTTP header keys of an OData response were not handled case-insensitive, causing problems with processing those responses.
   This is fixed now and should handle headers the same way, regardless of capitalization.
@@ -321,7 +364,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
 
 - The module `usage-analytics` uses the dependency `org.jdom:jdom:2.0.6` which is affected by the vulnerability [CVE-2021-33813](https://nvd.nist.gov/vuln/detail/CVE-2021-33813).
   There was no fixed dependency version available at the release date.
-  We'll update this dependency once a secure version is available.  
+  We'll update this dependency once a secure version is available.
   The dependency is used in a Maven plugin and hence there is no harm during the runtime of any BTP application.
 
 ### Compatibility Notes

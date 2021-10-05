@@ -3,6 +3,7 @@ const YES = ':heavy_check_mark:';
 const NO = ':x:';
 const PLANNED = ':date:';
 const DEPRECATED = ':warning:';
+const BETA = ':gear:';
 const FEATURE_REQUEST =
   '[Request this feature](https://github.com/SAP/cloud-sdk/issues/new?assignees=&labels=feature+request&template=feature_request.md&title=)';
 /**
@@ -210,8 +211,7 @@ export const features = [
     category: 'Environment',
     java: {
       status: YES,
-      docsLink:
-        '[docs](`$(baseUrl)/java/environments/sap-btp-kubernetes-environment-with-sap-gardener`)',
+      docsLink: `[docs](${baseUrl}/java/environments/sap-btp-kubernetes-environment-with-sap-gardener)`,
       note: ''
     },
     js: {
