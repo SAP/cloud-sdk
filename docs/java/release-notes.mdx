@@ -67,16 +67,16 @@ To continue using the latest features outlined in the release notes for version 
   This utility interface consists of just a single method (`load`), which returns all service bindings for the current application.
   We also provide the following implementations:
 
-  - The `EnvironmentVariableServiceBindingLoader` that is capable of parsing environment variables (such as the `VCAP_SERVICES`) on SAP BTP Cloud Foundry
-  - The `FileSystemServiceBindingLoader` that is capable of parsing service bindings, which are mounted to the file system (for example, when running in a K8s environment).
-  - The `ServiceBindingMerger` that is capable of combining the results of an arbitrary amount of other `ServiceBindingLoader` instances based on a configurable service binding property (e.g. the `name` of the bindings).
+  - The `EnvironmentVariableServiceBindingLoader` is capable of parsing environment variables (such as the `VCAP_SERVICES`) on SAP BTP Cloud Foundry
+  - The `FileSystemServiceBindingLoader` is capable of parsing service bindings, which are mounted to the file system (for example, when running in a K8s environment).
+  - The `ServiceBindingMerger` is capable of combining the results of an arbitrary amount of other `ServiceBindingLoader` instances based on a configurable service binding property (e.g. the `name` of the bindings).
 
-  During the design of this new feature, we paid special attention to the configurability and extensibility of the architecture to enable consumers to support their own runtime with as little changes as possible.
+  During the design of this new feature, we paid special attention to the reconfigurability and extensibility of the API to enable consumers to support any runtime with as few changes as possible.
 
-- We changed the way our `ScpCfCloudPlatform` is loading service bindings in accordance to the newly introduced `ServiceBindingLoader` API (see note above).
-  In particular, K8s based environments where service bindings are mounted to the file system are now support out-of-the-box when using the `ScpCfCloudPlatform`.
+- We changed the way `ScpCfCloudPlatform` class is loading service bindings to use the newly introduced `ServiceBindingLoader` API.
+  It allows to seamlessly load service bindings from a file system in K8s-based environments like SAP Gardener.
 
-  Service bindings are now loaded with the following priority (highest to lowest):
+  We search and load the `Service bindings` with the following priority, highest to lowest:
 
   - From the file system, as provided by the SAP Service Operator K8s service with the `SecretKey` layout
   - From the file system, as provided by the SAP Service Operator K8s service with the `Data` (default) layout
@@ -102,8 +102,8 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed issues
 
 - Fix `SapPassportAccessor.getPassportForNextRequest()` to no longer throw an exception if either the current `ThreadContext` is unavailable or the incoming HTTP request is missing the SAP passport header.
-  - Instead a new passport will be generated on behalf of the base passport template.
-  - If the base passport template is not defined a new template will be instantiated at runtime via `SapPassportFactory`.
+  - Instead, we generate a new passport on behalf of the base passport template.
+  - If the base passport template is not defined, a new template will be instantiated at runtime via `SapPassportFactory`.
 
 ## 3.54.0 - September 23, 2021
 
