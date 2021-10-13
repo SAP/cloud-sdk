@@ -910,8 +910,8 @@ spec:
     app: approuter
 ```
 
-4. Finally, configure the `Ingress` to be aware of the session-cookie created by the AppRouter and point at the AppRouter service.
-   To secure your application, you can also remove all previous routes that pointed at your application endpoints, and only expose them through the AppRouter, that way only users that are authenticated by your Identity Provider can access these endpoints.
+4. Finally, configure the `Ingress` to create a session-cookie that is consumed by the AppRouter and point at the AppRouter service.
+   To secure your application, you can also remove all previous routes that pointed at your application endpoints and only expose them through the AppRouter, that way only users that are authenticated by your Identity Provider can access these endpoints.
    For that you just need specify the service names in your AppRouter's destinations and remove the previous rules you created for these endpoints in the `Ingress`.
 
    Depending on your `Ingress` controller you have to use different annotations, for the NGINX Ingress controller use the following annotations for your `Ingress`:
