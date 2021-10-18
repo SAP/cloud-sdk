@@ -55,6 +55,51 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed issues
 -->
 
+## 3.56.0 - October 21, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.56.0) | [Javadoc](https://help.sap.com/doc/82a32040212742019ce79dda40f789b9/1.0/en-US/index.html)
+
+### Known issues
+
+### Compatibility Notes
+
+### New Functionality
+
+- We added support for the newly introduced `SecretRootKey` service binding layout as defined by the SAP BTP Service Operator (K8s).
+  We recommend all consumers to use this binding layout as it solves the problem of incorrectly parsed array properties.
+
+### Improvements
+
+- We improved API generalization to accept custom implementations of interface `OAuth2Service` instead of dedicated class `XsuaaService`.
+
+- To increase compatibility, the OData V2 `count()` operation on our V2 VDM now ignores query options other than `$filter` and user defined query options which are not relevant for the count operation.
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update `com.sap.cloud:neo-java-web-api` from `4.9.4` to `4.11.4`
+    - Update `com.sap.cloud:neo-javaee7-wp-api` from `1.105.7` to `1.107.5`
+  - Other dependency updates:
+    - Major version updates:
+        - Update `org.mockito:mockito-core` from `3.12.4` to `4.0.0`
+    - Minor version updates:
+        - Update `org.projectlombok:lombok` from `1.8.20` to `1.8.22`
+        - Update `com.fasterxml.jackson:jackson-bom` from `2.12.5` to `2.13.0`
+        - Update `io.swagger:swagger-annotations` from `1.6.2` to `1.6.3`
+        - Update `joda-time:joda-time` from `2.10.10` to `2.10.12`
+        - Update `net.sourceforge.pmd:pmd-core, pmd-java, pmd-test` from `6.38.0` to `6.39.0`
+        - Update `com.squareup.okhttp3:okhttp, mockwebserver` and  from `4.9.1` to `4.9.2`
+        - Update `org.apache.tomcat:tomcat-annotations-api, tomcat-jdbc` from `8.5.71` to `8.5.72`
+        - Update `com.google.protobuf:protobuf-java` from `3.18.0` to `3.18.1`
+
+### Fixed issues
+
+- We fixed an issue where the `appendDestinationLoader` and `prependDestinationLoader` on the `DestinationLoader` were not behaving as expected on a given `DestinationLoaderChain`.The `DestinationLoaderChain`s are now correctly added to an existing `DestinationLoaderChain`.
+  
+- We fixed an issue with the OData V4 generator not considering actions and functions when one of their arguments references a complex- or entity-type that is not transitively exposed through entity sets.
+
+- We fixed the issue where `HttpClient`s were not cached correctly on BTP Neo.
+  With this fix the caching should now behave as expected, minimizing the number of concurrent `HttpClient` instance in use.
+
 ## 3.55.1 - October 7, 2021
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.55.1) | [Javadoc](https://help.sap.com/doc/82a32040212742019ce79dda40f789b9/1.0/en-US/index.html)
