@@ -35,14 +35,23 @@ The reasons to separate destinations and application are manifold:
 
 The SAP Cloud SDK helps you to authenticate against the destination service and retrieve destinations into your application.
 
-The following example shows a request against the Business Partner service with the SAP Cloud SDK to retrieve the top 5 business partners:
+The SAP Cloud SDK supports [OData](../odata/overview.mdx) and [OpenApi](../openapi/overview.mdx) services.
+For both service types the `execute()` methods triggers a request to a target system:
 
 ```ts
-BusinessPartner.requestBuilder().getAll().top(5).execute(myDestination);
+//OData
+const responseOData = await BusinessPartner.requestBuilder()
+  .getAll()
+  .execute(myDestination);
+//OpenApi
+const responseOpenApi = await MyApi.myFunction().execute(myDestination);
 ```
 
 `myDestination` is an SAP Cloud SDK representation of a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_core.Destination" name="destination" />.
 The given request is executed against `myDestination`.
+
+For the rest of the document, we will discuss the different options on destination lookup.
+All statements equally apply to OData and OpenAPI based services.
 
 ## Creating Destinations Manually
 
@@ -97,6 +106,31 @@ This would set a destination with the name `TESTINATION`.
 At runtime, the SAP Cloud SDK will check the environment variable for a destination with the given name and use it if present.
 Note that the SAP Cloud SDK offers also a `mockTestDestination()` method, which reads in a `systems.json` and `credentials.json` to create destinations.
 The advantage of files is that they can be excluded from the repository since they contain sensitive information.
+
+:::tip AuthToken Forwarding
+
+Usually, the destination service should be used in production to fetch a destination including an authentication token.
+In the case of frequent service to service communication, requesting the destination service every time for a target-specific `JWT` would mean a big overhead.
+
+In such a case you can configure your destination targets to accept the initial request `JWT` and use this for all further calls.
+This makes the call to the destination service for a target-specific token redundant.
+If you configured your target system in such a way, you put a destination in the local environment variables to stop the lookup right away.
+Include the `forwardAuthToken` to the destination configuration and your initial `JWT` will be forwarded directly as `Authorization` header to the target systems without an extra round trip to the destination service.
+You can use the `setTestDestination()` method to set the destination in the environment variables:
+
+```ts
+setTestDestination({
+  name: 'FORWARD-DESTINATION',
+  url: 'https://mys4hana.com',
+  forwardAuthToken: true
+});
+
+MyReqeust.execute({ destinationName: 'myDestination', jwt: 'forwardedJwt' });
+```
+
+:::
+
+Note that this approach is not suitable for multi-tenant scenarios, because only the destination service can return destinations for different tenants.
 
 ### Service Binding Environment Variables
 
