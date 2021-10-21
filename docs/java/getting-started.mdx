@@ -37,10 +37,6 @@ Alternatively, you can follow [these instructions](#integrate-the-cloud-sdk-for-
 
 ## Generating a Project from a Maven Archetype
 
-<Tabs groupId="frameworks" defaultValue="spring" values={[
-{ label: 'Spring', value: 'spring', },
-{ label: 'TomEE', value: 'tomee', }]}>
-
 The SAP Cloud SDK provides archetypes based on [Spring](https://spring.io/) and [TomEE](https://tomee.apache.org/), so select whatever suits you best.
 
 :::note
@@ -52,6 +48,11 @@ For Neo platform we provide an archetype `scp-neo-javaee7` for only servlet base
 
 Run:
 
+<Tabs groupId="frameworks" defaultValue="spring" values={[
+{ label: 'Spring', value: 'spring', },
+{ label: 'TomEE', value: 'tomee', }
+]}>
+
 <TabItem value="spring">
 
 ```bash
@@ -61,6 +62,7 @@ mvn archetype:generate "-DarchetypeGroupId=com.sap.cloud.sdk.archetypes" \
 ```
 
 </TabItem>
+
 <TabItem value="tomee">
 
 ```bash
@@ -170,9 +172,10 @@ To get started with an existing project include the _SAP Cloud SDK BOM_ in the _
 
 If your application is running on **SAP Business Technology Platform** please add the appropriate dependency:
 
-<Tabs groupId="scp" defaultValue="cf" values={[
+<Tabs groupId="btp" defaultValue="cf" values={[
 { label: 'Cloud Foundry', value: 'cf', },
-{ label: 'Neo', value: 'neo', }]}>
+{ label: 'Neo', value: 'neo', },
+]}>
 
 <TabItem value="cf">
 
@@ -200,9 +203,11 @@ If your application is running on **SAP Business Technology Platform** please ad
 If you want to connect to an **SAP S/4HANA** system via the **OData** protocol, you should also add a dependency to the client libraries of the SAP Cloud SDK.
 The dependencies differ with respect to the type of **SAP S/4HANA** system([**SAP S/4HANA Cloud**](https://api.sap.com/package/SAPS4HANACloud?section=Artifacts) or [**SAP S/4HANA On-premise 2020**](https://api.sap.com/package/S4HANAOPAPI?section=Artifacts)):
 
-<Tabs groupId="s4hana" defaultValue="s4hanacloud" values={[ { label: 'SAP S/4HANA Cloud', value: 's4hanacloud', }, { label: 'SAP S/4HANA On-premise 2020', value: 's4hana_onpremise', }]}>
+<Tabs groupId="s4" defaultValue="s4hc" values={[
+{ label: 'SAP S/4HANA Cloud', value: 's4hc', },
+{ label: 'SAP S/4HANA On-premise 2020', value: 's4op', }]}>
 
-<TabItem value="s4hanacloud">
+<TabItem value="s4hc">
 
 <!-- vale off -->
 
@@ -214,7 +219,8 @@ The dependencies differ with respect to the type of **SAP S/4HANA** system([**SA
 ```
 
 </TabItem>
-<TabItem value="s4hana_onpremise">
+
+<TabItem value="s4op">
 
 ```xml
 <dependency>
