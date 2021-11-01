@@ -257,7 +257,10 @@ Compilation fails if:
 
 - These keywords exist under the `paths` part, under any operation while defining either the `requestbody` or `responses`
 
-```YAML
+<details>
+  <summary>Keywords under paths</summary>
+
+```
 paths:
  /APIPath:
         put:
@@ -282,8 +285,14 @@ paths:
                         items:
                           $ref: '#/components/schemas/SomeOtherSchema'
 ```
+</details>
+
 - These keywords exist under any of the `schemas` either under any property in `properties` or under `additionalProperties`
-```YAML
+
+<details>
+  <summary>Keywords under properties of schema</summary>
+
+```
 components:
   schemas:
     SampleSchema:
@@ -320,8 +329,11 @@ components:
             - $ref: '#/components/schemas/SomeSchema'
             - $ref: '#/components/schemas/SomeOtherSchema'
 ```
-To make the compilation to succeed, please remove these keywords (if they exist in the above mentioned positions) from the input specification and generated the client again.
+</details>
 
-Please note that while removing these keywords, you must also supply a meaningful replacement.
+To make the compilation to succeed, please remove these keywords (if they exist in the above mentioned positions) from the input specification and generate the client again.
+
+Please note that while removing these keywords from a property, you must also supply a meaningful replacement.
+Sometimes you may also choose to drop the property altogether for e.g, in the case of `additionalProperties`
 
 Refer to the [Swagger documentation](https://swagger.io/docs/specification/data-models/oneof-anyof-allof-not/) to understand more about the usage of these keywords and to derive their replacement.
