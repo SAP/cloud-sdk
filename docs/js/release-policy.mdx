@@ -16,6 +16,9 @@ keywords:
   - support
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 :::info relevance
 
 This release policy only applies to the SAP Cloud SDK for JavaScript.
@@ -46,7 +49,6 @@ The SAP Cloud SDK for JavaScript follows [semantic versioning](https://semver.or
 - Upgrade to a new **minor release version** should not involve any effort because we do not introduce breaking changes.
 
 :::info TypeScript version bumps
-
 We regularly upgrade TypeScript to the latest stable version.
 In rare cases this can lead to compilation errors for projects using TypeScript.
 The solution is usually upgrading TypeScript to the latest stable version.
@@ -58,10 +60,48 @@ The solution is usually upgrading TypeScript to the latest stable version.
 - We provide a step-by-step upgrade guide for each major version.
 - Following the upgrade steps should take less than a day of development effort regardless of the project size.
 
-### Fixes, Maintenance, Documentation
+### Documentation
+
+- The documentation is always up to date with the **latest major release**.
+- We will use tabs to demostrate a difference between the versions where required.
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'v2', value: 'major' }, { label: 'v1', value: 'deprecated' } ]}>
+
+<TabItem value="major">
+
+```
+
+Major version documentation
+
+```
+
+</TabItem>
+
+<TabItem value="deprecated">
+
+```
+
+Deprecated version documentation
+
+```
+
+</TabItem>
+
+</Tabs>
+
+- At all times we will maintain documentation only for two most recent versions.
+- With every new major version release the oldest documented version is removed from the documentation portal.
+
+:::tip
+
+We will always provide a branch with the latest snapshot of the documentation before the major version release.
+You can use that branch to host documentation for the earlier version locally.
+
+:::
+
+### Fixes and Maintenance
 
 - We maintain only the **latest major release** of the SAP Cloud SDK for JavaScript.
-- The documentation is always up to date with the **latest major release**.
 
 ### Support and feedback
 
