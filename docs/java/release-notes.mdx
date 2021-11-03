@@ -55,9 +55,102 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed issues
 -->
 
+## 3.56.0 - October 21, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.56.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
+
+
+### New Functionality
+
+- We added support for the newly introduced `SecretRootKey` service binding layout as defined by the SAP BTP Service Operator for K8s.
+  We recommend all consumers to use this binding layout as it solves the problem of incorrectly parsed array properties.
+  Please refer to our [K8s Guide](environments/sap-btp-kubernetes-environment-with-sap-gardener) for more detailed instructions on how to create service bindings using the SAP BTP Service Operator.
+
+### Improvements
+
+- We improved API generalization to accept custom implementations of interface `OAuth2Service` instead of dedicated class `XsuaaService`.
+
+- To increase compatibility, the OData V2 `count()` operation on our OData V2 typed client (VDM) now ignores query options other than `$filter` and user-defined query options which are not relevant for the count operation.
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update `com.sap.cloud:neo-java-web-api` from `4.9.4` to `4.11.4`
+    - Update `com.sap.cloud:neo-javaee7-wp-api` from `1.105.7` to `1.107.5`
+  - Other dependency updates:
+    - Major version updates:
+        - Update `org.mockito:mockito-core` from `3.12.4` to `4.0.0`
+    - Minor version updates:
+        - Update `org.projectlombok:lombok` from `1.8.20` to `1.8.22`
+        - Update `com.fasterxml.jackson:jackson-bom` from `2.12.5` to `2.13.0`
+        - Update `io.swagger:swagger-annotations` from `1.6.2` to `1.6.3`
+        - Update `joda-time:joda-time` from `2.10.10` to `2.10.12`
+        - Update `net.sourceforge.pmd:pmd-core, pmd-java, pmd-test` from `6.38.0` to `6.39.0`
+        - Update `com.squareup.okhttp3:okhttp, mockwebserver` and  from `4.9.1` to `4.9.2`
+        - Update `org.apache.tomcat:tomcat-annotations-api, tomcat-jdbc` from `8.5.71` to `8.5.72`
+        - Update `com.google.protobuf:protobuf-java` from `3.18.0` to `3.18.1`
+
+### Fixed issues
+
+- We fixed an issue where the `appendDestinationLoader` and `prependDestinationLoader` on the `DestinationLoader` were not behaving as expected on a given `DestinationLoaderChain`.The `DestinationLoaderChain`s are now correctly added to an existing `DestinationLoaderChain`.
+  
+- We fixed an issue with the OData V4 generator not considering actions and functions when one of their arguments references a complex- or entity-type that is not transitively exposed through entity sets.
+
+- We fixed the issue where `HttpClient`s were not cached correctly on BTP Neo.
+  With this fix the caching should now behave as expected, minimizing the number of concurrent `HttpClient` instances in use.
+
+## 3.55.1 - October 7, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.55.1) | [Javadoc](https://help.sap.com/doc/d82db621081448e8abc28eef75ddfc9d/1.0/en-US/index.html)
+
+### New Functionality
+
+- We introduced a new abstraction to load service bindings from various locations in an environment agnostic manner:
+  The `ServiceBindingLoader` interface.
+
+  This utility interface consists of just a single method (`load`), which returns all service bindings for the current application.
+  We also provide the following implementations:
+
+  - The `EnvironmentVariableServiceBindingLoader` is capable of parsing environment variables (such as the `VCAP_SERVICES`) on SAP BTP Cloud Foundry
+  - The `FileSystemServiceBindingLoader` is capable of parsing service bindings, which are mounted to the file system (for example, when running in a K8s environment).
+  - The `ServiceBindingMerger` is capable of combining the results of an arbitrary amount of other `ServiceBindingLoader` instances based on a configurable service binding property (e.g. the `name` of the bindings).
+
+  During the design of this new feature, we paid special attention to the reconfigurability and extensibility of the API to enable consumers to support any runtime with as few changes as possible.
+
+- We changed the way `ScpCfCloudPlatform` class is loading service bindings to use the newly introduced `ServiceBindingLoader` API.
+  It allows to seamlessly load service bindings from a file system in K8s-based environments like SAP Gardener.
+
+  We search and load the `Service bindings` with the following priority, highest to lowest:
+
+  - From the file system, as provided by the SAP Service Operator K8s service with the `SecretKey` layout
+  - From the file system, as provided by the SAP Service Operator K8s service with the `Data` (default) layout
+  - From the `VCAP_SERVICES` environment variable
+
+### Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [XSUAA Token Client and Token Flow API](https://github.com/SAP/cloud-security-xsuaa-integration/tree/main/token-client) from `2.10.5` to `2.11.0`
+  - Other dependency updates:
+    - Major version updates:
+      - Update `org.togglz:togglz-core` from `2.9.9` to `3.0.0`
+    - Minor version updates:
+      - Update `ch.qos.logback:logback-classic` from `1.2.5` to `1.2.6`
+      - Update `com.auth0:java-jwt` from `3.18.1` to `3.18.2`
+      - Update `org.springframework:spring-framework-bom` from `5.3.9` to `5.3.10`
+      - Update `org.jooq:jooq ` from `3.14.12` to `3.14.15`
+      - Update `io.projectreactor:reactor-core` from `3.4.9` to `3.4.10`
+      - Update `org.apache.tomcat:tomcat-annotations-api,tomcat-jdbc` from `8.5.69` to `8.5.71`
+      - Update `com.google.protobuf:protobuf-java` from `3.17.3` to `3.18.0`
+
+### Fixed issues
+
+- Fix `SapPassportAccessor.getPassportForNextRequest()` to no longer throw an exception if either the current `ThreadContext` is unavailable or the incoming HTTP request is missing the SAP passport header.
+  - Instead, we generate a new passport on behalf of the base passport template.
+  - If the base passport template is not defined, a new template will be instantiated at runtime via `SapPassportFactory`.
+
 ## 3.54.0 - September 23, 2021
 
-[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.54.0) | [Javadoc](https://help.sap.com/doc/0d9c3f5f8d874f99a32444910d7a3504/1.0/en-US/index.html)
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.54.0) | [Javadoc](https://help.sap.com/doc/9bcf49c2ab0047a2862c06178649df9a/1.0/en-US/index.html)
 
 ### Known Issues
 
@@ -100,7 +193,7 @@ To continue using the latest features outlined in the release notes for version 
 
 ## 3.53.0 - September, 13, 2021
 
-[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.53.0) | [Javadoc](https://help.sap.com/doc/0d9c3f5f8d874f99a32444910d7a3504/1.0/en-US/index.html)
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.53.0) | [Javadoc](https://help.sap.com/doc/76121d8eb0eb4a809112760096efb417/1.0/en-US/index.html)
 
 ### Compatibility Notes
 
@@ -158,7 +251,6 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
 
 - You can now add `headers` to a `destination` using the `property` method so that they will always be included when calling the target system.
   Here's an example of the `property` method call: `.property("URL.headers.foo1", "bar1")`. Find more details on setting properties [here](https://sap.github.io/cloud-sdk/docs/java/features/connectivity/sdk-connectivity-destination-service#provide-headers-for-destinations).
-
 - You can now add query parameters to a destination using properties.
   They will always be included in the query string when calling the target system.
   The query values should be provided without encoding. They will be encoded in the query string by the SDK.
@@ -192,7 +284,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
 
 ## 3.52.0 - August 26, 2021
 
-[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.52.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.52.0) | [Javadoc](https://help.sap.com/doc/0d9c3f5f8d874f99a32444910d7a3504/1.0/en-US/index.html)
 
 ### Known Issues
 
