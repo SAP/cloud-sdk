@@ -52,7 +52,8 @@ module.exports = {
             label: 'Connectivity',
             items: [
               'java/features/connectivity/sdk-connectivity-destination-service',
-              'java/features/connectivity/sdk-connectivity-http-client'
+              'java/features/connectivity/sdk-connectivity-http-client',
+              'java/features/connectivity/sdk-connectivity-mtls'
             ]
           },
           {
@@ -68,6 +69,16 @@ module.exports = {
               'java/features/resilience/caching'
             ]
           }
+        ]
+      },
+      {
+        type: 'category',
+        label: 'Environments',
+        items: [
+          'java/environments/sap-btp-environments-overview',
+          'java/environments/sap-btp-cloud-foundry-environment',
+          'java/environments/sap-btp-kubernetes-environment-with-sap-gardener',
+          'java/environments/sap-btp-kyma-environment'
         ]
       },
       {
@@ -179,6 +190,11 @@ module.exports = {
         type: 'category',
         label: 'Extensions',
         items: ['js/extensions/currency-conversion']
+      },
+      {
+        type: 'category',
+        label: 'Releases',
+        items: ['js/release-policy', 'js/announcing-version-2']
       },
       {
         type: 'category',

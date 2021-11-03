@@ -35,7 +35,7 @@ Tenant or principal information is not available or an incorrect tenant is used.
 **Possible causes:**
 
 - A subscriber based JWT is passed in, but its validation fails, causing the SAP Cloud SDK to fall back to the provider account.
-  See [JWT validation fails](#jwt-validation-fails).
+  See [JWT validation fails](#json-web-token-validation-fails).
 
 - An operation is performed in an asynchronous manner without propagating the `ThreadContext`.
   See [Running Asynchronous Operations](features/multi-tenancy/multi-tenancy-thread-context#running-asynchronous-operations).
@@ -215,3 +215,23 @@ When running `Destination#asHttp()` you encounter an exception message like `"De
   To solve that issue, please check every field in the destination configuration for valid input.
   Please find the official [documentation from the Destination Service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/42a0e6b966924f2e902090bdf435e1b2.html) for more details.
   The value for field "Token Service URL" may require the full service endpoint path, including e.g. `/oauth/token`.
+
+## Olingo Dependency Conflicts
+
+:::info **Symptoms**
+In your CAP based application you encounter exception messages like `NoSuchMethodError` or `ClassDefNotFoundException` on methods or classes of `org.apache.olingo.odata2`.
+:::
+
+**Possible causes:**
+
+- The SAP Cloud SDK brings the dependency `com.sap.cloud.servicesdk:odata-v2-lib` which internally repackages Olingo.
+  If you don't rely on any deprecated OData V2 functionality of the SAP Cloud SDK this dependency is not required and can be excluded.
+
+  Add this exclusion in all places where `odata-v2-lib` is coming into your `mvn dependency:tree`:
+
+  ```xml
+  <exclusion>
+    <groupId>com.sap.cloud.servicesdk</groupId>
+    <artifactId>odata-v2-lib</artifactId>
+  </exclusion>
+  ```

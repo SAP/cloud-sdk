@@ -1,3 +1,18 @@
+const { ProvidePlugin } = require('webpack');
+
+// We have to polyfill some Node APIs because Docusaurus migrated to Webpack 5
+// This is mainly required because of remark related modules which don't load otherwise
+// Also process is required for local runs
+class ESMPolyfillWrapper {
+  apply(compiler) {
+    compiler.options.plugins.push(
+      new ProvidePlugin({
+        process: 'process/browser.js'
+      })
+    );
+  }
+}
+
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
   title: 'SAP Cloud SDK',
@@ -211,5 +226,21 @@ module.exports = {
       src: 'https://sap.github.io/cloud-sdk/js/swa.js'
     }
   ],
-  customFields: {}
+  customFields: {},
+  plugins: [
+    function nodeWebpackPolyfillPlugin(context, options) {
+      return {
+        name: 'nodeWebpackPlyfill',
+        configureWebpack(config, isServer) {
+          return {
+            plugins: [new ESMPolyfillWrapper()]
+          };
+        }
+      };
+    }
+  ],
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en']
+  }
 };
