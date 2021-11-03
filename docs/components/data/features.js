@@ -277,6 +277,20 @@ export const features = [
     }
   },
   {
+    name: 'Kubernetes Service Binding',
+    category: 'Environment',
+    java: {
+      status: YES,
+      docsLink: `[docs](${baseUrl}/java/environments/sap-btp-kubernetes-environment-with-sap-gardener#load-service-binding-information`,
+      note: ``
+    },
+    js: {
+      status: NO,
+      docsLink: ``,
+      note: ``
+    }
+  },
+  {
     name: '[BTP CF Connectivity Service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/313b215066a8400db461b311e01bd99b.html)',
     category: 'Connectivity',
     java: {
