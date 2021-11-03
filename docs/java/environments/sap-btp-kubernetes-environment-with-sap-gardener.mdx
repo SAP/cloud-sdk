@@ -409,3 +409,71 @@ spec:
 ```
 
 2. Repeat the same steps 2-5 from the previous section, always replacing `destination` with `identity`.
+
+### Load Service Binding Information
+
+SAP Cloud SDK provides functionality to load service binding information when running the application in any Kubernetes runtime.
+This means that the SAP Cloud SDK features can be used in a Kubernetes environment without additional configuration (specifically `ScpCfCloudPlatform`).
+Below you can find an architectural overview of the relevant classes.
+**Please note that the API is still in an experimental state at this time.**
+
+![ServiceBindingLoaders](/img/ServiceBindingLoaders.png 'ServiceBindingLoaders')
+
+Let's look at the classes and their use cases individually.
+
+#### ServiceBindingLoader
+
+An interface offering only one method to load the existing service bindings for the current application.
+The abstract method named `load()` will have different functionality based on the subclass.
+The following four classes implement this interface.
+
+#### FileSystemServiceBindingLoader
+
+![FileSystemServiceBindingLoader](/img/FSSBL.png 'FileSystemServiceBindingLoader')
+
+Used for transforming file system structures (e.g. files and directories) into service bindings, starting at a specific root location based on the provided `ParsingStrategy`.
+It has a _Functional Interface_ (`ParsingStrategy`), exposing the `Map<String, JsonArray> parse(Path)` method.
+`FileSystemServiceBindingLoader.ParsingStrategy` represents an algorithm to transform a given root location (the directory in the file system) to service bindings.
+`FileSystemServiceBindingLoader` takes the root location path and a `ParsingStrategy`.
+The SAP Cloud SDK offers several implementations for the `ParsingStrategy` as shown in the figure.
+
+#### EnvironmentVariableServiceBindingLoader
+
+![EnvironmentVariableServiceBindingLoader](/img/EVSBL.png 'EnvironmentVariableServiceBindingLoader')
+
+Used for transforming environment variables into service bindings based on the provided `ParsingStrategy`.
+It has a _Functional Interface_ (`ParsingStrategy`), exposing the `Map<String, JsonArray> parse(Function<String, String>)` method.
+`EnvironmentVariableServiceBindingLoader.ParsingStrategy` represents an algorithm to transform environment variables that can be obtained from the given environment variable reader into service bindings.
+`EnvironmentVariableServiceBindingLoader` takes an environment variable reader and a `ParsingStrategy`.
+The SAP Cloud SDK offers an implementation for the `ParsingStrategy` as shown in the figure.
+
+#### ServiceBindingMerger
+
+![ServiceBindingMerger](/img/SBM.png 'ServiceBindingMerger')
+
+Used for merging the result of an arbitrary amount of given instances based on the provided `MergingStrategy`.
+It has a _Functional Interface_ (`MergingStrategy`), exposing the `Map<String, JsonArray> merge(List<Map<String, JsonArray>> serviceBindingsCollection)` method.
+`ServiceBindingMerger.MergingStrategy` represents an algorithm to merge multiple service bindings.
+`ServiceBindingMerger` is capable of merging the result of multiple loaders on a binding name (it assumes that each service binding has a property called name) level.
+With that, it is able to combine multiple service bindings for the same service from different sources.
+SAP Cloud SDK offers an implementation for the `MergingStrategy` as shown in the figure.
+
+#### SimpleCachingServiceBindingLoaderWrapper
+
+![SimpleCachingServiceBindingLoaderWrapper](/img/SCSBLW.png 'SimpleCachingServiceBindingLoaderWrapper')
+
+Used for wrapping another instance and caching the result for a certain amount of time.
+Once the cache duration has been exceeded, the wrapped `ServiceBindingLoader` is evaluated again.
+The cache can also be reset in a manual fashion.
+
+#### Usage
+
+We suggest that `ScpCfCloudPlatform` is used when running in a Kubernetes environment.
+The above-mentioned architecture can be used by calling the `Map<String, JsonArray> getVcapServices()` method.
+By default, the service bindings are loaded in the following order:
+
+- Service Operator (Kubernetes) Secret Key layout
+- Service Operator (Kubernetes) Data (Default) layout
+- VCAP_SERVICES environment variable
+
+This can be customized by providing a `ServiceBindingLoader` with the method `setServiceBindingLoader(ServiceBindingLoader serviceBindingLoader)`.
