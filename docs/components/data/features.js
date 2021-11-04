@@ -235,7 +235,7 @@ export const features = [
     }
   },
   {
-    name: 'Deploy with Confidence',
+    name: 'Deploy with Confidence (DwC)',
     category: 'Environment',
     java: {
       status: YES,
