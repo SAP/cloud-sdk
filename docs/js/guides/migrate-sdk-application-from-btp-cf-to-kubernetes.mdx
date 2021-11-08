@@ -780,9 +780,9 @@ To do this, use the following code snippet:
 kubectl edit secret <binding-name>
 ```
 
-Now you have to add the fields `onpremise_proxy_host` and `onpremise_proxy_port` and `url`. 
+Now you have to add the fields `onpremise_proxy_host` and `onpremise_proxy_port` and `url`.
 The host has the pattern `connectivity-proxy.<namespace>` which is in our case `connectivity-proxy.default`.
-The default port is `20003`. 
+The default port is `20003`.
 The `url` field should contain the same value as `token_service_url`.
 Be aware that the values have to be encoded in base64, for example:
 
@@ -796,12 +796,13 @@ url: aHR0cHM6Ly9teS1hcGkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tCg==
 
 ## Principal Propagation
 
-You can use the Application Router also known as AppRouter to propagate a principal in Kubernetes and achieve multi-tenancy. It works in a similar fashion to SAP BTP CloudFoundry.
+You can use the Application Router also known as AppRouter to propagate a principal in Kubernetes and achieve multi-tenancy.
+It works in a similar fashion to SAP BTP CloudFoundry.
 
-1. You need an XSUAA instance that can redirect to a Kubernetes URI. 
+1. You need an XSUAA instance that can redirect to a Kubernetes URI.
    For this the parameter `redirect-uris` is important, however, if you use one parameter while creating a service, you have to use all of them.
 
-Below is an example using the SAP BTP Operator, to create an XSUAA with a very generic rule specifying the allowed URI with wildcards `https://*/**`. 
+Below is an example using the SAP BTP Operator, to create an XSUAA with a very generic rule specifying the allowed URI with wildcards `https://*/**`.
 For your application, it is recommended to point directly at your specific URI.
 
 If you are not using the SAP BTP Operator, you still have to provide the same parameters but in a different format.
@@ -984,7 +985,7 @@ export class PrincipalBusinessPartnerService {
       .top(5)
       .execute({
         destinationName: 'MY-DESTINATION',
-        jwt: retrieveJwt(request),
+        jwt: retrieveJwt(request)
       });
   }
 }
