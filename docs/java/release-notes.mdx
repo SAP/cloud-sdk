@@ -55,9 +55,77 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed issues
 -->
 
+## 3.57.0 - November 4, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.57.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
+
+### Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [Neo JavaEE7 WP API](https://search.maven.org/search?q=g:com.sap.cloud%20a:neo-javaee7-wp-api) (`com.sap.cloud:neo-javaee7-wp-api`) from `1.107.5` to `1.108.5`
+    - Update [Neo Java Web API](https://search.maven.org/search?q=g:com.sap.cloud%20a:neo-java-web-api) (`com.sap.cloud:neo-java-web-api`) from `4.11.4` to `4.12.2`
+    - Update [CDS4J Maven Plugin](https://search.maven.org/search?q=g:com.sap.cds%20a:cds4j-maven-plugin) (`com.sap.cds:cds4j-maven-plugin`) from `1.16.0` to `1.23.0`
+    - Update JPaaS Security Utils (`com.sap.core.jpaas.security:com.sap.core.jpaas.security.utils`) from `1.4.90` to `1.4.91`
+  - Other dependency updates:
+    - Major version updates:
+      - Update [Guava](https://search.maven.org/search?q=g:com.google.guava%20a:guava) (`com.google.guava:guava, guava-testlib`) from `30.1.1-jre` to `31.0.1-jre`
+    - Minor version updates:
+      - Update [Hibernate Core](https://search.maven.org/search?q=g:org.hibernate%20a:hibernate-core) (`org.hibernate:hibernate-core`) from `5.5.7.Final` to `5.6.0.Final`
+      - Update [JUnit Jupiter](https://search.maven.org/search?q=g:org.junit.jupiter%20a:junit-jupiter-engine) (`org.junit.jupiter:junit-jupiter-engine`) and [JUnit Vintage](https://search.maven.org/search?q=g:org.junit.vintage%20a:junit-vintage-engine) (`org.junit.vintage:junit-vintage-engine`) from `5.7.2` to `5.8.1`
+      - Update [Netty](https://search.maven.org/search?q=g:io.netty%20a:netty-bom) (`io.netty:netty-bom`) from `4.1.67.Final` to `4.1.69.Final`
+      - Update [Protobuf](https://search.maven.org/search?q=g:com.google.protobuf%20a:protobuf-java) (`com.google.protobuf:protobuf-java`) from `3.18.1` to `3.19.0`
+      - Update [Reactor Core](https://search.maven.org/search?q=g:io.projectreactor%20a:reactor-core) (`io.projectreactor:reactor-core`) from `3.4.10` to `3.4.11`
+
+### Fixed issues
+
+- We fixed the vulnerability [CVE-2021-37137](https://www.whitesourcesoftware.com/vulnerability-database/CVE-2021-37137) that affects Netty with versions `< 4.1.68.Final` by updating to version `4.1.69.Final`.
+- We fixed an issue where some OData exception messages were not encoded correctly.
+
+## 3.56.0 - October 21, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.56.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
+
+### New Functionality
+
+- We added support for the newly introduced `SecretRootKey` service binding layout as defined by the SAP BTP Service Operator for K8s.
+  We recommend all consumers to use this binding layout as it solves the problem of incorrectly parsed array properties.
+  Please refer to our [K8s Guide](environments/sap-btp-kubernetes-environment-with-sap-gardener) for more detailed instructions on how to create service bindings using the SAP BTP Service Operator.
+
+### Improvements
+
+- We improved API generalization to accept custom implementations of interface `OAuth2Service` instead of dedicated class `XsuaaService`.
+
+- To increase compatibility, the OData V2 `count()` operation on our OData V2 typed client (VDM) now ignores query options other than `$filter` and user-defined query options which are not relevant for the count operation.
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update `com.sap.cloud:neo-java-web-api` from `4.9.4` to `4.11.4`
+    - Update `com.sap.cloud:neo-javaee7-wp-api` from `1.105.7` to `1.107.5`
+  - Other dependency updates:
+    - Major version updates:
+      - Update `org.mockito:mockito-core` from `3.12.4` to `4.0.0`
+    - Minor version updates:
+      - Update `org.projectlombok:lombok` from `1.8.20` to `1.8.22`
+      - Update `com.fasterxml.jackson:jackson-bom` from `2.12.5` to `2.13.0`
+      - Update `io.swagger:swagger-annotations` from `1.6.2` to `1.6.3`
+      - Update `joda-time:joda-time` from `2.10.10` to `2.10.12`
+      - Update `net.sourceforge.pmd:pmd-core, pmd-java, pmd-test` from `6.38.0` to `6.39.0`
+      - Update `com.squareup.okhttp3:okhttp, mockwebserver` and from `4.9.1` to `4.9.2`
+      - Update `org.apache.tomcat:tomcat-annotations-api, tomcat-jdbc` from `8.5.71` to `8.5.72`
+      - Update `com.google.protobuf:protobuf-java` from `3.18.0` to `3.18.1`
+
+### Fixed issues
+
+- We fixed an issue where the `appendDestinationLoader` and `prependDestinationLoader` on the `DestinationLoader` were not behaving as expected on a given `DestinationLoaderChain`.The `DestinationLoaderChain`s are now correctly added to an existing `DestinationLoaderChain`.
+- We fixed an issue with the OData V4 generator not considering actions and functions when one of their arguments references a complex- or entity-type that is not transitively exposed through entity sets.
+
+- We fixed the issue where `HttpClient`s were not cached correctly on BTP Neo.
+  With this fix the caching should now behave as expected, minimizing the number of concurrent `HttpClient` instances in use.
+
 ## 3.55.1 - October 7, 2021
 
-[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.55.1) | [Javadoc](https://help.sap.com/doc/82a32040212742019ce79dda40f789b9/1.0/en-US/index.html)
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.55.1) | [Javadoc](https://help.sap.com/doc/d82db621081448e8abc28eef75ddfc9d/1.0/en-US/index.html)
 
 ### New Functionality
 
