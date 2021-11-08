@@ -285,9 +285,9 @@ export const features = [
       note: ``
     },
     js: {
-      status: NO,
-      docsLink: ``,
-      note: ``
+      status: YES,
+      docsLink: `[docs](${baseUrl}/js/guides/migrate-sdk-application-from-btp-cf-to-kubernetes)`,
+      note: `Bindings are handled via configuration`
     }
   },
   {
