@@ -122,7 +122,11 @@ ValueBoolean expression = fieldA.equalTo("foo").and(fieldB.greaterThan(42));
 query.filter(expression);
 ```
 
-## Handling OData Delta Token
+## Cookbook - Generic OData Client
+
+We collect popular use-cases and scenarios leveraging the Generic OData Client in this cookbook section.
+
+### Handling OData Delta Token
 
 [OData v4 specification](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_RequestingChanges) provides capabilities to return only a delta between your last and ongoing request.
 For example, if your previous request loaded information from the service which continues to be updated with new records, then with your next request you can ask to provide you only with the difference between what you've already loaded and current records on the service side.
@@ -162,7 +166,7 @@ if( deltaToken!=null) {
 }
 ```
 
-## OData v2 Batch Read Request
+### OData v2 Batch Read Request
 
 For use cases that are not supported in the [type-safe client](./type-safe-client-odata-v2.mdx) you can choose to use the generic OData client.
 Let's see an example of how to use the generic OData client for batch requests for OData v2.
@@ -209,7 +213,7 @@ Batch requests in OData v2 are now supported in our typed clients and you no lon
 Refer [here](./type-safe-client-odata-v2.mdx#batch-requests) for more details.
 :::
 
-## Call OData v4 Bound Functions and Actions
+### Call OData v4 Bound Functions and Actions
 
 Bound function and actions were freshly introduced in OData v4 specification.
 We'll soon provide a type-safe API to leverage these features in a convenient way.
@@ -259,5 +263,44 @@ ODataRequestRead request = new ODataRequestRead("/service-path/resource-path/", 
 
 HttpClient client = HttpClientAccessor.getHttpClient(destination);
 ODataRequestResultGeneric result = request.execute(client);
+
+```
+
+### Fetching Raw Stream Data from /$value Endpoint
+
+You can get `fileStream` and `responseHeaders` in a single request by using the low-level Generic OData Client.
+Let's take this dummy OData request as an example: `/FileService/FileCollection(id='abc')/$value?foo=bar`
+
+The corresponding code to fetch the raw file's content will look like this:
+
+```java
+
+HttpDestination destination;
+
+ODataEntityKey entityKey = new ODataEntityKey(ODataProtocol.V2).addKeyProperty("id", "abc")
+ODataResourcePath resource = ODataResourcePath.of("FileCollection", entityKey).addSegment("$value");
+ODataRequestReadByKey request = new ODataRequestReadByKey("FileService", resource, "?foo=bar", ODataProtocol.V2);
+
+ODataRequestResultGeneric result = request.execute(HttpClientAccessor.getHttpClient(destination));
+HttpResponse httpResponse = result.getHttpResponse();
+Header[] responseHeaders = httpResponse.getAllHeaders();
+try( InputStream fileStream = httpResponse.getEntity().getContent(); ) {
+  // do thing
+}
+
+```
+
+Alternatively you can run the HTTP request yourself:
+
+```java
+
+HttpDestination destination;
+
+HttpClient httpClient = HttpClientAccessor.getHttpClient(destination);
+HttpResponse httpResponse = httpClient.execute(new HttpGet("/FileService/FileCollection(id='abc')/$value"));
+Header[] responseHeaders = httpResponse.getAllHeaders();
+try( InputStream fileStream = httpResponse.getEntity().getContent(); ) {
+  // do thing
+}
 
 ```

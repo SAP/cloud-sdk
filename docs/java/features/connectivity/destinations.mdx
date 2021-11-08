@@ -35,7 +35,11 @@ DestinationAccessor.getDestination("my-destination");
 This will look up the destination in the destination service if the application is running on SAP Business Technology Platform.
 Other sources like the environment variables are also considered.
 
-:::note Hint
+:::caution Destinations are cached for 5 minutes
+
+Mind that Destinations are cached for 5 minutes.
+If you are debugging you Destination configuration either wait for 5 minutes before the next retrieval or restart you application.
+We plan to make this cache configurable.
 
 To minimize the runtime overhead of finding destinations, the SAP Cloud SDK uses caching to internally maintain a list of already retrieved destinations.
 Therefore, subsequent calls to `DestinationAccessor.getDestination("my-destination");` will be served from that cache instead of performing the look up over and over again.
