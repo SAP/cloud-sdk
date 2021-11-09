@@ -281,7 +281,7 @@ export const features = [
     category: 'Environment',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/environments/sap-btp-kubernetes-environment-with-sap-gardener#load-service-binding-information`,
+      docsLink: `[docs](${baseUrl}/java/features/service-bindings/service-binding-loader.mdx#load-service-binding-information`,
       note: ``
     },
     js: {
