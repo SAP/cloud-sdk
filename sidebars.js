@@ -18,7 +18,6 @@ module.exports = {
         label: 'Features',
         items: [
           // authorization & authentication
-          // resilience & caching
           {
             type: 'category',
             label: 'OData',
@@ -78,7 +77,8 @@ module.exports = {
           'java/environments/sap-btp-environments-overview',
           'java/environments/sap-btp-cloud-foundry-environment',
           'java/environments/sap-btp-kubernetes-environment-with-sap-gardener',
-          'java/environments/sap-btp-kyma-environment'
+          'java/environments/sap-btp-kyma-environment',
+          'java/features/service-bindings/load-service-bindings-from-environment'
         ]
       },
       {
