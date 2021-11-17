@@ -277,6 +277,20 @@ export const features = [
     }
   },
   {
+    name: 'Kubernetes Service Binding',
+    category: 'Environment',
+    java: {
+      status: YES,
+      docsLink: `[docs](${baseUrl}/java/features/service-bindings/load-service-bindings-from-environment#load-service-binding-information)`,
+      note: ``
+    },
+    js: {
+      status: YES,
+      docsLink: `[docs](${baseUrl}/js/guides/migrate-sdk-application-from-btp-cf-to-kubernetes)`,
+      note: `Bindings are handled via configuration`
+    }
+  },
+  {
     name: '[BTP CF Connectivity Service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/313b215066a8400db461b311e01bd99b.html)',
     category: 'Connectivity',
     java: {
