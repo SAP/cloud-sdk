@@ -216,6 +216,22 @@ When running `Destination#asHttp()` you encounter an exception message like `"De
   Please find the official [documentation from the Destination Service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/42a0e6b966924f2e902090bdf435e1b2.html) for more details.
   The value for field "Token Service URL" may require the full service endpoint path, including e.g. `/oauth/token`.
 
+## `SSLHandshakeException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target`
+
+:::info **Symptoms**
+When accessing an On-Premise system from your local machine the HTTP client is unable to establish a secure connection to the target server.
+You may experience the follow-up error message: `"ODataConnectionException: Connection was aborted."`
+:::
+
+**Possible causes:**
+
+- In order to validate the SSL connection your Java runtime would need to check the chain of trusted certificates.
+  Please review your local Java trust store.
+
+  To solve the issue there are many tutorials on how to register certificates.
+  However if you require a quick solution for your local development environmment, you can add a special flag to your `"destinations"` environment variable: `"TrustAll" : "true"`.
+  This will disable the certificate validation on your local runtime.
+
 ## Olingo Dependency Conflicts
 
 :::info **Symptoms**
