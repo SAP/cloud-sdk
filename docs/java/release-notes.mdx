@@ -55,6 +55,59 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed issues
 -->
 
+
+## 3.58.0 - November 18, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.58.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
+
+### Compatibility Notes
+
+- The OpenAPI generator now fails with a helpful message during generation if the input []([specification](https://swagger.io/docs/specification/data-models/oneof-anyof-allof-not/)) contains any of these keywords `oneOf` or `anyOf` in either:
+  - The `paths` part of the specification
+  - As an additional property or nested inside a property under a `Schema` listed in the specification.
+  
+Please, remove these properties from your specification and generation will succeed. It will allow you to use the remaining endpoints via the type-safe client by the SDK.
+Support for `oneOf`, `anyOf` might be added in the future but the timeline for that is unknown.
+
+### New Functionality
+
+- Update the OData VDM to the [newest release 2111 of SAP S/4HANA Cloud](https://news.sap.com/2021/10/sap-s4hana-cloud-2111-innovating-business-futures/). This includes completely new services (available as usual in packages `com.sap.cloud.sdk.s4hana.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types. The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/products/SAPS4HANACloud/overview) with the exception of the following services:
+  - (OData V2) _Maintenance Item_ - `API_MAINTENANCEITEM`
+  - (OData V2) _Enterprise Project V2_ - `API_ENTERPRISE_PROJECT_SRV_0002`
+  - (OData V2) _Service Order Template_ - `OP_API_SERVICE_ORDER_TEMPLATE_SRV_0001`
+  - (OData V4) _Contract Accounting Business Transaction_ - `CABUSINESSPARTNER_0001`
+  - (OData V4) _Handling Unit_ - `HANDLINGUNIT_0001`
+  - (OData V4) _Maintenance Task List_ - `MAINTENANCETASKLIST_0001`
+  - (OData V4) _Measuring Point_ - `MEASURINGPOINT_0001`
+  - (OData V4) _Planned Order_ - `PLANNEDORDER_0001`
+  - (OData V4) _Process Warehouse Task_ - `WAREHOUSEORDER_0001`
+  - (OData V4) _Product Exclusion_ - `PRODUCTEXCLUSION_0001`
+  - (OData V4) _Product Substitution_ - `PRODUCTSUBSTITUTION_0001`
+  - (OData V4) _Supplier Item_ - `SUPPLIERITEM_0001`
+  - (OData V4) _Warehouse Resource_ - `WAREHOUSERESOURCE_0001`
+
+
+### Improvements
+
+- Limit beans scanning to service classes only in dependencies `s4hana-api-odata`, `s4hana-api-odata-onpremise-2020` and`s4hana-api-odata-v4-onpremise-2020`.
+  This significantly reduces startup times and memory consumption for TomEE applications that are missing their own `beans.xml` configuration.
+  For consistency the beans scanning of `s4hana-api-odata-v4` is enabled now but also limited to service classes.
+
+- The `ALWAYS_SUBSCRIBER` strategy of the default `ScpCfDestinationRetrievalStrategy` in the `ScpCfDestinationLoader` did not behave as its name implied.
+It was taking the current tenant, which might also be a Provider Tenant due to misconfiguration.
+  We fixed it by:
+  - Renaming `ALWAYS_SUBSCRIBER` to `CURRENT_TENANT` and making it a new default strategy.
+  - Deprecation the confusingly named `ALWAYS_SUBSCRIBER` strategy
+  - Adding a new `ONLY_SUBSCRIBER` strategy that actively enforces that a current tenant is not a provider tenant
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [Neo JavaEE7 WP API](https://search.maven.org/search?q=g:com.sap.cloud%20a:neo-javaee7-wp-api) (`com.sap.cloud:neo-javaee7-wp-api`) from `1.108.5` to `1.109.7`
+    - Update [Neo Java Web API](https://search.maven.org/artifact/com.sap.cloud/neo-java-web-api) (`com.sap.cloud:neo-java-web-api`) from `4.12.2` to `4.13.8`
+  - Other dependency updates:
+    - Minor version updates:
+        - Update [Gson](https://search.maven.org/artifact/com.google.code.gson/gson/2.8.9/jar) (`com.google.code.gson:gson`) from `2.8.8` to `2.8.9`
+
 ## 3.57.0 - November 4, 2021
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.57.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
