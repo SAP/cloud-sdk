@@ -93,7 +93,8 @@ To continue using the latest features outlined in the release notes for version 
   This significantly reduces startup times and memory consumption for TomEE applications that are missing their own `beans.xml` configuration.
   For consistency the beans scanning of `s4hana-api-odata-v4` is enabled now but also limited to service classes.
 
-- The naming of the default `ScpCfDestinationRetrievalStrategy` (`ALWAYS_SUBSCRIBER`) in the `ScpCfDestinationLoader` did not behave as the name implied, as it was taking the current tenant, which might, due to misconfiguration, also be the Provider Tenant.
+- The `ALWAYS_SUBSCRIBER` strategy of the default `ScpCfDestinationRetrievalStrategy` in the `ScpCfDestinationLoader` did not behave as its name implied.
+It was taking the current tenant, which might also be a Provider Tenant due to misconfiguration.
   This is now fixed by the following steps:
   - Deprecation of the unclear `ALWAYS_SUBSCRIBER` strategy
   - As a default providing a renamed alternative keeping the same behavior: `CURRENT_TENANT`
