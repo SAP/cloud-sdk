@@ -96,9 +96,9 @@ Support for `oneOf`, `anyOf` might be added in the future but the timeline for t
 - The `ALWAYS_SUBSCRIBER` strategy of the default `ScpCfDestinationRetrievalStrategy` in the `ScpCfDestinationLoader` did not behave as its name implied.
 It was taking the current tenant, which might also be a Provider Tenant due to misconfiguration.
   This is now fixed by the following steps:
-  - Deprecation of the unclear `ALWAYS_SUBSCRIBER` strategy
-  - As a default providing a renamed alternative keeping the same behavior: `CURRENT_TENANT`
-  - Adding a new strategy `ONLY_SUBSCRIBER` which actively enforces that the current tenant is not the provider tenant
+  - Renaming `ALWAYS_SUBSCRIBER` to `CURRENT_TENANT` and making it a new default strategy.
+  - Deprecation the confusingly named `ALWAYS_SUBSCRIBER` strategy
+  - Adding a new `ONLY_SUBSCRIBER` strategy that actively enforces that a current tenant is not a provider tenant
 
 - Dependency Updates:
   - SAP dependency updates:
