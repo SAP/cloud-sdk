@@ -2,12 +2,12 @@
 id: release-notes-sap-cloud-sdk-for-javascript-and-typescript
 title: Release Notes
 sidebar_label: Release Notes
-description: Release notes of the SAP Cloud SDK for JavaScript and TypeScript, stay up to date with the recent features, fixes, dependency updates and recommendations.
+description: Release notes of the SAP Cloud SDK for JavaScript and TypeScript, stay up to date with the recent features, fixes, dependency updates, and recommendations.
 keywords:
   - sap
   - cloud
   - sdk
-  - cloud native
+  - cloud-native
   - cloud sdk
   - sap cloud sdk
 ---
@@ -30,9 +30,9 @@ It will help you:
 
 :::tip What are pregenerated typed client libraries (VDM)?
 
-For your convenience we [pregenerate client libraries](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*) (also known as Virtual Data Model or VDM for short) for allow-listed OData services of SAP S/4HANA Cloud, Marketing Cloud and SAP S/4HANA On-premise.
+For your convenience we [pregenerate client libraries](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*) (also known as Virtual Data Model or VDM for short) for allow-listed OData services of SAP S/4HANA Cloud, Marketing Cloud, and SAP S/4HANA On-premise.
 These libraries are not Open Source, but free and distributed under the SAP Developer license through [npmjs.com](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*).
-You can always generate a typed client library youself by using our [OData](features/odata/generate-odata-client.mdx) and [Open API](features/openapi/generate-openapi-client.mdx) code generators. To search for supported services use our API Business Hub integration.
+You can always generate a typed client library yourself by using our [OData](features/odata/generate-odata-client.mdx) and [Open API](features/openapi/generate-openapi-client.mdx) code generators. To search for supported services use our API Business Hub integration.
 
 :::
 
@@ -41,7 +41,7 @@ You can always generate a typed client library youself by using our [OData](feat
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.34.1) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
 
-### Known issues
+### Known Issues
 
 ### Compatibility Notes
 
@@ -49,15 +49,15 @@ You can always generate a typed client library youself by using our [OData](feat
 
 ### Improvements
 
-### Fixed issues
+### Fixed Issues
 -->
 
 ## 1.28.2 [Client Libraries] - Novevmber 17, 2021
 
 ### Compatibility Notes
 
-- We stoped generating API documentation for typed client libraries.
-You can discover all required API infomation via you IDE features like autocomplete and IntelliSence.
+- We stopped generating API documentation for typed client libraries.
+You can discover all required API information via your IDE features like autocomplete and IntelliSense.
 
 ### New Functionality
 
@@ -75,10 +75,10 @@ You can discover all required API infomation via you IDE features like autocompl
 
 - We changed default cache isolation strategy from `IsolationStrategy.Tenant` to `IsolationStrategy.Tenant_User`. This applies when you set `useCache` to `true` while using a `getDestination` method for a destination lookup.
 
-### Fixed issues
+### Fixed Issues
 
 - We now cache a destination only when a `JWT` contains all necessary information about a `Tenant` and a `User`. For example, when using `IsolationStrategy.Tenant_User`, the JWT has to contain both **tenant id** and **user id**.
-- If `JWT` has an expiration time we'll use it to override default cache expiration time of 5 minutes.
+- If `JWT` has an expiration time we'll use it to override the default cache expiration time of 5 minutes.
 - A **provider** token won't be used to retrieve a destination from cache from now on.
 
 ## 1.27.0 [Client Libraries] - Aug 20, 2021
