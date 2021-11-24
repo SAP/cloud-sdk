@@ -409,3 +409,106 @@ spec:
 ```
 
 2. Repeat the same steps 2-5 from the previous section, always replacing `destination` with `identity`.
+
+## Excursion: Bind Services created by the Service Catalog
+
+In case of using the [Kubernetes Service Catalog](https://kubernetes.io/docs/concepts/extend-kubernetes/service-catalog/) via the [Service Catalog CLI](https://svc-cat.io/docs/cli/) you will receive service bindings that are not immediately compatible with the SAP Cloud SDK.
+
+### Known XSUAA Service Incompatibility
+
+For example, let us assume you want to create an XSUAA Service Binding.
+You would use commands similar to the following:
+
+```bash
+svcat provision svcat-xsuaa-service --class xsuaa --plan application
+svcat bind svcat-xsuaa-service
+```
+
+To see the resulting secret on K8s you can run the following command:
+
+```bash
+kubectl get secrets svcat-xsuaa-service -o yaml
+```
+
+The `data` block of the result looks something like this:
+
+```yaml
+apiurl: <base64-encoded-value>
+clientid: <base64-encoded-value>
+clientsecret: <base64-encoded-value>
+credential-type: <base64-encoded-value>
+identityzone: <base64-encoded-value>
+identityzoneid: <base64-encoded-value>
+sburl: <base64-encoded-value>
+subaccountid: <base64-encoded-value>
+tenantid: <base64-encoded-value>
+tenantmode: <base64-encoded-value>
+uaadomain: <base64-encoded-value>
+url: <base64-encoded-value>
+verificationkey: <base64-encoded-value>
+xsappname: <base64-encoded-value>
+zoneid: <base64-encoded-value>
+```
+
+You can see that the property `plan` is missing there.
+This property, however, is required by the SAP Cloud SDK, so that runtime errors are produced once the application tries to read this service binding.
+
+To fix this issue you need to edit the secret so that it contains the `plan` property.
+The easiest way, when you are already using the CLI, is by using the `kubectl edit` command:
+
+```bash
+kubectl edit secrets svcat-xsuaa-service
+```
+
+In there you can now add a `plan` property with one of the following base64 encoded values:
+
+| plan          | base64 encoded value |
+| ------------- | -------------------- |
+| `application` | `YXBwbGljYXRpb24K`   |
+| `broker`      | `YnJva2VyCg==`       |
+| `space`       | `c3BhY2UK`           |
+| `apiaccess`   | `apiaccess`          |
+
+The resulting service binding can now be consumed with the SAP Cloud SDK.
+
+### Known Connectivity Service Incompatibility
+
+As another example, let us assume you want to create an Connectivity Service Binding with the Service Catalog CLI.
+
+You would, again, use commands similar to the following to create the binding:
+
+```bash
+svcat provision svcat-connectivity-service --class connectivity --plan connectivity_proxy
+svcat bind svcat-connectivity-service
+```
+
+This time we will have a look at the decoded content by executing the following command:
+
+```
+kubectl get secret svcat-connectivity-service -o go-template='{{range $k,$v := .data}}{{printf "%s: " $k}}{{if not $v}}{{$v}}{{else}}{{$v | base64decode}}{{end}}{{"\n"}}{{end}}'
+```
+
+This will show you the content of the `data` block with all values base64 decoded:
+
+```
+clientid: <some-string>
+clientsecret: <some-string>
+connectivity_service: {"CAs_path":"<some-string>","CAs_signing_path":"<some-string>","api_path":"<some-string>","tunnel_path":"<some-string>","url":"<some-string>"}
+subaccount_id: <some-string>
+subaccount_subdomain: <some-string>
+token_service_domain: <some-string>
+token_service_url: <some-string>
+token_service_url_pattern: <some-string>
+token_service_url_pattern_tenant_key: <some-string>
+xsappname: <some-string>
+```
+
+Here you can see, that the `connectivity_service` property contains a JSON object, whereas the other properties only contain simple strings.
+Due to the way the SAP Cloud SDK reads the service bindings and tries to find the credentials, it assumes that a single JSON object property contains the credentials.
+In our case, however, this does not hold true.
+
+To fix this issue you would follow the same step described above, this time just removing the unnecessary property:
+
+```bash
+kubectl edit secrets svcat-connectivity-service
+```
