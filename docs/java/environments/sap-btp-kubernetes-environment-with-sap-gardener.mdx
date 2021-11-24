@@ -414,6 +414,8 @@ spec:
 
 In case of using the [Kubernetes Service Catalog](https://kubernetes.io/docs/concepts/extend-kubernetes/service-catalog/) via the [Service Catalog CLI](https://svc-cat.io/docs/cli/) you will receive service bindings that are not immediately compatible with the SAP Cloud SDK.
 
+### Known XSUAA Service Incompatibility
+
 For example, let us assume you want to create an XSUAA Service Binding.
 You would use commands similar to the following:
 
@@ -468,3 +470,45 @@ In there you can now add a `plan` property with one of the following base64 enco
 | `apiaccess`   | `apiaccess`          |
 
 The resulting service binding can now be consumed with the SAP Cloud SDK.
+
+### Known Connectivity Service Incompatibility
+
+As another example, let us assume you want to create an Connectivity Service Binding with the Service Catalog CLI.
+
+You would, again, use commands similar to the following to create the binding:
+
+```bash
+svcat provision svcat-connectivity-service --class connectivity --plan connectivity_proxy
+svcat bind svcat-connectivity-service
+```
+
+This time we will have a look at the decoded content by executing the following command:
+
+```
+kubectl get secret svcat-connectivity-service -o go-template='{{range $k,$v := .data}}{{printf "%s: " $k}}{{if not $v}}{{$v}}{{else}}{{$v | base64decode}}{{end}}{{"\n"}}{{end}}'
+```
+
+This will show you the content of the `data` block with all values base64 decoded:
+
+```
+clientid: <some-string>
+clientsecret: <some-string>
+connectivity_service: {"CAs_path":"<some-string>","CAs_signing_path":"<some-string>","api_path":"<some-string>","tunnel_path":"<some-string>","url":"<some-string>"}
+subaccount_id: <some-string>
+subaccount_subdomain: <some-string>
+token_service_domain: <some-string>
+token_service_url: <some-string>
+token_service_url_pattern: <some-string>
+token_service_url_pattern_tenant_key: <some-string>
+xsappname: <some-string>
+```
+
+Here you can see, that the `connectivity_service` property contains a JSON object, whereas the other properties only contain simple strings.
+Due to the way the SAP Cloud SDK reads the service bindings and tries to find the credentials, it assumes that a single JSON object property contains the credentials.
+In our case, however, this does not hold true.
+
+To fix this issue you would follow the same step described above, this time just removing the unnecessary property:
+
+```bash
+kubectl edit secrets svcat-connectivity-service
+```
