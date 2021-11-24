@@ -412,9 +412,9 @@ spec:
 
 ## Excursion: Bind Services created by the Service Catalog
 
-In case that you are using the [Kubernetes Service Catalog](https://kubernetes.io/docs/concepts/extend-kubernetes/service-catalog/) via the [Service Catalog CLI](https://svc-cat.io/docs/cli/) you will receive service bindings that are not immediately compatible with the SAP Cloud SDK.
+In case of using the [Kubernetes Service Catalog](https://kubernetes.io/docs/concepts/extend-kubernetes/service-catalog/) via the [Service Catalog CLI](https://svc-cat.io/docs/cli/) you will receive service bindings that are not immediately compatible with the SAP Cloud SDK.
 
-For an example let us assume you want to create an XSUAA Service Binding.
+For example, let us assume you want to create an XSUAA Service Binding.
 You would use commands similar to the following:
 
 ```bash
@@ -448,10 +448,10 @@ xsappname: <base64-encoded-value>
 zoneid: <base64-encoded-value>
 ```
 
-In there you can see that the property `plan` is missing.
-This property, however, is required by the SAP Cloud SDK, so that a runtime error will produced once the application tries to read this service binding.
+You can see that the property `plan` is missing there.
+This property, however, is required by the SAP Cloud SDK, so that runtime errors are produced once the application tries to read this service binding.
 
-To fix this issue you need to edit the secret, so that it contains the `plan` property.
+To fix this issue you need to edit the secret so that it contains the `plan` property.
 The easiest way, when you are already using the CLI, is by using the `kubectl edit` command:
 
 ```bash
