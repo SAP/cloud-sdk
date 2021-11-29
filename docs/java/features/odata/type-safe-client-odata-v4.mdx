@@ -20,6 +20,64 @@ import TabItem from '@theme/TabItem';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import NotImplemented from '../../../components/NotImplemented.js';
 
+## Prerequisites
+
+To leverage the type-safe OData v4 client, you need to add following dependencies to the `dependencies` section of your `pom.xml`:
+
+<Tabs groupId="odataClientType" defaultValue="PregeneratedCloud" values={[ { label: 'Pregenerated Clients (Cloud)', value: 'PregeneratedCloud' }, { label: 'Pregenerated Clients (On-Premise)', value: 'PregeneratedOnPremise' }, { label: 'Self Generated Clients', value: 'Selfgenerated' } ]}>
+
+<TabItem value="Selfgenerated">
+
+```xml
+<dependency>
+    <groupId>com.sap.cloud.sdk.datamodel</groupId>
+    <artifactId>odata-v4-core</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <scope>provided</scope>
+</dependency>
+<dependency>
+    <groupId>javax.inject</groupId>
+    <artifactId>javax.inject</artifactId>
+    <scope>provided</scope>
+</dependency>
+```
+
+</TabItem>
+
+<TabItem value="PregeneratedCloud">
+
+```xml
+<dependency>
+    <groupId>com.sap.cloud.sdk.s4hana</groupId>
+    <artifactId>s4hana-api-odata-v4</artifactId>
+</dependency>
+```
+
+</TabItem>
+
+<TabItem value="PregeneratedOnPremise">
+
+```xml
+<dependency>
+    <groupId>com.sap.cloud.sdk.s4hana</groupId>
+    <artifactId>s4hana-api-odata-v4-onpremise</artifactId>
+</dependency>
+```
+
+</TabItem>
+</Tabs>
+
+:::tip Discover services on the SAP API Business Hub
+
+If you would like to consume a specific service, try searching for it on the [SAP API Business Hub](https://api.sap.com/) and visit an **SAP Cloud SDK** tab on the landing page of that service.
+There you will find detailed instructions on how to use the SAP Cloud SDK to get a client library for that specific service.
+Learn more about the integration with the SAP API Business Hub in the [blog](https://blogs.sap.com/2021/09/17/the-sap-cloud-sdk-integrates-with-the-sap-api-business-hub/).
+
+:::
+
 ## Build and Execute OData Requests With the Typed OData Client
 
 The typed OData v4 client allows building type-safe OData v4 requests for a given service.

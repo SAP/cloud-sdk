@@ -2,12 +2,12 @@
 id: release-notes-sap-cloud-sdk-for-javascript-and-typescript
 title: Release Notes
 sidebar_label: Release Notes
-description: Release notes of the SAP Cloud SDK for JavaScript and TypeScript, stay up to date with the recent features, fixes, dependency updates and recommendations.
+description: Release notes of the SAP Cloud SDK for JavaScript and TypeScript, stay up to date with the recent features, fixes, dependency updates, and recommendations.
 keywords:
   - sap
   - cloud
   - sdk
-  - cloud native
+  - cloud-native
   - cloud sdk
   - sap cloud sdk
 ---
@@ -28,24 +28,63 @@ It will help you:
 - Update client libraries giving access to the latest SAP services on SAP Business Technology Platform and SAP S/4HANA.
 - Protect yourself from bugs and breaking changes in the future
 
-:::note _Release notes_ for the Open Source components
+:::tip What are pregenerated typed client libraries (VDM)?
 
-For the Open Source modules of the SAP Cloud SDK for JavaScript we maintain [release notes](https://github.com/SAP/cloud-sdk-js/releases) on GitHub.
-
-:::
-
-## Pregenerated Type-Safe Client Libraries (VDM)
-
-:::tip What are client libraries?
-
-For your convenience we [pregenerate client libraries](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*) (also known as Virtual Data Model or VDM for short) for allow-listed OData services of SAP S/4HANA Cloud, Marketing Cloud and SAP S/4HANA On-premise.
+For your convenience we [pregenerate client libraries](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*) (also known as Virtual Data Model or VDM for short) for allow-listed OData services of SAP S/4HANA Cloud, Marketing Cloud, and SAP S/4HANA On-premise.
 These libraries are not Open Source, but free and distributed under the SAP Developer license through [npmjs.com](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*).
+You can always generate a typed client library yourself by using our [OData](features/odata/generate-odata-client.mdx) and [Open API](features/openapi/generate-openapi-client.mdx) code generators.
+To easily search for services and get typed client library for them,  use our [API Business Hub integration](https://blogs.sap.com/2021/09/17/the-sap-cloud-sdk-integrates-with-the-sap-api-business-hub/).
 
 :::
 
-## Version 1.27.0 - Aug 20, 2021
+<!-- Copy and fill
+## 1.xx.x [Core Modules] - January 1, 2021
 
-- API documentation (TBD)
+[GitHub](https://github.com/SAP/cloud-sdk-js/releases/tag/v1.52.0) | [npm](https://www.npmjs.com/search?q=%40sap-cloud-sdk)
+
+### Known Issues
+
+### Compatibility Notes
+
+### New Functionality
+
+### Improvements
+
+### Fixed Issues
+-->
+
+## 1.28.2 [Client Libraries] - November 17, 2021
+
+### Compatibility Notes
+
+- We stopped generating API documentation for typed client libraries.
+  You can discover all required API information via your IDE features like autocomplete and IntelliSense.
+
+### New Functionality
+
+- **We released a regular update for pregenerated client libraries (also known as VDM) for the [latest RTC release 2111 of SAP S/4HANA Cloud](https://news.sap.com/2021/10/sap-s4hana-cloud-2111-innovating-business-futures/).**
+  - The update covers all the changes to existing OData services and introduces new ones.
+- **We released a regular update for pregenerated client libraries (also known as VDM) for the latest RTC release 2021 FPS0 of SAP S/4HANA On-premise.**
+  - The update covers all the changes to existing OData services and introduces new ones.
+- **We released a regular update for pregenerated client libraries for [Workflow API for Cloud Foundry](https://api.sap.com/api/SAP_CP_Workflow_CF/resource).**
+
+## 1.52.0 [Core Modules] - November 5, 2021
+
+[GitHub](https://github.com/SAP/cloud-sdk-js/releases/tag/v1.52.0) | [npm](https://www.npmjs.com/search?q=%40sap-cloud-sdk)
+
+### Compatibility Notes
+
+- We changed default cache isolation strategy from `IsolationStrategy.Tenant` to `IsolationStrategy.Tenant_User`. 
+  This applies when you set `useCache` to `true` while using a `getDestination` method for a destination lookup.
+
+### Fixed Issues
+
+- We now cache a destination only when a `JWT` contains all necessary information about a `Tenant` and a `User`. 
+  For example, when using `IsolationStrategy.Tenant_User`, the JWT has to contain both **tenant id** and **user id**.
+- If `JWT` has an expiration time, we'll use it to override the default cache expiration time of 5 minutes.
+- A **provider** token won't be used to retrieve a destination from cache from now on.
+
+## 1.27.0 [Client Libraries] - Aug 20, 2021
 
 ### New Functionality
 
@@ -53,7 +92,7 @@ These libraries are not Open Source, but free and distributed under the SAP Deve
   - The update covers all the changes to existing OData services and introduces new ones.
   - The service `API_CDR_FILE_DOWNLOAD_SRV` is not included and will be released with the next release or on-demand.
 
-## Version 1.26.0 - June 04, 2021
+## 1.26.0 [Client Libraries] - June 04, 2021
 
 - [API documentation](https://help.sap.com/doc/c6112985e09f40ec97dd43ad791ebaef/1.0/en-US/index.html)
 
@@ -64,9 +103,7 @@ These libraries are not Open Source, but free and distributed under the SAP Deve
   - The missing service `CACREDITWORTHINESS_0001` is included.
 - **We released a regular update for pregenerated client libraries for [Workflow API for Cloud Foundry](https://api.sap.com/api/SAP_CP_Workflow_CF/resource).**
 
-## Version 1.25.0 - May 20, 2021
-
-- API documentation (TBD)
+## 1.25.0 [Client Libraries] - May 20, 2021
 
 ### New Functionality
 
@@ -74,7 +111,7 @@ These libraries are not Open Source, but free and distributed under the SAP Deve
   - The update covers all the changes to existing OData services and introduces new ones.
   - The service `CACREDITWORTHINESS_0001` is not included and will be released later.
 
-## Version 1.24.0 - January 18, 2021
+## 1.24.0 [Client Libraries] - January 18, 2021
 
 - [API documentation](https://help.sap.com/doc/38ea0a832f064060a834a2d328038ceb/1.0/en-US/index.html)
 
@@ -95,7 +132,7 @@ These libraries are not Open Source, but free and distributed under the SAP Deve
 - **We released a regular update for pregenerated client libraries (also known as VDM) for the latest RTC release 2020 FPS1 of SAP S/4HANA On-premise.**
   - The update covers all the changes to existing OData services and introduces new ones.
 
-## Version 1.22.0 - November 6, 2020
+## 1.22.0 [Client Libraries] - November 6, 2020
 
 - [API documentation](https://help.sap.com/doc/2d72cf72c3b946b0ab2b210d8d2d74da/1.0/en-US/index.html)
 
@@ -104,7 +141,7 @@ These libraries are not Open Source, but free and distributed under the SAP Deve
 - **We released a regular update for pregenerated client libraries (also known as VDM) for the [latest RTC release 2011 of SAP S/4HANA Cloud](https://blogs.sap.com/2020/10/28/sap-s-4hana-cloud-2011-release/).**
   - The update covers all the changes to existing OData services and introduces new ones.
 
-## Version 1.21.0 - September 10, 2020
+## 1.21.0 [Client Libraries] - September 10, 2020
 
 - [API documentation](https://help.sap.com/doc/a87270cbfc6140abaa7968558ab10b84/1.0/en-US/index.html)
 
@@ -113,7 +150,7 @@ These libraries are not Open Source, but free and distributed under the SAP Deve
 - **We released an extracurricular update for pregenerated client libraries (also known as VDM) for the [latest RTC release 2008 of SAP S/4HANA Cloud](https://blogs.sap.com/2020/07/29/sap-s-4hana-cloud-2008-release/).**
   - The update introduces new libraries for the SAP S/4HANA OData v4 services.
 
-## Version 1.20.0 - August 13, 2020
+## 1.20.0 [Client Libraries] - August 13, 2020
 
 - [API documentation](https://help.sap.com/doc/c0ae2e82b25e4b77855f00ec098ddf8f/1.0/en-US/index.html)
 - [npm](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*)
