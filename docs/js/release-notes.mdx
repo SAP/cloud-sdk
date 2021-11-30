@@ -33,7 +33,7 @@ It will help you:
 For your convenience we [pregenerate client libraries](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*) (also known as Virtual Data Model or VDM for short) for allow-listed OData services of SAP S/4HANA Cloud, Marketing Cloud, and SAP S/4HANA On-premise.
 These libraries are not Open Source, but free and distributed under the SAP Developer license through [npmjs.com](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*).
 You can always generate a typed client library yourself by using our [OData](features/odata/generate-odata-client.mdx) and [Open API](features/openapi/generate-openapi-client.mdx) code generators.
-To easily search for services and get typed client library for them,  use our [API Business Hub integration](https://blogs.sap.com/2021/09/17/the-sap-cloud-sdk-integrates-with-the-sap-api-business-hub/).
+To easily search for services and get typed client library for them, use our [API Business Hub integration](https://blogs.sap.com/2021/09/17/the-sap-cloud-sdk-integrates-with-the-sap-api-business-hub/).
 
 :::
 
@@ -74,12 +74,12 @@ To easily search for services and get typed client library for them,  use our [A
 
 ### Compatibility Notes
 
-- We changed default cache isolation strategy from `IsolationStrategy.Tenant` to `IsolationStrategy.Tenant_User`. 
+- We changed default cache isolation strategy from `IsolationStrategy.Tenant` to `IsolationStrategy.Tenant_User`.
   This applies when you set `useCache` to `true` while using a `getDestination` method for a destination lookup.
 
 ### Fixed Issues
 
-- We now cache a destination only when a `JWT` contains all necessary information about a `Tenant` and a `User`. 
+- We now cache a destination only when a `JWT` contains all necessary information about a `Tenant` and a `User`.
   For example, when using `IsolationStrategy.Tenant_User`, the JWT has to contain both **tenant id** and **user id**.
 - If `JWT` has an expiration time, we'll use it to override the default cache expiration time of 5 minutes.
 - A **provider** token won't be used to retrieve a destination from cache from now on.
