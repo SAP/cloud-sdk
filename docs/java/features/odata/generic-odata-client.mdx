@@ -132,38 +132,14 @@ We collect popular use-cases and scenarios leveraging the Generic OData Client i
 For example, if your previous request loaded information from the service which continues to be updated with new records, then with your next request you can ask to provide you only with the difference between what you've already loaded and current records on the service side.
 For that, you can leverage `$deltatokens` query parameter.
 
-We do not provide convenience API for delta tokens in our type-safe client, but you can leverage generic OData client to fetch the delta link from the `response` metadata and extract `$deltatoken` from there as in the code snippet below.
+We do not provide convenience API for delta tokens in our type-safe client, but you can leverage generic OData client to fetch the delta token from the `response` as in the code snippet below:
 
 ```java
-// Fetching of a $deltatoken from response metadata
-@Nullable
-private static String getDeltaTokenFromResponse( @Nonnull final ODataRequestResultGeneric response) {
-    try {
-        final InputStream httpResponseContent = response.getHttpResponse().getEntity().getContent();
-        final String deltaLink = new ObjectMapper().readTree(httpResponseContent).get("@odata.deltaLink").asText();
-        final Matcher matcher = Pattern.compile("\\$deltatoken=(.*?)(&|$)").matcher(deltaLink);
-        if (matcher.find()) {
-            return matcher.group(1);
-        }
-        return null;
-    }
-    catch(Exception e) {
-        // log exception with debug level
-        return null;
-    }
-}
-
-```
-
-Now you can create an OData request leveraging the `$deltatoken` token you have just fetched.
-
-```java
-// Composing a delta request with generic OData client
 ODataRequestResultGeneric response = request.execute(httpClient);
-String deltaToken = getDeltaTokenFromResponse(response);
-if( deltaToken!=null) {
-    deltaRequest.addQueryParameter("$deltatoken", deltaToken);
-}
+// obtain delta token and add it to the next request, if present
+response.getDeltaLink()
+        .flatMap(ODataUriFactory::extractDeltaToken)
+        .peek(token -> deltaRequest.addQueryParameter("$deltatoken", token));
 ```
 
 ### OData v2 Batch Read Request
