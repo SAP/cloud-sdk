@@ -49,11 +49,17 @@ The SAP Cloud SDK takes the client grant to call the connectivity service and re
 Then the SAP Cloud SDK creates an HTTP agent considering this proxy and the necessary `Proxy-Authorization` headers.
 The proxy is the entry point to the Cloud Connector instance connected the account.
 The proxy is only reachable from the Cloud Foundry space, so you cannot use that flow for applications running outside of Cloud Foundry.
-For quick local test purpusoes a deployment to Cloud Foundry is tedious and the following workarounds are possible:
+For quick local test purposes a deployment to Cloud Foundry is tedious and the following workarounds are possible:
 - [SAP Business Application Studio](../../guides/bas-external-system.mdx) has some build in functionality to connect to Cloud Foundry.
-- If you are in a VPN from where the onPremise system is reachable, use a [environment destination](./destination.mdx) to access the system directly.
+- If you are in a VPN from where the On-premise system is reachable, use a [environment destination](./destination.mdx) to access the system directly.
+- You can also use an existing application with bound connectivity service as a ssh tunnel:
+    - Enable ssh for the application as described [here](https://docs.cloudfoundry.org/devguide/deploy-apps/ssh-apps.html)
+    - Open a ssh tunnel with forwarding via the ` cf ssh MY-APP -L LOCAL-HOST:LOCAL-PORT:REMOTE-HOST:REMOTE-HOST-PORT` command.
+    Use as remote host and port the `onpremise_proxy_host` and `onpremise_proxy_port` values from the VCAP service variables e.g. `connectivityproxy.internal.cf.eu10.hana.ondemand.com` and `20003`.
+    For the localhost and port use the localhost and some free port e.g. `localhost:8081`.
+    - Replace the `onpremise_proxy_host` and `onpremise_proxy_port` in your locally used `VCAP_SERVICE` variables with `localhost` and the free port you choose.
 
-The final destination containing the [proxy information](./proxy.mdx) will look like:
+The final destination in the productive scenario containing the [proxy information](./proxy.mdx) will look like:
 
 ```JSON
 {
