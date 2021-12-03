@@ -224,12 +224,12 @@ export const features = [
     name: '[BTP Kyma Environment](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/468c2f3c3ca24c2c8497ef9f83154c44.html)',
     category: 'Environment',
     java: {
-      status: PLANNED,
+      status: YES,
       docsLink: `[docs](${baseUrl}/java/environments/sap-btp-kyma-environment)`,
       note: `[Kyma Open Source project](https://kyma-project.io/)`
     },
     js: {
-      status: PLANNED,
+      status: YES,
       docsLink: `[docs](${baseUrl}/js/getting-started#deploy-the-project-on-sap-btp-cloud-foundry)`,
       note: ''
     }
