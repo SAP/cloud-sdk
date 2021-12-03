@@ -166,8 +166,7 @@ module.exports = {
             items: [
               'js/features/cli/overview',
               'js/features/cli/init',
-              'js/features/cli/package',
-              'js/features/cli/generator'
+              'js/features/cli/package'
             ]
           },
           'js/features/error-handling',
