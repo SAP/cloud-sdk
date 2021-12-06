@@ -153,11 +153,13 @@ Consider this example:
 If there are breaking API changes in `java-security` this can lead to runtime errors.
 
 :::note
+
 There is no way to solve this versioning problem on SAP Cloud SDK or Buildpack side.
 Generally, we try to keep the versions as consistent as possible.
 
 However, the exact combination of Buildpack and SAP Cloud SDK depends on the release schedule of the two products.
-In addition to that it also depends on the time an application updates the SAP Cloud SDK version & deploys it.
+In addition to that, it also depends on the time an application updates the SAP Cloud SDK version & deploys it.
+
 :::
 
 ### Dependency Scope Conflicts
@@ -169,17 +171,17 @@ Consider this example:
 - Buildpack contains `java-security`
 - SAP Cloud SDK depends on `java-security` with scope `compile`
 
-As a result the classes from `java-security` will be on the classpath twice.
+As a result, the classes from `java-security` will be on the classpath twice.
 Once from the Buildpack and once packaged by maven into the deployment artifact.
 
 ### Recommended Strategy: Avoiding Version Conflicts
 
-We recommend to set a fixed Buildpack version in the `manifest.yml` and update it regularly.
+We recommend setting a fixed Buildpack version in the `manifest.yml` and updating it regularly.
 Use `cf buildpacks` to see which Buildpacks are currently available.
 Please note that usually only the last 3 Buildpack versions are kept alive, and usually every two weeks a new version is released.
-Consequently, with this strategy you should update at least once a month.
+Consequently, with this strategy, you should update at least once a month.
 
-In general, this is more safe than using always the latest Buildpack. 
+In general, this is safer than using always the latest Buildpack. 
 Because this strategy avoids that a simple restart can break your application due to a changed Buildpack.
 
 In particular, it ensures that the specific Buildpack + SAP Cloud SDK combination has been tested.
@@ -187,7 +189,8 @@ In particular, it ensures that the specific Buildpack + SAP Cloud SDK combinatio
 Also see [this note](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/a3f90069d6cd41da82f34a6123d82ce6.html) on Buildpack versioning.
 
 :::note
-There are no known dependencies in the [Community Java Buildpack](https://github.com/cloudfoundry/java-buildpack) that could interfere with the SAP Cloud SDK provided ones.
+
+There are no known dependencies in the [Community Java Buildpack](https://github.com/cloudfoundry/java-buildpack) that could interfere with the ones provided by the SAP Cloud SDK.
 Still, the same strategy is also valid and useful for the community Buildpack.
 :::
 
@@ -209,9 +212,3 @@ For example:
     <version>2.11.0</version>
     <scope>provided</scope>
 </dependency>
-```
-
-:::tip
-Verify your dependency tree via `mvn dependency:tree`.
-The above dependencies should only be listed with scope `provided`.
-:::
