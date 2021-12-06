@@ -55,6 +55,47 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed issues
 -->
 
+## 3.59.0 - December 02, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.59.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+
+### Compatibility Notes
+
+- Removed unnecessary dependency `netty-bom` from the Bill of Material (BOM).
+- Replaced the experimental API `HttpSecuritySettings getHttpSecuritySettings()` with `SSLContext getSslContext()` on `CloudPlatform`.
+  Removed the experimental interface `HttpSecuritySettings`
+
+### New Functionality
+
+- Add the remaining changes since `3.58.0` to our update of the OData VDM with the [newest release 2111 of SAP S/4HANA Cloud](https://news.sap.com/2021/10/sap-s4hana-cloud-2111-innovating-business-futures/).
+  Now the SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/products/SAPS4HANACloud/overview).
+
+- Update of the OData VDM to the [newest release 2021 of SAP S/4HANA On-Premise](https://help.sap.com/viewer/product/SAP_S4HANA_ON-PREMISE/2021/en-US).
+  The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA On-Premise](https://api.sap.com/products/SAPS4HANA/overview)
+  This includes completely new services, new operations in previously existing services, and new entity types in the following new Maven artifacts:
+
+  - [`s4hana-api-odata-v4-onpremise`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata-v4-onpremise) manages classes in package `com.sap.cloud.sdk.s4hana.onpremise.datamodel.odatav4.services`
+  - [`s4hana-api-odata-onpremise`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata-onpremise) manages classes in package `com.sap.cloud.sdk.s4hana.onpremise.datamodel.odata.services`
+
+  The existing modules `s4hana-api-odata-onpremise-2020` and `s4hana-api-odata-v4-onpremise-2020` remain unchanged to reflect the respective (outdated) On-Premise release version.
+  Additional modules with `2021` name equivalent are not planned.
+
+### Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [Neo JavaEE7 WP API](https://search.maven.org/search?q=g:com.sap.cloud%20a:neo-javaee7-wp-api) (`com.sap.cloud:neo-javaee7-wp-api`) from `1.109.7` to `1.110.3`
+    - Update [Neo Java Web API](https://search.maven.org/artifact/com.sap.cloud/neo-java-web-api) (`com.sap.cloud:neo-java-web-api`) from `4.13.8` to `4.14.6`
+  - Other dependency updates:
+    - Minor version updates:
+      - Update [Logback Classic](https://search.maven.org/search?q=g:ch.qos.logback%20a:logback-classic) (`ch.qos.logback:logback-classic`) from `1.2.6` to `1.2.7`.
+      - Update [Mockito](https://search.maven.org/search?q=g:org.mockito%20a:mockito-core) (`org.mockito:mockito-core`) from `4.0.0` to `4.1.0`
+
+### Fixed issues
+
+- Fix a race-condition issue when serializing OData V2 VDM entity objects concurrently in multiple threads.
+  This addresses errors reported as _"Could not serialize property 'FooBar'. Returning null instead."_
+
 ## 3.58.0 - November 18, 2021
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.58.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)

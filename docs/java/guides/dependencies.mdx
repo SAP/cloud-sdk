@@ -181,7 +181,7 @@ Use `cf buildpacks` to see which Buildpacks are currently available.
 Please note that usually only the last 3 Buildpack versions are kept alive, and usually every two weeks a new version is released.
 Consequently, with this strategy, you should update at least once a month.
 
-In general, this is safer than using always the latest Buildpack. 
+In general, this is safer than using always the latest Buildpack.
 Because this strategy avoids that a simple restart can break your application due to a changed Buildpack.
 
 In particular, it ensures that the specific Buildpack + SAP Cloud SDK combination has been tested.
@@ -199,12 +199,14 @@ Still, the same strategy is also valid and useful for the community Buildpack.
 We recommend overriding the scope for selected dependencies when using the SAP Java Buildpack.
 
 The respective dependencies are:
+
 - `com.sap.cloud.security:java-api`
 - `com.sap.cloud.security:java-security`
 
 You can override the scope by setting including these dependencies explicitly in your `pom.xml` with scope `provided`.
 
 For example:
+
 ```xml
 <dependency>
     <artifactId>java-api</artifactId>
