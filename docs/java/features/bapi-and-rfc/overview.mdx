@@ -256,41 +256,45 @@ The difference is to use alternative classes:
 - `RfmRequest` instead of `BapiRequest`
 - `RfmRequestResult` instead of `BapiRequestResult`
 
-### Deploy to the SAP Business Technology Platform, Cloud Foundry Environment
+## Configure & Deploy to a Cloud Foundry Environment
 
-Invoke `cf push` from the directory root to deploy the app to your Cloud Foundry space.
-
-### Configure the SAP Business Technology Platform, Cloud Foundry Environment
-
-#### Prerequisites
+### Prerequisites
 
 Here is what you'll need to make progress throughout the next steps.
 
-- Node.js installed on your machine
+- CF CLI installed on your machine
 - User in SAP S/4HANA target system
-- SAP BTP subaccount for the Cloud Foundry environment with entitlements for XSUAA, destination and connectivity service
+- SAP BTP subaccount for the Cloud Foundry environment with entitlements for XSUAA, Destination and Connectivity service
 - SAP Cloud Connector connected to the subaccount (if SAP S/4HANA is On-premise)
+- App Router (for some use cases, see note below)
 
-Official tutorials for setting up these scenarios can be found [here](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/fa4adc9bd40e45dbac573fd616695446.html).
+Official tutorials for setting up these scenarios can be found [here](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/b14eeb94be944c62a5880bde50c59aef.html).
 
-#### Optional: Set Up App Router
+### Set Up App Router
 
-If tenant-aware access of JCo and its required microservices or Principal Propagation want to be achieved, it is required that the app is invoked with a JWT containing the user context.
+:::note Relevant Use Cases
+
+An App Router is required if any of these conditions are met:
+- The app is multi tenant
+- Principal Propagation is used
+- If SAP S/4HANA is On-premise and the subaccount ID differs from the tenant ID of your CF subaccount
+:::
+
+For the above use cases to function it is required that the app is invoked with a JWT containing the user context.
 For that, securing the backend with an app router is required.
 Follow [this tutorial](https://developers.sap.com/tutorials/s4sdk-secure-cloudfoundry.html) to set up the app router.
 
-Furthermore, please check out the documentation [here](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/b14eeb94be944c62a5880bde50c59aef.html), especially if you want to call JCo from any newly created thread.
-:::caution Transitive dependency
+:::note Multitenancy
 
-Be aware to exclude the artifacts mentioned above, since they are transitively included with the SAP Cloud SDK.
+In case your application should be multi tenant it is also required to [mitigate scope conflicts](../../guides/manage-dependencies#avoiding-scope-conflicts) with the SAP Java Buildpack.
 
 :::
 
-#### Setup Cloud Connector for SAP S/4HANA On-Premise access
+### Setup Cloud Connector for SAP S/4HANA On-Premise access
 
 Expose the SAP S/4HANA system in the SAP Cloud Connector as described in the [official documentation](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/ca5868997e48468395cf0ca4882f5783.html).
 
-#### Setup Destination
+### Setup Destination
 
 Open the SAP BTP cockpit on the subaccount level.
 Navigate to `Connectivity` -> `Destinations` and create a new RFC destination with these properties.
@@ -312,6 +316,10 @@ For performance improvements of your app, please consider using optional propert
 This destination setup is exemplary for accessing an On-premise SAP S/4HANA system directly, if you want to access it e.g. via message server logon or you want to access a cloud system via WebSocketRFC, please adapt the properties as described in the [official documentation](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/ab6eac92978f469e9eabe3d477ca2411.html).
 
 :::
+
+### Deploy to the SAP Business Technology Platform, Cloud Foundry Environment
+
+Invoke `cf push` from the directory root to deploy the app to your Cloud Foundry space.
 
 ### Call the Test App
 
@@ -418,29 +426,13 @@ env:
 ### Dependency Conflicts at Runtime
 
 If you see exceptions related to classes or methods not being found this can indicate a dependency conflict.
-Please visit the [dependency guide](../../guides/manage-dependencies) for more information.
+Please visit the [Notes on the SAP Java Buildpack](../../guides/manage-dependencies#Notes-on-the-SAP-Java-Buildpack) and follow the guide on mitigating conflicts.
 
 ### Subscriber Tenant Is Not Found at Runtime
 
-In case you want to use multitenancy or multithreading you need to adapt the dependency scope of `java-api` in your project.
-This dependency comes in via the SAP Cloud SDK with the usual `compile` scope.
-However, for this special use-case, it has to be overridden with `provided` when using the `SAP Java Buildpack`.
-At the top of your dependency management section, before including any SAP Cloud SDK dependencies in your project, insert the following:
+In case you want to use multitenancy or multithreading the recommendations to [avoid scope conflicts](../../guides/manage-dependencies#avoiding-scope-conflicts) become mandatory.
 
-```xml
-<dependency>
-    <groupId>com.sap.cloud.security</groupId>
-    <artifactId>java-api</artifactId>
-    <version>latest-version-here</version>
-    <scope>provided</scope>
-</dependency>
-<dependency>
-    <groupId>com.sap.cloud.security</groupId>
-    <artifactId>java-security</artifactId>
-    <version>latest-version-here</version>
-    <scope>provided</scope>
-</dependency>
-```
+Furthermore, please check out the documentation [here](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/fa4adc9bd40e45dbac573fd616695446.html), especially if you want to call JCo from any newly created thread.
 
 ### Decoration of RFC Destinations
 
