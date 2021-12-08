@@ -9,12 +9,12 @@ description: This document will guide you through the upgrade process from versi
 
 ## Overview
 
-This document will guide you through the steps necessary to upgrade to the version 2.0 of the SDK.
-Depending on your project some of the steps are not applicable.
+This document will guide you through the steps necessary to upgrade to version 2.0 of the SDK.
+Depending on your project, some of the steps might not be applicable.
 We try to give clear conditions in the beginning of each section if it is applicable.
 If not please proceed to the next one.
 
-### Update Public Api Clients
+### Update Public API Clients
 
 __Prerequisite__: Your project uses published API clients like `https://www.npmjs.com/package/@sap/cloud-sdk-vdm-business-partner-service`.
 
@@ -22,9 +22,9 @@ Follow the following steps:
 - Find the used clients in your `package.json`.
 - Change the used version from 1.X.Y to 2.0.0.
 - Find the invocations of the request builders.
-- Change the `execute()` call as described in [here](#executeAPIChanges)
+- Change the `execute()` call as described [here](#executeAPIChanges)
 
-### Update Generated Api Clients
+### Update Generated API Clients
 
 __Prerequisite__: Your project uses generated API clients.
 
@@ -33,17 +33,17 @@ We assume that you have installed the generator as a local `devDependency` in yo
 - Change the used version from 1.X.Y to 2.0.0 and execute `npm i`.
 - Regenerate the client with the updated generator.
 - Find the invocations of the request builders.
-- Change the `execute()` call as described in [here](#executeAPIChanges)
+- Change the `execute()` call as described [here](#executeAPIChanges)
 
 ### Deprecated Methods
 
 We have deprecated objects in version 1.X.Y and in version 2.0.0 they were removed.
-If you use TypesScript the replacement is simple:
+If you use TypesScript, the replacement is simple:
 - Check the objects you use.
 - Your IDE should cross out deprecated methods.
 - The JSDoc of the method will tell you how to handle the deprecated method e.g. `@deprecated Since v1.20.0. Use 'buildAuthorizationHeaders' instead.`
 
-If you use JavaScript more manual effort is needed.
+If you use JavaScript, more manual effort is needed.
 You could either proactively investigate the [deprecated object list](#deprecatedList) and replace findings.
 Alternatively, you can also proceed with the next step and see which imports fail and check if the method is deprecated then.
 
@@ -51,41 +51,41 @@ Alternatively, you can also proceed with the next step and see which imports fai
 
 __Prerequisite__: Your project used method imports from `@sap-cloud-sdk/core`
 
-The big modules `@sap-cloud-sdk/core` was split in multiple smaller modules and imports need to be adjusted:
+We split the big module `@sap-cloud-sdk/core` into multiple smaller modules. These imports need to be adjusted:
 - Find the imported method in your code.
-- Find the new package where the method is located as described in [here](#findNewPackage).
+- Find the new package where the method is located as described [here](#findNewPackage).
 - Add the new package to the `package.json`
-- Remove the `@sap-cloud-sdk/core`.
+- Remove `@sap-cloud-sdk/core`.
 - Replace the old import with package name.
 
-Note that we reduced the number of object in the stable public API.
+Note that we reduced the number of objects in the stable public API.
 Your IDE should warn you if a module has no exported member with the given name.
-In such a case the method is reachable under the `internal` path:
+In such a case, the method is reachable under the `internal` path:
 
 ```
 { publicApiMethod } from '@sap-cloud-sdk/connectivity'
 { internalApiMethod } from '@sap-cloud-sdk/connectivity/internal'
 ```
 
-We try also to keep the internal API stable and guarantee this for patch version increases.
+We also try to keep the internal API stable and guarantee this for patch version increases.
 Details on the API contract are discussed in this [ADR](https://github.com/SAP/cloud-sdk-js/blob/2.0/knowledge-base/adr/0028-public-api-extraction.md)
 
 ### Serializing and Deserializing of Entities
 
 __Prerequisite__: You consume non primitive entity properties like dates, duration and times.
 
-In the past one oData datatype was always transformed to the same datatype in typescript.
-For example time related properties were transformed to `moment` instances.
+In the past, one oData datatype was always transformed to the same datatype in typescript.
+For example, time related properties were transformed to `moment` instances.
 We introduced a new [middle ware concept](XXX ref to middleware) to make this more flexible.
 
 The default serialization for time related properties is changed from `moment` to `temporal`.
 Since `moment` is a discontinued project with large size we recommend to stick with the new standard.
-Please adjust your code base to use the [temporal](https://tc39.es/proposal-temporal/docs/) time objects.
+Please adjust your code base to use the [temporal](https://tc39.es/proposal-temporal/docs/) date/time objects.
 If this is not possible in your case please follow the [documentation](XXX ref to middleware) to switch back to the `moment` serialization.
 
 ### You are Stuck with the Migration
 
-__Prerequisite___: You tried to do the steps above but hit some impedement.
+__Prerequisite___: You tried to do the steps above but hit some impediments.
 
 Please create a [support issue](https://github.com/SAP/cloud-sdk-js/issues/new/choose) describing the problem you have.
 
@@ -95,7 +95,7 @@ Please create a [support issue](https://github.com/SAP/cloud-sdk-js/issues/new/c
 
 The breaking change which will affect most users is the change of the execute methods.
 In the past there was a separate `DestinationNameAndJwt` object and a `DestinationOptions` to define how a destination was fetched from the service.
-In version 2.0 there is now a single `DestinationFetchOptions` containing all information.
+In version 2.0, there is now a single `DestinationFetchOptions` containing all information.
 
 ```js
 //Version 1.X.Y
@@ -109,7 +109,7 @@ You also see a second important detail: The optional parameter `userJwt` is rena
 Note that all options besides the `destinationName` are optional.
 We have picked the `execute()` method of the request builders to illustrate the change.
 But the same changes apply to all places the two objects ( `DestinationNameAndJwt` and `DestinationOptions`) were used.
-Prominent example are the `executeHttpRequest()` or `getDestination()` methods:
+Prominent examples are the `executeHttpRequest()` or `getDestination()` methods:
 
 ```js
 //Version 1.X.Y
@@ -125,17 +125,17 @@ executeHttpRequest({destinationName:'myDestination', jwt:'yourJwt', selectionStr
 
 We have split the `@sap-cloud-sdk/core` package into the following smaller packages:
 
-- `@sap-cloud-sdk/connectivity` which contains all cloud foundry connectivity service related methods like `getDestination()`.
-- `@sap-cloud-sdk/http-client` which contains the http client with build in connectivity with `executeHttpRequest()`.
-- `@sap-cloud-sdk/odata-common` which contains the odata functionality shared between version 2 and 4. This module is a technical module with no public API.
+- `@sap-cloud-sdk/connectivity` which contains all Cloud Foundry connectivity service related methods like `getDestination()`.
+- `@sap-cloud-sdk/http-client` which contains the http client with built in connectivity with `executeHttpRequest()`.
+- `@sap-cloud-sdk/odata-common` which contains the oData functionality shared between versions 2 and 4. This module is a technical module with no public API.
 - `@sap-cloud-sdk/odata-v2` which contains the odata functionality specific to oData version 2.
 - `@sap-cloud-sdk/odata-v2` which contains the odata functionality specific to oData version 4.
 - `@sap-cloud-sdk/openapi` which contains methods for openapi clients.
 
-In most situation it should be natural in which module the original object is located.
-If you are unsure you can the code search on github e.g. `https://github.com/SAP/cloud-sdk-js/search?q=function+getDestination` to quickly find the package.
+In most situations, it should be natural in which module the original object is located.
+If you are unsure, you can do a code search on Github e.g. `https://github.com/SAP/cloud-sdk-js/search?q=function+getDestination` to quickly find the package.
 
-Note that for the `executeHttpRequest` the new API offers all the destination retrieval options.
+Note that for the `executeHttpRequest`, the new API offers all the destination retrieval options.
 
 ###<a name="deprecatedList"/> Deprecated Methods
 
