@@ -6,15 +6,16 @@ The example below shows how you would create the data from above using the entit
 The relation to the business partner address is a one-to-many relation here.
 
 ```ts
-import { BusinessPartner, BusinessPartnerAddress } from '@sap/cloud-sdk-vdm-business-partner-service';
+import {
+  BusinessPartner,
+  BusinessPartnerAddress
+} from '@sap/cloud-sdk-vdm-business-partner-service';
 
 const businessPartner = BusinessPartner.builder()
   .firstName('Peter')
   .lastName('Pan')
   .toBusinessPartnerAddress([
-    BusinessPartnerAddress.builder()
-      .country('Neverland')
-      .build()
+    BusinessPartnerAddress.builder().country('Neverland').build()
   ])
   .build();
 ```
