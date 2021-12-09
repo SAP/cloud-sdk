@@ -1,4 +1,21 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 The Delete request builder allows you to create `DELETE` requests, that delete an entity.
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+```ts
+/*
+  The following won't work on the real SAP S/4HANA BusinessPartner service because BusinessPartners cannot be deleted.
+  We added this only for the sake of the example.
+*/
+new BusinessPartnerApi().requestBuilder().delete(businessPartner);
+```
+
+ </TabItem>
+<TabItem value="deprecated">
 
 ```ts
 /*
@@ -8,8 +25,33 @@ The Delete request builder allows you to create `DELETE` requests, that delete a
 BusinessPartner.requestBuilder().delete(businessPartner);
 ```
 
+</TabItem>
+</Tabs>
+
 Entities can only be deleted if [ETags](#handling-of-etags) match.
 If you want to force deletion of the entity regardless of the ETag configure the request to ignore version identifiers with `ignoreVersionIdentifier`:
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+```ts
+new BusinessPartnerApi()
+  .requestBuilder()
+  .delete(businessPartner)
+  .ignoreVersionIdentifier();
+```
+
+You can also overwrite ETags using `setVersionIdentifier`:
+
+```ts
+new BusinessPartnerApi()
+  .requestBuilder()
+  .delete(businessPartner)
+  .setVersionIdentifier('etag');
+```
+
+</TabItem>
+<TabItem value="deprecated">
 
 ```ts
 BusinessPartner.requestBuilder()
@@ -24,5 +66,8 @@ BusinessPartner.requestBuilder()
   .delete(businessPartner)
   .setVersionIdentifier('etag');
 ```
+
+</TabItem>
+</Tabs>
 
 In the example above the ETag 'ETag' is being used instead of the original one.

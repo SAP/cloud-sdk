@@ -67,6 +67,35 @@ You need to configure an `address usage` field as shown in the example below to 
 
 :::
 
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+```ts
+const businessPartner = new BusinessPartnerApi()
+  .entityBuilder()
+  .firstName('John')
+  .lastName('Doe')
+  .businessPartnerCategory('1')
+  .toBusinessPartnerAddress([
+    new BusinessPartnerAddressApi()
+      .entityBuilder()
+      .country('DE')
+      .postalCode('14469')
+      .cityName('Potsdam')
+      .streetName('Konrad-Zuse-Ring')
+      .houseNumber('10')
+      // additional code starts
+      .toAddressUsage([
+        new BuPaAddressUsageApi().builder().addressUsage('XXDEFAULT').build()
+      ])
+      .build()
+  ])
+  .build();
+```
+
+  </TabItem>
+<TabItem value="deprecated">
+
 ```ts
 const businessPartner = BusinessPartner.builder()
   .firstName('John')
@@ -87,5 +116,8 @@ const businessPartner = BusinessPartner.builder()
   ])
   .build();
 ```
+
+  </TabItem>
+  </Tabs>
 
 You can also create an entity `asChildOf` another entity.
