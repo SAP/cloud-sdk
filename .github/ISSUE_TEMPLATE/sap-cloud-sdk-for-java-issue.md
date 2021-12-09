@@ -17,6 +17,10 @@ _Please_ take the time to fill out the information in this template. In _almost 
 Be sure to remove **any confidential** information (examples: credentials or internal URLs) before publishing the issue on the internet.
 -->
 
+**[OPTIONAL] Survey**
+Please, help us making the SAP Cloud SDK better by taking our [survey](https://sapinsights.eu.qualtrics.com/jfe/form/SV_0P69X6kJ0Pdxqbc). It's less than 3 minutes :)
+
+
 ## Issue Description
 
 <!--
