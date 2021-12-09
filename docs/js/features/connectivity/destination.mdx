@@ -40,6 +40,22 @@ The SAP Cloud SDK helps you to authenticate against the destination service and 
 The SAP Cloud SDK supports [OData](../odata/overview.mdx) and [OpenApi](../openapi/overview.mdx) services.
 For both service types the `execute()` methods triggers a request to a target system:
 
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+```ts
+//OData
+const responseOData = await new BusinessPartnerApi()
+  .requestBuilder()
+  .getAll()
+  .execute(myDestination);
+//OpenApi
+const responseOpenApi = await MyApi.myFunction().execute(myDestination);
+```
+
+</TabItem>
+<TabItem value="deprecated">
+
 ```ts
 //OData
 const responseOData = await BusinessPartner.requestBuilder()
@@ -48,6 +64,9 @@ const responseOData = await BusinessPartner.requestBuilder()
 //OpenApi
 const responseOpenApi = await MyApi.myFunction().execute(myDestination);
 ```
+
+  </TabItem>
+  </Tabs>
 
 `myDestination` is an SAP Cloud SDK representation of a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_core.Destination" name="destination" />.
 The given request is executed against `myDestination`.
@@ -218,21 +237,21 @@ The lookup process done by the SAP Cloud SDK involves the following steps:
 If no token is given or the destination is not found in the subscriber account the provider account is used as a fallback.
 To control this fallback behavior a selection strategy can be passed to the destination lookup:
 
-<Tabs groupId="version" defaultValue="deprecated" values={[
+<Tabs groupId="version" defaultValue="major" values={[
 { label: 'SDK 1.x', value: 'deprecated'},
 { label: 'SDK 2.x', value: 'major'}]}>
 
-<TabItem value="deprecated">
-
-```ts
-.execute({destinationName: 'myDestination', jwt: 'yourJWT'}, {selectionStrategy:'alwaysSubscriber'})
-```
-
-</TabItem>
 <TabItem value="major">
 
 ```ts
 .execute({destinationName: 'myDestination', jwt: 'yourJWT', selectionStrategy:'alwaysSubscriber'})
+```
+
+</TabItem>
+<TabItem value="deprecated">
+
+```ts
+.execute({destinationName: 'myDestination', jwt: 'yourJWT'}, {selectionStrategy:'alwaysSubscriber'})
 ```
 
 </TabItem>
@@ -265,10 +284,17 @@ In every request, these destinations are added to the destinations returned by t
 There are situations where you do not have a JWT issued by the XSUAA but need to look a destination up e.g. in background processes.
 In such situations the property `iss` of the `DestinationAccessorOptions` can be used:
 
-<Tabs groupId="version" defaultValue="deprecated" values={[
+<Tabs groupId="version" defaultValue="major" values={[
 { label: 'SDK 1.x', value: 'deprecated'},
 { label: 'SDK 2.x', value: 'major'}]}>
 
+<TabItem value="major">
+
+```ts
+.execute({ destinationName: 'myDestination', iss: yourIssuerValue })
+```
+
+</TabItem>
 <TabItem value="deprecated">
 
 ```ts
@@ -276,14 +302,6 @@ In such situations the property `iss` of the `DestinationAccessorOptions` can be
   { destinationName: 'myDestination' },
   { iss: yourIssuerValue }
 )
-```
-
-</TabItem>
-
-<TabItem value="major">
-
-```ts
-.execute({ destinationName: 'myDestination', iss: yourIssuerValue })
 ```
 
 </TabItem>

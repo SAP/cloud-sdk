@@ -1,3 +1,6 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 A retrieve request is any HTTP `GET` request.
 In terms of the SAP Cloud SDK this includes all requests built by a [`GetAllRequestBuilder`](#getall-request-builder) and [`GetByKeyRequestBuilder`](#getbykey-request-builder).
 
@@ -15,6 +18,44 @@ In the example below, each given address id is mapped to a [`GetByKeyRequestBuil
 These retrieve requests are combined into one `batch` request and executed against a destination.
 
 If one of the requests was not successful, an error will be thrown, otherwise, the responses are transformed into instances of `BusinessPartnerAddress`.
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+```ts
+async function getAddressesByIds(
+  businessPartnerId: string,
+  addressIds: string[]
+): Promise<BusinessPartnerAddress[]> {
+  const businessPartnerAddressApi = new BusinessPartnerAddressApi();
+  const retrieveRequests = addressIds.map(addressId =>
+    // Create get by key request
+    businessPartnerAddressApi
+      .requestBuilder()
+      .getByKey(businessPartnerId, addressId)
+  );
+
+  // Execute batch request combining multiple retrieve requests
+  const batchResponses = await batch(...retrieveRequests).execute(destination);
+
+  // Error handling
+  if (batchResponses.some(response => !response.isSuccess())) {
+    throw new Error('Some of the batch subrequests were not successful.');
+  }
+
+  return batchResponses.reduce(
+    (addresses: BusinessPartnerAddress[], response: BatchResponse) => [
+      ...addresses,
+      // Transform response to an instance of BusinessPartnerAddress
+      ...(response as ReadResponse).as(BusinessPartnerAddress)
+    ],
+    []
+  );
+}
+```
+
+  </TabItem>
+<TabItem value="deprecated">
 
 ```ts
 async function getAddressesByIds(
@@ -47,3 +88,6 @@ async function getAddressesByIds(
   );
 }
 ```
+
+  </TabItem>
+  </Tabs>

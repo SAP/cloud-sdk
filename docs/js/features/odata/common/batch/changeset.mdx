@@ -1,3 +1,6 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 A changeset is a collection of HTTP `POST`, `PUT`, `PATCH` and `DELETE` operations - requests built by any [`CreateRequestBuilder`](#create-request-builder), [`UpdateRequestBuilder`](#update-request-builder) and [`DeleteRequestBuilder`](#delete-request-builder) in terms of the SAP Cloud SDK.
 The order of execution within a changeset is not defined.
 This differs from the whole batch request itself, where the order is defined.
@@ -30,6 +33,43 @@ Once the batch request is executed it returns a list of `BatchResponse`s, which 
 
 If the request was not successful, an error will be thrown, otherwise, the subresponses are transformed into instances of `BusinessPartnerAddress`.
 
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+```ts
+async function updateAddresses(
+  businessPartnerAddresses: BusinessPartnerAddress[]
+): Promise<BusinessPartnerAddress[]> {
+  const businessPartnerAddressApi = new BusinessPartnerAddressApi();
+  // Create update requests
+  const updateRequests = businessPartnerAddresses.map(address =>
+    businessPartnerAddressApi.requestBuilder().update(address)
+  );
+
+  // Execute batch request with one changeset
+  const batchResponses = await batch(
+    // Combine update requests into one changeset
+    changeset(...updateRequests)
+  ).execute(destination);
+
+  // Get response for the changeset request
+  const changesetResonse = batchResponses[0];
+
+  // Error handling
+  if (!changesetResonse.isSuccess()) {
+    throw new Error('The changeset request was not successful.');
+  }
+
+  return (changesetResonse as WriteResponses).responses.map(response =>
+    // Transform response to an instance of BusinessPartnerAddress
+    response.as!(BusinessPartnerAddress)
+  );
+}
+```
+
+</TabItem>
+<TabItem value="deprecated">
+
 ```ts
 async function updateAddresses(
   businessPartnerAddresses: BusinessPartnerAddress[]
@@ -59,3 +99,6 @@ async function updateAddresses(
   );
 }
 ```
+
+</TabItem>
+</Tabs>
