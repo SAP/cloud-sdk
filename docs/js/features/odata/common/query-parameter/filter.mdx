@@ -1,5 +1,38 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 When operating on a collection of entities, the API offers `filter( ... )` on the builders.
 It directly corresponds to the `$filter` parameter of the request.
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+Filters are also built via the fields on the schema property of entities api class:
+
+```ts
+/*
+  Get all business partners that either:
+    - Have first name 'Alice' but not last name 'Bob'
+    - Or have first name 'Mallory'
+*/
+const businessPartnerApi = new BusinessPartnerApi();
+businessPartnerApi.requestBuilder()
+  .getAll()
+  .filter(
+    or(
+      and(
+        businessPartnerApi.schema.FIRST_NAME.equals('Alice'),
+        businessPartnerApi.schema.LAST_NAME.notEquals('Bob')
+      ),
+      businessPartnerApi.schema.FIRST_NAME.equals('Mallory')
+    )
+  )
+  .execute(destination);
+```
+</TabItem>
+
+<TabItem value="deprecated">
+
 Filters are also built via the static property fields on entities:
 
 ```ts
@@ -21,6 +54,8 @@ BusinessPartner.requestBuilder()
   )
   .execute(destination);
 ```
+</TabItem>
+</Tabs>
 
 The example above will translate to this filter parameter:
 

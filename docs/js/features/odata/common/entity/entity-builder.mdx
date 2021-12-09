@@ -1,3 +1,6 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 To build an entity by assigning its properties and you can use the entity builders provided by every entity class.
 Use the static `.builder` method to access the builder, set the properties and finally use the `.build` method to yield the entity.
 To set navigation properties, that link to other entities, you have to create the linked entities using their respective builder.
@@ -23,6 +26,26 @@ const businessPartner = BusinessPartner.builder()
 You can also add fields, that are unknown according to the specification, if you add them as custom fields.
 To achieve this, pass an object the `.withCustomFields` method, where the keys denote the names of the custom fields, and the values their respective values.
 
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+```ts
+import {
+  BusinessPartnerApi,
+  BusinessPartnerAddressApi
+} from '@sap/cloud-sdk-vdm-business-partner-service';
+
+const businessPartner = new BusinessPartnerApi().entityBuilder()
+  .firstName('Peter')
+  .withCustomFields({
+    myCustomField: 'this is custom'
+  })
+  .build();
+```
+
+</TabItem>
+<TabItem value="deprecated">
+
 ```ts
 import {
   BusinessPartner,
@@ -36,3 +59,7 @@ const businessPartner = BusinessPartner.builder()
   })
   .build();
 ```
+
+</TabItem>
+</Tabs>
+

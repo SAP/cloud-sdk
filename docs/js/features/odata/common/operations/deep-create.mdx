@@ -1,4 +1,35 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 It is also possible to create an entity together with related entities in a single request:
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+```ts
+// build a business partner instance with one linked address
+const businessPartnerApi = new BusinessPartnerApi();
+const businessPartner = businessPartnerApi.entityBuilder()
+  .firstName('John')
+  .lastName('Doe')
+  .businessPartnerCategory('1')
+  .toBusinessPartnerAddress([
+    new BusinessPartnerAddressApi.entityBuilder()
+      .country('DE')
+      .postalCode('14469')
+      .cityName('Potsdam')
+      .streetName('Konrad-Zuse-Ring')
+      .houseNumber('10')
+      .build()
+  ])
+  .build();
+
+// execute the create request
+businessPartnerApi.requestBuilder().create(businessPartner).execute(myDestination);
+```
+
+</TabItem>
+<TabItem value="deprecated">
 
 ```ts
 // build a business partner instance with one linked address
@@ -20,6 +51,11 @@ const businessPartner = BusinessPartner.builder()
 // execute the create request
 BusinessPartner.requestBuilder().create(businessPartner).execute(myDestination);
 ```
+
+</TabItem>
+</Tabs>
+
+
 
 :::note Troubleshooting
 
