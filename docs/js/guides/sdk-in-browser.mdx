@@ -11,6 +11,9 @@ keywords:
   - sap cloud sdk
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 The SAP Cloud SDK for JavaScript can be used both as a backend and frontend library when used in a browser.
 Because of the specifics of a browser environment, some features might be unavailable.
 To help you get up and running faster in a browser, we'll outline the main steps and caveats of using SAP Cloud SDK on the frontend.
@@ -54,6 +57,22 @@ Please check out the [workaround](#workaround) for these kinds of errors.
 As discussed above the `myDest` can not be fetched via the destination service.
 When you run locally you can simply provide it.
 
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+```
+import {Destination} from '@sap-cloud-sdk/connectivity'
+
+const myDest:Destination = {
+  url: 'https://my123456.s4hana.ondemand.com',
+  username: 'myUser',
+  password: 'myPassowrd'
+}
+```
+
+</TabItem>
+<TabItem value="deprecated">
+
 ```
 import {Destination} from '@sap-cloud-sdk/core'
 
@@ -63,6 +82,9 @@ const myDest:Destination = {
   password: 'myPassowrd'
 }
 ```
+
+</TabItem>
+</Tabs>
 
 When you execute `npm run serve` your project is compiled and hosted on a local server.
 
@@ -89,12 +111,30 @@ You configure the `xs-app.json` of the used app-router with an entry like this:
 
 and then in your application define the destination as:
 
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
 ```
-import {Destination} from '@sap-cloud-sdk/core'
+import {Destination123} from '@sap-cloud-sdk/connectivity'
 
 const myDest:Destination = {
   url: '/REMOTE-SYSTEM-IDENTIFIER'
 }
+```
+
+</TabItem>
+<TabItem value="deprecated">
+
+```
+import {Destination123} from '@sap-cloud-sdk/core'
+
+const myDest:Destination = {
+  url: '/REMOTE-SYSTEM-IDENTIFIER'
+}
+```
+
+</TabItem>
+</Tabs>
 ```
 
 The created request to `/REMOTE-SYSTEM-IDENTIFIER/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner` will be matched by the app-router and the destination with the given URL and credentials is used.
