@@ -9,16 +9,18 @@ description: This document will guide you through the upgrade process from versi
 
 ## Overview
 
-This document will guide you through the steps necessary to upgrade to version 2.0 of the SDK.
+This document will guide you through the steps necessary to upgrade to version 2.0 of the SAP Cloud SDK.
 Depending on your project, some of the steps might not be applicable.
-We try to give clear conditions in the beginning of each section if it is applicable.
+We have provided prerequisites at the beginning of each section.
+If it does not apply to your project, please proceed to the next one.
 If not please proceed to the next one.
 
 ### Update Public API Clients
 
-__Prerequisite__: Your project uses published API clients like `https://www.npmjs.com/package/@sap/cloud-sdk-vdm-business-partner-service`.
+**Prerequisite**: Your project uses published API clients like `https://www.npmjs.com/package/@sap/cloud-sdk-vdm-business-partner-service`.
 
 Follow the following steps:
+
 - Find the used clients in your `package.json`.
 - Change the used version from 1.X.Y to 2.0.0.
 - Find the invocations of the request builders.
@@ -26,9 +28,10 @@ Follow the following steps:
 
 ### Update Generated API Clients
 
-__Prerequisite__: Your project uses generated API clients.
+**Prerequisite**: Your project uses generated API clients.
 
 We assume that you have installed the generator as a local `devDependency` in your project:
+
 - Find the installed generator in your `package.json`.
 - Change the used version from 1.X.Y to 2.0.0 and execute `npm i`.
 - Regenerate the client with the updated generator.
@@ -39,19 +42,23 @@ We assume that you have installed the generator as a local `devDependency` in yo
 
 We have deprecated objects in version 1.X.Y and in version 2.0.0 they were removed.
 If you use TypesScript, the replacement is simple:
+
 - Check the objects you use.
 - Your IDE should cross out deprecated methods.
 - The JSDoc of the method will tell you how to handle the deprecated method e.g. `@deprecated Since v1.20.0. Use 'buildAuthorizationHeaders' instead.`
 
 If you use JavaScript, more manual effort is needed.
 You could either proactively investigate the [deprecated object list](#deprecatedList) and replace findings.
-Alternatively, you can also proceed with the next step and see which imports fail and check if the method is deprecated then.
+Alternatively, you can also proceed with the next step and see which imports fail.
+Then check if the method is deprecated.
 
 ### Update Core Imports
 
-__Prerequisite__: Your project used method imports from `@sap-cloud-sdk/core`
+**Prerequisite**: Your project used method imports from `@sap-cloud-sdk/core`
 
-We split the big module `@sap-cloud-sdk/core` into multiple smaller modules. These imports need to be adjusted:
+We split the big module `@sap-cloud-sdk/core` into multiple smaller modules.
+These imports need to be adjusted:
+
 - Find the imported method in your code.
 - Find the new package where the method is located as described [here](#findNewPackage).
 - Add the new package to the `package.json`
@@ -72,9 +79,9 @@ Details on the API contract are discussed in this [ADR](https://github.com/SAP/c
 
 ### Serializing and Deserializing of Entities
 
-__Prerequisite__: You consume non primitive entity properties like dates, duration and times.
+**Prerequisite**: You consume non primitive entity properties like dates, duration and times.
 
-In the past, one oData datatype was always transformed to the same datatype in typescript.
+In the past, one oData datatype was always transformed to the same datatype in TypeScript.
 For example, time related properties were transformed to `moment` instances.
 We introduced a new [middle ware concept](../features/odata/execute-odata-request#setting-custom-middleware) to make this more flexible.
 
@@ -83,9 +90,9 @@ Since `moment` is a discontinued project with large size we recommend to stick w
 Please adjust your code base to use the [temporal](https://tc39.es/proposal-temporal/docs/) date/time objects.
 If this is not possible in your case please follow the [documentation](../features/odata/execute-odata-request#setting-custom-middleware) to switch back to the `moment` serialization.
 
-### You are stuck with the Migration
+### You Are Facing Issues With The Migration
 
-__Prerequisite___: You tried to do the steps above but hit some impediments.
+**Prerequisite\_**: You tried to do the steps above but hit some impediments.
 
 Please create a [support issue](https://github.com/SAP/cloud-sdk-js/issues/new/choose) describing the problem you have.
 
@@ -99,10 +106,19 @@ In version 2.0, there is now a single `DestinationFetchOptions` containing all i
 
 ```js
 //Version 1.X.Y
-MyEntity.requestBuillder().getAll().execute({destinationName:'myDestination', userJwt:'yourJwt'}, {useCache:true})
+MyEntity.requestBuillder()
+  .getAll()
+  .execute(
+    { destinationName: 'myDestination', userJwt: 'yourJwt' },
+    { useCache: true }
+  );
 
 //Version 2.0.0
-MyEntity.requestBuillder().getAll().execute({destinationName:'myDestination', jwt:'yourJwt', useCache:true})
+MyEntity.requestBuillder().getAll().execute({
+  destinationName: 'myDestination',
+  jwt: 'yourJwt',
+  useCache: true
+});
 ```
 
 You also see a second important detail: The optional parameter `userJwt` is renamed to `jwt`.
@@ -113,15 +129,32 @@ Prominent examples are the `executeHttpRequest()` or `getDestination()` methods:
 
 ```js
 //Version 1.X.Y
-getDestination({destinationName:'myDestination', userJwt:'yourJwt'},{useCache:true})
-executeHttpRequest({destinationName:'myDestination', userJwt:'yourJwt'},{method:"get"})
+getDestination(
+  { destinationName: 'myDestination', userJwt: 'yourJwt' },
+  { useCache: true }
+);
+executeHttpRequest(
+  { destinationName: 'myDestination', userJwt: 'yourJwt' },
+  { method: 'get' }
+);
 
 //Version 2.0.0
-getDestination({destinationName:'myDestination', jwt:'yourJwt', useCache:true})
-executeHttpRequest({destinationName:'myDestination', jwt:'yourJwt', selectionStrategy:alwaysProvider}, {method:"get"})
+getDestination({
+  destinationName: 'myDestination',
+  jwt: 'yourJwt',
+  useCache: true
+});
+executeHttpRequest(
+  {
+    destinationName: 'myDestination',
+    jwt: 'yourJwt',
+    selectionStrategy: alwaysProvider
+  },
+  { method: 'get' }
+);
 ```
 
-###<a name="findNewPackage"/> How to find the the new Packages
+###<a name="findNewPackage"/> How to find the new Packages
 
 We have split the `@sap-cloud-sdk/core` package into the following smaller packages:
 
@@ -133,7 +166,7 @@ We have split the `@sap-cloud-sdk/core` package into the following smaller packa
 - `@sap-cloud-sdk/openapi` which contains methods for openapi clients.
 
 In most situations, it should be natural in which module the original object is located.
-If you are unsure, you can do a code search on Github e.g. `https://github.com/SAP/cloud-sdk-js/search?q=function+getDestination` to quickly find the package.
+If you are unsure, you can do a code search on GitHub e.g. `https://github.com/SAP/cloud-sdk-js/search?q=function+getDestination` to quickly find the package.
 
 Note that for the `executeHttpRequest`, the new API offers all the destination retrieval options.
 
@@ -141,113 +174,117 @@ Note that for the `executeHttpRequest`, the new API offers all the destination r
 
 The table below gives a list of the removed methods for which a replacement is provided.
 
-| deprecated method | replacement | source file |
-|---|---|---|
-|_fieldName|field|filter.ts
-|addAuthorizationHeader|buildAuthorizationHeaders|authorization-header.ts
-|AnyField|EdmTypeField|any-field.ts
-|AnyFieldBase|EdmTypeField|any-field.ts
-|applyPrefixOnJsConfictFunctionImports|applyPrefixOnJsConflictFunctionImports|name-formatting-strategies.ts
-|applyPrefixOnJsConfictParam|applyPrefixOnJsConflictParam|name-formatting-strategies.ts
-|applySuffixOnConflictDash|UniqueNameGenerator|name-formatting-strategies.ts
-|applySuffixOnConflictUnderscore|UniqueNameGenerator|name-formatting-strategies.ts
-|BigNumberField|OrderableEdmTypeField|big-number-field.ts
-|BigNumberFieldBase|OrderableEdmTypeField|big-number-field.ts
-|BinaryField|EdmTypeField|binary-field.ts
-|BinaryFieldBase|EdmTypeField|binary-field.ts
-|BooleanField|EdmTypeField|boolean-field.ts
-|BooleanFieldBase|EdmTypeField|boolean-field.ts
-|buildAndAddAuthorizationHeader|buildAuthorizationHeaders|authorization-header.ts
-|clientCredentialsGrant|@sap/xssec|xsuaa-service.ts
-|CompleteDecodedJWT|Jwt|jwt.ts
-|ComplexTypeAnyPropertyField|EdmTypeField|any-field.ts
-|ComplexTypeBigNumberPropertyField|OrderableEdmTypeField|big-number-field.ts
-|ComplexTypeBinaryPropertyField|EdmTypeField|binary-field.ts
-|ComplexTypeBooleanPropertyField|EdmTypeField|boolean-field.ts
-|ComplexTypeDatePropertyField|OrderableEdmTypeField|date-field.ts
-|ComplexTypeDurationPropertyField|OrderableEdmTypeField|duration-field.ts
-|ComplexTypeEnumPropertyField|EnumField|enum-field.ts
-|ComplexTypeNumberPropertyField|OrderableEdmTypeField|number-field.ts
-|ComplexTypeStringPropertyField|EdmTypeField|string-field.ts
-|ComplexTypeTimePropertyField|OrderableEdmTypeField|time-field.ts
-|constructor|Use other constructors instead.|complex-type-field.ts
-|constructor|Use superclass instead.|odata-batch-request-config.ts
-|DateField|OrderableEdmTypeField|date-field.ts
-|DateFieldBase|OrderableEdmTypeField|date-field.ts
-|DecodedJWT|JWTPayload]] if you want to represent the decoded JWT payload or [[CompleteDecodedJWT|jwt.ts
-|DeepFieldType|FieldType|field.ts
-|DestinationCachingOptions|CachingOptions|destination-service-types.ts
-|DurationField|OrderableEdmTypeField|duration-field.ts
-|DurtionFieldBase|OrderableEdmTypeField|duration-field.ts
-|EnumFieldBase|EnumField|enum-field.ts
-|EnvironmentAccessor|Use directly exported functions instead|environment-accessor.ts
-|errorWithCause|ErrorWithCause|error.ts
-|extractDataFromOneToManyLink|getLinkedCollectionResult|extract-data-from-one-to-many-link.ts
-|extractDataFromOneToManyLink|getLinkedCollectionResult|extract-data-from-one-to-many-link.ts
-|filterNullishValues|pickNonNullish|header-util.ts
-|get batchId|boundary|odata-batch-request-config.ts
-|get changeSetId|boundary|batch-change-set.ts
-|get changeSetId|boundary|batch-change-set.ts
-|get contentType|defaultHeaders|odata-request-config.ts
-|get selects|_selects|link.ts
-|getDestinationByName|getDestinationFromEnvByName|destination-from-env.ts
-|getDestinationCacheKey|getDestinationCacheKeyStrict|destination-cache.ts
-|getDestinations|getDestinationsFromEnv|destination-from-env.ts
-|getHeader|pickIgnoreCase|header-util.ts
-|getHeaders|pickIgnoreCase|header-util.ts
-|getHeaderValue|pickValueIgnoreCase|header-util.ts
-|getQueryParametersForFilter|ODataUri.getFilter|get-filter.ts
-|getQueryParametersForOrderBy|ODataUri.getOrderBy|get-orderby.ts
-|getQueryParametersForSelection|ODataUri.getSelect]] and [[ODataUri.getExpand|get-selection.ts
-|getResourcePathForKeys|ODataUri.getResourcePathForKeys|get-resource-path.ts
-|HttpMethod|Use method string directly, e. g. 'get' or 'GET'.|http-client-types.ts
-|HttpReponse|HttpResponse|http-client-types.ts
-|ignoredFields|setIgnoredFields|update-request-builder-base.ts
-|initializeCustomFields|setCustomFields|entity.ts
-|isMulti?|isCollection|vdm-types.ts
-|isMultiLink?|isCollection|vdm-types.ts
-|jwtBearerTokenGrant|@sap/xssec|xsuaa-service.ts
-|JWTHeader|JwtHeader|jwt.ts
-|JWTPayload|JwtPayload|jwt.ts
-|MapType|Record<string, T>|types.ts
-|mergeHeaders|mergeIgnoreCase|header-util.ts
-|NumberField|OrderableEdmTypeField|number-field.ts
-|NumberFieldBase|OrderableEdmTypeField|number-field.ts
-|ODataBatchChangeSet|BatchChangeSet|batch-change-set.ts
-|ODataBatchChangeSet|BatchChangeSet|batch-change-set.ts
-|ODataCreateRequestConfig|Use superclass instead.|odata-create-request-config.ts
-|ODataDeleteRequestConfig|Use superclass instead.|odata-delete-request-config.ts
-|ODataFunctionImportRequestConfig|Use superclass instead.|odata-function-import-request-config.ts
-|ODataGetAllRequestConfig|Use superclass instead.|odata-get-all-request-config.ts
-|ODataGetByKeyRequestConfig|Use superclass instead.|odata-get-by-key-request-config.ts
-|ODataUpdateRequestConfig|Use superclass instead.|odata-update-request-config.ts
-|parseType|isEdmType and complexTypeName|edmx-to-vdm-util.ts
-|protected getCurrentMapKeys|asObject|entity.ts
-|refreshTokenGrant|jwtBearerTokenGrant|xsuaa-service.ts
-|RegisteredJWTClaims|This interface will not be replaced. Use the higher level JWT types directly.|jwt.ts
-|RegisteredJWTClaimsBasic|This interface will not be replaced. Use the higher level JWT types directly.|jwt.ts
-|RegisteredJWTClaimsTenant|This interface will not be replaced. Use the higher level JWT types directly.|tenant.ts
-|RegisteredJWTClaimsUser|This interface will not be replaced. Use the higher level JWT types directly.|user.ts
-|replaceDuplicateKeys|mergeLeftIgnoreCase|header-util.ts
-|requiredFields|setRequiredFields|update-request-builder-base.ts
-|SelectableEdmTypeField|SelectableT|selectable.ts
-|serializersCommom|serializersCommon|payload-value-converter.ts
-|static clone|clone|link.ts
-|static clone|clone|one-to-one-link.ts
-|StringField|EdmTypeField|string-field.ts
-|StringFieldBase|EdmTypeField|string-field.ts
-|TimeField|OrderableEdmTypeField|time-field.ts
-|TimeFieldBase|OrderableEdmTypeField|time-field.ts
-|toBatchChangeSet|serializeChangeSet|batch-request-serializer.ts
-|toBatchChangeSet|serializeChangeSet|batch-request-serializer.ts
-|toPascalCase|@sap-cloud-sdk/util|name-converter.ts
-|toPropertyFormat|@sap-cloud-sdk/util|name-converter.ts
-|toSanitizedHeaderObject|toSanitizedObject|header-util.ts
-|toStaticPropertyFormat|@sap-cloud-sdk/util|name-converter.ts
-|toTitleFormat|@sap-cloud-sdk/util|name-converter.ts
-|toTypeNameFormat|@sap-cloud-sdk/util|name-converter.ts
-|userTokenGrant|jwtBearerTokenGrant|xsuaa-service.ts
-|withCustomHeaders|addCustomHeaders|request-builder-base.ts
-|withCustomQueryParameters|addCustomQueryParameters|request-builder-base.ts
-|withCustomServicePath|setCustomServicePath|request-builder-base.ts
-|withCustomVersionIdentifier|setVersionIdentifier|update-request-builder-base.ts
+<!-- vale off -->
+
+| deprecated method                     | replacement                                                                       | source file                             |
+| ------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------- |
+| \_fieldName                           | field                                                                             | filter.ts                               |
+| addAuthorizationHeader                | buildAuthorizationHeaders                                                         | authorization-header.ts                 |
+| AnyField                              | EdmTypeField                                                                      | any-field.ts                            |
+| AnyFieldBase                          | EdmTypeField                                                                      | any-field.ts                            |
+| applyPrefixOnJsConfictFunctionImports | applyPrefixOnJsConflictFunctionImports                                            | name-formatting-strategies.ts           |
+| applyPrefixOnJsConfictParam           | applyPrefixOnJsConflictParam                                                      | name-formatting-strategies.ts           |
+| applySuffixOnConflictDash             | UniqueNameGenerator                                                               | name-formatting-strategies.ts           |
+| applySuffixOnConflictUnderscore       | UniqueNameGenerator                                                               | name-formatting-strategies.ts           |
+| BigNumberField                        | OrderableEdmTypeField                                                             | big-number-field.ts                     |
+| BigNumberFieldBase                    | OrderableEdmTypeField                                                             | big-number-field.ts                     |
+| BinaryField                           | EdmTypeField                                                                      | binary-field.ts                         |
+| BinaryFieldBase                       | EdmTypeField                                                                      | binary-field.ts                         |
+| BooleanField                          | EdmTypeField                                                                      | boolean-field.ts                        |
+| BooleanFieldBase                      | EdmTypeField                                                                      | boolean-field.ts                        |
+| buildAndAddAuthorizationHeader        | buildAuthorizationHeaders                                                         | authorization-header.ts                 |
+| clientCredentialsGrant                | @sap/xssec                                                                        | xsuaa-service.ts                        |
+| CompleteDecodedJWT                    | Jwt                                                                               | jwt.ts                                  |
+| ComplexTypeAnyPropertyField           | EdmTypeField                                                                      | any-field.ts                            |
+| ComplexTypeBigNumberPropertyField     | OrderableEdmTypeField                                                             | big-number-field.ts                     |
+| ComplexTypeBinaryPropertyField        | EdmTypeField                                                                      | binary-field.ts                         |
+| ComplexTypeBooleanPropertyField       | EdmTypeField                                                                      | boolean-field.ts                        |
+| ComplexTypeDatePropertyField          | OrderableEdmTypeField                                                             | date-field.ts                           |
+| ComplexTypeDurationPropertyField      | OrderableEdmTypeField                                                             | duration-field.ts                       |
+| ComplexTypeEnumPropertyField          | EnumField                                                                         | enum-field.ts                           |
+| ComplexTypeNumberPropertyField        | OrderableEdmTypeField                                                             | number-field.ts                         |
+| ComplexTypeStringPropertyField        | EdmTypeField                                                                      | string-field.ts                         |
+| ComplexTypeTimePropertyField          | OrderableEdmTypeField                                                             | time-field.ts                           |
+| constructor                           | Use other constructors instead.                                                   | complex-type-field.ts                   |
+| constructor                           | Use superclass instead.                                                           | odata-batch-request-config.ts           |
+| DateField                             | OrderableEdmTypeField                                                             | date-field.ts                           |
+| DateFieldBase                         | OrderableEdmTypeField                                                             | date-field.ts                           |
+| DecodedJWT                            | JWTPayload if you want to represent the decoded JWT payload or CompleteDecodedJWT | jwt.ts                                  |
+| DeepFieldType                         | FieldType                                                                         | field.ts                                |
+| DestinationCachingOptions             | CachingOptions                                                                    | destination-service-types.ts            |
+| DurationField                         | OrderableEdmTypeField                                                             | duration-field.ts                       |
+| DurtionFieldBase                      | OrderableEdmTypeField                                                             | duration-field.ts                       |
+| EnumFieldBase                         | EnumField                                                                         | enum-field.ts                           |
+| EnvironmentAccessor                   | Use directly exported functions instead                                           | environment-accessor.ts                 |
+| errorWithCause                        | ErrorWithCause                                                                    | error.ts                                |
+| extractDataFromOneToManyLink          | getLinkedCollectionResult                                                         | extract-data-from-one-to-many-link.ts   |
+| extractDataFromOneToManyLink          | getLinkedCollectionResult                                                         | extract-data-from-one-to-many-link.ts   |
+| filterNullishValues                   | pickNonNullish                                                                    | header-util.ts                          |
+| get batchId                           | boundary                                                                          | odata-batch-request-config.ts           |
+| get changeSetId                       | boundary                                                                          | batch-change-set.ts                     |
+| get changeSetId                       | boundary                                                                          | batch-change-set.ts                     |
+| get contentType                       | defaultHeaders                                                                    | odata-request-config.ts                 |
+| get selects                           | \_selects                                                                         | link.ts                                 |
+| getDestinationByName                  | getDestinationFromEnvByName                                                       | destination-from-env.ts                 |
+| getDestinationCacheKey                | getDestinationCacheKeyStrict                                                      | destination-cache.ts                    |
+| getDestinations                       | getDestinationsFromEnv                                                            | destination-from-env.ts                 |
+| getHeader                             | pickIgnoreCase                                                                    | header-util.ts                          |
+| getHeaders                            | pickIgnoreCase                                                                    | header-util.ts                          |
+| getHeaderValue                        | pickValueIgnoreCase                                                               | header-util.ts                          |
+| getQueryParametersForFilter           | ODataUri.getFilter                                                                | get-filter.ts                           |
+| getQueryParametersForOrderBy          | ODataUri.getOrderBy                                                               | get-orderby.ts                          |
+| getQueryParametersForSelection        | ODataUri.getSelect and ODataUri.getExpand                                         | get-selection.ts                        |
+| getResourcePathForKeys                | ODataUri.getResourcePathForKeys                                                   | get-resource-path.ts                    |
+| HttpMethod                            | Use method string directly, e. g. 'get' or 'GET'.                                 | http-client-types.ts                    |
+| HttpReponse                           | HttpResponse                                                                      | http-client-types.ts                    |
+| ignoredFields                         | setIgnoredFields                                                                  | update-request-builder-base.ts          |
+| initializeCustomFields                | setCustomFields                                                                   | entity.ts                               |
+| isMulti?                              | isCollection                                                                      | vdm-types.ts                            |
+| isMultiLink?                          | isCollection                                                                      | vdm-types.ts                            |
+| jwtBearerTokenGrant                   | @sap/xssec                                                                        | xsuaa-service.ts                        |
+| JWTHeader                             | JwtHeader                                                                         | jwt.ts                                  |
+| JWTPayload                            | JwtPayload                                                                        | jwt.ts                                  |
+| MapType                               | Record<string, T>                                                                 | types.ts                                |
+| mergeHeaders                          | mergeIgnoreCase                                                                   | header-util.ts                          |
+| NumberField                           | OrderableEdmTypeField                                                             | number-field.ts                         |
+| NumberFieldBase                       | OrderableEdmTypeField                                                             | number-field.ts                         |
+| ODataBatchChangeSet                   | BatchChangeSet                                                                    | batch-change-set.ts                     |
+| ODataBatchChangeSet                   | BatchChangeSet                                                                    | batch-change-set.ts                     |
+| ODataCreateRequestConfig              | Use superclass instead.                                                           | odata-create-request-config.ts          |
+| ODataDeleteRequestConfig              | Use superclass instead.                                                           | odata-delete-request-config.ts          |
+| ODataFunctionImportRequestConfig      | Use superclass instead.                                                           | odata-function-import-request-config.ts |
+| ODataGetAllRequestConfig              | Use superclass instead.                                                           | odata-get-all-request-config.ts         |
+| ODataGetByKeyRequestConfig            | Use superclass instead.                                                           | odata-get-by-key-request-config.ts      |
+| ODataUpdateRequestConfig              | Use superclass instead.                                                           | odata-update-request-config.ts          |
+| parseType                             | isEdmType and complexTypeName                                                     | edmx-to-vdm-util.ts                     |
+| protected getCurrentMapKeys           | asObject                                                                          | entity.ts                               |
+| refreshTokenGrant                     | jwtBearerTokenGrant                                                               | xsuaa-service.ts                        |
+| RegisteredJWTClaims                   | This interface will not be replaced. Use the higher level JWT types directly.     | jwt.ts                                  |
+| RegisteredJWTClaimsBasic              | This interface will not be replaced. Use the higher level JWT types directly.     | jwt.ts                                  |
+| RegisteredJWTClaimsTenant             | This interface will not be replaced. Use the higher level JWT types directly.     | tenant.ts                               |
+| RegisteredJWTClaimsUser               | This interface will not be replaced. Use the higher level JWT types directly.     | user.ts                                 |
+| replaceDuplicateKeys                  | mergeLeftIgnoreCase                                                               | header-util.ts                          |
+| requiredFields                        | setRequiredFields                                                                 | update-request-builder-base.ts          |
+| SelectableEdmTypeField                | SelectableT                                                                       | selectable.ts                           |
+| serializersCommom                     | serializersCommon                                                                 | payload-value-converter.ts              |
+| static clone                          | clone                                                                             | link.ts                                 |
+| static clone                          | clone                                                                             | one-to-one-link.ts                      |
+| StringField                           | EdmTypeField                                                                      | string-field.ts                         |
+| StringFieldBase                       | EdmTypeField                                                                      | string-field.ts                         |
+| TimeField                             | OrderableEdmTypeField                                                             | time-field.ts                           |
+| TimeFieldBase                         | OrderableEdmTypeField                                                             | time-field.ts                           |
+| toBatchChangeSet                      | serializeChangeSet                                                                | batch-request-serializer.ts             |
+| toBatchChangeSet                      | serializeChangeSet                                                                | batch-request-serializer.ts             |
+| toPascalCase                          | @sap-cloud-sdk/util                                                               | name-converter.ts                       |
+| toPropertyFormat                      | @sap-cloud-sdk/util                                                               | name-converter.ts                       |
+| toSanitizedHeaderObject               | toSanitizedObject                                                                 | header-util.ts                          |
+| toStaticPropertyFormat                | @sap-cloud-sdk/util                                                               | name-converter.ts                       |
+| toTitleFormat                         | @sap-cloud-sdk/util                                                               | name-converter.ts                       |
+| toTypeNameFormat                      | @sap-cloud-sdk/util                                                               | name-converter.ts                       |
+| userTokenGrant                        | jwtBearerTokenGrant                                                               | xsuaa-service.ts                        |
+| withCustomHeaders                     | addCustomHeaders                                                                  | request-builder-base.ts                 |
+| withCustomQueryParameters             | addCustomQueryParameters                                                          | request-builder-base.ts                 |
+| withCustomServicePath                 | setCustomServicePath                                                              | request-builder-base.ts                 |
+| withCustomVersionIdentifier           | setVersionIdentifier                                                              | update-request-builder-base.ts          |
+
+<!-- vale on -->
