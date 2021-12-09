@@ -7,10 +7,14 @@ Note that you can create very complex queries within the expand scope:
 <TabItem value="major">
 
 ```ts
-peopleApi.requestBuilder()
+peopleApi
+  .requestBuilder()
   .getAll()
   .expand(
-    People.FRIENDS.select(peopleApi.schema.FIRST_NAME, peopleApi.schema.ADDRESS_INFO)
+    People.FRIENDS.select(
+      peopleApi.schema.FIRST_NAME,
+      peopleApi.schema.ADDRESS_INFO
+    )
       .filter(peopleApi.schema.LAST_NAME.equals('Miller'))
       .orderBy(asc(peopleApi.schema.GENDER))
       .top(1)

@@ -11,16 +11,20 @@ For non-navigational property the `select` behaves as follows:
 
 ```ts
 const businessPartnerApi = new BusinessPartnerApi();
-businessPartnerApi.requestBuilder()
+businessPartnerApi
+  .requestBuilder()
   .getAll()
-  .select(businessPartnerApi.schema.FIRST_NAME, businessPartnerApi.schema.LAST_NAME)
+  .select(
+    businessPartnerApi.schema.FIRST_NAME,
+    businessPartnerApi.schema.LAST_NAME
+  )
   .execute(destination);
 ```
 
 </TabItem>
 <TabItem value="deprecated">
 
-  ```ts
+```ts
 BusinessPartner.requestBuilder()
   .getAll()
   .select(BusinessPartner.FIRST_NAME, BusinessPartner.LAST_NAME)

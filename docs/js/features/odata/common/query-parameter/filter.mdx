@@ -16,7 +16,8 @@ Filters are also built via the fields available on the schema property of the en
     - Or have first name 'Mallory'
 */
 const businessPartnerApi = new BusinessPartnerApi();
-businessPartnerApi.requestBuilder()
+businessPartnerApi
+  .requestBuilder()
   .getAll()
   .filter(
     or(
@@ -29,6 +30,7 @@ businessPartnerApi.requestBuilder()
   )
   .execute(destination);
 ```
+
 </TabItem>
 
 <TabItem value="deprecated">
@@ -54,6 +56,7 @@ BusinessPartner.requestBuilder()
   )
   .execute(destination);
 ```
+
 </TabItem>
 </Tabs>
 
@@ -86,6 +89,7 @@ In addition, the negation operator `not` can also be used for wrapping any filte
   )
 )
 ```
+
 </TabItem>
 <TabItem value="deprecated">
 
@@ -107,7 +111,6 @@ In addition, the negation operator `not` can also be used for wrapping any filte
 
 </TabItem>
 </Tabs>
-
 
 The `$filter` parameter will then be generated like below:
 
@@ -163,4 +166,3 @@ The example above can be shortened to:
 
 </TabItem>
 </Tabs>
-

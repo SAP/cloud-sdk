@@ -9,7 +9,8 @@ It is also possible to create an entity together with related entities in a sing
 ```ts
 // build a business partner instance with one linked address
 const businessPartnerApi = new BusinessPartnerApi();
-const businessPartner = businessPartnerApi.entityBuilder()
+const businessPartner = businessPartnerApi
+  .entityBuilder()
   .firstName('John')
   .lastName('Doe')
   .businessPartnerCategory('1')
@@ -25,7 +26,10 @@ const businessPartner = businessPartnerApi.entityBuilder()
   .build();
 
 // execute the create request
-businessPartnerApi.requestBuilder().create(businessPartner).execute(myDestination);
+businessPartnerApi
+  .requestBuilder()
+  .create(businessPartner)
+  .execute(myDestination);
 ```
 
 </TabItem>
@@ -54,8 +58,6 @@ BusinessPartner.requestBuilder().create(businessPartner).execute(myDestination);
 
 </TabItem>
 </Tabs>
-
-
 
 :::note Troubleshooting
 

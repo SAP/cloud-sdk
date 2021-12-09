@@ -17,7 +17,8 @@ In SAP S/4HANA, navigation properties typically start with `TO_`.
 
 ```ts
 const businessPartnerApi = new BusinessPartnerApi();
-businessPartnerApi.requestBuilder()
+businessPartnerApi
+  .requestBuilder()
   .getAll()
   .select(
     businessPartnerApi.schema.FIRST_NAME,
@@ -66,7 +67,8 @@ One can also select properties of the expanded navigation property:
 ```ts
 const businessPartnerApi = new BusinessPartnerApi();
 const businessPartnerAddressApi = new BusinessPartnerAddressApi();
-businessPartnerApi.requestBuilder()
+businessPartnerApi
+  .requestBuilder()
   .getAll()
   .select(
     businessPartnerApi.schema.FIRST_NAME,
@@ -96,7 +98,6 @@ BusinessPartner.requestBuilder()
 
 </TabItem>
 </Tabs>
-
 
 The above translates to the following query parameters:
 

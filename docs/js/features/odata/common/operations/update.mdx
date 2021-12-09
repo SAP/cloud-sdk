@@ -28,8 +28,9 @@ To update the whole entity use `replaceWholeEntityWithPut`:
 <Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
 <TabItem value="major">
 
-  ```ts
-new BusinessPartnerApi().requestBuilder()
+```ts
+new BusinessPartnerApi()
+  .requestBuilder()
   .update(businessPartner)
   .replaceWholeEntityWithPut();
 ```
@@ -37,7 +38,7 @@ new BusinessPartnerApi().requestBuilder()
   </TabItem>
 <TabItem value="deprecated">
 
-  ```ts
+```ts
 BusinessPartner.requestBuilder()
   .update(businessPartner)
   .replaceWholeEntityWithPut();
@@ -54,8 +55,9 @@ If you want to force an update of the entity regardless of the ETag configure th
 <Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
 <TabItem value="major">
 
-  ```ts
-new BusinessPartnerApi().requestBuilder()
+```ts
+new BusinessPartnerApi()
+  .requestBuilder()
   .update(businessPartner)
   .ignoreVersionIdentifier();
 ```
@@ -63,7 +65,7 @@ new BusinessPartnerApi().requestBuilder()
   </TabItem>
 <TabItem value="deprecated">
 
-  ```ts
+```ts
 BusinessPartner.requestBuilder()
   .update(businessPartner)
   .ignoreVersionIdentifier();

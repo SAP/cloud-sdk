@@ -10,15 +10,23 @@ If you want to get all people with first name `John` the query is:
 <TabItem value="major">
 
 ```ts
-peopleApi.requestBuilder().getAll().filter(peopleApi.schema.FIRST_NAME.equals('John'));
+peopleApi
+  .requestBuilder()
+  .getAll()
+  .filter(peopleApi.schema.FIRST_NAME.equals('John'));
 ```
 
 If you want to get all people who have at least one friend with first name `John` the query is:
 
 ```ts
-peopleApi.requestBuilder()
+peopleApi
+  .requestBuilder()
   .getAll()
-  .filter(peopleApi.schema.FRIENDS.filter(any(peopleApi.schema.FIRST_NAME.equals('John'))));
+  .filter(
+    peopleApi.schema.FRIENDS.filter(
+      any(peopleApi.schema.FIRST_NAME.equals('John'))
+    )
+  );
 ```
 
 </TabItem>
@@ -48,10 +56,14 @@ In case you want to get all people but reduce the friends in the response, the f
 <TabItem value="major">
 
 ```ts
-peopleApi.requestBuilder()
+peopleApi
+  .requestBuilder()
   .getAll()
-  .expand(peopleApi.schema.FRIENDS.filter(peopleApi.schema.FIRST_NAME.equals('John')));
+  .expand(
+    peopleApi.schema.FRIENDS.filter(peopleApi.schema.FIRST_NAME.equals('John'))
+  );
 ```
+
 </TabItem>
 <TabItem value="deprecated">
 
@@ -60,9 +72,8 @@ People.requestBuilder()
   .getAll()
   .expand(People.FRIENDS.filter(People.FIRST_NAME.equals('John')));
 ```
+
 </TabItem>
 </Tabs>
-
-
 
 This will return all people but only the friends with the first name `John` will be included in the response.

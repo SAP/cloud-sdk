@@ -17,7 +17,8 @@ import {
   BusinessPartnerAddressApi
 } from '@sap/cloud-sdk-vdm-business-partner-service';
 
-const businessPartner = new BusinessPartnerApi().entityBuilder()
+const businessPartner = new BusinessPartnerApi()
+  .entityBuilder()
   .firstName('Peter')
   .lastName('Pan')
   .toBusinessPartnerAddress([
@@ -61,11 +62,10 @@ To achieve this, pass an object the `.withCustomFields` method, where the keys d
 <TabItem value="major">
 
 ```ts
-import {
-  BusinessPartnerApi
-} from '@sap/cloud-sdk-vdm-business-partner-service';
+import { BusinessPartnerApi } from '@sap/cloud-sdk-vdm-business-partner-service';
 
-const businessPartner = new BusinessPartnerApi().entityBuilder()
+const businessPartner = new BusinessPartnerApi()
+  .entityBuilder()
   .firstName('Peter')
   .withCustomFields({
     myCustomField: 'this is custom'
@@ -77,9 +77,7 @@ const businessPartner = new BusinessPartnerApi().entityBuilder()
 <TabItem value="deprecated">
 
 ```ts
-import {
-  BusinessPartner
-} from '@sap/cloud-sdk-vdm-business-partner-service';
+import { BusinessPartner } from '@sap/cloud-sdk-vdm-business-partner-service';
 
 const businessPartner = BusinessPartner.builder()
   .firstName('Peter')
@@ -91,4 +89,3 @@ const businessPartner = BusinessPartner.builder()
 
 </TabItem>
 </Tabs>
-

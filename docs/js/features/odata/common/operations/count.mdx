@@ -21,8 +21,6 @@ BusinessPartner.requestBuilder().getAll().count();
 </TabItem>
 </Tabs>
 
-
-
 The return type of count requests is a `Promise<number>`.
 You can combine the `count()` with filter conditions.
 To get the number of business partners with first name `John` execute the following request:
@@ -32,7 +30,8 @@ To get the number of business partners with first name `John` execute the follow
 
 ```ts
 const businessPartnerApi = new BusinessPartnerApi();
-businessPartnerApi.requestBuilder()
+businessPartnerApi
+  .requestBuilder()
   .filter(businessPartnerApi.schema.FIRST_NAME.equals('John'))
   .count()
   .getAll();
@@ -41,7 +40,7 @@ businessPartnerApi.requestBuilder()
 </TabItem>
 <TabItem value="deprecated">
 
-  ```ts
+```ts
 BusinessPartner.requestBuilder()
   .filter(BusinessPartner.FIRST_NAME.equals('John'))
   .count()
@@ -50,8 +49,6 @@ BusinessPartner.requestBuilder()
 
 </TabItem>
 </Tabs>
-
-
 
 As defined in the OData spec `count` is not affected by `top`, `skip`, and `orderBy`.
 :::note `top()` and `skip()` are ignored for count
