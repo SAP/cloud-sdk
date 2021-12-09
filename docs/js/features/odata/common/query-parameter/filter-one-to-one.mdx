@@ -1,6 +1,29 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 In addition to basic properties, filters can also be applied on one-to-one navigation properties.
 The example below shows how to filter on the `TO_CUSTOMER`, which is a one-to-one navigation property of the BusinessPartner entity.
 Please note, the `CUSTOMER_NAME` and `CUSTOMER_FULL_NAME` are properties of the entity `Customer`, which is the type of the one-to-one navigation property `TO_CUSTOMER`.
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+```ts
+/*
+  Get all business partners that match all the following conditions:
+    - Have customer with the customer name 'name'
+    - Have customer with the customer full name 'fullName'
+*/
+.filter(
+  businessPartnerApi.schema.TO_CUSTOMER.filter(
+    customerApi.schema.CUSTOMER_NAME.equals('name'),
+    customerApi.schema.CUSTOMER_FULL_NAME.equals('fullName')
+  )
+)
+```
+
+</TabItem>
+<TabItem value="deprecated">
 
 ```ts
 /*
@@ -15,6 +38,9 @@ Please note, the `CUSTOMER_NAME` and `CUSTOMER_FULL_NAME` are properties of the 
   )
 )
 ```
+
+</TabItem>
+</Tabs>
 
 The generated `$filter` will be:
 

@@ -1,7 +1,15 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 Assume you have already created a business partner and would like to add a new address to it:
 
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
 ```ts
-const existingBusinessPartner = await BusinessPartner.requestBuilder()
+const businessPartnerApi = new BusinessPartnerApi();
+const existingBusinessPartner = await businessPartnerApi.requestBuilder()
   .getByKey(myID)
   .execute(myDestination);
 
@@ -14,8 +22,45 @@ const newAddress = BusinessPartnerAddress.builder()
   .build();
 ```
 
+</TabItem>
+<TabItem value="deprecated">
+
+```ts
+const existingBusinessPartner = await BusinessPartner.requestBuilder()
+  .getByKey(myID)
+  .execute(myDestination);
+
+const newAddress = new BusinessPartnerAddressApi().builder()
+  .country('DE')
+  .postalCode('14469')
+  .cityName('Potsdam')
+  .streetName('Konrad-Zuse-Ring')
+  .houseNumber('10')
+  .build();
+```
+
+</TabItem>
+</Tabs>
+
+
 This can be done by using the `asChildOf` method which allows creating an entity as a child of an existing entity.
 You need to give the parent object and the field connecting the two entities:
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+```ts
+new BusinessPartnerAddressApi().requestBuilder()
+  .create(newAddress)
+  .asChildOf(
+    existingBusinessPartner,
+    businessPartnerApi.schema.TO_BUSINESS_PARTNER_ADDRESS
+  )
+  .execute(myDestination);
+```
+
+</TabItem>
+<TabItem value="deprecated">
 
 ```ts
 BusinessPartnerAddress.requestBuilder()
@@ -26,3 +71,6 @@ BusinessPartnerAddress.requestBuilder()
   )
   .execute(myDestination);
 ```
+
+</TabItem>
+</Tabs>
