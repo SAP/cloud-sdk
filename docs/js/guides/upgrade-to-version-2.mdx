@@ -23,6 +23,7 @@ Follow the following steps:
 - Find the used clients in your `package.json`.
 - Change the used version from 1.X.Y to 2.0.0.
 - Find the invocations of the request builders.
+- Change the `requestBuillder()` call as described [here](#newRequestApi)
 - Change the `execute()` call as described [here](#executeAPIChanges)
 
 ### Update Generated API Clients
@@ -35,6 +36,7 @@ We assume that you have installed the generator as a local `devDependency` in yo
 - Change the used version from 1.X.Y to 2.0.0 and execute `npm i`.
 - Regenerate the client with the updated generator.
 - Find the invocations of the request builders.
+- Change the `requestBuillder()` call as described [here](#newRequestApi)
 - Change the `execute()` call as described [here](#executeAPIChanges)
 
 ### Deprecated Methods
@@ -98,6 +100,37 @@ Please create a [support issue](https://github.com/SAP/cloud-sdk-js/issues/new/c
 
 ## Appendix
 
+###<a name="newRequestApi" /> Breaking Change on the RequestBuilder API
+
+In order to make the [middle ware concept](../features/odata/execute-odata-request#setting-custom-middleware) possible, it was necessary to add more state to the `requestBuillder`.
+This means the `requestBuillder` is not a static method anymore but a instance method on an api object:
+
+```js
+//Version 1.X.Y
+MyEntity.requestBuillder()
+
+//Version 2.0.0
+new MyEntityApi.requestBuillder()
+```
+
+The same is true for the static properties to build select or filters.
+These are also part of an instance now inside a `schema` property:
+
+```ts
+//Version 1.X.Y
+MyEntity.requestBuilder()
+  .getAll()
+  .select(MyEntity.FIRST_NAME, MyEntity.LAST_NAME)
+  .execute(destination);
+
+//Version 2.0.0
+const api = new MyEntityApi.requestBuillder()
+api.requestBuilder()
+      .getAll()
+      .select(api.schema.FIRST_NAME, api.schema.LAST_NAME)
+      .execute(destination);
+```
+
 ###<a name="executeAPIChanges"/> Breaking Change on the Execute API
 
 The breaking change which will affect most users is the change of the execute methods.
@@ -114,7 +147,7 @@ MyEntity.requestBuillder()
   );
 
 //Version 2.0.0
-MyEntity.requestBuillder().getAll().execute({
+new MyEntityApi.requestBuillder().getAll().execute({
   destinationName: 'myDestination',
   jwt: 'yourJwt',
   useCache: true
