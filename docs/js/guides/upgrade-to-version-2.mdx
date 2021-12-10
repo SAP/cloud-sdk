@@ -14,6 +14,13 @@ Depending on your project, some of the steps might not be applicable.
 We have provided prerequisites at the beginning of each section.
 If it does not apply to your project, please proceed to the next one.
 
+### EcmaScript Runtime
+
+We changed the compilation target of our source code from `es5` to `es2019`.
+Depending on your configuration this may lead to compilation errors (TypeScript) or runtime errors in (JavaScript).
+If you run a recent node version greater 12 you should be fine from a JavaScript perspective.
+Please select in your `tsconfig.json` a value for the `target` which is compatible with `es2019`.
+
 ### Update Public API Clients
 
 **Prerequisite**: Your project uses published API clients like `https://www.npmjs.com/package/@sap/cloud-sdk-vdm-business-partner-service`.
@@ -98,7 +105,7 @@ Please create a [support issue](https://github.com/SAP/cloud-sdk-js/issues/new/c
 
 ## Appendix
 
-###<a name="executeAPIChanges"/> Breaking Change on the Execute API
+### <a name="executeAPIChanges"/> Breaking Change on the Execute API
 
 The breaking change which will affect most users is the change of the execute methods.
 In the past there was a separate `DestinationNameAndJwt` object and a `DestinationOptions` to define how a destination was fetched from the service.
@@ -125,7 +132,7 @@ You also see a second important detail: The optional parameter `userJwt` is rena
 Note that all options besides the `destinationName` are optional.
 We have picked the `execute()` method of the request builders to illustrate the change.
 But the same changes apply to all places the two objects ( `DestinationNameAndJwt` and `DestinationOptions`) were used.
-Prominent examples are the `executeHttpRequest()` or `getDestination()` methods:
+Prominent examples are the `executeHttpRequest()`,`executeRaw()` or `getDestination()` methods:
 
 ```js
 //Version 1.X.Y
@@ -154,7 +161,7 @@ executeHttpRequest(
 );
 ```
 
-###<a name="findNewPackage"/> How to find the new Packages
+### <a name="findNewPackage"/> How to find the new Packages
 
 We have split the `@sap-cloud-sdk/core` package into the following smaller packages:
 
@@ -166,11 +173,14 @@ We have split the `@sap-cloud-sdk/core` package into the following smaller packa
 - `@sap-cloud-sdk/openapi` which contains methods for openapi clients.
 
 In most situations, it should be natural in which module the original object is located.
-If you are unsure, you can do a code search on GitHub e.g. `https://github.com/SAP/cloud-sdk-js/search?q=function+getDestination` to quickly find the package.
+You can search for the method at two places:
+
+- You can do a code search on GitHub e.g. `https://github.com/SAP/cloud-sdk-js/search?q=function+getDestination` to quickly find the package.
+- You can search in the [api specification](https://sap.github.io/cloud-sdk/api/) and select a version 2.0.
 
 Note that for the `executeHttpRequest`, the new API offers all the destination retrieval options.
 
-###<a name="deprecatedList"/> Deprecated Methods
+### <a name="deprecatedList"/> Deprecated Methods
 
 The table below gives a list of the removed methods for which a replacement is provided.
 
@@ -178,7 +188,7 @@ The table below gives a list of the removed methods for which a replacement is p
 
 | deprecated method                     | replacement                                                                       | source file                             |
 | ------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------- |
-| \_fieldName                           | field                                                                             | filter.ts                               |
+| \_fieldName                           | field (this a property of the Filter class)                                       | filter.ts                               |
 | addAuthorizationHeader                | buildAuthorizationHeaders                                                         | authorization-header.ts                 |
 | AnyField                              | EdmTypeField                                                                      | any-field.ts                            |
 | AnyFieldBase                          | EdmTypeField                                                                      | any-field.ts                            |
