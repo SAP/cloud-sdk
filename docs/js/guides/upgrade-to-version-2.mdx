@@ -11,28 +11,39 @@ description: This document will guide you through the upgrade process from versi
 
 This document will guide you through the steps necessary to upgrade to version 2.0 of the SAP Cloud SDK.
 Depending on your project, some of the steps might not be applicable.
+The ToDo list is:
+
+- [Upgrade ECMAScript runtime to "es2019" or higher](#updateEcmaScript)
+- [Update Public API Clients](#updatePublicClient)
+- [Update Generated API Clients](#updateGeneratedClient)
+- [Replace Core Imports](#replaceCoreImports)
+
+
 We have provided prerequisites at the beginning of each section.
 If it does not apply to your project, please proceed to the next one.
 
-### EcmaScript Runtime
+### <a name="updateEcmaScript"/> Update EcmaScript Runtime
 
 We changed the compilation target of our source code from `es5` to `es2019`.
 Depending on your configuration this may lead to compilation errors (TypeScript) or runtime errors in (JavaScript).
 If you run a recent node version greater 12 you should be fine from a JavaScript perspective.
 Please select in your `tsconfig.json` a value for the `target` which is compatible with `es2019`.
 
-### Update Public API Clients
+### <a name="updatePublicClient"/> Update Public API Clients
 
 **Prerequisite**: Your project uses published API clients like `https://www.npmjs.com/package/@sap/cloud-sdk-vdm-business-partner-service`.
 
-Follow the following steps:
+We will publish updated clients containing version 2.0 of the SDK after the beta phase.
+Once these clients are available, follow the following steps:
 
 - Find the used clients in your `package.json`.
-- Change the used version from 1.X.Y to 2.0.0.
+- Change the used version of the client from 1.X.Y to 2.0.0.
 - Find the invocations of the request builders.
 - Change the `execute()` call as described [here](#executeAPIChanges)
 
-### Update Generated API Clients
+If you want to check a client before we publish it, follow the step below to generate it locally.
+
+### <a name="updateGeneratedClient"/> Update Generated API Clients
 
 **Prerequisite**: Your project uses generated API clients.
 
@@ -44,21 +55,7 @@ We assume that you have installed the generator as a local `devDependency` in yo
 - Find the invocations of the request builders.
 - Change the `execute()` call as described [here](#executeAPIChanges)
 
-### Deprecated Methods
-
-We have deprecated objects in version 1.X.Y and in version 2.0 they were removed.
-If you use TypesScript, the replacement is simple:
-
-- Check the objects you use.
-- Your IDE should cross out deprecated methods.
-- The JSDoc of the method will tell you how to handle the deprecated method e.g. `@deprecated Since v1.20.0. Use 'buildAuthorizationHeaders' instead.`
-
-If you use JavaScript, more manual effort is needed.
-You could either proactively investigate the [deprecated object list](#deprecatedList) and replace findings.
-Alternatively, you can also proceed with the next step and see which imports fail.
-Then check if the method is deprecated.
-
-### Update Core Imports
+### <a name="replaceCoreImports"/> Replace Core Imports
 
 **Prerequisite**: Your project used method imports from `@sap-cloud-sdk/core`
 
@@ -72,18 +69,18 @@ These imports need to be adjusted:
 - Replace the old import with package name.
 
 Note that we reduced the number of objects in the stable public API.
+There are three cases:
+- The object is part of the public api: `{ publicApiMethod } from '@sap-cloud-sdk/connectivity'`
+- The object is moved to the internal api: `{ internalApiMethod } from '@sap-cloud-sdk/connectivity/internal'`
+- The object is removed without replacement see: [deprecated object list](#deprecatedList)
+
 Your IDE should warn you if a module has no exported member with the given name.
-In such a case, the method is reachable under the `internal` path:
-
-```
-{ publicApiMethod } from '@sap-cloud-sdk/connectivity'
-{ internalApiMethod } from '@sap-cloud-sdk/connectivity/internal'
-```
-
-We also try to keep the internal API stable and guarantee this for patch version increases.
+The use of the internal api is considered a temporary quick fix.
+If you need functionality please [open an issue](https://github.com/SAP/cloud-sdk-js/issues/new/choose) and state your requirements.
 Details on the API contract are discussed in this [ADR](https://github.com/SAP/cloud-sdk-js/blob/2.0/knowledge-base/adr/0028-public-api-extraction.md)
 
-### Serializing and Deserializing of Entities
+
+### <a name="" /> AdjustSerializing and Deserializing of Entities
 
 **Prerequisite**: You consume non primitive entity properties like dates, duration and times.
 
