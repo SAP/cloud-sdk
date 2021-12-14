@@ -35,7 +35,7 @@ Please select in your `tsconfig.json` a value for the `target` which is compatib
 
 **Prerequisite**: Your project uses published API clients like `https://www.npmjs.com/package/@sap/cloud-sdk-vdm-business-partner-service`.
 
-We will publish updated clients containing version 2.0 of the SDK after the beta phase.
+We will publish updated clients containing version 2.0 of the SAP Cloud SDK after the beta phase.
 Once these clients are available, follow the following steps:
 
 - Find the used clients in your `package.json`.
@@ -73,12 +73,12 @@ These imports need to be adjusted:
 Note that we reduced the number of objects in the stable public API.
 There are three cases:
 
-- The object is part of the public api: `{ publicApiMethod } from '@sap-cloud-sdk/connectivity'`
-- The object is moved to the internal api: `{ internalApiMethod } from '@sap-cloud-sdk/connectivity/internal'`
+- The object is part of the public API: `{ publicApiMethod } from '@sap-cloud-sdk/connectivity'`
+- The object is moved to the internal API: `{ internalApiMethod } from '@sap-cloud-sdk/connectivity/internal'`
 - The object is removed without replacement see: [deprecated object list](#deprecatedList)
 
 Your IDE should warn you if a module has no exported member with the given name.
-The use of the internal api is considered a temporary quick fix.
+The use of the internal API is considered a temporary quick fix.
 If you need functionality please [open an issue](https://github.com/SAP/cloud-sdk-js/issues/new/choose) and state your requirements.
 Details on the API contract are discussed in this [ADR](https://github.com/SAP/cloud-sdk-js/blob/2.0/knowledge-base/adr/0028-public-api-extraction.md)
 
@@ -176,7 +176,7 @@ In most situations, it should be natural in which module the original object is 
 You can search for the method at two places:
 
 - You can do a code search on GitHub e.g. `https://github.com/SAP/cloud-sdk-js/search?q=function+getDestination` to quickly find the package.
-- You can search in the [api specification](https://sap.github.io/cloud-sdk/api/) and select a version 2.0.
+- You can search in the [API specification](https://sap.github.io/cloud-sdk/api/) and select a version 2.0.
 
 Note that for the `executeHttpRequest`, the new API offers all the destination retrieval options.
 
