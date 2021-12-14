@@ -14,10 +14,12 @@ Depending on your project, some of the steps might not be applicable.
 The ToDo list is:
 
 - [Upgrade ECMAScript runtime to "es2019" or higher](#updateEcmaScript)
-- [Update Public API Clients](#updatePublicClient)
+- [Update Public API Clients - possible after beta phase](#updatePublicClient)
 - [Update Generated API Clients](#updateGeneratedClient)
 - [Replace Core Imports](#replaceCoreImports)
-
+  <!--  Put back after feature is released -->
+  <!-- - [Adjust Serializing and Deserializing of Entities](#adjustSerializer) -->
+- [Get Support if you face a problem in the migration process](#getSupport)
 
 We have provided prerequisites at the beginning of each section.
 If it does not apply to your project, please proceed to the next one.
@@ -70,6 +72,7 @@ These imports need to be adjusted:
 
 Note that we reduced the number of objects in the stable public API.
 There are three cases:
+
 - The object is part of the public api: `{ publicApiMethod } from '@sap-cloud-sdk/connectivity'`
 - The object is moved to the internal api: `{ internalApiMethod } from '@sap-cloud-sdk/connectivity/internal'`
 - The object is removed without replacement see: [deprecated object list](#deprecatedList)
@@ -79,22 +82,22 @@ The use of the internal api is considered a temporary quick fix.
 If you need functionality please [open an issue](https://github.com/SAP/cloud-sdk-js/issues/new/choose) and state your requirements.
 Details on the API contract are discussed in this [ADR](https://github.com/SAP/cloud-sdk-js/blob/2.0/knowledge-base/adr/0028-public-api-extraction.md)
 
+<!--  Put back after feature is released -->
+<!-- ### <a name="adjustSerializer"/> Adjust Serializing and Deserializing of Entities -->
 
-### <a name="" /> AdjustSerializing and Deserializing of Entities
+<!-- **Prerequisite**: You consume non-primitive entity properties like dates, duration and times. -->
 
-**Prerequisite**: You consume non-primitive entity properties like dates, duration and times.
+<!-- In the past, one OData datatype was always transformed to the same datatype in TypeScript. -->
+<!-- For example, time related properties were transformed to `moment` instances. -->
+<!-- We introduced a new [middle ware concept](../features/odata/execute-odata-request#setting-custom-middleware) to make this more flexible. -->
 
-In the past, one OData datatype was always transformed to the same datatype in TypeScript.
-For example, time related properties were transformed to `moment` instances.
-We introduced a new [middle ware concept](../features/odata/execute-odata-request#setting-custom-middleware) to make this more flexible.
+<!-- The default serialization for time related properties is changed from `moment` to `temporal`. -->
+<!-- Note that in the `beta` phase of the 2.0 version, the default remains `moment`. -->
+<!-- Since `moment` is a discontinued project with large size we recommend to stick with the new standard. -->
+<!-- Please adjust your code base to use the [temporal](https://tc39.es/proposal-temporal/docs/) date/time objects. -->
+<!-- If this is not possible in your case please follow the [documentation](../features/odata/execute-odata-request#setting-custom-middleware) to switch back to the `moment` serialization. -->
 
-The default serialization for time related properties is changed from `moment` to `temporal`.
-Note that in the `beta` phase of the 2.0 version, the default remains `moment`.
-Since `moment` is a discontinued project with large size we recommend to stick with the new standard.
-Please adjust your code base to use the [temporal](https://tc39.es/proposal-temporal/docs/) date/time objects.
-If this is not possible in your case please follow the [documentation](../features/odata/execute-odata-request#setting-custom-middleware) to switch back to the `moment` serialization.
-
-### You are facing issues with the Upgrade
+### <a name="getSupport"/> Get Support
 
 **Prerequisite\_**: You tried to do the steps above but hit some impediments.
 
