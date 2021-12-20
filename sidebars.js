@@ -183,7 +183,8 @@ module.exports = {
           'js/guides/upgrade-to-version-2',
           'js/guides/bas-external-system',
           'js/guides/tutorial-overview-sdk-js',
-          'js/guides/sdk-in-browser'
+          'js/guides/sdk-in-browser',
+          'js/guides/how-to-use-the-approuter'
         ]
       },
       {
