@@ -1,3 +1,9 @@
+import imports1 from '@site/static/img/imports-in-v1.png';
+import imports2 from '@site/static/img/imports-in-v2.png';
+import ecma2019 from '@site/static/img/ecma2019.png';
+import es5 from '@site/static/img/es5.png';
+import temporal from '@site/static/img/temporal.png';
+
 # Announcing Version 2 Beta
 
 ## What Is Included in the Beta?
@@ -23,12 +29,10 @@ Internal functions are not exported in our v2 packages to make it easier to find
 We expose internals via a special import path, but offer no stability guarantee for this internal interface.
 
 This means you will see this:
-
-![autocomplete for import from core](./img/imports-in-v2.png)
+<img style={{ maxWidth: '75%', height:'auto'}} src={imports2} alt="autocomplete for import from core" />
 
 rather than this:
-
-![autocomplete for import from odata-v2](./img/imports-in-v1.png)
+<img style={{ maxWidth:'75%', height:'auto'}} src={imports1} alt="autocomplete for import from odata-v2" />
 
 ### Increase Compilation Target to ECMAScript 2019
 
@@ -36,10 +40,10 @@ This will only affect you if you run your application in a legacy environment.
 It makes the compiled JavaScript code a little cleaner, as in this example.
 
 Old:
-![file-generator in ES5](./img/es5.png)
+<img style={{ maxWidth:'75%', height:'auto'}} src={es5} alt="file-generator in ES5" />
 
 New:
-![file-generator in ES19](./img/ecma2019.png)
+<img style={{ maxWidth:'75%', height:'auto'}} src={ecma2019} alt="file-generator in ECMAScript 2019" />
 
 The differences are minor, but it saves five lines of code in this file alone.
 
@@ -55,14 +59,14 @@ There is good progress toward a flexible middleware approach.
 Sadly, it is not ready for the beta release yet.
 To give you a sneak peek, here is an example for a middleware to serialize `Edm.DateTime`, `Edm.DateTimeOffset` and `Edm.Time` to `temporal`:
 
-![temporal serializer](./img/temporal.png)
+<img style={{ maxWidth:'75%', height:'auto'}} src={temporal} alt="example temporal serializer" />
 
 ## How Can I Use It?
 
 We publish the beta version on `npm`.
 You can install it by adding `@beta` after the package name (e.g. `npm install @sap-cloud-sdk/generator@beta`).
 
-::: warning
+:::caution
 
 If you use an OData or OpenAPI client, make sure it was generated with the same version as your other SAP Cloud SDK dependencies.
 

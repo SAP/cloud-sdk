@@ -195,7 +195,7 @@ module.exports = {
       {
         type: 'category',
         label: 'Releases',
-        items: ['js/release-policy', 'js/announcing-version-2']
+        items: ['js/release-policy', 'js/announcing-version-2', 'js/announcing-version-2-beta']
       },
       {
         type: 'category',

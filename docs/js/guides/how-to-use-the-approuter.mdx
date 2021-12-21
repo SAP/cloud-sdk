@@ -21,6 +21,7 @@ You will learn how to secure your application and configure multi-tenancy for pr
 
 When we want to enable multi-tenancy for our application, we use the [SAP Application Router](https://www.npmjs.com/package/@sap/approuter).
 The application router’s primary purpose is to be the single entry point of a microservice-based application and act as the application’s reverse proxy.
+
 Its responsibilities consist of dispatching requests to backend microservices, authenticating users, and serving static content.
 The application router checks if a given request has a valid JSON Web Token (JWT) when accessing a target service.
 If the request contains a valid JWT, the application router forwards the request to the target service; if the request does not contain a valid JWT, the user must authenticate.
@@ -119,7 +120,7 @@ Additionally, we use the `xsenv` library to retrieve our `xsuaa` credentials and
 Below is a simple example, where we get the `approuter-scaffold-xsuaa` which is bound to our application, use it in the `JWTStrategy`, and then forward the middleware to the passport.
 
 <!-- vale off -->
-``` TypeScript
+``` ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { JWTStrategy } from '@sap/xssec';
@@ -145,7 +146,7 @@ To enable principal propagation with this setup, we must forward the request to 
 
 First, we forward the request in our `app.controller.ts` to our principal propagation endpoint.
 
-``` TypeScript
+``` ts
 @Get('principal-business-partner')
   getPrincipalBusinessPartner(
     @Req() request: Request,
@@ -161,7 +162,7 @@ Then, we simply use the SAP Cloud SDK's `retrieveJwt` function to extract the JW
 Below is an example using the `BusinessPartnerService`, where we retrieve the top five business partners.
 
 <!-- vale off -->
-``` TypeScript
+``` ts
 import { Injectable } from '@nestjs/common';
 import { BusinessPartner } from '@sap/cloud-sdk-vdm-business-partner-service';
 import { retrieveJwt } from '@sap-cloud-sdk/core';
