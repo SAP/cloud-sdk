@@ -180,6 +180,7 @@ module.exports = {
         items: [
           'js/guides/migrate-sdk-application-from-btp-cf-to-kubernetes',
           'js/guides/migrate-to-open-source-version-of-cloud-sdk-for-javascript-typescript',
+          'js/guides/upgrade-to-version-2',
           'js/guides/bas-external-system',
           'js/guides/tutorial-overview-sdk-js',
           'js/guides/sdk-in-browser',
