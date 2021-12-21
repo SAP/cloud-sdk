@@ -24,9 +24,9 @@ The application router’s primary purpose is to be the single entry point of a 
 Its responsibilities consist of dispatching requests to backend microservices, authenticating users, and serving static content.
 The application router checks if a given request has a valid JSON Web Token (JWT) when accessing a target service.
 If the request contains a valid JWT, the application router forwards the request to the target service; if the request does not contain a valid JWT, the user must authenticate.
-As we can see in the diagramm below, we use an Identity Provider (IdP) to authenticate, the request is redirected to an IdP where a user gets authenticated and then redirected back to the application router for passing further according to its desired destination.
+As we can see in the diagram below, we use an Identity Provider (IdP) to authenticate, the request is redirected to an IdP where a user gets authenticated and then redirected back to the application router for passing further according to its desired destination.
 
-```mermaid
+``` mermaid
 sequenceDiagram
   User->>Approuter: sending request
   alt has no JWT
@@ -39,25 +39,27 @@ sequenceDiagram
   end
 ```
 
-### Approuter Setup
+### Application Router Setup
 
-To deploy our approuter in SAP BTP Cloud Foundry, we need to configure it first.
+To deploy our application router in SAP BTP Cloud Foundry, we need to configure it first.
 Let's walk through the four files we need to use.
 
 The `xs-security.json` file defines the security and deployment options for an application.
-With the below example, we enable the `shared` tenant-mode for our xsuaa instance, which we need for multi-tenancy.
-```json
+With the below example, we enable the `shared` tenant-mode for our `xsuaa` instance, which we need for multi-tenancy.
+
+``` json
 {
   "xsappname": "approuter-scaffold",
   "tenant-mode": "shared"
 }
 ```
 
-In the `xs-app.json` we specify to which backend service a request is forwarded to, and how this request has to be authenticated.
+In the `xs-app.json`, we specify to which backend service a request is forwarded to, and how this request has to be authenticated.
 We can optionally also specify a specific `identityProvider` that is used for the authentication.
 
-In the example below, we forward every request against the approuter's `/` route to the backend destination's `/` route.
-```json
+In the example below, we forward every request against the application router's `/` route to the backend destination's `/` route.
+
+``` json
 {
   "welcomeFile": "index.html",
   "routes": [{
@@ -68,8 +70,9 @@ In the example below, we forward every request against the approuter's `/` route
 }
 ```
 
-In the `package.json` we only have one dependency, the approuter module.
-```json
+In the `package.json` we only have one dependency, the application router module.
+
+``` json
 {
   "name": "approuter",
   "dependencies": {
@@ -81,13 +84,13 @@ In the `package.json` we only have one dependency, the approuter module.
 }
 ```
 
-The manifest contains our approuter, as well as environment variables which our approuter needs for multi-tenancy.
+The manifest contains our application router, as well as environment variables which our application router needs for multi-tenancy.
 As you see under `env`, we specify the `TENANT_HOST_PATTERN` and `destinations`.
 The `destinations` are the destinations we use in our `xs-app.json` where we forward requests to. 
 The `TENANT_HOST_PATTERN` is a regular expression that describes how a tenant name should be retrieved from the host.
-We also have to bind the xsuaa which we configured with our `xs-security.json` to the approuter.
+We also have to bind the `xsuaa` which we configured with our `xs-security.json` to the application router.
 
-```yaml
+``` yaml
 applications:
   - name: approuter-scaffold-approuter
     routes:
@@ -111,10 +114,12 @@ applications:
 To secure our application endpoints, we utilize the [passport](http://www.passportjs.org/packages/passport-jwt) library.
 It lets us authenticate endpoints using a JSON web token.
 
-Additionally, we use the `xsenv` library to retrieve our xsuaa credentials and the `xssec` library's `JWTStrategy` object for the middleware.
+Additionally, we use the `xsenv` library to retrieve our `xsuaa` credentials and the `xssec` library's `JWTStrategy` object for the middleware.
 
-Below is a simple example, where we get the `approuter-scaffold-xsuaa` which is bound to our application, use it in the JWTStrategy, and then forward the middleware to the passport.
-```TypeScript
+Below is a simple example, where we get the `approuter-scaffold-xsuaa` which is bound to our application, use it in the `JWTStrategy`, and then forward the middleware to the passport.
+
+<!-- vale off -->
+``` TypeScript
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { JWTStrategy } from '@sap/xssec';
@@ -132,12 +137,15 @@ async function bootstrap() {
 }
 bootstrap();
 ```
+<!-- vale on -->
 
 ## Enabling Principal Propagation
+
 To enable principal propagation with this setup, we must forward the request to our endpoints.
 
 First, we forward the request in our `app.controller.ts` to our principal propagation endpoint.
-```TypeScript
+
+``` TypeScript
 @Get('principal-business-partner')
   getPrincipalBusinessPartner(
     @Req() request: Request,
@@ -151,7 +159,9 @@ First, we forward the request in our `app.controller.ts` to our principal propag
 Then, we simply use the SAP Cloud SDK's `retrieveJwt` function to extract the JWT from our request, and forward it to the `execute` method.
 
 Below is an example using the `BusinessPartnerService`, where we retrieve the top five business partners.
-```TypeScript
+
+<!-- vale off -->
+``` TypeScript
 import { Injectable } from '@nestjs/common';
 import { BusinessPartner } from '@sap/cloud-sdk-vdm-business-partner-service';
 import { retrieveJwt } from '@sap-cloud-sdk/core';
@@ -170,3 +180,4 @@ export class PrincipalBusinessPartnerService {
   }
 }
 ```
+<!-- vale on -->
