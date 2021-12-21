@@ -3,10 +3,10 @@
 ## What Is Included in the Beta?
 
 We announced four noteworthy changes for our upcoming version increase:
-- Replace `moment.js` with a flexible middleware approach for deserialization
 - Split packages and export only the public interface
 - Increase compilation target to ECMAScript 2019
 - Remove deprecated functionality
+- ~~Replace `moment.js` with a flexible middleware approach for deserialization~~ (postponed)
 
 We think made good progress and would love you to try the beta.
 Let's take a look what was achieved so far.
@@ -24,11 +24,11 @@ We expose internals via a special import path, but offer no stability guarantee 
 
 This means you will see this:
 
-![autocomplete for import from core](./img/imports-in-v2.png)
+![autocomplete for import from core](img/imports-in-v2.png)
 
 rather than this:
 
-![autocomplete for import from odata-v2](./img/imports-in-v1.png)
+![autocomplete for import from odata-v2](img/imports-in-v1.png)
 
 ### Increase Compilation Target to ECMAScript 2019
 
@@ -36,10 +36,10 @@ This will only affect you if you run your application in a legacy environment.
 It makes the compiled JavaScript code a little cleaner, as in this example.
 
 Old:
-![file-generator in ES5](./img/es5.png)
+![file-generator in ES5](img/es5.png)
 
 New:
-![file-generator in ES19](./img/ecma2019.png)
+![file-generator in ES19](img/ecma2019.png)
 
 The differences are minor, but it saves five lines of code in this file alone.
 
@@ -49,17 +49,23 @@ We hope you replaced deprecated functionality already.
 If not, our upgrade guide lists all removed methods and their replacement.
 In total, we removed a bit more than 100 deprecated methods.
 
-### Replace `moment.js` with a Flexible Middleware Approach for Deserialization
+### Replace `moment.js` with a Flexible Middleware Approach for Deserialization (Postponed)
 
 There is good progress toward a flexible middleware approach.
 Sadly, it is not ready for the beta release yet.
 To give you a sneak peek, here is an example for a middleware to serialize `Edm.DateTime`, `Edm.DateTimeOffset` and `Edm.Time` to `temporal`:
 
-![temporal serializer](./img/temporal.png)
+![temporal serializer](img/temporal.png)
 
 ## How Can I Use It?
 
 We publish the beta version on `npm`.
 You can install it by adding `@beta` after the package name (e.g. `npm install @sap-cloud-sdk/generator@beta`).
 
+::: warning
 
+If you use an OData or OpenAPI client, make sure it was generated with the same version as your other SAP Cloud SDK dependencies.
+
+:::
+
+Check the [upgrade guide](../guides/upgrade-to-version-2.mdx) for detailed instructions how to upgrade.
