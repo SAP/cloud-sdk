@@ -27,7 +27,7 @@ async function getAddressesByIds(
   businessPartnerId: string,
   addressIds: string[]
 ): Promise<BusinessPartnerAddress[]> {
-  const businessPartnerAddressApi = new BusinessPartnerAddressApi();
+ const { businessPartnerAddressApi } = businessPartnerService();
   const retrieveRequests = addressIds.map(addressId =>
     // Create get by key request
     businessPartnerAddressApi

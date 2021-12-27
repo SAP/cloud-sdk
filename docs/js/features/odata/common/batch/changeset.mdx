@@ -40,7 +40,7 @@ If the request was not successful, an error will be thrown, otherwise, the subre
 async function updateAddresses(
   businessPartnerAddresses: BusinessPartnerAddress[]
 ): Promise<BusinessPartnerAddress[]> {
-  const businessPartnerAddressApi = new BusinessPartnerAddressApi();
+  const { businessPartnerAddressApi } = businessPartnerService();
   // Create update requests
   const updateRequests = businessPartnerAddresses.map(address =>
     businessPartnerAddressApi.requestBuilder().update(address)
