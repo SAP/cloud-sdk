@@ -11,7 +11,8 @@ The Delete request builder allows you to create `DELETE` requests, that delete a
   The following won't work on the real SAP S/4HANA BusinessPartner service because BusinessPartners cannot be deleted.
   We added this only for the sake of the example.
 */
-new BusinessPartnerApi().requestBuilder().delete(businessPartner);
+const { businessPartnerApi } = businessPartnerService();
+businessPartnerApi.requestBuilder().delete(businessPartner);
 ```
 
  </TabItem>
@@ -35,7 +36,8 @@ If you want to force deletion of the entity regardless of the ETag configure the
 <TabItem value="major">
 
 ```ts
-new BusinessPartnerApi()
+const { businessPartnerApi } = businessPartnerService();
+businessPartnerApi
   .requestBuilder()
   .delete(businessPartner)
   .ignoreVersionIdentifier();
@@ -44,7 +46,7 @@ new BusinessPartnerApi()
 You can also overwrite ETags using `setVersionIdentifier`:
 
 ```ts
-new BusinessPartnerApi()
+businessPartnerApi
   .requestBuilder()
   .delete(businessPartner)
   .setVersionIdentifier('etag');

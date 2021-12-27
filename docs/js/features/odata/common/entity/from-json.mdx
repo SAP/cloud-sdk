@@ -26,9 +26,10 @@ The example below shows how you would create an instance of the business partner
 <TabItem value="major">
 
 ```ts
-import { BusinessPartnerApi } from '@sap/cloud-sdk-vdm-business-partner-service';
+import { businessPartnerService } from '@sap/cloud-sdk-vdm-business-partner-service';
 
-const businessPartner = new BusinessPartnerApi().entityBuilder().fromJson({
+const { businessPartnerApi } = businessPartnerService();
+const businessPartner = businessPartnerApi.entityBuilder().fromJson({
   firstName: 'Peter',
   lastName: 'Pan',
   toBusinessPartnerAddress: [

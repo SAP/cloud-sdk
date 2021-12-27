@@ -8,7 +8,8 @@ By default, `PATCH` is used to only update the changed fields:
 <TabItem value="major">
 
 ```ts
-new BusinessPartnerApi().requestBuilder().update(businessPartner);
+const { businessPartnerApi } = businessPartnerService();
+businessPartnerApi.requestBuilder().update(businessPartner);
 ```
 
 </TabItem>
@@ -29,7 +30,8 @@ To update the whole entity use `replaceWholeEntityWithPut`:
 <TabItem value="major">
 
 ```ts
-new BusinessPartnerApi()
+const { businessPartnerApi } = businessPartnerService();
+businessPartnerApi
   .requestBuilder()
   .update(businessPartner)
   .replaceWholeEntityWithPut();
@@ -56,7 +58,8 @@ If you want to force an update of the entity regardless of the ETag configure th
 <TabItem value="major">
 
 ```ts
-new BusinessPartnerApi()
+const { businessPartnerApi } = businessPartnerService();
+businessPartnerApi
   .requestBuilder()
   .update(businessPartner)
   .ignoreVersionIdentifier();

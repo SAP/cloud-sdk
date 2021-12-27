@@ -7,13 +7,13 @@ Assume you have already created a business partner and would like to add a new a
 <TabItem value="major">
 
 ```ts
-const businessPartnerApi = new BusinessPartnerApi();
+const { businessPartnerApi, businessPartnerAddressApi } = businessPartnerService();
 const existingBusinessPartner = await businessPartnerApi
   .requestBuilder()
   .getByKey(myID)
   .execute(myDestination);
 
-const newAddress = BusinessPartnerAddress.builder()
+const newAddress = businessPartnerAddressApi.entityBuilder()
   .country('DE')
   .postalCode('14469')
   .cityName('Potsdam')
@@ -30,7 +30,7 @@ const existingBusinessPartner = await BusinessPartner.requestBuilder()
   .getByKey(myID)
   .execute(myDestination);
 
-const newAddress = new BusinessPartnerAddressApi()
+const newAddress = new BusinessPartnerAddress()
   .builder()
   .country('DE')
   .postalCode('14469')
@@ -50,7 +50,7 @@ You need to give the parent object and the field connecting the two entities:
 <TabItem value="major">
 
 ```ts
-new BusinessPartnerAddressApi()
+businessPartnerAddressApi
   .requestBuilder()
   .create(newAddress)
   .asChildOf(

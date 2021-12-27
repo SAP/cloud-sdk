@@ -87,20 +87,19 @@ The use of the internal API is considered a temporary quick fix.
 If you need functionality please [open an issue](https://github.com/SAP/cloud-sdk-js/issues/new/choose) and state your requirements.
 Details on the API contract are discussed in this [ADR](https://github.com/SAP/cloud-sdk-js/blob/2.0/knowledge-base/adr/0028-public-api-extraction.md)
 
-<!--  Put back after feature is released -->
-<!-- ### <a name="adjustSerializer"/> Adjust Serializing and Deserializing of Entities -->
+### <a name="adjustSerializer"/> Adjust Serializing and Deserializing of Entities
 
-<!-- **Prerequisite**: You consume non-primitive entity properties like dates, duration and times. -->
+**Prerequisite**: You consume non-primitive entity properties like dates, duration and times.
 
-<!-- In the past, one OData datatype was always transformed to the same datatype in TypeScript. -->
-<!-- For example, time related properties were transformed to `moment` instances. -->
-<!-- We introduced a new [middle ware concept](../features/odata/execute-odata-request#setting-custom-middleware) to make this more flexible. -->
+In the past, one OData datatype was always transformed to the same datatype in TypeScript.
+For example, time related properties were transformed to `moment` instances.
+We introduced a new [middle ware concept](../features/odata/execute-odata-request#setting-custom-middleware) to make this more flexible.
 
-<!-- The default serialization for time related properties is changed from `moment` to `temporal`. -->
-<!-- Note that in the `beta` phase of the 2.0 version, the default remains `moment`. -->
-<!-- Since `moment` is a discontinued project with large size we recommend to stick with the new standard. -->
-<!-- Please adjust your code base to use the [temporal](https://tc39.es/proposal-temporal/docs/) date/time objects. -->
-<!-- If this is not possible in your case please follow the [documentation](../features/odata/execute-odata-request#setting-custom-middleware) to switch back to the `moment` serialization. -->
+The default serialization for time related properties is changed from `moment` to `temporal`.
+Note that in the `beta` phase of the 2.0 version, the default remains `moment`.
+Since `moment` is a discontinued project with large size we recommend to stick with the new standard.
+Please adjust your code base to use the [temporal](https://tc39.es/proposal-temporal/docs/) date/time objects.
+If this is not possible in your case please follow the [documentation](../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#setting-moment-as-middleware) to switch back to the `moment` serialization.
 
 ### <a name="getSupport"/> Get Support
 
@@ -131,7 +130,8 @@ MyEntity.requestBuillder()
   );
 
 //Version 2.0.0
-MyEntity.requestBuillder().getAll().execute({
+const { myEntityApi } = myEntityService();
+myEntityApi.requestBuillder().getAll().execute({
   destinationName: 'myDestination',
   jwt: 'yourJwt',
   useCache: true

@@ -35,24 +35,25 @@ On an abstract level, creating a request using the fluent API always follows the
 <TabItem value="major">
 
 ```ts
-import { MyEntityApi } from './outputDir/my-service';
+import { myEntityService } from './outputDir/my-service';
 
-return new MyEntityApi().requestBuilder()
+const { myEntityApi } = myEntityService();
+return myEntityApi.requestBuilder()
   .<requestType>(...)
   .<additionalRequestConfiguration>(...)
   .execute(destination);
 ```
 
-When using a custom OData client, import an entity's api class from the generated service directory (`my-service`) within the specified output directory (`outputDir`).
+When using a custom OData client, import the common service method, e.g. `myEntityService()`, from the generated service directory (`my-service`) within the specified output directory (`outputDir`).
 The name of the service directory corresponds to the `directoryName` specified in the service mapping file (`serviceMapping.json` by default) in your input directory.
 
 When using one of the predefined OData clients, import it from the npm module.
 
 ```ts
-import { PredefinedEntityApi } from '@sap/cloud-sdk-vdm-predefined-service';
+import { predefinedEntityService } from '@sap/cloud-sdk-vdm-predefined-service';
 ```
 
-Every entity api has a `requestBuilder` function, that allows to chain all types of request builders that are available for this entity, e.g. `MyEntityApi().requestBuilder().getAll()` for the `getAll` request type.
+Every entity api has a `requestBuilder` function, that allows to chain all types of request builders that are available for this entity, e.g. `myEntityApi.requestBuilder().getAll()` for the `getAll` request type.
 
 </TabItem>
 <TabItem value="deprecated">
@@ -171,18 +172,6 @@ The last step when making a request using the SAP Cloud SDK is the request execu
 Once the request is configured use the `execute` function and pass a [destination](../connectivity/destination) to it.
 This will automatically construct your request URL and headers, execute the request, and return a typed response if applicable.
 
-### Using Custom (De-)Serialization
-
-<Tabs groupId="version" defaultValue="major" values={[
-{ label: 'SDK 2.x', value: 'major'}]}>
-
-<TabItem value="major">
-
-Coming soon.
-
-</TabItem>
-</Tabs>
-
 ### Setting Custom Request Headers
 
 The SAP Cloud SDK automatically sets some necessary request headers on every request.
@@ -192,7 +181,8 @@ You can specify additional custom headers using the `addCustomHeaders` function:
 <TabItem value="major">
 
 ```ts
-new MyEntityApi().requestBuilder().getAll().addCustomHeaders({
+const { myEntityApi } = myEntityService();
+myEntityApi.requestBuilder().getAll().addCustomHeaders({
   apikey: 'my-api-key'
 });
 ```
@@ -232,7 +222,8 @@ In the example below an additional query parameter `language=en` will be added t
 <TabItem value="major">
 
 ```ts
-new MyEntityApi().requestBuilder().getAll().withCustomQueryParameters({
+const { myEntityApi } = myEntityService();
+myEntityApi.requestBuilder().getAll().withCustomQueryParameters({
   language: 'en'
 });
 ```
@@ -265,7 +256,8 @@ It can also be adjusted per request by using the `withCustomServicePath` functio
 <TabItem value="major">
 
 ```ts
-new MyEntityApi()
+const { myEntityApi } = myEntityService();
+myEntityApi
   .requestBuilder()
   .getAll()
   .withCustomServicePath('my/custom/service/path');
@@ -294,7 +286,8 @@ Executing the example request above against a destination with URL `https://my.s
 <TabItem value="major">
 
 ```ts
-new MyEntityApi()
+const { myEntityApi } = myEntityService();
+myEntityApi
   .requestBuilder()
   .getAll()
   .addCustomRequestConfiguration({ responseType: 'arraybuffer' });
@@ -327,7 +320,8 @@ The example below shows how to query a navigation property from a given entity.
 <TabItem value="major">
 
 ```ts
-new MyEntityApi()
+const { myEntityApi } = myEntityService();
+myEntityApi
   .requestBuilder()
   .getByKey('123')
   .appendPath(
@@ -371,7 +365,8 @@ Example:
 <TabItem value="major">
 
 ```ts
-const httpResponse: HttpResponse = new MyEntityApi()
+const { myEntityApi } = myEntityService();
+const httpResponse: HttpResponse = myEntityApi
   .requestBuilder()
   .getAll()
   .executeRaw(destination);

@@ -8,7 +8,9 @@ This can also be useful for paging:
 <TabItem value="major">
 
 ```ts
-new BusinessPartnerApi().requestBuilder().
+const { businessPartnerApi } = businessPartnerService();
+businessPartnerApi
+  .requestBuilder()
   .getAll()
   .top(10)
 ```
@@ -17,7 +19,7 @@ new BusinessPartnerApi().requestBuilder().
 <TabItem value="deprecated">
 
 ```ts
-BusinessPartner.requestBuilder().
+BusinessPartner.requestBuilder()
   .getAll()
   .top(10)
 ```

@@ -45,7 +45,8 @@ For both service types the `execute()` methods triggers a request to a target sy
 
 ```ts
 //OData
-const responseOData = await new BusinessPartnerApi()
+const { businessPartnerApi } = businessPartnerService();
+const responseOData = await businessPartnerApi
   .requestBuilder()
   .getAll()
   .execute(myDestination);
