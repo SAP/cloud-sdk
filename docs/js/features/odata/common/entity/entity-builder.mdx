@@ -12,7 +12,7 @@ To build an entity by assigning its properties, use the entity builders provided
 First invoke the `.entityBuilder` method to access the builder, then you can set the properties and finally call the `.build` method to yield the entity.
 To set navigation properties that link to other entities, you have to create the linked entities using their respective builders.
 Navigation properties, that are linked through a one-to-many relation have to be assigned in an array - one-to-one relations are assigned as single objects.
-The example below shows how you would create the data from above using the entity builder.
+The example below shows how you can create the data from above using the entity builder.
 The relation to the business partner address is a one-to-many relation here.
 
 ```ts
@@ -25,9 +25,6 @@ businessPartnerApi
   .entityBuilder()
   .firstName('Peter')
   .lastName('Pan')
-  .organizationFoundationDate(
-    Temporal.PlainDateTime.from('1995-12-07T03:24:30')
-  )
   .toBusinessPartnerAddress([
     businessPartnerAddressApi.entityBuilder().country('Neverland').build()
   ])
@@ -41,7 +38,7 @@ To build an entity by assigning its properties, you can use the entity builders 
 Use the static `.builder` method to access the builder, set the properties and finally use the `.build` method to yield the entity.
 To set navigation properties, that link to other entities, you have to create the linked entities using their respective builder.
 Navigation properties, that are linked through a one-to-many relation have to be assigned in an array - one-to-one relations are assigned as single objects.
-The example below shows how you would create the data from above using the entity builder.
+The example below shows how you can create the data from above using the entity builder.
 The relation to the business partner address is a one-to-many relation here.
 
 ```ts
