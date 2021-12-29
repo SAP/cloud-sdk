@@ -5,8 +5,9 @@ import TabItem from '@theme/TabItem';
 <TabItem value="major">
 
 In version 2.0 of the SAP Cloud SDK, two new changes have been introduced:
-- an API class for each entity (e.g. `BusinessPartnerApi`), providing access to its properties via a `schema`, and  
-- a common utility method, e.g. `businessPartnerService`, with accessors for all the API classes.  
+
+- an API class for each entity (e.g. `BusinessPartnerApi`), providing access to its properties via a `schema`, and
+- a common utility method, e.g. `businessPartnerService`, with accessors for all the API classes.
 
 To build an entity by assigning its properties, use the entity builders provided by the API class.
 First invoke the `.entityBuilder` method to access the builder, then you can set the properties and finally call the `.build` method to yield the entity.
@@ -16,11 +17,10 @@ The example below shows how you can create the data from above using the entity 
 The relation to the business partner address is a one-to-many relation here.
 
 ```ts
-import {
-  businessPartnerService
-} from '@sap/cloud-sdk-vdm-business-partner-service';
+import { businessPartnerService } from '@sap/cloud-sdk-vdm-business-partner-service';
 
-const { businessPartnerApi, businessPartnerAddressApi } = businessPartnerService();
+const { businessPartnerApi, businessPartnerAddressApi } =
+  businessPartnerService();
 businessPartnerApi
   .entityBuilder()
   .firstName('Peter')

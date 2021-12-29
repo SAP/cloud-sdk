@@ -7,13 +7,15 @@ Assume you have already created a business partner and would like to add a new a
 <TabItem value="major">
 
 ```ts
-const { businessPartnerApi, businessPartnerAddressApi } = businessPartnerService();
+const { businessPartnerApi, businessPartnerAddressApi } =
+  businessPartnerService();
 const existingBusinessPartner = await businessPartnerApi
   .requestBuilder()
   .getByKey(myID)
   .execute(myDestination);
 
-const newAddress = businessPartnerAddressApi.entityBuilder()
+const newAddress = businessPartnerAddressApi
+  .entityBuilder()
   .country('DE')
   .postalCode('14469')
   .cityName('Potsdam')

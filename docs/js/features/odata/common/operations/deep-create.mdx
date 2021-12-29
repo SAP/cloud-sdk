@@ -8,14 +8,16 @@ It is also possible to create an entity together with related entities in a sing
 
 ```ts
 // build a business partner instance with one linked address
-const { businessPartnerApi, businessPartnerAddressApi } = businessPartnerService();
+const { businessPartnerApi, businessPartnerAddressApi } =
+  businessPartnerService();
 const businessPartner = businessPartnerApi
   .entityBuilder()
   .firstName('John')
   .lastName('Doe')
   .businessPartnerCategory('1')
   .toBusinessPartnerAddress([
-     businessPartnerAddressApi.entityBuilder()
+    businessPartnerAddressApi
+      .entityBuilder()
       .country('DE')
       .postalCode('14469')
       .cityName('Potsdam')
@@ -71,7 +73,8 @@ You need to configure an `address usage` field as shown in the example below to 
 <TabItem value="major">
 
 ```ts
-const { businessPartnerApi, businessPartnerAddressApi, buPaAddressUsageApi } = businessPartnerService();
+const { businessPartnerApi, businessPartnerAddressApi, buPaAddressUsageApi } =
+  businessPartnerService();
 businessPartnerApi
   .entityBuilder()
   .firstName('John')

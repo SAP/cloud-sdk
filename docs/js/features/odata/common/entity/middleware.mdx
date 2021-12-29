@@ -1,11 +1,11 @@
-In earlier versions of the SAP Cloud SDK, `moment` was the default type for all date/time properties in the OData clients. 
-But `moment` is now a legacy project and in maintenance mode. 
+In earlier versions of the SAP Cloud SDK, `moment` was the default type for all date/time properties in the OData clients.
+But `moment` is now a legacy project and in maintenance mode.
 It also doesn't work well with modern "tree shaking" algorithms, leading to a large application bundle size.
 
-Therefore, in version 2.0 of the SAP Cloud SDK, the default (de)serialization for date/time fields has been changed from `moment` to [`Temporal`](https://tc39.es/proposal-temporal/docs/). 
-Also, a new flexible middleware concept has been introduced that allows configuring custom implementations for serialization and de-serialization of all types. 
-You can set your custom middleware by passing it as a parameter to the entity's `Service()` method. 
-This parameter is optional. 
+Therefore, in version 2.0 of the SAP Cloud SDK, the default (de)serialization for date/time fields has been changed from `moment` to [`Temporal`](https://tc39.es/proposal-temporal/docs/).
+Also, a new flexible middleware concept has been introduced that allows configuring custom implementations for serialization and de-serialization of all types.
+You can set your custom middleware by passing it as a parameter to the entity's `Service()` method.
+This parameter is optional.
 When left unset, the default implementation is used.
 
 ```ts
@@ -21,7 +21,7 @@ const { businessPartnerApi } = businessPartnerService(customMiddleware);
 
 #### Using Default `Temporal` Middleware
 
-`Temporal` proposes classes for all data types required to handle OData types (for example, `PlainDate`, `PlainTime`, `PlainDateTime`, `Duration` and, `ZonedDateTime`). 
+`Temporal` proposes classes for all data types required to handle OData types (for example, `PlainDate`, `PlainTime`, `PlainDateTime`, `Duration` and, `ZonedDateTime`).
 The example below shows how to set a value of an `Edm.DateTime` field.
 
 ```ts
@@ -36,8 +36,8 @@ businessPartnerApi
 
 #### Setting `moment` as Middleware
 
-We will continue to make `moment`-based middleware available for cases where a switch to `Temporal` is impossible. 
-This implementation is available as a separate npm package `@sap-cloud-sdk/moment-middleware`. 
+We will continue to make `moment`-based middleware available for cases where a switch to `Temporal` is impossible.
+This implementation is available as a separate npm package `@sap-cloud-sdk/moment-middleware`.
 Adapt your code to use this package:
 
 ```ts
