@@ -40,6 +40,7 @@ Once these clients are available, follow the following steps:
 
 - Find the used clients in your `package.json`.
 - Change the used version of the client from 1.X.Y to 2.0.0.
+- Change the `builder()` call as described [here](#newEntityBuilder)
 - Find the invocations of the request builders.
   This RegExp `import.*from.*@sap\/cloud\-sdk\-vdm\-.*` helps to find the files where the client is used.
 - Change the `requestBuillder()` call as described [here](#newRequestApi)
@@ -57,6 +58,7 @@ We assume that you have installed the generator as a local `devDependency` in yo
 - Find the installed generator in your `package.json`.
 - Change the used version from 1.X.Y to 2.0.0 and execute `npm install`.
 - Regenerate the client with the updated generator as described [here](../features/odata/generate-odata-client).
+- Change the `builder()` call as described [here](#newEntityBuilder)
 - Find the invocations of the request builders.
   This RegExp `import.*from.*EntityName.*` helps to find the files where the client is used.
   Replace `EntityName` with the name of your entities.
@@ -110,12 +112,40 @@ Please create a [support issue](https://github.com/SAP/cloud-sdk-js/issues/new/c
 
 ## Appendix
 
+### <a name="newEntityBuilder"/> Breaking Change on the EntityBuilder API
+
+For the implementation of the [middleware concept](../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#using-custom-de-serialization) , two changes are introduced in version 2.0:
+- Each entity now has its API class (e.g. `myEntityApi`). 
+- A new `service` method (e.g. `myEntityService`) provides getters for instances of all the entities' API class.
+
+The static `.builder` method has been renamed to `.entityBuilder` and it is now an instance method on the entity API class:
+
+```js
+//Version 1.X.Y
+MyEntity.builder()
+  .getAll()
+  .firstName('Peter')
+  .lastName('Pan')
+   .toMyRelatedEntity([
+    MyRelatedEntity.builder().country('Neverland').build()
+  ])
+  .build();
+
+//Version 2.0.0
+const { myEntityApi, myRelatedEntityAPI } = myEntityService();
+myEntityApi
+  .entityBuilder()
+  .firstName('Peter')
+  .lastName('Pan')
+  .toMyRelatedEntity([
+    myRelatedEntityAPI.entityBuilder().country('Neverland').build()
+  ])
+  .build();
+```
+
 ### <a name="newRequestApi"/> Breaking Change on the RequestBuilder API
 
 In order to make the [middle ware concept](../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#using-custom-de-serialization) possible, it was necessary to add more state to the `requestBuillder`.
-In version 2.0, two changes are introduced:
-- Each entity now has its API class (e.g. `myEntityApi`). 
-- A new `service` method (e.g. `myEntityService`) provides getters for instances of all the entities' API class.
 
 All the static properties used to build select or filters are also now part of an instance and are exposed via a `schema` property.
 The `requestBuillder` is also not a static method anymore but an instance method on an api object:
