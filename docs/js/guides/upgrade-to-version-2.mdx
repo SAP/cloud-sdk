@@ -95,14 +95,13 @@ Details on the API contract are discussed in this [ADR](https://github.com/SAP/c
 **Prerequisite**: You consume non-primitive entity properties like dates, duration and times.
 
 In the past, one OData datatype was always transformed to the same datatype in TypeScript.
-For example, time related properties were transformed to `moment` instances.
+For example, time related properties are transformed to `moment` instances.
 We introduced a new [middle ware concept](../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#using-custom-de-serialization) to make this more flexible.
 
-The default serialization for time related properties is changed from `moment` to `temporal`.
-Note that in the `beta` phase of the 2.0 version, the default remains `moment`.
+If you would like to switch to the [temporal](https://tc39.es/proposal-temporal/docs/) serialization for date/time objects, please please follow the [documentation](../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#using-temporal-middleware) and adjust your code base.
+The default serialization for time related properties will be changed from `moment` to `temporal` once it reaches Stage 4.
 Since `moment` is a discontinued project with large size we recommend to stick with the new standard.
-Please adjust your code base to use the [temporal](https://tc39.es/proposal-temporal/docs/) date/time objects.
-If this is not possible in your case please follow the [documentation](../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#setting-moment-as-middleware) to switch back to the `moment` serialization.
+Note that in 2.0 version, the default remains `moment`.
 
 ### <a name="getSupport"/> Get Support
 
@@ -115,7 +114,8 @@ Please create a [support issue](https://github.com/SAP/cloud-sdk-js/issues/new/c
 ### <a name="newEntityBuilder"/> Breaking Change on the EntityBuilder API
 
 For the implementation of the [middleware concept](../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#using-custom-de-serialization) , two changes are introduced in version 2.0:
-- Each entity now has its API class (e.g. `myEntityApi`). 
+
+- Each entity now has its API class (e.g. `myEntityApi`).
 - A new `service` method (e.g. `myEntityService`) provides getters for instances of all the entities' API class.
 
 The static `.builder` method has been renamed to `.entityBuilder` and it is now an instance method on the entity API class:
@@ -126,9 +126,7 @@ MyEntity.builder()
   .getAll()
   .firstName('Peter')
   .lastName('Pan')
-   .toMyRelatedEntity([
-    MyRelatedEntity.builder().country('Neverland').build()
-  ])
+  .toMyRelatedEntity([MyRelatedEntity.builder().country('Neverland').build()])
   .build();
 
 //Version 2.0.0

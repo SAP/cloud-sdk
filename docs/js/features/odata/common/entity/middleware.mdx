@@ -1,31 +1,57 @@
-In earlier versions of the SAP Cloud SDK, `moment` was the default type for all date/time properties in the OData clients.
-But `moment` is now a legacy project and in maintenance mode.
-It also doesn't work well with modern "tree shaking" algorithms, leading to a large application bundle size.
-
-Therefore, in version 2.0 of the SAP Cloud SDK, the default (de)serialization for date/time fields has been changed from `moment` to [`Temporal`](https://tc39.es/proposal-temporal/docs/).
-Also, a new flexible middleware concept has been introduced that allows configuring custom implementations for serialization and de-serialization of all types.
-You can set your custom middleware by passing it as a parameter to the common service method (e.g. `businessPartnerService`).
+In the previous version of the SAP Cloud SDK, all OData types were always deserialized to a specific TypeScript data type and vice versa, `moment` being the default for all OData date/time properties.
+In version 2.0, a new flexible middleware concept has been introduced that allows configuring custom implementations for serialization and de-serialization of all data types.
+You can set your custom (de-)serialization middleware by passing it as a parameter to the common service method (e.g. `businessPartnerService`).
 This parameter is optional.
 When left unset, the default implementation is used.
 
+Below example shows a custom middleware example for `Edm.Date` with `dayjs`:
+
 ```ts
+import dayjs from 'dayjs';
+
+function dayjsCustomDeserializationFunc(date: string): dayjs {
+const parsed = dayjs(date, 'YYYY-MM-DD', true);
+  if (!parsed.isValid()) {
+    throw new Error(
+      `Provided date value ${date} does not follow the Edm.Date pattern: YYYY-MM-DD`
+    );
+  }
+  return parsed;
+}
+
+function dayjsCustomSerializationFunc(date: dayjs): string {
+  return date.format('YYYY-MM-DD');
+}
+
 const customMiddleware = {
-  'Edm.DateTime': {
+  'Edm.Date': {
     deserialize: dayjsCustomDeserializationFunc
     serialize: dayjsCustomSerializationFunc
   }
 }
-
-const { businessPartnerApi } = businessPartnerService(customMiddleware);
 ```
 
-#### Using Default `Temporal` Middleware
-
-`Temporal` proposes classes for all data types required to handle OData types (for example, `PlainDate`, `PlainTime`, `PlainDateTime`, `Duration` and, `ZonedDateTime`).
-The example below shows how to set a value of an `Edm.DateTime` field.
+You can now pass this middleware as a parameter to the `businessPartnerService` method to set it globally for all entities in the OData client.
 
 ```ts
-const { businessPartnerApi } = businessPartnerService();
+const { businessPartnerApi } = businessPartnerService(customMiddleware);
+businessPartnerApi.entityBuilder()
+.firstName('Peter')
+.lastName('Pan')
+.organizationFoundationDate(dayjs({ year :2010, month :3, day :5})
+.build();
+```
+
+#### Using `Temporal` Middleware
+
+`Temporal` proposes classes for all data types required to handle OData types (for example, `PlainDate`, `PlainTime`, `PlainDateTime`, `Duration` and, `ZonedDateTime`).
+We have also provided a temporal-based middleware if you would like to switch from `moment`.
+This implementation is available as a separate npm package `@sap-cloud-sdk/temporal-middleware`.
+Adapt your code to use this package:
+
+```ts
+import { temporalDeSerializers_v4 } from '@sap-cloud-sdk/temporal-middleware';
+const { businessPartnerApi } = businessPartnerService(temporalDeSerializers_v4);
 businessPartnerApi
   .entityBuilder()
   .organizationFoundationDate(
@@ -34,19 +60,4 @@ businessPartnerApi
   .build();
 ```
 
-#### Setting `moment` as Middleware
-
-We will continue to make `moment`-based middleware available for cases where a switch to `Temporal` is impossible.
-This implementation is available as a separate npm package `@sap-cloud-sdk/moment-middleware`.
-Adapt your code to use this package:
-
-```ts
-import { momentDeSerializers } from '@sap-cloud-sdk/moment-middleware';
-
-const { businessPartnerApi } = businessPartnerService(momentDeSerializers);
-
-businessPartnerApi
-  .entityBuilder()
-  .organizationFoundationDate(new moment())
-  .build();
-```
+`Temporal` is currently at Stage 3 of the TC39 process. We will switch the default date/time (de-)serialization from `moment` to Temporal when it reaches Stage 4.
