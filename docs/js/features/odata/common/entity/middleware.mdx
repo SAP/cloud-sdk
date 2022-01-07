@@ -46,12 +46,12 @@ businessPartnerApi.entityBuilder()
 
 `Temporal` proposes classes for all data types required to handle OData types (for example, `PlainDate`, `PlainTime`, `PlainDateTime`, `Duration` and, `ZonedDateTime`).
 We have also provided a temporal-based middleware if you would like to switch from `moment`.
-This implementation is available as a separate npm package `@sap-cloud-sdk/temporal-middleware`.
+This implementation is available as a separate npm package `@sap-cloud-sdk/temporal-de-serializers`.
 Adapt your code to use this package:
 
 ```ts
-import { temporalDeSerializers_v4 } from '@sap-cloud-sdk/temporal-middleware';
-const { businessPartnerApi } = businessPartnerService(temporalDeSerializers_v4);
+import { temporalDeSerializersV4 } from '@sap-cloud-sdk/temporal-de-serializers';
+const { businessPartnerApi } = businessPartnerService(temporalDeSerializersV4);
 businessPartnerApi
   .entityBuilder()
   .organizationFoundationDate(
