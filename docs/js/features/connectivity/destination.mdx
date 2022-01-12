@@ -339,3 +339,31 @@ Custom headers and query parameters, however, overwrite the additional propertie
 **Header names** keep their casing but overwrite other headers independent of casing, e.g. `AUTHORIZATION` overwrites `authorization`.
 This does not apply to query **parameter names**`.
 :::
+
+### Register Destination
+
+With the `registerDestination` function it is possible to put destinations into the environment variables.
+You can then use these destinations in the same way as those retrieved from the SAP BTP.
+
+Below is an example using the `executeHttpRequestOrigin` function together with a registered destination.
+
+<Tabs groupId="version" defaultValue="major" values={[
+{ label: 'SDK 2.x', value: 'major'}]}>
+
+<TabItem value="major">
+
+```ts
+import { registerDestination } from '@sap-cloud-sdk/connectivity';
+
+registerDestination({ name: 'MY-DEST', url: 'https://example.com' });
+
+const response = await executeHttpRequestOrigin(
+  { destinationName: 'MY-DEST' },
+  {
+    method: 'get'
+  }
+);
+```
+
+</TabItem>
+</Tabs>
