@@ -4,6 +4,7 @@ import ChangeSetContent from './changeset.mdx';
 import CombiningRequestsContent from './combining-requests.mdx';
 import SerializationContent from './serialization.mdx';
 import RetrieveRequestsContent from './retrieve-request.mdx';
+import ResponsesContent from './responses.mdx';
 import ConfigureSerializationContent from './configure-serialization.mdx';
 
 export function BatchIntro() {
@@ -24,6 +25,10 @@ export function ConfigureSerialization() {
 
 export function RetrieveRequests() {
   return <RetrieveRequestsContent />;
+}
+
+export function Responses() {
+  return <ResponsesContent />;
 }
 
 export function Serialization() {
