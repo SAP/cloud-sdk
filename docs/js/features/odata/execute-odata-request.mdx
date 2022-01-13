@@ -44,14 +44,16 @@ return myEntityApi.requestBuilder()
   .execute(destination);
 ```
 
-When using a custom OData client, import the common service method, e.g. `myEntityService()`, from the generated service directory (`my-service`) within the specified output directory (`outputDir`).
+If you are using an OData client, that you generated on your own, import the service function, e.g. `myEntityService`, from the generated service directory (`my-service`) within the specified output directory (`outputDir`).
 The name of the service directory corresponds to the `directoryName` specified in the service mapping file (`serviceMapping.json` by default) in your input directory.
 
-When using one of the predefined OData clients, import it from the npm module.
+If you are using one of the pregenerated OData clients, import it from the npm package.
 
 ```ts
-import { predefinedEntityService } from '@sap/cloud-sdk-vdm-predefined-service';
+import { pregeneratedEntityService } from '@sap/cloud-sdk-vdm-pregenerated-service';
 ```
+
+Destructure the service to get the API of the entity you want to make requests for - `myEntityApi` in the example above.
 
 Every entity API has a `requestBuilder` function, that allows to chain all types of request builders that are available for this entity, e.g. `myEntityApi.requestBuilder().getAll()` for the `getAll` request type.
 
@@ -67,13 +69,13 @@ return MyEntity.requestBuilder()
   .execute(destination);
 ```
 
-When using a custom OData client, import an entity from the generated service directory (`my-service`) within the specified output directory (`outputDir`).
+If you are using an OData client, that you generated on your own, import an entity from the generated service directory (`my-service`) within the specified output directory (`outputDir`).
 The name of the service directory corresponds to the `directoryName` specified in the service mapping file (`serviceMapping.json` by default) in your input directory.
 
-When using one of the predefined OData clients, import it from the npm module.
+If you are using one of the pregenerated OData clients, import it from the npm package.
 
 ```ts
-import { PredefinedEntity } from '@sap/cloud-sdk-vdm-predefined-service';
+import { PregeneratedEntity } from '@sap/cloud-sdk-vdm-pregenerated-service';
 ```
 
 Every entity has a `requestBuilder` function, that allows to chain all types of request builders that are available for this entity, e.g. `MyEntity.requestBuilder().getAll()` for the `getAll` request type.
