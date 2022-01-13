@@ -52,7 +52,7 @@ To continue using the latest features outlined in the release notes for version 
 
 ### Improvements
 
-### Fixed issues
+### Fixed Issues
 -->
 
 ## 3.61.0 - January 13, 2022
@@ -67,6 +67,17 @@ To continue using the latest features outlined in the release notes for version 
   The new `RequestHeaderAccessor` located in the `cloudplatform-core` module can be used to conveniently access HTTP headers of the currently processed incoming request.
   Furthermore, it can be used to also propagate specific headers to nested `ThreadContext`s, much like the other _accessors_ of the Cloud SDK.
   By default, all present headers are automatically "inherited" when creating a new `ThreadContext` so that even asynchronous operations are able to access the initial headers.
+
+### Fixed Issues
+
+- Fix a regression in version `3.51.0` that caused SOAP transaction commits to not be applied to the same session as the requests being committed.
+- Fix an issue that could sometimes lead to a `ConcurrentModificationException` when using the Destination or Connectivity service functionality.
+- Fix an issue that could sometimes lead to `CacheException Cache already exists` when using the Destination / Connectivity service or resilience functionality.
+- Fix an issue where service bindings were not loaded from the file system in case the working directory of the Java process was not the root directory.
+- Fix an issue where custom service-path information is not propagated from OData V2 service classes to batch classes.
+  Previously this led to a runtime exception: `ODataRequestException: Batch request contains requests to different service paths [...]`.
+  To enable the fix, please use the latest [OData V2 VDM](https://sap.github.io/cloud-sdk/docs/java/features/odata/use-typed-odata-v2-client-in-sap-cloud-sdk-for-java) and/or [re-generate your own OData V2 classes](https://sap.github.io/cloud-sdk/docs/java/features/odata/generate-typed-odata-v2-and-v4-client-for-java).
+- Fix [CVE-2021-33813](https://nvd.nist.gov/vuln/detail/CVE-2021-33813) by upgrading `jdom2` to version `2.0.6.1`
 
 ### Improvements
 
@@ -92,17 +103,6 @@ To continue using the latest features outlined in the release notes for version 
         - Update [Reactor Core](https://search.maven.org/search?q=g:io.projectreactor%2BAND%2Ba:reactor-core) (`io.projectreactor:reactor-core`) from `3.4.12` to `3.4.13`
         - Update [System Lambda](https://search.maven.org/search?q=g:com.github.stefanbirkner%2BAND%2Ba:system-lambda) (`com.github.stefanbirkner:system-lambda`) from `1.2.0` to `1.2.1`
         - Update [Wiremock](https://search.maven.org/search?q=g:com.github.tomakehurst%2BAND%2Ba:wiremock-jre8-standalone) (`com.github.tomakehurst:wiremock-jre8-standalone`) from `2.31.0` to `2.32.0`
-
-### Fixed issues
-
-- Fix a regression in version `3.51.0` that caused SOAP transaction commits to not be applied to the same session as the requests being committed.
-- Fix an issue that could sometimes lead to a `ConcurrentModificationException` when using the Destination or Connectivity service functionality.
-- Fix an issue that could sometimes lead to `CacheException Cache already exists` when using the Destination / Connectivity service or resilience functionality.
-- Fix an issue where service bindings were not loaded from the file system in case the working directory of the Java process was not the root directory.
-- Fix an issue where custom service-path information is not propagated from OData V2 service classes to batch classes.
-  Previously this led to a runtime exception: `ODataRequestException: Batch request contains requests to different service paths [...]`.
-  To enable the fix, please use the latest [OData V2 VDM](https://sap.github.io/cloud-sdk/docs/java/features/odata/use-typed-odata-v2-client-in-sap-cloud-sdk-for-java) and/or [re-generate your own OData V2 classes](https://sap.github.io/cloud-sdk/docs/java/features/odata/generate-typed-odata-v2-and-v4-client-for-java).
-- Fix [CVE-2021-33813](https://nvd.nist.gov/vuln/detail/CVE-2021-33813) by upgrading `jdom2` to version `2.0.6.1`
 
 ## 3.60.0 - December 16, 2021
 
