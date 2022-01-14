@@ -105,6 +105,16 @@ The cached `HttpClient` instances are also isolated based on the tenant and prin
 
 :::
 
+## Supported Proxy Types
+
+| Proxy Type                                                                                                                    | Parameter Name           |
+| :---------------------------------------------------------------------------------------------------------------------------- | :----------------------- |
+| [`Internet`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/42a0e6b966924f2e902090bdf435e1b2.html)  | `ProxyType.INTERNET`     |
+| [`OnPremise`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/42a0e6b966924f2e902090bdf435e1b2.html) | `ProxyType.ON_PREMISE`   |
+| [`PrivateLink`](https://help.sap.com/viewer/product/PRIVATE_LINK/CLOUD/en-US)*                                                | `ProxyType.PRIVATE_LINK` |
+
+\* Further reading: [SAP BTP Private Link Announcement Blog Post](https://blogs.sap.com/2021/10/28/btp-private-linky-swear-with-azure-propagate-your-sap-principels/)
+
 ## Decorating Destinations
 
 Depending on the use case, one needs to wrap the accessed destination before issuing a request to a system.
@@ -466,7 +476,7 @@ In case the destination is of proxy type `OnPremise`, the SAP Cloud SDK performs
 
 ### Configuration Procedure for Localhost
 
-#### Destinations With Proxy Type "Internet"
+#### Destinations With Proxy Type `Internet`
 
 Maintain the destination configuration via the environment variable `destinations`.
 See the example value above for reference.
