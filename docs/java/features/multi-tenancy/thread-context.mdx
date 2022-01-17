@@ -132,4 +132,23 @@ Be cautious with long-running, asynchronous operations.
 A propagated thread context will only persist as long as the thread lives that it was created on.
 So when the parent thread dies the context will cease to exist and no longer be available in any of the threads.
 
+<details>
+<summary> Workaround </summary>
+You can work around this limitation with the following approach:
+
+```java
+// Obtain the current request headers in the parent thread
+Property<?> headers = ThreadContextAccessor.getCurrentContext()
+        .getProperty(RequestHeaderThreadContextListener.PROPERTY_REQUEST_HEADERS).get();
+
+ThreadContextExecutor executor = new ThreadContextExecutor();
+Callable operationWithContext = () -> executor.execute(() -> {
+  // Manually set them again into the child thread
+  // All critical information (auth token, tenant, user) will be derived from the headers
+  ThreadContextAccessor.getCurrentContext()
+    .setPropertyIfAbsent(RequestHeaderThreadContextListener.PROPERTY_REQUEST_HEADERS, Try.success(headers));
+  operation();
+});
+```
+</details>
 :::
