@@ -180,6 +180,7 @@ module.exports = {
         items: [
           'js/guides/migrate-sdk-application-from-btp-cf-to-kubernetes',
           'js/guides/migrate-to-open-source-version-of-cloud-sdk-for-javascript-typescript',
+          'js/guides/upgrade-to-version-2',
           'js/guides/bas-external-system',
           'js/guides/tutorial-overview-sdk-js',
           'js/guides/sdk-in-browser',
@@ -194,7 +195,7 @@ module.exports = {
       {
         type: 'category',
         label: 'Releases',
-        items: ['js/release-policy', 'js/announcing-version-2']
+        items: ['js/release-policy', 'js/announcing-version-2', 'js/announcing-version-2-beta']
       },
       {
         type: 'category',
