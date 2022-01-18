@@ -1,6 +1,6 @@
 import React from 'react';
 import CustomFieldsContent from './custom-fields.mdx';
-import MiddlewareContent from './middleware.mdx';
+import CustomDeSerializersContent from './custom-de-serializers.mdx';
 import DeserializeEntityContent from './deserialize-entity.mdx';
 import EntityBuilderContent from './entity-builder.mdx';
 import EntityContent from './entity.mdx';
@@ -10,8 +10,8 @@ export function CustomFields() {
   return <CustomFieldsContent />;
 }
 
-export function Middleware() {
-  return <MiddlewareContent />;
+export function CustomDeSerializers() {
+  return <CustomDeSerializersContent />;
 }
 
 export function DeserializeEntity() {
