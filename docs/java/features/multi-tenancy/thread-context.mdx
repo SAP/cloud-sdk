@@ -137,18 +137,12 @@ So when the parent thread dies the context will cease to exist and no longer be 
 You can work around this limitation with the following approach:
 
 ```java
-// Obtain the current request headers in the parent thread
-Property<?> headers = ThreadContextAccessor.getCurrentContext()
-        .getProperty(RequestHeaderThreadContextListener.PROPERTY_REQUEST_HEADERS).get();
+RequestHeaderContainer requestHeaders = RequestHeaderAccessor.tryGetHeaderContainer().getOrElse(RequestHeaderContainer.EMPTY);
+ThreadContextExecutor executor = new ThreadContextExecutor().withThreadContext(new DefaultThreadContext())
+        .withListeners(new RequestHeaderThreadContextListener(requestHeaders));
 
-ThreadContextExecutor executor = new ThreadContextExecutor();
-Callable operationWithContext = () -> executor.execute(() -> {
-  // Manually set them again into the child thread
-  // All critical information (auth token, tenant, user) will be derived from the headers
-  ThreadContextAccessor.getCurrentContext()
-    .setPropertyIfAbsent(RequestHeaderThreadContextListener.PROPERTY_REQUEST_HEADERS, Try.success(headers));
-  operation();
-});
+Callable operationWithContext = () -> executor.execute(() -> operation());
+invokeAsynchronously(operationWithContext);
 ```
 </details>
 :::

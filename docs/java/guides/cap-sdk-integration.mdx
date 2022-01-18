@@ -144,11 +144,11 @@ You need to use the `ThreadContextExecutor` from the SAP Cloud SDK (refer to the
 Example:
 
 ```java
-final EventContext context;
-final ThreadContextExecutor threadContextExecutor = new ThreadContextExecutor();
-final RequestContextRunner cdsContextRunner = context.getCdsRuntime().requestContext();
+EventContext context;
+ThreadContextExecutor threadContextExecutor = new ThreadContextExecutor();
+RequestContextRunner cdsContextRunner = context.getCdsRuntime().requestContext();
 
-final Callable<Object> task = () -> cdsContextRunner.run(context ->
+Callable<Object> task = () -> cdsContextRunner.run(context ->
                                         threadContextExecutor.execute(() -> ... ));
 ```
 
@@ -156,29 +156,22 @@ final Callable<Object> task = () -> cdsContextRunner.run(context ->
 
 Be cautious with long-running, asynchronous operations.
 A propagated thread context will only persist as long as the thread lives that it was created on.
-So when the parent thread dies the context will cease to exist and no longer be available in any of the threads.
+Thus, when the parent thread dies the context will cease to exist and no longer be available in any of the threads.
 
 <details>
 <summary> Workaround </summary>
 You can work around this limitation with the following approach:
 
 ```java
-// Obtain the current request headers in the parent thread
-Property<?> headers = ThreadContextAccessor.getCurrentContext()
-        .getProperty(RequestHeaderThreadContextListener.PROPERTY_REQUEST_HEADERS).get();
+EventContext context;
+RequestHeaderContainer requestHeaders = RequestHeaderAccessor.tryGetHeaderContainer().getOrElse(RequestHeaderContainer.EMPTY);
+ThreadContextExecutor executor = new ThreadContextExecutor().withThreadContext(new DefaultThreadContext())
+        .withListeners(new RequestHeaderThreadContextListener(requestHeaders));
 
-final EventContext context;
-final ThreadContextExecutor threadContextExecutor = new ThreadContextExecutor();
-final RequestContextRunner cdsContextRunner = context.getCdsRuntime().requestContext();
+RequestContextRunner cdsContextRunner = context.getCdsRuntime().requestContext();
 
-final Callable<Object> task = () -> cdsContextRunner.run(context ->
-                                        threadContextExecutor.execute(() -> {
-                                            // Manually set them again into the child thread
-                                            // All critical information (auth token, tenant, user) will be derived from the headers
-                                            ThreadContextAccessor.getCurrentContext()
-                                                .setPropertyIfAbsent(RequestHeaderThreadContextListener.PROPERTY_REQUEST_HEADERS, Try.success(headers));
-                                            ...
-                                        } ));
+Callable<Object> task = () -> cdsContextRunner.run(context ->
+                                        threadContextExecutor.execute(() -> operation()));
 ```
 
 </details>
