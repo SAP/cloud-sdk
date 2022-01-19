@@ -144,13 +144,39 @@ You need to use the `ThreadContextExecutor` from the SAP Cloud SDK (refer to the
 Example:
 
 ```java
-final EventContext context;
-final ThreadContextExecutor threadContextExecutor = new ThreadContextExecutor();
-final RequestContextRunner cdsContextRunner = context.getCdsRuntime().requestContext();
+EventContext context;
+ThreadContextExecutor threadContextExecutor = new ThreadContextExecutor();
+RequestContextRunner cdsContextRunner = context.getCdsRuntime().requestContext();
 
-final Callable<Object> task = () -> cdsContextRunner.run(context ->
+Callable<Object> task = () -> cdsContextRunner.run(context ->
                                         threadContextExecutor.execute(() -> ... ));
 ```
+
+:::danger Thread Lifecycle
+
+Be cautious with long-running, asynchronous operations.
+A propagated thread context will only persist as long as the thread lives that it was created on.
+Thus, when the parent thread dies the context will cease to exist and no longer be available in any of the threads.
+
+<details>
+<summary> Workaround </summary>
+You can work around this limitation with the following approach:
+
+```java
+EventContext context;
+RequestHeaderContainer requestHeaders = RequestHeaderAccessor.tryGetHeaderContainer().getOrElse(RequestHeaderContainer.EMPTY);
+ThreadContextExecutor executor = new ThreadContextExecutor().withThreadContext(new DefaultThreadContext())
+        .withListeners(new RequestHeaderThreadContextListener(requestHeaders));
+
+RequestContextRunner cdsContextRunner = context.getCdsRuntime().requestContext();
+
+Callable<Object> task = () -> cdsContextRunner.run(context ->
+                                        threadContextExecutor.execute(() -> operation()));
+```
+
+</details>
+
+:::
 
 :::success Integration finished
 
