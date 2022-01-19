@@ -26,6 +26,9 @@ jobs:
           onlyAnnotateModifiedLines: true # optional, default is false
           # Log debugging information to stdout
           debug: false # optional, default is false
+        env:
+          # Required
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Setup Node
         uses: actions/setup-node@v2
@@ -37,6 +40,3 @@ jobs:
 
       - name: Build docs
         run: npm run build
-        env:
-          # Required
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
