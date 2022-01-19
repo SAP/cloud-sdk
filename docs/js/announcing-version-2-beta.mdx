@@ -14,7 +14,7 @@ We announced four noteworthy changes for our upcoming version increase:
 - Increase compilation target to ECMAScript 2019
 - Remove deprecated functionality
 - Remove generator options
-- ~~Replace `moment.js` with a flexible middleware approach for deserialization~~ (Postponed)
+- Introduce customizable (de-)serialization
 
 The beta already provides many improvements, and we would love for you to try them.
 Let's take a look what was achieved so far.
@@ -87,17 +87,20 @@ The following generator options are removed:
 For `generateTypedocJson` option, you can add `typedoc` or other documentation lib as a dependency to your `package.json` by your own.
 The options `aggregatorDirectoryName` and `aggregatorNpmPackageName` are not useful from the user perspective.
 
-### Middleware Approach for Deserialization (Postponed)
+### Introduce Customizable (De-)Serialization
 
-There is good progress toward a flexible middleware approach.
-Unfortunately, it is not ready for the beta release yet.
-To give you a sneak peek, here is an example for a middleware to serialize `Edm.DateTime`, `Edm.DateTimeOffset` and `Edm.Time` to `temporal`:
+We added options to dynamically change the types in your entities.
+You can now define custom (de-)serializers - functions to convert data to and from the types you need.
+Here is an example for (de-)serializers to convert `Edm.DateTime`, `Edm.DateTimeOffset` and `Edm.Time` to/from Temporal:
 
 <img
   style={{ maxWidth: '75%', height: 'auto' }}
   src={temporal}
   alt="example temporal serializer"
 />
+
+Intrigued?
+You can get the Temporal-based (de-)serializers via npm (`npm install @sap-cloud-sdk/temporal-de-serializers@beta`).
 
 ## How Can I Use It?
 
