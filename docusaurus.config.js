@@ -95,11 +95,7 @@ module.exports = {
               to: 'docs/java/release-notes-sap-cloud-sdk-for-java'
             },
             {
-              label: 'JS/TS Core',
-              to: 'https://github.com/SAP/cloud-sdk-js/releases'
-            },
-            {
-              label: 'JS/TS Client Libraries',
+              label: 'JavaScript/TypeScript',
               to: 'docs/js/release-notes-sap-cloud-sdk-for-javascript-and-typescript'
             }
           ]
