@@ -13,17 +13,17 @@ This document will guide you through the steps necessary to upgrade to version 2
 Depending on your project, some of the steps might not be applicable.
 The To-Do list is:
 
-- [Upgrade ECMAScript runtime to "es2019" or higher](#updateEcmaScript)
-- [Update Public API Clients - possible after beta phase](#updatePublicClient)
-- [Update Generated API Clients](#updateGeneratedClient)
-- [Replace Core Imports](#replaceCoreImports)
-- [Adjust Serializing and Deserializing of Entities](#adjustSerializer)
-- [Get Support if you face a problem in the migration process](#getSupport)
+- [Upgrade ECMAScript runtime to "es2019" or higher](#update-ecmascript-runtime)
+- [Update Public API Clients - possible after beta phase](#update-public-api-clients)
+- [Update Generated API Clients](#update-generated-api-clients)
+- [Replace Core Imports](#replace-core-imports)
+- [Adjust Serializing and Deserializing of Entities](#adjust-serializing-and-deserializing-of-entities)
+- [Get Support if you face a problem in the upgrade process](../../overview/support.mdx)
 
 We have provided prerequisites at the beginning of each section.
 If it does not apply to your project, please proceed to the next one.
 
-### <a name="updateEcmaScript"/> Update EcmaScript Runtime
+### Update EcmaScript Runtime
 
 We changed the compilation target of our source code from `es5` to `es2019`.
 Depending on your configuration this may lead to compilation errors (TypeScript) or runtime errors in (JavaScript).
@@ -31,13 +31,13 @@ If you run node version 12 or greater, no changes are necessary.
 If you run an older node version, please update to a newer version.
 You can find a list of breaking changes in the news section of the [node.js website](https://nodejs.org/en/blog/) (e.g. ["The Difference Between Node.js 10 and 12"](https://nodejs.org/en/blog/uncategorized/10-lts-to-12-lts/))
 
-:::tip 
+:::tip
 
 We recommend switching to Node 14 or above when using the SAP Cloud SDK for JavaScript 2.0.
 
 :::
 
-### <a name="updatePublicClient"/> Update Public API Clients
+### Update Public API Clients
 
 **Prerequisite**: Your project uses published API clients like `https://www.npmjs.com/package/@sap/cloud-sdk-vdm-business-partner-service` (this applies to all direct dependencies in your `package.json` that start with `@sap/cloud-sdk-vdm-`).
 
@@ -54,7 +54,7 @@ Once these clients are available, follow the following steps:
 
 If you want to check a client before we publish it, follow the step below to generate it locally.
 
-### <a name="updateGeneratedClient"/> Update Generated API Clients
+### Update Generated API Clients
 
 **Prerequisite**: Your project uses generated API clients.
 If you are unsure if you have generated clients use this RegExp `class.*RequestBuilder.*extends RequestBuilder` to scan your project for RequestBuilders of a generated client.
@@ -71,7 +71,7 @@ We assume that you have installed the generator as a local `devDependency` in yo
 - Change the `requestBuillder()` call as described [here](#newRequestApi)
 - Change the `execute()` call as described [here](#executeAPIChanges)
 
-### <a name="replaceCoreImports"/> Replace Core Imports
+### Replace Core Imports
 
 **Prerequisite**: Your project used imports from `@sap-cloud-sdk/core`. Check your `package.json` and search globally for any import statements from this package.
 
@@ -96,7 +96,7 @@ The use of the internal API is considered a temporary quick fix.
 If you need functionality please [open an issue](https://github.com/SAP/cloud-sdk-js/issues/new/choose) and state your requirements.
 Details on the API contract are discussed in this [ADR](https://github.com/SAP/cloud-sdk-js/blob/2.0/knowledge-base/adr/0028-public-api-extraction.md)
 
-### <a name="adjustSerializer"/> Adjust Serializing and Deserializing of Entities
+### Adjust Serializing and Deserializing of Entities
 
 **Prerequisite**: You consume non-primitive entity properties like dates, duration and times.
 
