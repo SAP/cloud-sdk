@@ -46,11 +46,11 @@ Once these clients are available, follow the following steps:
 
 - Find the used clients in your `package.json`.
 - Change the used version of the client from 1.X.Y to 2.0.0.
-- Change the `builder()` call as described [here](#newEntityBuilder)
+- Change the `builder()` call as described [here](#breaking-change-on-the-entitybuilder-api)
 - Find the invocations of the request builders.
   This RegExp `import.*from.*@sap\/cloud\-sdk\-vdm\-.*` helps to find the files where the client is used.
-- Change the `requestBuillder()` call as described [here](#newRequestApi)
-- Change the `execute()` call as described [here](#executeAPIChanges)
+- Change the `requestBuillder()` call as described [here](#breaking-change-on-the-requestbuilder-api)
+- Change the `execute()` call as described [here](#breaking-change-on-the-execute-api)
 
 If you want to check a client before we publish it, follow the step below to generate it locally.
 
@@ -64,7 +64,7 @@ We assume that you have installed the generator as a local `devDependency` in yo
 - Find the installed generator in your `package.json`.
 - Change the used version from 1.X.Y to 2.0.0 and execute `npm install`.
 - Regenerate the client with the updated generator as described [here](../features/odata/generate-odata-client).
-- Change the `builder()` call as described [here](#newEntityBuilder)
+- Change the `builder()` call as described [here](#breaking-change-on-the-entitybuilder-api)
 - Find the invocations of the request builders.
   This RegExp `import.*from.*EntityName.*` helps to find the files where the client is used.
   Replace `EntityName` with the name of your entities.
@@ -79,7 +79,7 @@ We split the big module `@sap-cloud-sdk/core` into multiple smaller modules.
 These imports need to be adjusted:
 
 - Find the imported method in your code.
-- Find the new package where the method is located as described [here](#findNewPackage).
+- Find the new package where the method is located as described [here](#how-to-find-the-new-packages).
 - Add the new package to the `package.json`
 - Remove `@sap-cloud-sdk/core` from the `package.json`.
 - Replace the old import with package name.
@@ -89,7 +89,7 @@ There are three cases:
 
 - The object is part of the public API: `{ publicApiMethod } from '@sap-cloud-sdk/connectivity'`
 - The object is moved to the internal API: `{ internalApiMethod } from '@sap-cloud-sdk/connectivity/internal'`
-- The object is removed without replacement see: [deprecated object list](#deprecatedList)
+- The object is removed without replacement see: [deprecated object list](#deprecated-methods)
 
 Your IDE should warn you if a module has no exported member with the given name.
 The use of the internal API is considered a temporary quick fix.
