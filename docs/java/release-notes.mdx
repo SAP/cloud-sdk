@@ -55,6 +55,52 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed Issues
 -->
 
+## 3.62.0 - January 28, 2022
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.62.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
+
+### New Functionality
+
+- The experimental [Generic OData Client](https://sap.github.io/cloud-sdk/docs/java/features/odata/generic-untyped-odata-client) allows for customization of the number deserialization strategy from JSON to Java:
+  ```java
+  ODataRequestResultGeneric result;
+  
+  // Default: Number to Double
+  result.withNumberDeserializationStrategy(NumberDeserializationStrategy.DOUBLE)
+  
+  // Custom: Number to BigDecimal
+  result.withNumberDeserializationStrategy(NumberDeserializationStrategy.BIG_DECIMAL)
+  ```
+  This feature requires Gson dependency version `2.8.9` or higher.
+
+### Improvements
+
+- The OData generators no longer throw an exception and log an error in case the provided EDMX file does not match the respective OData version schema.
+  Instead, the file(s) that do not qualify for Java code generation will be skipped and debug messages are logged.
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [XSUAA Token Client and Token Flow API](https://github.com/SAP/cloud-security-xsuaa-integration/tree/main/token-client) from `2.11.5` to `2.11.10`
+    - Update [CF Logging Support](https://search.maven.org/search?q=g:com.sap.hcp.cf.logging%2BAND%2Ba:cf-java-logging-support-logback) (`com.sap.hcp.cf.logging:cf-java-logging-support-logback`) from `3.5.5` to `3.5.6`
+    - Update [Neo JavaEE7 WP API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-javaee7-wp-api) (`com.sap.cloud:neo-javaee7-wp-api`) from `1.111.8` to `1.113.10.2`
+    - Update [Neo Java Web API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-java-web-api) (`com.sap.cloud:neo-java-web-api`) from `4.15.7` to `4.17.4.1`
+  - Other dependency updates:
+    - Minor version updates:
+        - Update [Spring Framework](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-framework-bom) (`org.springframework:spring-framework-bom`) from `5.3.13` to `5.3.14`
+        - Update [Spring Security](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-security-bom) (`org.springframework:spring-security-bom`) from `5.6.0` to `5.6.1`
+        - Update [Fabric Gateway Java](https://search.maven.org/search?q=g:org.hyperledger.fabric%2BAND%2Ba:fabric-gateway-java) (`org.hyperledger.fabric:fabric-gateway-java`) from `2.2.2` to `2.2.3`
+        - Update [Java JWT](https://search.maven.org/search?q=g:com.auth0%2BAND%2Ba:java-jwt) (`com.auth0:java-jwt`) from `3.18.2` to `3.18.3`
+        - Update [Slf4j](https://search.maven.org/search?q=g:org.slf4j%2BAND%2Ba:slf4j-api) (`org.slf4j:slf4j-api`) from `1.7.32` to `1.7.33`
+        - Update [AMQP Client](https://search.maven.org/search?q=g:com.rabbitmq%2BAND%2Ba:amqp-client) (`com.rabbitmq:amqp-client`) from `5.14.0` to `5.14.1`
+        - Update [Netty BOM](https://search.maven.org/search?q=g:io.netty%2BAND%2Ba:netty-bom) (`io-netty:netty-bom`) from `4.1.72` to `4.1.73`
+        - Update [Protobuf Java](https://search.maven.org/search?q=g:com.google.protobuf%2BAND%2Ba:protobuf-java) (`com.google.protobuf:protobuf-java`) from `3.19.1` to `3.19.3`
+        - Update [Reactor Core](https://search.maven.org/search?q=g:io.projectreactor%2BAND%2Ba:reactor-core) (`io.projectreactor:reactor-core`) from `3.4.13` to `3.4.14`
+
+### Fixed Issues
+
+- Fix an issue where service bindings would not be loaded in some Kubernetes environments. 
+- Fix an issue where log message with `WARN` level would be written regularly with every incoming request.
+
 ## 3.61.0 - January 13, 2022
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.61.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
