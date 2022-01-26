@@ -13,17 +13,17 @@ This document will guide you through the steps necessary to upgrade to version 2
 Depending on your project, some of the steps might not be applicable.
 The To-Do list is:
 
-- [Upgrade ECMAScript runtime to "es2019" or higher](#updateEcmaScript)
-- [Update Public API Clients - possible after beta phase](#updatePublicClient)
-- [Update Generated API Clients](#updateGeneratedClient)
-- [Replace Core Imports](#replaceCoreImports)
-- [Adjust Serializing and Deserializing of Entities](#adjustSerializer)
-- [Get Support if you face a problem in the migration process](#getSupport)
+- [Upgrade ECMAScript runtime to "es2019" or higher](#update-ecmascript-runtime)
+- [Update Public API Clients - possible after beta phase](#update-public-api-clients)
+- [Update Generated API Clients](#update-generated-api-clients)
+- [Replace Core Imports](#replace-core-imports)
+- [Adjust Serializing and Deserializing of Entities](#adjust-serializing-and-deserializing-of-entities)
+- [Get Support if you face a problem in the upgrade process](#get-support)
 
 We have provided prerequisites at the beginning of each section.
 If it does not apply to your project, please proceed to the next one.
 
-### <a name="updateEcmaScript"/> Update EcmaScript Runtime
+### Update EcmaScript Runtime
 
 We changed the compilation target of our source code from `es5` to `es2019`.
 Depending on your configuration this may lead to compilation errors (TypeScript) or runtime errors in (JavaScript).
@@ -31,13 +31,13 @@ If you run node version 12 or greater, no changes are necessary.
 If you run an older node version, please update to a newer version.
 You can find a list of breaking changes in the news section of the [node.js website](https://nodejs.org/en/blog/) (e.g. ["The Difference Between Node.js 10 and 12"](https://nodejs.org/en/blog/uncategorized/10-lts-to-12-lts/))
 
-:::tip 
+:::tip
 
 We recommend switching to Node 14 or above when using the SAP Cloud SDK for JavaScript 2.0.
 
 :::
 
-### <a name="updatePublicClient"/> Update Public API Clients
+### Update Public API Clients
 
 **Prerequisite**: Your project uses published API clients like `https://www.npmjs.com/package/@sap/cloud-sdk-vdm-business-partner-service` (this applies to all direct dependencies in your `package.json` that start with `@sap/cloud-sdk-vdm-`).
 
@@ -46,15 +46,15 @@ Once these clients are available, follow the following steps:
 
 - Find the used clients in your `package.json`.
 - Change the used version of the client from 1.X.Y to 2.0.0.
-- Change the `builder()` call as described [here](#newEntityBuilder)
+- Change the `builder()` call as described [here](#breaking-change-on-the-entitybuilder-api)
 - Find the invocations of the request builders.
   This RegExp `import.*from.*@sap\/cloud\-sdk\-vdm\-.*` helps to find the files where the client is used.
-- Change the `requestBuillder()` call as described [here](#newRequestApi)
-- Change the `execute()` call as described [here](#executeAPIChanges)
+- Change the `requestBuillder()` call as described [here](#breaking-change-on-the-requestbuilder-api)
+- Change the `execute()` call as described [here](#breaking-change-on-the-execute-api)
 
 If you want to check a client before we publish it, follow the step below to generate it locally.
 
-### <a name="updateGeneratedClient"/> Update Generated API Clients
+### Update Generated API Clients
 
 **Prerequisite**: Your project uses generated API clients.
 If you are unsure if you have generated clients use this RegExp `class.*RequestBuilder.*extends RequestBuilder` to scan your project for RequestBuilders of a generated client.
@@ -64,14 +64,14 @@ We assume that you have installed the generator as a local `devDependency` in yo
 - Find the installed generator in your `package.json`.
 - Change the used version from 1.X.Y to 2.0.0 and execute `npm install`.
 - Regenerate the client with the updated generator as described [here](../features/odata/generate-odata-client).
-- Change the `builder()` call as described [here](#newEntityBuilder)
+- Change the `builder()` call as described [here](#breaking-change-on-the-entitybuilder-api)
 - Find the invocations of the request builders.
   This RegExp `import.*from.*EntityName.*` helps to find the files where the client is used.
   Replace `EntityName` with the name of your entities.
-- Change the `requestBuillder()` call as described [here](#newRequestApi)
-- Change the `execute()` call as described [here](#executeAPIChanges)
+- Change the `requestBuillder()` call as described [here](#breaking-change-on-the-requestbuilder-api)
+- Change the `execute()` call as described [here](#breaking-change-on-the-execute-api)
 
-### <a name="replaceCoreImports"/> Replace Core Imports
+### Replace Core Imports
 
 **Prerequisite**: Your project used imports from `@sap-cloud-sdk/core`. Check your `package.json` and search globally for any import statements from this package.
 
@@ -79,7 +79,7 @@ We split the big module `@sap-cloud-sdk/core` into multiple smaller modules.
 These imports need to be adjusted:
 
 - Find the imported method in your code.
-- Find the new package where the method is located as described [here](#findNewPackage).
+- Find the new package where the method is located as described [here](#how-to-find-the-new-packages).
 - Add the new package to the `package.json`
 - Remove `@sap-cloud-sdk/core` from the `package.json`.
 - Replace the old import with package name.
@@ -89,14 +89,14 @@ There are three cases:
 
 - The object is part of the public API: `{ publicApiMethod } from '@sap-cloud-sdk/connectivity'`
 - The object is moved to the internal API: `{ internalApiMethod } from '@sap-cloud-sdk/connectivity/internal'`
-- The object is removed without replacement see: [deprecated object list](#deprecatedList)
+- The object is removed without replacement see: [deprecated object list](#deprecated-methods)
 
 Your IDE should warn you if a module has no exported member with the given name.
 The use of the internal API is considered a temporary quick fix.
 If you need functionality please [open an issue](https://github.com/SAP/cloud-sdk-js/issues/new/choose) and state your requirements.
 Details on the API contract are discussed in this [ADR](https://github.com/SAP/cloud-sdk-js/blob/2.0/knowledge-base/adr/0028-public-api-extraction.md)
 
-### <a name="adjustSerializer"/> Adjust Serializing and Deserializing of Entities
+### Adjust Serializing and Deserializing of Entities
 
 **Prerequisite**: You consume non-primitive entity properties like dates, duration and times.
 
@@ -109,7 +109,7 @@ The default serialization for time related properties will be changed from Momen
 Since Moment.js is a discontinued project with large size we recommend to stick with the new standard.
 Note that in 2.0 version, the default remains Moment.js.
 
-### <a name="getSupport"/> Get Support
+### Get Support
 
 **Prerequisite\_**: You tried to do the steps above but hit some impediments.
 
@@ -117,7 +117,7 @@ Please create a [support issue](https://github.com/SAP/cloud-sdk-js/issues/new/c
 
 ## Appendix
 
-### <a name="newEntityBuilder"/> Breaking Change on the EntityBuilder API
+### Breaking Change on the EntityBuilder API
 
 For the implementation of the [(de-)serializers](../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#customize-de-serialization), two changes are introduced in version 2.0:
 
@@ -147,7 +147,7 @@ myEntityApi
   .build();
 ```
 
-### <a name="newRequestApi"/> Breaking Change on the RequestBuilder API
+### Breaking Change on the RequestBuilder API
 
 In order to make the [middle ware concept](../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#customize-de-serialization) possible, it was necessary to add more state to the `requestBuillder`.
 
@@ -170,7 +170,7 @@ myEntityApi
   .execute(destination);
 ```
 
-### <a name="executeAPIChanges"/> Breaking Change on the Execute API
+### Breaking Change on the Execute API
 
 The breaking change which will affect most users is the change of the execute methods.
 In the past there was a separate `DestinationNameAndJwt` object and a `DestinationOptions` to define how a destination was fetched from the service.
@@ -231,7 +231,7 @@ executeHttpRequest(
 );
 ```
 
-### <a name="findNewPackage"/> How to find the new Packages
+### How to find the new Packages
 
 We have split the `@sap-cloud-sdk/core` package into the following smaller packages:
 
@@ -250,7 +250,7 @@ You can search for the method at two places:
 
 Note that for the `executeHttpRequest`, the new API offers all the destination retrieval options.
 
-### <a name="deprecatedList"/> Deprecated Methods
+### Deprecated Methods
 
 The table below gives a list of the removed methods for which a replacement is provided.
 
