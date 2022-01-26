@@ -21,13 +21,11 @@ import TabItem from '@theme/TabItem';
 
 <BuildBadge /> <LicenseBadge />
 
-## Introduction
+## What Is the SAP Cloud SDK
 
-### What Is the SAP Cloud SDK
+The SAP Cloud SDK is a set of libraries that helps you end-to-end when developing applications on SAP Business Technology Platform that communicate with SAP solutions and services such as SAP S/4HANA, SAP S/4HANA Cloud, SAP SuccessFactors, and many others.
 
-The SAP Cloud SDK is a set of libraries that helps you end-to-end when developing applications on SAP Business Technology Platform that communicate with SAP solutions and services such as SAP S/4HANA, SAP S/4HANA Cloud, SAP SuccessFactors,  and many others.
-
-### Starter projects
+## Starter projects
 
 The SAP Cloud SDK for JavaScript publishes starter projects for multiple scenarios in the [samples repository](https://github.com/SAP-samples/cloud-sdk-js).
 Currently there are starter projects available for:
@@ -41,9 +39,9 @@ Currently there are starter projects available for:
 Make sure you have `git` installed. To create a new project run
 
 <Tabs groupId="scenario" defaultValue="vanilla-cf" values={[
-{ label: 'CF', value: 'vanilla-cf'},{ label: 'CF + CAP', value: 'cap-cf'},{ label: 'K8s + Gardener', value: 'k8s'},{ label: 'K8s + Gardener + Helm', value: 'k8s-helm'}, ]}>
+{ label: 'CF', value: 'cf'},{ label: 'CF + CAP', value: 'cap-cf'},{ label: 'K8s + Gardener', value: 'k8s'},{ label: 'K8s + Gardener + Helm', value: 'k8s-helm'}, ]}>
 
-<TabItem value="major">
+<TabItem value="cf">
 
 ```shell
 git clone \
@@ -57,30 +55,55 @@ git sparse-checkout set samples/cf-sample-application
 ```
 
 </TabItem>
-</Tabs>
 
-It will guide you through the initialization, create the necessary files, and add necessary dependencies.
-If you run it in an empty folder, it will ask if you want to initialize a project using [`@nest/cli`](https://github.com/nestjs/nest-cli).
-
-The CLI will already install all the necessary dependencies for the project, so this might take a minute.
-If everything worked correctly, you should see the following output:
+<TabItem value="cap-cf">
 
 ```shell
-+---------------------------------------------------------------+
-| ✅ Init finished successfully.                                |
-|                                                               |
-| 🚀 Next steps:                                                |
-| - Run the application locally (`npm run start:dev`)           |
-| - Deploy your application (`npm run deploy`)                  |
-|                                                               |
-| 🔨 Consider setting up Jenkins to continuously build your app |
-| Use `sap-cloud-sdk add-cx-server` to create the setup script  |
-+---------------------------------------------------------------+
+git clone \
+  --depth 1  \
+  --filter=blob:none  \
+  --sparse \
+  https://github.com/SAP-samples/cloud-sdk-js.git \
+;
+cd cloud-sdk-js
+git sparse-checkout set samples/cds-sample-application
 ```
 
-## Project Files and Folders
+</TabItem>
 
-<!--not sure about this part-->
+<TabItem value="k8s">
+
+```shell
+git clone \
+  --depth 1  \
+  --filter=blob:none  \
+  --sparse \
+  https://github.com/SAP-samples/cloud-sdk-js.git \
+;
+cd cloud-sdk-js
+git sparse-checkout set samples/k8s-sample-application
+```
+
+</TabItem>
+
+<TabItem value="k8s-helm">
+
+```shell
+git clone \
+  --depth 1  \
+  --filter=blob:none  \
+  --sparse \
+  https://github.com/SAP-samples/cloud-sdk-js.git \
+;
+cd cloud-sdk-js
+git sparse-checkout set samples/helm-sample-application
+```
+
+</TabItem>
+
+</Tabs>
+
+### Project Files and Folders
 
 The project contains the following files and folders, among others, to get you started with the SAP Cloud SDK for JavaScript:
 
@@ -89,7 +112,7 @@ The project contains the following files and folders, among others, to get you s
 - **`package.json`**: Specifies dependencies, metadata, and user-defined scripts.
   The application comes with some predefined scripts and dependencies.
 - **`.npmrc`**: The **`npm`** configuration file.
-  The SAP Cloud SDK consists of some generic libraries, that are available as Open Source Software and service libraries for allowlisted SAP S/4HANA APIs, referred to as the Virtual Data Model (VDM).
+  The SAP Cloud SDK consists of some generic libraries, that are available as Open Source Software and typed client libraries for allow-listed SAP APIs like SAP S/4HANA and multiple others. These libraries are often referred to as the Virtual Data Model (VDM).
   In the scaffolding, we specify the registry for the `@sap` scope, where the VDM libraries are published.
 
 #### TypeScript
@@ -100,8 +123,7 @@ The project contains the following files and folders, among others, to get you s
 #### Continuous Delivery
 
 - **`Jenkinsfile`**: Jenkins pipeline definition file for quality assurance.
-  It uses the [project "Piper" General Purpose Pipeline](https://sap.github.io/jenkins-library).
-- **`pipeline_config.yml`**: Pipeline configuration file for the Jenkins pipeline.
+  It uses the [project "Piper" General Purpose Pipeline](https://www.project-piper.io/).
 
 #### Cloud Foundry
 
