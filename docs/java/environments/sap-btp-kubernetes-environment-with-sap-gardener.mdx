@@ -526,11 +526,29 @@ This excursion will guide you through the necessary steps to get your applicatio
    -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
    ```
 
-   One example for this might be in the Dockerfile of your application:
+   As an example, let's assume that your Dockerfile has the following entrypoint:
 
    ```Dockerfile
-   ENTRYPOINT ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005", "-jar", "/app.jar"]
+   ENTRYPOINT ["java","-jar","/app.jar"]
    ```
+
+   Then you can update your deployment by adding the `command` and `args` properties to your image spec in your deployment.yml:
+
+   ```yml
+   spec: # pod spec
+     containers:
+       - image: <your-image-spec>
+         name: <your-container-name>
+         command: ['java']
+         args:
+           [
+             '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005',
+             '-jar',
+             '/app.jar'
+           ]
+   ```
+
+   This will replace the entrypoint with the given command and arguments, as described in the [Kubernetes documentation](https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/).
 
 2. Make sure that the adjusted image is actually running in your Kubernetes Cluster.
 
@@ -543,4 +561,4 @@ This excursion will guide you through the necessary steps to get your applicatio
    ```
 
 5. Let your IDE connect against `localhost:5005`.
-   The specifics of this step depend heavily on your choice of IDE, so we cannot give fits-all solution.
+   The specifics of this step depend heavily on your choice of IDE, so we cannot give a fits-all solution.
