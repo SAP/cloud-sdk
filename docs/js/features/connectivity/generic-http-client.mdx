@@ -13,6 +13,8 @@ keywords:
 ---
 
 import LinkToLatestJsApiDocs from '../../../../src/sap/sdk-js/LinkToLatestJsApiDocs';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 ## What Is the Generic HTTP Client?
 
@@ -96,14 +98,34 @@ For example, a request configuration with `authorization` headers will overwrite
 
 You can also pass an optional third parameter `httpRequestOptions`, where you can indicate for example whether the SAP Cloud SDK should fetch `CSRF` token for a non-GET request.
 For a get request, the `CSRF` token is not fetched and this option is ignored.
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
 By default, the value of `fetchCsrfToken` is true.
 
 For some non-GET requests, fetching the `CSRF` token is not required, and can be skipped.
 You can disable the `CSRF` token request by setting the `fetchCsrfToken` to false like below:
 
-```JSON
+```ts
 executeHttpRequest(destination, requestConfig, { fetchCsrfToken: false });
 ```
+
+</TabItem>
+<TabItem value="deprecated">
+
+Below is an example of the `httpRequestOptions` to delegate the `CSRF` token fetching to the SAP Cloud SDK.
+
+```JSON
+{
+     fetchCsrfToken: true
+}
+```
+
+By default, the value of `fetchCsrfToken` is false.
+
+</TabItem>
+</Tabs>
 
 ## When to Use It
 
