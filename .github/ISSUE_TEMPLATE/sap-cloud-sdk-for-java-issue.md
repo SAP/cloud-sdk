@@ -4,7 +4,6 @@ about: Report issues with the SAP Cloud SDK for Java
 title: ''
 labels: Java
 assignees: ''
-
 ---
 
 <!--
@@ -18,9 +17,8 @@ Be sure to remove **any confidential** information (examples: credentials or int
 -->
 
 **[OPTIONAL] Survey**
-Please, help us making the SAP Cloud SDK better by taking our [survey](https://sapinsights.eu.qualtrics.com/jfe/form/SV_0P69X6kJ0Pdxqbc). 
+Please, help us making the SAP Cloud SDK better by taking our [survey](https://sapinsights.eu.qualtrics.com/jfe/form/SV_0P69X6kJ0Pdxqbc).
 It takes less than 3 minutes :)
-
 
 ## Issue Description
 
