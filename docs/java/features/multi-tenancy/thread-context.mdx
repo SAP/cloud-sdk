@@ -137,9 +137,7 @@ So when the parent thread dies the context will cease to exist and no longer be 
 You can work around this limitation with the following approach:
 
 ```java
-RequestHeaderContainer requestHeaders = RequestHeaderAccessor.tryGetHeaderContainer().getOrElse(RequestHeaderContainer.EMPTY);
-ThreadContextExecutor executor = new ThreadContextExecutor().withThreadContext(new DefaultThreadContext())
-        .withListeners(new RequestHeaderThreadContextListener(requestHeaders));
+ThreadContextExecutor executor = new ThreadContextExecutor().withThreadContext(new DefaultThreadContext());
 
 Callable operationWithContext = () -> executor.execute(() -> operation());
 invokeAsynchronously(operationWithContext);
