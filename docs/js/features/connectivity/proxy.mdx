@@ -53,13 +53,15 @@ In this document, we focus on the **proxy** part and explain how proxies are han
 ## What Kind of Proxies are There?
 
 Before we get into the details, it is important to have an overview of the different proxy types.
-There are two possible types of proxies:
+There are three possible types of proxies:
 
 1. A local proxy running on the cloud platform that connects to SAP S/4HANA On-premise systems.
    The proxy information like host and port are provided by the [connectivity service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/daca64dacc6148fcb5c70ed86082ef91.html#loiodaca64dacc6148fcb5c70ed86082ef91__services).
    This proxy will be referred to as connectivity proxy.
 2. A proxy running in some landscape that makes requests to the internet.
    This proxy will be referred to as web proxy.
+3. A proxy which is used when your destination represents a tunnel that's created via the [Private Link Service](https://help.sap.com/viewer/product/PRIVATE_LINK/CLOUD/en-US).
+   This proxy will be referred to as `PrivateLink` proxy.
 
 ## Manual Configuration
 
@@ -95,9 +97,9 @@ Hence, you will provide in the `.execute()` method only the destination name.
 This will trigger the destination lookup as described [here](destination).
 
 The result of the lookup is a destination object which contains a property called `Proxy Type`.
-This property can have two values: `Internet` and `OnPremise`:
+This property can have three values: `Internet`, `OnPremise`, and `PrivateLink`:
 
-<img alt="Destination in CF" src={useBaseUrl('img/proxyTypeDestination.png')} />
+<img alt="Destination in CF" src={useBaseUrl('img/proxyTypeDestination.png')} height="300" />
 
 If `OnPremise` is selected, it is assumed that this destination points to an SAP S/4HANA On-premise system.
 In this case, you need the connectivity proxy.
@@ -139,6 +141,8 @@ Since environment variables are a global setting, it might become necessary to e
 This is possible using the `NO_PROXY` environment variable.
 The `NO_PROXY` variable contains a list of comma-separated URLs for which no proxy is used.
 Currently, wild cards like `*` are supported in the list.
+
+If `PrivateLink` is selected we use the same flow as we do for proxy type `Internet`.
 
 ## A Word on the Used Libraries and Implementation Details
 
