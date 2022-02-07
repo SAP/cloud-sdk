@@ -142,6 +142,7 @@ module.exports = {
             label: 'Connectivity',
             items: [
               'js/features/connectivity/destination',
+              'js/features/connectivity/destination-cache-isolation',
               'js/features/connectivity/proxy',
               'js/features/connectivity/generic-http-client',
               'js/features/connectivity/on-premise'
