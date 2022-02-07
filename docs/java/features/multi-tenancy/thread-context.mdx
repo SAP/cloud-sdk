@@ -49,6 +49,12 @@ If the `Authorization` header contains a `JWT` from the [`AppRouter`](https://bl
 - Store it in the `ThreadContext` and
 - Pull the _Tenant_ and _Principal_ information from it
 
+:::tip Integration with CAP
+In case you are using CAP (with the `cds-integration-cloud-sdk` dependency) the Tenant & Principal information will **instead** be derived from the [CAP Request Context](https://cap.cloud.sap/docs/java/request-contexts).
+That also means that the `ThreadContext` will not be used when accessing this information.
+All other information (not Tenant or Principal) will still be derived & maintained via the `ThreadContext`.
+:::
+
 ## How Can the Thread Context Be Used?
 
 ### Accessing Information
@@ -72,6 +78,12 @@ In that case you can override the current tenant explicitly:
 ```java
 TenantAccessor.executeWithTenant(customTenant, () -> doStuff());
 ```
+
+:::caution CAP Integration
+The above does not apply for `TenantAccessor` and `PrincipalAccessor` when using the CAP framework (with the `cds-integration-cloud-sdk` dependency).
+When using CAP the Tenant & Principal information is derived from the `RequestContext`.
+Please refer to [this section](https://cap.cloud.sap/docs/java/request-contexts#defining-requestcontext) on how to override existing values in the CAP context.
+:::
 
 :::caution
 Be aware, that the `executeWith` methods shown above only replaces the given property, but does not update properties derived from it.
@@ -125,6 +137,11 @@ Callable operationWithTenant = TenantAccessor.executeWithTenant(customTenant, ()
 
 invokeAsynchronously(operationWithContext);
 ```
+
+:::caution CAP Integration
+In case you are using CAP also the CAP Request Context needs to be passed on.
+Please refer to [this guide](../../guides/cap-sdk-integraion) on how to achieve this.
+:::
 
 :::danger Thread Lifecycle
 
