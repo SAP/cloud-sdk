@@ -123,10 +123,9 @@ The isolation strategy is automatically detected and applied based on the given 
 - `JWT` without `user_id`: Isolation is `Tenant` and value for the tenant is the `zid` of the `JWT`
 - `JWT` with `user_id`: Isolation is `TenantUser` and values are taken from `zid` and `user_id`.
 
-You can override the autodetected isolation strategy.
+You can override the automatically detected isolation strategy.
 This could be necessary if you want to register a destination that cares only about `Tenant` while your `JWT` contains both a `tenant` and a `user_id` which would make it `TenantUser` by default.
 
 ```ts
 registerDestination(destination,{jwt:'yourJWT', isolationStrategy: IsolationStrategy.Tenant});
 ```
-
