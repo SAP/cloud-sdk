@@ -88,11 +88,13 @@ In such a case you can manually enforce weaker isolation:
  </TabItem>
  </Tabs>
 
+:::caution
 Be very careful with this option.
 You should know what you're doing when manually downgrading the isolation strategy from the maximally possible `TenanUser` level.
-A erroneous configuration can lead to severe permission escalation between users.
+A erroneous configuration can lead to severe privilege escalation between users.
+:::
 
-:::caution
+:::info
 In version 1.X of the SAP Cloud SDK the isolation strategy is always TenantUser per default.
 You need to set it manually.
 You need to activate caching explicitly with the `useCache` option, even if you pass an isolation strategy.
