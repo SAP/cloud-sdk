@@ -66,8 +66,63 @@ We do not remove any deprecated code before next major release.
 
 We intend to release a new **major version** every **six months** to introduce significant feature upgrades, refactor existing features, and clean up deprecated code.
 
-  - **Major version** release interval is indicative and can be extended.
-  - We will announce planned date and scope of the next **major version** release in this [document](#planned-major-release-schedule) and [release notes](./release-notes.mdx) at least 3 months before the planned release date.
+  - **Major version** release interval is indicative and can be changed. (Q)
+  - We will announce planned date and scope of the next **major version** release in this [document](#planned-major-release-schedule) and [release notes](./release-notes.mdx) at least 3 months before the planned release date. (Q, should we bother to provide some fixed interval or any commitment point)
+
+:::caution  "Upgrading between major versions"
+
+Major releases include incompatible API changes.
+An upgrade will usually involve certain effort to make your code benefit from new APIs.
+We intend to minimize this effort between adjacent major versions.
+
+- We provide a step-by-step upgrade guide for each major version.
+- Following the upgrade steps should take less than a day of development effort regardless of the project size.
+
+:::
+
+### Documentation
+
+The documentation is always up to date with the **latest major release**.
+We provide documentation for the two most recent major versions at the same time.
+We will use tabs to demonstrate a difference between them where required.
+See example below
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 4.x', value: 'major' }, { label: 'SDK 3.x', value: 'deprecated' } ]}>
+
+<TabItem value="major">
+
+```
+
+Major version documentation
+
+```
+
+</TabItem>
+
+<TabItem value="deprecated">
+
+```
+
+Deprecated version documentation
+
+```
+
+</TabItem>
+
+</Tabs>
+
+With every new major version release the oldest documented version is removed from the documentation portal.
+
+:::tip
+
+We will always provide a branch with the latest snapshot of the documentation before the major version release.
+You can use that branch to host documentation for the earlier version locally.
+
+:::
+
+### Fixes and Maintenance
+
+We provide new features and fixes only for the **latest major release** of the SAP Cloud SDK for Java.
 
 ### Major release stages
 
@@ -96,10 +151,6 @@ We intend to release a new **major version** every **six months** to introduce s
 
 #### Heading
 
-
-
-
-
 |              | Propose scope  | Get feedback        | Refine and approve scope | Announce scope                         | Develop Beta | Get feedback         | Refine Beta       | GA Release                    |
 |:------------:|:--------------:|:-------------------:|:------------------------:|:--------------------------------------:|:------------:|:--------------------:|:-----------------:|:-----------------------------:|
 | Time frame   | 1 month        | 1 month             | 2 weeks                  | 1 day                                  | 2 months     | 1 months             | 2 weeks           | 2 weeks                       |
@@ -107,71 +158,9 @@ We intend to release a new **major version** every **six months** to introduce s
 | Result       | Scope proposal | Validated scope     | Approved Scope           | Publish scope and planned release date | Release Beta | List of improvements | Release Candidate | New Major version released GA |
 
 
-```mermaid
-journey
-    title Major release strategy of the SAP Cloud SDK for Java
-    section Scoping
-      Propose scope: 3: SDK Team
-      Get feedback: 4: Stakeholders, SDK Team
-      Refine scope: 5: Stakeholders, SDK Team
-    section Go home
-      Go downstairs: 5: Me
-      Sit down: 5: Me
-```
 
-### Upgrading to a New Minor Version
+## Support and feedback
 
-- Upgrade to a new **minor release version** should not involve any effort because we do not introduce breaking changes.
-
-### Upgrading to a New Major Version
-
-- We provide a step-by-step upgrade guide for each major version.
-- Following the upgrade steps should take less than a day of development effort regardless of the project size.
-
-### Documentation
-
-- The documentation is always up to date with the **latest major release**.
-- We will use tabs to demonstrate a difference between the versions where required.
-
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-
-<TabItem value="major">
-
-```
-
-Major version documentation
-
-```
-
-</TabItem>
-
-<TabItem value="deprecated">
-
-```
-
-Deprecated version documentation
-
-```
-
-</TabItem>
-
-</Tabs>
-
-- We will maintain documentation for the two most recent versions.
-- With every new major version release the oldest documented version is removed from the documentation portal.
-
-:::tip
-
-We will always provide a branch with the latest snapshot of the documentation before the major version release.
-You can use that branch to host documentation for the earlier version locally.
-
-:::
-
-### Fixes and Maintenance
-
-- We provide new features and fixes only for the **latest major release** of the SAP Cloud SDK for JavaScript.
-
-### Support and feedback
-
-We are happy to hear from you and usually respond within one day.
-Check our [support channels](../overview/support.mdx) and chose the one that works best for you.
+Let us know if you have any questions about our release policy.
+We usually respond within one day.
+Check our [support channels](../overview/support.mdx) and chose the one working best for you.
