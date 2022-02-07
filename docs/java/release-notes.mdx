@@ -62,10 +62,13 @@ To continue using the latest features outlined in the release notes for version 
 ### New Functionality
 
 - Update the OData VDM to the [newest release 2202 of SAP S/4HANA Cloud](https://blogs.sap.com/2022/01/26/highlights-of-the-sap-s-4hana-cloud-2202-release/).
-  This includes completely new services (available as usual in packages `com.sap.cloud.sdk.s4hana.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types.
+  This includes completely new services available as usual in packages: 
+ - `com.sap.cloud.sdk.s4hana.datamodel.odata.services` 
+ - `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`
+ You will also find new operations in previously existing services, and new entity types.
   The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/products/SAPS4HANACloud/overview).
 - Add a new method (`excludingFields(...)`) to exclude specific fields from OData V2 and V4 `PUT` requests (i.e. `replacingEntity()`).
-  This method can be used to to exclude read-only fields, as well as dependent properties that are not tied to key properties from your `PUT` request payload.
+  This method can be used to exclude read-only fields, as well as dependent properties that are not tied to key properties from your `PUT` request payload.
 
 ### Improvements
 
@@ -82,7 +85,8 @@ To continue using the latest features outlined in the release notes for version 
 
 ### Fixed Issues
 
-- Fix an issue with Destination initialization, where the `"Authorization"` header value is constructed with improper scheme capitalization: e.g. instead of `"bearer [...]"` it will now correctly consider `"Bearer [...]"` as header value for outgoing HTTP requests.
+- Fix an issue with Destination initialization, where the `"Authorization"` header value is constructed with improper scheme capitalization. 
+Instead of `"bearer [...]"` it will now correctly use `"Bearer [...]"` as a header value for outgoing HTTP requests.
 
 ## 3.62.0 - January 28, 2022
 
