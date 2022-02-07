@@ -115,6 +115,7 @@ module.exports = {
         ]
       },
       'java/sdk-java-troubleshooting-frequent-problems',
+      'java/release-policy',
       'java/release-notes-sap-cloud-sdk-for-java',
       'java/frequently-asked-questions'
     ],
@@ -195,7 +196,11 @@ module.exports = {
       {
         type: 'category',
         label: 'Releases',
-        items: ['js/release-policy', 'js/announcing-version-2', 'js/announcing-version-2-beta']
+        items: [
+          'js/release-policy',
+          'js/announcing-version-2',
+          'js/announcing-version-2-beta'
+        ]
       },
       {
         type: 'category',
