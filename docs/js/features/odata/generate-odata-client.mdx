@@ -11,16 +11,22 @@ keywords:
   - generate
 ---
 
-The generator allows you to generate custom OData client libraries for OData services.
+With the generator you can generate custom OData client libraries for OData services.
 You can then access these services using the client libraries.
 
-The SAP Cloud SDK generator can both be used as a command-line interface (CLI) and programmatically.
+You can use the SAP Cloud SDK generator both as a command-line interface (CLI) and programmatically.
 
-All you need to use it is a service metadata specification in the `EDMX` format (file ending can be `.edmx` or `.xml`).
+All you need to use it, is a service metadata specification in the `EDMX` format (file ending can be `.edmx` or `.xml`).
 
 ## Installation
 
-Run this command in your project's terminal to install the generator globally.
+Run this command in your project's terminal to install the generator as a `devDependency`:
+
+```sh
+npm install -D @sap-cloud-sdk/generator
+```
+
+or globally:
 
 ```sh
 npm install -g @sap-cloud-sdk/generator
@@ -28,8 +34,8 @@ npm install -g @sap-cloud-sdk/generator
 
 :::note
 
-The generator is included in the SAP Cloud SDK CLI.
-If you installed the CLI, you don't need to install the generator separately.
+If you want to generate JavaScript code and install the generator globally, you have to install the `@sap-cloud-sdk/odata-v2` or `@sap-cloud-sdk/odata-v4` package in your project.
+See #transpilation for more details.
 
 :::
 
@@ -81,6 +87,17 @@ By default, the generated module contains the following sources:
 The generation always includes the TypeScript sources.
 All other files can be excluded from the generation - see the options below.
 
+## Transpilation
+
+The SAP Cloud SDK OData client generator for JavaScript/TypeScript generates TypeScript code.
+By default, it transpiles the generated sources to JavaScript and provides a `package.json` for the client (this differs from the OpanAPI generator).
+The generated clients depend on the `@sap-cloud-sdk/odata-v2` or `@sap-cloud-sdk/odata-v4` packages, depending on the OData version of the service.
+Therefore, for transpilation you need a local reference to those packages.
+Those packages are not installed for you, so that you can decide where to install them (e.g. in your project or in the subdirectory of your client).
+If you installed the generator globally, transpilation will fail unless you install the required odata packages.
+If you installed the generator as a `devDependency`, transpilation will work, however, for productive use, you may have to define the dependency productively.
+You can suppress transpilation with the `--generateJs` flag.
+
 ## Options
 
 Run `generate-odata-client --help` for additional options.
@@ -88,7 +105,7 @@ Run `generate-odata-client --help` for additional options.
 | Option, Aliases <div style={{ width: "225px" }}></div> |              Default              | Description                                                                                                                                                                                            |
 | :----------------------------------------------------- | :-------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `-i`, `--inputDir` _(required)_                        |                 -                 |  This directory will be recursively searched for `.edmx`/`.xml` files.                                                                                                                                 |
-| `-o`,`--outputDir`, _(required)_                       |                 -                 |  Directory to save the generated code in.                                                                                                                                                              |
+| `-o`, `--outputDir` _(required)_                       |                 -                 |  Directory to save the generated code in.                                                                                                                                                              |
 | `-s`, `--serviceMapping`,                              | `<inputDir>/service-mapping.json` |  Configuration file to ensure consistent names between multiple generation runs with updated / changed metadata files. Will be generated if not existent.                                              |
 | `--forceOverwrite`                                     |              `false`              |  Exit when encountering a file that already exists. When set to true, it will be overwritten instead. Please note that compared to the `--clearOutputDir` option, this will not delete outdated files. |
 | `--clearOutputDir`                                     |              `false`              |  Deletes EVERYTHING in the specified output directory before generating code.                                                                                                                          |
