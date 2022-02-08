@@ -60,7 +60,7 @@ Also ensure that it is not possible to manipulate the cache key generation to re
 The same rules apply if you create a multi-tenant application with respect to tenant isolation.
 :::
 
-Note that the [opossum](https://nodeshift.dev/opossum/) circuit breaker provides also a cache option.
+Note that the [opossum](https://nodeshift.dev/opossum/) circuit-breaker provides also a cache option.
 We will discuss the concept of a circuit-breaker in the next section.
 
 ## Circuit-Breaker
@@ -69,16 +69,16 @@ In general, a circuit-breaker is a safety part preventing your wires to melt in 
 In software development the circuit-breaker does not protect actual wires from melting but resources from overloading and helping them recover.
 You should include a circuit-breaker if:
 
-- The resource is essential in your infrastructure and should be protected
-- The resource reacts poorly to heavy load
-- Your application creates a high number of requests
+- The resource is essential in your infrastructure and should be protected.
+- The resource reacts poorly to heavy load.
+- Your application creates a high number of requests.
 
 Circuit-breakers are typically used for HTTP request and behave in the following way:
 
-- The circuit-breaker monitors the HTTP requests and tracks failing and successful requests
-- The circuit-breaker calculates an average percentage of failing requests
-- If this average is above some threshold the breaker opens
-- From this moment, requests are directly blocked and not executed
+- The circuit-breaker monitors the HTTP requests and tracks failing and successful requests.
+- The circuit-breaker calculates an average percentage of failing requests.
+- If this average is above some threshold the breaker opens.
+- From this moment, requests are directly blocked and not executed.
   This prevents the system from getting to many requests if it is in a unhealthy state.
 - After a reset time the breaker closes and requests can reach the target system again.
 
@@ -88,16 +88,17 @@ The reason for this is, that you do not overburden systems in the recovery phase
 
 Typical parameters to configure a circuit-breaker are:
 
-- FailureThreshold: Failure rate above which the circuit breaker will open
-- ResetTimeout: Time after which the circuit breaker will close
+- FailureThreshold: Failure rate above which the circuit-breaker will open.
+- ResetTimeout: Time after which the circuit-breaker will close.
+- Fallback: Something to be done when the breaker is open.
 - Options to calculate the failure rate.
 
-We prepared an example using the [opossum](https://nodeshift.dev/opossum/) circuit breaker in our [samples repository](https://github.com/SAP-samples/cloud-sdk-js/samples/resilience-examples).
+We prepared an example using the [opossum](https://nodeshift.dev/opossum/) circuit-breaker in our [samples repository](https://github.com/SAP-samples/cloud-sdk-js/samples/resilience-examples).
 
 ## Retries
 
 An other approach to add resilience to your application is to retry failed requests.
-Also for this pattern there are libraries available like [async-retry](https://www.npmjs.com/package/async-retry) which makes every asynchronous method perform some retries if they do not resolve.
+Also for this pattern there are libraries available like [async-retry](https://www.npmjs.com/package/async-retry) which makes every asynchronousyarn method perform some retries if they do not resolve.
 However, this pattern needs to be used with caution, because it is often mitigating a problem which should be solved properly.
 Also if something fails consistently, it does not help to press the same button multiple times.
 You should consider some rules for implementing retries:
@@ -121,6 +122,6 @@ Typical options for a retry library are:
 We prepared an example using the [async-retry](https://www.npmjs.com/package/async-retry) library in our [samples repository](https://github.com/SAP-samples/cloud-sdk-js/samples/resilience-examples).
 
 :::caution
-If you use retries together with a circuit breaker chose the options for the two accordingly.
-The waiting time between requests of the retry should be large enough to not trigger the circuit breaker to open.
+If you use retries together with a circuit-breaker chose the options for the two accordingly.
+The waiting time between requests of the retry should be large enough to not trigger the circuit-breaker to open.
 :::
