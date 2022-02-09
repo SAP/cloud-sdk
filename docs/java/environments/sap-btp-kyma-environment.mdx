@@ -227,9 +227,6 @@ curl localhost:8080/hello
 
 ```
 
-### Access Your Application outside the cluster
-**To do**
-
 ### Bind SAP BTP Services to the Application
 
 The SAP Business Technology Platform offers various services that can be used by applications.
@@ -238,7 +235,7 @@ To access services from a Kyma environment instances have to be created and boun
 For this guide we'll assume we want to use two services:
 
 1. Destination Service
-2. XSUAA
+2. XSUAA Service
 
 #### Bind the Destination Service
 
@@ -250,7 +247,6 @@ apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceInstance
 metadata:
   name: [Name of your new destination service instance]
-  namespace: [Your namespace]
 spec:
   clusterServiceClassExternalName: destination
   clusterServicePlanExternalName: [Your desired plan]
@@ -259,7 +255,6 @@ apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceBinding
 metadata:
    name: [Name of your service binding]
-   namespace: [Your namespace]
 spec:
    instanceRef:
      name: [Name of your destination service instance]
@@ -293,3 +288,55 @@ spec:
       ```
 
 5. Update the configuration via `kubectl apply -f deployment.yml`.
+
+#### Bind the XSUAA Service
+
+1. Create a new YAML file :
+
+```yml title="xsuaa-service.yaml"
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: [Name of your new xsuaa service instance]
+spec:
+  clusterServiceClassExternalName: xsuaa
+  clusterServicePlanExternalName: [Your desired plan]
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBinding
+metadata:
+   name: [Name of your service binding]
+spec:
+   instanceRef:
+     name: [Name of your xsuaa service instance]
+   secretName: my-xsuaa-secret
+```
+
+2. Repeat the same steps 2-5 from the previous section but make use of `my-xsuaa-secret` for the steps.
+
+##### Known XSUAA Service incompatibility
+
+We have observed that the property `plan` is missing in the XSUAA secret created in the previous section.
+This property, however, is required by the SAP Cloud SDK and it's absence causes runtime errors in the application while trying to read this service binding.
+
+To fix this issue you need to edit the secret so that it contains the `plan` property.
+The easiest way, when you are already using the CLI, is by using the `kubectl edit` command:
+
+```bash
+kubectl edit secrets my-xsuaa-secret
+```
+In there you can now add a `plan` property with one of the following base64 encoded values:
+
+| plan          | base64 encoded value |
+| ------------- | -------------------- |
+| `application` | `YXBwbGljYXRpb24K`   |
+| `broker`      | `YnJva2VyCg==`       |
+| `space`       | `c3BhY2UK`           |
+| `apiaccess`   | `YXBpYWNjZXNzCg==`   |
+
+The resulting service binding can now be consumed with the SAP Cloud SDK.
+
+### Access Your Application outside the cluster
+
+We will configure and deploy an [Approuter](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/01c5f9ba7d6847aaaf069d153b981b51.html?locale=en-US) so that only authenticated users can access our application.
