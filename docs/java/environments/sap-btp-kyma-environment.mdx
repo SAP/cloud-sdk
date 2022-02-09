@@ -132,7 +132,7 @@ In case you are facing authorization issues when pushing to your repository refe
 
 1. Create a new YAML file:
 <!-- vale off -->
-   ```yml title="deployment.yml" {16,28}
+   ```yml title="deployment.yml" {17,31}
  apiVersion: apps/v1
  kind: Deployment
  metadata:
@@ -186,18 +186,18 @@ In case you are facing authorization issues when pushing to your repository refe
 
 3. Monitor the status of the deployment by running: `kubectl get deployment my-app-deployment`.
 
-Eventually, you should see an output similar to:
+    Eventually, you should see an output similar to:
 
-```bash
-kubectl get deployment my-app-deployment
+    ```bash
+    kubectl get deployment my-app-deployment
 
-NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
-my-app-deployment     1/1     1            1           15s
-```
+    NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+    my-app-deployment     1/1     1            1           15s
+    ```
 
-:::tip
-In case something went wrong use `kubectl describe` together with `deployment` or `pod` to get more information about the status of your application.
-:::
+    :::tip
+    In case something went wrong use `kubectl describe` together with `deployment` or `pod` to get more information about the status of your application.
+    :::
 
 ### Access Your Application inside the cluster
 
@@ -205,21 +205,18 @@ To access your application from inside the cluster find the name of the applicat
 
 ```bash
 kubectl get pods
-
 ```
 Now use the name of the application pod and open a shell in this pod using:
 
 ```bash
 kubectl exec --stdin --tty [pod-name] -- /bin/sh
-
 ```
 Install [`curl`](https://curl.se/) on your pod depending on the Linux distribution of your pod and access the application by accessing an endpoint using `curl`.
+
 In case you started with an SAP Cloud SDK Archetype, you can test the `hello` endpoint:
 
 ```
-
 curl localhost:8080/hello
-
 ```
 
 ### Bind SAP BTP Services to the Application
