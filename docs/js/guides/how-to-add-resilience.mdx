@@ -39,7 +39,7 @@ The introduction of a cache is most effective in the following cases:
 - The function is invoked multiple times for the same arguments or context
 - The cache reduces the dependence on an external system being available
 
-Typically a cache implementation will provide a interface like:
+Typically a cache implementation has an interface like this:
 
 ```ts
 interface Cache<T> {
@@ -49,71 +49,70 @@ interface Cache<T> {
 }
 ```
 
-It will provide methods to `get`, `set` and `clear` the cached entries.
-The `key` will represent the arguments passed to your cached method.
+It provides methods to `get`, `set` and `clear` the cached entries.
+The `key` represents the arguments passed to your cached method.
 It is used to set and get a value from the cache.
 
 :::caution
-If your cached method relies on authentication/authorization like a HTTP call, be sure your cache preserves user isolation.
+If your cached method relies on authentication/authorization like an HTTP call, be sure your cache preserves user isolation.
 This means that the cache key must include the user making the request.
 Also ensure that it is not possible to manipulate the cache key generation to retrieve results related to other users.
 The same rules apply if you create a multi-tenant application with respect to tenant isolation.
 :::
 
-Note that the [opossum](https://nodeshift.dev/opossum/) circuit-breaker provides also a cache option.
-We will discuss the concept of a circuit-breaker in the next section.
+Note that the [opossum](https://nodeshift.dev/opossum/) circuit-breaker also provides a cache option.
 
 ## Circuit-Breaker
 
-In general, a circuit-breaker is a safety part preventing your wires to melt in case to much power is consumed.
-In software development the circuit-breaker does not protect actual wires from melting but resources from overloading and helping them recover.
+In electronics, a circuit-breaker is a safety device preventing your wires to melt in case too much power is consumed.
+In software development, the circuit-breaker does not protect actual wires from melting but resources from overloading, while helping them recover.
 You should include a circuit-breaker if:
 
 - The resource is essential in your infrastructure and should be protected.
 - The resource reacts poorly to heavy load.
 - Your application creates a high number of requests.
 
-Circuit-breakers are typically used for HTTP request and behave in the following way:
+Circuit-breakers are typically used for HTTP requests and behave in the following way:
 
 - The circuit-breaker monitors the HTTP requests and tracks failing and successful requests.
 - The circuit-breaker calculates an average percentage of failing requests.
 - If this average is above some threshold the breaker opens.
-- From this moment, requests are directly blocked and not executed.
-  This prevents the system from getting to many requests if it is in a unhealthy state.
+- From this moment on, requests are immediately blocked and not executed.
+  This prevents the system from getting too many requests if it is in an unhealthy state.
 - After a reset time the breaker closes and requests can reach the target system again.
 
-Many circuit-breakers do not close to 100% directly, but go to a half-open state.
+Many circuit-breakers do not go into a complete closed state, but go into a half-open state..
 In this state every failing request will directly cause the breaker to open again.
 The reason for this is, that you do not overburden systems in the recovery phase.
 
 Typical parameters to configure a circuit-breaker are:
 
-- FailureThreshold: Failure rate above which the circuit-breaker will open.
+- "failure threshold": Failure rate above which the circuit-breaker will open.
 - ResetTimeout: Time after which the circuit-breaker will close.
 - Fallback: Something to be done when the breaker is open.
 - Options to calculate the failure rate.
 
-We prepared an example using the [opossum](https://nodeshift.dev/opossum/) circuit-breaker in our [samples repository](https://github.com/SAP-samples/cloud-sdk-js/samples/resilience-examples).
+You can find an example using the [opossum](https://nodeshift.dev/opossum/) circuit-breaker [here](https://github.com/SAP-samples/cloud-sdk-js/samples/resilience-examples).
 
 ## Retries
 
 An other approach to add resilience to your application is to retry failed requests.
-Also for this pattern there are libraries available like [async-retry](https://www.npmjs.com/package/async-retry) which makes every asynchronousyarn method perform some retries if they do not resolve.
+or retries there are libraries available like [async-retry](https://www.npmjs.com/package/async-retry) which make every asynchronous function perform some retries if they do not resolve.
 However, this pattern needs to be used with caution, because it is often mitigating a problem which should be solved properly.
-Also if something fails consistently, it does not help to press the same button multiple times.
+Also, if something fails consistently, it does not help to press the same button multiple times.
 You should consider some rules for implementing retries:
 
 - The error should be the exception not the default.
 - The error should happen randomly so a second call has a high likelihood of giving something.
-- The source of error is out of your domain to fix.
-- Consistent errors should not trigger a retry. For example a HTTP request failing with 401 should not trigger a retry because the user is simply unauthorized.
-- The number of retires should be limited to a low digit number and there should be some appropriate waiting time between retires.
+- The source of the error is out of your domain to fix.
+- Consistent errors should not trigger a retry. For example an HTTP request failing with 401 should not trigger a retry because the user is simply unauthorized.
+- The number of retires should be limited to a low digit number and there should be some appropriate waiting time between retries.
 
 Typical options for a retry library are:
 
 - Retries: How many attempts should be done.
-- "mininmum timeout": initial waiting time for the first retry
-- maxTimeout: What is the maximal time for all retires to execute.
+- "minimum timeout": initial waiting time for the first retry
+- "maximum timeout": What is the maximal time for all retires to execute.
 - Distribution: How the retires are distributes over time.
   An exponential waiting time is a good option.
   Also adding some random time deviation is distributing the load of parallel retries.
