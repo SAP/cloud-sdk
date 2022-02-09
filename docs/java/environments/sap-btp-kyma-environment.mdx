@@ -34,6 +34,7 @@ You can also use this guide to migrate your existing application to Kyma.
 ### Prerequisites
 
 To follow this guide you will need:
+
 - An [SAP BTP Kyma environment](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/09dd313bf6644250a14f8f38c3d644c0.html?locale=en-US) instance
 - [Docker](https://www.docker.com/) and a publicly reachable Docker repository
 - A [Spring Boot](https://spring.io/projects/spring-boot) Application using the SAP Cloud SDK
@@ -82,6 +83,7 @@ And check your configuration which is usually located under `(your-home-director
 
 :::tip
 In case AuthN/AuthZ is required to download images make sure you have a secret configured in your cluster
+
 ```bash
 kubectl create secret docker-registry (name-of-the-secret) --docker-username=(username) --docker-password=(API-token) --docker-server=(your-repo)
 ```
@@ -131,13 +133,13 @@ In case you are facing authorization issues when pushing to your repository refe
 ### Create a Kyma Deployment
 
 1. Create a new YAML file:
-<!-- vale off -->
+   <!-- vale off -->
    ```yml title="deployment.yml" {17,31}
- apiVersion: apps/v1
- kind: Deployment
- metadata:
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
    name: my-app-deployment
- spec:
+   spec:
    replicas: 1
    selector:
      matchLabels:
@@ -148,7 +150,7 @@ In case you are facing authorization issues when pushing to your repository refe
          app: my-app
      spec:
        containers:
-       # Configure the docker image you just pushed to your repository here
+         # Configure the docker image you just pushed to your repository here
          - image: <name-of-the-image>
            name: my-app
            imagePullPolicy: Always
@@ -165,22 +167,25 @@ In case you are facing authorization issues when pushing to your repository refe
          # In case your repository requires a login, reference your secret here
          - name: <your-secret-for-docker-login>
        volumes:
- ---
- apiVersion: v1
- kind: Service
- metadata:
-   labels:
-     app: my-app
-   name: my-app
- spec:
-   type: NodePort
-   ports:
-     - port: 8080
-       targetPort: 8080
-       protocol: TCP
-   selector:
-     app: my-app
    ```
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+labels:
+app: my-app
+name: my-app
+spec:
+type: NodePort
+ports: - port: 8080
+targetPort: 8080
+protocol: TCP
+selector:
+app: my-app
+
+````
 <!-- vale on -->
 2. Install the configuration via `kubectl apply -f path/to/deployment/file/deployment.yml`.
 
@@ -193,7 +198,7 @@ kubectl get deployment my-app-deployment
 
 NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
 my-app-deployment     1/1     1            1           15s
-```
+````
 
 :::tip
 In case something went wrong use `kubectl describe` together with `deployment` or `pod` to get more information about the status of your application.
@@ -206,11 +211,13 @@ To access your application from inside the cluster find the name of the applicat
 ```bash
 kubectl get pods
 ```
+
 Now use the name of the application pod and open a shell in this pod using:
 
 ```bash
 kubectl exec --stdin --tty [pod-name] -- /bin/sh
 ```
+
 Install [`curl`](https://curl.se/) on your pod depending on the Linux distribution of your pod and access the application by accessing an endpoint using `curl`.
 
 In case you started with an SAP Cloud SDK Archetype, you can test the `hello` endpoint:
@@ -246,11 +253,11 @@ spec:
 apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceBinding
 metadata:
-   name: my-destination-service-binding
+  name: my-destination-service-binding
 spec:
-   instanceRef:
-     name: destination-service
-   secretName: my-dest-secret
+  instanceRef:
+    name: destination-service
+  secretName: my-dest-secret
 ```
 
 2. Install the configuration via `kubectl apply -f destination-service.yml`.
@@ -275,7 +282,7 @@ spec:
 
       ```yml title="volumeMounts:"
       - name: my-destination-service-binding-volume
-        mountPath: "/etc/secrets/sapcp/destination/my-destination-service-binding"
+        mountPath: '/etc/secrets/sapcp/destination/my-destination-service-binding'
         readOnly: true
       ```
 
@@ -298,11 +305,11 @@ spec:
 apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceBinding
 metadata:
-   name: my-xsuaa-service-binding
+  name: my-xsuaa-service-binding
 spec:
-   instanceRef:
-     name: xsuaa-service
-   secretName: my-xsuaa-secret
+  instanceRef:
+    name: xsuaa-service
+  secretName: my-xsuaa-secret
 ```
 
 2. Repeat the same steps 2-5 from the previous section but make use of `my-xsuaa-secret` for the steps.
@@ -318,6 +325,7 @@ The easiest way, when you are already using the CLI, is by using the `kubectl ed
 ```bash
 kubectl edit secrets my-xsuaa-secret
 ```
+
 In there, you can now add a `plan` property with one of the following base64 encoded values:
 
 | plan          | base64 encoded value |
@@ -336,7 +344,8 @@ We used a slimmed down version of this [repository](https://github.wdf.sap.corp/
 
 1. Based on the approuter application you used, containerize your application and push the image to a docker repository of your choice.
 2. Create a new YAML file describing the approuter deployment:
-<!-- vale off -->
+   <!-- vale off -->
+
    ```yml title="deployment.yml" {18,21,31,32,37}
    apiVersion: apps/v1
    kind: Deployment
@@ -357,27 +366,27 @@ We used a slimmed down version of this [repository](https://github.wdf.sap.corp/
          imagePullSecrets:
            - name: <your-secret-for-docker-login>
          containers:
-         # Configure the docker image of your approuter application here
-         - image: <name-of-the-image>
-           imagePullPolicy: Always
-           name: my-approuter
-           env:
-             - name: PORT
-               value: "5000"
-             - name: destinations
-               value: >
-                 [
-                   {
-                     "name": "<name-for-the-backend-app>",
-                     "url": "<URL-to-access-backend-app>",
-                     "forwardAuthToken": true
-                   }
-                 ]
-             - name: TENANT_HOST_PATTERN
-               value: <URL-pattern-for-outside-cluster-access>
-           volumeMounts:
-             - name: my-xsuaa-service-binding-volume
-               mountPath: "/etc/secrets/sapcp/xsuaa/my-xsuaa-service-binding"
+           # Configure the docker image of your approuter application here
+           - image: <name-of-the-image>
+             imagePullPolicy: Always
+             name: my-approuter
+             env:
+               - name: PORT
+                 value: '5000'
+               - name: destinations
+                 value: >
+                   [
+                     {
+                       "name": "<name-for-the-backend-app>",
+                       "url": "<URL-to-access-backend-app>",
+                       "forwardAuthToken": true
+                     }
+                   ]
+               - name: TENANT_HOST_PATTERN
+                 value: <URL-pattern-for-outside-cluster-access>
+             volumeMounts:
+               - name: my-xsuaa-service-binding-volume
+                 mountPath: '/etc/secrets/sapcp/xsuaa/my-xsuaa-service-binding'
          volumes:
            - name: my-xsuaa-service-binding-volume
              secret:
@@ -401,7 +410,9 @@ We used a slimmed down version of this [repository](https://github.wdf.sap.corp/
      selector:
        app: my-approuter
    ```
+
 3. Also adapt the `xs-app.json` file:
+
 ```json{5,7,8}
 {
     "welcomeFile": "/web-pages/index.html",
@@ -416,10 +427,11 @@ We used a slimmed down version of this [repository](https://github.wdf.sap.corp/
     ]
 }
 ```
+
 4. Follow steps similar to steps 2-3 in [Create a Kyma Deployment section](#create-a-kyma-deployment) to deploy the approuter and check if the deployment is successful.
 
 5. Update the already created XSUAA service instance with few parameters like `xsappname` and `oauth2-configuration`.
-This is required to provide authenticated access to backend application via the approuter.
+   This is required to provide authenticated access to backend application via the approuter.
 
 ```yml title="xsuaa-service.yaml"{9-15}
 ---
@@ -434,18 +446,18 @@ spec:
     xsappname: <your-backend-app-name>
     oauth2-configuration:
       allowedproviders:
-      - sap.custom
+        - sap.custom
       redirect-uris:
-      - <URL-pattern-for-outside-cluster-access>
+        - <URL-pattern-for-outside-cluster-access>
 ---
 apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceBinding
 metadata:
-   name: my-xsuaa-service-binding
+  name: my-xsuaa-service-binding
 spec:
-   instanceRef:
-     name: xsuaa-service
-   secretName: my-xsuaa-secret
+  instanceRef:
+    name: xsuaa-service
+  secretName: my-xsuaa-secret
 ```
 
 6. Update the configuration via `kubectl apply -f xsuaa-service.yaml`.
@@ -481,3 +493,9 @@ You need not necessarily push an Approuter to access your application outside a 
 You could also go ahead and expose the service for your application directly by creating an APIRule.
 But, this would mean that access to your application would not be authenticated first.
 :::
+
+You can also refer to this additional material available for getting started with SAP Cloud SDK on Kyma:
+
+- [Sample Application with Setup Guide](https://github.com/SAP-samples/kyma-runtime-extension-samples/tree/main/sample-cloudsdk-java)
+- [Blog Post on a Sample Use Case](https://blogs.sap.com/2022/01/11/use-sap-cloud-sdk-on-kyma-runtime-to-connect-to-external-systems-with-client-cert-authentication/)
+- [Using the Service Catalog with the SAP Cloud SDK](https://sap.github.io/cloud-sdk/docs/java/environments/sap-btp-kubernetes-environment-with-sap-gardener#excursion-bind-services-created-by-the-service-catalog)
