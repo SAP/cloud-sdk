@@ -44,7 +44,7 @@ Check out the details below in case you are uncertain about any of the prerequis
   <summary>Kyma Environment</summary>
 
 This guide assumes you already have a Global Account, a subaccount on SAP BTP platform and have [Kubernetes CLI](https://kubernetes.io/docs/tasks/tools/#kubectl) installed on your local machine.
-If not, please refer to these guides on getting a [Global Account](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/d61c2819034b48e68145c45c36acba6e.html?locale=en-US) and creating a [subacccount](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/05280a123d3044ae97457a25b3013918.html?locale=en-US)
+If not, please refer to these guides on getting a [Global Account](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/d61c2819034b48e68145c45c36acba6e.html?locale=en-US) and creating a [subaccount](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/05280a123d3044ae97457a25b3013918.html?locale=en-US)
 
 In your subaccount in SAP BTP cockpit, create a [Kyma Environment instance](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/09dd313bf6644250a14f8f38c3d644c0.html?locale=en-US).
 Make sure that you select an appropriate [plan](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/befe01d5d8864e59bf847fa5a5f3d669.html?locale=en-US#azure) and also assign the necessary [roles](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/148ae38b7d6f4e61bbb696bbfb3996b2.html?locale=en-US) to users.
@@ -152,11 +152,11 @@ In case you are facing authorization issues when pushing to your repository refe
            imagePullPolicy: Always
            resources:
              requests:
-               memory: "1.5Gi"
-               cpu: "500m"
+               memory: '1.5Gi'
+               cpu: '500m'
              limits:
-               memory: "2Gi"
-               cpu: "1000m"
+               memory: '2Gi'
+               cpu: '1000m'
            # To do - do these lines enable seeing debug logs- clarify
            #env:
            #  - name: LOGGING_LEVEL_COM_SAP_CLOUD_SDK
@@ -193,8 +193,8 @@ In case you are facing authorization issues when pushing to your repository refe
 
 Eventually, you should see an output similar to:
 
-```
-$ kubectl get deployment my-app-deployment
+```bash
+kubectl get deployment my-app-deployment
 
 NAME                READY   UP-TO-DATE   AVAILABLE   AGE
 my-app-deployment   1/1     1            1           15s
@@ -208,13 +208,13 @@ In case something went wrong use `kubectl describe` together with `deployment` o
 
 To access your application from inside the cluster find the name of the application pod by listing out all available pods:
 
-```
+```bash
 kubectl -n [namespace] get pods
 
 ```
 Now use the name of the application pod and open a shell in this pod using:
 
-```
+```bash
 kubectl -n [namespace] exec --stdin --tty [pod-name] -- /bin/sh
 
 ```
@@ -228,7 +228,7 @@ curl localhost:8080/hello
 ```
 
 ### Access Your Application outside the cluster
-**Todo**
+**To do**
 
 ### Bind SAP BTP Services to the Application
 
