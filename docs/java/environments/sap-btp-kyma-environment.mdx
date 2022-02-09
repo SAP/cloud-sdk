@@ -49,8 +49,10 @@ If not, please refer to these guides on getting a [Global Account](https://help.
 In your subaccount in SAP BTP cockpit, create a [Kyma Environment instance](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/09dd313bf6644250a14f8f38c3d644c0.html?locale=en-US).
 Make sure that you select an appropriate [plan](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/befe01d5d8864e59bf847fa5a5f3d669.html?locale=en-US#azure) and also assign the necessary [roles](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/148ae38b7d6f4e61bbb696bbfb3996b2.html?locale=en-US) to users.
 
-:::Note
+:::note
+
 Creating a Kyma environment instance can take up to 30 minutes.
+
 :::
 
 </details>
@@ -130,25 +132,25 @@ In case you are facing authorization issues when pushing to your repository refe
 
 1. Create a new YAML file:
 <!-- vale off -->
-   ```yml title="deployment.yml" {18,32}
+   ```yml title="deployment.yml" {4,9,13,16,17}
  apiVersion: apps/v1
  kind: Deployment
  metadata:
-   name: <name-of-the-deployment>
+   name: my-app-deployment
  spec:
    replicas: 1
    selector:
      matchLabels:
-       app: <name-of-the-app>
+       app: my-app
    template:
      metadata:
        labels:
-         app: <name-of-the-app>
+         app: my-app
      spec:
        containers:
        # Configure the docker image you just pushed to your repository here
          - image: <name-of-the-image>
-           name: <name-of-the-app>
+           name: my-app
            imagePullPolicy: Always
            resources:
              requests:
@@ -160,6 +162,7 @@ In case you are facing authorization issues when pushing to your repository refe
            # Volume mounts needed for injecting SAP BTP service credentials
            volumeMounts:
        imagePullSecrets:
+         # In case your repository requires a login, reference your secret here
          - name: <your-secret-for-docker-login>
        volumes:
  ---
@@ -167,8 +170,8 @@ In case you are facing authorization issues when pushing to your repository refe
  kind: Service
  metadata:
    labels:
-     app: <name-of-the-app>
-   name: <name-of-the-app>
+     app: my-app
+   name: my-app
  spec:
    type: NodePort
    ports:
@@ -176,20 +179,20 @@ In case you are facing authorization issues when pushing to your repository refe
        targetPort: 8080
        protocol: TCP
    selector:
-     app: <name-of-the-app>
+     app: my-app
    ```
 <!-- vale on -->
 2. Install the configuration via `kubectl apply -f path/to/deployment/file/deployment.yml`.
 
-3. Monitor the status of the deployment by running: `kubectl get deployment <name-of-the-deployment>`.
+3. Monitor the status of the deployment by running: `kubectl get deployment my-app-deployment`.
 
 Eventually, you should see an output similar to:
 
 ```bash
-kubectl get deployment <name-of-the-deployment>
+kubectl get deployment my-app-deployment
 
-NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
-<name-of-the-deployment>       1/1     1            1           15s
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+my-app-deployment     1/1     1            1           15s
 ```
 
 :::tip
@@ -340,18 +343,18 @@ We used a slimmed down version of this [repository](https://github.wdf.sap.corp/
    apiVersion: apps/v1
    kind: Deployment
    metadata:
-     name: <name-of-the-deployment>
+     name: my-approuter-deployment
      labels:
-       app: <name-of-the-approuter-app>
+       app: my-approuter
    spec:
      replicas: 1
      selector:
        matchLabels:
-         app: <name-of-the-approuter-app>
+         app: my-approuter
      template:
        metadata:
          labels:
-           app: <name-of-the-approuter-app>
+           app: my-approuter
        spec:
          imagePullSecrets:
            - name: <your-secret-for-docker-login>
@@ -359,7 +362,7 @@ We used a slimmed down version of this [repository](https://github.wdf.sap.corp/
          # Configure the docker image of your approuter application here
          - image: <name-of-the-image>
            imagePullPolicy: Always
-           name: <name-of-the-approuter-app>
+           name: my-approuter
            env:
              - name: PORT
                value: "5000"
@@ -388,8 +391,8 @@ We used a slimmed down version of this [repository](https://github.wdf.sap.corp/
    kind: Service
    metadata:
      labels:
-       app: <name-of-the-app>
-     name: <name-of-the-app>
+       app: my-approuter
+     name: my-approuter
    spec:
      type: NodePort
      ports:
@@ -398,7 +401,7 @@ We used a slimmed down version of this [repository](https://github.wdf.sap.corp/
          protocol: TCP
          nodePort: 31002
      selector:
-       app: <name-of-the-app>
+       app: my-approuter
    ```
 2. Also adapt the `xs-app.json` file:
 ```json
@@ -421,7 +424,7 @@ We used a slimmed down version of this [repository](https://github.wdf.sap.corp/
 This is required to provide authenticated access to backend application via the approuter.
 The updated `xsuaa-service.yaml`:
 
-```yml title="xsuaa-service.yaml"
+```yml title="xsuaa-service.yaml"{9-15}
 ---
 apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceInstance
@@ -468,7 +471,7 @@ spec:
       path: /.*
   service:
     host: s4sdk-k8s-kyma-q2wk189v.<URL-pattern-for-outside-cluster-access>
-    name: <name-of-the-approuter-app>
+    name: my-approuter
     port: 5000
 ```
 
