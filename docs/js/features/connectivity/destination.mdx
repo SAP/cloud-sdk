@@ -105,7 +105,7 @@ The SAP Cloud SDK searches for the destination by its name in the following loca
 The search stops, once a destination is found.
 Therefore, if a destination with the same name exists in multiple locations, the destination that occurs earliest during the search takes precedence before other destinations with the same name.
 
-:::
+:::note
 The second option `register a destination` was introduced in version 2.0 of the SAP Cloud SDK.
 :::
 
@@ -398,7 +398,7 @@ This does not apply to query **parameter names**`.
 With the `registerDestination` function it is possible to put destinations into the environment variables.
 You can then use these destinations in the same way as those retrieved from the SAP BTP.
 
-Below is an example using the `executeHttpRequestOrigin` function together with a registered destination.
+Below is an example using the `executeHttpRequest` function together with a registered destination.
 
 <Tabs groupId="version" defaultValue="major" values={[
 { label: 'SDK 2.x', value: 'major'}]}>
@@ -410,7 +410,7 @@ import { registerDestination } from '@sap-cloud-sdk/connectivity';
 
 registerDestination({ name: 'MY-DEST', url: 'https://example.com' });
 
-const response = await executeHttpRequestOrigin(
+const response = await executeHttpRequest(
   { destinationName: 'MY-DEST' },
   {
     method: 'get'
