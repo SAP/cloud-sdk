@@ -132,7 +132,7 @@ In case you are facing authorization issues when pushing to your repository refe
 
 1. Create a new YAML file:
 <!-- vale off -->
-   ```yml title="deployment.yml" {4,9,13,16,17}
+   ```yml title="deployment.yml" {16,28}
  apiVersion: apps/v1
  kind: Deployment
  metadata:
@@ -236,12 +236,12 @@ For this guide we'll assume we want to use two services:
 
 1. Create a new YAML file :
 
-```yml title="destination-service.yaml"
+```yml title="destination-service.yaml"{8}
 ---
 apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceInstance
 metadata:
-  name: <name-of-your-destination-service-instance>
+  name: destination-service
 spec:
   clusterServiceClassExternalName: destination
   clusterServicePlanExternalName: <your-desired-plan>
@@ -249,10 +249,10 @@ spec:
 apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceBinding
 metadata:
-   name: <name-of-your-service-binding>
+   name: my-destination-service-binding
 spec:
    instanceRef:
-     name: <name-of-your-destination-service-instance>
+     name: destination-service
    secretName: my-dest-secret
 ```
 
@@ -268,7 +268,7 @@ spec:
       Add a new volume, referencing the secret:
 
       ```yml title="volumes:"
-      - name: <name-of-your-destination-service-instance>
+      - name: my-destination-service-binding-volume
         secret:
           secretName: my-dest-secret
       ```
@@ -277,8 +277,8 @@ spec:
       Add it to the empty list of `volumeMounts` in the `container` section of your `deployment.yml`:
 
       ```yml title="volumeMounts:"
-      - name: <name-of-the-service-instance>
-        mountPath: "/path/to/store/binding"
+      - name: my-destination-service-binding-volume
+        mountPath: "/etc/secrets/sapcp/destination/my-destination-service-binding"
         readOnly: true
       ```
 
@@ -293,7 +293,7 @@ spec:
 apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceInstance
 metadata:
-  name: <name-of-xsuaa-service-instance>
+  name: xsuaa-service
 spec:
   clusterServiceClassExternalName: xsuaa
   clusterServicePlanExternalName: <your-desired-plan>
@@ -301,10 +301,10 @@ spec:
 apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceBinding
 metadata:
-   name: <name-of-your-xsuaa-service-binding>
+   name: my-xsuaa-service-binding
 spec:
    instanceRef:
-     name: <name-of-xsuaa-service-instance>
+     name: xsuaa-service
    secretName: my-xsuaa-secret
 ```
 
@@ -378,10 +378,10 @@ We used a slimmed down version of this [repository](https://github.wdf.sap.corp/
              - name: TENANT_HOST_PATTERN
                value: <URL-pattern-for-outside-cluster-access>
            volumeMounts:
-             - name: <name-of-xsuaa-service-instance>
-               mountPath: <mount-path-for-xsuaa-service-instance>
+             - name: my-xsuaa-service-binding-volume
+               mountPath: "/etc/secrets/sapcp/xsuaa/my-xsuaa-service-binding"
          volumes:
-           - name: <name-of-xsuaa-service-instance>
+           - name: my-xsuaa-service-binding-volume
              secret:
                secretName: my-xsuaa-secret
          restartPolicy: Always
@@ -429,7 +429,7 @@ The updated `xsuaa-service.yaml`:
 apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceInstance
 metadata:
-  name: <name-of-xsuaa-service-instance>
+  name: xsuaa-service
 spec:
   clusterServiceClassExternalName: xsuaa
   clusterServicePlanExternalName: <your-desired-plan>
@@ -444,10 +444,10 @@ spec:
 apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceBinding
 metadata:
-   name: <name-of-your-xsuaa-service-binding>
+   name: my-xsuaa-service-binding
 spec:
    instanceRef:
-     name: <name-of-xsuaa-service-instance>
+     name: xsuaa-service
    secretName: my-xsuaa-secret
 ```
 
