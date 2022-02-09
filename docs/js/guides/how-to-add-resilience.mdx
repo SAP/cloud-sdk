@@ -1,7 +1,7 @@
 ---
-title: How to Add Resilience to the SAP Cloud SDK
+title: How to Make Applications more Resilient?
 sidebar_label: How to Add Resilience
-description: This article describes how you can add a layer of resilience to the SAP Cloud SDK
+description: This article describes how you can add a layer of resilience to Applications
 keywords:
   - sap
   - cloud
@@ -19,7 +19,7 @@ In contrast to Java, for JavaScript there is no standard framework the handle re
 Hence, we have not included resilience features within the SAP Cloud SDK, but leave it up to you which framework you want to use.
 We have prepared examples on the resilience topic in our [samples repository](https://github.com/SAP-samples/cloud-sdk-js/samples/resilience-examples) which illustrate the concepts and pick some widely used `npm` packages.
 
-There is one exception to this rule.
+There is one exception to this approach.
 We introduced a circuit-breaker for all calls going to SAP BTP services like XSUAA and the destination service.
 The circuit breaker is enabled by default to protect the services and you can disable it via the `enableCircuitBreaker` option on the `execute()` methods.
 
@@ -37,7 +37,7 @@ The introduction of a cache is most effective in the following cases:
 - The execution of a method is expense i.e. it consumes a lot of resources
 - The method is a pure function or close to it. This means all information is contained in the function arguments and no hidden state effects the result of the function
 - The function is invoked multiple times for the same arguments or context
-- The cache reduces the dependence on an external system being available
+- The system behind the cache has known downtimes or limited availability mitigated by the cache
 
 Typically a cache implementation has an interface like this:
 
@@ -88,7 +88,7 @@ The reason for this is, that you do not overburden systems in the recovery phase
 Typical parameters to configure a circuit-breaker are:
 
 - "failure threshold": Failure rate above which the circuit-breaker will open.
-- ResetTimeout: Time after which the circuit-breaker will close.
+- "reset timeout": Time after which the circuit-breaker will close.
 - Fallback: Something to be done when the breaker is open.
 - Options to calculate the failure rate.
 
