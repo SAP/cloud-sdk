@@ -186,18 +186,18 @@ In case you are facing authorization issues when pushing to your repository refe
 
 3. Monitor the status of the deployment by running: `kubectl get deployment my-app-deployment`.
 
-    Eventually, you should see an output similar to:
+Eventually, you should see an output similar to:
 
-    ```bash
-    kubectl get deployment my-app-deployment
+```bash
+kubectl get deployment my-app-deployment
 
-    NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
-    my-app-deployment     1/1     1            1           15s
-    ```
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+my-app-deployment     1/1     1            1           15s
+```
 
-    :::tip
-    In case something went wrong use `kubectl describe` together with `deployment` or `pod` to get more information about the status of your application.
-    :::
+:::tip
+In case something went wrong use `kubectl describe` together with `deployment` or `pod` to get more information about the status of your application.
+:::
 
 ### Access Your Application inside the cluster
 
@@ -222,7 +222,7 @@ curl localhost:8080/hello
 ### Bind SAP BTP Services to the Application
 
 The SAP Business Technology Platform offers various services that can be used by applications.
-To access services from a Kyma environment instances have to be created and bound to the application.
+To access services from a Kyma environment, instances have to be created and bound to the application.
 
 For this guide we'll assume we want to use two services:
 
@@ -255,7 +255,7 @@ spec:
 
 2. Install the configuration via `kubectl apply -f destination-service.yml`.
 
-3. Monitor the status via `kubectl describe ServiceInstance <name-of-your-destination-service-instance>`.
+3. Monitor the status via `kubectl describe ServiceInstance destination-service`.
    Eventually this should automatically create a Kubernetes secret named `my-dest-secret`.
    This secret will contain the actual service binding information.
 
@@ -285,7 +285,7 @@ spec:
 
 1. Create a new YAML file :
 
-```yml title="xsuaa-service.yaml"
+```yml title="xsuaa-service.yaml"{8}
 ---
 apiVersion: servicecatalog.k8s.io/v1beta1
 kind: ServiceInstance
@@ -307,7 +307,7 @@ spec:
 
 2. Repeat the same steps 2-5 from the previous section but make use of `my-xsuaa-secret` for the steps.
 
-##### Known XSUAA Service incompatibility
+#### Known XSUAA Service incompatibility
 
 We have observed that the property `plan` is missing in the XSUAA secret created in the previous section.
 This property, however, is required by the SAP Cloud SDK and it's absence causes runtime errors in the application while trying to read this service binding.
@@ -318,7 +318,7 @@ The easiest way, when you are already using the CLI, is by using the `kubectl ed
 ```bash
 kubectl edit secrets my-xsuaa-secret
 ```
-In there you can now add a `plan` property with one of the following base64 encoded values:
+In there, you can now add a `plan` property with one of the following base64 encoded values:
 
 | plan          | base64 encoded value |
 | ------------- | -------------------- |
@@ -334,9 +334,10 @@ The resulting service binding can now be consumed with the SAP Cloud SDK.
 We will configure and deploy an [Approuter](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/01c5f9ba7d6847aaaf069d153b981b51.html?locale=en-US) so that only authenticated users can access our application.
 We used a slimmed down version of this [repository](https://github.wdf.sap.corp/xs2/approuter.js) for this purpose.
 
-1. Create a new YAML file describing the approuter deployment:
+1. Based on the approuter application you used, containerize your application and push the image to a docker repository of your choice.
+2. Create a new YAML file describing the approuter deployment:
 <!-- vale off -->
-   ```yml title="deployment.yml" {18,32}
+   ```yml title="deployment.yml" {18,21,31,32,37}
    apiVersion: apps/v1
    kind: Deployment
    metadata:
@@ -400,8 +401,8 @@ We used a slimmed down version of this [repository](https://github.wdf.sap.corp/
      selector:
        app: my-approuter
    ```
-2. Also adapt the `xs-app.json` file:
-```json
+3. Also adapt the `xs-app.json` file:
+```json{5,7,8}
 {
     "welcomeFile": "/web-pages/index.html",
     "routes": [
@@ -415,11 +416,10 @@ We used a slimmed down version of this [repository](https://github.wdf.sap.corp/
     ]
 }
 ```
-3. Follow steps similar to steps 2-3 in [Create a Kyma Deployment section](#create-a-kyma-deployment) to deploy the approuter and check if the deployment is successful.
+4. Follow steps similar to steps 2-3 in [Create a Kyma Deployment section](#create-a-kyma-deployment) to deploy the approuter and check if the deployment is successful.
 
-4. Update the already created XSUAA service instance with few parameters like `xsappname` and `oauth2-configuration`.
+5. Update the already created XSUAA service instance with few parameters like `xsappname` and `oauth2-configuration`.
 This is required to provide authenticated access to backend application via the approuter.
-The updated `xsuaa-service.yaml`:
 
 ```yml title="xsuaa-service.yaml"{9-15}
 ---
@@ -448,11 +448,11 @@ spec:
    secretName: my-xsuaa-secret
 ```
 
-5. Update the configuration via `kubectl apply -f xsuaa-service.yaml`.
+6. Update the configuration via `kubectl apply -f xsuaa-service.yaml`.
 
-6. Make the approuter accessbile outside the cluster by creating a API rule:
+7. Make the approuter accessbile outside the cluster by creating an API rule:
 
-```yml title="create-api-rule.yml"
+```yml title="create-api-rule.yml"{4,15}
 apiVersion: gateway.kyma-project.io/v1alpha1
 kind: APIRule
 metadata:
@@ -472,6 +472,12 @@ spec:
     port: 5000
 ```
 
-7. Update the configuration via `kubectl apply -f create-api-rule.yml`.
+8. Update the configuration via `kubectl apply -f create-api-rule.yml`.
 
-8. Finally, access the application by using the host address provided in the API rule created and appending the `path-for-backend-endpoints` given in `xs-app.json` along with the an actual end point of your backend application.
+9. Finally, access the application by using the host address provided in the API rule created and appending the `path-for-backend-endpoints` given in `xs-app.json` along with the an actual end point of your backend application.
+
+:::tip
+You need not necessarily push an Approuter to access your application outside a cluster.
+You could also go ahead and expose the service for your application directly by creating an APIRule.
+But, this would mean that access to your application would not be authenticated first.
+:::
