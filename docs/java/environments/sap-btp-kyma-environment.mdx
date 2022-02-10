@@ -340,7 +340,7 @@ The resulting service binding can now be consumed with the SAP Cloud SDK.
 ### Access Your Application outside the cluster
 
 We will configure and deploy an [Approuter](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/01c5f9ba7d6847aaaf069d153b981b51.html?locale=en-US) so that only authenticated users can access our application.
-We used a slimmed down version of this [repository](https://github.wdf.sap.corp/xs2/approuter.js) for this purpose.
+We created a simple application that uses the [@sap/approuter](https://www.npmjs.com/package/@sap/approuter) and starts it for this purpose.
 
 1. Based on the approuter application you used, containerize your application and push the image to a docker repository of your choice.
 2. Create a new YAML file describing the approuter deployment:
@@ -462,7 +462,7 @@ spec:
 
 6. Update the configuration via `kubectl apply -f xsuaa-service.yaml`.
 
-7. Make the approuter accessbile outside the cluster by creating an API rule:
+7. Make the approuter accessible outside the cluster by creating an API rule:
 
 ```yml title="create-api-rule.yml"{4,15}
 apiVersion: gateway.kyma-project.io/v1alpha1
