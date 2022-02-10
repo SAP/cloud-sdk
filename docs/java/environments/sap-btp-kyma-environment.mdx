@@ -139,54 +139,53 @@ In case you are facing authorization issues when pushing to your repository refe
 1. Create a new YAML file:
 
    ```yml title="deployment.yml" {17,31}
-   apiVersion: apps/v1
-   kind: Deployment
-   metadata:
-   name: my-app-deployment
-   spec:
-   replicas: 1
-   selector:
-     matchLabels:
-       app: my-app
-   template:
-     metadata:
-       labels:
-         app: my-app
-     spec:
-       containers:
-         # Configure the docker image you just pushed to your repository here
-         - image: <name-of-the-image>
-           name: my-app
-           imagePullPolicy: Always
-           resources:
-             requests:
-               memory: '1.5Gi'
-               cpu: '500m'
-             limits:
-               memory: '2Gi'
-               cpu: '1000m'
-           # Volume mounts needed for injecting SAP BTP service credentials
-           volumeMounts:
-       imagePullSecrets:
-         # In case your repository requires a login, reference your secret here
-         - name: <your-secret-for-docker-login>
-       volumes:
-
-   ----
-   apiVersion: v1
-   kind: Service
-   metadata:
-     labels:
-       app: my-app
-     name:  my-app
-   spec:
-     type: NodePort
-     ports:
-       - port: 8080
-         targetPort: 8080
-         protocol: TCP
-     selector:
-       app: my-app
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: my-app-deployment
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: my-app
+      template:
+        metadata:
+          labels:
+            app: my-app
+        spec:
+          containers:
+            # Configure the docker image you just pushed to your repository here
+            - image: <name-of-the-image>
+              name: my-app
+              imagePullPolicy: Always
+              resources:
+                requests:
+                  memory: '1.5Gi'
+                  cpu: '500m'
+                limits:
+                  memory: '2Gi'
+                  cpu: '1000m'
+              # Volume mounts needed for injecting SAP BTP service credentials
+              volumeMounts:
+          imagePullSecrets:
+            # In case your repository requires a login, reference your secret here
+            - name: <your-secret-for-docker-login>
+          volumes:
+    ----
+    apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        app: my-app
+      name:  my-app
+    spec:
+      type: NodePort
+      ports:
+        - port: 8080
+          targetPort: 8080
+          protocol: TCP
+      selector:
+        app: my-app
 ```
 2. Install the configuration via `kubectl apply -f path/to/deployment/file/deployment.yml`.
 
