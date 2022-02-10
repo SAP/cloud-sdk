@@ -50,10 +50,12 @@ The destination caching is disabled by default and you switch it on by the `useC
 A cached destination is stored for 5 minutes in the cache.
 The SAP Cloud SDK tries to set the proper isolation strategy for the destination automatically.
 There are two options:
+
 - `Tenant`: The destination is cached for a tenant and different users will hit the same cache entry.
 - `UserTenant`: The destination is cached for each user of a tenant separately.
 
 The SAP Cloud SDK sets the isolation based on the provided `JWT`:
+
 - No `JWT`: Isolation is `Tenant` and value for the tenant is the provider account.
 - `JWT` without `user_id`: Isolation is `Tenant` and value for the tenant is the `zid` of the `JWT`
 - `JWT` with `user_id`: Isolation is `TenantUser` and values are taken from `zid` and `user_id`.
@@ -64,7 +66,7 @@ Examples of such a flow are `BasicAuthentication`, `ClientCertificateAuthenticat
 
 There are cases where the choice by the SAP Cloud SDK is not optimal.
 Assume you have a multi-tenant scenario and you need to pass the `JWT` to obtain the destination for the right tenant.
-The `JWT` contains a `user_id`  but the destination flow is user<span class="x x-first x-last">-</span>independent.
+The `JWT` contains a `user_id` but the destination flow is user<span class="x x-first x-last">-</span>independent.
 The SAP Cloud SDK would use isolation `UserTenant`, although `Tenant` would be sufficient.
 In such a case you can manually enforce weaker isolation:
 
@@ -74,16 +76,26 @@ In such a case you can manually enforce weaker isolation:
 
  <TabItem value="major">
 
- ```ts
- .execute({destinationName: 'myDestination', jwt: 'yourJWT', isolationStrategy: IsolationStrategy.Tenant})
- ```
+```ts
+.execute({
+  destinationName: 'myDestination',
+  jwt: 'yourJWT',
+  isolationStrategy: IsolationStrategy.Tenant
+})
+```
 
  </TabItem>
  <TabItem value="deprecated">
 
- ```ts
- .execute({ destinationName: 'myDestination', jwt: 'yourJWT' }, { useCache: true, isolationStrategy: IsolationStrategy.Tenant })
- ```
+```ts
+.execute({
+  destinationName: 'myDestination',
+  jwt: 'yourJWT'
+},{
+  useCache: true,
+  isolationStrategy: IsolationStrategy.Tenant
+})
+```
 
  </TabItem>
  </Tabs>
@@ -106,27 +118,29 @@ Version 2.0 introduced the `registerDestination()` method, which is like a manua
 We explain the usage of this method in the guide on [destination lookup](./destination.mdx).
 The method behaves similarly to the destination-service cache discussed above.
 
-
 ```ts
 import { registerDestination } from '@sap-cloud-sdk/connectivity';
 
 const destination = {
-    name: 'FORWARD-DESTINATION',
-    url: 'https://mys4hana.com'
-}
+  name: 'FORWARD-DESTINATION',
+  url: 'https://mys4hana.com'
+};
 
-registerDestination(destination,{jwt:'yourJWT'});
+registerDestination(destination, { jwt: 'yourJWT' });
 ```
 
 The isolation strategy is automatically detected and applied based on the given `JWT`:
+
 - No `JWT`: Isolation is `Tenant` and value for the tenant is the provider account.
 - `JWT` without `user_id`: Isolation is `Tenant` and value for the tenant is the `zid` of the `JWT`
 - `JWT` with `user_id`: Isolation is `TenantUser` and values are taken from `zid` and `user_id`.
 
-You can override the autodetected isolation strategy.
+You can override the automatically detected isolation strategy.
 This could be necessary if you want to register a destination that cares only about `Tenant` while your `JWT` contains both a `tenant` and a `user_id` which would make it `TenantUser` by default.
 
 ```ts
-registerDestination(destination,{jwt:'yourJWT', isolationStrategy: IsolationStrategy.Tenant});
+registerDestination(destination, {
+  jwt: 'yourJWT',
+  isolationStrategy: IsolationStrategy.Tenant
+});
 ```
-
