@@ -133,7 +133,7 @@ In case you are facing authorization issues when pushing to your repository refe
 ### Create a Kyma Deployment
 
 1. Create a new YAML file:
-   <!-- vale off -->
+
    ```yml title="deployment.yml" {17,31}
    apiVersion: apps/v1
    kind: Deployment
@@ -167,26 +167,23 @@ In case you are facing authorization issues when pushing to your repository refe
          # In case your repository requires a login, reference your secret here
          - name: <your-secret-for-docker-login>
        volumes:
-   ```
 
----
-
-apiVersion: v1
-kind: Service
-metadata:
-labels:
-app: my-app
-name: my-app
-spec:
-type: NodePort
-ports: - port: 8080
-targetPort: 8080
-protocol: TCP
-selector:
-app: my-app
-
-````
-<!-- vale on -->
+   ----
+   apiVersion: v1
+   kind: Service
+   metadata:
+     labels:
+       app: my-app
+     name:  my-app
+   spec:
+     type: NodePort
+     ports:
+       - port: 8080
+         targetPort: 8080
+         protocol: TCP
+     selector:
+       app: my-app
+```
 2. Install the configuration via `kubectl apply -f path/to/deployment/file/deployment.yml`.
 
 3. Monitor the status of the deployment by running: `kubectl get deployment my-app-deployment`.
