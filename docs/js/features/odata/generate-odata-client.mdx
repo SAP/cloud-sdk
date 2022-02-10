@@ -87,18 +87,6 @@ By default, the generated module contains the following sources:
 The generation always includes the TypeScript sources.
 All other files can be excluded from the generation - see the options below.
 
-## Transpilation
-
-The SAP Cloud SDK OData client generator for JavaScript/TypeScript generates TypeScript code.
-By default, it transpiles the generated sources to JavaScript and provides a `package.json` for the client (this differs from the OpenAPI generator).
-The generated clients depend on the `@sap-cloud-sdk/odata-v2` or `@sap-cloud-sdk/odata-v4` packages, depending on the OData version of the service.
-Therefore, you need a local reference to those packages for transpilation.
-Those packages are not installed for you, so that you can decide where to install them (e.g. in your project or in the subdirectory of your client).
-If you installed the generator globally, transpilation will fail unless you install the required package (`sap-cloud-sdk/odata-v2` or `sap-cloud-sdk/odata-v4`).
-If you installed the generator as a `devDependency`, transpilation will work automatically.
-However, for productive use, you may have to define the dependency productively.
-You can suppress transpilation with the `--generateJs` flag.
-
 ## Options
 
 Run `generate-odata-client --help` for additional options.
@@ -159,3 +147,49 @@ generate({
   outputDir
 });
 ```
+
+## NPM Packages vs. Local clients
+
+The SAP Cloud SDK OData client generator for JavaScript/TypeScript generates TypeScript code.
+By default, the generator creates all sources needed for an npm package.
+It transpiles the generated sources to JavaScript and provides a `package.json` for the client.
+This differs from the OpenAPI generator and will likely change in the next major version upgrade.
+
+If you want to publish a generated client to an npm registry, you can work with the default configuration.
+Please make sure to check inellectual property regulations before publishing to a public registry.
+
+If you want to use the generated client in your code without sharing it, you can omit the generation of a `package.json` with the `generatePackageJson` flag.
+Additionally, if you work with TypeScript you can skip transpilation with the `--generateJs` flag.
+The generated clients depend on the `@sap-cloud-sdk/odata-v2` or `@sap-cloud-sdk/odata-v4` packages, depending on the OData version of the service.
+You have to make sure, there is a local reference to these packages, by running:
+
+```sh
+npm install @sap-cloud-sdk/odata-v2
+```
+
+or:
+
+```sh
+npm install @sap-cloud-sdk/odata-v4
+```
+
+respectively.
+
+## Transpilation
+
+If you installed the generator globally and want to transpile the generated code, you have to install the required dependency (or `devDependency`) for your client (`sap-cloud-sdk/odata-v2` or `sap-cloud-sdk/odata-v4`) prior to generation.
+You do this by running:
+
+```sh
+npm install -D @sap-cloud-sdk/odata-v2
+```
+
+or:
+
+```sh
+npm install -D @sap-cloud-sdk/odata-v4
+```
+
+respectively.
+
+If you installed the generator as a `devDependency`, transpilation will work without additional steps.
