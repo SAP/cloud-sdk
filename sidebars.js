@@ -162,15 +162,6 @@ module.exports = {
               }
             ]
           },
-          {
-            type: 'category',
-            label: 'SAP Cloud SDK CLI',
-            items: [
-              'js/features/cli/overview',
-              'js/features/cli/init',
-              'js/features/cli/package'
-            ]
-          },
           'js/features/error-handling',
           'js/features/logging',
           'js/features/eslint-configuration'
