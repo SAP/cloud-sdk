@@ -141,6 +141,7 @@ module.exports = {
             label: 'Connectivity',
             items: [
               'js/features/connectivity/destination',
+              'js/features/connectivity/destination-cache-isolation',
               'js/features/connectivity/proxy',
               'js/features/connectivity/generic-http-client',
               'js/features/connectivity/on-premise'
@@ -184,7 +185,8 @@ module.exports = {
           'js/guides/bas-external-system',
           'js/guides/tutorial-overview-sdk-js',
           'js/guides/sdk-in-browser',
-          'js/guides/how-to-use-the-approuter'
+          'js/guides/how-to-use-the-approuter',
+          'js/guides/how-to-add-resilience'
         ]
       },
       {
