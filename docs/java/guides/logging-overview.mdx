@@ -249,10 +249,10 @@ For example, to log all requests sent and responses received by the Apache HttpC
 
 You can set the `SET_LOGGING_LEVEL` environment variable via your deployment descriptor or via the CF CLI.
 
-:::hint Dynamically Changing Log Levels at Runtime
+:::tip Dynamically Changing Log Levels at Runtime
 Using the `SET_LOGGING_LEVEL` requires at least a restart of your application for changes to take effect.
 Alternatively, you can also change the log levels dynamically and even on a per-request basis via [Dynamic Logging](https://github.com/SAP/cf-java-logging-support/wiki/Dynamic-Log-Levels).
-```
+:::
 
 **Setting the Log Levels Using the Deployment Descriptor:**
 
@@ -295,11 +295,11 @@ modules:
 
 **Setting the Log Levels Using the Cloud Foundry CLI:**
 
-Leverage the `cf set-env` command to set an environment variable and apply the change via `cf restage`:
+Leverage the `cf set-env` command to set an environment variable and apply the change via `cf restart`:
 
 ```bash
 cf set-env <your-application> SET_LOGGING_LEVEL '{ROOT: INFO, com.sap.cloud.sdk: INFO, org.apache.http: DEBUG, org.apache.http.wire: ERROR}'
-cf restage <your-application>
+cf restart <your-application>
 ```
 
 Remember to change the levels back to their original value using the same approach, e.g. after debugging an issue.
