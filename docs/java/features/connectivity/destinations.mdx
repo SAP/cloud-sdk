@@ -35,6 +35,13 @@ DestinationAccessor.getDestination("my-destination");
 This will look up the destination in the destination service if the application is running on SAP Business Technology Platform.
 Other sources like the environment variables are also considered.
 
+:::tip Authentication Flows
+Authentication flows like **OAuth 2.0 Client Credentials** and others are usually performed by the Destination Service.
+They are executed when querying the destination information and the resulting authorization information will be included in the response.
+
+See the note on [supported authentication flows](#supported-authentication-flows).
+:::
+
 :::caution Destinations are cached for 5 minutes
 
 Mind that Destinations are cached for 5 minutes.
@@ -49,7 +56,10 @@ Cache entries will automatically be invalidated 5 minutes after their initial cr
 
 ## Supported Authentication Flows
 
-We provide support for the following authentication types on SAP BTP, Cloud Foundry environment.
+The SAP Cloud SDK does not implement most of the authentication flows itself.
+Instead, it relies on the Destination Service to perform the flows and complements it with additional steps, if necessary.
+
+The SAP Cloud SDK recognizes the following authentication types of the SAP BTP Destination Service:
 
 | Authentication Type                                                                                                                                                             | Parameter Name                                         |
 | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :----------------------------------------------------- |
@@ -66,6 +76,15 @@ We provide support for the following authentication types on SAP BTP, Cloud Foun
 | [`InternalSystemAuthentication`](https://help.sap.com/viewer/2d168c76daa1406b8567eee447eb1b2f/Cloud/en-US/a9c2c896be574077b56a7b2e2790e86c.html?q=InternalSystemAuthentication) | `AuthenticationType.INTERNAL_SYSTEM_AUTHENTICATION`    |
 | [`OAuth2Password`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/452357cdd82a4c0ba6095b36c0057526.html)                                              | `AuthenticationType.OAUTH2_PASSWORD`                   |
 | [`SAMLAssertion`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/d81e1683bd434823abf3ceefc4ff157f.html)                                               | `AuthenticationType.SAML_ASSERTION`                    |
+
+:::tip Other Destination Sources
+In some situations you may want to obtain a destination **not** from the Destination Service, but e.g. from the environment variables.
+
+In that case, only `NoAuthentication` and `BasicAuthentication` are supported by default.
+Additionally, `OAuth2ClientCredentials` as well as `OAuth2UserTokenExchange` are available through a dedicated API.
+
+For more details visit the sections on how to [Configure HTTP Destinations for Local Deployment](#configure-http-destinations-for-local-deployment) and [Skip Destination Creation Step for Certain Authentication Types on Cloud Foundry](#skip-destination-creation-step-for-certain-authentication-types-on-cloud-foundry).
+:::
 
 ### Integrated Multi-Tenancy
 
@@ -111,7 +130,7 @@ The cached `HttpClient` instances are also isolated based on the tenant and prin
 | :---------------------------------------------------------------------------------------------------------------------------- | :----------------------- |
 | [`Internet`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/42a0e6b966924f2e902090bdf435e1b2.html)  | `ProxyType.INTERNET`     |
 | [`OnPremise`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/42a0e6b966924f2e902090bdf435e1b2.html) | `ProxyType.ON_PREMISE`   |
-| [`PrivateLink`](https://help.sap.com/viewer/product/PRIVATE_LINK/CLOUD/en-US)*                                                | `ProxyType.PRIVATE_LINK` |
+| [`PrivateLink`](https://help.sap.com/viewer/product/PRIVATE_LINK/CLOUD/en-US)\*                                               | `ProxyType.PRIVATE_LINK` |
 
 \* Further reading: [SAP BTP Private Link Announcement Blog Post](https://blogs.sap.com/2021/10/28/btp-private-linky-swear-with-azure-propagate-your-sap-principels/)
 

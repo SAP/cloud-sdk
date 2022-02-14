@@ -49,6 +49,12 @@ If the `Authorization` header contains a `JWT` from the [`AppRouter`](https://bl
 - Store it in the `ThreadContext` and
 - Pull the _Tenant_ and _Principal_ information from it
 
+:::tip Integration with CAP
+In case you are using CAP (with the `cds-integration-cloud-sdk` dependency) the Tenant and Principal information will **instead** be derived from the [CAP Request Context](https://cap.cloud.sap/docs/java/request-contexts).
+That also means that the `ThreadContext` will not be used when accessing this information.
+All other information (not Tenant or Principal) will still be derived and maintained via the `ThreadContext`.
+:::
+
 ## How Can the Thread Context Be Used?
 
 ### Accessing Information
@@ -73,6 +79,12 @@ In that case you can override the current tenant explicitly:
 ```java
 TenantAccessor.executeWithTenant(customTenant, () -> doStuff());
 ```
+
+:::caution CAP Integration
+The above does not apply for `TenantAccessor` and `PrincipalAccessor` when using the CAP framework (with the `cds-integration-cloud-sdk` dependency).
+When using CAP the Tenant and Principal information is derived from the `RequestContext`.
+Please refer to [this section](https://cap.cloud.sap/docs/java/request-contexts#defining-requestcontext) on how to override existing values in the CAP context.
+:::
 
 :::caution
 Be aware, that the `executeWith` methods shown above only replaces the given property, but does not update properties derived from it.
@@ -127,10 +139,29 @@ Callable operationWithTenant = TenantAccessor.executeWithTenant(customTenant, ()
 invokeAsynchronously(operationWithContext);
 ```
 
+:::caution CAP Integration
+In case you are using CAP the CAP Request Context also needs to be passed on (in addition to the `ThreadContext`).
+Please refer to [this guide](../../guides/cap-sdk-integraion) on how to achieve this.
+:::
+
 :::danger Thread Lifecycle
 
 Be cautious with long-running, asynchronous operations.
 A propagated thread context will only persist as long as the thread lives that it was created on.
 So when the parent thread dies the context will cease to exist and no longer be available in any of the threads.
 
+<details>
+<summary> Workaround </summary>
+You can work around this limitation with the following approach:
+
+```java
+RequestHeaderContainer requestHeaders = RequestHeaderAccessor.tryGetHeaderContainer().getOrElse(RequestHeaderContainer.EMPTY);
+ThreadContextExecutor executor = new ThreadContextExecutor().withThreadContext(new DefaultThreadContext())
+        .withListeners(new RequestHeaderThreadContextListener(requestHeaders));
+
+Callable operationWithContext = () -> executor.execute(() -> operation());
+invokeAsynchronously(operationWithContext);
+```
+
+</details>
 :::
