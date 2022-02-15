@@ -74,4 +74,5 @@ Use the links below to quickly access your favorite tutorial and refresh your kn
     Generate a custom OData client library for the SAP SuccessFactors Candidate service of the Recruiting module.
 
 11. [Send Multiple OData Requests in Batch Mode with SAP Cloud SDK's Virtual Data Model](https://developers.sap.com/tutorials/cloudsdk-js-odata-batch-changeset.html)
+
     Build and execute OData batch requests for writing and retrieving data with the SAP Cloud SDK's Virtual Data Model in your Address Manager application.
