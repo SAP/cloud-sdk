@@ -42,7 +42,7 @@ To follow this guide you will need:
 :::tip Tip
 
 When deploying applications to Kyma, you are not limited to Spring Boot applications.
-In fact, you may deploy any application that can be dockerized.
+In fact, you may deploy any application that can be executed within a Docker container.
 The examples in this document, however, do use a Spring Boot app.
 
 :::
@@ -258,7 +258,7 @@ Forwarding from [::1]:50309 -> 8080
 ```
 
 In this example, `kubectl` chose the local port `50309`.
-So you should be able to successfully run the following `curl` command:
+Hence, you should be able to successfully run the following `curl` command:
 
 ```bash
 curl localhost:50309/hello
@@ -287,7 +287,7 @@ For this guide we'll assume we want to use two services:
 
 #### Bind the Destination Service
 
-1. Open your Kyma dashboard by clicking the link in your BTP cockpit:
+1. Open your Kyma dashboard by clicking the link in your SAP BTP cockpit:
 
 ![Kyma Console URL](sap-btp-kyma-environment/btp-cockpit-kyma-console-url.png)
 
@@ -395,7 +395,7 @@ spec:
 
 </details>
 
-#### Known XSUAA Service incompatibility
+#### Known XSUAA Service Incompatibility
 
 We have observed that the property `plan` is missing in the XSUAA secret created in the previous section.
 This property, however, is required by the SAP Cloud SDK and it's absence causes runtime errors in the application while trying to read this service binding.
