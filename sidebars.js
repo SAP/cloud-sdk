@@ -115,6 +115,7 @@ module.exports = {
         ]
       },
       'java/sdk-java-troubleshooting-frequent-problems',
+      'java/release-policy',
       'java/release-notes-sap-cloud-sdk-for-java',
       'java/frequently-asked-questions'
     ],
@@ -161,15 +162,6 @@ module.exports = {
               }
             ]
           },
-          {
-            type: 'category',
-            label: 'SAP Cloud SDK CLI',
-            items: [
-              'js/features/cli/overview',
-              'js/features/cli/init',
-              'js/features/cli/package'
-            ]
-          },
           'js/features/error-handling',
           'js/features/logging',
           'js/features/eslint-configuration'
@@ -185,7 +177,8 @@ module.exports = {
           'js/guides/bas-external-system',
           'js/guides/tutorial-overview-sdk-js',
           'js/guides/sdk-in-browser',
-          'js/guides/how-to-use-the-approuter'
+          'js/guides/how-to-use-the-approuter',
+          'js/guides/how-to-add-resilience'
         ]
       },
       {
@@ -196,7 +189,11 @@ module.exports = {
       {
         type: 'category',
         label: 'Releases',
-        items: ['js/release-policy', 'js/announcing-version-2', 'js/announcing-version-2-beta']
+        items: [
+          'js/release-policy',
+          'js/announcing-version-2',
+          'js/announcing-version-2-beta'
+        ]
       },
       {
         type: 'category',
