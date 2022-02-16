@@ -39,6 +39,14 @@ To follow this guide you will need:
 - [Docker](https://www.docker.com/) and a publicly reachable Docker repository
 - A [Spring Boot](https://spring.io/projects/spring-boot) Application using the SAP Cloud SDK
 
+:::tip Tip
+
+When deploying applications to Kyma, you are not limited to Spring Boot applications.
+In fact, you may deploy any application that can be dockerized.
+The examples in this document, however, do use a Spring Boot app.
+
+:::
+
 Check out the details below in case you are uncertain about any of the prerequisites.
 
 <details>
@@ -50,11 +58,15 @@ If not, please refer to these guides on getting a [Global Account](https://help.
 In your subaccount in SAP BTP cockpit, create a [Kyma Environment instance](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/09dd313bf6644250a14f8f38c3d644c0.html?locale=en-US).
 Make sure that you select an appropriate [plan](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/befe01d5d8864e59bf847fa5a5f3d669.html?locale=en-US#azure) and also assign the necessary [roles](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/148ae38b7d6f4e61bbb696bbfb3996b2.html?locale=en-US) to users.
 
-:::note
+:::note Kyma Setup Time
 
 Creating a Kyma environment instance can take up to 30 minutes.
 
 :::
+
+Once your Kyma environment is created, you can download a [Kubeconfig file](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/) directly from the BTP cockpit.
+
+![Kubeconfig file download](sap-btp-kyma-environment/btp-cockpit-kubeconfig-url.png)
 
 </details>
 
@@ -130,8 +142,10 @@ docker build -t <your-repo>/<your-image-name>:<your-tag> .
 docker push <your-repo>/<your-image-name>:<your-tag>
 ```
 
-:::tip
+:::tip Tip
+
 In case you are facing authorization issues when pushing to your repository refer to the dedicated section under [Prerequisites](#prerequisites).
+
 :::
 
 ### Create a Kyma Deployment
@@ -198,33 +212,68 @@ kubectl get deployment my-app-deployment
 
 NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
 my-app-deployment     1/1     1            1           15s
-````
+```
 
 :::tip
 In case something went wrong use `kubectl describe` together with `deployment` or `pod` to get more information about the status of your application.
 :::
 
-### Access Your Application inside the cluster
+### Access Your Application
 
-To access your application from inside the cluster find the name of the application pod by listing out all available pods:
+To access your application without further configuration you need to find the name of the application pod by listing out all available pods:
 
 ```bash
 kubectl get pods
 ```
 
-Now use the name of the application pod and open a shell in this pod using:
+Now use the name of the application pod and forward the application port to your local machine:
+
+```bash
+kubectl port-forward [pod-name] [local-port]:[application-port]
+```
+
+In case you started with an SAP Cloud SDK Archetype, you can test the `hello` endpoint:
+
+```
+curl localhost:[local-port]/hello
+```
+
+<details>
+  <summary>Example</summary>
+
+If your application is running on port `8080` (default configuration) in it's pod, you can use the following command to gain access to your app:
+
+```bash
+kubectl port-forward my-app-pod-XYZ :8080
+```
+
+Please note that we skipped the `[local-port]` parameter in the command above.
+This will let `kubectl` choose a random available port on your local machine everytime you run the command.
+
+If everything worked as expected, you should see an output similar to the following:
+
+```bash
+Forwarding from 127.0.0.1:50309 -> 8080
+Forwarding from [::1]:50309 -> 8080
+```
+
+In this example, `kubectl` chose the local port `50309`.
+So you should be able to successfully run the following `curl` command:
+
+```bash
+curl localhost:50309/hello
+```
+</details>
+
+:::tip SSH Access to your Pods
+
+If port-forwarding is not enough for you, you can also easily get SSH access to your application pods:
 
 ```bash
 kubectl exec --stdin --tty [pod-name] -- /bin/sh
 ```
 
-Install [`curl`](https://curl.se/) on your pod depending on the Linux distribution of your pod and access the application by accessing an endpoint using `curl`.
-
-In case you started with an SAP Cloud SDK Archetype, you can test the `hello` endpoint:
-
-```
-curl localhost:8080/hello
-```
+:::
 
 ### Bind SAP BTP Services to the Application
 
@@ -237,6 +286,23 @@ For this guide we'll assume we want to use two services:
 2. XSUAA Service
 
 #### Bind the Destination Service
+
+1. Open your Kyma dashboard by clicking the link in your BTP cockpit:
+
+![Kyma Console URL](sap-btp-kyma-environment/btp-cockpit-kyma-console-url.png)
+
+2. In the Kyma dashboard, select your Kyma namespace (top right hand side of the screen), navigate to `Service Management > Catalog`, and select the `Destination` service.
+
+![Destination Service Selection](sap-btp-kyma-environment/btp-kyma-dashboard-destination-service-selection.png)
+
+3. Configure your new service instance by first clicking on the `Add +` button followed by selecting both a name and a plan.
+
+4. Finalize the service instance creation by confirming your configuration with a click on the `Create` button.
+
+![Destination Service Creation](sap-btp-kyma-environment/btp-kyma-dashboard-destination-service-creation.png)
+
+<details>
+  <summary>Alternative: Using Kubernetes Descriptors</summary>
 
 1. Create a new YAML file :
 
@@ -288,7 +354,20 @@ spec:
 
 5. Update the configuration via `kubectl apply -f deployment.yml`.
 
+</details>
+
 #### Bind the XSUAA Service
+
+1. Open your Kyma dashboard (see previous section) and select the `Authorization and Trust Management Service` in `Service Managament > Catalog`:
+
+![XSUAA Service Selection](sap-btp-kyma-environment/btp-kyma-dashboard-xsuaa-service-selection.png)
+
+2. Configure your new service instance by clicking the `Add +` button and selecting both a name and a plan or your new service instance. Complete the process by clicking the `Create` button.
+
+![XSUAA Service Creation](sap-btp-kyma-environment/btp-kyma-dashboard-xsuaa-service-creation.png)
+
+<details>
+  <summary>Alternative: Using Kubernetes Descriptors</summary>
 
 1. Create a new YAML file :
 
@@ -314,6 +393,8 @@ spec:
 
 2. Repeat the same steps 2-5 from the previous section but make use of `my-xsuaa-secret` for the steps.
 
+</details>
+
 #### Known XSUAA Service incompatibility
 
 We have observed that the property `plan` is missing in the XSUAA secret created in the previous section.
@@ -337,10 +418,10 @@ In there, you can now add a `plan` property with one of the following base64 enc
 
 The resulting service binding can now be consumed with the SAP Cloud SDK.
 
-### Access Your Application outside the cluster
+### Expose your Application to the Internet
 
-We will configure and deploy an [Approuter](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/01c5f9ba7d6847aaaf069d153b981b51.html?locale=en-US) so that only authenticated users can access our application.
-We created a simple application that uses the [@sap/approuter](https://www.npmjs.com/package/@sap/approuter) and starts it for this purpose.
+During the next steps, you will configure and deploy an [Approuter](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/01c5f9ba7d6847aaaf069d153b981b51.html?locale=en-US) so that only authenticated users can access your application.
+For that, you will need to create a simple application that uses the [@sap/approuter](https://www.npmjs.com/package/@sap/approuter) and starts it for this purpose.
 
 1. Based on the approuter application you used, containerize your application and push the image to a docker repository of your choice.
 2. Create a new YAML file describing the approuter deployment:
@@ -372,7 +453,7 @@ We created a simple application that uses the [@sap/approuter](https://www.npmjs
              name: my-approuter
              env:
                - name: PORT
-                 value: '5000'
+                 value: "5000"
                - name: destinations
                  value: >
                    [
@@ -386,7 +467,7 @@ We created a simple application that uses the [@sap/approuter](https://www.npmjs
                  value: <URL-pattern-for-outside-cluster-access>
              volumeMounts:
                - name: my-xsuaa-service-binding-volume
-                 mountPath: '/etc/secrets/sapcp/xsuaa/my-xsuaa-service-binding'
+                 mountPath: "/etc/secrets/sapcp/xsuaa/my-xsuaa-service-binding"
          volumes:
            - name: my-xsuaa-service-binding-volume
              secret:
@@ -418,7 +499,7 @@ We created a simple application that uses the [@sap/approuter](https://www.npmjs
     "welcomeFile": "/web-pages/index.html",
     "routes": [
         {
-            "source": "<path-for-backend-endpoints>",
+            "source": "/<path-for-backend-endpoints>/(.*)",
             "target": "$1",
             "destination": "<name-for-the-backend-app>",
             "identityProvider": "<optional-identity-provider-id>",
@@ -446,7 +527,7 @@ spec:
     xsappname: <your-backend-app-name>
     oauth2-configuration:
       allowedproviders:
-        - sap.custom
+        - <your-idp-key>
       redirect-uris:
         - <URL-pattern-for-outside-cluster-access>
 ---
