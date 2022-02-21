@@ -17,7 +17,7 @@ keywords:
 The SAP Cloud SDK for Java offers a broad spectrum of convenience _accessors_.
 These _accessors_ can be used to get information such as the currently active _tenant_, the _principal_, and the _authentication token_.
 Under the hood, the _accessors_ extract the requested information from the _incoming_ (user) request that is currently being processed.
-Previously (prior to version `3.61.0`), the implementations were relying on Java's `Servlet` API.
+Before version `3.61.0`, the implementations were relying on Java's `Servlet` API.
 Unfortunately, that approach has proven to be inflexible, especially in asynchronous applications.
 Therefore, the `RequestHeaderAccessor` was introduced with version `3.61.0` of the SAP Cloud SDK.
 
@@ -46,9 +46,9 @@ That way, you can be assured that both calls `myRequestHeaders.getHeaderValues("
 
 You can also check whether a certain header is present by using `RequestHeaderAccessor#containsHeader(String headerName)` - also case-insensitive.
 
-### Usage in other Accessors
+### Usage in Other Accessors
 
-As mentioned in the beginning, prior to version `3.61.0`, the SAP Cloud SDK's conveniene _accessors_, such as the `AuthTokenAccessor`, used to rely on the incoming `ServletRequest`.
+As mentioned in the beginning, prior to version `3.61.0`, the SAP Cloud SDK's convenience _accessors_, such as the `AuthTokenAccessor`, used to rely on the incoming `ServletRequest`.
 This behavior has been changed in favor of the new `RequestHeaderAccessor`.
 
 ## Creating HTTP Header Containers
@@ -90,7 +90,7 @@ Or you could want to delete one of the headers to avoid leaking sensitive inform
 Since the `RequestHeaderContainer` interface is designed to be **immutable**, changing the data contained in an existing instance is not possible.
 However, we included the `RequestHeaderContainer#toBuilder()` method in the interface.
 This method takes care of creating a new `RequestHeaderContainer.Builder` instance, which is already filled with all headers that are contained in the initial container.
-That way, you can add, remove, and overwrite existing headers easily:
+That way, you can add, remove, and overwrite existing headers:
 
 ```java
 RequestHeaderContainer existingHeaderContainer;
@@ -106,10 +106,10 @@ RequestHeaderContainer newHeaderContainer =
 
 You will end up with a **new instance** of the `RequestHeaderContainer` interface that contains the updated header values.
 
-### Forwarding Headers to other Cloud SDK Features
+### Forwarding Headers to other Features
 
-Most of the Cloud SDK's functionality that relies on reading HTTP headers has been migrated to use the new `RequestHeaderAccessor` - and therefore also the `RequestHeaderContainer`.
-Therefore, explicitly defining which headers should be used by the Cloud SDK is essential in many scenarios.
+Most of the SAP Cloud SDK's functionality that relies on reading HTTP headers has been migrated to use the new `RequestHeaderAccessor` - and therefore also the `RequestHeaderContainer`.
+Therefore, explicitly defining which headers should be used by the SAP Cloud SDK is essential in many scenarios.
 This can be achieved through the following code:
 
 ```java
