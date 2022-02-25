@@ -37,7 +37,7 @@ export default function Table({ columns, data }) {
               {row.cells.map(cell => {
                 return (
                   <td key={cell.key} {...cell.getCellProps()}>
-                    <ReactMarkdown plugins={[gfm, emoji]}>
+                    <ReactMarkdown remarkPlugins={[gfm, emoji]}>
                       {cell.value}
                     </ReactMarkdown>
                   </td>
