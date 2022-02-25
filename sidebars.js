@@ -145,6 +145,7 @@ module.exports = {
               'js/features/connectivity/destination-cache-isolation',
               'js/features/connectivity/proxy',
               'js/features/connectivity/generic-http-client',
+              'js/features/connectivity/quert-parameters',
               'js/features/connectivity/on-premise'
             ]
           },
