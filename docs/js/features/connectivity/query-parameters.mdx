@@ -22,12 +22,147 @@ import TabItem from '@theme/TabItem';
 
 - Version 2.0 disclaimer
 
-## Priority
+In this document we explain where how query parameters
 
-- Explain origing and in which order
+## Header Origins and Priority
+
+As partially described in the [destination guide](./destination#additional-headers-and-query-parameters-on-destinations) there are multiple origins for query parameters:
+
+- Provided by user on request level. These parameters are referred to as `custom` parameters.
+- Defined by the destination object or properties.
+- Introduced by the SAP Cloud SDK. These parameters are referred to as `internal` parameters.
+
+In case there are parameters with the same key from multiple origins the priority is:
+
+1. `Custom` parameters
+2. `Destination` parameters
+3. `Internal` parameters
+
+### Custom Parameters
+
+Custom parameters are set on the request level by the `execute()` method of the generated clients
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+```ts
+const { myEntityApi } = myEntityService();
+myEntityApi.requestBuilder().getAll().addCustomQueryParameters({
+  apikey: 'my-api-key'
+});
+```
+
+</TabItem>
+<TabItem value="deprecated">
+
+```ts
+MyEntity.requestBuilder().getAll().addCustomQueryParameters({
+  apikey: 'my-api-key'
+});
+```
+
+</TabItem>
+</Tabs>
+
+or the `executeHttpRequest` method of the generic http-client:
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+```ts
+const requestConfig = {
+  params: {
+    custom: { parameterKey: parameterValue }
+  }
+};
+executeHttpRequest(myDestination, requestConfig);
+```
+
+</TabItem>
+<TabItem value="deprecated">
+
+```ts
+const requestConfig = {
+  params: {
+    parameterKey: parameterValue
+  }
+};
+executeHttpRequest(myDestination, requestConfig);
+```
+
+</TabItem>
+</Tabs>
+
+Note the difference between version 1.0 and 2.0 of the SAP Cloud SDK.
+In the newer version we allow to specify the origin of the header, whereas for version 1.0 it is `custom` per default.
+
+### Destination Parameters
+
+You set these parameters on the destination object as described [here](./destination#additional-headers-and-query-parameters-on-destinations).
+You can investigate the parsed parameters in the `queryParameters` property of the destination object:
+
+```ts
+const { queryParameters } = await getDestination({
+  destinationName: 'myDestination',
+  userJwt: 'yourJwt'
+});
+```
+
+### Internal Parameters
+
+The SAP Cloud SDK sets certain parameters in the query per default.
+For OData the format is set to `json` for example using a query parameter.
+Also all filter, select, expand,top... options you choose in the OData clients lead to query parameters considered to be `internal`:
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+```ts
+const { myEntityApi } = myEntityService();
+myEntityApi.requestBuilder().getAll().
+    .select(myEntityApi.schema.FIRST_NAME)
+    .top(5)
+//request url: <host>/myEntityApi?$select=FirstName&$top=5&$format=json
+```
+
+</TabItem>
+<TabItem value="deprecated">
+
+```ts
+MyEntity.requestBuilder().getAll().select(myEntityApi.schema.FIRST_NAME).top(5);
+//request url: <host>/myEntityApi?$select=FirstName&$top=5&$format=json
+```
+
+</TabItem>
+</Tabs>
+
+The internal parameters have the lowest priority and you should not have to adjust them manually.
 
 ## Encoding
 
-- Default behavior OData, OpenApi
-- Default httpClient -> change the default meaningful
-- Examples of encode all Provided and different encoding
+:::info
+This section applies to version 2.0 of the SAP Cloud SDK.
+For version 1.0 encoding is done one OData related query parameters without a way to configure it.
+:::
+
+In the end, query parameters end up in the URL to the target system.
+Therefore special characters with a meaning in a URL need to be [% encoded](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier).
+The SAP Cloud SDK takes care of this encoding depending on the origin you use.
+For calls executed via a typed client and generic http client the encoding is done as:
+
+- `Custom` parameters are not encoded. The idea behind this is to give you a way to send parameters with highest priority to the target system as they are.
+- `Destination` parameters are encoded.
+- `Internal` parameters are encoded.
+
+For the `executeHttpRequest` method a option is available to adjust the behavior.
+
+```
+const parameterEncoder = function(params: Record<string,any>):Record<string,any>{
+//your custom implementation
+}
+executeHttpRequest(destination,{parameterEncoder})
+```
+
+The `parameterEncoder function is applied to the keys and values of all parameters of the request. In case you have the need to encode all parameters also the custom ones, we exported a `encodeAllParameters`method to do that. Simply pass this method as the`parameterEncoder`to the`executeHttpRequest` call.
+
+Note that this option is not available for the OData and OpenApi clients, because the typed clients take care of encoding already and an additional encoding step would easily lead to errors.
