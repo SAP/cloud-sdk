@@ -312,43 +312,48 @@ The following parameters are available on the generator for both OData protocol 
 
 <TabItem value="maven">
 
-| Parameter                      | Default  | Description                                                      |
-| :----------------------------- | :------: | :--------------------------------------------------------------- |
-| `<compileScope>`               |  `NONE`  | Adds the generated sources to the compilation or test phase      |
-| `<copyrightHeader>`            |  `null`  | Copyright header to be added at the top of generated files       |
-| `<deleteOutputDirectory>`      | `False`  | Target directory is deleted before code generation               |
-| `<defaultBasePath>`            |    -     | Base path of the exposed API                                     |
-| `<includeEntitySets>`          |    -     | Only generate classes for specific entity sets                   |
-| `<includeFunctionImports>`     |    -     | Only generate classes for specific function imports              |
-| `<inputDirectory>`             | `input`  | Location of the metadata files                                   |
-| `<namingStrategy>`             |    -     | Fully-qualified Java class to be used as the naming strategy     |
-| `<nameSource>`                 | `LABEL`  | Source for entity and property names (either `LABEL` or `NAME`)  |
-| `<outputDirectory>`            | `output` | Output directory for generated sources                           |
-| `<overwriteFiles>`             | `False`  | Overwrite existing files                                         |
-| `<packageName>`                |    -     | Package name for the generated sources                           |
-| `<sapCopyrightHeader>`         | `False`  | Add the SAP copyright header (overrides `copyrightHeader`)       |
-| `<serviceNameMappingFile>`     |    -     | Determine service names from a given mapping file                |
-| `<serviceMethodsPerEntitySet>` | `False`  | Generate service methods per each entity set for one entity type |
+| Parameter                      | Default  | Description                                                                                 |
+| :----------------------------- | :------: | :------------------------------------------------------------------------------------------ |
+| `<compileScope>`               |  `NONE`  | Adds the generated sources to the compilation or test phase                                 |
+| `<copyrightHeader>`            |  `null`  | Copyright header to be added at the top of generated files                                  |
+| `<deleteOutputDirectory>`      | `False`  | Target directory is deleted before code generation                                          |
+| `<defaultBasePath>`            |    -     | Base path of the exposed API                                                                |
+| `<includeEntitySets>`          |    -     | Only generate classes for specific entity sets                                              |
+| `<includeFunctionImports>`     |    -     | Only generate classes for specific function imports                                         |
+| `<inputDirectory>`             | `input`  | Location of the metadata files                                                              |
+| `<namingStrategy>`             |    -     | Fully-qualified Java class to be used as the naming strategy                                |
+| `<nameSource>`                 | `LABEL`  | Source for entity and property names (either `LABEL` or `NAME`)                             |
+| `<outputDirectory>`            | `output` | Output directory for generated sources                                                      |
+| `<overwriteFiles>`             | `False`  | Overwrite existing files                                                                    |
+| `<packageName>`                |    -     | Package name for the generated sources                                                      |
+| `<sapCopyrightHeader>`         | `False`  | Add the SAP copyright header (overrides `copyrightHeader`)                                  |
+| `<serviceNameMappingFile>`     |    -     | Determine service names from a given mapping file                                           |
+| `<serviceMethodsPerEntitySet>` | `False`  | Generate service methods per each entity set for one entity type                            |
+| `<keepExistingSignatures>`[^1] | `False`  | Try to avoid API breaking changes by sticking to previously generated method[^2] signatures |
+
+[^1] Feature is in experimental state.
+
+[^2] The _keep existing signatures_ switch only works if the output directory already contains a generated client library.
 
 More information is also available in the Javadoc of the generator implementation ([OData v2](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odata/generator/DataModelGenerator.html), [OData v4](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odatav4/generator/DataModelGenerator.html)).
 
 </TabItem>
 <TabItem value="cli">
 
-| Parameter                          | Alias  |  Default | Description                                                                                            |
+| Parameter                          | Alias  | Default  | Description                                                                                            |
 | :--------------------------------- | :----: | :------: | :----------------------------------------------------------------------------------------------------- |
 | `--copyrightHeader <arg>`          |  none  |  `null`  | Copyright header to be added at the top of generated files                                             |
 | `--default-base-path <arg>`        |  `-b`  |    -     | Base path of the exposed API                                                                           |
 | `--delete-output-dir`              |  `-d`  | `False`  | Target directory is deleted before code generation                                                     |
 | `--help`                           |  `-h`  |    -     | Print a help message.                                                                                  |
 | `--input-dir <arg>`                |  `-i`  | `input`  | Location of the metadata files                                                                         |
-| `--include-entity-sets <arg>`      | `-ies` |    -     | Only generate classes for specific entity sets                                                         |
-| `--include-function-imports <arg>` | `-ifn` |    -     | Only generate classes for specific function imports                                                    |
+| `--include-entity-sets <arg>`      | `-ies` |    -     | Only generate classes for specific entity sets                                                         |
+| `--include-function-imports <arg>` | `-ifn` |    -     | Only generate classes for specific function imports                                                    |
 | `--name-mapping-file <arg>`        |  `-m`  |    -     | Determine service names from a given mapping file                                                      |
 | `--name-strategy-class <arg>`      |  `-n`  |    -     | Fully-qualified Java class to be used as the naming strategy                                           |
 | `--use-odata-names`                |  none  |    -     | Generates entity and property names based on the names within the EDMX file instead of the `sap:label` |
 | `--output-dir <arg>`               |  `-o`  | `output` | Output directory for generated sources                                                                 |
-| `--overwrite-files`                |  `-f`  | `False`  |  Overwrite existing files                                                                              |
+| `--overwrite-files`                |  `-f`  | `False`  | Overwrite existing files                                                                               |
 | `--package-name-prefix <arg>`      |  `-p`  |    -     | Package name for the generated sources                                                                 |
 | `--sapCopyrightHeader`             |  none  | `False`  | Add the SAP copyright header (overrides `copyrightHeader`)                                             |
 | `--service-methods-per-entity-set` |  none  | `False`  | Generate service methods per each entity set for one entity type                                       |
@@ -359,22 +364,27 @@ More information is also available in the Javadoc of the generator implementatio
 </TabItem>
 <TabItem value="java">
 
-| Parameter                                  | Default  | Description                                                                           |
-| :----------------------------------------- | :------: | :------------------------------------------------------------------------------------ |
-| `copyrightHeader(String)`                  |  `null`  |  Copyright header to be added at the top of generated files                           |
-| `deleteOutputDirectory()`                  | `False`  |  Target directory is deleted before code generation                                   |
-| `overwriteFiles()`                         | `False`  |  Overwrite existing files                                                             |
-| `withDefaultBasePath(String)`              |    -     | Base path of the exposed API                                                          |
-| `withIncludedEntitySets(Set<String>)`      |    -     | Only generate classes for specific entity sets                                        |
-| `withIncludedFunctionImports(Set<String>)` |    -     | Only generate classes for specific function imports                                   |
-| `withInputDirectory(String)`               | `input`  | Location of the metadata files                                                        |
-| `withNamingStrategy(NamingStrategy)`       |    -     | Fully-qualified Java class to be used as the naming strategy                          |
-| `withNameSource(NameSource)`               |    -     | Source for entity and property names (either `NameSource.LABEL` or `NameSource.NAME`) |
-| `withOutputDirectory(String)`              | `output` | Output directory for generated sources                                                |
-| `withPackageName(String)`                  |    -     | Package name for the generated sources                                                |
-| `withServiceNameMapping(String)`           |    -     | Determine service names from a given mapping file                                     |
-| `sapCopyrightHeader()`                     | `False`  | Add the SAP copyright header (overrides `copyrightHeader`)                            |
-| `serviceMethodsPerEntitySet()`             | `False`  | Generate service methods per each entity set for one entity type                      |
+| Parameter                                  | Default  | Description                                                                                 |
+| :----------------------------------------- | :------: | :------------------------------------------------------------------------------------------ |
+| `copyrightHeader(String)`                  |  `null`  | Copyright header to be added at the top of generated files                                  |
+| `deleteOutputDirectory()`                  | `False`  | Target directory is deleted before code generation                                          |
+| `overwriteFiles()`                         | `False`  | Overwrite existing files                                                                    |
+| `withDefaultBasePath(String)`              |    -     | Base path of the exposed API                                                                |
+| `withIncludedEntitySets(Set<String>)`      |    -     | Only generate classes for specific entity sets                                              |
+| `withIncludedFunctionImports(Set<String>)` |    -     | Only generate classes for specific function imports                                         |
+| `withInputDirectory(String)`               | `input`  | Location of the metadata files                                                              |
+| `withNamingStrategy(NamingStrategy)`       |    -     | Fully-qualified Java class to be used as the naming strategy                                |
+| `withNameSource(NameSource)`               |    -     | Source for entity and property names (either `NameSource.LABEL` or `NameSource.NAME`)       |
+| `withOutputDirectory(String)`              | `output` | Output directory for generated sources                                                      |
+| `withPackageName(String)`                  |    -     | Package name for the generated sources                                                      |
+| `withServiceNameMapping(String)`           |    -     | Determine service names from a given mapping file                                           |
+| `sapCopyrightHeader()`                     | `False`  | Add the SAP copyright header (overrides `copyrightHeader`)                                  |
+| `serviceMethodsPerEntitySet()`             | `False`  | Generate service methods per each entity set for one entity type                            |
+| `keepExistingSignatures()`[^1]             | `False`  | Try to avoid API breaking changes by sticking to previously generated[^2] method signatures |
+
+[^1] Feature is in experimental state.
+
+[^2] The _keep existing signatures_ switch only works if the output directory already contains a generated client library.
 
 More details can be found on the Javadoc ([OData v2](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odata/generator/DataModelGenerator.html), [OData v4](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odatav4/generator/DataModelGenerator.html)).
 
