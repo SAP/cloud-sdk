@@ -126,7 +126,9 @@ We'll add a respective integration dependency to the POM file under the `srv` di
 You can learn more about how the multitenancy of the SAP Cloud SDK integrates with CAP in [this article](../features/multi-tenancy/multi-tenancy-thread-context#how-is-a-thread-context-created).
 :::
 
-### Enable the Component Scan for SAP Cloud SDK Package
+### Enable the Component Scan for SAP Cloud SDK Package 
+
+**Please note:** The following step is no longer necessary from CAP/CDS version `1.23.0` onwards.
 
 Let the Spring component scan crawl the SAP Cloud SDK package.
 We'll annotate the Spring Boot application class which is annotated with `@SpringBootApplication` as follows.
@@ -139,6 +141,8 @@ We'll annotate the Spring Boot application class which is annotated with `@Sprin
 Make sure that you also add the package name of your application.
 
 ### Wrap Asynchronous Calls
+
+**Please note:** From CAP/CDS version `1.23.0` onwards, the following step is only necesasry when relying on `executeWith` methods of our _Accessor_ classes.
 
 If your app uses asynchronous calls which spawn new threads or reuse pooled threads, the call must be decorated with the respective wrapper classes.
 This decoration is required to forward thread-specific information from the calling thread to the asynchronously running thread.
