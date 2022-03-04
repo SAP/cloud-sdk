@@ -29,10 +29,10 @@ In this document we explain where how query parameters
 As partially described in the [destination guide](./destination#additional-headers-and-query-parameters-on-destinations) there are multiple origins for query parameters:
 
 - Provided by user on request level.
-These parameters are referred to as `custom` parameters.
+  These parameters are referred to as `custom` parameters.
 - Defined by the destination object or properties.
 - Introduced by the SAP Cloud SDK.
-These parameters are referred to as `internal` parameters.
+  These parameters are referred to as `internal` parameters.
 
 In case there are parameters with the same key from multiple origins the priority is:
 
@@ -114,7 +114,7 @@ const { queryParameters } = await getDestination({
 
 The SAP Cloud SDK sets certain parameters in the query per default.
 For OData the format is set to `json` for example using a query parameter.
-Also all choosen options like filter, select, or top in the OData clients lead to query parameters considered to be `internal`:
+Also all chosen options like filter, select, or top in the OData clients lead to query parameters considered to be `internal`:
 
 <Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
 <TabItem value="major">
@@ -124,7 +124,7 @@ const { myEntityApi } = myEntityService();
 myEntityApi.requestBuilder().getAll().
     .select(myEntityApi.schema.FIRST_NAME)
     .top(5)
-//request url: <host>/myEntityApi?$select=FirstName&$top=5&$format=json
+// request url: /myEntityApi?$select=FirstName&$top=5&$format=json
 ```
 
 </TabItem>
@@ -132,7 +132,7 @@ myEntityApi.requestBuilder().getAll().
 
 ```ts
 MyEntity.requestBuilder().getAll().select(myEntityApi.schema.FIRST_NAME).top(5);
-//request url: <host>/myEntityApi?$select=FirstName&$top=5&$format=json
+// request url: /myEntityApi?$select=FirstName&$top=5&$format=json
 ```
 
 </TabItem>
@@ -153,22 +153,22 @@ The SAP Cloud SDK takes care of this encoding depending on the origin you use.
 For calls executed via a typed client and generic http client the encoding is done as:
 
 - `Custom` parameters are not encoded.
-The idea behind this is to give you a way to send parameters with highest priority to the target system as they are.
+  The idea behind this is to give you a way to send parameters with highest priority to the target system as they are.
 - `Destination` parameters are encoded.
 - `Internal` parameters are encoded.
 
 For the `executeHttpRequest` method a option is available to adjust the behavior.
 
-```
-const parameterEncoder = function(params: Record<string,any>):Record<string,any>{
-//your custom implementation
-}
-executeHttpRequest(destination,{parameterEncoder})
+```ts
+const parameterEncoder = function (
+  params: Record<string, any>
+): Record<string, any> {
+  // your custom implementation
+};
+executeHttpRequest(destination, { parameterEncoder });
 ```
 
-The `parameterEncoder function is applied to the keys and values of all parameters of the request.
-In case you have the need to encode all parameters also the custom ones, we exported a `encodeAllParameters`method to do that.
-Simply pass this method as the`parameterEncoder`to the`executeHttpRequest` call.
+The `parameterEncoder function is applied to the keys and values of all parameters of the request. In case you have the need to encode all parameters also the custom ones, we exported a `encodeAllParameters`method to do that. Simply pass this method as the`parameterEncoder`to the`executeHttpRequest` call.
 
 Note that this option is not available for the OData and OpenApi clients.
 The typed clients take care of encoding already and an additional encoding layer would lead to errors.
