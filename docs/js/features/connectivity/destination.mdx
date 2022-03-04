@@ -356,6 +356,40 @@ It is your responsibility as a developer to ensure that the provided value for t
 
 :::
 
+### Destination Fetch Options
+
+:::note
+This section is written for version 2.0 of the SAP Cloud SDK.
+Most of the options are also available in version 1.0 but not all of them e.g. `timeout.
+:::
+
+The `execute()`, `getDestination()` or `executeHttpRequest()` perform a destination lookup by name as discussed above.
+You can pass options to adjust how the destination is fetched.
+In the section above we listed already a few of the options but this sections gives a comprehensive overview:
+
+- `destinationName`: The only mandatory property.
+  All the other parameters are optional.
+- `jwt`: The JSON web token.
+  Crucial in multi tenant scenarios or for user dependent authentication flows.
+- `iss`: Issuer URL which can be used to obtain destination for a subscriber tenant if no JWT is present.
+  Read the detailed documentation above before using this option.
+- `selectionStrategy`: Strategy which account is searched for a destination.
+  Default is `subscriberFirst`.
+  Alternative values are `alwaysProvider` and `alwaysSubscriber`.
+- `iasToXsuaaTokenExchange`: Boolean value with default true.
+  Performs a token exchange form IAS format tokens to XSUAA if needed using `@sap/xssec` library
+- `cacheVerificationKeys`: Boolean value with default true.
+  The verification certificates for the JWT are cached if enabled.
+- `useCache`: Boolean value with default false.
+  Stores received destinations in the cache.
+- `isolationStrategy`: Specifies how the destination cache is scoped.
+  The value is automatically set but [under certain conditions](./destination-cache-isolation) you may want to optimize it.
+- `enableCircuitBreaker`: Boolean value with default true.
+  Protects the calls to the `XSUAA` and `destination-service` by a circuit breaker.
+- `timeout`: Value in milliseconds with a default of 10000.
+  Sets the timeout for the calls to the `XSUAA` and `destination-service`.
+  There is a second timeout options on the request level, setting the timeout for the calls to the destination target.
+
 ### Additional Headers and Query Parameters on Destinations
 
 The destination service has a convention to define static headers and query parameters on destinations.
@@ -392,31 +426,3 @@ Custom headers and query parameters, however, overwrite the additional propertie
 **Header names** keep their casing but overwrite other headers independent of casing, e.g. `AUTHORIZATION` overwrites `authorization`.
 This does not apply to query **parameter names**`.
 :::
-
-### Register Destination
-
-With the `registerDestination` function it is possible to put destinations into the environment variables.
-You can then use these destinations in the same way as those retrieved from the SAP BTP.
-
-Below is an example using the `executeHttpRequest` function together with a registered destination.
-
-<Tabs groupId="version" defaultValue="major" values={[
-{ label: 'SDK 2.x', value: 'major'}]}>
-
-<TabItem value="major">
-
-```ts
-import { registerDestination } from '@sap-cloud-sdk/connectivity';
-
-registerDestination({ name: 'MY-DEST', url: 'https://example.com' });
-
-const response = await executeHttpRequest(
-  { destinationName: 'MY-DEST' },
-  {
-    method: 'get'
-  }
-);
-```
-
-</TabItem>
-</Tabs>
