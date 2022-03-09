@@ -359,8 +359,8 @@ It is your responsibility as a developer to ensure that the provided value for t
 ### Destination Fetch Options
 
 :::note
-This section is written for version 2.0 of the SAP Cloud SDK.
-Most of the options are also available in version 1.0 but not all e.g. `timeout.
+This section is written for version 2 of the SAP Cloud SDK.
+Most of the options are also available in version 1 but not all e.g. `timeout`.
 :::
 
 The `execute()`, `getDestination()` or `executeHttpRequest()` perform a destination lookup by name as discussed above.
@@ -373,10 +373,10 @@ In the section above we listed already a few of the options but this sections gi
   Crucial in multi tenant scenarios or for user dependent authentication flows.
 - `iss`: Issuer URL which can be used to obtain destination for a subscriber tenant if no JWT is present.
   Read the detailed documentation above before using this option.
-- `selectionStrategy`: Strategy which account is searched for a destination.
+- `selectionStrategy`: Specifies the order in which accounts are searched for a destination.
   Default is `subscriberFirst`.
   Alternative values are `alwaysProvider` and `alwaysSubscriber`.
-- `iasToXsuaaTokenExchange`: Switches on token exchange form IAS format tokens to XSUAA if needed using `@sap/xssec` library.
+- `iasToXsuaaTokenExchange`: Switches on token exchange form IAS format tokens to XSUAA if needed using the `@sap/xssec` library.
   Default value is true.
 - `cacheVerificationKeys`: Switches on caching for the verification certificates for the JWT.
   Default value is true.
@@ -387,7 +387,7 @@ In the section above we listed already a few of the options but this sections gi
 - `enableCircuitBreaker`: Switches on circuit breakers to protects the calls to the `XSUAA` and `destination-service`.
   Default value is true.
 - `timeout`: Sets the timeout for the calls to SAP BTP services like `XSUAA` and `destination-service`.
-  Value is in milliseconds with a default of 10000.
+  The value is in milliseconds and the default value is 10000 (10 seconds).
   There is a second timeout options on the request level, setting the timeout for the calls to the destination target.
 
 ### Additional Headers and Query Parameters on Destinations
