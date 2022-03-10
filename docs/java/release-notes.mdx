@@ -55,6 +55,49 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed Issues
 -->
 
+## 3.65.0 - March 10, 2022
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.65.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+
+### Compatibility Notes
+
+- The following modules have been marked as `deprecated` and will be removed with the next major release:
+  - `com.sap.cloud.sdk.frameworks.cxf`
+  - `com.sap.cloud.sdk.frameworks.eclipselink`
+  - `com.sap.cloud.sdk.frameworks.eclipselink-javaee`
+  - `com.sap.cloud.sdk.frameworks.javaee`
+  - `com.sap.cloud.sdk.frameworks.jaxrs`
+  - `com.sap.cloud.sdk.frameworks.jaxrs-gson`
+  - `com.sap.cloud.sdk.frameworks.liquibase`
+  - `com.sap.cloud.sdk.frameworks.liquibase-javaee`
+  - `com.sap.cloud.sdk.frameworks.spring-boot-multitenancy-scp-cf`
+  - `com.sap.cloud.sdk.frameworks.spring-web`
+  - `com.sap.cloud.sdk.frameworks.togglz`
+
+- For Media Entities in the OData V2 VDM the method `fetchAsStream()` is deprecated in favour of `fetchMediaStream()`.
+
+### New Functionality
+
+- Update of the OData VDM to the [newest release 2021 FPS1 of SAP S/4HANA On-Premise](https://help.sap.com/viewer/product/SAP_S4HANA_ON-PREMISE/2021/en-US).
+  The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA On-Premise](https://api.sap.com/products/SAPS4HANA/overview)
+  This includes completely new services, new operations in previously existing services, and new entity types in the existing Maven artifacts:
+  - [`s4hana-api-odata-v4-onpremise`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata-v4-onpremise) manages classes in package `com.sap.cloud.sdk.s4hana.onpremise.datamodel.odatav4.services`
+  - [`s4hana-api-odata-onpremise`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata-onpremise) manages classes in package `com.sap.cloud.sdk.s4hana.onpremise.datamodel.odata.services`
+
+### Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [Neo JavaEE7 WP API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-javaee7-wp-api) from `1.115.17` to `1.116.10`
+    - Update [Neo Java Web API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-java-web-api) from `4.19.13` to `4.20.7`
+  - Other dependency updates:
+    - Minor version updates:
+      - Update [Json Unit AssertJ](https://search.maven.org/search?q=g:net.javacrumbs.json-unit%2BAND%2Ba:json-unit-assertj) (`net.javacrumbs.json-unit:json-unit-assertj`) from `2.31.0` to `2.32.0`
+      - Update [Caffeine JCache](https://search.maven.org/search?q=g:com.github.ben-manes.caffeine%2BAND%2Ba:jcache) (`com.github.ben-manes.caffeine:jcache`) from `2.9.2` to `2.9.3`
+      - Update [Reactor Core](https://search.maven.org/search?q=g:io.projectreactor%2BAND%2Ba:reactor-core) (`io.projectreactor:reactor-core`) from `3.4.14` to `3.4.15`
+      - Update [Tomcat JDBC](https://search.maven.org/search?q=g:org.apache.tomcat%2BAND%2Ba:tomcat-jdbc) (`org.apache.tomcat:tomcat-jdbc`) and [Tomcat Annotations API](https://search.maven.org/search?q=g:org.apache.tomcat%2BAND%2Ba:tomcat-annotations-api) (`org.apache.tomcat:tomcat-annotations-api`) from `8.5.72` to `8.5.75`
+      - Update [Json Smart](https://search.maven.org/search?q=g:net.minidev%2BAND%2Ba:json-smart) (`net.minidev:json-smart`) from `2.4.7` to `2.4.8`
+
 ## 3.64.0 - February 24, 2022
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.64.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
