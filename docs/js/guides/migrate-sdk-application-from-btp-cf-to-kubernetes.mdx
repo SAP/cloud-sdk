@@ -799,7 +799,7 @@ url: aHR0cHM6Ly9teS1hcGkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tCg==
 
 ## Principal Propagation
 
-You can use the Application Router also known as AppRouter to propagate a principal in Kubernetes and achieve multi-tenancy.
+You can use the Application Router also known as approuter to propagate a principal in Kubernetes and achieve multi-tenancy.
 It works in a similar fashion to SAP BTP CloudFoundry.
 
 1. You need an XSUAA instance that can redirect to a Kubernetes URI.
@@ -926,7 +926,7 @@ spec:
 4. Finally, configure the `Ingress` to create a session cookie that is consumed by the `AppRouter` and point it at the `AppRouter` service.
    To secure your application, remove all previous routes that pointed at your application's endpoints and only expose them through the `AppRouter`.
    This way only users authenticated by your Identity Provider can access these endpoints.
-   For that, specify the service names in your AppRouter destinations' configuration and remove the rules you previously created for these endpoints in the `Ingress`.
+   For that, specify the service names in your approuter destinations' configuration and remove the rules you previously created for these endpoints in the `Ingress`.
 
    Depending on your `Ingress` controller you have to use different annotations.
    For the NGINX Ingress controller use the following annotations:
