@@ -1,7 +1,7 @@
 By default, URLs in the multipart representation of a request are serialized to a path relative to the service, e.g.:
 
 ```
-GET /sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartnerAddress?$format=json HTTP/1.1
+GET /sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartnerAddress HTTP/1.1
 ```
 
 However, some services might only understand URLs relative to the entity or even absolute URLs.
@@ -13,13 +13,13 @@ See below for examples:
 Serialize subrequest path relative to entity:
 
 ```ts
-// GET /A_BusinessPartnerAddress?$format=json HTTP/1.1
+// GET /A_BusinessPartnerAddress HTTP/1.1
 batch(...requests).withSubRequestPathType('relativeToEntity');
 ```
 
 Serialize subrequest path as absolute URL:
 
 ```ts
-// GET https://my-s4.system.com/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartnerAddress?$format=json HTTP/1.1
+// GET https://my-s4.system.com/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartnerAddress HTTP/1.1
 batch(...requests).withSubRequestPathType('absolute');
 ```
