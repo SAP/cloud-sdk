@@ -50,7 +50,7 @@ Once these clients are available, follow the following steps:
 - Change the `builder()` call as described [here](#breaking-change-on-the-entitybuilder-api).
 - Find the invocations of the request builders.
   This RegExp `import.*from.*@sap\/cloud\-sdk\-vdm\-.*` helps to find the files where the client is used.
-- Change the `requestBuillder()` call as described [here](#breaking-change-on-the-requestbuilder-api).
+- Change the `requestBuilder()` call as described [here](#breaking-change-on-the-requestbuilder-api).
 - Change the `execute()` call as described [here](#breaking-change-on-the-execute-api).
 
 If you want to check a client before we publish it, follow the step below to generate it locally.
@@ -69,7 +69,7 @@ We assume that you have installed the generator as a local `devDependency` in yo
 - Find the invocations of the request builders.
   This RegExp `import.*from.*EntityName.*` helps to find the files where the client is used.
   Replace `EntityName` with the name of your entities.
-- Change the `requestBuillder()` call as described [here](#breaking-change-on-the-requestbuilder-api).
+- Change the `requestBuilder()` call as described [here](#breaking-change-on-the-requestbuilder-api).
 - Change the `execute()` call as described [here](#breaking-change-on-the-execute-api).
 
 ### Replace Core Imports
@@ -178,10 +178,10 @@ myEntityApi
 
 ### Breaking Change on the `RequestBuilder` API
 
-To make the [middle ware concept](../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#customize-de-serialization) possible, it was necessary to add more state to the `requestBuillder`.
+To make the [middle ware concept](../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#customize-de-serialization) possible, it was necessary to add more state to the `requestBuilder`.
 
 All the static properties used to build select or filters are also now part of an instance and are exposed via a `schema` property.
-The `requestBuillder` is also not a static method anymore but an instance method of an API object:
+The `requestBuilder` is also not a static method anymore but an instance method of an API object:
 
 ```js
 //Version 1.X.Y
