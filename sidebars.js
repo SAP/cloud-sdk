@@ -101,7 +101,6 @@ module.exports = {
         label: 'Extensions',
         items: [
           'java/extensions/extensions-supported-by-sap-cloud-sdk-for-java',
-          'java/extensions/sap-currency-conversion-extension-library-for-cloud-sdk-for-java'
         ]
       },
       {
