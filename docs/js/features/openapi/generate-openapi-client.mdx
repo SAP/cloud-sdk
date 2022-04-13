@@ -162,6 +162,26 @@ Example:
 | `myFunction`            | `myFunction`             |
 | `other_function`        | `otherFunction`          |
 
+#### Path Templating
+Path templating can be used as:
+
+```yaml
+paths:
+  /entities/{pathParam}:
+    parameters:
+      - in: path
+        name: pathParam
+        required: true
+        type: string
+```
+
+The following path patterns are also syntactically valid: `/path/{param1}:{param2}`, `/path/foo{param1}text{param2}bar`, `/path/{param1}{param2}`, `/path/{{{param}}` (the innermost curly brackets will be matched).
+It is not recommended to have reserved characters included in the rest of the path, e.g., `/path/value?{param}`, since this will cause a misinterpretation of the path parameter.
+It is not allowed to have the slash ("/"), question mark ("?"), and number sign ("#") characters in the placeholder or the value of a path parameter. (RFC3986)
+Therefore, path pattern `/path/{pa/ram}` will be interpreted as having no placeholder. 
+
+The generator checks for mismatches between path parameters and placeholders. If a path parameter cannot be matched with any placeholder (or vice versa), an error will be thrown.
+
 ### Configure Generated Client Structure and Naming
 
 In case you need more flexibility when generating clients, you can use the SAP Cloud SDK's vendor extensions for OpenAPI.
