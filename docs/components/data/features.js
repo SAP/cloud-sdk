@@ -494,18 +494,3 @@ export const ODataFeatures = [
  * List of OpenAPI features supported or planned to be supported by SDK
  */
 export const OpenAPIFeatures = [];
-
-/**
- * List of releases or planned extensions
- */
-export const extensions = [
-  {
-    name: 'Currency conversion library',
-    java: {
-      status: DEPRECATED
-    },
-    js: {
-      status: PLANNED
-    }
-  }
-];
