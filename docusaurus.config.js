@@ -51,6 +51,14 @@ module.exports = {
     //   isCloseable: false, // Defaults to `true`.
 
     // },
+    announcementBar: {
+      id: 'early_bird',
+      content:
+        'Are you interested in an interactive session about the SAP Cloud SDK? Join us at the German-language 🐣 <a href="/cloud-sdk/docs/community/early-bird-agilita" style="color: var(--ifm-link-color);text-decoration: var(--ifm-link-decoration);transition: color var(--ifm-transition-fast) var(--ifm-transition-timing-default)">Early Bird webinar powered by Agilita</a> on Apr 19th 7:30 CEST.',
+      backgroundColor: 'var(--ifm-color-secondary)',
+      // textColor: '#091E42',
+      isCloseable: false
+    },
     navbar: {
       title: 'SAP Cloud SDK',
       logo: {
