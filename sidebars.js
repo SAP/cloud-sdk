@@ -184,6 +184,23 @@ module.exports = {
       },
       {
         type: 'category',
+        label: 'Tutorials',
+        items: [
+          {
+            type: 'category',
+            label: 'Cloud Foundry App',
+            items: [
+              'js/tutorials/cf-app/build-cf-app-using-sdk-js-introduction',
+              'js/tutorials/cf-app/set-up-dev-enviroment-tutorial',
+              'js/tutorials/cf-app/create-a-new-project-tutorial',
+              'js/tutorials/cf-app/create-your-first-application-tutorial',
+              'js/tutorials/cf-app/deploy-application-to-cloud-foundry-tutorial'
+            ]
+          }
+        ]
+      },
+      {
+        type: 'category',
         label: 'Extensions',
         items: ['js/extensions/currency-conversion']
       },

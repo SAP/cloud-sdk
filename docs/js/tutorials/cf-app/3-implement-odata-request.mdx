@@ -1,0 +1,315 @@
+---
+id: create-your-first-application-tutorial
+title: Create Your First Application with SAP Cloud SDK for JavaScript
+sidebar_label: Execute an OData Request
+description: Learn the fundamentals of the SAP Cloud SDK for JavaScript and integrate with an SAP S/4HANA Cloud system.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+In this tutorial, you will do the following:
+
+- Set up a mock API Server 
+- Extend the starter NestJS application by adding a custom route
+- Call the Business Partner Service of SAP S/4HANA Cloud using SAP Cloud SDK for JavaScript
+- Manage Destinations centrally during development (optional)
+
+## Set Up the API Server
+
+:::note
+If you have access to an `SAP S/4HANA Cloud` system with a technical user, you can skip this part.
+:::
+
+There are multiple ways of setting up an API Server, you can either setup your own Mock Server or you can use the Sandbox API.
+
+To make a call to an `OData` service, there needs to be a service to call.
+You can setup a local mock server that mimics the business partner and a custom service by following the instructions [here](https://sap.github.io/cloud-s4-sdk-book/pages/mock-odata.html).
+This mock server does not support all the features of the actual OData services, but it suffices to try it out locally.
+
+Once it is up and running you should see the list of services at `http://localhost:3000/`.
+
+Alternatively, many APIs can also be tested using the sandbox of the SAP API Business Hub.
+To use the sandbox, you need an API key.
+Go to https://api.sap.com and click **Login** in the top right corner.
+If you do not have an account, you will need to register first.
+When you are logged in, click on 'Hi ' in the top right corner and then click on **Settings** in the dropdown menu that just opened.
+On the settings page, click **Show API Key**.
+
+## Add a Custom Route
+
+Initially, the app only contains the `hello-world` route.
+We will add another route for `business-parters` that will list all available business partners.
+
+First, create a new file `business-partner.controller.ts` in the `src/` directory and add an implementation for this route, like so:
+
+```ts
+import { Controller, Get } from '@nestjs/common';
+
+@Controller()
+export class BusinessPartnerController {
+  @Get('business-partners')
+  getBusinessPartners() {
+    return 'We will implement this in a minute.';
+  }
+}
+```
+
+The `@Controller()` decorator marks our class as controller (i.e. a thing that handles requests), and the `@Get('business-partners')` decorator marks the `getBusinessPartners` method as handler for GET requests on the path `/business-partners`.
+The `@Controller()` decorator allows [providing more configuration](https://docs.nestjs.com/controllers), but this is beyond the scope of this tutorial.
+
+In order for the controller to work, we also need to register it in our application.
+Open `app.module.ts`, import the controller class you just created and add it to the `controllers` declaration.
+Your file should look like this:
+
+```ts
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { BusinessPartnerController } from './business-partner.controller';
+
+@Module({
+  imports: [],
+  controllers: [AppController, BusinessPartnerController],
+  providers: [AppService],
+})
+export class AppModule {}
+```
+
+If you've started your application with the following command in the previous tutorial, it should detect the change and restart automatically.
+
+```shell
+npm run start:dev
+```
+
+If you've terminated your application, you can restart it by running the start command again.
+Now, calling `http://localhost:8080/business-partners` should return our placeholder string.
+
+## Import Service Entities
+
+To use the SAP Cloud SDK for JavaScript to make a call to an OData service, add the `virtual data model (VDM)` for this service to your dependencies.
+For this tutorial, we are using the VDM for the business partner service.
+Install it with the following command:
+
+```shell
+npm install @sap/cloud-sdk-vdm-business-partner-service@latest
+```
+
+Import the service function and entity exported by the VDM.
+Add the following line to the top of the `business-partner.controller.ts`.
+
+```ts
+import { businessPartnerService, BusinessPartner } from '@sap/cloud-sdk-vdm-business-partner-service';
+```
+
+:::note
+The `SAP Cloud SDK for JavaScript` offers packages for each OData service exposed by `SAP S/4HANA Cloud`.
+You can find a list of these services in the SAP API Business Hub.
+:::
+
+## Execute an OData Request
+
+In `business-partner.controller.ts` create a function `getAllBusinessPartners`.
+Get the API for the entity you want to make a call to in your application.
+Unpack the API object you need from the service function using [JavaScript Object Destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment).
+In this tutorial, we are using the `businessPartnerEntityApi` of the business partner service.
+
+Depending on your API Server, the destination configuration can vary:
+
+<Tabs groupId="scenario" defaultValue="mock-server" values={[
+{ label: 'Mock Server', value: 'mock-server'},{ label: 'SAP S/4HANA Cloud System', value: 's4hana-cloud'},{ label: 'SAP API Business Hub Sandbox', value: 'api-hub-sandbox'}]}>
+
+<TabItem value="mock-server">
+
+```ts
+function getAllBusinessPartners(): Promise<BusinessPartner[]> {
+  const { businessPartnerApi } = businessPartnerService();
+  return businessPartnerApi
+    .requestBuilder()
+    .getAll()
+    .execute({
+      url: 'http://localhost:3000'
+    });
+}
+```
+</TabItem>
+
+<TabItem value="s4hana-cloud">
+
+```ts
+function getAllBusinessPartners(): Promise<BusinessPartner[]> {
+  const { businessPartnerApi } = businessPartnerService();
+  return businessPartnerApi
+    .requestBuilder()
+    .getAll()
+     .execute({
+      url: '<URI of your SAP S/4HANA Cloud System>',
+      username: '<USERNAME>',
+      password: '<PASSWORD>'
+    });
+}
+```
+
+</TabItem>
+
+<TabItem value="api-hub-sandbox">
+
+```ts
+function getAllBusinessPartners(): Promise<BusinessPartner[]> {
+  const { businessPartnerApi } = businessPartnerService();
+  return businessPartnerApi
+    .requestBuilder()
+    .getAll()
+    .withCustomHeaders({ APIKey: '<YOUR-API-KEY>'})
+    .execute({
+      url: 'https://sandbox.api.sap.com/s4hanacloud'
+    });
+}
+```
+
+</TabItem>
+</Tabs>
+
+As network requests are asynchronous by nature, the return value of this function is a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) to a list of Business Partners `(Promise<BusinessPartner[]>)`.
+
+Let's add the execution of this request to `getBusinessPartners` method:
+
+```ts
+import { Controller, Get, HttpException } from '@nestjs/common';
+
+@Get('business-partners')
+getBusinessPartners() {
+  return getAllBusinessPartners()
+    .catch(error => {
+      throw new HttpException(`Failed to get business partners - ${error.message}`, 500);
+    });
+}
+
+```
+
+`Nest.js` will handle the `Promise` we return automatically.
+We add a `.catch` handler to specify how errors are handled (otherwise it would only show `internal server error` when something goes wrong).
+Reload the `http://localhost:8080/business-partners` URL to retrieve a list of business partners.
+
+Congratulations, you just made your first call with the SAP Cloud SDK!
+
+## Manage Destinations Centrally (Optional)
+
+To avoid repeating your destination configuration for every request execution, you can set a destinations environment variable to manage your destinations.
+In `Node.js` application, it is common to use a `.env` file to maintain such environment variables for a given project.
+Create a `.env` file in the root directory of your project and define the destinations environment variable as follows:
+
+```ts
+destinations=[{"name": "<DESTINATIONNAME>", "url": "<URL to your system>", "username": "<USERNAME>", "password": "<PASSWORD>"}]
+```
+
+:::caution
+Please do not use this approach in production and also include the .env file in your .gitignore list, so that it is not accidentally checked in.
+:::
+
+This is what it would look like for the mock server:
+
+```ts
+destinations=[{"name": "MockServer", "url": "http://localhost:3000"}]
+```
+
+Now that we have defined our destinations, we need to make sure that they are available in our process.
+For this we use the `config` package provided by `nest.js`. You can install it with the following command:
+
+```shell
+npm install @nestjs/config
+```
+
+To load the environment variables defined in the `.env` file, we need to add the `ConfigModule` provided by the `config` package to the application's `@Module` definition.
+Open `app.module.ts` and update it with the following code:
+
+```ts
+import { ConfigModule } from '@nestjs/config';
+
+@Module({
+  imports: [ConfigModule.forRoot()],
+  controllers: [AppController, BusinessPartnerController],
+  providers: [AppService],
+})
+```
+
+`ConfigModule` is imported from the `config` package and in we add it to the module's `imports`.
+If no arguments are passed to the `forRoot()` method, the `.env` file has to be located in the project root.
+For details on the possible configuration see the [nest documentation](https://docs.nestjs.com/techniques/configuration).
+To reference a destination in the request execution, replace the URL with a destinationName - `MockServer` in our example:
+
+```ts
+function getAllBusinessPartners(): Promise<BusinessPartner[]> {
+  return BusinessPartner.requestBuilder()
+    .getAll()
+    .execute({
+      destinationName: 'MockServer'
+    });
+}
+```
+
+:::note
+Every environment variable in the `.env` file has to be defined on one line.
+You can add more destinations to the array.
+:::
+
+## Final Code Review
+
+Here are the code files discussed on this page, if you are using the mock server:
+
+<Tabs groupId="code-files" defaultValue="bupa-controller" values={[{ label: 'src/business-partner.controller.ts', value: 'bupa-controller'}, { label: 'src/app.module.ts', value: 'app-module'}]}>
+<TabItem value="bupa-controller">
+
+  ```ts
+  import { Controller, Get, HttpException } from '@nestjs/common';
+  import { businessPartnerService, BusinessPartner } from '@sap/cloud-sdk-vdm-business-partner-service';
+
+  @Controller()
+  export class BusinessPartnerController {
+    @Get('business-partners')
+    getBusinessPartners() {
+      return getAllBusinessPartners()
+        .catch(error => {
+          throw new HttpException(`Failed to get business partners - ${error.message}`, 500);
+        });
+    }
+
+  function getAllBusinessPartners(): Promise<BusinessPartner[]> {
+    const { businessPartnerApi } = businessPartnerService();
+    return businessPartnerApi
+      .requestBuilder()
+      .getAll()
+      .execute({
+        destinationName: 'MockServer'
+      });
+    }
+  }
+  ```
+
+</TabItem>
+<TabItem value="app-module">
+
+  ```ts
+  import { Module } from '@nestjs/common';
+  import { ConfigModule } from '@nestjs/config';
+  import { AppController } from './app.controller';
+  import { AppService } from './app.service';
+  import { BusinessPartnerController } from './business-partner.controller';
+
+  @Module({
+    imports: [ConfigModule.forRoot()],
+    controllers: [AppController, BusinessPartnerController],
+    providers: [AppService],
+  })
+  export class AppModule {}
+  ```
+
+</TabItem>
+</Tabs>
