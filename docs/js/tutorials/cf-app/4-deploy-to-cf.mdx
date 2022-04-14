@@ -214,12 +214,9 @@ The function now looks like this:
 ```ts
 function getAllBusinessPartners(): Promise<BusinessPartner[]> {
   const { businessPartnerApi } = businessPartnerService();
-  return businessPartnerApi
-    .requestBuilder()
-    .getAll()
-    .execute({
-      destinationName: 'MockServer'
-    });
+  return businessPartnerApi.requestBuilder().getAll().execute({
+    destinationName: 'MockServer'
+  });
 }
 ```
 

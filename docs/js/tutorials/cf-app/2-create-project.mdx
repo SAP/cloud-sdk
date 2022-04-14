@@ -89,64 +89,64 @@ Here are the code files discussed on this page:
 
 <TabItem value="main">
 
-  ```ts
-  import { NestFactory } from '@nestjs/core';
-  import { AppModule } from './app.module';
+```ts
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
 
-  async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
-    await app.listen(process.env.PORT || 8080);
-  }
-  bootstrap();
-  ```
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  await app.listen(process.env.PORT || 8080);
+}
+bootstrap();
+```
 
 </TabItem>
 <TabItem value="app-module">
 
-  ```ts
-  import { Module } from '@nestjs/common';
-  import { AppController } from './app.controller';
-  import { AppService } from './app.service';
+```ts
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
-  @Module({
-    imports: [],
-    controllers: [AppController],
-    providers: [AppService],
-  })
-  export class AppModule {}
-  ```
+@Module({
+  imports: [],
+  controllers: [AppController],
+  providers: [AppService]
+})
+export class AppModule {}
+```
 
 </TabItem>
 <TabItem value="app-controller">
 
-  ```ts
-  import { Controller, Get } from '@nestjs/common';
-  import { AppService } from './app.service';
+```ts
+import { Controller, Get } from '@nestjs/common';
+import { AppService } from './app.service';
 
-  @Controller()
-  export class AppController {
-    constructor(private readonly appService: AppService) {}
+@Controller()
+export class AppController {
+  constructor(private readonly appService: AppService) {}
 
-    @Get()
-    getHello(): string {
-      return this.appService.getHello();
-    }
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
   }
-  ```
+}
+```
 
 </TabItem>
 <TabItem value="app-service">
 
-  ```ts
-  import { Injectable } from '@nestjs/common';
+```ts
+import { Injectable } from '@nestjs/common';
 
-  @Injectable()
-  export class AppService {
-    getHello(): string {
-      return 'Hello World!';
-    }
+@Injectable()
+export class AppService {
+  getHello(): string {
+    return 'Hello World!';
   }
-  ```
+}
+```
 
 </TabItem>
 </Tabs>
