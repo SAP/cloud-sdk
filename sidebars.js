@@ -100,7 +100,7 @@ module.exports = {
         type: 'category',
         label: 'Extensions',
         items: [
-          'java/extensions/extensions-supported-by-sap-cloud-sdk-for-java',
+          'java/extensions/extensions-supported-by-sap-cloud-sdk-for-java'
         ]
       },
       {
