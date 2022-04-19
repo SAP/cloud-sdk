@@ -1,8 +1,8 @@
 ---
-id: create-a-new-project-tutorial
-title: Get Started with SAP Cloud SDK for JavaScript
-sidebar_label: Create a Project
-description: Scaffold an application that is ready to be used with the SAP Cloud SDK for JavaScript.
+id: set-up-dev-enviroment
+title: Set up Development Environment
+sidebar_label: Set up Development Environment
+description: Set up your environment to use the SAP Cloud SDK for JavaScript.
 keywords:
   - sap
   - cloud
@@ -10,23 +10,64 @@ keywords:
   - cloud native
   - cloud sdk
   - sap cloud sdk
+  - tutorial
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
+You will start with installing the tools necessary to getting started.
 Once your development enviroment is setup, you can begin with scaffolding an initial application with the Nest.js CLI.
 Throughout this tutorial, you'll modify and extend this starter application to use the SAP Cloud SDK for JavaScript.
 
-In this tutorial, you'll do the following:
+In this part of the tutorial, you'll do the following:
 
-- Scaffold your NestJS application.
-- Learn about the project's structure.
+- Install `Node.js` and `npm`.
+- Install the Nest CLI.
+- Install the Cloud Foundry CLI, `cf`.
+- Scaffold your NestJS application and learn about the project's structure.
 - Run the application locally.
+
+## Node.js and npm
+
+If you have Node.js and npm installed, skip ahead to the next step.
+To check the Node.js and npm versions you have installed, run the following commands:
+
+```shell
+node -v
+npm -v
+```
+
+If one of those commands fails, you will have to install Node.js.
+It is recommended to use the [latest LTS version](https://nodejs.org/en/about/releases/).
+
+## Install Nest CLI
+
+You need to have the Nest CLI installed to create a new project.
+You can install it globally by executing the following command:
+
+```shell
+npm i -g @nestjs/cli
+```
+
+## Cloud Foundry Command Line Interface
+
+You will need the Cloud Foundry CLI (`cf`) to later deploy your application to SAP Business Technology Platform.
+To see whether it is already installed, run the following:
+
+```shell
+cf -v
+```
+
+If the command fails, you will need to install `cf`.
+
+You can find installation instructions for all common platforms in the [Cloud Foundry documentation](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html).
+We recommend to use a package manager for that.
+If you are using `chocolatey` on Windows, please find the instructions [here](https://community.chocolatey.org/packages/cloudfoundry-cli).
 
 ## Scaffold an Application
 
-With `npm` and `Nest CLI` installed, you can create a new project using the command below:
+You can now create a new project using the command below:
 
 ```shell
 nest new project-name
@@ -40,17 +81,17 @@ If everything worked correctly, you should see output like this:
 
 ```shell
 
-🚀  Successfully created project project-name
+🚀  Successfully created project <project-name>
 👉  Get started with the following commands:
 
-$ cd project-name
+$ cd <project-name>
 $ npm run start
 
 ```
 
 ## Get Familiar With the Project
 
-The project contains the following files and folders, among others, to get you started with the SAP Cloud SDK for JavaScript:
+The project contains the following files and folders:
 
 #### npm / Project
 
@@ -59,7 +100,8 @@ The project contains the following files and folders, among others, to get you s
 
 #### TypeScript
 
-- **`tsconfig.json`**: Configuration file for `TypeScript`. This is not needed in the plain `JavaScript` version.
+- **`tsconfig.json`**: Configuration file for `TypeScript`.
+  This is not needed in the plain `JavaScript` version.
 
 #### Local Development
 
@@ -74,8 +116,9 @@ npm run start:dev
 ```
 
 This will start a local server in watch mode so that subsequent changes will automatically trigger a restart of the server.
-Go to `http://localhost:3000` and you should get a `Hello, World!` in response.
-Before continuing with the next tutorial, open `src/main.ts` and switch the port from `3000` to `8080`. The corresponding line should then look like this:
+Go to `http://localhost:3000` and you should get a `Hello World!` in response.
+Before continuing with the next part of the tutorial, open `src/main.ts` and switch the port from `3000` to `8080`.
+The corresponding line should then look like this:
 
 ```ts
 await app.listen(process.env.PORT || 8080);

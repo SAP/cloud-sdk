@@ -176,7 +176,6 @@ module.exports = {
           'js/guides/migrate-to-open-source-version-of-cloud-sdk-for-javascript-typescript',
           'js/guides/upgrade-to-version-2',
           'js/guides/bas-external-system',
-          'js/guides/tutorial-overview-sdk-js',
           'js/guides/sdk-in-browser',
           'js/guides/how-to-use-the-approuter',
           'js/guides/how-to-add-resilience'
@@ -188,13 +187,12 @@ module.exports = {
         items: [
           {
             type: 'category',
-            label: 'Cloud Foundry App',
+            label: 'Getting Started',
             items: [
-              'js/tutorials/cf-app/build-cf-app-using-sdk-js-introduction',
-              'js/tutorials/cf-app/set-up-dev-enviroment-tutorial',
-              'js/tutorials/cf-app/create-a-new-project-tutorial',
-              'js/tutorials/cf-app/create-your-first-application-tutorial',
-              'js/tutorials/cf-app/deploy-application-to-cloud-foundry-tutorial'
+              'js/tutorials/getting-started/introduction',
+              'js/tutorials/getting-started/set-up-dev-enviroment',
+              'js/tutorials/getting-started/execute-an-odata-request',
+              'js/tutorials/getting-started/deploy-app-to-cf'
             ]
           }
         ]

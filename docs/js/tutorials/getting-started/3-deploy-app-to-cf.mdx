@@ -1,6 +1,6 @@
 ---
-id: deploy-application-to-cloud-foundry-tutorial
-title: Deploy Application to Cloud Foundry with SAP Cloud SDK for JavaScript
+id: deploy-app-to-cf
+title: Deploy Application to Cloud Foundry with the SAP Cloud SDK for JavaScript
 sidebar_label: Deploy Application to Cloud Foundry
 description: Deploy an existing application and deploy it to Cloud Foundry in SAP Business Technology Platform.
 keywords:
@@ -10,27 +10,23 @@ keywords:
   - cloud native
   - cloud sdk
   - sap cloud sdk
+  - tutorial
 ---
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-In this tutorial, you will to the following:
+In this part of the tutorial, you will to the following:
 
 - Deploy your application to Cloud Foundry in SAP Business Technology Platform
 - Configure a destination in the SAP Business Technology cockpit
 - Consume the destination in your application
 
-## Prerequisites
-
-For deploying your application to Cloud Foundry in SAP Business Technology Platform, you will need an account.
-You can get a trial account [here](https://www.sap.com/products/cloud-platform.html) by clicking on **Start your free trial** or use an existing account, if you already have one.
-
 ## Deploy Application to Cloud Foundry
 
 To deploy your application, you need to add a `manifest.yml` file to the root directory.
-It is a deployment descriptor file for `SAP BTP, Cloud Foundry environment`.
+It is a deployment descriptor file for SAP BTP, Cloud Foundry environment.
 The file should look like this (where `<YOUR-APPLICATION-NAME>` is replaced by the name you specified when initializing the project):
 
 ```YAML
@@ -47,11 +43,11 @@ applications:
 - The specified `path` instructs Cloud Foundry to upload all the files from the `dist/` folder.
 - The command specified under the `command` attribute tells the `buildpack` what command to issue to start the application.
 
-Next, you need to login to `Cloud Foundry` in `SAP Business Technology Platform` using the `cf` CLI.
+Next, you need to login to Cloud Foundry in SAP Business Technology Platform using the `cf` CLI.
 First you need to set an API endpoint.
-The exact URL of this API endpoint depends on the region your `subaccount` is in.
+The exact URL of this API endpoint depends on the region your _subaccount_ is in.
 Open the [SAP Business Technology Platform Cockpit](https://account.hana.ondemand.com/) and navigate to the subaccount you are planning to deploy your application to.
-Click on **Overview** on the left and you can see the URL of the API endpoint.
+Click on _Overview_ on the left and you can see the URL of the API endpoint.
 
 <img
   alt="SAP BTP Cockpit Subaccount overview"
@@ -112,17 +108,17 @@ cf logs <YOUR-APPLICATION-NAME> --recent
 ## Deploy the Business Partner Mock Server (Optional)
 
 :::note
-If you have access to an `SAP S/4HANA Cloud` system, you can skip this step.
+If you have access to an SAP S/4HANA Cloud system, you can skip this step.
 :::
 
-If you have used the [OData Mock Service](https://github.com/SAP/cloud-s4-sdk-book/tree/mock-server) for the Business Partner API in the previous tutorial, you will now also have to deploy it to Cloud Foundry.
-Navigate to the mock server's root folder, that already contains a `manifest.yml` and run:
+If you have used the [OData Mock Service](https://github.com/SAP/cloud-s4-sdk-book/tree/mock-server) for the business partner API in the previous tutorial, you will now also have to deploy it to Cloud Foundry.
+Navigate to the mock server project's root folder, that already contains a `manifest.yml` and run:
 
 ```shell
 cf push
 ```
 
-Make sure that your Mock Server and `Node.js` are up to date.
+Make sure that your mock server and `Node.js` are up to date.
 When the server has been pushed successfully, `cf` CLI will output the route where the server can be reached.
 Copy this route, as you will need it in the next step.
 
@@ -132,10 +128,10 @@ Now that you have deployed your application, you need to configure a destination
 
 Start by opening the [Cloud Cockpit](https://account.hana.ondemand.com/#/home/welcome) in your browser and logging in.
 
-Next, navigate to your respective subaccount (in case of a trial account it should be called **trial**).
-In the menu bar on the left, there should be a section **Connectivity** with an entry called **Destinations**.
-Click Destinations.
-On the page that opens, click **New Destination** and fill in the details below.
+Next, navigate to your respective subaccount (in case of a trial account it should be called _trial_).
+In the menu bar on the left, there should be a section _Connectivity_ with an entry called _Destinations_.
+Click _Destinations_.
+On the page that opens, click _New Destination_ and fill in the details below.
 
 <img
   alt="SAP BTP Cockpit Subaccount Destinations"
@@ -143,13 +139,13 @@ On the page that opens, click **New Destination** and fill in the details below.
   width="100%"
 />
 
-For Name, choose a name that describes your system.
+For _Name_, choose a name that describes your system.
 This tutorial will go with `MockServer`.
 
-If you use the Business Partner mock server, for URL enter the URL that you have saved from the previous step and use `NoAuthentication` for **Authentication**.
-If you use an `SAP S/4HANA Cloud` system, enter the systems URL in the URL field and choose `BasicAuthentication` as authentication type.
-This will make the fields **User** and **Password** appear.
-Enter here the credentials of a technical user for your `SAP S/4HANA Cloud` system.
+If you use the business partner mock server, for URL enter the URL that you have saved from the previous step and use `NoAuthentication` for _Authentication_.
+If you use an SAP S/4HANA Cloud system, enter the systems URL in the URL field and choose `BasicAuthentication` as authentication type.
+This will make the fields _User_ and _Password_ appear.
+Enter here the credentials of a technical user for your SAP S/4HANA Cloud system.
 
 ## Bind Destination Service
 
@@ -161,7 +157,7 @@ To create an instance of the destination service, execute the following command 
 cf create-service destination lite my-destination
 ```
 
-This tells Cloud Foundry in SAP Business Technology Platform to create an instance of the destination service with service plan **lite** and make it accessible under the name `my-destination`.
+This tells Cloud Foundry in SAP Business Technology Platform to create an instance of the destination service with service plan _lite_ and make it accessible under the name `my-destination`.
 You can now use the name to bind this service to your application.
 To do this, open your `manifest.yml` and add a section called `services`, under which you can then add the name of the just created service.
 
@@ -238,7 +234,7 @@ Here are the code files discussed on this page:
 ```YAML
 applications:
   - name: <YOUR-APPLICATION-NAME>
-    path: deployment/
+    path: .
     buildpacks:
       - nodejs_buildpack
     memory: 256M
