@@ -54,6 +54,7 @@ To continue using the latest features outlined in the release notes for version 
 
 ### Fixed Issues
 -->
+
 ## 3.67.0 - April 14, 2022
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.67.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
@@ -62,7 +63,7 @@ To continue using the latest features outlined in the release notes for version 
 
 - To fix critical [CVE-2022-22965](https://tanzu.vmware.com/security/cve-2022-22965) vulnerability in Spring, we had to update [Spring BOM](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-framework-bom) to `5.3.18` and to maintain compatibility had to also update [XSUAA Client Library](https://github.com/SAP/cloud-security-xsuaa-integration) to `2.11.15`.
   Please note that if you are using SAP JAVA buildpack for your deployments use a static buildpack version `sap_java_buildpack_1_49` to avoid dependency conflicts and class loading issues.
-- The module `auditlog-scp-cf` is considered **deprecated**. 
+- The module `auditlog-scp-cf` is considered **deprecated**.
   The internally used auditlog API is outdated and no longer adheres to product standard.
   In the future Cloud SDK may provide an update leveraging the recommended API, until then the users have the option to continue using the deprecated logic at their own risk, or directly consume the recommended auditlog API directly - without the Cloud SDK convenience layer.
   This deprecated module will remain in upcoming Cloud SDK v4.
@@ -106,8 +107,8 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed Issues
 
 - Getters and Setters of OpenApi POJOs are no longer considered when using the `ApiClient` (without passing a `RestTemplate`) to serialize/deserialize data
-- Fix incorrect encoding of Pipes (`|`) in OData queries
-- Prevent compilation errors on nullable properties when using the OpenAPI generator
+- Fixed an issue which caused incorrect encoding of Pipes (`|`) in OData queries
+- Fixed an issue where compilation errors occurred on nullable properties when using the OpenAPI generator
 
 ## 3.66.0 - March 24, 2022
 
