@@ -17,7 +17,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-In this part of the tutorial, you will to the following:
+In this part of the tutorial, you will do the following:
 
 - Deploy your application to Cloud Foundry in SAP Business Technology Platform
 - Configure a destination in the SAP Business Technology cockpit
@@ -26,8 +26,8 @@ In this part of the tutorial, you will to the following:
 ## Deploy Application to Cloud Foundry
 
 To deploy your application, you need to add a `manifest.yml` file to the root directory.
-It is a deployment descriptor file for SAP BTP, Cloud Foundry environment.
-The file should look like this (where `<YOUR-APPLICATION-NAME>` is replaced by the name you specified when initializing the project):
+It is a deployment descriptor file for Cloud Foundry environment in SAP BTP.
+The file should look like this:
 
 ```YAML
 applications:
@@ -39,6 +39,8 @@ applications:
     command: npm run start:prod
     random-route: true
 ```
+
+where `<YOUR-APPLICATION-NAME>` is replaced by the name you specified when initializing the project.
 
 - The specified `path` instructs Cloud Foundry to upload all the files from the `dist/` folder.
 - The command specified under the `command` attribute tells the `buildpack` what command to issue to start the application.
@@ -62,7 +64,7 @@ cf api https://api.cf.<region>.hana.ondemand.com
 cf login
 ```
 
-`cf login` will prompt you for your username and your password.
+`cf login` will prompt you for your _username_ and your _password_.
 Should you have more then one organization or space, you will also have to select those.
 
 Finally, if you have logged in successfully, it is time to build and deploy your application.
@@ -149,17 +151,17 @@ Enter here the credentials of a technical user for your SAP S/4HANA Cloud system
 
 ## Bind Destination Service
 
-To allow the application to use the destination you have just configured, you need to bind an instances of the `destination` and the `XSUAA` services to your application.
+To allow the application to use the destination you have just configured, you need to bind instances of the `destination` and the `XSUAA` services to your application.
 
-To create an instance of the destination service, execute the following command in your terminal:
+To create an instance of the destination service, execute the following command:
 
 ```shell
 cf create-service destination lite my-destination
 ```
 
-This tells Cloud Foundry in SAP Business Technology Platform to create an instance of the destination service with service plan _lite_ and make it accessible under the name `my-destination`.
+This tells Cloud Foundry to create an instance of the destination service with service plan _lite_ and make it accessible under the name `my-destination`.
 You can now use the name to bind this service to your application.
-To do this, open your `manifest.yml` and add a section called `services`, under which you can then add the name of the just created service.
+To do this, open your `manifest.yml` and add a section called `services`, under which you can then add the name of the created service.
 
 The resulting `manifest.yml` should look like this:
 
@@ -188,7 +190,8 @@ Create a file called `xs-security.json` with the following content:
 }
 ```
 
-The value for `xsappname` again has to be unique across the whole of Cloud Foundry in SAP Business Technology Platform, so make sure to choose a unique name or prefix.
+The value for `xsappname` again has to be unique across the whole of Cloud Foundry in SAP Business Technology Platform.
+Make sure to choose a unique name or prefix.
 Now, execute the following command:
 
 ```shell
@@ -203,25 +206,25 @@ services:
       - my-xsuaa
 ```
 
-Finally, you need to adapt the `getAllBusinessPartners` function in `business-partner.controller.ts` to use the destination defined in the SAP BTP Cockpit.
+Finally, you need to adapt the `getAllBusinessPartners` function in `business-partner.services.ts` to use the destination defined in the SAP BTP Cockpit.
 
 The function now looks like this:
 
 ```ts
-function getAllBusinessPartners(): Promise<BusinessPartner[]> {
+async getAllBusinessPartners(): Promise<BusinessPartner[]> {
   const { businessPartnerApi } = businessPartnerService();
-  return businessPartnerApi.requestBuilder().getAll().execute({
+  return await businessPartnerApi.requestBuilder().getAll().execute({
     destinationName: 'MockServer'
   });
 }
 ```
 
 In the snippet, the parameter of `execute` is replaced with an object whose key `destinationName` refers to the name of the destination you defined earlier.
-If you followed this [step](./create-your-first-application-tutorial#manage-destinations-centrally-optional) in the previous tutorial, your code will already refer to the correct `destinationName`.
+If you followed this [step](./execute-an-odata-request#manage-destinations-centrally-optional) in the previous tutorial, your code will already refer to the correct `destinationName`.
 If you chose a different name than `MockServer`, make sure to use it here accordingly.
 
 Now you can recompile and redeploy the application.
-When you now call the `/business-partners` route of your app, the Business Partners will be retrieved from the defined destination!
+When you now call the `/business-partners` route of your app, the Business Partners will be retrieved from the defined destination.
 
 ## Final Code Review
 
@@ -238,7 +241,7 @@ applications:
     buildpacks:
       - nodejs_buildpack
     memory: 256M
-    command: node index.js
+    command: npm run start:prod
     random-route: true
     services:
       - my-destination
