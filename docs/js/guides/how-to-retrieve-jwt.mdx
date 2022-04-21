@@ -1,7 +1,7 @@
 ---
 title: How to retrieve JSON Web Tokens (JWT)
 sidebar_label: How to retrieve JWTs
-description: You'll learn how to retrieve a JWT in your application code as well as locally using tools like postman.
+description: You'll learn how to retrieve a JWT in your application code as well as locally using tools like Postman.
 keywords:
   - sap
   - cloud
@@ -16,16 +16,19 @@ keywords:
 ## Overview
 
 A JSON Web Token (JWT) is standardized object containing some structured information.
-A JWT contains three parts: - Header: Containing meta information like hashing algorithm and verification certificates - Payload: The actual data - Verify Signature: Signature of the Header and Payload for verification
+A JWT contains three parts:
+- Header: Containing meta information like hashing algorithm and verification certificates
+- Payload: The actual data
+- Verify Signature: Signature of the Header and Payload for verification
 
 Given a JWT, you can use the information from the header and signature to check if the JWT is valid.
-Therefore, JWTs are used to exchange authorization and authentication information to applications.
+Therefore, JWTs are used to exchange authorization and authentication information between applications.
 Also SAP has chosen the JWT format to pass authentication related claims.
 
 ## JWT in SAP BTP
 
 We will not go into details how to setup an application with the approuter and XSUAA service.
-Have a look a the sample applications for [SAP Cloud Foundry](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/cf-sample-application) and [k8s](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/k8s-sample-application).
+Have a look at the sample applications for [SAP Cloud Foundry](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/cf-sample-application) and [k8s](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/k8s-sample-application).
 The high level flow is as follows:
 
 - User wants to access a protected resource and is not yet authenticated
@@ -69,8 +72,8 @@ Effectively it takes `authorization` header value ("Bearer yourJwtTokenBase64Enc
 const myToken = headers.authorization.split(' ')[1];
 ```
 
-Once you have the JWT at hand you can use it to get data [from other systems](../features/odata/execute-odata-request.mdx) or make calls to the [destination service](../features/connectivity/destination#destination-service).
-Note that the [destination service](../features/connectivity/destination.mdx#destination-service) will perform taken exchange flows for you if configured accordingly.
+Once you have the JWT at hand, you can use it to get data [from other systems](../features/odata/execute-odata-request.mdx) or make calls to the [destination service](../features/connectivity/destination#destination-service).
+Note that the [destination service](../features/connectivity/destination.mdx#destination-service) will perform token exchange flows for you if configured accordingly.
 This means the initial JWT is transformed to a `SAMLBearerAssertion` or `ClientCredentials` grant.
 
 ## Obtain JWT locally
@@ -80,7 +83,7 @@ In some cases your application will rely on a JWT to set scopes or propagate a u
 In such a test scenario you need to fetch the JWT manually.
 
 Postman supports the `OAuth 2.0` flow used by the IdP and XSUAA.
-Hence, it is simple to get a token via postman:
+Hence, it is simple to get a token via Postman:
 
 - Create a new request
 - Go to the `Authorization` tab of the request
@@ -97,18 +100,18 @@ Hence, it is simple to get a token via postman:
 - Postman shows the retrieved token and you can copy it
 
 Cookies will remember the entered username and password.
-This makes re-fetching a new tokens super quick when your old token is expired.
+This makes re-fetching a new token super quick when your old token is expired.
 Remove the cookies in case you want to start fresh.
 
 ![](../img/postman-oauth-token.png)
 
 ## Obtain JWT programmatically
 
-In some situations, it is not possible to use a UI based approach like postman or the browser to retrieve a JWT.
+In some situations, it is not possible to use a UI based approach like Postman or the browser to retrieve a JWT.
 If you want to retrieve a JWT programmatically you have to implement the `OAuth 2.0` flow or rely on a library to do that for you.
 We have done this for our internal E2E tests and the implementation involves many steps and is a bit tricky.
 We will give a high level overview.
-In case you also need an implementation investigate the steps in the debug console of your browser when you do a login.
+In case you also need an implementation, investigate the steps in the debug console of your browser when you do a login.
 
 - First step is to retrieve a `code` from the XSUAA
 - Initial GET request on XSUAA: `https://<xsuaaUrl>/oauth/authorize?client_id=<clientId>&redirect_uri=<redirectUri>&response_type=code`
