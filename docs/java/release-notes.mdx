@@ -64,9 +64,11 @@ To continue using the latest features outlined in the release notes for version 
 - To fix the critical [CVE-2022-22965](https://tanzu.vmware.com/security/cve-2022-22965) vulnerability in Spring, we had to update [Spring BOM](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-framework-bom) to `5.3.18` and to maintain compatibility had to also update [XSUAA Client Library](https://github.com/SAP/cloud-security-xsuaa-integration) to `2.11.15`.
   Please note that if you are using SAP JAVA buildpack for your deployments use a static buildpack version `sap_java_buildpack_1_49` to avoid dependency conflicts and class loading issues.
 - The module `auditlog-scp-cf` is considered **deprecated**.
-  The internally used auditlog API is outdated and no longer adheres to product standard.
-  In the future Cloud SDK may provide an update leveraging the recommended API, until then the users have the option to continue using the deprecated logic at their own risk, or directly consume the recommended auditlog API directly - without the Cloud SDK convenience layer.
-  This deprecated module will remain in upcoming Cloud SDK v4.
+  The audit logging API used to implement the integration is outdated and no longer adheres to product guidelines.
+  In the future, Cloud SDK may provide an update leveraging the recommended API. Until then the users have an option to continue using the deprecated logic at their own risk, or directly consume the recommended audit logging API - without the Cloud SDK convenience layer.
+Please, [create an issue](https://github.com/SAP/cloud-sdk/issues/new?assignees=&labels=feedback&template=feedback.md&title=) if you are interested in the consumption of `auditlog-scp-cf` via the SAP Cloud SDK.
+This deprecated module will be kept in the upcoming [SAP Cloud SDK v4 and removed in the SAP Cloud SDK v5](https://sap.github.io/cloud-sdk/docs/java/release-policy)
+  The module targeting Neo in not deprecated and integration can be consumed as before.
 - The following modules have been marked as `deprecated` and will be removed with the next major release version (v4):
   - `com.sap.cloud.sdk.services.currencyconversion.core`
   - `com.sap.cloud.sdk.services.currencyconversion.adapter.integrationobjects`
