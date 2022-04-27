@@ -501,10 +501,6 @@ export const OpenAPIFeatures = [];
 export const extensions = [
   {
     name: 'Currency conversion library',
-    java: {
-      status: YES,
-      docsLink: `[docs](${baseUrl}/java/extensions/sap-currency-conversion-extension-library-for-cloud-sdk-for-java)`
-    },
     js: {
       status: PLANNED
     }

@@ -55,6 +55,63 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed Issues
 -->
 
+## 3.67.0 - April 14, 2022
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.67.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+
+### Compatibility Notes
+
+- To fix the critical [CVE-2022-22965](https://tanzu.vmware.com/security/cve-2022-22965) vulnerability in Spring, we had to update [Spring BOM](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-framework-bom) to `5.3.18` and to maintain compatibility had to also update [XSUAA Client Library](https://github.com/SAP/cloud-security-xsuaa-integration) to `2.11.15`.
+  Please note that if you are using SAP JAVA buildpack for your deployments use a static buildpack version `sap_java_buildpack_1_49` to avoid dependency conflicts and class loading issues.
+- The module `auditlog-scp-cf` is considered **deprecated**.
+  The audit logging API used to implement the integration is outdated and no longer adheres to product guidelines.
+  In the future, Cloud SDK may provide an update leveraging the recommended API. Until then the users have an option to continue using the deprecated logic at their own risk, or directly consume the recommended audit logging API - without the Cloud SDK convenience layer.
+Please, [create an issue](https://github.com/SAP/cloud-sdk/issues/new?assignees=&labels=feedback&template=feedback.md&title=) if you are interested in the consumption of `auditlog-scp-cf` via the SAP Cloud SDK.
+This deprecated module will be kept in the upcoming SAP Cloud SDK v4.
+  The module targeting Neo in not deprecated and integration can be consumed as before.
+- The following modules have been marked as `deprecated` and will be removed with the next major release version (v4):
+  - `com.sap.cloud.sdk.services.currencyconversion.core`
+  - `com.sap.cloud.sdk.services.currencyconversion.adapter.integrationobjects`
+  - `com.sap.cloud.sdk.services.currencyconversion.datamodel.model`
+  - `com.sap.cloud.sdk.services.currencyconversion.datamodel.adapter`
+  - `com.sap.cloud.sdk.plugins:usage-analytics`
+  - `com.sap.cloud.sdk.plugins:usage-analytics-maven-plugin`
+
+### New Functionality
+
+- Add Rate Limiter to Resilience Capabilities
+
+### Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [XSUAA Client Library](https://github.com/SAP/cloud-security-xsuaa-integration) from `2.11.12` to `2.11.15`
+    - Update [CF Logging Support](https://search.maven.org/search?q=g:com.sap.hcp.cf.logging%2BAND%2Ba:cf-java-logging-support-logback) (`com.sap.hcp.cf.logging:cf-java-logging-support-logback`) from `3.5.7` to `3.6.0`
+    - Update [CDS4J Maven Plugin](https://search.maven.org/search?q=g:com.sap.cds%20a:cds4j-maven-plugin) (`com.sap.cds:cds4j-maven-plugin`) from `1.26.2` to `1.27.0`
+  - Other dependency updates:
+    - Major version updates:
+      - Update [Rest Assured](https://search.maven.org/search?q=g:io.rest-assured%2BAND%2Ba:rest-assured) (`io.rest-assured:rest-assured`) from `4.5.1` to `5.0.0`
+    - Minor version updates:
+      - Update [Json](https://search.maven.org/search?q=g:org.json%2BAND%2Ba:json) (`org.json:json`) from `20211205` to `20220320`
+      - Update [Java JWT](https://search.maven.org/search?q=g:com.auth0%2BAND%2Ba:java-jwt) (`com.auth0:java-jwt`) from `3.18.3` to `3.19.0`
+      - Update [liquibase-core](https://search.maven.org/search?q=g:org.liquibase%2BAND%2Ba:liquibase-core) (`org.liquiebase:liquibase-core`) from `4.8.0` to `4.9.0`
+      - Update [Fabric Gateway Java](https://search.maven.org/search?q=g:org.hyperledger.fabric%2BAND%2Ba:fabric-gateway-java) (`org.hyperledger.fabric:fabric-gateway-java`) from `2.2.3` to `2.2.4`
+      - Update [Jackson Databind](https://search.maven.org/search?q=g:com.fasterxml.jackson.core%2BAND%2Ba:jackson-databind) (`com.fasterxml.jackson.core:jackson-databind`) from `2.13.2` to `2.13.2.2`
+      - Update [Joda Time](https://search.maven.org/search?q=g:joda-time%2BAND%2Ba:joda-time) (`joda-time:joda-time`) from `2.10.13` to `2.10.14`
+      - Update [Reactor Core](https://search.maven.org/search?q=g:io.projectreactor%20a:reactor-core) (`io.projectreactor:reactor-core`) from `3.4.15` to `3.4.16`
+      - Update [Tomcat JDBC](https://search.maven.org/search?q=g:org.apache.tomcat%2BAND%2Ba:tomcat-jdbc) (`org.apache.tomcat:tomcat-jdbc`) and [Tomcat Annotations API](https://search.maven.org/search?q=g:org.apache.tomcat%2BAND%2Ba:tomcat-annotations-api) (`org.apache.tomcat:tomcat-annotations-api`) from `8.5.75` to `8.5.77`
+      - Update [Swagger Core V3](https://search.maven.org/search?q=g:io.swagger.core.v3%2BAND%2Ba:swagger-core) (`io.swagger.core.v3:swagger-core`) and [Swagger Core V3 models](https://search.maven.org/search?q=g:io.swagger.core.v3%2BAND%2Ba:swagger-models) (`io.swagger.core.v3:swagger-models`)from `2.1.7` to `2.1.13`
+      - Update [Swagger Core](https://search.maven.org/search?q=g:io.swagger%2BAND%2Ba:swagger-core) (`io.swagger:swagger-core`) from `1.6.2` to `1.6.5`
+      - Update [Spring BOM](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-framework-bom) (`org.springframework:spring-framework-bom`) from `5.3.15` to `5.3.18`
+      - Update [Spring Boot](https://search.maven.org/search?q=g:org.springframework.boot%2BAND%2Ba:spring-boot-starter-reactor-netty) (`org.springframework.boot:spring-boot-starter-reactor-netty`) from `2.6.3` to `2.6.6`
+      - Update [Spring Security](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-security-bom) (`org.springframework:spring-security-bom`) from `5.6.1` to `5.6.2`
+
+### Fixed Issues
+
+- Getters and Setters of OpenApi POJOs are no longer considered when using the `ApiClient` (without passing a `RestTemplate`) to serialize/deserialize data
+- Fixed an issue which caused incorrect encoding of Pipes (`|`) in OData queries
+- Fixed an issue where compilation errors occurred on nullable properties when using the OpenAPI generator
+
 ## 3.66.0 - March 24, 2022
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.66.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
