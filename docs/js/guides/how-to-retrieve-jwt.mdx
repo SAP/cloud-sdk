@@ -34,7 +34,7 @@ The flow is as follows:
 
 - user requests a resource and is not yet authenticated
 - approuter redirects the request to the identity provide (IdP)
-- XSUAA issues a JWT - see [here](## Obtain JWT programmatically) for detals
+- XSUAA issues a JWT - see [here](## Obtain JWT programmatically) for details
 - approuter adds the JWT to the request headers and redirects the request to initially requested resource
 
 :::caution Caution
@@ -76,34 +76,27 @@ export class AppController {
 
 Note, that the SAP Cloud SDK uses the `Request` object from [express](https://expressjs.com/), which makes a usage in this popular framework also simple.
 In case you use a different framework, the [implementation](https://github.com/SAP/cloud-sdk-js/blob/6e3453e50a061d3ea2dbd9ac6a40232e624f348f/packages/connectivity/src/scp-cf/jwt.ts#L45-L63) in the `retrieveJwt()` is simple.
-Effectively it takes `authorization` header value and extracts the token value:
+Effectively it takes `authorization` header value and extracts the token value.
 
-```ts
-const myToken = headers.authorization.split(' ')[1];
-```
-
-Once you have the JWT at hand, you can use it to get data [from other systems](../features/odata/execute-odata-request.mdx) or make calls to the [destination service](../features/connectivity/destination#destination-service).
-Note that the [destination service](../features/connectivity/destination.mdx#destination-service) will perform token exchange flows for you if configured accordingly.
+You can use the JWT to call the destination service or make a request against a destination directly.
+Note, that the destination service performs token exchange flows for you, if configured accordingly.
 This means the initial JWT is transformed to a `SAMLBearerAssertion` or `ClientCredentials` grant.
 
-## Obtain JWT locally
+## Obtain JWT with Postman
 
-For a faster feedback cycle it is sometimes convenient to test things locally without a deployment to the SAP BTP.
-In some cases your application will rely on a JWT to set scopes or propagate a user to external systems.
-In such a test scenario you need to fetch the JWT manually.
-
-Postman supports the `OAuth 2.0` flow used by the IdP and XSUAA.
-Hence, it is simple to get a token via Postman:
+For a faster feedback cycle it is convenient to test things locally without a deployment to the SAP BTP.
+In some cases applications rely on a JWT to set scopes or propagate a user to external systems.
+In such a case, you can obtain the JWT using Postman:
 
 - create a new request
-- go to the `Authorization` tab of the request
-- select `Oauth 2.0` as a type
+- go to the "Authorization tab of the request
+- select "OAuth 2.0" as a type
 - fill the following values in the user interface:
   - `Callback URL`: Path to the application protected by the XSUAA
   - `Auth URL`: Path to the authentication endpoint using your subdomain and the values for the callback URL e.g. `https://<subdomain>.authentication.sap.hana.ondemand.com/oauth/authorize?redirect_uri=<callbackUrl>`
   - `Token URL`: Path to the token endpoint using your subdomain e.g. `https://<subdomain>.authentication.sap.hana.ondemand.com/oauth/token`
   - `Client ID` and `Client secret` for the XSUAA service (either VCAP variables or service keys)
-  - Do not check the `Authorize using browser checkbox`
+  - uncheck the `Authorize using browser checkbox`
 - press the `Get new access token` button to retrieve a token
 - Postman will open a window showing the IdP login form
 - enter username and password
@@ -117,11 +110,9 @@ Remove the cookies in case you want to start fresh.
 
 ## Obtain JWT programmatically
 
-In some situations, it is not possible to use a UI based approach like Postman or the browser to retrieve a JWT.
-If you want to retrieve a JWT programmatically you have to implement the `OAuth 2.0` flow or rely on a library to do that for you.
-We have done this for our internal E2E tests and the implementation involves many steps and is a bit tricky.
+In some situations, it is necessary to retrieve a JWT programmatically.
+We have implemented the OAuth 2.0 flow for our internal E2E tests and the implementation involves many steps.
 We will give a high level overview.
-In case you also need an implementation, investigate the steps in the debug console of your browser when you do a login.
 
 - retrieve a `code` from the XSUAA
 - initial GET request on XSUAA: `https://<xsuaaUrl>/oauth/authorize?client_id=<clientId>&redirect_uri=<redirectUri>&response_type=code`
@@ -133,3 +124,5 @@ In case you also need an implementation, investigate the steps in the debug cons
   In node most http clients do not handle the redirects correctly and a manual redirect on 302 response needs to be implemented.
 - Once you have the SAML response, call the XSUAA to retrieve the `code` in the location header.
 - Use the `code` with clientId and clientSecret to get a JWT token from the XSUAA service.
+
+In case you also need an implementation, investigate the steps in the debug console of your browser when you do a login.
