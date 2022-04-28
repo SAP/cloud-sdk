@@ -20,20 +20,20 @@ A JWT contains three parts:
 
 - Header: Containing meta information like hashing algorithm and verification certificates
 - Payload: The actual data
-- Verify Signature: Signature of the Header and Payload for verification
+- Signature: Signature of the Header and Payload for verification
 
 Given a JWT, you can use the information from the header and signature to check if the JWT is valid.
 Therefore, JWTs are used to exchange authorization and authentication information between applications.
 
-## JWT in SAP BTP
+## JWT on SAP BTP
 
 The retrieval of a JWT is done by the approuter together with the XSUAA.
 We explain these concepts in [this guide ](https://sap.github.io/cloud-sdk/docs/js/guides/how-to-use-the-approuter).
-You find a complete setup in the sample applications for [Cloud Foundry](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/cf-sample-application) and [k8s](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/k8s-sample-application).
+Find a complete setup in the sample applications for [Cloud Foundry](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/cf-sample-application) and [k8s](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/k8s-sample-application).
 The flow is as follows:
 
 - user requests a resource and is not yet authenticated
-- approuter redirects the request to the identity provide (IdP)
+- approuter redirects the request to the identity provider (IdP)
 - XSUAA issues a JWT - see [here](## Obtain JWT programmatically) for details
 - approuter adds the JWT to the request headers and redirects the request to initially requested resource
 
