@@ -28,8 +28,11 @@ In this tutorial, you will build your own application from scratch, using the SA
 
 The application will use the [business partner client library](https://api.sap.com/api/API_BUSINESS_PARTNER/cloud-sdk/JavaScript) and connect to an SAP S/4HANA Cloud system.
 It will fetch a list of business partners and provide the result to a service endpoint that users can consume.
-You will leverage several of the SAP Cloud SDK features such as [request builders](../../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#getall-request-builder) to make requests against the target SAP S/4HANA system.
-You will also learn about features that are abstracted such as connectivity, authentication, etc.
+You will leverage several of the SAP Cloud SDK features such as:
+
+- [request builders](../../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#getall-request-builder) to build OData requests for available request types.
+- [destination lookup](../../features/connectivity/destination#creating-destinations-manually) for destinations created manually or referenced by name.
+- [execute](../../features/odata/execute-odata-request#general-request-structure) method to construct request URL and headers, execute the request, and return a typed response
 
 ## Prerequisites
 
@@ -43,7 +46,19 @@ For deploying your application to Cloud Foundry in SAP Business Technology Platf
 You can get a trial account [here](https://www.sap.com/products/business-technology-platform/trial.html) or use an existing account, if you already have one.
 
 You also need to have access to an SAP S/4HANA Cloud system with a technical user.
-If no SAP S/4HANA Cloud system is available, you can set up a mock server or use a sandbox API as described [here](./execute-an-odata-request#set-up-a-mock-server-optional).
+If no SAP S/4HANA Cloud system is available, you can set up a mock server or use a sandbox API as described below.
+
+You can setup a local mock server by following the instructions [here](https://sap.github.io/cloud-s4-sdk-book/pages/mock-odata.html).
+This server hosts an OData v2 mock service that mimics the business partner API.
+It does not support all the features of the actual OData services, but it suffices to try it out locally.
+Once it is up and running you should see the list of services at http://localhost:3000.
+
+Alternatively, many APIs can also be tested using the sandbox of the SAP API Business Hub.
+To use the sandbox, you need an _API key_.
+Go to [SAP API Business Hub](https://api.sap.com) and click _Login_ in the top right corner.
+If you do not have an account, you will need to register first.
+When you are logged in, click on _Hi name_ in the top right corner and then click on _Settings_ in the dropdown menu.
+On the settings page, click _Show API Key_.
 
 ## Learning Outcomes
 
