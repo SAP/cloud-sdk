@@ -74,7 +74,7 @@ export class AppController {
 }
 ```
 
-Note, that the SAP Cloud SDK uses the `Request` object from [express](https://expressjs.com/), which makes a usage in this popular framework also simple.
+Note, that the SAP Cloud SDK uses the `IncomingMessage` object from node, which is compatible to the request object of common frameworks like [express](https://expressjs.com/)or [NestJs](https://nestjs.com/).
 In case you use a different framework, the [implementation](https://github.com/SAP/cloud-sdk-js/blob/6e3453e50a061d3ea2dbd9ac6a40232e624f348f/packages/connectivity/src/scp-cf/jwt.ts#L45-L63) in the `retrieveJwt()` is simple.
 Effectively it takes `authorization` header value and extracts the token value.
 
