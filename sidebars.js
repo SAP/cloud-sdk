@@ -177,7 +177,8 @@ module.exports = {
           'js/guides/bas-external-system',
           'js/guides/sdk-in-browser',
           'js/guides/how-to-use-the-approuter',
-          'js/guides/how-to-add-resilience'
+          'js/guides/how-to-add-resilience',
+          'js/guides/how-to-retrieve-jwt'
         ]
       },
       {
