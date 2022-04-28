@@ -43,9 +43,9 @@ applications:
 where `<YOUR-APPLICATION-NAME>` is replaced by the name you specified when initializing the project.
 
 - The specified `path` instructs Cloud Foundry to upload all the files from the `dist/` folder.
-- The command specified under the `command` attribute tells the `buildpack` what command to issue to start the application.
+- The command specified under the `command` attribute tells the buildpack what command to issue to start the application.
 
-Next, you need to login to Cloud Foundry in SAP Business Technology Platform using the `cf` CLI.
+Next, you need to login to Cloud Foundry in SAP Business Technology Platform using the cf CLI.
 First you need to set an API endpoint.
 The exact URL of this API endpoint depends on the region your _subaccount_ is in.
 Open the [SAP Business Technology Platform Cockpit](https://account.hana.ondemand.com/) and navigate to the subaccount you are planning to deploy your application to.
@@ -120,8 +120,8 @@ Navigate to the mock server project's root folder, that already contains a `mani
 cf push
 ```
 
-Make sure that your mock server and `Node.js` are up to date.
-When the server has been pushed successfully, `cf` CLI will output the route where the server can be reached.
+Make sure that your mock server and Node.js are up to date.
+When the server has been pushed successfully, cf CLI will output the route where the server can be reached.
 Copy this route, as you will need it in the next step.
 
 ## Configure Destination
@@ -151,7 +151,7 @@ Enter here the credentials of a technical user for your SAP S/4HANA Cloud system
 
 ## Bind Destination Service
 
-To allow the application to use the destination you have just configured, you need to bind instances of the `destination` and the `XSUAA` services to your application.
+To allow the application to use the destination you have just configured, you need to bind instances of the destination and the XSUAA services to your application.
 
 To create an instance of the destination service, execute the following command:
 
@@ -178,7 +178,7 @@ applications:
       - my-destination
 ```
 
-Secondly, you need an instance of the `XSUAA service`.
+Secondly, you need an instance of the XSUAA service.
 The XSUAA service is responsible for issuing access tokens that are necessary to talk to other services, like the destination service.
 For this service, you will need a bit of extra configuration in the form of a configuration file.
 Create a file called `xs-security.json` with the following content:
