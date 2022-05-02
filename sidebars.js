@@ -175,11 +175,27 @@ module.exports = {
           'js/guides/migrate-to-open-source-version-of-cloud-sdk-for-javascript-typescript',
           'js/guides/upgrade-to-version-2',
           'js/guides/bas-external-system',
-          'js/guides/tutorial-overview-sdk-js',
           'js/guides/sdk-in-browser',
           'js/guides/how-to-use-the-approuter',
           'js/guides/how-to-add-resilience',
           'js/guides/how-to-retrieve-jwt'
+        ]
+      },
+      {
+        type: 'category',
+        label: 'Tutorials',
+        items: [
+          'js/tutorials/address-manager/address-manager',
+          {
+            type: 'category',
+            label: 'Getting Started',
+            items: [
+              'js/tutorials/getting-started/introduction',
+              'js/tutorials/getting-started/set-up-dev-enviroment',
+              'js/tutorials/getting-started/execute-an-odata-request',
+              'js/tutorials/getting-started/deploy-app-to-cf'
+            ]
+          }
         ]
       },
       {
