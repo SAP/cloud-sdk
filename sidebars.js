@@ -185,7 +185,13 @@ module.exports = {
         type: 'category',
         label: 'Tutorials',
         items: [
-          'js/tutorials/address-manager/address-manager',
+          {
+            type: 'category',
+            label: 'Address Manager',
+            items: [
+              'js/tutorials/address-manager/get-all'
+            ]
+          },
           {
             type: 'category',
             label: 'Getting Started',

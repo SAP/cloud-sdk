@@ -1,0 +1,201 @@
+---
+id: get-all
+title: Building an Address Manager Application with the SAP Cloud SDK
+sidebar_label: Get All
+description: Build an Address Manager Application with the SAP Cloud SDK
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+  - tutorial
+  - address manager
+---
+
+## Overview
+
+In the SAP S/4HANA data model, Addresses are related to the business partner entity.
+Each business partner can have multiple addresses assigned.
+The application will provide a REST API to manage addresses of business partners.
+
+The tutorial is based on the initial `NestJs` application explained in this tutorial.XXX
+
+## Get All Business Partners
+
+### Install the Typed Client
+
+The first service endpoint will retrieve all business partners.
+Install the typed client for the business partner OData endpoint:
+
+```shell
+npm install @sap/cloud-sdk-vdm-business-partner-service@^2.0.0
+```
+
+### Create Service
+
+A `NestJS` application is based on three main entities: `Service`, `Controller` and `Module`.
+
+In the scaffold a set of these entities has already been created: `app.service.ts`, `app.controller.ts` and `app.module.ts`.
+We will create a new set in order to query business partners from a SAP S/4HANA Cloud system.
+For details on the concepts have a look at the [Nest tutorials](https://docs.nestjs.com/first-steps).
+Start with a `business-partner.service.ts` file, which will contain the implementation of the query:
+
+```ts
+import { Injectable } from '@nestjs/common';
+import {
+  BusinessPartner,
+  businessPartnerService
+} from '@sap/cloud-sdk-vdm-business-partner-service';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
+@Injectable()
+export class BusinessPartnerService {
+  getAllBusinessPartners(): Promise<BusinessPartner[]> {
+    return businessPartnerService()
+      .businessPartnerApi.requestBuilder()
+      .getAll()
+      .addCustomHeaders({ apikey: process.env.APIKey })
+      .top(10)
+      .execute({ url: 'https://sandbox.api.sap.com/s4hanacloud/' });
+  }
+}
+```
+
+Let's walk you through the implementation of the service.
+You have imported the `businessPartnerService` which offers you many API and you picked the `businessPartnerApi`.
+With this API your requested the first 10 business partners using the `top` to keep the query short.
+We will use the sandbox system offered by [API hub](https://api.sap.com/) and provide the `url` directly.
+In real applications you would use a proper system and the [destination service](../../features/connectivity/destination) to avoid hard coding system properties.
+You need an `apiKey` to access the sandbox system.
+Once you retrieved the key from the [API hub](https://api.sap.com/) please do not use it directly in the code.
+Store it in a `.env` and add the file to the `.gitignore` list so that it is not checked in by accident.
+Install the [dotenv](https://www.npmjs.com/package/dotenv) dependency in your project.
+
+### Create a Controller
+
+The next step is to create a controller which will dispatch the incoming requests to the respective service implementation.
+Create a `business-partner.controller.ts` with the following content:
+
+```ts
+import { Controller, Get } from '@nestjs/common';
+import { BusinessPartner } from '@sap/cloud-sdk-vdm-business-partner-service';
+import { BusinessPartnerService } from './business-partner.service';
+
+@Controller('business-partners')
+export class BusinessPartnerController {
+  constructor(
+    private readonly businessPartnerService: BusinessPartnerService
+  ) {}
+
+  @Get()
+  getAllBusinessPartners(): Promise<BusinessPartner[]> {
+    return this.businessPartnerService.getAllBusinessPartners();
+  }
+}
+```
+
+The later URL will be `<host>/business-partners` because we did not specify any path in the `@Get()` annotation.
+
+### Register the Service
+
+As a last step we have to register the controller and service.
+In order to keep the example brief, just add the controller and service to the `app.module.ts` which is the root module of the Nest application:
+
+```JavaScript / TypeScript
+import { Module } from "@nestjs/common";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
+import { BusinessPartnerController } from "./business-partner.controller";
+import { BusinessPartnerService } from "./business-partner.service";
+
+@Module({
+  imports: [],
+  controllers: [AppController, BusinessPartnerController],
+  providers: [AppService, BusinessPartnerService],
+})
+export class AppModule {}
+```
+
+### Test Service
+
+Now you can start your application using:
+
+```Shell
+npm start
+```
+
+When the server is running, you should see a message like: `[NestApplication] Nest application successfully started` and some mappings related to the listed controllers.
+Open the URL `http://localhost:3000/business-partners` and you should see 10 business partners returned.
+
+### Select certain Fields
+
+The output from the previous sections showed all fields of the business partner entity.
+Like SQL, OData allows to only select specific properties of an entity.
+For our address manager, we only want to know the ID, the first name and the last name of a business partner.
+Add a select statement to the service implementation:
+
+```ts
+const { businessPartnerApi } = businessPartnerService();
+
+@Injectable()
+export class BusinessPartnerService {
+  getAllBusinessPartners(): Promise<BusinessPartner[]> {
+    return businessPartnerApi
+      .requestBuilder()
+      .getAll()
+      .addCustomHeaders({ apikey: process.env.APIKey })
+      .select(
+        businessPartnerApi.schema.BUSINESS_PARTNER,
+        businessPartnerApi.schema.FIRST_NAME,
+        businessPartnerApi.schema.LAST_NAME
+      )
+      .top(10)
+      .execute({ url: 'https://sandbox.api.sap.com/s4hanacloud/' });
+  }
+}
+```
+
+As you can see, each property we select is represented by an object on the `businessPartnerApi` schema.
+To keep the code shorter the `businessPartnerApi` has been assigned to a local variable.
+If you type `businessPartnerApi.schema.` in your IDE, you will see all the properties the can be selected on that entity.
+This saves you from having to look up the properties in the metadata, and prevents errors due to mistyping.
+
+If you open the URL `http://localhost:3000/business-partners` you should see only the ID, first name and last name of the business partners.
+
+### Filter Business Partners by Type
+
+Business partners can either be natural persons or legal persons (e.g. organizations or companies).
+For the address manager, we only want the addresses of natural persons.
+Therefore, we need to a filter to our request.
+Modify your code like this:
+
+```ts
+businessPartnerApi
+      .requestBuilder()
+      .getAll()
+      .addCustomHeaders({ apikey: process.env.APIKey })
+      .select(
+        businessPartnerApi.schema.BUSINESS_PARTNER,
+        businessPartnerApi.schema.FIRST_NAME,
+        businessPartnerApi.schema.LAST_NAME
+      )
+      .filter(
+          businessPartnerApi.schema.BUSINESS_PARTNER_CATEGORY.equals('1')
+      )
+      .execute({ url: "https://sandbox.api.sap.com/s4hanacloud/" });
+}
+```
+
+Note that we dropped the `top(10)` condition, because the amount of data is reduced due to the filter and select statement.
+As for `select`, you can use the properties of the `BusinessPartner` entity directly for filtering.
+Each property offers a set of functions for constructing filters.
+Every property has the `equals` and `notEquals` function.
+Depending on that type of the property, there can be additional functions like `greaterThan` or `greaterOrEqual`.
+Also, since we know the type of the property, the typed client will prevent you from passing values of the wrong type.
+For example, `businessPartnerApi.schema.FIRST_NAME.equals(1)` would not compile (in pure JavaScript the code would only fail at runtime, but most editors will still raise a warning for the type mismatch).
+
+For more complicated filter conditions have a look at the [filter documentation](../../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#filter).
