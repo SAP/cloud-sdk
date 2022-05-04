@@ -189,7 +189,7 @@ module.exports = {
             type: 'category',
             label: 'Address Manager',
             items: [
-              'js/tutorials/address-manager/get-all'
+              'js/tutorials/address-manager/read-addresses'
             ]
           },
           {

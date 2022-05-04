@@ -1,5 +1,5 @@
 ---
-id: get-all
+id: read-addresses
 title: Building an Address Manager Application with the SAP Cloud SDK
 sidebar_label: Get All
 description: Build an Address Manager Application with the SAP Cloud SDK
@@ -19,8 +19,9 @@ keywords:
 In the SAP S/4HANA data model, Addresses are related to the business partner entity.
 Each business partner can have multiple addresses assigned.
 The application will provide a REST API to manage addresses of business partners.
+In this part of the tutorial we will create the endpoints reading data.
 
-The tutorial is based on the initial `NestJs` application explained in this tutorial.XXX
+The tutorial is based on the initial `NestJs` application explained in the [getting started tutorials](../getting-started/introduction.mdx)
 
 ## Get All Business Partners
 
@@ -199,3 +200,119 @@ Also, since we know the type of the property, the typed client will prevent you 
 For example, `businessPartnerApi.schema.FIRST_NAME.equals(1)` would not compile (in pure JavaScript the code would only fail at runtime, but most editors will still raise a warning for the type mismatch).
 
 For more complicated filter conditions have a look at the [filter documentation](../../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#filter).
+
+## Get Addresses of Business Partner
+
+As a first step we created an endpoint for obtaining all business partners.
+However, we are interested not the addresses related to the business partner object.
+In this part of the tutorial we will create the services to read the addresses.
+
+### Get one Business Partner
+
+The first step to obtain the addresses related to business partner is to create a query for fetching one specific business partner.
+Each business partner has a unique ID which can be used to do that.
+Include a second method in the existing `business-partner.service.ts`
+
+```ts
+getBusinessPartnerById(id: string): Promise<BusinessPartner> {
+    return businessPartnerApi
+      .requestBuilder()
+      .getByKey(id)
+      .addCustomHeaders({ apikey: process.env.APIKey })
+      .execute({ url: 'https://sandbox.api.sap.com/s4hanacloud/' });
+}
+```
+
+As before, we call `businessPartnerApi.requestBuilder()` to select the type of request we want to build.
+Since we only want to get a single business partner, we use the `getByKey` function and then call `execute` to execute the request.
+We use again the sandbox system as for the `getAll` request from the previous section.
+
+As a next step you need to expose the service via the controller.
+Open the `business-partner.controller.ts` and add the following method:
+
+```ts
+@Get('/:id')
+getBusinessPartnerById(@Param('id') id: string): Promise<BusinessPartner> {
+    return this.businessPartnerService.getBusinessPartnerById(id);
+}
+```
+
+The function takes the ID from the URL and passes it to `getBusinessPartnerById` in the service class.
+If a business partner with the provided ID exists in the target system, it will be sent to the client.
+Otherwise, an error message is sent.
+
+### Test Service
+
+Restart your server and open `http://localhost:3000/business-partners` to get the list of all business partners.
+Copy one ID from the result list and execute `http://localhost:3000/business-partners/<yourId>`.
+You should see the details on the chosen business partner.
+Note that Nest application have a build in [exception filter](https://docs.nestjs.com/exception-filters), which maps exceptions to http messages shown to the client.
+By default the exceptions from the SDK are mapped to a server side error.
+So if you provide a non existing ID you will receive a 500 response and not a 404.
+
+### Navigate to Address
+
+As mentioned before is the address a separate OData entity related to the business partner.
+The SAP Cloud SDK represents this connection via a navigation property.
+If you want include such a related property in the query result you have to include it in the select statement:
+
+```ts
+return businessPartnerApi
+  .requestBuilder()
+  .getByKey(id)
+  .addCustomHeaders({ apikey: process.env.APIKey })
+  .select(
+    businessPartnerApi.schema.BUSINESS_PARTNER,
+    businessPartnerApi.schema.FIRST_NAME,
+    businessPartnerApi.schema.LAST_NAME,
+    businessPartnerApi.schema.TO_BUSINESS_PARTNER_ADDRESS
+  )
+  .execute({ url: 'https://sandbox.api.sap.com/s4hanacloud/' });
+```
+
+This implicitly expands the property and includes all properties like street, house number, state... of the address in the result.
+Also here we are interested only in few properties of the address.
+A second select on the navigation property reduces output to the desired fields:
+
+```ts
+const { businessPartnerAddressApi } = businessPartnerService();
+
+return businessPartnerApi
+  .requestBuilder()
+  .getByKey(id)
+  .addCustomHeaders({ apikey: process.env.APIKey })
+  .select(
+    businessPartnerApi.schema.BUSINESS_PARTNER,
+    businessPartnerApi.schema.FIRST_NAME,
+    businessPartnerApi.schema.LAST_NAME,
+    businessPartnerApi.schema.TO_BUSINESS_PARTNER_ADDRESS.select(
+      businessPartnerAddressApi.schema.POSTAL_CODE,
+      businessPartnerAddressApi.schema.CITY_NAME,
+      businessPartnerAddressApi.schema.STREET_NAME,
+      businessPartnerAddressApi.schema.HOUSE_NUMBER
+    )
+  )
+  .execute({ url: 'https://sandbox.api.sap.com/s4hanacloud/' });
+```
+
+Note that properties like `POSTAL_CODE`, `CITY_NAME` and so on, are part of the address API and related schema.
+This API is also part of the collection of business partner service.
+If you call the URL `http://localhost:3000/business-partners/<yourId>`, the service should return a single partner with the selected address information:
+
+```json
+// http://localhost:3001/business-partners/11386003
+
+{
+  "businessPartner": "11386003",
+  "firstName": "Christian",
+  "lastName": "Klein",
+  "toBusinessPartnerAddress": [
+    {
+      "cityName": "Feltham",
+      "houseNumber": "23",
+      "postalCode": "TW14 8HD",
+      "streetName": "Industry Str. 01"
+    }
+  ]
+}
+```
