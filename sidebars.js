@@ -189,7 +189,8 @@ module.exports = {
             type: 'category',
             label: 'Address Manager',
             items: [
-              'js/tutorials/address-manager/read-addresses'
+              'js/tutorials/address-manager/read-addresses',
+              'js/tutorials/address-manager/change-addresses'
             ]
           },
           {

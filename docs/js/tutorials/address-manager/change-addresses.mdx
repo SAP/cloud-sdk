@@ -1,0 +1,193 @@
+---
+id: change-addresses
+title: Building an Address Manager Application with the SAP Cloud SDK - Part 2
+sidebar_label: Change Address Data
+description: Build an Address Manager Application with the SAP Cloud SDK - Part 2
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+  - tutorial
+  - address manager
+---
+
+## Overview
+
+In the [first part](./read-addresses.mdx) of the tutorial we covered the read operation on business partners and the related address information.
+In this part you will learn:
+
+- How to create a new address.
+- How to update an existing address.
+- How to delete an existing address.
+
+### Create an Address
+
+After reading data in the first part of the tutorial it is now time to change data.
+We will use the `businessPartnerAddress` to adjust the addresses.
+We start with the creation of new addresses.
+Add a service implementation in the `business-partner.service.ts`:
+
+```ts
+  createAddress(
+    address: Record<string, any>,
+    businessPartnerId: string
+  ): Promise<BusinessPartnerAddress> {
+   const businessPartnerAddress = businessPartnerAddressApi
+      .entityBuilder()
+      .fromJson({ businessPartner: businessPartnerId, ...address });
+    return businessPartnerAddressApi
+      .requestBuilder()
+      .create(businessPartnerAddress)
+      .execute({ url: "http://localhost:3000" });
+  }
+```
+
+We use the `entityBuilder` to create a new address object from the input.
+The business partner id is added to the address object.
+This is mandatory to define for which business partner the address is created.
+We use the `requestBuilder` to build a `create` request and `execute` it against to mock server.
+
+You need to adjust the `business-partner.controller.ts` to expose the new service.
+Since you want to create data, a POST request is needed:
+
+```ts
+  @Post("/:businessPartnerId/address")
+  @HttpCode(201)
+  createAddress(
+    @Body() requestBody: Record<string, any>,
+    @Param("businessPartnerId") businessPartnerId: string
+  ): Promise<BusinessPartnerAddress> {
+    return this.businessPartnerService.createAddress(requestBody, businessPartnerId);
+  }
+```
+
+The ID of the business partner is taken from the URL of the request and the new address from the body.
+
+### Test Service
+
+To test the new service you need a http client like [postman](https://www.postman.com/) to create a POST request.
+Create a new request with the following parameters:
+
+```
+POST http://localhost:8080/business-partners/1003764/address
+BODY
+{
+    "postalCode": "14469",
+    "cityName": "Potsdam",
+    "streetName": "Konrad-Zuse-Ring",
+    "houseNumber": "10"
+}
+```
+
+The request should return `201` as a status code.
+If you execute `GET http://localhost:8080/business-partners/1003764` afterwards you should see the additional address for the business partner.
+
+### Update Service
+
+As a next step we would like to update existing addresses.
+This is done using the `update` request builder.
+Add the following code in the `business-partner.service.ts`:
+
+```ts
+ updateAddress(
+    address: Record<string, any>,
+    businessPartnerId: string,
+    addressId: string
+  ): Promise<BusinessPartnerAddress> {
+    const businessPartnerAddress = businessPartnerAddressApi
+      .entityBuilder()
+      .fromJson({ businessPartner:businessPartnerId, addressId, ...address });
+    return businessPartnerAddressApi
+      .requestBuilder()
+      .update(businessPartnerAddress)
+      .execute({ url: "http://localhost:3000" });
+  }
+```
+
+As for the create example a new address object is created.
+This time it contains the ID of the business partner and the address.
+This is necessary because a business partner can contain multiple addresses.
+
+Expose the service implementation via the `business-partner.controller.ts`:
+
+```ts
+  @Put('/:businessPartnerId/address/:addressId')
+  updateBusinessPartnerAddress(
+      @Body() requestBody: Record<string, any>,
+      @Param('businessPartnerId') businessPartnerId:string,
+      @Param('addressId') addressId:string
+  ): Promise<BusinessPartnerAddress> {
+    return this.businessPartnerService.updateAddress(requestBody,businessPartnerId,addressId);
+  }
+```
+
+The path of the service contains the ID of the business partner and address to be updated.
+The new address is given in the payload.
+
+### Test Service
+
+The update requests is triggered by the PUT method.
+Execute the update request in your HTTP client:
+
+```
+PUT http://localhost:8080/business-partners/1003764/address/28238
+BODY
+{
+    "houseNumber": "123"
+}
+```
+
+After the update, a `GET http://localhost:8080/business-partners/1003764` should show the updated house number 123.
+
+### Delete Address
+
+After creating and changing addresses it is time to delete an address.
+Also here we start with the service implementation in `business-partner.service.ts`:
+
+```ts
+ deleteAddress(businessPartnerId: string, addressId: string): Promise<void> {
+    return businessPartnerAddressApi
+      .requestBuilder()
+      .delete(businessPartnerId, addressId)
+      .execute({ url: "http://localhost:3000" });
+  }
+```
+
+As for the other operations, the `requestBuilder` is used to build the `delete` request.
+The method needs the two IDs to identify the business partner and address you want to delete.
+
+The delete endpoint is exposed in the `business-partner.controller.ts` via the following code:
+
+```ts
+  @Delete("/:businessPartnerId/address/:addressId")
+  @HttpCode(204)
+  deleteBusinessPartnerAddress(
+    @Param("businessPartnerId") businessPartnerId: string,
+    @Param("addressId") addressId: string
+  ): Promise<void> {
+    return this.businessPartnerService.deleteAddress(
+      businessPartnerId,
+      addressId
+    );
+  }
+```
+
+You use HTTP method DELETE to trigger a deletion and the status 204 indicates a successful deletion.
+
+### Test Service
+
+You can test the service in the following way.
+Execute `GET http://localhost:8080/business-partners/1003764` and note the ID of an address you want to delete e.g. 28241.
+Then execute `DELETE http://localhost:8080/business-partners/1003764/address/28241` in your HTTP client.
+This should return 204 if existing IDs are passed.
+To verify you can execute `GET http://localhost:8080/business-partners/1003764` afterwards and the selected address should be removed.
+
+## Summary
+
+In this summary you learned how to create, update and delete addresses using the SAP Cloud SDK.
+First a implementation is added in the service class.
+Then the implementation is exposed in the controller class.
+The result of this and the [previous tutorial](./read-addresses.mdx) is a RESTful API to manage business partner addresses.
