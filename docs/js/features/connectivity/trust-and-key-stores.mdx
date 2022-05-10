@@ -3,7 +3,7 @@ title: How the SAP Cloud SDK handles Trust and Keystores
 hide_title: false
 hide_table_of_contents: false
 sidebar_label: Trust and Keystores
-description: This article describes how configures trust and keystores in the SAP Business Technoligy Platform and how the SDK handles them..
+description: This article describes how to configure trust and keystores in the SAP Business Technology Platform and how the SDK handles them.
 keywords:
   - sap
   - cloud
@@ -22,17 +22,17 @@ The essence of web applications is communication between two parties.
 These two parties could be a server and a client, two servers or any other combination.
 In the communication you want to ensure that:
 
-1. You are actually talking to the person you think you talk
-2. The content of your conversation remains private ensure by some encryption
+1. You are talking to the party you expect you talk to.
+2. The content of your conversation is encrypted and therefore private.
 
-To ensure this the secure socket layer (SSL) later called transport layer security (TLS) was developed.
+To ensure this the secure socket layer (SSL), later called transport layer security (TLS), was developed.
 If you want to add this security layer to your request you use `HTTPS` instead of `HTTP`.
 
 The method to achieve both points above (trust and privacy) are private and public keys.
 Such keys offer the following properties:
 
 - You can encrypt something with one key, but only with the counterpart you can decrypt it.
-- You can distribute one key but you can not derive the other part from the distributed one.
+- You can distribute one key but you can not derive the counterpart from the distributed one.
 
 The process of encrypting something with the private key is sometimes called `signing`, because everybody can check the signature with the public key.
 The format of the private and public keys are certificates which provide additional information like:
@@ -41,7 +41,7 @@ The format of the private and public keys are certificates which provide additio
 - the issuer of the key pair
 - the validity of the key
 - the domain the key was issued for
-  ...
+- etc.
 
 ### Formats and Naming
 
@@ -80,8 +80,8 @@ The identity is verified in the following way:
 - Client checks that the content was actually signed with the public key.
 
 If all checks have passed, the server is trustworthy.
-Creating a secure connection is possible using also the private and public keys.
-For a encrypted connection you need to interchange a secret.
+Creating a secure connection is possible using private and public keys.
+For an encrypted connection, you need to interchange a secret.
 An initial secret can be encrypted using the public certificate and send back to the server.
 This is the starting point for a private connection between client and server.
 
@@ -118,7 +118,7 @@ Note that you can also upload certificates in the destination service instance.
 The SAP Cloud SDK searches the subaccount first and only if no certificate with the given name is found proceeds to the instance certificates.
 
 :::caution
-The SAP Cloud SDK for JavaScript supports only `.pem` as certificate format.
+The SAP Cloud SDK for JavaScript only supports `.pem` as certificate format.
 :::
 
 :::caution
@@ -130,14 +130,14 @@ Avoid this options if possible.
 
 ## Keystore Configuration
 
-As discussed above you can also use certificate to authenticate the client.
-This is the mentioned two way SSL situation and is called `clientCertificateAuthentication` in the destination service.
+As discussed above you can also use a certificate to authenticate the client.
+This is the mentioned two-way SSL scenario and is called `clientCertificateAuthentication` in the destination service.
 The SAP Cloud SDK supports this authentication flow.
 You have to do the following steps:
 
-- Upload the keystore in destinations section of the subaccount
+- Upload the keystore in the destinations section of the subaccount.
 - Configure the destination to use [ClientCertificateAuthentication](sap destination service TrustStoreLocation) and provide the keystore information like keystore name and password.
 
 :::caution
-The SAP Cloud SDK for JavaScript supports only `.P12` and `.PFX` as formats for the keystore.
+The SAP Cloud SDK for JavaScript only supports `.P12` and `.PFX` as formats for the keystore.
 :::
