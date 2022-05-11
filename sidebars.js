@@ -145,7 +145,6 @@ module.exports = {
               'js/features/connectivity/proxy',
               'js/features/connectivity/generic-http-client',
               'js/features/connectivity/query-parameters',
-              'js/features/connectivity/trust-and-key-stores',
               'js/features/connectivity/on-premise'
             ]
           },
@@ -177,6 +176,7 @@ module.exports = {
           'js/guides/upgrade-to-version-2',
           'js/guides/bas-external-system',
           'js/guides/sdk-in-browser',
+          'js/guides/trust-and-key-stores',
           'js/guides/how-to-use-the-approuter',
           'js/guides/how-to-add-resilience',
           'js/guides/how-to-retrieve-jwt'
