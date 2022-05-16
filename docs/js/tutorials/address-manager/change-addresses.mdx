@@ -16,7 +16,7 @@ keywords:
 
 ## Overview
 
-In the [first part](./read-addresses.mdx) of the tutorial, we covered the read operation on business partners and the related address information.
+In the [first part](./read-addresses.mdx) of the tutorial, you implemented the read operation on business partners and the related address information.
 In this part you will learn:
 
 - How to create a new address.
@@ -26,8 +26,8 @@ In this part you will learn:
 ## Create an Address
 
 After reading data in the first part of the tutorial, it is now time to change data.
-We will use the `businessPartnerAddress` to adjust the addresses.
-We start with the creation of new addresses.
+You will use the `businessPartnerAddressApi` to adjust the addresses.
+You start with the creation of new addresses.
 Add a service implementation in the `business-partner.service.ts`:
 
 ```ts
@@ -45,10 +45,10 @@ Add a service implementation in the `business-partner.service.ts`:
   }
 ```
 
-We use the `entityBuilder` to create a new address object from the input.
+You use the `entityBuilder` to create a new address object from the input.
 The business partner ID is added to the address object.
 This is mandatory to define for which business partner the address is created.
-We use the `requestBuilder` to build a `create` request and `execute` it against the mock server.
+Then you use the `requestBuilder` to build a `create` request and `execute` it against the mock server.
 
 You need to adjust the `business-partner.controller.ts` to expose the new service.
 Since you want to create data, a POST request is needed:
@@ -145,7 +145,7 @@ After the update, a `GET http://localhost:8080/business-partners/1003764` should
 ## Delete Address
 
 After creating and updating addresses, it is time to delete an address.
-Also here we start with the service implementation in `business-partner.service.ts`:
+Also here you start with the service implementation in `business-partner.service.ts`:
 
 ```ts
  deleteAddress(businessPartnerId: string, addressId: string): Promise<void> {
