@@ -16,16 +16,16 @@ keywords:
 
 ## Overview
 
-In the [first part](./read-addresses.mdx) of the tutorial we covered the read operation on business partners and the related address information.
+In the [first part](./read-addresses.mdx) of the tutorial, we covered the read operation on business partners and the related address information.
 In this part you will learn:
 
 - How to create a new address.
 - How to update an existing address.
 - How to delete an existing address.
 
-### Create an Address
+## Create an Address
 
-After reading data in the first part of the tutorial it is now time to change data.
+After reading data in the first part of the tutorial, it is now time to change data.
 We will use the `businessPartnerAddress` to adjust the addresses.
 We start with the creation of new addresses.
 Add a service implementation in the `business-partner.service.ts`:
@@ -46,9 +46,9 @@ Add a service implementation in the `business-partner.service.ts`:
 ```
 
 We use the `entityBuilder` to create a new address object from the input.
-The business partner id is added to the address object.
+The business partner ID is added to the address object.
 This is mandatory to define for which business partner the address is created.
-We use the `requestBuilder` to build a `create` request and `execute` it against to mock server.
+We use the `requestBuilder` to build a `create` request and `execute` it against the mock server.
 
 You need to adjust the `business-partner.controller.ts` to expose the new service.
 Since you want to create data, a POST request is needed:
@@ -68,7 +68,7 @@ The ID of the business partner is taken from the URL of the request and the new 
 
 ### Test Service
 
-To test the new service you need a http client like [postman](https://www.postman.com/) to create a POST request.
+To test the new service, you need an HTTP client like [postman](https://www.postman.com/) to create a POST request.
 Create a new request with the following parameters:
 
 ```
@@ -83,11 +83,11 @@ BODY
 ```
 
 The request should return `201` as a status code.
-If you execute `GET http://localhost:8080/business-partners/1003764` afterwards you should see the additional address for the business partner.
+If you execute `GET http://localhost:8080/business-partners/1003764` afterwards, you should see the additional address for the business partner.
 
-### Update Service
+## Update Service
 
-As a next step we would like to update existing addresses.
+As a next step, we would like to update existing addresses.
 This is done using the `update` request builder.
 Add the following code in the `business-partner.service.ts`:
 
@@ -107,8 +107,8 @@ Add the following code in the `business-partner.service.ts`:
   }
 ```
 
-As for the create example a new address object is created.
-This time it contains the ID of the business partner and the address.
+First, an address object is build from the user input.
+It contains the ID of the business partner and the address to be updated.
 This is necessary because a business partner can contain multiple addresses.
 
 Expose the service implementation via the `business-partner.controller.ts`:
@@ -142,9 +142,9 @@ BODY
 
 After the update, a `GET http://localhost:8080/business-partners/1003764` should show the updated house number 123.
 
-### Delete Address
+## Delete Address
 
-After creating and changing addresses it is time to delete an address.
+After creating and updating addresses, it is time to delete an address.
 Also here we start with the service implementation in `business-partner.service.ts`:
 
 ```ts
