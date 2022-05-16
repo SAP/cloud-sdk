@@ -42,7 +42,7 @@ To continue using the latest features outlined in the release notes for version 
 <!-- Copy and fill
 ## 3.xx.x - January 1, 2021
 
-[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.34.1) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.34.1) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
 
 ### Known issues
 
@@ -55,9 +55,73 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed Issues
 -->
 
+## 3.68.0 - May 19, 2022
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.68.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
+
+### Compatibility Notes
+
+- To fix the high vulnerability [CVE-2022-22968](https://nvd.nist.gov/vuln/detail/CVE-2022-22968) in Spring, we had to update [Spring BOM](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-framework-bom) to `5.3.19` and to maintain compatibility had to also update [XSUAA Client Library](https://github.com/SAP/cloud-security-xsuaa-integration) to `2.11.16`.
+  Please note that if you are using SAP JAVA buildpack for your deployments use a static buildpack version `sap_java_buildpack_1_52` to avoid dependency conflicts and class loading issues.
+- Update the SAP Business Rules OpenAPI client library to the latest version of the Business Rules service.
+  This includes a breaking change to the field `List<TextPredefinedResults> predefinedResults` which is renamed to `List<TextPredefined> predefined`.
+- Deprecate non-productive `com.sap.cloud.sdk.s4hana.datamodel.odata.adapter.ODataCalendarAdapter` and child classes `ODataDateTimeAdapter`, `ODataDateTimeOffsetAdapter`, and `ODataTimeAdapter`.
+  It is planned to remove those classes with [SAP Cloud SDK v4](https://sap.github.io/cloud-sdk/docs/java/release-policy).
+- Switch from using `com.google.code.findbugs:annotations` to `com.github.spotbugs:spotbugs-annotations` in modules `cloudplatform-core-dwc-cf` and `recast-ai`.
+  No code changes are required if you are consuming these modules.
+  However, if you are planning on consuming these dependencies, remember to declare them directly in your POM as these are declared as [optional dependencies](https://maven.apache.org/guides/introduction/introduction-to-optional-and-excludes-dependencies.html).
+- The `DefaultLocaleFacade` does no longer consider the `ServletRequest` (accessed via the `RequestAccessor`) to determine the desired `Locale`.
+  Instead, the facade uses the `RequestHeaderAccessor` to derive the `Locale` based on the `Accept-Language` header - this change was already introduced in version `3.61.0`.
+  As a fallback, in case the header cannot be found, the default `Locale` for the server will be returned - this has also not been changed.
+  This change does not affect any productive scenarios.
+  However, there might be changes in tests, where the `RequestServlet#getLocales()` is mocked to return an arbitrary value that is neither part of the `Accept-Language` header nor the default system `Locale`.
+- Deprecate modules:
+  - `Recast AI`
+  - `Graph`
+  - `Services - SAP BTP Machine Learning`
+
+### Improvements
+
+- Update the SAP Business Rules OpenAPI client library to the latest version of the Business Rules service.
+  See also the related compatibility note.
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [XSUAA Client Library](https://github.com/SAP/cloud-security-xsuaa-integration) from `2.11.15` to `2.11.16`
+    - Update [CF Logging Support](https://search.maven.org/search?q=g:com.sap.hcp.cf.logging%2BAND%2Ba:cf-java-logging-support-logback) (`com.sap.hcp.cf.logging:cf-java-logging-support-logback`) from `3.6.0` to `3.6.2`
+    - Update [Neo JavaEE7 WP API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-javaee7-wp-api) from `1.117.2` to `1.121.5`
+    - Update [Neo Java Web API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-java-web-api) from `4.21.1` to `4.25.6`
+  - Other dependency updates:
+    - Major version updates:
+        - Add [Spotbugs annotations](https://search.maven.org/search?q=g:com.github.spotbugs%2BAND%2Ba:spotbugs-annotations) (`com.github.spotbugs:spotbugs-annotations`) version `4.7.0`
+        - Add [JCIP annotations](https://search.maven.org/search?q=g:net.jcip%2BAND%2Ba:jcip-annotations) (`net.jcip:jcip-annotations`) version `1.0`
+        - Remove [Findbugs annotations](https://search.maven.org/search?q=g:com.google.code.findbugs%2BAND%2Ba:annotations) (`com.google.code.findbugs:annotations`)
+        - Update [Woodstox Core](https://search.maven.org/search?q=g:com.fasterxml.woodstox%2BAND%2Ba:woodstox-core) (`com.fasterxml.woodstox:woodstox-core`) from `5.3.0` to `6.2.8`
+    - Minor version updates:
+        - Update [ASM](https://search.maven.org/search?q=g:org.ow2.asm%2BAND%2Ba:asm) (`org.ow2.asm:asm`) from `9.2` to `9.3`
+        - Update [Java JWT](https://search.maven.org/search?q=g:com.auth0%2BAND%2Ba:java-jwt) (`com.auth0:java-jwt`) from `3.19.0` to `3.19.2`
+        - Update [Liquibase Core](https://search.maven.org/search?q=g:org.liquibase%2BAND%2Ba:liquibase-core) (`org.liquibase:liquibase-core`) from `4.9.0` to `4.10.0`
+        - Update [Lombok](https://search.maven.org/search?q=g:org.projectlombok%2BAND%2Ba:lombok) (`org.projectlombok:lombok`) from `1.18.22` to `1.18.24`
+        - Update [Swagger Annotations](https://search.maven.org/search?q=g:io.swagger%2BAND%2Ba:swagger-annotations) (`io.swagger:swagger-annotations`) from `1.6.5` to `1.6.6`
+        - Update [Error Prone Annotations](https://search.maven.org/search?q=g:com.google.errorprone%2BAND%2Ba:error_prone_annotations) (`com.google.errorprone:error_prone_annotations`) from `2.11.0` to `2.13.1`
+        - Update [Json Unit AssertJ](https://search.maven.org/search?q=g:net.javacrumbs.json-unit%2BAND%2Ba:json-unit-assertj) (`net.javacrumbs.json-unit:json-unit-assertj`) from `2.32.0` to `2.35.0`
+        - Update [Netty Bom](https://search.maven.org/search?q=g:io.netty%2BAND%2Ba:netty-bom) (`io.netty:netty-bom`) from `4.1.75` to `4.1.77`
+        - Update [Protobuf Java](https://search.maven.org/search?q=g:com.google.protobuf%2BAND%2Ba:protobuf-java) (`com.google.protobuf:protobuf-java`) from `3.19.4` to `3.20.1`
+        - Update [Reactor Core](https://search.maven.org/search?q=g:io.projectreactor%2BAND%2Ba:reactor-core) (`io.projectreactor:reactor-core`) from `3.4.16` to `3.4.17`
+        - Update [Rest Assured](https://search.maven.org/search?q=g:io.rest-assured%2BAND%2Ba:rest-assured) (`io.rest-assured:rest-assured`) from `5.0.0` to `5.0.1`
+        - Update [Wiremock](https://search.maven.org/search?q=g:com.github.tomakehurst%2BAND%2Ba:wiremock-jre8-standalone) (`com.github.tomakehurst:wiremock-jre8-standalone`) from `2.32.0` to `2.33.2`
+        - Update [Spring BOM](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-framework-bom) (`org.springframework:spring-framework-bom`) from `5.3.18` to `5.3.19`
+        - Update [Spring Security](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-security-bom) (`org.springframework:spring-security-bom`) from `5.6.2` to `5.6.3`
+        - Update [Jsonschema2Pojo Core](https://search.maven.org/search?q=g:org.jsonschema2pojo%2BAND%2Ba:jsonschema2pojo-core) (`org.jsonschema2pojo:jsonschema2pojo-core`) from `1.1.1` to `1.1.2`
+        - Update [Togglz Core](https://search.maven.org/search?q=g:org.togglz%2BAND%2Ba:togglz-core) (`org.togglz:togglz-core`) from `3.1.1` to `3.1.2`
+
+### Fixed Issues
+
+- Fix an issue with OpenAPI client not being able to instantiate the class `ApiClient` when _Jackson_ formats other than _JSON_ are possible at runtime.
+- Fix an issue with some OData services unable to parse the syntax of batch request segments, that have special characters in entity key values.
+
 ## 3.67.0 - April 14, 2022
 
-[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.67.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.67.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
 
 ### Compatibility Notes
 
@@ -114,7 +178,7 @@ To continue using the latest features outlined in the release notes for version 
 
 ## 3.66.0 - March 24, 2022
 
-[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.66.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.66.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
 
 ### Compatibility Notes
 
@@ -147,7 +211,7 @@ To continue using the latest features outlined in the release notes for version 
 
 ## 3.65.0 - March 10, 2022
 
-[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.65.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.65.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
 
 ### Compatibility Notes
 
@@ -191,7 +255,7 @@ To continue using the latest features outlined in the release notes for version 
 
 ## 3.64.0 - February 24, 2022
 
-[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.64.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.64.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
 
 ### New Functionality
 
@@ -229,7 +293,7 @@ To continue using the latest features outlined in the release notes for version 
 
 ## 3.63.0 - February 10, 2022
 
-[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.63.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.63.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
 
 ### New Functionality
 
