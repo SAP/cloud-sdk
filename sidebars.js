@@ -187,20 +187,20 @@ module.exports = {
         items: [
           {
             type: 'category',
-            label: 'Address Manager',
-            items: [
-              'js/tutorials/address-manager/read-addresses',
-              'js/tutorials/address-manager/change-addresses'
-            ]
-          },
-          {
-            type: 'category',
             label: 'Getting Started',
             items: [
               'js/tutorials/getting-started/introduction',
               'js/tutorials/getting-started/set-up-dev-enviroment',
               'js/tutorials/getting-started/execute-an-odata-request',
               'js/tutorials/getting-started/deploy-app-to-cf'
+            ]
+          },
+          {
+            type: 'category',
+            label: 'Address Manager',
+            items: [
+              'js/tutorials/address-manager/read-addresses',
+              'js/tutorials/address-manager/change-addresses'
             ]
           }
         ]

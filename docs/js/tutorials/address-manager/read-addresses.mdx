@@ -18,17 +18,17 @@ keywords:
 
 In the SAP S/4HANA data model, addresses are related to the business partner entity.
 Each business partner can have multiple addresses assigned.
-The application will provide a REST API to manage addresses of business partners.
+You will develop an application which provides a REST API to manage addresses of business partners.
 In this part of the tutorial you will create the endpoints reading data.
 You will learn:
 
 - How to retrieve a single business partner.
-- How to retrieve the addresses of a business partner
+- How to retrieve the addresses of a business partner.
 
-The tutorial is based on the initial NestJs application explained in the [first part of the getting started tutorials](../getting-started/1-set-up-dev-environment.mdx)
-In that tutorial you already created a first OData request to get [a list of business partners](../getting-started/2-execute-odata-request.mdx).
+The tutorial is based on the initial NestJs application explained in the [first part of the getting started tutorials](../getting-started/1-set-up-dev-environment.mdx).
+In that tutorial you already created [a first OData request](../getting-started/2-execute-odata-request.mdx) to get a list of business partners.
 You will extend the functionality of the API in this tutorial and the [follow up part](./change-addresses.mdx).
-Since the follow up part is about changing data, we recommend to use a local mock system.
+Since the follow-up part is about changing data, we recommend to use a [local mock system](https://sap.github.io/cloud-s4-sdk-book/pages/mock-odata.html).
 Changing data is not possible on SAP API Business Hub and an actual SAP S/4HANA instance should not be polluted with test data.
 Note that both systems run locally but have different ports:
 
@@ -68,7 +68,7 @@ As discussed, you should use the local [mock system](https://sap.github.io/cloud
 For simplicity the `url` is passed directly to the `execute()` method.
 In real applications you would use a real SAP S/4HANA system and the [destination service](../../features/connectivity/destination) to avoid leaking private or secret information through hard-coding system properties.
 
-### Test Service
+### Test GetAll Service
 
 You can start your application using:
 
@@ -79,7 +79,7 @@ npm start
 When the server is running, you should see a message like: `[NestApplication] Nest application successfully started` and some mappings related to the listed controllers.
 Open the URL `http://localhost:8080/business-partners` and you should see the data of the mock server.
 
-### Select certain Fields
+### Select Certain Fields
 
 The output from the previous sections shows all fields of the business partner entity.
 Like SQL, OData allows to select only specific properties of an entity.
@@ -106,12 +106,15 @@ export class BusinessPartnerService {
 }
 ```
 
-As you can see, each property you select is represented by an object on the `businessPartnerApi` schema.
-To keep the code shorter the `businessPartnerApi` has been assigned to a local variable.
-If you type `businessPartnerApi.schema.` in your IDE, you will see all the properties that can be selected on this entity.
+As you can see, each property you select is represented by a property of the `businessPartnerApi` schema.
+To keep the code shorter, the `businessPartnerApi` has been assigned to a local variable.
+If your IDE supports code completion, you can see all properties that can be selected on this entity by typing `businessPartnerApi.schema.`.
+Depending on your IDE, the list may show automatically or when you trigger the code completion manually (often by pressing `Ctrl` + `Space`).
 This saves you from having to look up the properties in the metadata and prevents errors due to mistyping.
 
 If you open the URL `http://localhost:8080/business-partners`, you should see only the ID, first name, and last name of the business partners.
+
+![](../img/get-all-business-partners.png)
 
 ### Filter Business Partners by Type
 
@@ -140,6 +143,7 @@ As for `select`, you can use the properties of the `BusinessPartner` entity dire
 Each property offers a set of functions for constructing filters.
 Every property has the `equals` and `notEquals` function.
 Depending on the type of the property, there can be additional functions like `greaterThan` or `greaterOrEqual`.
+
 Since, the type of the property is known, the typed client will prevent you from passing values of the wrong type.
 For example, `businessPartnerApi.schema.FIRST_NAME.equals(1)` would not compile when using TypeScript.
 In JavaScript, the code would only fail at run-time, but your editor may raise a warning for the type mismatch.
@@ -151,10 +155,10 @@ For more complicated filter conditions have a look at the [filter documentation]
 As a first step you created an endpoint for obtaining a list of business partners.
 In this part of the tutorial you will create the services to read the addresses.
 
-### Get one Business Partner
+### Get One Business Partner
 
 We are interested in the addresses related to one business partner and create a query for fetching one specific business partner.
-Each business partner has a unique ID which you can use to do that.
+Each business partner has a unique ID, which you can use to do that.
 Include a second method in the existing `business-partner.service.ts`
 
 ```ts
@@ -184,7 +188,7 @@ The method takes the ID from the URL and passes it to `getBusinessPartnerById` i
 If a business partner with the provided ID exists in the target system, it will be sent to the client.
 Otherwise, an error message is sent.
 
-### Test Service
+### Test GetById Service
 
 Restart your server and open `http://localhost:8080/business-partners` to get the list of all business partners.
 Copy one ID from the result list and execute `http://localhost:8080/business-partners/<yourId>`.
@@ -193,7 +197,7 @@ Note that Nest applications have a build-in [exception filter](https://docs.nest
 By default the exceptions from the SAP Cloud SDK are mapped to a server side error.
 So if you provide a non-existing ID, you will receive a 500 response and not a 404.
 
-### Navigate to Address
+### Navigate To Address
 
 As mentioned before, the address is a separate OData entity related to the business partner.
 In OData the address is a navigation property of the business partner.
@@ -267,3 +271,152 @@ In this tutorial you have created an API to read business partners.
 You created endpoints to read a list of business partners as well as a specific business partner by ID.
 You adjusted the results with `select` and `filter` statements to fit your needs.
 In the [next part](./change-addresses.mdx) you will extend the API to change data.
+
+You can find the complete code below:
+
+<details><summary>business-partner.service.ts</summary>
+<p>
+
+```ts
+import { Injectable } from '@nestjs/common';
+import {
+  BusinessPartner,
+  BusinessPartnerAddress,
+  businessPartnerService
+} from '@sap/cloud-sdk-vdm-business-partner-service';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+const { businessPartnerApi, businessPartnerAddressApi } =
+  businessPartnerService();
+
+/**
+ * Service implementation of address API.
+ */
+@Injectable()
+export class BusinessPartnerService {
+  /**
+   * Gets a list of all business partners.
+   * @returns List of business partner.
+   */
+  async getAllBusinessPartners(): Promise<BusinessPartner[]> {
+    return businessPartnerApi
+      .requestBuilder()
+      .getAll()
+      .select(
+        businessPartnerApi.schema.BUSINESS_PARTNER,
+        businessPartnerApi.schema.FIRST_NAME,
+        businessPartnerApi.schema.LAST_NAME,
+        businessPartnerApi.schema.TO_BUSINESS_PARTNER_ADDRESS.select(
+          businessPartnerAddressApi.schema.BUSINESS_PARTNER,
+          businessPartnerAddressApi.schema.ADDRESS_ID
+        )
+      )
+      .filter(businessPartnerApi.schema.BUSINESS_PARTNER_CATEGORY.equals('1'))
+      .execute({ url: 'http://localhost:3000' });
+  }
+
+  /**
+   * Get a business partner by ID.
+   * @param id - ID of the business partner to be returned.
+   * @returns The business partner with the given ID.
+   */
+  getBusinessPartnerById(id: string): Promise<BusinessPartner> {
+    return businessPartnerApi
+      .requestBuilder()
+      .getByKey(id)
+      .select(
+        businessPartnerApi.schema.BUSINESS_PARTNER,
+        businessPartnerApi.schema.FIRST_NAME,
+        businessPartnerApi.schema.LAST_NAME,
+        businessPartnerApi.schema.TO_BUSINESS_PARTNER_ADDRESS.select(
+          businessPartnerAddressApi.schema.BUSINESS_PARTNER,
+          businessPartnerAddressApi.schema.ADDRESS_ID,
+          businessPartnerAddressApi.schema.POSTAL_CODE,
+          businessPartnerAddressApi.schema.CITY_NAME,
+          businessPartnerAddressApi.schema.STREET_NAME,
+          businessPartnerAddressApi.schema.HOUSE_NUMBER
+        )
+      )
+      .execute({ url: 'http://localhost:3000' });
+  }
+}
+```
+
+</p>
+</details>
+
+<details><summary>business-partner.controller.ts</summary>
+<p>
+
+```ts
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Put
+} from '@nestjs/common';
+import {
+  BusinessPartner,
+  BusinessPartnerAddress
+} from '@sap/cloud-sdk-vdm-business-partner-service';
+import { BusinessPartnerService } from './business-partner.service';
+
+@Controller('business-partners')
+export class BusinessPartnerController {
+  constructor(
+    private readonly businessPartnerService: BusinessPartnerService
+  ) {}
+
+  @Get()
+  getAllBusinessPartners(): Promise<BusinessPartner[]> {
+    return this.businessPartnerService.getAllBusinessPartners();
+  }
+
+  @Get('/:id')
+  getBusinessPartnerById(@Param('id') id: string): Promise<BusinessPartner> {
+    return this.businessPartnerService.getBusinessPartnerById(id);
+  }
+
+  @Post('/:id/address')
+  @HttpCode(201)
+  createAddress(
+    @Body() requestBody: Record<string, any>,
+    @Param('id') id: string
+  ): Promise<BusinessPartnerAddress> {
+    return this.businessPartnerService.createAddress(requestBody, id);
+  }
+
+  @Put('/:businessPartnerId/address/:addressId')
+  updateBusinessPartnerAddress(
+    @Body() requestBody: Record<string, any>,
+    @Param('businessPartnerId') businessPartnerId: string,
+    @Param('addressId') addressId: string
+  ): Promise<BusinessPartnerAddress> {
+    return this.businessPartnerService.updateAddress(
+      requestBody,
+      businessPartnerId,
+      addressId
+    );
+  }
+
+  @Delete('/:businessPartnerId/address/:addressId')
+  @HttpCode(204)
+  deleteBusinessPartnerAddress(
+    @Param('businessPartnerId') businessPartnerId: string,
+    @Param('addressId') addressId: string
+  ): Promise<void> {
+    return this.businessPartnerService.deleteAddress(
+      businessPartnerId,
+      addressId
+    );
+  }
+}
+```
+
+</p>
+</details>
