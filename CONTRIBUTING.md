@@ -101,4 +101,6 @@ Once you are part of the team, you can submit `pull requests` without forking th
 
 ## Developer Certificate of Origin (DCO)
 
-Due to legal reasons, contributors will be asked to accept a DCO before they submit the first pull request to this project. This happens in an automated fashion during the submission process. SAP uses [the standard DCO text of the Linux Foundation](https://developercertificate.org/).
+Due to legal reasons, contributors will be asked to accept a DCO before they submit the first pull request to this project.
+This happens in an automated fashion during the submission process.
+SAP uses [the standard DCO text of the Linux Foundation](https://developercertificate.org/).
