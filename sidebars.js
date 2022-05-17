@@ -176,6 +176,7 @@ module.exports = {
           'js/guides/upgrade-to-version-2',
           'js/guides/bas-external-system',
           'js/guides/sdk-in-browser',
+          'js/guides/trust-and-key-stores',
           'js/guides/how-to-use-the-approuter',
           'js/guides/how-to-add-resilience',
           'js/guides/how-to-retrieve-jwt'
