@@ -264,6 +264,7 @@ Hence, you should be able to successfully run the following `curl` command:
 ```bash
 curl localhost:50309/hello
 ```
+
 </details>
 
 :::tip SSH Access to your Pods
@@ -421,7 +422,7 @@ The resulting service binding can now be consumed with the SAP Cloud SDK.
 
 ### Expose your Application to the Internet
 
-During the next steps, you will configure and deploy an [Approuter](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/01c5f9ba7d6847aaaf069d153b981b51.html?locale=en-US) so that only authenticated users can access your application.
+During the next steps, you will configure and deploy an [approuter](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/01c5f9ba7d6847aaaf069d153b981b51.html?locale=en-US) so that only authenticated users can access your application.
 For that, you will need to create a simple application that uses the [@sap/approuter](https://www.npmjs.com/package/@sap/approuter) and starts it for this purpose.
 
 1. Based on the approuter application you used, containerize your application and push the image to a docker repository of your choice.
@@ -454,7 +455,7 @@ For that, you will need to create a simple application that uses the [@sap/appro
              name: my-approuter
              env:
                - name: PORT
-                 value: "5000"
+                 value: '5000'
                - name: destinations
                  value: >
                    [
@@ -468,7 +469,7 @@ For that, you will need to create a simple application that uses the [@sap/appro
                  value: <URL-pattern-for-outside-cluster-access>
              volumeMounts:
                - name: my-xsuaa-service-binding-volume
-                 mountPath: "/etc/secrets/sapcp/xsuaa/my-xsuaa-service-binding"
+                 mountPath: '/etc/secrets/sapcp/xsuaa/my-xsuaa-service-binding'
          volumes:
            - name: my-xsuaa-service-binding-volume
              secret:
