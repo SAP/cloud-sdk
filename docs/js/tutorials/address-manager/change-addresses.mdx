@@ -35,7 +35,7 @@ Add a service implementation in the `business-partner.service.ts`:
     address: Record<string, any>,
     businessPartnerId: string
   ): Promise<BusinessPartnerAddress> {
-   const businessPartnerAddress = businessPartnerAddressApi
+    const businessPartnerAddress = businessPartnerAddressApi
       .entityBuilder()
       .fromJson({ businessPartner: businessPartnerId, ...address });
     return businessPartnerAddressApi
@@ -85,7 +85,7 @@ BODY
 You find the ID of a business partner via the endpoint `http://localhost:8080/business-partners`.
 The request should return `201` as a [status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#successful_responses).
 
-![](../img/create-business-partner-address.png)
+![Create a address with postman.](../img/create-business-partner-address.png)
 
 If you execute `GET http://localhost:8080/business-partners/1003764` afterwards, you should see the additional address for the business partner.
 
@@ -96,7 +96,7 @@ This is done using the `update` request builder.
 Add the following code in the `business-partner.service.ts`:
 
 ```ts
- updateAddress(
+  updateAddress(
     address: Record<string, any>,
     businessPartnerId: string,
     addressId: string
@@ -120,9 +120,9 @@ Expose the service implementation via the `business-partner.controller.ts`:
 ```ts
   @Put('/:businessPartnerId/address/:addressId')
   updateBusinessPartnerAddress(
-      @Body() requestBody: Record<string, any>,
-      @Param('businessPartnerId') businessPartnerId: string,
-      @Param('addressId') addressId: string
+    @Body() requestBody: Record<string, any>,
+    @Param('businessPartnerId') businessPartnerId: string,
+    @Param('addressId') addressId: string
   ): Promise<BusinessPartnerAddress> {
     return this.businessPartnerService.updateAddress(requestBody,businessPartnerId,addressId);
   }
@@ -152,7 +152,7 @@ After creating and updating addresses, it is time to delete an address.
 Also here you start with the service implementation in `business-partner.service.ts`:
 
 ```ts
- deleteAddress(businessPartnerId: string, addressId: string): Promise<void> {
+  deleteAddress(businessPartnerId: string, addressId: string): Promise<void> {
     return businessPartnerAddressApi
       .requestBuilder()
       .delete(businessPartnerId, addressId)

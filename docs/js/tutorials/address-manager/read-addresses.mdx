@@ -32,8 +32,8 @@ Since the follow-up part is about changing data, we recommend to use a [local mo
 Changing data is not possible on SAP API Business Hub and an actual SAP S/4HANA instance should not be polluted with test data.
 Note that both systems run locally but have different ports:
 
-- `localhost:3000` is the mock system imitating the SAP S/4HANA system
-- `localhost:8080` is the address manager application you develop in the tutorial
+- `localhost:3000` is the mock system imitating the SAP S/4HANA system.
+- `localhost:8080` is the address manager application you develop in the tutorial.
 
 ## Get All Business Partners
 
@@ -66,7 +66,12 @@ You have imported the `businessPartnerService` which offers you many APIs and yo
 With this API you requested all business partners using the `getAll` request builder.
 As discussed, you should use the local [mock system](https://sap.github.io/cloud-s4-sdk-book/pages/mock-odata.html).
 For simplicity the `url` is passed directly to the `execute()` method.
+
+:::caution
+
 In real applications you would use a real SAP S/4HANA system and the [destination service](../../features/connectivity/destination) to avoid leaking private or secret information through hard-coding system properties.
+
+:::
 
 ### Test GetAll Service
 
@@ -114,7 +119,7 @@ This saves you from having to look up the properties in the metadata and prevent
 
 If you open the URL `http://localhost:8080/business-partners`, you should see only the ID, first name, and last name of the business partners.
 
-![](../img/get-all-business-partners.png)
+![Get all business partners.](../img/get-all-business-partners.png)
 
 ### Filter Business Partners by Type
 
