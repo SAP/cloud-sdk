@@ -120,14 +120,28 @@ If asynchronous operations need to access the information, it has to be propagat
 The following code achieves this:
 
 ```java
-ThreadContextExecutor executor = new ThreadContextExecutor();
+ExecutorService executor = ExecutorDecorator.of(Executors.newCachedThreadPool());
+executor.execute(
+    // code that is executed within the ThreadContext propagated by ExecutorDecorator
+    () -> operation());
+```
+
+<details>
+<summary> Customizing ThreadContext </summary>
+
+It's possible to customize the `ThreadContext`:
+
+```java
+ThreadContextExecutor executor = new ThreadContextExecutor().withThreadContext(context);
 Callable operationWithContext = () -> executor.execute(() -> operation());
 
 invokeAsynchronously(operationWithContext);
 ```
 
-Take note that the `ThreadContextExecutor` is created _before_ performing the asynchronous operation.
+Take note that the `ThreadContextExecutor` is created _before_ executing the asynchronous operation.
 This is important because only at that time the context is available and will be propagated.
+
+</details>
 
 A similar approach can be applied with the `Tenant`, `Principal` and `AuthToken` accessors.
 This code runs an asynchronous operation with a dedicated tenant:
