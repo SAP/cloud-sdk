@@ -72,7 +72,7 @@ To continue using the latest features outlined in the release notes for version 
   However, if you are planning on consuming these dependencies, remember to declare them directly in your POM as these are declared as [optional dependencies](https://maven.apache.org/guides/introduction/introduction-to-optional-and-excludes-dependencies.html).
 - The `DefaultLocaleFacade` does no longer consider the `ServletRequest` (accessed via the `RequestAccessor`) to determine the desired `Locale`.
   Instead, the facade uses the `RequestHeaderAccessor` to derive the `Locale` based on the `Accept-Language` header - this change was already introduced in version `3.61.0`.
-  As a fallback, in case the header cannot be found, the default `Locale` for the server will be returned - this has also not been changed.
+  As a fallback, in case the header cannot be found, the default `Locale` for the server will be returned as before.
   This change does not affect any productive scenarios.
   However, there might be changes in tests, where the `RequestServlet#getLocales()` is mocked to return an arbitrary value that is neither part of the `Accept-Language` header nor the default system `Locale`.
 - Deprecate modules:
