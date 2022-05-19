@@ -176,6 +176,7 @@ module.exports = {
           'js/guides/upgrade-to-version-2',
           'js/guides/bas-external-system',
           'js/guides/sdk-in-browser',
+          'js/guides/trust-and-key-stores',
           'js/guides/how-to-use-the-approuter',
           'js/guides/how-to-add-resilience',
           'js/guides/how-to-retrieve-jwt'
@@ -193,6 +194,14 @@ module.exports = {
               'js/tutorials/getting-started/set-up-dev-enviroment',
               'js/tutorials/getting-started/execute-an-odata-request',
               'js/tutorials/getting-started/deploy-app-to-cf'
+            ]
+          },
+          {
+            type: 'category',
+            label: 'Address Manager',
+            items: [
+              'js/tutorials/address-manager/read-addresses',
+              'js/tutorials/address-manager/change-addresses'
             ]
           }
         ]
