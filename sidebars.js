@@ -195,6 +195,14 @@ module.exports = {
               'js/tutorials/getting-started/execute-an-odata-request',
               'js/tutorials/getting-started/deploy-app-to-cf'
             ]
+          },
+          {
+            type: 'category',
+            label: 'Address Manager',
+            items: [
+              'js/tutorials/address-manager/read-addresses',
+              'js/tutorials/address-manager/change-addresses'
+            ]
           }
         ]
       },
