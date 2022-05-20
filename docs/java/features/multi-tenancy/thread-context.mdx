@@ -120,7 +120,7 @@ If asynchronous operations need to access the information, it has to be propagat
 The following code achieves this:
 
 ```java
-ExecutorService executor = ExecutorDecorator.of(Executors.newCachedThreadPool());
+ExecutorService executor = ExecutorDecorator.newDefaultExecutor();
 executor.execute(
     // code that is executed within the ThreadContext propagated by ExecutorDecorator
     () -> operation());
@@ -132,6 +132,9 @@ executor.execute(
 It's possible to customize the `ThreadContext`:
 
 ```java
+ThreadContext context = new DefaultThreadContext();
+context.setPropertyIfAbsent("name", "value");
+
 ThreadContextExecutor executor = new ThreadContextExecutor().withThreadContext(context);
 Callable operationWithContext = () -> executor.execute(() -> operation());
 
@@ -151,6 +154,27 @@ Callable operationWithTenant = TenantAccessor.executeWithTenant(customTenant, ()
 
 invokeAsynchronously(operationWithContext);
 ```
+
+### Spring Integration
+
+Annotating a method with `@Async` will make it execute in a separate thread.
+
+To enable this, a configuration class has to be created:
+
+```java
+@EnableAsync
+@Configuration
+public class AsynchronousConfiguration implements AsyncConfigurer {
+
+  @Override
+  public Executor getAsyncExecutor() {
+    return ExecutorDecorator.decorate(new SimpleAsyncTaskExecutor());
+  }
+}
+
+```
+
+For your annotated methods to be able to access the `ThreadContext`, an `ExecutorDecorator` needs to be supplied.
 
 :::caution CAP Integration
 In case you are using CAP the CAP Request Context also needs to be passed on (in addition to the `ThreadContext`).
