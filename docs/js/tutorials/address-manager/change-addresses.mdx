@@ -14,6 +14,9 @@ keywords:
   - address manager
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 ## Overview
 
 In the [first part](./read-addresses.mdx) of the tutorial, you implemented the read operation on business partners and the related address information.
@@ -189,7 +192,7 @@ Then execute `DELETE http://localhost:8080/business-partners/1003764/address/282
 This should return 204 if existing IDs are passed.
 To verify you can execute `GET http://localhost:8080/business-partners/1003764` afterwards and the selected address should be removed.
 
-## Summary
+## Final Code Review
 
 In this tutorial, you learned how to create, update and delete addresses using the SAP Cloud SDK.
 First an implementation is added in the service class.
@@ -198,8 +201,9 @@ The result of this and the [previous tutorial](./read-addresses.mdx) is an API t
 
 You can find the complete code below:
 
-<details><summary>business-partner.service.ts</summary>
-<p>
+<Tabs groupId="code-files" defaultValue="business-partner.service" values={[{ label: 'business-partner.service.ts', value: 'business-partner.service' }, { label: 'business-partner.controller.ts', value: 'business-partner.controller' }]}>
+
+<TabItem value="business-partner.service" className="code-block-height-js thin-scrollbar">
 
 ```ts
 import { Injectable } from '@nestjs/common';
@@ -322,11 +326,8 @@ export class BusinessPartnerService {
 }
 ```
 
-</p>
-</details>
-
-<details><summary>business-partner.controller.ts</summary>
-<p>
+</TabItem>
+<TabItem value="business-partner.controller" className="code-block-height-js thin-scrollbar">
 
 ```ts
 import {
@@ -397,5 +398,5 @@ export class BusinessPartnerController {
 }
 ```
 
-</p>
-</details>
+</TabItem>
+</Tabs>
