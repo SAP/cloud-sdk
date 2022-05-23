@@ -70,7 +70,7 @@ Similarly for OpenAPI:
 const responseOpenApi = await MyApi.myFunction().execute(myDestination);
 ```
 
-`myDestination` is an SAP Cloud SDK representation of a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_core.Destination" name="destination" />.
+`myDestination` is an SAP Cloud SDK representation of a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="destination" />.
 The given request is executed against `myDestination`.
 
 For the rest of the document, we will discuss the different options on destination lookup.
@@ -113,11 +113,11 @@ The second option `register a destination` was introduced in version 2.0 of the 
 
 This option is present for deployment and testing in a local environment outside the SAP BTP where no destination services are available.
 If a `destinations` environment variable is present it will be used for the destination lookup as described above.
-The value is expected to be a stringified JSON array, where the items adhere to the <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_core.Destination" name="Destination interface" />.
+The value is expected to be a stringified JSON array, where the items adhere to the <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="Destination interface" />.
 Example: `"[{\"name\": \"TESTINATION\", \"url\": \"http://url.hana.ondemand.com\", \"username\": \"DUMMY\", \"password\": \"dummy\"}]"`.
 
 The SAP Cloud SDK provides a `setTestDestination(destination)` function to add a destination to the environment variable for the current process programmatically.
-It takes a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_core.Destination" name="destination object" />, transforms it to a JSON object, and adds it to `process.env.destinations`.
+It takes a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="destination object" />, transforms it to a JSON object, and adds it to `process.env.destinations`.
 
 ```ts
 import { setTestDestination } from '@sap-cloud-sdk/test-util';
@@ -259,6 +259,7 @@ For simplicity an optional argument of the destination lookup has been neglected
 ```
 
 The `jwt` argument takes the JSON web token (JWT) issued by an XSUAA as input.
+Additional information on how to retrieve JWTs can be found [here](../../guides/how-to-retrieve-jwt).
 This token contains a field `zid` holding the tenant id which will be used in the lookup process.
 The lookup process done by the SAP Cloud SDK involves the following steps:
 

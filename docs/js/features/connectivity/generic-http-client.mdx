@@ -20,15 +20,8 @@ import TabItem from '@theme/TabItem';
 
 In the [Executing a request using a generated OData client](../odata/execute-odata-request.mdx) section, we explained how to make OData requests using the generated OData client.
 This client is the highest layer of convenience and type-safety for the user.
-Below the OData client uses the Generic HTTP client of the SAP Cloud SDK.
-For the final HTTP calls, we have decided to use the axios library.
-
-<img
-  alt="The layers of HTTP clients in the SDK."
-  src={require('@site/static/img/odata-client-layers.png').default}
-  class="center"
-  width="50%"
-/>
+Below the OData client uses the generic HTTP client of the SAP Cloud SDK.
+For the final HTTP calls the SAP Cloud SDK for JavaScript uses the axios library.
 
 In this document, we explain when and how to use the middle layer directly.
 Different clients serve different purposes:
@@ -63,10 +56,10 @@ To make a request using the Generic HTTP client use the `executeHttpRequest` fun
 executeHttpRequest(destination, requestConfig, httpRequestOptions);
 ```
 
-The `destination` argument is either a full <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_core.Destination" name="destination object" />, that you have already fetched or an <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_core.DestinationNameAndJwt" name="object containing a destination name and an optional JWT" />.
+The `destination` argument is either a full <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="destination object" />, that you have already fetched or an <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.DestinationNameAndJwt" name="object containing a destination name and an optional JWT" />.
 In the latter case, the SAP Cloud SDK fetches the destination for you.
-To learn more, check the [destination documentation](destination.mdx). It provides more details about the `JWT` parameter.
-The <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_core.HttpRequestConfig" name="request configuration" /> argument contains the request configuration.
+For more details, see [here](destination.mdx).
+The <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_http_client#HttpRequestConfig" name="request configuration" /> argument contains the request configuration.
 A minimal configuration would look like this:
 
 ```JSON
