@@ -22,7 +22,13 @@ With the SAP Cloud SDK, you can generate typed clients for those specifications.
 
 ## Installation
 
-Run the command below to install the OpenAPI generator globally:
+Run the command below to install the OpenAPI generator as a `devDependency`:
+
+```sh
+npm install -D @sap-cloud-sdk/openapi-generator
+```
+
+or globally:
 
 ```sh
 npm install -g @sap-cloud-sdk/openapi-generator
@@ -51,7 +57,7 @@ By default, the generated clients will each contain:
 The generation always includes the TypeScript sources.
 All other files can be excluded from the generation - see the options below.
 
-## Options of the OpenAPI CLI
+## Options
 
 Run `openapi-generator --help` for additional options.
 
@@ -91,7 +97,7 @@ Run `openapi-generator --help` for additional options.
  }
 ```
 
-## Generate a Type-safe Client Programmatically
+## Generate a Client Programmatically
 
 The generator can also be executed programmatically in JavaScript or TypeScript code.
 Add the `@sap-cloud-sdk/openapi-generator` package to your project:
@@ -197,3 +203,34 @@ Many OpenAPI validators fail if there are duplicate `operationId`s.
 With the approach of the SAP Cloud SDK OpenAPI generator this restriction might make the resulting clients more complicated than necessary.
 Given that you have multiple APIs, it can make sense to have the same function names in different APIs, e.g. `MyResource1Api.getAll()` and `MyResource2Api.getAll()`.
 The purpose of the `x-sap-cloud-sdk-operation-name` is to allow using duplicate names across APIs, while complying with the OpenAPI specification.
+
+## npm Packages vs. Local clients
+
+The SAP Cloud SDK OpenAPI client generator generates TypeScript code.
+By default, it creates only the TypeScript sources.
+This differs from the OData generator, which currently creates all sources needed for an npm package and includes transpilation.
+
+If you want to use the generated client in your TypeScript code without sharing it, you can work with the default configuration.
+If you work with JavaScript you can enable and configure transpilation with the `--transpile` and `--tsConfig` flags.
+
+If you want to publish a generated client to an npm registry, in addition to transpiling you will need to have a `package.json` for your client.
+You can generate it with `--packageJson` or include your custom `package.json` with `--include`.
+Please make sure to check intellectual property regulations before publishing to a public registry.
+
+The generated clients depend on the `@sap-cloud-sdk/openapi` package.
+You have to make sure, there is a local reference to this package, by running:
+
+```sh
+npm install @sap-cloud-sdk/openapi
+```
+
+## Transpilation
+
+If you installed the generator globally and want to transpile the generated code, you have to install the required dependency (or `devDependency`) for your client (`sap-cloud-sdk/openapi`) prior to generation.
+You do this by running:
+
+```sh
+npm install -D @sap-cloud-sdk/openapi
+```
+
+If you installed the generator as a `devDependency`, transpilation will work without additional steps.

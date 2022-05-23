@@ -15,37 +15,47 @@ keywords:
 ---
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
+import ThemedImage from '@theme/ThemedImage';
 
 ## What is the Business Application Studio?
 
-The Business Application Studio (BAS) is a development environment offered as a service on the SAP BTP, Cloud Foundry (CF) environment.
-You can subscribe to the BAS and from there quickly start developing without installing node, git, Visual Studio Code, or other tools.
+The SAP Business Application Studio (BAS) is a development environment offered as a service on SAP BTP.
+You can subscribe to the BAS and from there quickly start developing without installing node, git, Visual Studio Code, nor other tools.
 The solution looks and feels like Visual Studio Code, which is no surprise since it is based on [Eclipse Theia](https://theia-ide.org/), the open source version of Visual Studio Code.
 
 However, SAP added a few useful features to the BAS.
-You can connect the BAS to your CF account, which allows you to reach all systems that you have configured on CF from your local machine.
+You can connect the BAS to your SAP BTP account, which allows you to reach all systems that you have configured on SAP BTP from your local machine.
 This includes systems that are connected through the Cloud Connector (CC) and are normally not reachable through the internet.
 Being able to test changes locally reduces the overhead of deploying remotely and thus increases convenience for developers.
 
-<img
-  alt="Connecting to external On-premise systems"
-  src={useBaseUrl('img/cloud-connector.png')}
+<!-- vale off -->
+
+<ThemedImage
+  alt="Connecting to On-premise systems"
+  sources={{
+    light: useBaseUrl('img/bas_light.svg'),
+    dark: useBaseUrl('img/bas_dark.svg')
+  }}
+  class="center"
+  width="100%"
 />
+
+<!-- vale on -->
 
 ## Case 1: Connection to an On-Premise System
 
 ### Technical Background
 
 Companies do not expose their SAP S/4HANA On-premise systems to the internet.
-They are only reachable via a CC attached to a CF account.
-In principle, you cannot reach these systems outside the CF account.
+They are only reachable via a CC attached to an SAP BTP account.
+In principle, you cannot reach these systems outside the SAP BTP account.
 
-However, due to the subscription between the BAS and the CF account, there is a connection from the local application to the SAP S/4HANA system.
+However, due to the subscription between the BAS and the SAP BTP account, there is a connection from the local application to the SAP S/4HANA system.
 On a high level the connection works the following way:
 
 - The BAS includes an HTTP_PROXY running at http://localhost:8887
-- This proxy forwards all `http` requests to the CF account
-- CF searches the existing destinations for one matching the name
+- This proxy forwards all `http` requests to the SAP BTP account
+- SAP BTP searches the existing destinations for one matching the name
 - If a destination is present, an initial request is sent to this destination
 - The proxy is a reverse proxy also piping back the response to the BAS
 
@@ -59,7 +69,7 @@ Via the subscription, the BAS can access all destination in the subscribed accou
 You have set up a working Cloud Connector and configured a destination pointing to an On-premise system.
 Per default, destinations are not usable by a subscribed BAS.
 You need to set two properties `WebIDEEnabled` and `HTML5.DynamicDestination` to enable that feature for a specific destination.
-Go to the destination configuration in CF and add the properties:
+Go to the destination configuration on SAP BTP and add the properties:
 
 | Property                   | Value |
 | -------------------------- | ----- |
@@ -99,7 +109,7 @@ For more details on testing and troubleshooting have a look at [this guide](http
 ### Implementation
 
 If the connection is tested and working you can start the implementation.
-The SAP Cloud SDK helps you to consider the HTTP_PROXY automatically and makes it easy to use the same code base locally and in production on CF.
+The SAP Cloud SDK helps you to consider the HTTP_PROXY automatically and makes it easy to use the same code base locally and in production on SAP BTP.
 The SAP Cloud SDK has a [destination lookup](../features/connectivity/destination) priority considering environment variables first.
 
 The trick is to define a `destinations` environment variable when you run locally, which works like a switch under the hood when you execute:
@@ -113,11 +123,11 @@ The two situations are:
 
 **Case 1:** When run locally, the SAP Cloud SDK reads the destination from the environment variables.
 The `jwt` is irrelevant.
-The destination contains only the name and URL of the real CF destination.
+The destination contains only the name and URL of the real SAP BTP destination.
 Since the destination has no proxy type specified, the SAP Cloud SDK takes the HTTP_PROXY into account, as is the default.
 From there the flow described above takes place.
 
-**Case 2:** When run on CF there is no environment variable present.
+**Case 2:** When run on SAP BTP there is no environment variable present.
 The `jwt` is used to fetch the full destination from the service.
 The proxy type is `OnPremise` and the connectivity service provides all proxy information.
 
@@ -162,7 +172,7 @@ Just add the following entry to the `.env` file:
 destinations="[{"name": "<destinationName>", "url": "http://<destinationName>.dest"}]"
 ```
 
-Fill in the `name` and `url` of the destination you [configured in CF](#prerequisite-2-cloud-connector-and-destination-setup).
+Fill in the `name` and `url` of the destination you [configured on SAP BTP](#prerequisite-2-cloud-connector-and-destination-setup).
 You can use the same pattern `<name>.dest` that you have used for [testing the connection](#checking-the-connection).
 All requests done with the SAP Cloud SDK will now reach the SAP S/4HANA system via the BAS connectivity proxy.
 You can start your application via the launch button.
@@ -179,8 +189,8 @@ For the simple case you would add `mockTestDestination(<destinationName>)` to yo
 {
     "systems": [
         {
-            "alias": "your CF destination name",
-            "uri": "your CF destination url "
+            "alias": "your destination name",
+            "uri": "your destination url "
         }
     ]
 }
@@ -221,8 +231,8 @@ If not, follow the [steps in the Cloud Foundry tutorial](https://developers.sap.
 ### Implementation
 
 You can mirror the `VCAP_SERVICE` variables from your Cloud Foundry account to your local BAS.
-Start the BAS and connect your BAS workspace to the CF account.
-This is done via the little CF icon (<img src={useBaseUrl('img/cf-connect-button.jpg')} />) on the left of the BAS.
+Start the BAS and connect your BAS workspace to the SAP BTP account.
+This is done via the little connection icon (<img src={useBaseUrl('img/cf-connect-button.jpg')} />) on the left of the BAS.
 Then select the application from which you want to mirror the variables and select the folder containing the `.env` file to store it.
 Use the `envFile` property in the `launch.json` to load the file on your local application startup.
 
