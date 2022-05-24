@@ -14,6 +14,9 @@ keywords:
   - address manager
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 ## Overview
 
 In the SAP S/4HANA data model, addresses are related to the business partner entity.
@@ -270,7 +273,7 @@ If you call the URL `http://localhost:8080/business-partners/<yourId>`, the serv
 }
 ```
 
-## Summary
+## Final Code Review
 
 In this tutorial you have created an API to read business partners.
 You created endpoints to read a list of business partners as well as a specific business partner by ID.
@@ -279,8 +282,9 @@ In the [next part](./change-addresses.mdx) you will extend the API to change dat
 
 You can find the complete code below:
 
-<details><summary>business-partner.service.ts</summary>
-<p>
+<Tabs groupId="code-files" defaultValue="business-partner.service.ts" values={[{ label: 'business-partner.service.ts', value: 'business-partner.service.ts'}, { label: 'business-partner.controller.ts', value: 'business-partner.controller.ts'}]}>
+
+<TabItem value="business-partner.service.ts" className="code-block-height-js thin-scrollbar">
 
 ```ts
 import { Injectable } from '@nestjs/common';
@@ -348,11 +352,9 @@ export class BusinessPartnerService {
 }
 ```
 
-</p>
-</details>
+</TabItem>
 
-<details><summary>business-partner.controller.ts</summary>
-<p>
+<TabItem value="business-partner.controller.ts" className="code-block-height-js thin-scrollbar">
 
 ```ts
 import {
@@ -423,5 +425,5 @@ export class BusinessPartnerController {
 }
 ```
 
-</p>
-</details>
+</TabItem>
+</Tabs>
