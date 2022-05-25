@@ -121,7 +121,7 @@ unmuteLogger(); // unmute all loggers
 The SAP Cloud SDK sets the log level **during the creation of a logger** based on the following order:
 
 | Order |                                                    | Usage                                         |
-|-------|----------------------------------------------------|-----------------------------------------------|
+| ----- | -------------------------------------------------- | --------------------------------------------- |
 | 1     | log level for a specific message context or logger | `setLogLevel('info', messageContextOrLogger)` |
 | 2     | `level` field in `createLogger`                    | `createLogger({..., level: "info"})`          |
 | 3     | global log level                                   | `setGlobalLogLevel('info')`                   |
@@ -134,7 +134,7 @@ Please notice that `setGlobalLogLevel` will not only affect the creation of the 
 The SAP Cloud SDK sets the log format based on the following order of priority:
 
 | Order |                                                     | Usage                                                        |
-|-------|-----------------------------------------------------|--------------------------------------------------------------|
+| ----- | --------------------------------------------------- | ------------------------------------------------------------ |
 | 1     | log format for a specific message context or logger | `setLogFormat(logFormat.local, messageContextOrLogger)`      |
 | 2     | `format` field in `createLogger`                    | `createLogger({..., format: logFormat.local})`               |
 | 3     | global log format                                   | `setGlobalLogFormat(logFormat.local)`                        |
