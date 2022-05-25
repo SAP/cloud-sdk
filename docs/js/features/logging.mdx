@@ -118,16 +118,35 @@ muteLoggers(); // mute all loggers completely
 unmuteLogger(); // unmute all loggers
 ```
 
-The SAP Cloud SDK sets the log level based on the following order of priority:
+The SAP Cloud SDK sets the log level **during the creation of a logger** based on the following order:
 
-`setLogLevel` > `level` field in `createLogger` > `setGlobalLogLevel` > default level `info`
+| Order |                                                    | Usage                                         |
+|-------|----------------------------------------------------|-----------------------------------------------|
+| 1     | log level for a specific message context or logger | `setLogLevel('info', messageContextOrLogger)` |
+| 2     | `level` field in `createLogger`                    | `createLogger({..., level: "info"})`          |
+| 3     | global log level                                   | `setGlobalLogLevel('info')`                   |
+| 4     | `info`                                             | default log level                             |
+
+:::note
+Please notice that `setGlobalLogLevel` will not only affect the creation of the next logger, but also the log level of all existing loggers.
+:::
 
 The SAP Cloud SDK sets the log format based on the following order of priority:
 
-`setLogFormat` > `format` field in `createLogger` > `setGlobalLogLevel` > default format determined by `NODE_ENV`
+| Order |                                                     | Usage                                                        |
+|-------|-----------------------------------------------------|--------------------------------------------------------------|
+| 1     | log format for a specific message context or logger | `setLogFormat(logFormat.local, messageContextOrLogger)`      |
+| 2     | `format` field in `createLogger`                    | `createLogger({..., format: logFormat.local})`               |
+| 3     | global log format                                   | `setGlobalLogFormat(logFormat.local)`                        |
+| 4     | `kibana` or `local` based on `NODE_ENV`             | set `NODE_ENV=production` to get `kibana`, otherwise `local` |
 
-There are two log formats provided by `@sap-cloud-sdk/util`: `logFormat.local` and `logFormat.kibana`.
-If `NODE_ENV` is set to `production`, the `kibana` format is used by default, otherwise `local`.
-If `nodejs_buildpack` is used to deploy your app on Cloud Foundry, `NODE_ENV` is set to `production` by default.
+:::note
+Please notice that `setGlobalLogFormat` will not only affect the creation of the next logger, but also the log format of all existing loggers.
+:::
+
+:::tip
+`nodejs_buildpack` sets `NODE_ENV=production` by default.
+Therefore, Node.js applications deployed on Cloud Foundry using `nodejs_buildpack` has `kibana` as the default log format.
+:::
 
 In case you see a need for higher flexibility of the logging instance feel free to create an issue in our [repository](https://github.com/SAP/cloud-sdk-js) or make a contribution.
