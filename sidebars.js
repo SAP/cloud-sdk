@@ -100,8 +100,7 @@ module.exports = {
         type: 'category',
         label: 'Extensions',
         items: [
-          'java/extensions/extensions-supported-by-sap-cloud-sdk-for-java',
-          'java/extensions/sap-currency-conversion-extension-library-for-cloud-sdk-for-java'
+          'java/extensions/extensions-supported-by-sap-cloud-sdk-for-java'
         ]
       },
       {
@@ -115,6 +114,7 @@ module.exports = {
         ]
       },
       'java/sdk-java-troubleshooting-frequent-problems',
+      'java/release-policy',
       'java/release-notes-sap-cloud-sdk-for-java',
       'java/frequently-asked-questions'
     ],
@@ -141,8 +141,10 @@ module.exports = {
             label: 'Connectivity',
             items: [
               'js/features/connectivity/destination',
+              'js/features/connectivity/destination-cache-isolation',
               'js/features/connectivity/proxy',
               'js/features/connectivity/generic-http-client',
+              'js/features/connectivity/query-parameters',
               'js/features/connectivity/on-premise'
             ]
           },
@@ -160,15 +162,6 @@ module.exports = {
               }
             ]
           },
-          {
-            type: 'category',
-            label: 'SAP Cloud SDK CLI',
-            items: [
-              'js/features/cli/overview',
-              'js/features/cli/init',
-              'js/features/cli/package'
-            ]
-          },
           'js/features/error-handling',
           'js/features/logging',
           'js/features/eslint-configuration'
@@ -182,9 +175,35 @@ module.exports = {
           'js/guides/migrate-to-open-source-version-of-cloud-sdk-for-javascript-typescript',
           'js/guides/upgrade-to-version-2',
           'js/guides/bas-external-system',
-          'js/guides/tutorial-overview-sdk-js',
           'js/guides/sdk-in-browser',
-          'js/guides/how-to-use-the-approuter'
+          'js/guides/trust-and-key-stores',
+          'js/guides/how-to-use-the-approuter',
+          'js/guides/how-to-add-resilience',
+          'js/guides/how-to-retrieve-jwt'
+        ]
+      },
+      {
+        type: 'category',
+        label: 'Tutorials',
+        items: [
+          {
+            type: 'category',
+            label: 'Getting Started',
+            items: [
+              'js/tutorials/getting-started/introduction',
+              'js/tutorials/getting-started/set-up-dev-enviroment',
+              'js/tutorials/getting-started/execute-an-odata-request',
+              'js/tutorials/getting-started/deploy-app-to-cf'
+            ]
+          },
+          {
+            type: 'category',
+            label: 'Address Manager',
+            items: [
+              'js/tutorials/address-manager/read-addresses',
+              'js/tutorials/address-manager/change-addresses'
+            ]
+          }
         ]
       },
       {
@@ -195,7 +214,11 @@ module.exports = {
       {
         type: 'category',
         label: 'Releases',
-        items: ['js/release-policy', 'js/announcing-version-2', 'js/announcing-version-2-beta']
+        items: [
+          'js/release-policy',
+          'js/announcing-version-2',
+          'js/announcing-version-2-beta'
+        ]
       },
       {
         type: 'category',
