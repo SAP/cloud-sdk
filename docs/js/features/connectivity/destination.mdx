@@ -399,7 +399,7 @@ The properties change the behavior how the SAP Cloud SDK handles the HTTP reques
 ### SAP Client
 
 The property `sap-client` is considered by the SAP Cloud SDK.
-This property leads to a header field `sap-client` with the specified value in the HTTP request.
+When this property is set, it is used as the header parameter `sap-client` with the specified value in the HTTP request to the target system.
 
 <img
   alt="SAP client property on destination"
@@ -409,7 +409,8 @@ This property leads to a header field `sap-client` with the specified value in t
 
 ### Trust Configuration
 
-There are two destination property used to establish trust to systems using certificates not issued by trusted certificate authorities:
+By default, SAP BTP only trusts certain certificate authorities.
+If you want to make HTTPS requests against systems that use certificates from other certificate authorities, you can configure the following properties:
 
 1. TrustStoreLocation: The SAP Cloud SDK adds the provided certificate in the `ca` property of the [node client](https://nodejs.org/api/tls.html#tlscreatesecurecontextoptions).
 2. TrustAll: The SAP Cloud SDK adds the inverted value as the [rejectUnauthorized](https://nodejs.org/api/tls.html#class-tlstlssocket)
