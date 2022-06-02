@@ -63,7 +63,7 @@ To continue using the latest features outlined in the release notes for version 
 
 - To fix the high vulnerability [CVE-2022-22968](https://nvd.nist.gov/vuln/detail/CVE-2022-22968) in Spring, we had to update [Spring BOM](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-framework-bom) to `5.3.19` and to maintain compatibility had to also update [XSUAA Client Library](https://github.com/SAP/cloud-security-xsuaa-integration) to `2.11.16`.
   Please note that if you are using SAP JAVA buildpack for your deployments use a static buildpack version `sap_java_buildpack_1_52` to avoid dependency conflicts and class loading issues.
--  SAP Buisiness Rules OpenAPI client library received breaking change to the field `List<TextPredefinedResults> predefinedResults` which is renamed to `List<TextPredefined> predefined` after updating to the latest version of the SAP Business Rules service
+- SAP Buisiness Rules OpenAPI client library received breaking change to the field `List<TextPredefinedResults> predefinedResults` which is renamed to `List<TextPredefined> predefined` after updating to the latest version of the SAP Business Rules service
 - Deprecate non-productive `com.sap.cloud.sdk.s4hana.datamodel.odata.adapter.ODataCalendarAdapter` and child classes `ODataDateTimeAdapter`, `ODataDateTimeOffsetAdapter`, and `ODataTimeAdapter`.
   It is planned to remove those classes with [SAP Cloud SDK v4](https://sap.github.io/cloud-sdk/docs/java/release-policy).
 - Switch from using `com.google.code.findbugs:annotations` to `com.github.spotbugs:spotbugs-annotations` in modules `cloudplatform-core-dwc-cf` and `recast-ai`.
@@ -91,27 +91,27 @@ To continue using the latest features outlined in the release notes for version 
     - Update [Neo Java Web API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-java-web-api) from `4.21.1` to `4.25.6`
   - Other dependency updates:
     - Major version updates:
-        - Add [Spotbugs annotations](https://search.maven.org/search?q=g:com.github.spotbugs%2BAND%2Ba:spotbugs-annotations) (`com.github.spotbugs:spotbugs-annotations`) version `4.7.0`
-        - Add [JCIP annotations](https://search.maven.org/search?q=g:net.jcip%2BAND%2Ba:jcip-annotations) (`net.jcip:jcip-annotations`) version `1.0`
-        - Remove [Findbugs annotations](https://search.maven.org/search?q=g:com.google.code.findbugs%2BAND%2Ba:annotations) (`com.google.code.findbugs:annotations`)
-        - Update [Woodstox Core](https://search.maven.org/search?q=g:com.fasterxml.woodstox%2BAND%2Ba:woodstox-core) (`com.fasterxml.woodstox:woodstox-core`) from `5.3.0` to `6.2.8`
+      - Add [Spotbugs annotations](https://search.maven.org/search?q=g:com.github.spotbugs%2BAND%2Ba:spotbugs-annotations) (`com.github.spotbugs:spotbugs-annotations`) version `4.7.0`
+      - Add [JCIP annotations](https://search.maven.org/search?q=g:net.jcip%2BAND%2Ba:jcip-annotations) (`net.jcip:jcip-annotations`) version `1.0`
+      - Remove [Findbugs annotations](https://search.maven.org/search?q=g:com.google.code.findbugs%2BAND%2Ba:annotations) (`com.google.code.findbugs:annotations`)
+      - Update [Woodstox Core](https://search.maven.org/search?q=g:com.fasterxml.woodstox%2BAND%2Ba:woodstox-core) (`com.fasterxml.woodstox:woodstox-core`) from `5.3.0` to `6.2.8`
     - Minor version updates:
-        - Update [ASM](https://search.maven.org/search?q=g:org.ow2.asm%2BAND%2Ba:asm) (`org.ow2.asm:asm`) from `9.2` to `9.3`
-        - Update [Java JWT](https://search.maven.org/search?q=g:com.auth0%2BAND%2Ba:java-jwt) (`com.auth0:java-jwt`) from `3.19.0` to `3.19.2`
-        - Update [Liquibase Core](https://search.maven.org/search?q=g:org.liquibase%2BAND%2Ba:liquibase-core) (`org.liquibase:liquibase-core`) from `4.9.0` to `4.10.0`
-        - Update [Lombok](https://search.maven.org/search?q=g:org.projectlombok%2BAND%2Ba:lombok) (`org.projectlombok:lombok`) from `1.18.22` to `1.18.24`
-        - Update [Swagger Annotations](https://search.maven.org/search?q=g:io.swagger%2BAND%2Ba:swagger-annotations) (`io.swagger:swagger-annotations`) from `1.6.5` to `1.6.6`
-        - Update [Error Prone Annotations](https://search.maven.org/search?q=g:com.google.errorprone%2BAND%2Ba:error_prone_annotations) (`com.google.errorprone:error_prone_annotations`) from `2.11.0` to `2.13.1`
-        - Update [Json Unit AssertJ](https://search.maven.org/search?q=g:net.javacrumbs.json-unit%2BAND%2Ba:json-unit-assertj) (`net.javacrumbs.json-unit:json-unit-assertj`) from `2.32.0` to `2.35.0`
-        - Update [Netty Bom](https://search.maven.org/search?q=g:io.netty%2BAND%2Ba:netty-bom) (`io.netty:netty-bom`) from `4.1.75` to `4.1.77`
-        - Update [Protobuf Java](https://search.maven.org/search?q=g:com.google.protobuf%2BAND%2Ba:protobuf-java) (`com.google.protobuf:protobuf-java`) from `3.19.4` to `3.20.1`
-        - Update [Reactor Core](https://search.maven.org/search?q=g:io.projectreactor%2BAND%2Ba:reactor-core) (`io.projectreactor:reactor-core`) from `3.4.16` to `3.4.17`
-        - Update [Rest Assured](https://search.maven.org/search?q=g:io.rest-assured%2BAND%2Ba:rest-assured) (`io.rest-assured:rest-assured`) from `5.0.0` to `5.0.1`
-        - Update [Wiremock](https://search.maven.org/search?q=g:com.github.tomakehurst%2BAND%2Ba:wiremock-jre8-standalone) (`com.github.tomakehurst:wiremock-jre8-standalone`) from `2.32.0` to `2.33.2`
-        - Update [Spring BOM](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-framework-bom) (`org.springframework:spring-framework-bom`) from `5.3.18` to `5.3.19`
-        - Update [Spring Security](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-security-bom) (`org.springframework:spring-security-bom`) from `5.6.2` to `5.6.3`
-        - Update [Jsonschema2Pojo Core](https://search.maven.org/search?q=g:org.jsonschema2pojo%2BAND%2Ba:jsonschema2pojo-core) (`org.jsonschema2pojo:jsonschema2pojo-core`) from `1.1.1` to `1.1.2`
-        - Update [Togglz Core](https://search.maven.org/search?q=g:org.togglz%2BAND%2Ba:togglz-core) (`org.togglz:togglz-core`) from `3.1.1` to `3.1.2`
+      - Update [ASM](https://search.maven.org/search?q=g:org.ow2.asm%2BAND%2Ba:asm) (`org.ow2.asm:asm`) from `9.2` to `9.3`
+      - Update [Java JWT](https://search.maven.org/search?q=g:com.auth0%2BAND%2Ba:java-jwt) (`com.auth0:java-jwt`) from `3.19.0` to `3.19.2`
+      - Update [Liquibase Core](https://search.maven.org/search?q=g:org.liquibase%2BAND%2Ba:liquibase-core) (`org.liquibase:liquibase-core`) from `4.9.0` to `4.10.0`
+      - Update [Lombok](https://search.maven.org/search?q=g:org.projectlombok%2BAND%2Ba:lombok) (`org.projectlombok:lombok`) from `1.18.22` to `1.18.24`
+      - Update [Swagger Annotations](https://search.maven.org/search?q=g:io.swagger%2BAND%2Ba:swagger-annotations) (`io.swagger:swagger-annotations`) from `1.6.5` to `1.6.6`
+      - Update [Error Prone Annotations](https://search.maven.org/search?q=g:com.google.errorprone%2BAND%2Ba:error_prone_annotations) (`com.google.errorprone:error_prone_annotations`) from `2.11.0` to `2.13.1`
+      - Update [Json Unit AssertJ](https://search.maven.org/search?q=g:net.javacrumbs.json-unit%2BAND%2Ba:json-unit-assertj) (`net.javacrumbs.json-unit:json-unit-assertj`) from `2.32.0` to `2.35.0`
+      - Update [Netty Bom](https://search.maven.org/search?q=g:io.netty%2BAND%2Ba:netty-bom) (`io.netty:netty-bom`) from `4.1.75` to `4.1.77`
+      - Update [Protobuf Java](https://search.maven.org/search?q=g:com.google.protobuf%2BAND%2Ba:protobuf-java) (`com.google.protobuf:protobuf-java`) from `3.19.4` to `3.20.1`
+      - Update [Reactor Core](https://search.maven.org/search?q=g:io.projectreactor%2BAND%2Ba:reactor-core) (`io.projectreactor:reactor-core`) from `3.4.16` to `3.4.17`
+      - Update [Rest Assured](https://search.maven.org/search?q=g:io.rest-assured%2BAND%2Ba:rest-assured) (`io.rest-assured:rest-assured`) from `5.0.0` to `5.0.1`
+      - Update [Wiremock](https://search.maven.org/search?q=g:com.github.tomakehurst%2BAND%2Ba:wiremock-jre8-standalone) (`com.github.tomakehurst:wiremock-jre8-standalone`) from `2.32.0` to `2.33.2`
+      - Update [Spring BOM](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-framework-bom) (`org.springframework:spring-framework-bom`) from `5.3.18` to `5.3.19`
+      - Update [Spring Security](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-security-bom) (`org.springframework:spring-security-bom`) from `5.6.2` to `5.6.3`
+      - Update [Jsonschema2Pojo Core](https://search.maven.org/search?q=g:org.jsonschema2pojo%2BAND%2Ba:jsonschema2pojo-core) (`org.jsonschema2pojo:jsonschema2pojo-core`) from `1.1.1` to `1.1.2`
+      - Update [Togglz Core](https://search.maven.org/search?q=g:org.togglz%2BAND%2Ba:togglz-core) (`org.togglz:togglz-core`) from `3.1.1` to `3.1.2`
 
 ### Fixed Issues
 
