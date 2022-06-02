@@ -423,6 +423,11 @@ Please use the `TrustAll` with great caution since it opens the gate to man in t
 If you use JWTs not issued by the XSUAA you can configure validation by the destination service using the `x_user_token.jwks` or `x_user_token.jwks_uri` property.
 For more details on the JWTs have a look at the more detailed guide(../../guides/how-to-retrieve-jwt.mdx).
 
+:::caution
+If you want to use a custom JWT in combination with the destination cache the JWT must contain the properties `zid` and `user_id`.
+These properties are used to construct the cache key.
+:::
+
 ### Additional Headers and Query Parameters on Destinations
 
 The destination service has a convention to define static headers and query parameters on destinations.
