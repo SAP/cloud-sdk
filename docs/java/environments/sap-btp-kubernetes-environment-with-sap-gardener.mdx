@@ -560,6 +560,7 @@ The following guide will show you what has to be done to create and use it.
    We already explained how to do it in the [section above](#known-connectivity-service-incompatibility).
    Additionally, to bind the secret represented by Kubernetes native YAML format, you need to convert it to a JSON to be consumable by the connectivity proxy.
    Retrieve the secret's content using the previous code snippet and convert it into a `JSON` before saving it. You can use the following as a guiding example.
+
    ```yaml
    apiVersion: v1
    kind: Secret
@@ -586,8 +587,10 @@ The following guide will show you what has to be done to create and use it.
        "token_service_url_pattern_tenant_key": "subaccount_subdomain"
    }'
    ```
+
    :::info
-   Note that we used the `stringData` field type instead of the default `data` field type to benefit from automatic base64 encoding, instead of doing it ourselves. This is a requirement of the connectivity proxy since it can't consume the data of the secret in YAML format yet.
+   Note that we used the `stringData` field type instead of the default `data` field type to benefit from automatic base64 encoding, instead of doing it ourselves.
+   This is a requirement of the connectivity proxy since it can't consume the data of the secret in YAML format yet.
    :::
 
 4. Now we need to download the CA certificate of the connectivity service and create a secret containing:
