@@ -64,7 +64,7 @@ Creating a Kyma environment instance can take up to 30 minutes.
 
 :::
 
-Once your Kyma environment is created, you can download a [Kubeconfig file](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/) directly from the BTP cockpit.
+Once your Kyma environment is created, you can download a [Kubeconfig file](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/) directly from the SAP BTP cockpit.
 
 ![Kubeconfig file download](sap-btp-kyma-environment/btp-cockpit-kubeconfig-url.png)
 
@@ -249,7 +249,7 @@ kubectl port-forward my-app-pod-XYZ :8080
 ```
 
 Please note that we skipped the `[local-port]` parameter in the command above.
-This will let `kubectl` choose a random available port on your local machine everytime you run the command.
+This will let `kubectl` choose a random available port on your local machine every time you run the command.
 
 If everything worked as expected, you should see an output similar to the following:
 
@@ -422,7 +422,7 @@ The resulting service binding can now be consumed with the SAP Cloud SDK.
 
 ### Expose your Application to the Internet
 
-During the next steps, you will configure and deploy an [Approuter](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/01c5f9ba7d6847aaaf069d153b981b51.html?locale=en-US) so that only authenticated users can access your application.
+During the next steps, you will configure and deploy an [approuter](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/01c5f9ba7d6847aaaf069d153b981b51.html?locale=en-US) so that only authenticated users can access your application.
 For that, you will need to create a simple application that uses the [@sap/approuter](https://www.npmjs.com/package/@sap/approuter) and starts it for this purpose.
 
 1. Based on the approuter application you used, containerize your application and push the image to a docker repository of your choice.

@@ -82,6 +82,16 @@ We strongly discourage users from running productive applications in debug mode!
 
 :::
 
+### I'm Observing a `DefaultHttpClientFactory not a subtype` Exception
+
+Application that rely on the SAP Java Buildpack, which is always true for application that require JCo, may throw the following exception when trying to access a RFC destination:
+
+```java
+java.util.ServiceConfigurationError: com.sap.cloud.security.client.HttpClientFactory: com.sap.cloud.security.client.DefaultHttpClientFactory not a subtype
+```
+
+This issue is caused by a dependency scope conflict and can be solved by following [our guidance](./guides/manage-dependencies#avoiding-scope-conflicts).
+
 ## OData Related Questions
 
 ### What Versions of OData Protocol Do You Support?
