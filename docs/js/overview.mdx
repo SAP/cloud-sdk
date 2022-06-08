@@ -15,27 +15,90 @@ keywords:
 ---
 
 import JsFeatureTable from '../components/JsFeatureTable';
-import BuildBadge from '../../src/sap/sdk-js/BuildBadge';
-import LicenseBadge from '../../src/sap/sdk-js/LicenseBadge';
-
-<BuildBadge /> <LicenseBadge />
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import ThemedImage from '@theme/ThemedImage';
 
 ## Quick Start
 
-For a quick start check out the [getting started](getting-started) section.
+For a quick start check out the ["Getting Started"](getting-started) page.
 
-## Why the SAP Cloud SDK for JavaScript?
+## What is the SAP Cloud SDK for JavaScript?
 
-The SAP Cloud SDK supports you end-to-end when developing applications that communicate with SAP solutions and services such as SAP S/4HANA Cloud, SAP SuccessFactors, and many others.
+The SAP Cloud SDK for JavaScript is a set of libraries that reduces the effort of building applications on SAP Business Technology Platform (SAP BTP).
+It abstracts common tasks on SAP BTP, so that you can concentrate on your business logic instead of writing boiler plate code.
+The image below shows the general architecture of an application built with the SAP Cloud SDK.
 
-Using the SAP Cloud SDK, you can reduce your effort when developing an application on SAP Business Technology Platform by building on best practices delivered by the SAP Cloud SDK.
-The SAP Cloud SDK provides Java libraries, JavaScript libraries, project templates, and a continuous delivery toolkit.
+<!-- vale off -->
+
+<ThemedImage
+  alt="General architecture"
+  sources={{
+    light: useBaseUrl('img/general-architecture_light.svg'),
+    dark: useBaseUrl('img/general-architecture_dark.svg')
+  }}
+  class="center"
+  width="100%"
+/>
+
+<!-- vale on -->
+
+The SAP Cloud SDK consists of two major parts:
+
+- the core libraries
+- the pregenerated client libraries
+
+### The Core Libraries
+
+The core libraries are the heart of the SAP Cloud SDK for JavaScript.
+Those libraries contain the request execution and connectivity logic as well as command line interfaces (CLIs) to generate OData and OpenApi clients.
+The image below shows the relationship between the individual core libraries.
+All core libraries are available as open source npm packages in the `@sap-cloud-sdk` scope on npm.
+
+<!-- vale off -->
+
+<ThemedImage
+  alt="Core packages"
+  sources={{
+    light: useBaseUrl('img/packages_light.svg'),
+    dark: useBaseUrl('img/packages_dark.svg')
+  }}
+  class="center"
+  width="500px"
+/>
+
+<!-- vale on -->
+
+#### `@sap-cloud-sdk/connectivity`
+
+The connectivity library provides functionality to read and exchange with services like the destination, XSUAA and connectivity service.
+It provides the basic types needed to reflect the concept of a [destination](features/connectivity/destination) throughout the SAP Cloud SDK for JavaScript.
+
+#### `@sap-cloud-sdk/http-client`
+
+The HTTP client library is a thin HTTP client, that allows you to execute requests by leveraging the concept of destinations.
+You can flexibly configure a request to your needs and send arbitrary HTTP requests to the given destination.
+
+#### `@sap-cloud-sdk/odata-v2`, `@sap-cloud-sdk/odata-v4`, and `@sap-cloud-sdk/openapi`
+
+The OData v2, v4, and OpenAPI libraries build the foundation for client libraries (custom and pregenerated).
+They contain OData and OpenAPI specific abstractions, that the client libraries use to expose their APIs.
+
+#### `@sap-cloud-sdk/generator` and `@sap-cloud-sdk/openapi-generator`
+
+The OData and OpenAPI generators are CLIs that generate client libraries based on the services' specifications (either EDMX format or OpenAPI/Swagger).
+You can use them to generate your own clients.
+The pregenerated client libraries are generated using these generators.
+
+### Pregenerated Client Libraries
+
+While you can generate your own libraries, the SAP Cloud SDK for JavaScript provides pregenerated client libraries for the SAP S/4HANA Cloud and On-Premise APIs as well as the SAP Workflow service.
+These libraries are published under the SAP Developer license agreement and are free to use.
 
 ## Feature Matrix
 
 <JsFeatureTable />
 
-## Difference to SAP OData library
+## Comparison with SAP OData Library
 
 There is a also a second open source library for consuming OData services developed by SAP.
 The [SAP OData library](https://github.com/SAP/odata-library) is developed by a different team than the SAP Cloud SDK.

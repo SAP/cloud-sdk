@@ -16,7 +16,7 @@ You can then access these services from your code using the client libraries.
 
 You can use the SAP Cloud SDK generator both as a command-line interface (CLI) and programmatically.
 
-All you need to use it, is a service metadata specification in the `EDMX` format (file ending can be `.edmx` or `.xml`).
+All you need to use is a service metadata specification in the `EDMX` format (file ending can be `.edmx` or `.xml`).
 
 ## Installation
 
@@ -57,7 +57,9 @@ This file is used for generation and contains a mapping from the original file n
 
 - `directoryName` - the name of the subdirectory the client code will be generated into.
 - `servicePath` - the URL path to be prepended before every request.
-  This is read from the EDMX file if available, otherwise, the value here will be `VALUE_IS_UNDEFINED`. In that case, it should be adjusted manually.
+  By default, this is read from the EDMX file, if available.
+  Otherwise, the value will be set as `VALUE_IS_UNDEFINED`, and an error will be logged.
+  In this case, you can specify `servicePath` in the `serviceMapping.json` manually and re-generate again.
 - `npmPackageName` - the name of the npm package, if a `package.json` is generated.
   This information is optional.
 
@@ -78,7 +80,7 @@ Example:
 By default, the generated module contains the following sources:
 
 - TypeScript code (`.ts`) representing request builders, entity representations and if needed representations for complex types as well as function/action imports.
-- All of the above as transpiled sources, including JavaScript sources (`.js`), type definition files (`.d.ts`) and sourcemap files (`.js.map` and `.d.ts.map`).
+- All of the above as transpiled sources, including JavaScript sources (`.js`), type definition files (`.d.ts`), and sourcemap files (`.js.map` and `.d.ts.map`).
 - An `.npmrc`.
 - A `package.json`.
 - A `typedoc.json`.
@@ -148,7 +150,7 @@ generate({
 });
 ```
 
-## NPM Packages vs. Local clients
+## npm Packages vs. Local clients
 
 The SAP Cloud SDK OData client generator generates TypeScript code.
 By default, the generator creates all sources needed for an npm package.

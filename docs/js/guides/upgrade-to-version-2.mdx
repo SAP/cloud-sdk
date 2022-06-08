@@ -14,7 +14,7 @@ Depending on your project, some steps might not be applicable.
 The To-Do list is:
 
 - [Upgrade ECMAScript runtime to "es2019" or higher](#update-ecmascript-runtime)
-- [Update Public API Clients - possible after beta phase](#update-public-api-clients)
+- [Update Public API Clients](#update-public-api-clients)
 - [Update Generated API Clients](#update-generated-api-clients)
 - [Replace Core Imports](#replace-core-imports)
 - [Adjust Serializing and Deserializing of Entities](#adjust-serializing-and-deserializing-of-entities)
@@ -46,11 +46,12 @@ Once these clients are available, follow the following steps:
 
 - Find the used clients in your `package.json`.
 - Change the used version of the client from 1.X.Y to 2.0.0.
-- Change the `builder()` call as described [here](#breaking-change-on-the-entitybuilder-api)
+- Update entity imports using the steps described [here](#update-entity-imports).
+- Change the `builder()` call as described [here](#breaking-change-on-the-entitybuilder-api).
 - Find the invocations of the request builders.
   This RegExp `import.*from.*@sap\/cloud\-sdk\-vdm\-.*` helps to find the files where the client is used.
-- Change the `requestBuillder()` call as described [here](#breaking-change-on-the-requestbuilder-api)
-- Change the `execute()` call as described [here](#breaking-change-on-the-execute-api)
+- Change the `requestBuilder()` call as described [here](#breaking-change-on-the-requestbuilder-api).
+- Change the `execute()` call as described [here](#breaking-change-on-the-execute-api).
 
 If you want to check a client before we publish it, follow the step below to generate it locally.
 
@@ -62,14 +63,14 @@ If you are unsure if you have generated clients use this RegExp `class.*RequestB
 We assume that you have installed the generator as a local `devDependency` in your project:
 
 - Find the installed generator in your `package.json`.
-- Change the used version from 1.X.Y to 2.0.0 and execute `npm install`.
+- Update the version from 1.X.Y to 2.0.0 using steps as described [here](#update-generator).
 - Regenerate the client with the updated generator as described [here](../features/odata/generate-odata-client).
-- Change the `builder()` call as described [here](#breaking-change-on-the-entitybuilder-api)
+- Change the `builder()` call as described [here](#breaking-change-on-the-entitybuilder-api).
 - Find the invocations of the request builders.
   This RegExp `import.*from.*EntityName.*` helps to find the files where the client is used.
   Replace `EntityName` with the name of your entities.
-- Change the `requestBuillder()` call as described [here](#breaking-change-on-the-requestbuilder-api)
-- Change the `execute()` call as described [here](#breaking-change-on-the-execute-api)
+- Change the `requestBuilder()` call as described [here](#breaking-change-on-the-requestbuilder-api).
+- Change the `execute()` call as described [here](#breaking-change-on-the-execute-api).
 
 ### Replace Core Imports
 
@@ -80,16 +81,15 @@ These imports need to be adjusted:
 
 - Find the imported method in your code.
 - Find the new package where the method is located as described [here](#how-to-find-the-new-packages).
-- Add the new package to the `package.json`
-- Remove `@sap-cloud-sdk/core` from the `package.json`.
+- Add the new package to the `package.json` and remove `@sap-cloud-sdk/core` as described [here](#how-to-install-20-dependencies).
 - Replace the old import with package name.
 
 Note that we reduced the number of objects in the stable public API.
 There are three cases:
 
-- The object is part of the public API: `{ publicApiMethod } from '@sap-cloud-sdk/connectivity'`
-- The object is moved to the internal API: `{ internalApiMethod } from '@sap-cloud-sdk/connectivity/internal'`
-- The object is removed without replacement see: [deprecated object list](#deprecated-methods)
+- The object is part of the public API: `{ publicApiMethod } from '@sap-cloud-sdk/connectivity'`.
+- The object is moved to the internal API: `{ internalApiMethod } from '@sap-cloud-sdk/connectivity/internal'`.
+- The object is removed without replacement see: [deprecated object list](#deprecated-methods).
 
 Your IDE should warn you if a module has no exported member with the given name.
 The use of the internal API is considered a temporary quick fix.
@@ -117,12 +117,41 @@ Please create a [support issue](https://github.com/SAP/cloud-sdk-js/issues/new/c
 
 ## Appendix
 
+### Update Entity Imports
+
+In version 1.X.Y of the SAP Cloud SDK, each entity (e.g. `BusinessPartner`) was imported directly:
+
+```
+import { BusinessPartner, BusinessPartnerAddress } from '@sap/cloud-sdk-vdm-business-partner-service';
+```
+
+This has been changed in version 2.0.
+
+- Each entity now has its API class (e.g. `MyEntityApi`).
+- A new service function (e.g. `myEntityService`) provides getters for instances of all the entities' API class, which can be consumed via [JavaScript Object Destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment).
+
+To access an entity, you need to import the service and destructure the API class objects.
+To do so, first update the imports following the steps:
+
+- Replace the entity imports with the service import. In most cases, the service name can be inferred from the npm package itself, i.e., everything after `@sap/cloud-sdk-vdm-` in camelCase. E.g.:
+
+```
+import { businessPartnerService } from '@sap/cloud-sdk-vdm-business-partner-service';
+```
+
+- Destructure this service to unpack the API objects you need.
+
+```
+const { businessPartnerApi, businessPartnerAddressApi } = businessPartnerService();
+```
+
+:::note
+The API object getters (e.g. `businessPartnerApi`) are denoted using camel case, whereas the corresponding classes (e.g. `BusinessPartnerApi`) follow pascal case.
+:::
+
 ### Breaking Change on the `EntityBuilder` API
 
 For the implementation of the [(de-)serializers](../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#customize-de-serialization), two changes are introduced in version 2.0:
-
-- Each entity now has its API class (e.g. `myEntityApi`).
-- A new `service` method (e.g. `myEntityService`) provides getters for instances of all the entities' API class.
 
 The static `.builder` method has been renamed to `.entityBuilder` and it is now an instance method on the entity API class:
 
@@ -149,10 +178,10 @@ myEntityApi
 
 ### Breaking Change on the `RequestBuilder` API
 
-To make the [middle ware concept](../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#customize-de-serialization) possible, it was necessary to add more state to the `requestBuillder`.
+To make the [middle ware concept](../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#customize-de-serialization) possible, it was necessary to add more state to the `requestBuilder`.
 
 All the static properties used to build select or filters are also now part of an instance and are exposed via a `schema` property.
-The `requestBuillder` is also not a static method anymore but an instance method of an API object:
+The `requestBuilder` is also not a static method anymore but an instance method of an API object:
 
 ```js
 //Version 1.X.Y
@@ -206,10 +235,8 @@ Prominent examples are the `executeHttpRequest()`, `executeRaw()` or `getDestina
 
 ```js
 //Version 1.X.Y
-getDestination(
-  { destinationName: 'myDestination', userJwt: 'yourJwt' },
-  { useCache: true }
-);
+getDestination('myDestination', { userJwt: 'yourJwt', useCache: true });
+
 executeHttpRequest(
   { destinationName: 'myDestination', userJwt: 'yourJwt' },
   { method: 'get' }
@@ -221,6 +248,7 @@ getDestination({
   jwt: 'yourJwt',
   useCache: true
 });
+
 executeHttpRequest(
   {
     destinationName: 'myDestination',
@@ -294,6 +322,48 @@ You can search for the method at two places:
 - You can search in the [API specification](https://sap.github.io/cloud-sdk/api/) and select a version 2.0.
 
 Note that for the `executeHttpRequest`, the new API offers all the destination retrieval options.
+
+### How to Install 2.0 Dependencies
+
+This section lists the commands for removing old dependencies and installing new dependencies in the correct version.
+
+To remove the `@sap-cloud-sdk/core` package from `node_modules` and `package.json`, run the below command in your project's terminal:
+
+```
+npm uninstall --save @sap-cloud-sdk/core
+```
+
+Once you have found the new packages to replace `@sap-cloud-sdk/core`, install them using the relevant commands below:
+
+```
+npm install @sap-cloud-sdk/http-client
+```
+
+```
+npm install @sap-cloud-sdk/connectivity
+```
+
+```
+npm install @sap-cloud-sdk/odata-v2
+```
+
+```
+npm install @sap-cloud-sdk/odata-v4
+```
+
+#### Update generator
+
+You can install the generator package as a `devDependency`:
+
+```
+npm install -D @sap-cloud-sdk/generator@latest
+```
+
+or globally:
+
+```
+npm install -g @sap-cloud-sdk/generator@latest
+```
 
 ### Deprecated Methods
 

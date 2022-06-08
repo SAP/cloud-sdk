@@ -350,12 +350,36 @@ MyEntity.requestBuilder()
 </Tabs>
 
 It will build the request URL like below:
-`https://my.s4-system.com/service-path/MyEntity(key='123')/to_SingleValueNavigationProperty1/to_SingleValueNavigationProperty2?$format=json`
+`https://my.s4-system.com/service-path/MyEntity(key='123')/to_SingleValueNavigationProperty1/to_SingleValueNavigationProperty2`
 where:
 
 - `/to_SingleValueNavigationProperty1/to_SingleValueNavigationProperty2` is the additional path that you provide from the parameters.
 - `https://my.s4-system.com/service-path/MyEntity(key='123')` is the path of the original request URL built by the SAP Cloud SDK.
-- `$format=json` is the query parameter.
+
+### Setting a Custom Timeout
+
+You can specify a timeout for the request via the `timeout()` method on the request builder:
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+```ts
+const { myEntityApi } = myEntityService();
+const httpResponse: HttpResponse = myEntityApi
+  .requestBuilder()
+  .getAll()
+  .timeout(1000)
+  .execute(destination);
+```
+
+</TabItem>
+</Tabs>
+
+The value is in milliseconds and the default value is 10000 (10 seconds)
+This timeout applies to the request send to the target system given in the destination.
+If a `CSRF` token is fetched from the target system the timeout applies also to this call.
+Note that there is also a second timeout option on the destination fetch options.
+This relates to the calls made to SAP BTP services like `destination-service` or XSUAA.
 
 ### Getting the Raw Response and the Original Request
 

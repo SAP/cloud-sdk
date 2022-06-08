@@ -42,7 +42,7 @@ To continue using the latest features outlined in the release notes for version 
 <!-- Copy and fill
 ## 3.xx.x - January 1, 2021
 
-[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.34.1) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.34.1) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
 
 ### Known issues
 
@@ -55,9 +55,234 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed Issues
 -->
 
+## 3.69.0 - June 03, 2022
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.69.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
+
+### Compatibility Notes
+
+- Deprecate the `testutil-*` (`com.sap.cloud.sdk.testutil:testutil-parent`, `com.sap.cloud.sdk.testutil:testutil-core`, and `com.sap.cloud.sdk.testutil:testutil-resources`) modules.
+  These will be removed from our public deliveries with the next upcoming major release of the SAP Cloud SDK.
+
+  **If you are relying on (one of) these modules for your testing scenarios, please let us know by reacting on [this GitHub issue](https://github.com/SAP/cloud-sdk/issues/818).**
+
+### Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [Neo Java Web API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-java-web-api) from `4.25.6` to `4.26.1`
+    - Update [Neo JavaEE7 WP API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-javaee7-wp-api) from `1.121.5` to `1.122.6`
+  - Other dependency updates:
+    - Minor version updates:
+      - Update [Spring BOM](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-framework-bom) (`org.springframework:spring-framework-bom`) from `5.3.19` to `5.3.20`
+      - Update [Spring Security](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-security-bom) (`org.springframework:spring-security-bom`) from `5.6.3` to `5.6.4`
+      - Update [Jackson Bom](https://search.maven.org/search?q=g:com.fasterxml.jackson%2BAND%2Ba:jackson-bom) (`com.fasterxml.jackson:jackson-bom`) from `2.13.2` to `2.13.3`
+      - Update [Jackson Databind](https://search.maven.org/search?q=g:com.fasterxml.jackson.core%2BAND%2Ba:jackson-databind) (`com.fasterxml.jackson.core:jackson-databind`) from `2.13.2.2` to `2.13.2.3`
+
+### Fixed Issues
+
+- Fix an issue with OData Batch request construction when the service path contains special characters. 
+
+## 3.68.0 - May 19, 2022
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.68.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
+
+### Compatibility Notes
+
+- To fix the high vulnerability [CVE-2022-22968](https://nvd.nist.gov/vuln/detail/CVE-2022-22968) in Spring, we had to update [Spring BOM](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-framework-bom) to `5.3.19` and to maintain compatibility had to also update [XSUAA Client Library](https://github.com/SAP/cloud-security-xsuaa-integration) to `2.11.16`.
+  Please note that if you are using SAP JAVA buildpack for your deployments use a static buildpack version `sap_java_buildpack_1_52` to avoid dependency conflicts and class loading issues.
+- SAP Buisiness Rules OpenAPI client library received breaking change to the field `List<TextPredefinedResults> predefinedResults` which is renamed to `List<TextPredefined> predefined` after updating to the latest version of the SAP Business Rules service
+- Deprecate non-productive `com.sap.cloud.sdk.s4hana.datamodel.odata.adapter.ODataCalendarAdapter` and child classes `ODataDateTimeAdapter`, `ODataDateTimeOffsetAdapter`, and `ODataTimeAdapter`.
+  It is planned to remove those classes with [SAP Cloud SDK v4](https://sap.github.io/cloud-sdk/docs/java/release-policy).
+- Switch from using `com.google.code.findbugs:annotations` to `com.github.spotbugs:spotbugs-annotations` in modules `cloudplatform-core-dwc-cf` and `recast-ai`.
+  No code changes are required if you are consuming these modules.
+  However, if you are planning on consuming these dependencies, remember to declare them directly in your POM as these are declared as [optional dependencies](https://maven.apache.org/guides/introduction/introduction-to-optional-and-excludes-dependencies.html).
+- The `DefaultLocaleFacade` does no longer consider the `ServletRequest` (accessed via the `RequestAccessor`) to determine the desired `Locale`.
+  Instead, the facade uses the `RequestHeaderAccessor` to derive the `Locale` based on the `Accept-Language` header - this change was already introduced in version `3.61.0`.
+  As a fallback, in case the header cannot be found, the default `Locale` for the server will be returned as before.
+  This change does not affect any productive scenarios.
+  However, there might be changes in tests, where the `RequestServlet#getLocales()` is mocked to return an arbitrary value that is neither part of the `Accept-Language` header nor the default system `Locale`.
+- Deprecate modules:
+  - `Recast AI`
+  - `Graph`
+  - `Services - SAP BTP Machine Learning`
+
+### Improvements
+
+- The SAP Business Rules OpenAPI client library was updated to the latest version of the Business Rules service.
+  See also the related compatibility note.
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [XSUAA Client Library](https://github.com/SAP/cloud-security-xsuaa-integration) from `2.11.15` to `2.11.16`
+    - Update [CF Logging Support](https://search.maven.org/search?q=g:com.sap.hcp.cf.logging%2BAND%2Ba:cf-java-logging-support-logback) (`com.sap.hcp.cf.logging:cf-java-logging-support-logback`) from `3.6.0` to `3.6.2`
+    - Update [Neo JavaEE7 WP API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-javaee7-wp-api) from `1.117.2` to `1.121.5`
+    - Update [Neo Java Web API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-java-web-api) from `4.21.1` to `4.25.6`
+  - Other dependency updates:
+    - Major version updates:
+      - Add [Spotbugs annotations](https://search.maven.org/search?q=g:com.github.spotbugs%2BAND%2Ba:spotbugs-annotations) (`com.github.spotbugs:spotbugs-annotations`) version `4.7.0`
+      - Add [JCIP annotations](https://search.maven.org/search?q=g:net.jcip%2BAND%2Ba:jcip-annotations) (`net.jcip:jcip-annotations`) version `1.0`
+      - Remove [Findbugs annotations](https://search.maven.org/search?q=g:com.google.code.findbugs%2BAND%2Ba:annotations) (`com.google.code.findbugs:annotations`)
+      - Update [Woodstox Core](https://search.maven.org/search?q=g:com.fasterxml.woodstox%2BAND%2Ba:woodstox-core) (`com.fasterxml.woodstox:woodstox-core`) from `5.3.0` to `6.2.8`
+    - Minor version updates:
+      - Update [ASM](https://search.maven.org/search?q=g:org.ow2.asm%2BAND%2Ba:asm) (`org.ow2.asm:asm`) from `9.2` to `9.3`
+      - Update [Java JWT](https://search.maven.org/search?q=g:com.auth0%2BAND%2Ba:java-jwt) (`com.auth0:java-jwt`) from `3.19.0` to `3.19.2`
+      - Update [Liquibase Core](https://search.maven.org/search?q=g:org.liquibase%2BAND%2Ba:liquibase-core) (`org.liquibase:liquibase-core`) from `4.9.0` to `4.10.0`
+      - Update [Lombok](https://search.maven.org/search?q=g:org.projectlombok%2BAND%2Ba:lombok) (`org.projectlombok:lombok`) from `1.18.22` to `1.18.24`
+      - Update [Swagger Annotations](https://search.maven.org/search?q=g:io.swagger%2BAND%2Ba:swagger-annotations) (`io.swagger:swagger-annotations`) from `1.6.5` to `1.6.6`
+      - Update [Error Prone Annotations](https://search.maven.org/search?q=g:com.google.errorprone%2BAND%2Ba:error_prone_annotations) (`com.google.errorprone:error_prone_annotations`) from `2.11.0` to `2.13.1`
+      - Update [Json Unit AssertJ](https://search.maven.org/search?q=g:net.javacrumbs.json-unit%2BAND%2Ba:json-unit-assertj) (`net.javacrumbs.json-unit:json-unit-assertj`) from `2.32.0` to `2.35.0`
+      - Update [Netty Bom](https://search.maven.org/search?q=g:io.netty%2BAND%2Ba:netty-bom) (`io.netty:netty-bom`) from `4.1.75` to `4.1.77`
+      - Update [Protobuf Java](https://search.maven.org/search?q=g:com.google.protobuf%2BAND%2Ba:protobuf-java) (`com.google.protobuf:protobuf-java`) from `3.19.4` to `3.20.1`
+      - Update [Reactor Core](https://search.maven.org/search?q=g:io.projectreactor%2BAND%2Ba:reactor-core) (`io.projectreactor:reactor-core`) from `3.4.16` to `3.4.17`
+      - Update [Rest Assured](https://search.maven.org/search?q=g:io.rest-assured%2BAND%2Ba:rest-assured) (`io.rest-assured:rest-assured`) from `5.0.0` to `5.0.1`
+      - Update [Wiremock](https://search.maven.org/search?q=g:com.github.tomakehurst%2BAND%2Ba:wiremock-jre8-standalone) (`com.github.tomakehurst:wiremock-jre8-standalone`) from `2.32.0` to `2.33.2`
+      - Update [Spring BOM](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-framework-bom) (`org.springframework:spring-framework-bom`) from `5.3.18` to `5.3.19`
+      - Update [Spring Security](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-security-bom) (`org.springframework:spring-security-bom`) from `5.6.2` to `5.6.3`
+      - Update [Jsonschema2Pojo Core](https://search.maven.org/search?q=g:org.jsonschema2pojo%2BAND%2Ba:jsonschema2pojo-core) (`org.jsonschema2pojo:jsonschema2pojo-core`) from `1.1.1` to `1.1.2`
+      - Update [Togglz Core](https://search.maven.org/search?q=g:org.togglz%2BAND%2Ba:togglz-core) (`org.togglz:togglz-core`) from `3.1.1` to `3.1.2`
+
+### Fixed Issues
+
+- Fix an issue with the OpenAPI client not being able to instantiate the class `ApiClient` when _Jackson_ formats other than _JSON_ are possible at runtime.
+- Fix an issue with some OData services unable to parse the syntax of batch request segments, that have special characters in entity key values.
+
+## 3.67.0 - April 14, 2022
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.67.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
+
+### Compatibility Notes
+
+- To fix the critical [CVE-2022-22965](https://tanzu.vmware.com/security/cve-2022-22965) vulnerability in Spring, we had to update [Spring BOM](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-framework-bom) to `5.3.18` and to maintain compatibility had to also update [XSUAA Client Library](https://github.com/SAP/cloud-security-xsuaa-integration) to `2.11.15`.
+  Please note that if you are using SAP JAVA buildpack for your deployments use a static buildpack version `sap_java_buildpack_1_49` to avoid dependency conflicts and class loading issues.
+- The module `auditlog-scp-cf` is considered **deprecated**.
+  The audit logging API used to implement the integration is outdated and no longer adheres to product guidelines.
+  In the future, Cloud SDK may provide an update leveraging the recommended API. Until then the users have an option to continue using the deprecated logic at their own risk, or directly consume the recommended audit logging API - without the Cloud SDK convenience layer.
+  Please, [create an issue](https://github.com/SAP/cloud-sdk/issues/new?assignees=&labels=feedback&template=feedback.md&title=) if you are interested in the consumption of `auditlog-scp-cf` via the SAP Cloud SDK.
+  This deprecated module will be kept in the upcoming SAP Cloud SDK v4.
+  The module targeting Neo in not deprecated and integration can be consumed as before.
+- The following modules have been marked as `deprecated` and will be removed with the next major release version (v4):
+  - `com.sap.cloud.sdk.services.currencyconversion.core`
+  - `com.sap.cloud.sdk.services.currencyconversion.adapter.integrationobjects`
+  - `com.sap.cloud.sdk.services.currencyconversion.datamodel.model`
+  - `com.sap.cloud.sdk.services.currencyconversion.datamodel.adapter`
+  - `com.sap.cloud.sdk.plugins:usage-analytics`
+  - `com.sap.cloud.sdk.plugins:usage-analytics-maven-plugin`
+
+### New Functionality
+
+- Add Rate Limiter to Resilience Capabilities
+
+### Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [XSUAA Client Library](https://github.com/SAP/cloud-security-xsuaa-integration) from `2.11.12` to `2.11.15`
+    - Update [CF Logging Support](https://search.maven.org/search?q=g:com.sap.hcp.cf.logging%2BAND%2Ba:cf-java-logging-support-logback) (`com.sap.hcp.cf.logging:cf-java-logging-support-logback`) from `3.5.7` to `3.6.0`
+    - Update [CDS4J Maven Plugin](https://search.maven.org/search?q=g:com.sap.cds%20a:cds4j-maven-plugin) (`com.sap.cds:cds4j-maven-plugin`) from `1.26.2` to `1.27.0`
+  - Other dependency updates:
+    - Major version updates:
+      - Update [Rest Assured](https://search.maven.org/search?q=g:io.rest-assured%2BAND%2Ba:rest-assured) (`io.rest-assured:rest-assured`) from `4.5.1` to `5.0.0`
+    - Minor version updates:
+      - Update [Json](https://search.maven.org/search?q=g:org.json%2BAND%2Ba:json) (`org.json:json`) from `20211205` to `20220320`
+      - Update [Java JWT](https://search.maven.org/search?q=g:com.auth0%2BAND%2Ba:java-jwt) (`com.auth0:java-jwt`) from `3.18.3` to `3.19.0`
+      - Update [liquibase-core](https://search.maven.org/search?q=g:org.liquibase%2BAND%2Ba:liquibase-core) (`org.liquiebase:liquibase-core`) from `4.8.0` to `4.9.0`
+      - Update [Fabric Gateway Java](https://search.maven.org/search?q=g:org.hyperledger.fabric%2BAND%2Ba:fabric-gateway-java) (`org.hyperledger.fabric:fabric-gateway-java`) from `2.2.3` to `2.2.4`
+      - Update [Jackson Databind](https://search.maven.org/search?q=g:com.fasterxml.jackson.core%2BAND%2Ba:jackson-databind) (`com.fasterxml.jackson.core:jackson-databind`) from `2.13.2` to `2.13.2.2`
+      - Update [Joda Time](https://search.maven.org/search?q=g:joda-time%2BAND%2Ba:joda-time) (`joda-time:joda-time`) from `2.10.13` to `2.10.14`
+      - Update [Reactor Core](https://search.maven.org/search?q=g:io.projectreactor%20a:reactor-core) (`io.projectreactor:reactor-core`) from `3.4.15` to `3.4.16`
+      - Update [Tomcat JDBC](https://search.maven.org/search?q=g:org.apache.tomcat%2BAND%2Ba:tomcat-jdbc) (`org.apache.tomcat:tomcat-jdbc`) and [Tomcat Annotations API](https://search.maven.org/search?q=g:org.apache.tomcat%2BAND%2Ba:tomcat-annotations-api) (`org.apache.tomcat:tomcat-annotations-api`) from `8.5.75` to `8.5.77`
+      - Update [Swagger Core V3](https://search.maven.org/search?q=g:io.swagger.core.v3%2BAND%2Ba:swagger-core) (`io.swagger.core.v3:swagger-core`) and [Swagger Core V3 models](https://search.maven.org/search?q=g:io.swagger.core.v3%2BAND%2Ba:swagger-models) (`io.swagger.core.v3:swagger-models`)from `2.1.7` to `2.1.13`
+      - Update [Swagger Core](https://search.maven.org/search?q=g:io.swagger%2BAND%2Ba:swagger-core) (`io.swagger:swagger-core`) from `1.6.2` to `1.6.5`
+      - Update [Spring BOM](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-framework-bom) (`org.springframework:spring-framework-bom`) from `5.3.15` to `5.3.18`
+      - Update [Spring Boot](https://search.maven.org/search?q=g:org.springframework.boot%2BAND%2Ba:spring-boot-starter-reactor-netty) (`org.springframework.boot:spring-boot-starter-reactor-netty`) from `2.6.3` to `2.6.6`
+      - Update [Spring Security](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-security-bom) (`org.springframework:spring-security-bom`) from `5.6.1` to `5.6.2`
+
+### Fixed Issues
+
+- Getters and Setters of OpenApi POJOs are no longer considered when using the `ApiClient` (without passing a `RestTemplate`) to serialize/deserialize data
+- Fixed an issue which caused incorrect encoding of Pipes (`|`) in OData queries
+- Fixed an issue where compilation errors occurred on nullable properties when using the OpenAPI generator
+
+## 3.66.0 - March 24, 2022
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.66.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
+
+### Compatibility Notes
+
+- We upgraded the major version of the `org.liquibase:liquibase-core` dependency to fix the known vulnerability [CVE-2022-0839](https://nvd.nist.gov/vuln/detail/CVE-2022-0839).
+  Please be aware that this change might impact the compatibility of the **deprecated** `com.sap.cloud.sdk.frameworks:liquibase` module.
+
+### Improvements
+
+- Improved the `exculdingFields` and `includingFields` options for OData V2 update requests. It now also allows for excluding complex and navigation properties.
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [Neo JavaEE7 WP API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-javaee7-wp-api) from `1.116.10` to `1.117.2`
+    - Update [Neo Java Web API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-java-web-api) from `4.20.7` to `4.21.1`
+  - Other dependency updates:
+    - Major version updates:
+      - Update [liquibase-core](https://search.maven.org/search?q=g:org.liquibase%2BAND%2Ba:liquibase-core) (`org.liquiebase:liquibase-core`) from `3.10.3` to `4.8.0`
+    - Minor version updates:
+      - Update [Guava](https://search.maven.org/search?q=g:com.google.guava%2BAND%2Ba:guava) (`com.google.guava:guava`) from `31.0.1` to `31.1.0`
+      - Update [Jackson Bom](https://search.maven.org/search?q=g:com.fasterxml.jackson%2BAND%2Ba:jackson-bom) (`com.fasterxml.jackson:jackson-bom`) from `2.13.1` to `2.13.2`
+      - Update [Logback Classic](https://search.maven.org/search?q=g:ch.qos.logback%2BAND%2Ba:logback-classic) (`ch.qos.logback:logback-classic`) from `1.2.10` to `1.2.11`
+      - Update [Mockito Core](https://search.maven.org/search?q=g:org.mockito%2BAND%2Ba:mockito-core) (`org.mockito:mockito-core`) from `4.3.1` to `4.4.0`
+      - Update [Mojo Executor](https://search.maven.org/search?q=g:org.twdata.maven%2BAND%2Ba:mojo-executor) (`org.twdata.maven:mojo-executor`) from `2.3.3` to `2.4.0`
+      - Update [Netty Bom](https://search.maven.org/search?q=g:io.netty%2BAND%2Ba:netty-bom) (`io.netty:netty-bom`) from `4.1.74` to `4.1.75`
+      - Update [OpenAPI Generator](https://search.maven.org/search?q=g:org.openapitools%2BAND%2Ba:openapi-generator) (org.openapitools:openapi-generator) from `5.0.0-beta3` to `5.4.0`
+
+### Fixed Issues
+
+- Fix an issue with destinations that have key-stores referencing more than one alias.
+- Fix an issue with certificate-based authentication for BTP services, e.g. _Destination Service_.
+
+## 3.65.0 - March 10, 2022
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.65.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
+
+### Compatibility Notes
+
+- The following modules have been marked as `deprecated` and will be removed with the next major release:
+
+  - `com.sap.cloud.sdk.frameworks.cxf`
+  - `com.sap.cloud.sdk.frameworks.eclipselink`
+  - `com.sap.cloud.sdk.frameworks.eclipselink-javaee`
+  - `com.sap.cloud.sdk.frameworks.javaee`
+  - `com.sap.cloud.sdk.frameworks.jaxrs`
+  - `com.sap.cloud.sdk.frameworks.jaxrs-gson`
+  - `com.sap.cloud.sdk.frameworks.liquibase`
+  - `com.sap.cloud.sdk.frameworks.liquibase-javaee`
+  - `com.sap.cloud.sdk.frameworks.spring-boot-multitenancy-scp-cf`
+  - `com.sap.cloud.sdk.frameworks.spring-web`
+  - `com.sap.cloud.sdk.frameworks.togglz`
+
+- For Media Entities in the OData V2 VDM the method `fetchAsStream()` is deprecated in favour of `fetchMediaStream()`.
+
+### New Functionality
+
+- Update of the OData VDM to the [newest release 2021 FPS1 of SAP S/4HANA On-Premise](https://help.sap.com/viewer/product/SAP_S4HANA_ON-PREMISE/2021/en-US).
+  The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA On-Premise](https://api.sap.com/products/SAPS4HANA/overview)
+  This includes completely new services, new operations in previously existing services, and new entity types in the existing Maven artifacts:
+  - [`s4hana-api-odata-v4-onpremise`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata-v4-onpremise) manages classes in package `com.sap.cloud.sdk.s4hana.onpremise.datamodel.odatav4.services`
+  - [`s4hana-api-odata-onpremise`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata-onpremise) manages classes in package `com.sap.cloud.sdk.s4hana.onpremise.datamodel.odata.services`
+
+### Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [Neo JavaEE7 WP API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-javaee7-wp-api) from `1.115.17` to `1.116.10`
+    - Update [Neo Java Web API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-java-web-api) from `4.19.13` to `4.20.7`
+  - Other dependency updates:
+    - Minor version updates:
+      - Update [Json Unit AssertJ](https://search.maven.org/search?q=g:net.javacrumbs.json-unit%2BAND%2Ba:json-unit-assertj) (`net.javacrumbs.json-unit:json-unit-assertj`) from `2.31.0` to `2.32.0`
+      - Update [Caffeine JCache](https://search.maven.org/search?q=g:com.github.ben-manes.caffeine%2BAND%2Ba:jcache) (`com.github.ben-manes.caffeine:jcache`) from `2.9.2` to `2.9.3`
+      - Update [Reactor Core](https://search.maven.org/search?q=g:io.projectreactor%2BAND%2Ba:reactor-core) (`io.projectreactor:reactor-core`) from `3.4.14` to `3.4.15`
+      - Update [Tomcat JDBC](https://search.maven.org/search?q=g:org.apache.tomcat%2BAND%2Ba:tomcat-jdbc) (`org.apache.tomcat:tomcat-jdbc`) and [Tomcat Annotations API](https://search.maven.org/search?q=g:org.apache.tomcat%2BAND%2Ba:tomcat-annotations-api) (`org.apache.tomcat:tomcat-annotations-api`) from `8.5.72` to `8.5.75`
+      - Update [Json Smart](https://search.maven.org/search?q=g:net.minidev%2BAND%2Ba:json-smart) (`net.minidev:json-smart`) from `2.4.7` to `2.4.8`
+
 ## 3.64.0 - February 24, 2022
 
-[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.64.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.64.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
 
 ### New Functionality
 
@@ -73,30 +298,29 @@ To continue using the latest features outlined in the release notes for version 
     - Update [JPaaS Security Utils](https://search.maven.org/search?q=g:com.sap.core.jpaas.security%2BAND%2Ba:com.sap.core.jpaas.security.utils) from `1.4.91` to `1.4.92`
   - Other dependency updates:
     - Minor version updates:
-        - Update [Gson](https://search.maven.org/search?q=g:com.google.code.gson%2BAND%2Ba:gson) (`com.google.code.gson:gson`) from `2.8.9` to `2.9.0`
-        - Update [Json Path](https://search.maven.org/search?q=g:com.jayway.jsonpath%2BAND%2Ba:json-path) (`com.jayway.jsonpath:json-path`) from `2.6.0` to `2.7.0`
-        - Update [Slf4j](https://search.maven.org/search?q=g:org.slf4j%2BAND%2Ba:slf4j-api) (`org.slf4j:slf4j-api`) from `1.7.35` to `1.7.36`
-        - Update [Spring BOM](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-framework-bom) (`org.springframework:spring-framework-bom`) from `5.3.14` to `5.3.15`
-        - Update [Swagger Annotations](https://search.maven.org/search?q=g:io.swagger%2BAND%2Ba:swagger-annotations) (`io.swagger:swagger-annotations`) from `1.6.4` to `1.6.5`
-        - Update [Togglz](https://search.maven.org/search?q=g:org.togglz%2BAND%2Ba:togglz-testing) (`org.togglz:togglz-testing`) from `3.1.0` to `3.1.1`
-        - Update [AMQP Client](https://search.maven.org/search?q=g:com.rabbitmq%2BAND%2Ba:amqp-client) (`com.rabbitmq:amqp-client`) from `5.14.1` to `5.14.2`
-        - Update [Jakarta Activation API](https://search.maven.org/search?q=g:jakarta.activation%2BAND%2Ba:jakarta.activation) (`jakarta.activation:jakarta.activation`) from `2.0.1` to `2.1.0`
-        - Update [Json Unit AssertJ](https://search.maven.org/search?q=g:net.javacrumbs.json-unit%2BAND%2Ba:json-unit-assertj) (`net.javacrumbs.json-unit:json-unit-assertj`) from `2.28.0` to `2.31.0`
-        - Update [Mojo Executor](https://search.maven.org/search?q=g:org.twdata.maven%2BAND%2Ba:mojo-executor) (`org.twdata.maven:mojo-executor`) from `2.3.2` to `2.3.3`
-        - Update [Netty BOM](https://search.maven.org/search?q=g:io.netty%2BAND%2Ba:netty-bom) (`io.netty:netty-bom`) from `4.1.73` to `4.1.74`
-        - Update [PMD Core](https://search.maven.org/search?q=g:net.sourceforge.pmd%2BAND%2Ba:pmd-core) (`net.sourceforge.pmd:pmd-core`) from `6.41.0` to `6.42.0`
-        - Update [Protobuf Java](https://search.maven.org/search?q=g:com.google.protobuf%2BAND%2Ba:protobuf-java) (`com.google.protobuf:protobuf-java`) from `3.19.3` to `3.19.4`
-        - Update [Rest Assured](https://search.maven.org/search?q=g:io.rest-assured%2BAND%2Ba:rest-assured) (`io.rest-assured:rest-assured`) from `4.5.0` to `4.5.1`
-        - Update [Spring Boot](https://search.maven.org/search?q=g:org.springframework.boot%2BAND%2Ba:spring-boot-starter-reactor-netty) (`org.springframework.boot:spring-boot-starter-reactor-netty`) from `2.6.2` to `2.6.3`
+      - Update [Gson](https://search.maven.org/search?q=g:com.google.code.gson%2BAND%2Ba:gson) (`com.google.code.gson:gson`) from `2.8.9` to `2.9.0`
+      - Update [Json Path](https://search.maven.org/search?q=g:com.jayway.jsonpath%2BAND%2Ba:json-path) (`com.jayway.jsonpath:json-path`) from `2.6.0` to `2.7.0`
+      - Update [Slf4j](https://search.maven.org/search?q=g:org.slf4j%2BAND%2Ba:slf4j-api) (`org.slf4j:slf4j-api`) from `1.7.35` to `1.7.36`
+      - Update [Spring BOM](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-framework-bom) (`org.springframework:spring-framework-bom`) from `5.3.14` to `5.3.15`
+      - Update [Swagger Annotations](https://search.maven.org/search?q=g:io.swagger%2BAND%2Ba:swagger-annotations) (`io.swagger:swagger-annotations`) from `1.6.4` to `1.6.5`
+      - Update [Togglz](https://search.maven.org/search?q=g:org.togglz%2BAND%2Ba:togglz-testing) (`org.togglz:togglz-testing`) from `3.1.0` to `3.1.1`
+      - Update [AMQP Client](https://search.maven.org/search?q=g:com.rabbitmq%2BAND%2Ba:amqp-client) (`com.rabbitmq:amqp-client`) from `5.14.1` to `5.14.2`
+      - Update [Jakarta Activation API](https://search.maven.org/search?q=g:jakarta.activation%2BAND%2Ba:jakarta.activation) (`jakarta.activation:jakarta.activation`) from `2.0.1` to `2.1.0`
+      - Update [Json Unit AssertJ](https://search.maven.org/search?q=g:net.javacrumbs.json-unit%2BAND%2Ba:json-unit-assertj) (`net.javacrumbs.json-unit:json-unit-assertj`) from `2.28.0` to `2.31.0`
+      - Update [Mojo Executor](https://search.maven.org/search?q=g:org.twdata.maven%2BAND%2Ba:mojo-executor) (`org.twdata.maven:mojo-executor`) from `2.3.2` to `2.3.3`
+      - Update [Netty BOM](https://search.maven.org/search?q=g:io.netty%2BAND%2Ba:netty-bom) (`io.netty:netty-bom`) from `4.1.73` to `4.1.74`
+      - Update [PMD Core](https://search.maven.org/search?q=g:net.sourceforge.pmd%2BAND%2Ba:pmd-core) (`net.sourceforge.pmd:pmd-core`) from `6.41.0` to `6.42.0`
+      - Update [Protobuf Java](https://search.maven.org/search?q=g:com.google.protobuf%2BAND%2Ba:protobuf-java) (`com.google.protobuf:protobuf-java`) from `3.19.3` to `3.19.4`
+      - Update [Rest Assured](https://search.maven.org/search?q=g:io.rest-assured%2BAND%2Ba:rest-assured) (`io.rest-assured:rest-assured`) from `4.5.0` to `4.5.1`
+      - Update [Spring Boot](https://search.maven.org/search?q=g:org.springframework.boot%2BAND%2Ba:spring-boot-starter-reactor-netty) (`org.springframework.boot:spring-boot-starter-reactor-netty`) from `2.6.2` to `2.6.3`
 
 ### Fixed Issues
 
 - Fix an issue that caused `PrincipalAccessor#getCurrentPrincipal()` to throw a `PrincipalAccessException` in K8s based environments
 
-
 ## 3.63.0 - February 10, 2022
 
-[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.63.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.63.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
 
 ### New Functionality
 
