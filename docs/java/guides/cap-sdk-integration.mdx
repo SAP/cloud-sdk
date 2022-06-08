@@ -143,6 +143,7 @@ Make sure that you also add the package name of your application.
 ### Wrap Asynchronous Calls
 
 **Please note:** From CAP/CDS version `1.23.0`, the additional wrapping using `threadContextExecutor.execute(..)` in the following example is not necessary but it is still required to wrap your calls with CAP's `RequestContextRunner`.
+The `executeWith` methods of _Accessor_ classes cannot be currently used to execute asynchronous operations in the CAP context.
 
 If your app uses asynchronous calls which spawn new threads or reuse pooled threads, the call must be decorated with the respective wrapper classes.
 This decoration is required to forward thread-specific information from the calling thread to the asynchronously running thread.
