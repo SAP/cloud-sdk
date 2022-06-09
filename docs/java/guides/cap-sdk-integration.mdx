@@ -126,9 +126,11 @@ We'll add a respective integration dependency to the POM file under the `srv` di
 You can learn more about how the multitenancy of the SAP Cloud SDK integrates with CAP in [this article](../features/multi-tenancy/multi-tenancy-thread-context#how-is-a-thread-context-created).
 :::
 
-### Enable the Component Scan for SAP Cloud SDK Package
 
-**Please note:** From CAP/CDS version `1.23.0`, the following step is no longer necessary.
+:::info
+This step is only required if you are using CAP/CDS versions earlier than `1.23.0`.
+<details>
+<summary>Enable the Component Scan for SAP Cloud SDK Package</summary>
 
 Let the Spring component scan crawl the SAP Cloud SDK package.
 We'll annotate the Spring Boot application class which is annotated with `@SpringBootApplication` as follows.
@@ -139,18 +141,37 @@ We'll annotate the Spring Boot application class which is annotated with `@Sprin
 ```
 
 Make sure that you also add the package name of your application.
+</details>
+:::
 
 ### Wrap Asynchronous Calls
-
-**Please note:** From CAP/CDS version `1.23.0`, the additional wrapping using `threadContextExecutor.execute(..)` in the following example is not necessary but it is still required to wrap your calls with CAP's `RequestContextRunner`.
-The `executeWith` methods of _Accessor_ classes cannot be currently used to execute asynchronous operations in the CAP context.
 
 If your app uses asynchronous calls which spawn new threads or reuse pooled threads, the call must be decorated with the respective wrapper classes.
 This decoration is required to forward thread-specific information from the calling thread to the asynchronously running thread.
 
-You need to use the `ThreadContextExecutor` from the SAP Cloud SDK (refer to the [ThreadContext documentation](https://sap.github.io/cloud-sdk/docs/java/features/multi-tenancy/multi-tenancy-thread-context/#what-is-a-thread-context)) in conjunction with the `RequestContextRunner` from [CAP](https://cap.cloud.sap/docs/java/provisioning-api#threading-requestcontext).
+For this purpose, you need to use the `RequestContextRunner` from [CAP](https://cap.cloud.sap/docs/java/provisioning-api#threading-requestcontext)
 
 Example:
+
+```java
+EventContext context;
+RequestContextRunner cdsContextRunner = context.getCdsRuntime().requestContext();
+
+Callable<Object> task = () -> cdsContextRunner.run(() -> ... ));
+```
+
+:::caution Caution
+The `executeWith` methods of _Accessor_ classes cannot be currently used to execute asynchronous operations in the CAP context.
+:::
+
+:::info Info
+This is only valid if you are using CAP/CDS versions earlier than `1.23.0`.
+<details>
+<summary>Wrap asynchronous calls </summary>
+
+You need to additionally wrap your calls using the `ThreadContextExecutor` from the SAP Cloud SDK (refer to the [ThreadContext documentation](https://sap.github.io/cloud-sdk/docs/java/features/multi-tenancy/multi-tenancy-thread-context/#what-is-a-thread-context)) in conjunction with the `RequestContextRunner` from [CAP](https://cap.cloud.sap/docs/java/provisioning-api#threading-requestcontext).
+
+So, the code snippet from above would look like:
 
 ```java
 EventContext context;
@@ -160,6 +181,8 @@ RequestContextRunner cdsContextRunner = context.getCdsRuntime().requestContext()
 Callable<Object> task = () -> cdsContextRunner.run(context ->
                                         threadContextExecutor.execute(() -> ... ));
 ```
+</details>
+:::
 
 :::danger Thread Lifecycle
 
