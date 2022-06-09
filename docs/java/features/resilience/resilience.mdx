@@ -304,12 +304,12 @@ You can find good explanations on how the individual patterns behave on the [doc
 Be aware that the patterns interact with each other.
 They are applied in the following order:
 
-1. Retries
-2. Fallbacks
-3. Circuit Breaker
-4. Rate Limiter
-5. Timeout
-6. Bulkhead
+1. Timeouts
+2. Bulkhead
+3. Rate Limiter
+4. Circuit Breaker
+5. Retries
+6. Fallback
 
 This means that every individual attempt triggered by retries will be limited by the timeout.
 Every failed retry will be accounted for in the circuit breaker.
