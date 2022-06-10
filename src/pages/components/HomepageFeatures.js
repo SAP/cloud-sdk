@@ -9,7 +9,7 @@ const FeatureList = [
   {
     title: <>SAP Cloud SDK for Java</>,
     link: 'docs/java/getting-started',
-    Svg: require('../../../static/img/logo-for-java.svg').default,
+    Svg: require('../../../static/img/logo-java.svg').default,
     badge: <MvnBadge />,
     description: (
       <>
@@ -26,7 +26,7 @@ const FeatureList = [
   {
     title: <>SAP Cloud SDK for JavaScript</>,
     link: 'docs/js/getting-started',
-    Svg: require('../../../static/img/logo-with-js.svg').default,
+    Svg: require('../../../static/img/logo-js.svg').default,
     badge: (
       <>
         <BuildBadge /> <LicenseBadge />

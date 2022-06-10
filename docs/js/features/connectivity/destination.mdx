@@ -391,6 +391,33 @@ In the section above we listed already a few of the options but this sections gi
   The value is in milliseconds and the default value is 10000 (10 seconds).
   There is a second timeout options on the request level, setting the timeout for the calls to the destination target.
 
+## Destination Properties
+
+The destination object may contain additional properties.
+The properties change the behavior how the SAP Cloud SDK handles the HTTP request at runtime.
+
+### SAP Client
+
+The property `sap-client` is considered by the SAP Cloud SDK.
+When this property is set, it is used as the header parameter `sap-client` with the specified value in the HTTP request to the target system.
+
+<img
+  alt="SAP client property on destination"
+  src={useBaseUrl('img/destination-property-sap-client.png')}
+  class="center"
+/>
+
+### Trust Configuration
+
+By default, SAP BTP only trusts certain certificate authorities.
+If you want to make HTTPS requests against systems that use certificates from other certificate authorities, you can configure the following properties:
+
+1. TrustStoreLocation: The SAP Cloud SDK adds the provided certificate in the `ca` property of the [node client](https://nodejs.org/api/tls.html#tlscreatesecurecontextoptions).
+2. TrustAll: The SAP Cloud SDK adds the inverted value as the [rejectUnauthorized](https://nodejs.org/api/tls.html#class-tlstlssocket)
+
+For additional information on trust configuration have a look at the more [detailed guide](../../guides/trust-and-key-stores.mdx).
+Please use the `TrustAll` with great caution since it opens the gate to man in the middle attacks.
+
 ### Additional Headers and Query Parameters on Destinations
 
 The destination service has a convention to define static headers and query parameters on destinations.
