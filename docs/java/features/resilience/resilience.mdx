@@ -304,8 +304,9 @@ They are applied in the following order:
 
 Fallback( Retry ( CircuitBreaker ( RateLimiter ( TimeLimiter ( Bulkhead ( Function ) ) ) ) ) )
 
-If you read from right to left, it shows you the order in which the aspects will be applied i.e `Fallbacks` are called last while `Bulkhead` is the first aspect applied.
-Hence,exceptions are also propagated from right to left.
+If you read from right to left, it shows you the order in which the aspects will be applied.
+For example, `Fallbacks` are called last while `Bulkhead` is the first aspect applied.
+Hence, exceptions are also propagated from right to left.
 
 Based on the order, the following inferences(not exhaustive) can be made:
 - Every timeout will trigger a retry, if configured.
