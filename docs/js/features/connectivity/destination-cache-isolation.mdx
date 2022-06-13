@@ -125,6 +125,7 @@ To create your custom destination cache provider, implement the `DestinationCach
 
 ```ts
 export interface DestinationCacheInterface {
+  hasKey(key: string): Promise<boolean>;
   get(key: string | undefined): Promise<Destination | undefined>;
   set(key: string | undefined, item: CacheEntry<Destination>): Promise<void>;
   clear(): Promise<void>;
