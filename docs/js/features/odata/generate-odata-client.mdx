@@ -11,16 +11,22 @@ keywords:
   - generate
 ---
 
-The generator allows you to generate custom OData client libraries for OData services.
-You can then access these services using the client libraries.
+The OData client generator allows you to generate custom OData client libraries for OData services.
+You can then access these services from your code using the client libraries.
 
-The SAP Cloud SDK generator can both be used as a command-line interface (CLI) and programmatically.
+You can use the SAP Cloud SDK generator both as a command-line interface (CLI) and programmatically.
 
-All you need to use it is a service metadata specification in the `EDMX` format (file ending can be `.edmx` or `.xml`).
+All you need to use is a service metadata specification in the `EDMX` format (file ending can be `.edmx` or `.xml`).
 
 ## Installation
 
-Run this command in your project's terminal to install the generator globally.
+Run this command in your project's terminal to install the generator as a `devDependency`:
+
+```sh
+npm install -D @sap-cloud-sdk/generator
+```
+
+or globally:
 
 ```sh
 npm install -g @sap-cloud-sdk/generator
@@ -28,8 +34,8 @@ npm install -g @sap-cloud-sdk/generator
 
 :::note
 
-The generator is included in the SAP Cloud SDK CLI.
-If you installed the CLI, you don't need to install the generator separately.
+If you want to generate JavaScript code and install the generator globally, you have to install the `@sap-cloud-sdk/odata-v2` or `@sap-cloud-sdk/odata-v4` package in your project.
+See #transpilation for more details.
 
 :::
 
@@ -51,7 +57,9 @@ This file is used for generation and contains a mapping from the original file n
 
 - `directoryName` - the name of the subdirectory the client code will be generated into.
 - `servicePath` - the URL path to be prepended before every request.
-  This is read from the EDMX file if available, otherwise, the value here will be `VALUE_IS_UNDEFINED`. In that case, it should be adjusted manually.
+  By default, this is read from the EDMX file, if available.
+  Otherwise, the value will be set as `VALUE_IS_UNDEFINED`, and an error will be logged.
+  In this case, you can specify `servicePath` in the `serviceMapping.json` manually and re-generate again.
 - `npmPackageName` - the name of the npm package, if a `package.json` is generated.
   This information is optional.
 
@@ -72,7 +80,7 @@ Example:
 By default, the generated module contains the following sources:
 
 - TypeScript code (`.ts`) representing request builders, entity representations and if needed representations for complex types as well as function/action imports.
-- All of the above as transpiled sources, including JavaScript sources (`.js`), type definition files (`.d.ts`) and sourcemap files (`.js.map` and `.d.ts.map`).
+- All of the above as transpiled sources, including JavaScript sources (`.js`), type definition files (`.d.ts`), and sourcemap files (`.js.map` and `.d.ts.map`).
 - An `.npmrc`.
 - A `package.json`.
 - A `typedoc.json`.
@@ -88,7 +96,7 @@ Run `generate-odata-client --help` for additional options.
 | Option, Aliases <div style={{ width: "225px" }}></div> |              Default              | Description                                                                                                                                                                                            |
 | :----------------------------------------------------- | :-------------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `-i`, `--inputDir` _(required)_                        |                 -                 |  This directory will be recursively searched for `.edmx`/`.xml` files.                                                                                                                                 |
-| `-o`,`--outputDir`, _(required)_                       |                 -                 |  Directory to save the generated code in.                                                                                                                                                              |
+| `-o`, `--outputDir` _(required)_                       |                 -                 |  Directory to save the generated code in.                                                                                                                                                              |
 | `-s`, `--serviceMapping`,                              | `<inputDir>/service-mapping.json` |  Configuration file to ensure consistent names between multiple generation runs with updated / changed metadata files. Will be generated if not existent.                                              |
 | `--forceOverwrite`                                     |              `false`              |  Exit when encountering a file that already exists. When set to true, it will be overwritten instead. Please note that compared to the `--clearOutputDir` option, this will not delete outdated files. |
 | `--clearOutputDir`                                     |              `false`              |  Deletes EVERYTHING in the specified output directory before generating code.                                                                                                                          |
@@ -141,3 +149,49 @@ generate({
   outputDir
 });
 ```
+
+## npm Packages vs. Local clients
+
+The SAP Cloud SDK OData client generator generates TypeScript code.
+By default, the generator creates all sources needed for an npm package.
+It transpiles the generated sources to JavaScript and provides a `package.json` for the client.
+This differs from the OpenAPI generator and will likely change in a future major version upgrade.
+
+If you want to publish a generated client to an npm registry, you can work with the default configuration.
+Please make sure to check intellectual property regulations before publishing to a public registry.
+
+If you want to use the generated client in your code without sharing it, you can omit the generation of a `package.json` with the `generatePackageJson` flag.
+Additionally, if you work with TypeScript you can skip transpilation with the `--generateJs` flag.
+The generated clients depend on the `@sap-cloud-sdk/odata-v2` or `@sap-cloud-sdk/odata-v4` packages, depending on the OData version of the service.
+You have to make sure, there is a local reference to these packages, by running:
+
+```sh
+npm install @sap-cloud-sdk/odata-v2
+```
+
+or:
+
+```sh
+npm install @sap-cloud-sdk/odata-v4
+```
+
+respectively.
+
+## Transpilation
+
+If you installed the generator globally and want to transpile the generated code, you have to install the required dependency (or `devDependency`) for your client (`sap-cloud-sdk/odata-v2` or `sap-cloud-sdk/odata-v4`) prior to generation.
+You do this by running:
+
+```sh
+npm install -D @sap-cloud-sdk/odata-v2
+```
+
+or:
+
+```sh
+npm install -D @sap-cloud-sdk/odata-v4
+```
+
+respectively.
+
+If you installed the generator as a `devDependency`, transpilation will work without additional steps.

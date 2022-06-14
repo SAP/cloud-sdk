@@ -18,15 +18,10 @@ keywords:
 
 ### How Often Do You Release a New SAP Cloud SDK Version?
 
-We release [bi-weekly](https://search.maven.org/artifact/com.sap.cloud.sdk/sdk-bom).
-All the features that are _Generally Available_ or _Beta_ get into the next release.
-You can find the latest SAP Cloud SDK version and the list of previous releases [here](release-notes-sap-cloud-sdk-for-java) or on [Maven Central](https://search.maven.org/artifact/com.sap.cloud.sdk/sdk-bom).
-
-### Do You Release Hotfixes?
-
-Yes, we do.
-They usually have a higher `patch` number according to [`semver`](https://semver.org/), i.e: 3.19.1 instead of 3.19.0.
-Check our [release notes](release-notes-sap-cloud-sdk-for-java) for more details.
+We release a [minor version](release-policy.mdx#minor-release-schedule) every two weeks.
+All the features that are _Generally Available_ or _Beta_ get into the next [release](https://search.maven.org/artifact/com.sap.cloud.sdk/sdk-bom).
+You can find the latest SAP Cloud SDK version and the list of previous releases [here](release-notes.mdx) or on [Maven Central](https://search.maven.org/artifact/com.sap.cloud.sdk/sdk-bom).
+Find more details in our [release policy](release-policy.mdx).
 
 ### Should I Update With Every Release?
 
@@ -86,6 +81,16 @@ Do not forget to revert any changes you made to your `mta.yml` (and/or environme
 We strongly discourage users from running productive applications in debug mode!
 
 :::
+
+### I'm Observing a `DefaultHttpClientFactory not a subtype` Exception
+
+Application that rely on the SAP Java Buildpack, which is always true for application that require JCo, may throw the following exception when trying to access a RFC destination:
+
+```java
+java.util.ServiceConfigurationError: com.sap.cloud.security.client.HttpClientFactory: com.sap.cloud.security.client.DefaultHttpClientFactory not a subtype
+```
+
+This issue is caused by a dependency scope conflict and can be solved by following [our guidance](./guides/manage-dependencies#avoiding-scope-conflicts).
 
 ## OData Related Questions
 

@@ -528,6 +528,7 @@ The default strategy is the _modifying entity update strategy_ which attempts to
 It issues a PATCH request and includes only the fields in the request payload whose values were _changed by its setter method_.
 Hence, fields whose values remain unchanged are not sent to the target system.
 Calling the method `includingFields(fields ...)` instructs the SAP Cloud SDK to add the mentioned fields explicitly in the update request.
+You could also add navigation properties to your request using the method.
 This is useful for backend systems that require some unchanged fields in the request payload for given reasons.
 
 This update strategy can be explicitly chosen by invoking the method `modifyingEntity()` while building the update request.
@@ -536,8 +537,8 @@ This update strategy can be explicitly chosen by invoking the method `modifyingE
 service.updateBusinessPartner(partner)
     //method call optional, since active by default
     .modifyingEntity()
-    //add the Business Partner Full Name explicitly to the update request
-    .includingFields(BusinessPartner.BUSINESS_PARTNER_FULL_NAME)
+    //add the Business Partner full name and address explicitly to the update request
+    .includingFields(BusinessPartner.BUSINESS_PARTNER_FULL_NAME,BusinessPartner.TO_BUSINESS_PARTNER_ADDRESS)
     .executeRequest(destination);
 ```
 
@@ -562,6 +563,16 @@ This update strategy can be explicitly chosen by invoking the method `replacingE
 ```java
 service.updateBusinessPartner(partner)
     .replacingEntity()
+    .executeRequest(destination);
+```
+
+For excluding read-only fields or dependent properties that are not tied to key properties from your `PUT` request payload, use `excludingFields()` on your update request
+It also allows you to exclude navigation properties from your request.
+
+```java
+service.updateBusinessPartner(partner)
+    .replacingEntity()
+    .excludingFields(BusinessPartner.BUSINESS_PARTNER_FULL_NAME,BusinessPartner.TO_BUSINESS_PARTNER_ADDRESS)
     .executeRequest(destination);
 ```
 

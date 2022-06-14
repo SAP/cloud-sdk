@@ -234,12 +234,31 @@ In the case that you want to log all requests sent and responses received by the
 
 #### On Cloud Foundry
 
-If you want to set the debug levels of your application running on Cloud Foundry (using the SAP Java Buildpack), you have to set the `SET_LOGGING_LEVEL`.
-This allows you to also change the log level at runtime, as we will see further down in this section.
+To set the debug levels of your application running on Cloud Foundry (using the SAP Java Buildpack) you can leverage the `SET_LOGGING_LEVEL` environment variable:
 
-To set the environment variable with every start of the application, it is advised to set it in the deployment descriptor of your project.
-This is typically a [Manifest](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjVv7TknpbsAhUJ36QKHaA_Bp4QFjAAegQIBBAC&url=https%3A%2F%2Fhelp.sap.com%2Fviewer%2F6a4563286d06419cb9927ef448c67432%2FCloud%2Fen-US%2Fe68e33b67c844689b07abf70e7ca5bc8.html&usg=AOvVaw1D_4MogbdbFNLOG1A1xeJy) or [MTA](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.03/en-US/33548a721e6548688605049792d55295.html) file in your project root directory.
-It usually looks something like this:
+```bash
+{ROOT: INFO, com.sap.cloud.sdk: INFO, other.package.to.log: TRACE}
+```
+
+Adjust the content of Java packages and their respective log levels according to your needs.
+For example, to log all requests sent and responses received by the Apache HttpClient you would set `SET_LOGGING_LEVEL` to:
+
+```bash
+{ROOT: INFO, com.sap.cloud.sdk: INFO, org.apache.http: DEBUG, org.apache.http.wire: ERROR}
+```
+
+You can set the `SET_LOGGING_LEVEL` environment variable via your deployment descriptor or via the CF CLI.
+
+:::tip Dynamically Changing Log Levels at Runtime
+Using the `SET_LOGGING_LEVEL` requires at least a restart of your application for changes to take effect.
+Alternatively, you can also change the log levels dynamically and even on a per-request basis via [Dynamic Logging](https://github.com/SAP/cf-java-logging-support/wiki/Dynamic-Log-Levels).
+:::
+
+**Setting the Log Levels Using the Deployment Descriptor:**
+
+You can conveniently set this environment variable in the deployment descriptor of your project.
+That way it will always be applied when (re-)deploying your application.
+In a [Manifest](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjVv7TknpbsAhUJ36QKHaA_Bp4QFjAAegQIBBAC&url=https%3A%2F%2Fhelp.sap.com%2Fviewer%2F6a4563286d06419cb9927ef448c67432%2FCloud%2Fen-US%2Fe68e33b67c844689b07abf70e7ca5bc8.html&usg=AOvVaw1D_4MogbdbFNLOG1A1xeJy) or [MTA](https://help.sap.com/viewer/4505d0bdaf4948449b7f7379d24d0f0d/2.0.03/en-US/33548a721e6548688605049792d55295.html) file the environment variable can be set like this:
 
 <Tabs defaultValue="manifest" values={[
 { label: 'Manifest', value: 'manifest', },
@@ -274,27 +293,20 @@ modules:
 </TabItem>
 </Tabs>
 
-In the case that you want to log all requests sent and responses received by the Apache HttpClient in your application on Cloud Foundry you would set `SET_LOGGING_LEVEL` to the following value:
+**Setting the Log Levels Using the Cloud Foundry CLI:**
+
+Leverage the `cf set-env` command to set an environment variable and apply the change via `cf restart`:
 
 ```bash
-{ROOT: INFO, com.sap.cloud.sdk: INFO, org.apache.http: DEBUG, org.apache.http.wire: ERROR}
+cf set-env <your-application> SET_LOGGING_LEVEL '{ROOT: INFO, com.sap.cloud.sdk: INFO, org.apache.http: DEBUG, org.apache.http.wire: ERROR}'
+cf restart <your-application>
 ```
 
-As mentioned earlier, it's possible to set the environment variable via the Cloud Foundry CLI.
-The SAP Java Buildpack should then be able to pick up these changes and propagate them to your application.
+Remember to change the levels back to their original value using the same approach, e.g. after debugging an issue.
 
-Assuming that you have the initial configuration shown above and you want to start logging the Apache HttpClient, you would now issue the following command on your command line:
-
-```bash
- cf set-env logging-documentation SET_LOGGING_LEVEL '{ROOT: INFO, com.sap.cloud.sdk: INFO, org.apache.http: DEBUG, org.apache.http.wire: ERROR}'
-```
-
-Don't forget to change the environment variable back to the previous state.
-In this example case the command would be the following:
-
-```bash
-cf set-env logging-documentation SET_LOGGING_LEVEL '{ROOT: INFO, com.sap.cloud.sdk: INFO}'
-```
+:::note
+Mind that a value set via the CLI will be overridden if you re-deploy your application with different environment variables.
+:::
 
 #### Recommendation for Spring Boot (e.g. SAP Cloud Application Programming Model)
 

@@ -33,9 +33,9 @@ module.exports = {
       darkTheme: require('prism-react-renderer/themes/dracula')
     },
     algolia: {
-      apiKey: '84d46c71e9f2445436400effad7c4e1b',
+      apiKey: '441c57554e5a0ca9338cc9f047fb10c8',
       indexName: 'sap_cloud-sdk',
-      // appId: 'app-id', // Optional, if you run the DocSearch crawler on your own
+      appId: 'E4A268JVO0',
       algoliaOptions: {} // Optional, if provided by Algolia
     },
     // ***************************************************************

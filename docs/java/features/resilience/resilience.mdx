@@ -15,7 +15,7 @@ keywords:
   - timeout
 ---
 
-The SAP Cloud SDK for Java provides abstractions for some frequently used resilience patterns like timeout, retry, or circuit breaker.
+The SAP Cloud SDK for Java provides abstractions for some frequently used resilience patterns like timeout, retry, rate limiter, or circuit breaker.
 Applying such patterns helps to make an application more resilient against failures it might encounter.
 
 The following article describes which resilience features the SAP Cloud SDK offers and how to apply them.
@@ -245,6 +245,13 @@ The following resilience patterns are available and can be configured in a Resil
       </td>
     </tr>
     <tr>
+      <td>Rate Limiter</td>
+      <td>
+        <em>RateLimiterConfiguration</em>
+      </td>
+      <td>Limit the number of operations accepted in a window of time</td>
+    </tr>
+    <tr>
       <td>Retry</td>
       <td>
         <em>
@@ -295,12 +302,14 @@ You can find good explanations on how the individual patterns behave on the [doc
 Be aware that the patterns interact with each other.
 They are applied in the following order:
 
-1. Timeouts
-2. Bulkhead
-3. Circuit Breaker
-4. Retries
-5. Fallbacks
+Fallback ( Retry ( CircuitBreaker ( RateLimiter ( TimeLimiter ( Bulkhead ( Function ) ) ) ) ) )
 
-This means that every individual attempt triggered by retries will be limited by the timeout.
-Every failed retry will be accounted for in the circuit breaker.
-Only if all retries failed the fallback function will be considered.
+If you read from right to left, it shows you the order in which the aspects will be applied.
+For example, `Fallbacks` are called last while `Bulkhead` is the first aspect applied.
+Hence, exceptions are also propagated from right to left.
+
+Based on the order, the following inferences (not exhaustive) can be made:
+- Every timeout will trigger a retry, if configured.
+- Only if all retries failed the fallback function will be considered.
+
+You can get more details in the Resilience4j [official documentation.](https://resilience4j.readme.io/docs/getting-started-3#aspect-order)
