@@ -126,9 +126,9 @@ We'll add a respective integration dependency to the POM file under the `srv` di
 You can learn more about how the multitenancy of the SAP Cloud SDK integrates with CAP in [this article](../features/multi-tenancy/multi-tenancy-thread-context#how-is-a-thread-context-created).
 :::
 
-
 :::info
 This step is only required if you are using CAP/CDS versions earlier than `1.23.0`.
+
 <details>
 <summary>Enable the Component Scan for SAP Cloud SDK Package</summary>
 
@@ -141,6 +141,7 @@ We'll annotate the Spring Boot application class which is annotated with `@Sprin
 ```
 
 Make sure that you also add the package name of your application.
+
 </details>
 :::
 
@@ -168,6 +169,7 @@ Please note that the `RequestScopedHttpClientCache` which is the default being u
 
 :::info Info
 In case you are using CAP/CDS versions earlier than `1.23.0`, additional steps are required.
+
 <details>
 <summary>Wrap asynchronous calls </summary>
 
@@ -190,6 +192,7 @@ Callable<Object> task = () -> cdsContextRunner.run(ctx -> {
                                 threadContextExecutor.execute(() -> operation());
                                 });
 ```
+
 </details>
 :::
 
