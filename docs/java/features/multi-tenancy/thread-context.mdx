@@ -64,6 +64,7 @@ If asynchronous operations need to access the information, it has to be propagat
 The SAP Cloud SDK offers a dedicated API to execute asynchronous operations while preserving the `ThreadContext`.
 
 Given any operation:
+
 ```java
 Callable myTask = () -> doStuff();
 // or
@@ -95,15 +96,17 @@ You can conveniently integrate this functionality to work with Springs `@Async` 
 Below configuration will ensure all methods annotated with `@Async` will have the `ThreadContext` available:
 
 ```java
- @EnableAsync
- @Configuration
- public class AsynchronousConfiguration implements AsyncConfigurer {
-   @Override
-   public Executor getAsyncExecutor() {
-     return ThreadContextExecutors.getDefault();
-   }
- }
- ```
+@EnableAsync
+@Configuration
+public class AsynchronousConfiguration implements AsyncConfigurer {
+
+  @Override
+  public Executor getAsyncExecutor() {
+    return ThreadContextExecutors.getDefault();
+  }
+}
+
+```
 
 You can read more about the `@Async` functionality [here](https://www.baeldung.com/spring-async).
 
@@ -130,11 +133,13 @@ You may want to run an asynchronous operation in a completely new or custom cont
 By default, the executor will transfer any existing context to the new thread.
 
 To run something in a completely new, empty context, use:
+
 ```java
 ThreadContextExecutors.submit(myTask, new DefaultThreadContext());
 ```
 
 By contrast, to pass on the current context, but modifying the tenant (and only the tenant), use:
+
 ```java
 Tenant myTenant = new DefaultTenant("foo");
 ThreadContextExecutor customExecutor = new ThreadContextExecutor()
@@ -142,7 +147,6 @@ ThreadContextExecutor customExecutor = new ThreadContextExecutor()
 
 ThreadContextExecutors.submit(myTask, customExecutor);
 ```
-
 
 ## How Can the Thread Context Be Used?
 
@@ -198,6 +202,7 @@ Tenant retrieveProviderTenant()
         .execute(TenantAccessor::getCurrentTenant);
 }
 ```
+
 :::
 
 ### Manipulating HTTP Headers
