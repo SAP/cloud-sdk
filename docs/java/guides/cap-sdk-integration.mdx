@@ -148,8 +148,9 @@ EventContext context;
 ThreadContextExecutor threadContextExecutor = new ThreadContextExecutor();
 RequestContextRunner cdsContextRunner = context.getCdsRuntime().requestContext();
 
-Callable<Object> task = () -> cdsContextRunner.run(ctx ->
-                                threadContextExecutor.execute(() -> ... ));
+Callable<Object> task = () -> cdsContextRunner.run(ctx -> {
+                                return threadContextExecutor.execute(() -> operation());
+                                });
 ```
 
 :::danger Thread Lifecycle
