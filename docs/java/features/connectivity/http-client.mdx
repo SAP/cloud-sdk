@@ -104,3 +104,15 @@ HttpClientAccessor.setHttpClientFactory(factory);
 ```
 
 From now on the custom factory will be used for every explicit and implicit HTTP request running through the SAP Cloud SDK.
+
+## Caching HttpClient
+
+By default, the SAP Cloud SDK uses the `RequestScopedHttpClientCache` to store `HttpClient` instances for the duration of a specific (incoming) request.
+The SAP Cloud SDK also offers the `TimeScopedHttpClientCache`, which keeps existing `HttpClient`s for a certain period of time.
+
+Switching the default cache can be done as follows:
+
+```java
+// run this code once in a setup step, afterwards HttpClient instances are kept for 5 minutes
+HttpClientAccessor.setHttpClientCache(new TimeScopedHttpClientCache(5, TimeUnit.MINUTES));
+```
