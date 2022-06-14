@@ -59,7 +59,7 @@ Please note that the `RequestScopedHttpClientCache` which is the default being u
 ## Running Asynchronous Operations
 
 As the name suggests, the `ThreadContext` is bound to a thread, more specifically to the one it was created in.
-If asynchronous operations need to access the information, it has to be propagated to the new threads.
+In consequence, other threads, i.e. asynchronous operations, cannot access the stored information if it hasn't been explicitly propagated.
 
 The SAP Cloud SDK offers a dedicated API to execute asynchronous operations while preserving the `ThreadContext`.
 
