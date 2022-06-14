@@ -121,7 +121,7 @@ When the cache option is enabled, the SAP Cloud SDK stores the fetched destinati
 However, in certain cases, a persistent or distributed cache may be more suitable according to your application architecture.
 For such cases where a different cache storage is desired, the SAP Cloud SDK allows you to plug-in your own implementation for destination cache.
 
-To create your custom destination cache provider, implement the `DestinationCacheInterface` interface and define the `get`, `set` and `clear` methods.
+To create your custom destination cache provider, implement the `DestinationCacheInterface` interface shown below and define the `get`, `set` and `clear` methods.
 
 ```ts
 export interface DestinationCacheInterface {
@@ -142,7 +142,11 @@ To do this, call the method `setDestinationCache` at the start of your applicati
 Pass your cache provider instance as an argument to this method.
 
 ```ts
-setDestinationCache(new CustomCacheProvider({ expirationTime }));
+class CustomCacheProvide implements DestinationCacheInterface{
+//your custom implementation
+}
+
+setDestinationCache(new CustomCacheProvider());
 ```
 
 All subsequent calls to fetch destinations will use the custom cache.
