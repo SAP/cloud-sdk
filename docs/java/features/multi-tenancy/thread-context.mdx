@@ -51,9 +51,9 @@ Additionally, if the `Authorization` header contains a `JWT` from the [`AppRoute
 - Pull the _Tenant_ and _Principal_ information from it
 
 :::tip Integration with CAP
-In case you are using CAP (with the `cds-integration-cloud-sdk` dependency) the Tenant and Principal information will **instead** be derived from the [CAP Request Context](https://cap.cloud.sap/docs/java/request-contexts).
+In case you are using CAP (with the `cds-integration-cloud-sdk` dependency) the Tenant,Principal information and Headers will **instead** be derived from the [CAP Request Context](https://cap.cloud.sap/docs/java/request-contexts).
 That also means that the `ThreadContext` will not be used when accessing this information.
-All other information (not Tenant or Principal) will still be derived and maintained via the `ThreadContext`.
+Please note that the `RequestScopedHttpClientCache` which is the default being used by the SAP Cloud SDK cannot work with this approach.
 :::
 
 ## How Can the Thread Context Be Used?
@@ -82,8 +82,8 @@ TenantAccessor.executeWithTenant(customTenant, () -> doStuff());
 ```
 
 :::caution CAP Integration
-The above does not apply for `TenantAccessor` and `PrincipalAccessor` when using the CAP framework (with the `cds-integration-cloud-sdk` dependency).
-When using CAP the Tenant and Principal information is derived from the `RequestContext`.
+The above does not apply for any accessors like `TenantAccessor`, `PrincipalAccessor`, `RequestHeaderAccessor` when using the CAP framework (with the `cds-integration-cloud-sdk` dependency).
+When using CAP the Tenant,Principal information and Headers are derived from the `RequestContext`.
 Please refer to [this section](https://cap.cloud.sap/docs/java/request-contexts#defining-requestcontext) on how to override existing values in the CAP context.
 :::
 
@@ -222,7 +222,7 @@ invokeAsynchronously(operationWithContext);
 ```
 
 :::caution CAP Integration
-In case you are using CAP the CAP Request Context also needs to be passed on (in addition to the `ThreadContext`).
+In case you are using CAP the CAP Request Context needs to be passed on instead of the `ThreadContext`.
 Please refer to [this guide](../../guides/cap-sdk-integration.mdx) on how to achieve this.
 :::
 
