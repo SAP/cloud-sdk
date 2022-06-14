@@ -162,6 +162,8 @@ Callable<Object> task = () -> cdsContextRunner.run(() -> ... ));
 
 :::caution Caution
 The `executeWith` methods of _Accessor_ classes cannot be currently used to execute asynchronous operations in the CAP context.
+
+Please note that the `RequestScopedHttpClientCache` which is the default being used by the SAP Cloud SDK cannot work with CAP integration, please use [`TimeScopedHttpClientCache`](../features/connectivity/sdk-connectivity-http-client#caching-httpclient) instead for caching `HttpClient`s.
 :::
 
 :::info Info
@@ -178,42 +180,17 @@ EventContext context;
 ThreadContextExecutor threadContextExecutor = new ThreadContextExecutor();
 RequestContextRunner cdsContextRunner = context.getCdsRuntime().requestContext();
 
+//If the operation returns something
 Callable<Object> task = () -> cdsContextRunner.run(ctx -> {
                                 return threadContextExecutor.execute(() -> operation());
                                 });
-```
-</details>
-:::
 
-:::danger Thread Lifecycle
-
-Be cautious with long-running, asynchronous operations.
-A propagated thread context will only persist as long as the thread lives that it was created on.
-Thus, when the parent thread dies the context will cease to exist and no longer be available in any of the threads.
-
-<details>
-<summary> Workaround </summary>
-You can work around this limitation with the following approach:
-
-```java
-EventContext context;
-
-RequestHeaderContainer requestHeaders =
-        RequestHeaderAccessor.tryGetHeaderContainer().getOrElse(RequestHeaderContainer.EMPTY);
-
-ThreadContextExecutor executor = new ThreadContextExecutor()
-        .withThreadContext(new DefaultThreadContext())
-        .withListeners(new RequestHeaderThreadContextListener(requestHeaders));
-
-RequestContextRunner cdsContextRunner = context.getCdsRuntime().requestContext();
-
+//If the operation does not return something
 Callable<Object> task = () -> cdsContextRunner.run(ctx -> {
-                                return threadContextExecutor.execute(() -> ...);
-                        });
+                                threadContextExecutor.execute(() -> operation());
+                                });
 ```
-
 </details>
-
 :::
 
 :::success Integration finished
