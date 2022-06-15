@@ -111,7 +111,7 @@ You can read more about the `@Async` functionality [here](https://www.baeldung.c
 
 ### Configuring the Executor
 
-The `ThreadContextExecutors` class leverages a default `ExecutorService` that can be configured.
+The `ThreadContextExecutors` class leverages an `ExecutorService` instance that can be configured.
 
 You can create a custom `ThreadContextExecutorService`, for example to use a different thread pool, via:
 
@@ -119,10 +119,11 @@ You can create a custom `ThreadContextExecutorService`, for example to use a dif
 ThreadContextExecutorService executor = DefaultThreadContextExecutorService
             .of(Executors.newFixedThreadPool(3));
 
+// use it directly:
 executor.submit(myTask);
 
-// You can also set this executor as the default for ThreadContextExecutors:
-ThreadContextExecutors.setDefault(executor);
+// or set it to be used by the static ThreadContextExecutors API:
+ThreadContextExecutors.setExecutor(executor);
 ThreadContextExecutors.submit(myTask);
 ```
 
