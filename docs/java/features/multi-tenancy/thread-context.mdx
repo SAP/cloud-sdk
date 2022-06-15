@@ -77,7 +77,8 @@ The operation can be executed asynchronously via:
 Future runningTask = ThreadContextExecutors.submit(myTask);
 ```
 
-This will use a default `ThreadContextExecutorService` based on a `CachedThreadPool` to create a new Thread and run the task.
+Operations that are submitted this way will be executed by a single instance of `ThreadContextExecutorService`.
+By default, this instance is based on a `CachedThreadPool`, which manages the concurrency internally.
 
 :::tip Spring Integration
 You can also use this functionality with Springs `@Async` annotation.
