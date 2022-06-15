@@ -141,6 +141,15 @@ By contrast, to pass on the current context, but modifying the tenant (and only 
 
 ```java
 Tenant myTenant = new DefaultTenant("foo");
+Callable myTaskWithTenant = () -> TenantAccessor.executeWithTenant(myTask, myTenant);
+
+ThreadContextExecutors.submit(myTaskWithTenant);
+```
+
+To avoid multiple wrappings, in particular when changing multiple values, you can also build a custom executor:
+
+```java
+Tenant myTenant = new DefaultTenant("foo");
 ThreadContextExecutor customExecutor = new ThreadContextExecutor()
             .withListeners(new TenantThreadContextListener(myTenant));
 
