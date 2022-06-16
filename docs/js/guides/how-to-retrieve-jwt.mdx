@@ -37,6 +37,17 @@ The flow is as follows:
 - XSUAA issues a JWT - see [here](## Obtain JWT programmatically) for details
 - approuter adds the JWT to the request headers and redirects the request to initially requested resource
 
+A JWT issued this way contains a `JKU` header property.
+This property points to the URL where you can obtain the certificate to verify the JWT.
+The URL must be from the XSUAA domain so that it is trusted and the JWT validation does not fail.
+
+Sometimes you want to use a JWT which is not issued by the XSUAA and approuter.
+Such tokens do not contain a `JKU` at all or a value with a different domain.
+In this case the SAP Cloud SDK does not validate the token, but the destination service does.
+You have to set the [destination properties](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/283cd2d1c72147a18c69daf681650f07.html) `x_user_token.jwks` or `x_user_token.jwks_uri` to provide the information to verify the custom JWT.
+
+If you use a custom JWT without the approuter and XSUAA service, it is your responsibility to do the access control in the application.
+
 :::caution Caution
 A JWT has a limited lifetime but is nevertheless a sensitive security object.
 Do not log complete JWTs in the application, share them with others or use online tools to decode them.
