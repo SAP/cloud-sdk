@@ -100,30 +100,6 @@ DestinationAccessor.getLoader().tryGetDestination(destinationName, options);
 
 See the section on [destination options](#building-destination-options) below.
 
-### Using the SAMLAssertion Authentication Type
-
-Using the [`SAMLAssertion`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/d81e1683bd434823abf3ceefc4ff157f.html) authentication types requires a different caching strategy for `HttpClient`s.
-This is because upon authentication at the target system, a session cookie is returned, which is stored within the used `HttpClient` instance.
-For subsequent calls, the service then expects authenticated clients to include their session cookie.
-
-By default, the SAP Cloud SDK uses the `RequestScopedHttpClientCache` to store `HttpClient` instances for the duration of a specific (incoming) request.
-Using this default strategy results into deleting the `HttpClient` (together with the session cookie) that was used to authorize at the target system, once the initial request has been handled.
-To avoid authorizing over and over again, the SAP Cloud SDK offers the `TimeScopedHttpClientCache`, which keeps existing `HttpClient`s for a certain period of time.
-These instances are then automatically reused for consecutive (incoming) requests, so that the session is retained.
-
-Switching the cache can be done as follows:
-
-```java
-// run this code once in a setup step, afterwards HttpClient instances are kept for 5 minutes
-HttpClientAccessor.setHttpClientCache(new TimeScopedHttpClientCache(5, TimeUnit.MINUTES));
-```
-
-:::note Hint
-
-The cached `HttpClient` instances are also isolated based on the tenant and principal.
-
-:::
-
 ## Supported Proxy Types
 
 | Proxy Type                                                                                                                    | Parameter Name           |
