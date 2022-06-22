@@ -51,8 +51,9 @@ Additionally, if the `Authorization` header contains a `JWT` from the [`AppRoute
 - Pull the _Tenant_ and _Principal_ information from it
 
 :::tip Integration with CAP
-In case you are using CAP (with the `cds-integration-cloud-sdk` dependency) the Tenant, Principal, and Headers will **instead** be derived from the [CAP Request Context](https://cap.cloud.sap/docs/java/request-contexts).
+In case you are using CAP (with the `cds-integration-cloud-sdk` dependency) the Tenant,Principal information and Headers will **instead** be derived from the [CAP Request Context](https://cap.cloud.sap/docs/java/request-contexts).
 That also means that the `ThreadContext` will not be used when accessing this information.
+Please note that the `RequestScopedHttpClientCache` which is the default being used by the SAP Cloud SDK cannot work with this approach.
 :::
 
 ## Running Asynchronous Operations
