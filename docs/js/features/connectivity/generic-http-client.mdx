@@ -137,3 +137,108 @@ You should consider the OData client if:
 - You want to update or create new entities.
   The OData Client has built-in `ETag` versions handling.
   With the generic client, you have to manage versions on your own.
+
+## Headers and Query parameters from different origins
+
+As partially described in the [destination guide](./destination#additional-headers-and-query-parameters-on-destinations) there are multiple possible origins for query parameters:
+
+- Provided by the user on request level.
+  These parameters are referred to as `custom` parameters.
+- Defined by the destination object or properties.
+- Introduced by the SAP Cloud SDK.
+  These parameters are referred to as `internal` parameters.
+
+In case there are parameters with the same key from multiple origins the priority is:
+
+1. `Custom` headers and parameters
+2. `Destination` headers and parameters
+3. `Internal` headers and parameters
+
+### Custom Headers and Query Parameters
+
+The code snippets demonstrate how to provide custom headers and parameters:
+
+```ts
+        executeHttpRequest( myDestination, {
+            headers: {
+                apiKey: 'my-api-key'
+            },
+            params: {
+                myParam: 'my-param'
+            }
+        });
+```
+
+### Headers and Query Parameters from Destination
+
+You set these parameters on the destination object as described [here](./destination#additional-headers-and-query-parameters-on-destinations).
+The example below shows how to get:
+- parsed parameters in the `queryParameters` property of the destination object
+- `authentication` value from the destination object, which will be used for the authentication header
+
+```ts
+const { queryParameters, authentication } = await getDestination({
+  destinationName: 'myDestination',
+  userJwt: 'yourJwt'
+});
+```
+
+### Provide Headers and Query Parameters with Origin information
+
+:::caution
+This is an SDK version 2.x feature.
+:::
+
+There are some use cases, when you want to define the priority of headers and parameters:
+- I want to test with my hard coded api key/JWT and ignore the ones from e.g. the destination
+- I want to have a default query parameter, which can be overwritten by the destination properties
+
+Check the example below, so you can define the headers and parameters with origin information:
+
+```ts
+        executeHttpRequestWithOrigin( myDestination, {
+            headers: {
+                custom: { apiKey: 'custom-header' },
+                requestConfig: { apiKey: 'default-header' }
+            },
+            params: {
+                custom: { myParam: 'custom-param' },
+                requestConfig: { myParam: 'default-param' }
+            }
+        });
+```
+
+## Encoding
+
+:::info
+This section applies to version 2 of the SAP Cloud SDK.
+For version 1 of the SAP Cloud SDK, encoding is done on OData related query parameters without a way to configure it.
+:::
+
+In the end, query parameters end up in the URL to the target system.
+Therefore special characters with a meaning in a URL need to be [% encoded](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier).
+The SAP Cloud SDK takes care of this encoding depending on the origin you use.
+For calls executed via a typed client and generic http client the encoding is done as:
+
+- `Custom` parameters are not encoded.
+  The idea behind this is to give you a way to send parameters with the highest priority to the target system as they are.
+- `Destination` parameters are encoded.
+- `Internal` parameters are encoded.
+
+For the `executeHttpRequest` method, an option is available to adjust the behavior.
+
+```ts
+const parameterEncoder = function (
+  params: Record<string, any>
+): Record<string, any> {
+  // your custom implementation
+};
+executeHttpRequest(destination, { parameterEncoder });
+```
+
+The `parameterEncoder` function is applied to the keys and values of all parameters of the request.
+In case you have the need to encode all parameters including custom ones, we exported a `encodeAllParameters` method to do that.
+Simply pass this method as the `parameterEncoder` to the `executeHttpRequest` call.
+
+Note that this option is not available for the OData and OpenApi clients.
+The typed clients take care of encoding already, and an additional encoding layer would lead to errors.
