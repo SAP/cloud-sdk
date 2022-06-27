@@ -14,6 +14,9 @@ keywords:
   - TypeScript
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 The SAP Cloud SDK provides the option to cache destinations for efficiency reasons.
 If a destination is stored in the cache the question about isolation arises.
 Should the destination be cached for all users?
@@ -28,8 +31,8 @@ All the discussed options apply to the `execute()` and `getDestination()` method
 The destination caching is disabled by default and you switch it on by the `useCache` flag:
 
 <Tabs groupId="version" defaultValue="major" values={[
-{ label: 'SDK 1.x', value: 'deprecated'},
-{ label: 'SDK 2.x', value: 'major'}]}>
+{ label: 'SDK 2.x', value: 'major'},
+{ label: 'SDK 1.x', value: 'deprecated'}]}>
 
 <TabItem value="major">
 
@@ -71,8 +74,8 @@ The SAP Cloud SDK would use isolation `UserTenant`, although `Tenant` would be s
 In such a case you can manually enforce weaker isolation:
 
  <Tabs groupId="version" defaultValue="major" values={[
- { label: 'SDK 1.x', value: 'deprecated'},
- { label: 'SDK 2.x', value: 'major'}]}>
+ { label: 'SDK 2.x', value: 'major'},
+ { label: 'SDK 1.x', value: 'deprecated'}]}>
 
  <TabItem value="major">
 
@@ -111,6 +114,42 @@ In version 1.X of the SAP Cloud SDK the isolation strategy is always TenantUser 
 You need to set it manually.
 You need to activate caching explicitly with the `useCache` option, even if you pass an isolation strategy.
 :::
+
+### Custom Destination-Service Cache
+
+When the cache option is enabled, the SAP Cloud SDK stores the fetched destinations in an in-memory cache.
+However, in certain cases, a persistent or distributed cache may be more suitable according to your application architecture.
+For such cases where a different cache storage is desired, the SAP Cloud SDK allows you to plug-in your own implementation for destination cache.
+
+To create your custom destination cache provider, implement the `DestinationCacheInterface` interface shown below and define the `get`, `set` and `clear` methods.
+
+```ts
+export interface DestinationCacheInterface {
+  hasKey(key: string): Promise<boolean>;
+  get(key: string | undefined): Promise<Destination | undefined>;
+  set(key: string | undefined, item: CacheEntry<Destination>): Promise<void>;
+  clear(): Promise<void>;
+}
+```
+
+Note that each item in the cache is represented using the type `CacheEntry<T>` which defines two properties:
+
+- `entry`, the item you want to store, and
+- `expires`, the expiration time for an individual cache item. This is optional.
+
+Once you have implemented your custom cache provider, you can tell the SAP Cloud SDK to use it in place of the default one.
+To do this, call the method `setDestinationCache` at the start of your application code, i.e., before the first calls to either the `getDestination` or the generic client's `executeHttpRequest` methods.  
+Pass your cache provider instance as an argument to this method.
+
+```ts
+class CustomCacheProvide implements DestinationCacheInterface{
+//your custom implementation
+}
+
+setDestinationCache(new CustomCacheProvider());
+```
+
+All subsequent calls to fetch destinations will use the custom cache.
 
 ## Register-Destination Cache
 

@@ -55,6 +55,75 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed Issues
 -->
 
+## 3.70.0 - June 16, 2022
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.70.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
+
+### New Functionality
+
+- Update of the OData VDM to the [newest release 2021 FPS2 of SAP S/4HANA On-Premise](https://help.sap.com/viewer/product/SAP_S4HANA_ON-PREMISE/2021/en-US).
+  The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA On-Premise](https://api.sap.com/products/SAPS4HANA/overview)
+  This includes completely new services, new operations in previously existing services, and new entity types in the existing Maven artifacts:
+  - [`s4hana-api-odata-v4-onpremise`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata-v4-onpremise) manages classes in package `com.sap.cloud.sdk.s4hana.onpremise.datamodel.odatav4.services`
+  - [`s4hana-api-odata-onpremise`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata-onpremise) manages classes in package `com.sap.cloud.sdk.s4hana.onpremise.datamodel.odata.services`
+
+  The following services are added:
+  - [BudgetPeriodService](https://api.sap.com/api/OP_API_BUDGETPERIOD_0001/overview)
+  - [BudgetPeriodHierarchyService](https://api.sap.com/api/OP_API_BUDGETPERIODHIERARCHY_0001/overview)
+  - [IncotermsService](https://api.sap.com/api/OP_API_SD_INCOTERMS_SRV_0001/overview)
+  - [FundsManagementFunctionalAreaService](https://api.sap.com/api/OP_API_FNDSMGMTFUNCTIONALAREA_0001/overview)
+  - [FundsCenterService](https://api.sap.com/api/OP_API_FUNDSCENTER_0001/overview)
+  - [GrantService](https://api.sap.com/api/OP_API_GRANT_0001/overview)
+  - [FundsManagementCommitmentAndActualItemService](https://api.sap.com/api/OP_API_FNDSMGMTCMTMTACTLITEM_0001/overview)
+  - [FundedProgramService](https://api.sap.com/api/OP_API_FUNDEDPROGRAM_0001/overview)
+  - [FundHierarchyService](https://api.sap.com/api/OP_API_FUNDHIERARCHY_0001/overview)
+  - [FundsManagementBudgetDocumentItemService](https://api.sap.com/api/OP_API_FNDSMGMTBDGTDOCITEM_0001/overview)
+  - [FundsCenterHierarchyService](https://api.sap.com/api/OP_API_FUNDSCENTERHIERARCHY_0001/overview)
+  - [FundedProgramHierarchyService](https://api.sap.com/api/OP_API_FUNDEDPROGRAMHIERARCHY_0001/overview)
+  - [FundService](https://api.sap.com/api/OP_API_FUND_0001/overview)
+  - [GrantHierarchyService](https://api.sap.com/api/OP_API_GRANTHIERARCHY_0001/overview)
+  - [CommitmentItemHierarchyService](https://api.sap.com/api/OP_API_COMMITMENTITEMHIER_0001/overview)
+  - [CommitmentItemService](https://api.sap.com/api/OP_API_COMMITMENTITEM_0001/overview)
+  - [ProjectClaimService](https://api.sap.com/api/OP_API_PROJECTCLAIM_0001/overview)
+  - [StatutoryReportingCategoryDefinitionService](https://api.sap.com/api/OP_STATRYRPTCATDEFINITION_0001/overview)
+  - [StatutoryReportingReportDefinitionService](https://api.sap.com/api/OP_STATRYRPTRPTDEFINITION_0001/overview)
+
+  The following services are updated:
+  - [CashSecurityDepositService](https://api.sap.com/api/OP_CASECURITYDEPOSIT_0001/overview)
+  - [CentralRequestForQuotationService](https://api.sap.com/api/OP_CENTRALREQUESTFORQUOTATION_0001/overview)
+  - [CentralSupplierQuotationService](https://api.sap.com/api/OP_CENTRALSUPPLIERQUOTATION_0001/overview)
+  - [ConditionContractService](https://api.sap.com/api/OP_API_CONDITION_CONTRACT_0001/overview)
+  - [FlexibleConstraintService](https://api.sap.com/api/OP_API_PMRPFLEXIBLECONSTRAINT_0001/overview)
+  - [InHouseRepairService](https://api.sap.com/api/OP_API_INHOUSEREPAIR_0001/overview)
+  - [PlannedOrderService](https://api.sap.com/api/OP_PLANNEDORDER_0001/overview)
+  - [ProjectDefinitionService](https://api.sap.com/api/OP_API_PROJECT_V3_0001/overview)
+  - [QualityTaskService](https://api.sap.com/api/OP_API_QUALITYTASK_0001/overview)
+  - [ReturnsInspectionService](https://api.sap.com/api/OP_API_RETURNSINSPECTION_0001/overview)
+  - [SettlementDocumentService](https://api.sap.com/api/OP_API_SETTLMT_DOC_0001/overview)
+  - [StatutoryReportingTaskService](https://api.sap.com/api/OP_STATUTORYREPORTINGTASK_0001/overview)
+  - [StorePickupOrderService](https://api.sap.com/api/OP_API_STOREPICKUPORDER_0001/overview)
+  - [VariantTableContentService](https://api.sap.com/api/OP_VARCONFIGNTABLECONTENT_0001/overview)
+  - [WarehouseDefectService](https://api.sap.com/api/OP_API_DEFECT_0001/overview)
+  - [ServiceConfirmationService](https://api.sap.com/api/OP_API_SERVICE_CONFIRMATION_SRV_0001/overview)
+  - [ServiceOrderService](https://api.sap.com/api/OP_API_SERVICE_ORDER_SRV_0001/overview)
+  - [ServiceOrderTemplateService](https://api.sap.com/api/OP_API_SERVICE_ORDER_TEMPLATE_SRV_0001/overview)
+
+### Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [Neo Java Web API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-java-web-api) from `4.26.4` to `4.27.5`
+    - Update [Neo JavaEE7 WP API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-javaee7-wp-api) from `1.122.6` to `1.123.12`
+    - Update [JPaaS Security Utils](https://search.maven.org/search?q=g:com.sap.core.jpaas.security%2BAND%2Ba:com.sap.core.jpaas.security.utils) from `1.4.92` to `1.4.93`
+  - Other dependency updates:
+    - Minor version updates:
+        - Update [Liquibase Core](https://search.maven.org/search?q=g:org.liquibase%2BAND%2Ba:liquibase-core) (`org.liquibase:liquibase-core`) from `4.10.0` to `4.11.0`
+        - Update [Togglz Core](https://search.maven.org/search?q=g:org.togglz%2BAND%2Ba:togglz-core) (`org.togglz:togglz-core`) from `3.1.2` to `3.2.1`
+        - Update [Plexus Utils](https://search.maven.org/search?q=g:org.codehaus.plexus%2BAND%2Ba:plexus-utils) (`org.codehaus.plexus:plexus-utils`) from `3.4.1` to `3.4.2`
+        - Update [Protobuf](https://search.maven.org/search?q=g:com.google.protobuf%2BAND%2Ba:protobuf-java) (`com.google.protobuf:protobuf-java`) from `3.20.1` to `3.21.1`
+        - Update [Reactor Core](https://search.maven.org/search?q=g:io.projectreactor%2BAND%2Ba:reactor-core) (`io.projectreactor:reactor-core`) from `3.4.17` to `3.4.18`
+        - Update [Rest Assured](https://search.maven.org/search?q=g:io.rest-assured%2BAND%2Ba:rest-assured) (`io.rest-assured:rest-assured`) from `5.0.1` to `5.1.0`
+
 ## 3.69.0 - June 03, 2022
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.69.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
@@ -81,7 +150,7 @@ To continue using the latest features outlined in the release notes for version 
 
 ### Fixed Issues
 
-- Fix an issue with OData Batch request construction when the service path contains special characters. 
+- Fix an issue with OData Batch request construction when the service path contains special characters.
 
 ## 3.68.0 - May 19, 2022
 
