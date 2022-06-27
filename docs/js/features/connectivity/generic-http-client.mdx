@@ -159,14 +159,14 @@ In case there are parameters with the same key from multiple origins the priorit
 The code snippets demonstrate how to provide custom headers and parameters:
 
 ```ts
-        executeHttpRequest( myDestination, {
-            headers: {
-                apiKey: 'my-api-key'
-            },
-            params: {
-                myParam: 'my-param'
-            }
-        });
+executeHttpRequest( myDestination, {
+  headers: {
+    apiKey: 'my-api-key'
+  },
+  params: {
+    myParam: 'my-param'
+  }
+});
 ```
 
 ### Headers and Query Parameters from Destination
@@ -191,21 +191,21 @@ This is an SDK version 2.x feature.
 
 In some situations you want to define the priority of headers and parameters:
 - You want to enforce a hard coded api key/JWT and ignore the ones from e.g. the destination
--You want a default query parameter, which can be overwritten by the destination properties
+- You want a default query parameter, which can be overwritten by the destination properties
 
 Check the example below, how you can define the headers and parameters with origin information:
 
 ```ts
-        executeHttpRequestWithOrigin( myDestination, {
-            headers: {
-                custom: { apiKey: 'custom-header' },
-                requestConfig: { apiKey: 'default-header' }
-            },
-            params: {
-                custom: { myParam: 'custom-param' },
-                requestConfig: { myParam: 'default-param' }
-            }
-        });
+executeHttpRequestWithOrigin( myDestination, {
+  headers: {
+    custom: { apiKey: 'custom-header' },
+    requestConfig: { apiKey: 'default-header' }
+  },
+  params: {
+    custom: { myParam: 'custom-param' },
+    requestConfig: { myParam: 'default-param' }
+  }
+});
 ```
 
 ## Encoding
