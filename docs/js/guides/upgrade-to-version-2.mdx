@@ -145,6 +145,15 @@ import { businessPartnerService } from '@sap/cloud-sdk-vdm-business-partner-serv
 const { businessPartnerApi, businessPartnerAddressApi } = businessPartnerService();
 ```
 
+:::caution
+You should use the object destructuring like the example above instead of calling the service multiple times for every API object, to avoid initialising multiple service instances.
+Here is a _bad_ example, that you should _not_ follow:
+```ts
+const businessPartnerApi = businessPartnerService().businessPartnerApi;
+const businessPartnerAddressApi = businessPartnerService().businessPartnerAddressApi;
+```
+:::
+
 :::note
 The API object getters (e.g. `businessPartnerApi`) are denoted using camel case, whereas the corresponding classes (e.g. `BusinessPartnerApi`) follow pascal case.
 :::
