@@ -423,3 +423,24 @@ const httpResponse: HttpResponse = MyEntity.requestBuilder()
     For those cases, you have to use <code>executeRaw</code> and use the <code>deserialize</code> function on the response data.
   </li>
 </ul>
+
+### Troubleshooting
+
+#### Deserialize Nested Navigation Properties
+
+When deserializing an OData response that contains nested navigation properties, a user reported an [issue](https://github.com/SAP/cloud-sdk-js/issues/2606) about some missing navigation properties.
+This might happen, if you don't use the object destructuring for getting multiple APIs.
+What you should do:
+
+```ts
+const { businessPartnerApi, businessPartnerAddressApi } =
+  businessPartnerService();
+```
+
+What you should avoid:
+
+```ts
+const businessPartnerApi = businessPartnerService().businessPartnerApi;
+const businessPartnerAddressApi =
+  businessPartnerService().businessPartnerAddressApi;
+```
