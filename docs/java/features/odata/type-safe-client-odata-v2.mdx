@@ -94,50 +94,6 @@ Or to fallback directly to the HTTP client level if that's not enough.
 In all the other situations the type-safe client is preferable and considered best practice.
 :::
 
-<!-- vale SAP.Headings = NO -->
-
-## Versions of OData v2 Client
-
-<!-- vale SAP.Headings = YES -->
-
-The SAP Cloud SDK has two versions of type-safe OData v2 client.
-
-:::tip use Tabs to see the API difference
-SAP Cloud SDK `3.29.1` releases the productive version of the new, improved OData client.
-Consequently, the APIs of the old OData client have been deprecated.
-:::
-
-### The New Improved Client
-
-As of SAP Cloud SDK `3.29.1`, we offer a generally available improved OData client.
-
-- High-performance thanks to optimized handling of metadata (fewer network requests)
-- Developed fully _In house_ and shares code with OData v4 client
-- Allows for faster feature development and bug fixes
-- Has standard and advanced APIs for typed and untyped client
-- More and better-implemented features
-
-### The Deprecated Old Client
-
-As of SAP Cloud SDK `3.29.1`, we have deprecated the old OData client.
-
-- Stable and well tested
-- Based on 3rd party dependencies, which slows down the release of advanced features
-- Doesn't share a code base with OData v4 client
-- Has good performance, but not optimized for optimal metadata handling
-
-### Which One to Choose?
-
-- We recommend using the new improved OData client for new development.
-- For existing code, we recommend [adjusting your code](#switch-to-improved-odata-vdm-beta) to switch to the new OData client.
-
-:::tip use Tabs to see the API difference
-
-Toggle between version Tabs in this document to see the API difference between these two OData v2 clients.
-Where API is the same we provide a universal code snippet
-
-:::
-
 ## Using the Fluent API
 
 The typed OData client consists of _service_ and _data model_ classes.
@@ -156,7 +112,7 @@ On an abstract level requests are generally build up according to the following 
 ```java
 result = service.operation()
     .withParameter(...)
-    .execute(destination);
+    .executeRequest(destination);
 ```
 
 - `operation` corresponds to the service's capabilities for entities e.g. `createEntity` or `readEntities`.
@@ -209,22 +165,6 @@ The SAP Cloud SDK will try to read version identifiers from responses and set th
 
 Consider the following example:
 
-<Tabs groupId="odataProtocol" defaultValue="v2" values={[ { label: 'OData V2', value: 'v2' }, { label: 'OData V2 (Deprecated)', value: 'v2-deprecated' } ]}>
-
-<TabItem value="v2-deprecated">
-
-```java
-partner = service.getBusinessPartnerByKey("id")
-                 .execute(destination);
-service.updateBusinessPartner(partner)
-                 .execute(destination);
-// the partner object is updated automatically
-```
-
-</TabItem>
-
-<TabItem value="v2">
-
 ```java
 partner = service.getBusinessPartnerByKey("id")
                  .executeRequest(destination);
@@ -233,9 +173,6 @@ response = service.updateBusinessPartner(partner)
 // update the partner reference
 partner = response.getModifiedEntity();
 ```
-
-</TabItem>
-</Tabs>
 
 On the read request, the SAP Cloud SDK will automatically try to extract the version identifier from the response and store it within the `partner` object.
 When updating it will be taken from there and sent with the `If-match` header.
@@ -247,28 +184,11 @@ If a service requires this header to be sent: Fetching the entity from the servi
 This behavior can be customized.
 The following code sends a `*` in the `IF-MATCH` header which essentially corresponds to a forced overwrite.
 
-<Tabs groupId="odataProtocol" defaultValue="v2" values={[ { label: 'OData V2', value: 'v2' }, { label: 'OData V2 (Deprecated)', value: 'v2-deprecated' } ]}>
-
-<TabItem value="v2">
-
 ```java
 service.updateBusinessPartner(partner)
                  .matchAnyVersionIdentifier()
                  .executeRequest(destination);
 ```
-
-</TabItem>
-
-<TabItem value="v2-deprecated">
-
-```java
-response = service.updateBusinessPartner(partner)
-                 .ignoreVersionIdentifier()
-                 .execute(destination);
-```
-
-</TabItem>
-</Tabs>
 
 #### Handling of Cross-Site Request Forgery Tokens
 
@@ -289,43 +209,6 @@ The properties that can be selected or expanded are represented via static _fiel
 There will be a field for each property.
 E.g. for the business partner entity one can find `BusinessPartner.FIRST_NAME` and `BusinessPartner.LAST_NAME`.
 
-<Tabs groupId="odataProtocol" defaultValue="v2" values={[ { label: 'OData V2', value: 'v2', }, { label: 'OData V2 (Deprecated)', value: 'v2-deprecated', }, ]}>
-
-<TabItem value="v2-deprecated">
-
-```java
-service.getBusinessPartnerByKey("id")
-    .select(BusinessPartner.FIRST_NAME, BusinessPartner.LAST_NAME, BusinessPartner.TO_BUSINESS_PARTNER_ADDRESS)
-    .execute(destination);
-```
-
-The above translates to the following query parameters:
-
-```
-$select=FirstName,LastName,to_BusinessPartnerAddress/*&$expand=to_BusinessPartnerAddress
-```
-
-One can also apply select again to the expanded object:
-
-```java
-service.getBusinessPartnerByKey("id")
-    .select(BusinessPartner.FIRST_NAME,
-        BusinessPartner.TO_BUSINESS_PARTNER_ADDRESS
-            .select(BusinessPartnerAddress.ADDRESS_ID,
-                BusinessPartnerAddress.CITY_CODE))
-    .execute(destination);
-```
-
-The above translates to the following query parameters:
-
-```
-$select=FirstName,to_BusinessPartnerAddress/AddressID,to_BusinessPartnerAddress/CityCode&$expand=to_BusinessPartnerAddress
-```
-
-</TabItem>
-
-<TabItem value="v2">
-
 ```java
 service.getBusinessPartnerByKey("id")
     .select(BusinessPartner.FIRST_NAME, BusinessPartner.LAST_NAME, BusinessPartner.TO_BUSINESS_PARTNER_ADDRESS)
@@ -354,9 +237,6 @@ The above translates to the following query parameters:
 ```
 $select=FirstName,to_BusinessPartnerAddress/AddressID,to_BusinessPartnerAddress/CityCode&$expand=to_BusinessPartnerAddress
 ```
-
-</TabItem>
-</Tabs>
 
 ### Filter
 
@@ -366,28 +246,6 @@ Filters are also built via the static property fields on entities.
 
 The following example:
 
-<Tabs groupId="odataProtocol" defaultValue="v2" values={[ { label: 'OData V2', value: 'v2', }, { label: 'OData V2 (Deprecated)', value: 'v2-deprecated', } ]}>
-
-<TabItem value="v2-deprecated">
-
-```java
-/*
-Get all business partners that either:
-  - Have first name 'Alice' but not last name 'Bob'
-  - Or have first name 'Mallory'
-*/
-service.getAllBusinessPartner()
-    .filter(BusinessPartner.FIRST_NAME.eq("Alice")
-        .and(BusinessPartner.LAST_NAME.ne("Bob"))
-        .or(BusinessPartner.FIRST_NAME.eq("Mallory"))
-    )
-    .execute(destination);
-```
-
-</TabItem>
-
-<TabItem value="v2">
-
 ```java
 /*
 Get all business partners that either:
@@ -401,9 +259,6 @@ service.getAllBusinessPartner()
     )
     .executeRequest(destination);
 ```
-
-</TabItem>
-</Tabs>
 
 Will translate to this filter parameter:
 
@@ -491,22 +346,6 @@ The accessors for custom fields respect multitenancy.
 
 You can also pass custom fields to select or filter system query options:
 
-<Tabs groupId="odataProtocol" defaultValue="v2" values={[ { label: 'OData V2', value: 'v2', }, { label: 'OData V2 (Deprecated)', value: 'v2-deprecated', } ]}>
-
-<TabItem value="v2-deprecated">
-
-```java
-service().getAllBusinessPartner()
-         .select(new BusinessPartnerField<>("ShoeSize"))
-         .select(()->"AnotherCustomField"))
-         .filter(new BusinessPartnerField<>("Shoesize").eq(42))
-         .execute(destination)
-```
-
-</TabItem>
-
-<TabItem value="v2">
-
 ```java
 service().getAllBusinessPartner()
          .select(new BusinessPartnerField<>("ShoeSize"))
@@ -514,9 +353,6 @@ service().getAllBusinessPartner()
          .filter(new BusinessPartnerField<>("Shoesize").eq(42))
          .executeRequest(destination)
 ```
-
-</TabItem>
-</Tabs>
 
 Please be aware that such an example can work for all tenants only if `ShoeSize` and `AnotherCustomField` are custom fields that have been defined by all tenants.
 
@@ -712,15 +548,6 @@ For example, there are cases where OData services do not support PUT requests.
 
 ## Error Handling
 
-<Tabs groupId="odataProtocol" defaultValue="v2" values={[ { label: 'OData V2', value: 'v2', }, { label: 'OData V2 (Deprecated)', value: 'v2-deprecated', }, ]}>
-
-<TabItem value="v2-deprecated">
-
-Coming soon.
-
-</TabItem>
-<TabItem value="v2">
-
 Sometimes requests fail and the SAP Cloud SDK provides a flexible way to deal with such failures on multiple levels.
 All `executeRequest` methods may throw a runtime exception (extending) `ODataException`.
 This will always contain the request which was (attempted to be) sent out as well as the cause of the exception.
@@ -757,49 +584,12 @@ catch( ODataServiceErrorException e ) {
 }
 ```
 
-</TabItem>
-</Tabs>
-
 ## Navigation Properties
 
 A navigation property describes a unidirectional relationship between two entity types.
 Like other properties, it has a name and declares a multiplicity, i.e. whether to expect a single or multiple values.
 Additionally, a navigation property allows for dedicated CRUD operations, that may not be exposed by default on entity sets of the service root.
 Such operations also provide a convenient way to access the nested resources of entities.
-
-<Tabs groupId="odataProtocol" defaultValue="v2" values={[ { label: 'OData V2', value: 'v2', }, { label: 'OData V2 (Deprecated)', value: 'v2-deprecated', }, ]}>
-
-<TabItem value="v2-deprecated">
-
-The typed OData client for OData v2 supports the following operations on (first-level only) navigation properties:
-
-- Create
-
-The below example leverages the creation of a nested entity in relation to an existing entity:
-
-```java
-/*
-Create a new address for a specific business partner.
-*/
-BusinessPartner businessPartnerById = BusinessPartner.builder().businessPartner("123").build();
-BusinessPartnerAddress addressItem = BusinessPartnerAddress.builder().country("DE").build();
-
-service.createBusinessPartnerAddress( addressItem )
-    .asChildOf( businessPartnerById, BusinessPartner.TO_BUSINESS_PARTNER_ADDRESS )
-    .execute( destination );
-```
-
-This sample API call translates to the following service request:
-
-```
-POST /ODataService/API_BUSINESS_PARTNER/A_BusinessPartner(123)/to_BusinessPartnerAddress
-{
-  "country": "de"
-}
-```
-
-</TabItem>
-<TabItem value="v2">
 
 The typed OData client for OData v2 supports the following operations on (first-level only) navigation properties:
 
@@ -827,10 +617,6 @@ POST /ODataService/API_BUSINESS_PARTNER/A_BusinessPartner(123)/to_BusinessPartne
   "country": "de"
 }
 ```
-
-</TabItem>
-
-</Tabs>
 
 ## Server-Driven Paging
 
@@ -889,25 +675,3 @@ Iterable<List<BusinessPartner>> iterablePagesOfEntities = service
 :::caution
 Please note that the OData service is not obliged to respect this setting.
 :::
-
-## Switch to Improved OData v2 Type-Safe Client
-
-- For any operation type, replace a call to `execute` with `executeRequest`.
-
-```java
-service.createBusinessPartner(partner).executeRequest(destination);
-```
-
-- For _Create_ and _Update_ operations, call `getModifiedEntity()` to obtain the created entity representation.
-
-```java
-final BusinessPartner partner = service.createBusinessPartner(partner)
-                                       .executeRequest(destination)
-                                       .getModifiedEntity();
-```
-
-- `executeRequest` throws the runtime exception `ODataException` and respective subclasses.
-  Hence, adjust your exception handling as described under the tab _OData V2 (Beta)_ in the section [Error Handling](#error-handling).
-  Note that any `ErrorResultHandler` registered by `withErrorHandler()` is not considered.
-- Remove any call to `cachingMetadata()` and `withoutCachingMetadata()` as they are obsolete.
-- Remove any call to `ignoringVersionIdentifier(boolean)` or `ignoreVersionIdentifier()`. Use `matchAnyVersionIdentifier()` or `disableVersionIdentifier()` instead.
