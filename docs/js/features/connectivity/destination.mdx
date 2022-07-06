@@ -190,12 +190,12 @@ We have a separate [guide](./destination-cache-isolation.mdx) on the cache optio
 
 ### Service Binding Environment Variables
 
-The service credentials, in other words `VCAP_SERVICES` environment variables represent services bound to the destination.
-If you want to consume such a service the SAP Cloud SDK can create a destination from the service binding for you.
+The service credentials, in other words `VCAP_SERVICES` environment variables, represent services bound to the destination.
+If you want to consume such a service, the SAP Cloud SDK can create a destination from the service binding for you.
 You do not need to create a dedicated destination in the destination service.
 Provide the name of the service instance as the destination name and the SAP Cloud SDK will:
 - Find the service binding with the given name
-- Extract the URL form the service binding
+- Extract the URL from the service binding
 - Fetch a client-credential-grant token if needed
 - Return a destination containing the token and URL
 
@@ -207,8 +207,8 @@ Currently, 5 services types are supported out of the box:
 - `workflow`
 - `destination`
 
-If you need a destination for a different service create a custom `serviceBindingTransformFn` and pass it with `destinationFetchOptions` or consider creating a [feature request](https://github.com/SAP/cloud-sdk-js/issues/new?assignees=&labels=feature+request&template=feature_request.md&title=).
-Contributions providing transform function are highly welcome.
+If you need a destination for a different service, create a custom `serviceBindingTransformFn` and pass it with `destinationFetchOptions` or consider creating a [feature request](https://github.com/SAP/cloud-sdk-js/issues/new?assignees=&labels=feature+request&template=feature_request.md&title=).
+Contributions providing transform functions are highly welcome.
 
 :::note
 The `serviceBindingTransformFn` was introduced in version 2.0 of the SAP Cloud SDK.
