@@ -190,27 +190,30 @@ We have a separate [guide](./destination-cache-isolation.mdx) on the cache optio
 
 ### Service Binding Environment Variables
 
-The service credentials, in other words `VCAP_SERVICES` environment variables, may contain a destination.
-If you want to use this information, the name of the service instance must be provided as the destination name.
-Currently, two services types are supported out of the box `business-logging` and `s4-hana-cloud` with the following transformation functions:
+The service credentials, in other words `VCAP_SERVICES` environment variables, represent services bound to the destination.
+If you want to consume such a service, the SAP Cloud SDK can create a destination from the service binding for you.
+You do not need to create a dedicated destination in the destination service.
+Provide the name of the service instance as the destination name and the SAP Cloud SDK will:
+- Find the service binding with the given name
+- Extract the URL from the service binding
+- Fetch a client-credential-grant token if needed
+- Return a destination containing the token and URL
 
-```ts
-//business-logging
-(serviceBinding) => {
-  url: serviceBinding.credentials.writeUrl,
-  authentication: 'OAuth2ClientCredentials',
-  username: serviceBinding.credentials.uaa.clientid,
-  password: serviceBinding.credentials.uaa.clientsecret
-};
+Currently, 5 services types are supported out of the box:
 
-//s4-hana-cloud
-(serviceBinding) => {
-  url: serviceBinding.credentials.URL,
-  authentication: 'BasicAuthentication',
-  username: serviceBinding.credentials.User,
-  password: serviceBinding.credentials.Password
-};
-```
+- `business-logging`
+- `s4-hana-cloud`
+- `saas-registry`
+- `workflow`
+- `destination`
+- `service-manager`
+
+If you need a destination for a different service, create a custom `serviceBindingTransformFn` and pass it with `destinationFetchOptions` or consider creating a [feature request](https://github.com/SAP/cloud-sdk-js/issues/new?assignees=&labels=feature+request&template=feature_request.md&title=).
+Contributions providing transform functions are highly welcome.
+
+:::note
+The `serviceBindingTransformFn` was introduced in version 2.0 of the SAP Cloud SDK.
+:::
 
 ### Destination Service
 

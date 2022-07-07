@@ -145,11 +145,13 @@ import { businessPartnerService } from '@sap/cloud-sdk-vdm-business-partner-serv
 const { businessPartnerApi, businessPartnerAddressApi } = businessPartnerService();
 ```
 
-:::caution
+:::danger
 You should use the object destructuring like the example above instead of calling the service multiple times for every API object, to avoid initialising multiple service instances.
-Here is a _bad_ example, that you should _not_ follow:
+Here is a **BAD** example, that you should **NOT** follow:
 ```ts
+// do NOT do this
 const businessPartnerApi = businessPartnerService().businessPartnerApi;
+// do NOT do this
 const businessPartnerAddressApi = businessPartnerService().businessPartnerAddressApi;
 ```
 :::
