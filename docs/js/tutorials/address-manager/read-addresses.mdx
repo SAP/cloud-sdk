@@ -55,8 +55,9 @@ import {
 @Injectable()
 export class BusinessPartnerService {
   getAllBusinessPartners(): Promise<BusinessPartner[]> {
-    return businessPartnerService()
-      .businessPartnerApi.requestBuilder()
+    const { businessPartnerApi } = businessPartnerService();
+    return businessPartnerApi
+      .requestBuilder()
       .getAll()
       .addCustomHeaders({ apikey: process.env.APIKey })
       .execute({ url: 'http://localhost:3000' });
