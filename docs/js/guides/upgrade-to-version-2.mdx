@@ -82,7 +82,7 @@ These imports need to be adjusted:
 - Find the imported method in your code.
 - Find the new package where the method is located as described [here](#how-to-find-the-new-packages).
 - Add the new package to the `package.json` and remove `@sap-cloud-sdk/core` as described [here](#how-to-install-20-dependencies).
-- Replace the old import with package name.
+- Replace the old import with the package name.
 
 Note that we reduced the number of objects in the stable public API.
 There are three cases:
@@ -98,16 +98,16 @@ Details on the API contract are discussed in this [ADR](https://github.com/SAP/c
 
 ### Adjust Serializing and Deserializing of Entities
 
-**Prerequisite**: You consume non-primitive entity properties like dates, duration and times.
+**Prerequisite**: You consume non-primitive entity properties like dates, duration, and times.
 
 In the past, one OData datatype was always transformed to the same data type in TypeScript.
-For example, time related properties are transformed to `moment` instances.
+For example, time-related properties are transformed into `moment` instances.
 We introduced a new [(de-)serialization](../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#customize-de-serialization) to make this more flexible.
 
 If you would like to switch to the [Temporal](https://tc39.es/proposal-temporal/docs/) (de-)serialization for date/time objects, please follow the [documentation](../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#using-de-serializers-for-temporal) and adjust your code base.
-The default serialization for time related properties will be changed from Moment.js to Temporal once it reaches Stage 4.
-Since Moment.js is a discontinued project with large size we recommend to stick with the new standard.
-Note that in 2.0 version, the default remains Moment.js.
+The default serialization for time-related properties will be changed from Moment.js to Temporal once it reaches Stage 4.
+Since Moment.js is a discontinued project with a large size we recommend sticking with the new standard.
+Note that in the 2.0 version, the default remains Moment.js.
 
 ### Get Support
 
@@ -128,7 +128,7 @@ import { BusinessPartner, BusinessPartnerAddress } from '@sap/cloud-sdk-vdm-busi
 This has been changed in version 2.0.
 
 - Each entity now has its API class (e.g. `MyEntityApi`).
-- A new service function (e.g. `myEntityService`) provides getters for instances of all the entities' API class, which can be consumed via [JavaScript Object Destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment).
+- A new service function (e.g. `myEntityService`) provides getters for instances of all the entities' API classes, which can be consumed via [JavaScript Object Destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment).
 
 To access an entity, you need to import the service and destructure the API class objects.
 To do so, first update the imports following the steps:
@@ -146,7 +146,7 @@ const { businessPartnerApi, businessPartnerAddressApi } = businessPartnerService
 ```
 
 :::danger
-You should use the object destructuring like the example above instead of calling the service multiple times for every API object, to avoid initialising multiple service instances.
+You should use the object destructuring like the example above instead of calling the service multiple times for every API object, to avoid initializing multiple service instances.
 Here is a **BAD** example, that you should **NOT** follow:
 ```ts
 // do NOT do this
@@ -212,14 +212,14 @@ myEntityApi
 
 ### Breaking Change on the Execute API
 
-The breaking change which will affect most users is the change of the execute methods.
-In the past there was a separate `DestinationNameAndJwt` object and a `DestinationOptions` to define how a destination was fetched from the service.
+The breaking change which will affect most users is the change in the execute methods.
+In the past, there was a separate `DestinationNameAndJwt` object and a `DestinationOptions` to define how a destination was fetched from the service.
 In version 2.0, there are two changes:
 
 - There is a single object `DestinationFetchOptions` containing all information.
 - The property `userJwt` was renamed to just `jwt`.
 
-A typical API adjustment would look like:
+A typical API adjustment would look like this:
 
 ```js
 //Version 1.X.Y
@@ -324,13 +324,13 @@ We have split the `@sap-cloud-sdk/core` package into the following smaller packa
 - `@sap-cloud-sdk/odata-common` contains the OData functionality shared between versions 2 and 4. This module is a technical module with no public API.
 - `@sap-cloud-sdk/odata-v2` contains the OData functionality specific to OData version 2.
 - `@sap-cloud-sdk/odata-v4` contains the OData functionality specific to OData version 4.
-- `@sap-cloud-sdk/openapi` contains methods for openapi clients.
+- `@sap-cloud-sdk/openapi` contains methods for OpenAPI clients.
 
 In most situations, it should be natural in which module the original object is located.
-You can search for the method at two places:
+You can search for the method in two places:
 
 - You can do a code search on GitHub e.g. `https://github.com/SAP/cloud-sdk-js/search?q=function+getDestination` to quickly find the package.
-- You can search in the [API specification](https://sap.github.io/cloud-sdk/api/) and select a version 2.0.
+- You can search in the [API specification](https://sap.github.io/cloud-sdk/api/) and select version 2.0.
 
 Note that for the `executeHttpRequest`, the new API offers all the destination retrieval options.
 

@@ -190,7 +190,7 @@ module.exports = {
             label: 'Getting Started',
             items: [
               'js/tutorials/getting-started/introduction',
-              'js/tutorials/getting-started/set-up-dev-enviroment',
+              'js/tutorials/getting-started/set-up-dev-environment',
               'js/tutorials/getting-started/execute-an-odata-request',
               'js/tutorials/getting-started/deploy-app-to-cf'
             ]

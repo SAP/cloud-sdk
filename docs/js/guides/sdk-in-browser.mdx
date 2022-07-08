@@ -1,7 +1,7 @@
 ---
 title: Use the SAP Cloud SDK in the Browser
 sidebar_label: Use the SAP Cloud SDK in the Browser
-description: You'll learn how to package SDK for a browser, what are the limitations, and how to use it with popular frontend frameworks.
+description: You'll learn how to package SDK for a browser, what are the limitations, and how to use it with popular front-end frameworks.
 keywords:
   - sap
   - cloud
@@ -14,9 +14,9 @@ keywords:
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-The SAP Cloud SDK for JavaScript can be used both as a backend and frontend library when used in a browser.
+The SAP Cloud SDK for JavaScript can be used both as a backend and front-end library when used in a browser.
 Because of the specifics of a browser environment, some features might be unavailable.
-To help you get up and running faster in a browser, we'll outline the main steps and caveats of using SAP Cloud SDK on the frontend.
+To help you get up and running faster in a browser, we'll outline the main steps and caveats of using SAP Cloud SDK on the front-end.
 We will use `Angular` to illustrate the usage.
 
 ## Prerequisite
@@ -27,7 +27,7 @@ For example an [Angular application](https://angular.io/cli/new) via `ng new myP
 ## Include the SAP Cloud SDK
 
 For most examples, we will use the business partner API.
-Add the package `@sap/cloud-sdk-vdm-business-partner-service` to your package.json introduce some call via:
+Add the package `@sap/cloud-sdk-vdm-business-partner-service` to your package.json and introduce some calls via:
 
 ```
 //In the .html part of the component
@@ -44,7 +44,7 @@ async function callApi(){
 
 :::note
 For the destination lookup, the SAP Cloud SDK relies on `Node.js` functionality like `process.env` for example.
-However, the request building, execution, and result parsing do not require any `Node.js` modules and can be used in the front end.
+However, the request building, execution, and result parsing do not require any `Node.js` modules and can be used on the front-end.
 Hence, you have to create the destination variable `myDest` manually.
 :::
 
@@ -142,7 +142,7 @@ The created request to `/REMOTE-SYSTEM-IDENTIFIER/sap/opu/odata/sap/API_BUSINESS
 :::note
 
 This approach does not support principal propagation to On-premise systems.
-For this you need a JWT and need to include the proper header fields defining the user.
+For this, you need a JWT and need to include the proper header fields defining the user.
 See the documentation on [On-premise systems](../features/connectivity/on-premise) for details.
 
 :::
@@ -205,4 +205,4 @@ module.exports = {
 }
 ```
 
-Now the project should build and the run locally.
+Now the project should build and run locally.
