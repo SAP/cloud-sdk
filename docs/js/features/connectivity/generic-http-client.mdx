@@ -19,9 +19,9 @@ import TabItem from '@theme/TabItem';
 ## What Is the Generic HTTP Client?
 
 In the [Executing a request using a generated OData client](../odata/execute-odata-request.mdx) section, we explained how to make OData requests using the generated OData client.
-This client is the highest layer of convenience and type-safety for the user.
+This client is the highest layer of convenience and type safety for the user.
 Below the OData client uses the generic HTTP client of the SAP Cloud SDK.
-For the final HTTP calls the SAP Cloud SDK for JavaScript uses the axios library.
+For the final HTTP calls, the SAP Cloud SDK for JavaScript uses the axios library.
 
 In this document, we explain when and how to use the middle layer directly.
 Different clients serve different purposes:
@@ -33,7 +33,7 @@ The client takes care of deserializing your request to a URL and JSON payload as
 The generated payload and URL are passed to the Generic HTTP Client.
 
 **Generic HTTP Client:**
-Adds SAP infrastructure specific functionality on top of a standard HTTP Client.
+Adds SAP infrastructure-specific functionality on top of a standard HTTP Client.
 All OData services use the same generic HTTP client, so it contains no service-specific information.
 The client handles connectivity related issues such as:
 
@@ -41,11 +41,11 @@ The client handles connectivity related issues such as:
 - Connections to [SAP S/4HANA On-premise](../connectivity/on-premise.mdx) via the connectivity service
 - [Web proxies](../connectivity/proxy.mdx).
 
-In the end, all information from the destination, connectivity service, and proxy configuration ends up in header-fields and [proxy-agents](https://www.npmjs.com/package/proxy-agent).
+In the end, all information from the destination, connectivity service, and proxy configuration ends up in header fields and [proxy-agents](https://www.npmjs.com/package/proxy-agent).
 The information goes one level down to the axios client.
 
 **axios HTTP Client:**
-Is a widely used open source [HTTP client for node](https://www.npmjs.com/package/axios).
+Is a widely used open-source [HTTP client for node](https://www.npmjs.com/package/axios).
 This client executes the actual HTTP requests in the end.
 
 ## How to Use It
@@ -56,10 +56,10 @@ To make a request using the Generic HTTP client use the `executeHttpRequest` fun
 executeHttpRequest(destination, requestConfig, httpRequestOptions);
 ```
 
-The `destination` argument is either a full <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="destination object" />, that you have already fetched or an <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.DestinationNameAndJwt" name="object containing a destination name and an optional JWT" />.
+The `destination` argument is either a full <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="destination object" />, that you have already fetched or an <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions" name="object containing a destination name and an optional JWT" />.
 In the latter case, the SAP Cloud SDK fetches the destination for you.
 For more details, see [here](destination.mdx).
-The <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_http_client#HttpRequestConfig" name="request configuration" /> argument contains the request configuration.
+The <LinkToLatestJsApiDocs slug="modules/sap_cloud_sdk_http_client#HttpRequestConfig" name="request configuration" /> argument contains the request configuration.
 A minimal configuration would look like this:
 
 ```JSON
@@ -74,7 +74,7 @@ A minimal configuration would look like this:
 ```
 
 Note that you can also give values for `url` in the request configuration.
-The values you give in the request configuration [will be merged](https://github.com/SAP/cloud-sdk-js/blob/main/packages/core/src/http-client/http-client.ts#L136-L148) with ones related to the destination:
+The values you give in the request configuration will be merged with ones related to the destination:
 
 ```ts
 {
@@ -86,11 +86,11 @@ The values you give in the request configuration [will be merged](https://github
 }
 ```
 
-For keys which exist for both object the value from the custom request configuration will be used.
+For keys that exist for both objects, the value from the custom request configuration will be used.
 For example, a request configuration with `authorization` headers will overwrite the authorization header information from the destination.
 
-You can also pass an optional third parameter `httpRequestOptions`, where you can indicate for example whether the SAP Cloud SDK should fetch `CSRF` token for a non-GET request.
-For a get request, the `CSRF` token is not fetched and this option is ignored.
+You can also pass an optional third parameter `httpRequestOptions`, where you can indicate, for example, whether the SAP Cloud SDK should fetch `CSRF` token for a non-GET request.
+For a GET request, the `CSRF` token is not fetched and this option is ignored.
 
 <Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
 <TabItem value="major">
@@ -140,9 +140,9 @@ You should consider the OData client if:
 
 ## Headers and Query Parameters from Different Origins
 
-As partially described in the [destination guide](./destination#additional-headers-and-query-parameters-on-destinations) there are multiple possible origins for query parameters:
+As partially described in the [destination guide](./destination#additional-headers-and-query-parameters-on-destinations), there are multiple possible origins for query parameters:
 
-- Provided by the user on request level.
+- Provided by the user on the request level.
   These parameters are referred to as `custom` parameters.
 - Defined by the destination object or properties.
 - Introduced by the SAP Cloud SDK.
@@ -179,7 +179,7 @@ The example below shows how to get:
 ```ts
 const { queryParameters, authentication } = await getDestination({
   destinationName: 'myDestination',
-  userJwt: 'yourJwt'
+  jwt: 'yourJwt'
 });
 ```
 
@@ -212,13 +212,13 @@ executeHttpRequestWithOrigin(myDestination, {
 
 :::info
 This section applies to version 2 of the SAP Cloud SDK.
-For version 1 of the SAP Cloud SDK, encoding is done on OData related query parameters without a way to configure it.
+For version 1 of the SAP Cloud SDK, encoding is done on OData-related query parameters without a way to configure it.
 :::
 
 In the end, query parameters end up in the URL to the target system.
 Therefore, special characters with a meaning in a URL need to be [% encoded](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier).
 The SAP Cloud SDK takes care of this encoding depending on the origin you use.
-For calls executed via a typed client and generic http client the encoding is done as:
+For calls executed via a typed client and generic HTTP client the encoding is done as:
 
 - `Custom` parameters are not encoded.
   The idea behind this is to give you a way to send parameters with the highest priority to the target system as they are.
@@ -237,7 +237,7 @@ executeHttpRequest(destination, { parameterEncoder });
 ```
 
 The `parameterEncoder` function is applied to the keys and values of all parameters of the request.
-In case you have the need to encode all parameters including custom ones, we exported a `encodeAllParameters` method to do that.
+In case you need to encode all parameters including custom ones, we exported a `encodeAllParameters` method to do that.
 Pass this method as the `parameterEncoder` to the `executeHttpRequest` call.
 
 Note that this option is not available for the OData and OpenApi clients.

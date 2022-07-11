@@ -48,7 +48,7 @@ where `<YOUR-APPLICATION-NAME>` is replaced by the name you specified when initi
 - The command specified under the `command` attribute tells the buildpack what command to issue to start the application.
 
 Next, you need to login to Cloud Foundry in SAP Business Technology Platform using the cf CLI.
-First you need to set an API endpoint.
+First, you need to set an API endpoint.
 The exact URL of this API endpoint depends on the region your _subaccount_ is in.
 Open the [SAP Business Technology Platform Cockpit](https://account.hana.ondemand.com/) and navigate to the subaccount you are planning to deploy your application to.
 Click on _Overview_ on the left and you can see the URL of the API endpoint.
@@ -67,7 +67,7 @@ cf login
 ```
 
 `cf login` will prompt you for your _username_ and your _password_.
-Should you have more then one organization or space, you will also have to select those.
+Should you have more than one organization or space, you will also have to select those.
 
 Finally, if you have logged in successfully, it is time to build and deploy your application.
 The `package.json` contains a few scripts that can be used for this purpose.
@@ -80,7 +80,7 @@ cf push
 Dependencies will be installed automatically when deploying to Cloud Foundry.
 The `cf` CLI will automatically pick up the `manifest.yml` of the project when deploying your application.
 
-When everything works as expected, you should get output that looks something like this:
+When everything works as expected, you should get an output that looks something like this:
 
 ```shell
 Waiting for app to start...
@@ -101,7 +101,7 @@ start command:   node index.js
 ```
 
 The application will be running at the `routes` URL.
-You can also make sure that the application works correctly by running the start command, this command can be different than the one shown above.
+You can also make sure that the application works correctly by running the start command, this command can be different from the one shown above.
 
 Should the application not work for whatever reason, you can call the following command to access the logs:
 
@@ -116,7 +116,7 @@ If you have access to an SAP S/4HANA Cloud system, you can skip this step.
 :::
 
 If you have used the [OData Mock Service](https://github.com/SAP/cloud-s4-sdk-book/tree/mock-server) for the business partner API in the previous tutorial, you will now also have to deploy it to Cloud Foundry.
-Navigate to the mock server project's root folder, that already contains a `manifest.yml` and run:
+Navigate to the mock server project's root folder, which already contains a `manifest.yml`, and run:
 
 ```shell
 cf push
@@ -147,7 +147,7 @@ For _Name_, choose a name that describes your system.
 This tutorial will go with `MockServer`.
 
 If you use the business partner mock server, for URL enter the URL that you have saved from the previous step and use `NoAuthentication` for _Authentication_.
-If you use an SAP S/4HANA Cloud system, enter the systems URL in the URL field and choose `BasicAuthentication` as authentication type.
+If you use an SAP S/4HANA Cloud system, enter the system URL in the URL field and choose `BasicAuthentication` as the authentication type.
 This will make the fields _User_ and _Password_ appear.
 Enter here the credentials of a technical user for your SAP S/4HANA Cloud system.
 
