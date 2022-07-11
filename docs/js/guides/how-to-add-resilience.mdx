@@ -14,7 +14,7 @@ keywords:
 
 # Introduction
 
-In this article, we will talk about resilience and what are the easy ways to add resilience on top of the SAP Cloud SDK.
+In this article, we will talk about resilience and how to add resilience when using the SAP Cloud SDK.
 In contrast to Java, for JavaScript, there is no standard framework to handle resilience.
 Hence, we have not included resilience features within the SAP Cloud SDK, but leave it up to you which framework you want to use.
 We have prepared examples on the resilience topic in our [samples repository](https://github.com/SAP-samples/cloud-sdk-js/samples/resilience-examples) which illustrate the concepts and pick some widely used `npm` packages.
@@ -25,7 +25,7 @@ The circuit breaker is enabled by default to protect the services and you can di
 
 ## Cache
 
-This is not a classical resilience topic but could help to improve the stability of your application.
+This is usually not a resilience topic, but could help to improve the stability of your application.
 The idea behind a cache is to reduce the load caused by expensive requests.
 Expensive means, for example, that you need to do a lot of computation (RAM, CPU, disk I/O) or many calls to external systems.
 Instead of doing the work every time, the method response is stored in the cache after the first execution and taken from there afterwards.
@@ -34,8 +34,8 @@ In such a case, a cache could reduce the number of calls and therefore improve r
 
 The introduction of a cache is most effective in the following cases:
 
-- The execution of a method is expensive, i.e., it consumes a lot of resources
-- The method is a pure function or close to it. This means the function arguments contain all the information and no hidden state affects the result of the function
+- The execution of a method consumes a lot of resources
+- The method is a pure function, meaning the function arguments contain all the information and no hidden state affects the result of the function
 - The function is invoked multiple times for the same arguments or context
 - The system behind the cache has known downtime or limited availability mitigated by the cache
 
