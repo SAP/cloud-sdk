@@ -19,10 +19,10 @@ import ThemedImage from '@theme/ThemedImage';
 
 The crucial problem with SAP S/4HANA On-premise systems is, that they are not exposed to the internet.
 Typically, they are located within a company's internal network.
-The SAP Cloud SDK has some useful features that allow you to connect to On-premise systems.
+The SAP Cloud SDK provides helpful features that allow you to connect to On-premise systems.
 
-Since this isolation contradicts to modern requirements of data availability, SAP has introduced the [Cloud Connector](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e6c7616abb5710148cfcf3e75d96d596.html?q=cloud%20connector).
-The Cloud Connector works like a reverse proxy opening a connection between some allowlisted service endpoints of the On-premise system, and the connected Cloud Foundry account.
+Since this isolation contradicts modern requirements of data availability, SAP has introduced the [Cloud Connector](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e6c7616abb5710148cfcf3e75d96d596.html?q=cloud%20connector).
+The Cloud Connector works like a reverse proxy, opening a connection between some allowlisted service endpoints of the On-premise system and the connected Cloud Foundry account.
 Only applications running in the connected Cloud Foundry account can access the services.
 Applications that are supposed to access On-premise systems need a binding to the [connectivity service](https://www.cloudfoundry.org/the-foundry/sap-cloud-platform-service-connectivity/).
 
@@ -55,7 +55,7 @@ If multiple connectivity services bindings exist, the SAP Cloud SDK uses the fir
 
 The SAP Cloud SDK takes the client grant to call the connectivity service and receives the host, password, and authorization of the connectivity proxy.
 Then the SAP Cloud SDK creates an HTTP agent considering this proxy and the necessary `Proxy-Authorization` headers.
-The proxy is the entry point to the Cloud Connector instance connected the account.
+The proxy is the entry point to the Cloud Connector instance connected to the account.
 The proxy is only reachable from the Cloud Foundry space, so you cannot use that flow for applications running outside of Cloud Foundry.
 For quick local test purposes, a deployment to Cloud Foundry is tedious and the following workarounds are possible:
 
@@ -68,7 +68,7 @@ For quick local test purposes, a deployment to Cloud Foundry is tedious and the 
     For the localhost and port use the localhost and some free port e.g. `localhost:8081`.
   - Replace the `onpremise_proxy_host` and `onpremise_proxy_port` in your locally used `VCAP_SERVICE` variables with `localhost` and the free port you choose.
 
-The final destination in the productive scenario containing the [proxy information](./proxy.mdx) will look like:
+The final destination in the productive scenario containing the [proxy information](./proxy.mdx) will look like this:
 
 ```JSON
 {
