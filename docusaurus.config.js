@@ -60,9 +60,10 @@ module.exports = {
       },
       items: [
         {
-          to: 'docs/common/overview/overview-cloud-sdk',
           label: 'Overview',
-          position: 'left'
+          to: 'docs/common/overview/overview-cloud-sdk',
+          position: 'left',
+          activeBasePath: 'docs/common'
         },
         {
           label: '☕ Java',
