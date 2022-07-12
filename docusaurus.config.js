@@ -61,7 +61,7 @@ module.exports = {
       items: [
         {
           to: 'docs/common/overview/overview-cloud-sdk',
-          label: 'Common',
+          label: 'Overview',
           position: 'left'
         },
         {
@@ -69,7 +69,7 @@ module.exports = {
           to: 'docs/java/overview-cloud-sdk-for-java',
           position: 'left',
           docsPluginId: 'docs-java',
-          activeBasePath: 'docs-java',
+          activeBasePath: 'docs/java',
           sdkSwitch: true
         },
         {
@@ -77,7 +77,7 @@ module.exports = {
           to: 'docs/js/overview-cloud-sdk-for-javascript',
           position: 'left',
           docsPluginId: 'docs-js',
-          activeBasePath: 'docs-js',
+          activeBasePath: 'docs/js',
           sdkSwitch: true
         },
       ]
@@ -186,18 +186,6 @@ module.exports = {
         routeBasePath: 'docs/java',
         remarkPlugins: [require('mdx-mermaid')],
         sidebarPath: require.resolve('./sidebarsDocsJava.js'),
-        // lastVersion: 'v3',
-        // versions: {
-        //   current: {
-        //     label: 'v4',
-        //     path: 'v4',
-        //     banner: 'unreleased'
-        //   },
-        //   v3: {
-        //     label: 'v3',
-        //     banner: 'none'
-        //   }
-        // }
       }
     ],
     [
@@ -208,18 +196,6 @@ module.exports = {
         routeBasePath: 'docs/js',
         remarkPlugins: [require('mdx-mermaid')],
         sidebarPath: require.resolve('./sidebarsDocsJs.js'),
-        // lastVersion: 'current',
-        // versions: {
-        //   current: {
-        //     label: 'v2',
-        //     banner: 'none'
-        //   },
-        //   v1: {
-        //     label: 'v1',
-        //     path: 'v1',
-        //     banner: 'unmaintained'
-        //   }
-        // }
       }
     ],
     function nodeWebpackPolyfillPlugin(context, options) {

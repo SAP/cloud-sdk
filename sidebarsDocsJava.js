@@ -105,6 +105,11 @@ module.exports = {
         'sdk-java-troubleshooting-frequent-problems',
         'release-policy',
         'release-notes-sap-cloud-sdk-for-java',
-        'frequently-asked-questions'
+        'frequently-asked-questions',
+        {
+          type: 'link',
+          label: 'Maven Central',
+          href: 'https://search.maven.org/search?q=g:com.sap.cloud.sdk*'
+        },
       ]
 }

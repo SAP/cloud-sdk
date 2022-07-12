@@ -7,8 +7,14 @@ module.exports = {
         'overview/who-uses-sap-cloud-sdk',
         'overview/frequently-asked-questions-about-sap-cloud-sdk',
         'overview/get-support',
-        'community/community-call', 
-        'community/sap-teched',
+        {
+            type: "category",
+            label: "Community",
+            items: [
+                'community/community-call', 
+                'community/sap-teched'
+              ]
+        },
         {
             type: "category",
             label: "Related Projects",
