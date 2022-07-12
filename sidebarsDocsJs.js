@@ -71,7 +71,7 @@ module.exports = {
               label: 'Getting Started',
               items: [
                 'tutorials/getting-started/introduction',
-                'tutorials/getting-started/set-up-dev-enviroment',
+                'tutorials/getting-started/set-up-dev-environment',
                 'tutorials/getting-started/execute-an-odata-request',
                 'tutorials/getting-started/deploy-app-to-cf'
               ]
