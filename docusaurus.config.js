@@ -61,9 +61,9 @@ module.exports = {
       items: [
         {
           label: 'Overview',
-          to: 'docs/common/overview/overview-cloud-sdk',
-          position: 'left',
-          activeBasePath: 'docs/common'
+          type: 'doc', 
+          docId: 'overview-cloud-sdk',
+          position: 'left'
         },
         {
           label: '☕ Java',
@@ -159,8 +159,8 @@ module.exports = {
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
           editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
-          routeBasePath: 'docs/common',
-          path: 'docs-common'
+          routeBasePath: 'docs/overview',
+          path: 'docs'
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css')
@@ -197,6 +197,20 @@ module.exports = {
         routeBasePath: 'docs/js',
         remarkPlugins: [require('mdx-mermaid')],
         sidebarPath: require.resolve('./sidebarsDocsJs.js'),
+      }
+    ],
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        createRedirects(existingPath) {
+          if (existingPath.includes('/community')) {
+            return existingPath.replace('/docs/overview/community', '/docs/community');
+          }
+          else if (existingPath.includes('/related-projects')) {
+            return existingPath.replace('/docs/overview/related-projects', '/docs/related-projects');
+          }
+          return undefined; // Return a falsy value: no redirect created
+        },
       }
     ],
     function nodeWebpackPolyfillPlugin(context, options) {

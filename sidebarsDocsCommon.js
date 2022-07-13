@@ -1,12 +1,12 @@
 module.exports = {
     someSidebar: [
-        'overview/overview-cloud-sdk',
-        'overview/cloud-sdk-feature-matrix',
-        'overview/getting-started',
-        'overview/benefits',
-        'overview/who-uses-sap-cloud-sdk',
-        'overview/frequently-asked-questions-about-sap-cloud-sdk',
-        'overview/get-support',
+        'overview-cloud-sdk',
+        'cloud-sdk-feature-matrix',
+        'getting-started',
+        'benefits',
+        'who-uses-sap-cloud-sdk',
+        'frequently-asked-questions-about-sap-cloud-sdk',
+        'get-support',
         {
             type: "category",
             label: "Community",
