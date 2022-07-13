@@ -7,6 +7,8 @@ import DeleteContent from './delete.mdx';
 import GetAllContent from './get-all.mdx';
 import GetByKeyContent from './get-by-key.mdx';
 import UpdateContent from './update.mdx';
+import ReplaceContent from './replace.mdx';
+import IgnoreOrOverwriteVersionContent from './ignore-or-overwrite-version.mdx'
 
 export function Count() {
   return <CountContent />;
@@ -38,4 +40,12 @@ export function GetByKey() {
 
 export function Update() {
   return <UpdateContent />;
+}
+
+export function Replace() {
+  return <ReplaceContent />;
+}
+
+export function IgnoreOrOverwriteVersion() {
+  return <IgnoreOrOverwriteVersionContent />
 }

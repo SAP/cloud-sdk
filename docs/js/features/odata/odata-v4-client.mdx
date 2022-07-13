@@ -30,7 +30,9 @@ import {
   Delete,
   Update,
   GetAll,
-  GetByKey
+  GetByKey,
+  Replace,
+  IgnoreOrOverwriteVersion
 } from './common/operations';
 import {
   Top,
@@ -53,7 +55,7 @@ import {
   Responses,
   ConfigureSerialization
 } from './common/batch';
-import { Csrf, SkipCsrfExample } from './common';
+import { Csrf, SkipCsrfExample, ETag } from './common';
 import {
   ExpandSelect,
   FilterOneToMany,
@@ -174,6 +176,10 @@ Note that we currently do not support the usage of count within a filter conditi
 
 <Update />
 
+### Update Whole Entity
+
+<Replace />
+
 ## Delete Request Builder
 
 <Delete />
@@ -189,6 +195,10 @@ Note that we currently do not support the usage of count within a filter conditi
 ## Handling of ETags
 
 <ETag />
+
+### Ignore or Overwrite the Version Identifier
+
+<IgnoreOrOverwriteVersion />
 
 ## Handling of Cross-Site Request Forgery Tokens
 

@@ -1,0 +1,40 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Entities can only be updated or deleted if [ETags](#handling-of-etags) match.
+If you want to force an update or the deletion of the entity regardless of the ETag, configure the request to ignore version identifiers with `ignoreVersionIdentifier`.
+
+Below is an example with an update:
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+```ts
+const { businessPartnerApi } = businessPartnerService();
+businessPartnerApi
+  .requestBuilder()
+  .update(businessPartner)
+  .ignoreVersionIdentifier();
+```
+
+</TabItem>
+<TabItem value="deprecated">
+
+```ts
+BusinessPartner.requestBuilder()
+  .update(businessPartner)
+  .ignoreVersionIdentifier();
+```
+
+You can also overwrite ETags using `setVersionIdentifier`:
+
+```ts
+BusinessPartner.requestBuilder()
+  .delete(businessPartner)
+  .setVersionIdentifier('etag');
+```
+
+In the example above the ETag 'etag' is being used instead of the original one.
+
+</TabItem>
+</Tabs>
