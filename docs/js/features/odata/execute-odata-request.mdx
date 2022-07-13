@@ -23,7 +23,7 @@ import {
 } from '../common';
 
 Once you have generated a typed OData client using the SAP Cloud SDK generator or if you decided to use one of the pregenerated OData clients for SAP S/4HANA, you can use your OData client to execute HTTP requests against your service.
-The client provides request builders for the different types of requests and abstractions of the entity sets of the given service, that we refer to as _entities_.
+The client provides request builders for the different types of requests and abstractions of the entity sets of the given service, which we refer to as _entities_.
 
 To request an entity set, entities offer a fluent API.
 
@@ -203,7 +203,7 @@ MyEntity.requestBuilder().getAll().addCustomHeaders({
 
 The keys and values of the passed object correspond with the header names and values.
 Custom headers take priority over automatically generated headers.
-Automatically generated headers are sent with lowercase header names, custom headers keep the case they were set in.
+Automatically generated headers are sent with lowercase header names, and custom headers keep the case they were set in.
 In the example above we pass an `apikey`, which is necessary if you want to make use of the SAP API Business Hub sandbox.
 
 :::caution
@@ -376,7 +376,7 @@ const httpResponse: HttpResponse = myEntityApi
 </Tabs>
 
 The value is in milliseconds and the default value is 10000 (10 seconds)
-This timeout applies to the request send to the target system given in the destination.
+This timeout applies to the request sent to the target system given in the destination.
 If a `CSRF` token is fetched from the target system the timeout applies also to this call.
 Note that there is also a second timeout option on the destination fetch options.
 This relates to the calls made to SAP BTP services like `destination-service` or XSUAA.
@@ -418,8 +418,29 @@ const httpResponse: HttpResponse = MyEntity.requestBuilder()
 <ul style={{ 'margin-top': '-16px' }}>
   <li>
     In rare cases, when the response data cannot be deserialized.
-    This can happen when function imports use an entity type as return type, and this entity type is shared by multiple <code>EntitySet</code>s.
+    This can happen when function imports use an entity type as a return type, and this entity type is shared by multiple `EntitySet`s.
     Without further information, it is unclear which <code>Entity</code> should be deserialized.
     For those cases, you have to use <code>executeRaw</code> and use the <code>deserialize</code> function on the response data.
   </li>
 </ul>
+
+### Troubleshooting
+
+#### Deserialize Nested Navigation Properties
+
+When deserializing an OData response that contains nested navigation properties, a user reported an [issue](https://github.com/SAP/cloud-sdk-js/issues/2606) about some missing navigation properties.
+This might happen if you don't use the object destructuring for getting multiple APIs.
+What you should do:
+
+```ts
+const { businessPartnerApi, businessPartnerAddressApi } =
+  businessPartnerService();
+```
+
+What you should avoid:
+
+```ts
+const businessPartnerApi = businessPartnerService().businessPartnerApi;
+const businessPartnerAddressApi =
+  businessPartnerService().businessPartnerAddressApi;
+```

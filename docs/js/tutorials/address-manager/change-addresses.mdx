@@ -28,7 +28,7 @@ In this part you will learn:
 
 ## Create an Address
 
-After reading data in the first part of the tutorial, it is now time to change data.
+After reading the data in the first part of the tutorial, it is now time to change the data.
 You will use the `businessPartnerAddressApi` to adjust the addresses.
 You start with the creation of new addresses.
 Add a service implementation in the `business-partner.service.ts`:
@@ -88,9 +88,9 @@ BODY
 You find the ID of a business partner via the endpoint `http://localhost:8080/business-partners`.
 The request should return `201` as a [status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#successful_responses).
 
-![Create a address with postman.](../img/create-business-partner-address.png)
+![Create an address with postman.](../img/create-business-partner-address.png)
 
-If you execute `GET http://localhost:8080/business-partners/1003764` afterwards, you should see the additional address for the business partner.
+If you execute `GET http://localhost:8080/business-partners/1003764` afterward, you should see the additional address for the business partner.
 
 ## Update Service
 
@@ -114,7 +114,7 @@ Add the following code in the `business-partner.service.ts`:
   }
 ```
 
-First, an address object is build from the user input.
+First, an address object is built from the user input.
 It contains the ID of the business partner and the address to be updated.
 This is necessary because a business partner can contain multiple addresses.
 
@@ -131,12 +131,12 @@ Expose the service implementation via the `business-partner.controller.ts`:
   }
 ```
 
-The path of the service contains the ID of the business partner and address to be updated.
+The path of the service contains the ID of the business partner and the address to be updated.
 The new address is given in the payload.
 
 ### Test Update Service
 
-The update requests is triggered by the PUT method.
+The update request is triggered by the PUT method.
 Execute the update request in your HTTP client (e.g. [postman](https://learning.postman.com/docs/getting-started/installation-and-updates/)):
 
 ```
@@ -182,7 +182,7 @@ The delete endpoint is exposed in the `business-partner.controller.ts` via the f
   }
 ```
 
-You use HTTP method DELETE to trigger a deletion and the status 204 indicates a successful deletion.
+You use the HTTP method DELETE to trigger a deletion and the status 204 indicates a successful deletion.
 
 ### Test Delete Service
 
@@ -190,12 +190,12 @@ You can test the service in the following way.
 Execute `GET http://localhost:8080/business-partners/1003764` and note the ID of an address you want to delete e.g. 28241.
 Then execute `DELETE http://localhost:8080/business-partners/1003764/address/28241` in your HTTP client.
 This should return 204 if existing IDs are passed.
-To verify you can execute `GET http://localhost:8080/business-partners/1003764` afterwards and the selected address should be removed.
+To verify you can execute `GET http://localhost:8080/business-partners/1003764` afterward and the selected address should be removed.
 
 ## Final Code Review
 
 In this tutorial, you learned how to create, update and delete addresses using the SAP Cloud SDK.
-First an implementation is added in the service class.
+First, an implementation is added in the service class.
 Then the implementation is exposed in the controller class.
 The result of this and the [previous tutorial](./read-addresses.mdx) is an API to manage business partner addresses.
 
@@ -225,7 +225,7 @@ const { businessPartnerApi, businessPartnerAddressApi } =
 export class BusinessPartnerService {
   /**
    * Gets a list of all business partners.
-   * @returns List of business partner.
+   * @returns List of business partners.
    */
   async getAllBusinessPartners(): Promise<BusinessPartner[]> {
     return businessPartnerApi
@@ -291,7 +291,7 @@ export class BusinessPartnerService {
 
   /**
    * Updates an address of a business partner.
-   * @param address - New address information after update. Existing values are overwritten, new onew are added.
+   * @param address - New address information after update. Existing values are overwritten, new ones are added.
    * @param businessPartner - ID of business partner whose address is updated.
    * @param addressId - ID of address which is updated.
    * @returns - The address after update.

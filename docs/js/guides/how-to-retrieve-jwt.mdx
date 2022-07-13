@@ -15,7 +15,7 @@ keywords:
 
 ## Overview
 
-A JSON Web Token (JWT) is standardized object containing some structured information.
+A JSON Web Token (JWT) is a standardized object containing some structured information.
 A JWT contains three parts:
 
 - Header: Containing meta information like hashing algorithm and verification certificates
@@ -35,7 +35,7 @@ The flow is as follows:
 - user requests a resource and is not yet authenticated
 - approuter redirects the request to the identity provider (IdP)
 - XSUAA issues a JWT - see [here](#obtain-jwt-programmatically) for details
-- approuter adds the JWT to the request headers and redirects the request to initially requested resource
+- approuter adds the JWT to the request headers and redirects the request to the initially requested resource
 
 A JWT issued this way contains a `JKU` header property.
 This property points to the URL where you can obtain the certificate to verify the JWT.
@@ -48,9 +48,9 @@ You have to set the [destination properties](https://help.sap.com/docs/CP_CONNEC
 
 If you use a custom JWT without the approuter and XSUAA service, it is your responsibility to do the access control in the application.
 
-:::caution Caution
+:::caution
 A JWT has a limited lifetime but is nevertheless a sensitive security object.
-Do not log complete JWTs in the application, share them with others or use online tools to decode them.
+Do not log complete JWTs in the application, share them with others, or use online tools to decode them.
 :::
 
 ## Use JWT in Application
@@ -66,7 +66,7 @@ After the JWT was issued, it is added to the request headers by the approuter:
 ```
 
 The SAP Cloud SDK has a convenience function to extract the JWT from the request object.
-For [NestJS](https://nestjs.com/) the code would look like:
+For [NestJS](https://nestjs.com/), the code would look like:
 
 ```ts
 import { Controller, Get, Req } from '@nestjs/common';
@@ -85,7 +85,7 @@ export class AppController {
 }
 ```
 
-Note, that the SAP Cloud SDK uses the `IncomingMessage` object from node, which is compatible to the request object of common frameworks like [express](https://expressjs.com/)or [NestJs](https://nestjs.com/).
+Note, that the SAP Cloud SDK uses the `IncomingMessage` object from node, which is compatible to the request object of common frameworks like [express](https://expressjs.com/) or [NestJs](https://nestjs.com/).
 In case you use a different framework, the [implementation](https://github.com/SAP/cloud-sdk-js/blob/6e3453e50a061d3ea2dbd9ac6a40232e624f348f/packages/connectivity/src/scp-cf/jwt.ts#L45-L63) in the `retrieveJwt()` is simple.
 Effectively it takes `authorization` header value and extracts the token value.
 
@@ -95,8 +95,8 @@ This means the initial JWT is transformed to a `SAMLBearerAssertion` or `ClientC
 
 ## Obtain JWT with Postman
 
-For a faster feedback cycle it is convenient to test things locally without a deployment to the SAP BTP.
-In some cases applications rely on a JWT to set scopes or propagate a user to external systems.
+For a faster feedback cycle, it is convenient to test things locally without deployment to the SAP BTP.
+In some cases, applications rely on a JWT to set scopes or propagate a user to external systems.
 In such a case, you can obtain the JWT using Postman:
 
 - create a new request
@@ -105,16 +105,16 @@ In such a case, you can obtain the JWT using Postman:
 - fill the following values in the user interface:
   - `Callback URL`: Path to the application protected by the XSUAA
   - `Auth URL`: Path to the authentication endpoint using your subdomain and the values for the callback URL e.g. `https://<subdomain>.authentication.sap.hana.ondemand.com/oauth/authorize?redirect_uri=<callbackUrl>`
-  - `Token URL`: Path to the token endpoint using your subdomain e.g. `https://<subdomain>.authentication.sap.hana.ondemand.com/oauth/token`
+  - `Token URL`: Path to the token endpoint using your subdomain, e.g., `https://<subdomain>.authentication.sap.hana.ondemand.com/oauth/token`
   - `Client ID` and `Client secret` for the XSUAA service (either VCAP variables or service keys)
   - uncheck the `Authorize using browser checkbox`
 - press the `Get new access token` button to retrieve a token
 - Postman will open a window showing the IdP login form
 - enter username and password
-- Postman shows the retrieved token and you can copy it
+- Postman shows the retrieved token that you can copy
 
 Cookies will remember the entered username and password.
-This makes re-fetching a new token super quick when your old token is expired.
+This makes re-fetching a new token super quick when your old token expires.
 Remove the cookies in case you want to start fresh.
 
 ![](../img/postman-oauth-token.png)
@@ -123,7 +123,7 @@ Remove the cookies in case you want to start fresh.
 
 In some situations, it is necessary to retrieve a JWT programmatically.
 We have implemented the OAuth 2.0 flow for our internal E2E tests and the implementation involves many steps.
-We will give a high level overview.
+We will give a high-level overview.
 
 - retrieve a `code` from the XSUAA
 - initial GET request on XSUAA: `https://<xsuaaUrl>/oauth/authorize?client_id=<clientId>&redirect_uri=<redirectUri>&response_type=code`
@@ -132,8 +132,8 @@ We will give a high level overview.
 - Transform the SAML request into a SAML response via the IdP.
   This involves multiple redirected requests with a lot of cookies and request parameters passed around.
   In the browser redirects with the `set-cookie` and `location` headers work well.
-  In node most http clients do not handle the redirects correctly and a manual redirect on 302 response needs to be implemented.
+  In node, most HTTP clients do not handle the redirects correctly and a manual redirect on 302 response needs to be implemented.
 - Once you have the SAML response, call the XSUAA to retrieve the `code` in the location header.
 - Use the `code` with clientId and clientSecret to get a JWT token from the XSUAA service.
 
-In case you also need an implementation, investigate the steps in the debug console of your browser when you do a login.
+In case you also need an implementation, investigate the steps in the debug console of your browser when you login.

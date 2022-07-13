@@ -28,10 +28,10 @@ A destination is an object with the following information, among others:
 - [proxy settings](./proxy.mdx)
 
 Destinations are managed separately from applications on SAP BTP and can be retrieved through the destination service at runtime.
-The reasons to separate destinations and application are manifold:
+The reasons to separate destinations and the application are manifold:
 
-- You can securely store authentication information that should not be part of application code.
-- You can update resource locations without touching application code.
+- You can securely store authentication information that should not be part of the application code.
+- You can update resource locations without touching the application code.
 - Different customers may want to configure different systems.
 - Multiple applications might want to access the same systems.
 
@@ -74,7 +74,7 @@ const responseOpenApi = await MyApi.myFunction().execute(myDestination);
 The given request is executed against `myDestination`.
 
 For the rest of the document, we will discuss the different options on destination lookup.
-All statements equally apply to OData and OpenAPI based services.
+All statements equally apply to OData and OpenAPI-based services.
 
 ## Creating Destinations Manually
 
@@ -85,7 +85,7 @@ The minimal requirement towards a manually constructed destination is that you p
 .execute({ url: 'https://example.com'})
 ```
 
-This, however, is not recommended for productive use as you would loose the benefits of separating destinations from applications.
+This, however, is not recommended for productive use as you would lose the benefits of separating destinations from applications.
 
 ## Referencing Destinations by Name
 
@@ -95,7 +95,7 @@ Instead of defining your destination manually, you can reference it by a name:
 .execute({ destinationName: 'myDestination' })
 ```
 
-The SAP Cloud SDK searches for the destination by its name in the following locations and in the following order:
+The SAP Cloud SDK searches for the destination by its name in the following locations and the following order:
 
 1. local environment variables
 2. register a destination in the SAP Cloud SDK
@@ -103,7 +103,7 @@ The SAP Cloud SDK searches for the destination by its name in the following loca
 4. SAP BTP's destination service
 
 The search stops, once a destination is found.
-Therefore, if a destination with the same name exists in multiple locations, the destination that occurs earliest during the search takes precedence before other destinations with the same name.
+Therefore, if a destination with the same name exists in multiple locations, the destination that occurs earliest during the search takes precedence over other destinations with the same name.
 
 :::note
 The second option `register a destination` was introduced in version 2.0 of the SAP Cloud SDK.
@@ -112,7 +112,7 @@ The second option `register a destination` was introduced in version 2.0 of the 
 ### Local Environment Variable
 
 This option is present for deployment and testing in a local environment outside the SAP BTP where no destination services are available.
-If a `destinations` environment variable is present it will be used for the destination lookup as described above.
+If a `destinations` environment variable is present, it will be used for the destination lookup as described above.
 The value is expected to be a stringified JSON array, where the items adhere to the <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="Destination interface" />.
 Example: `"[{\"name\": \"TESTINATION\", \"url\": \"http://url.hana.ondemand.com\", \"username\": \"DUMMY\", \"password\": \"dummy\"}]"`.
 
@@ -132,21 +132,21 @@ setTestDestination({
 
 This would set a destination with the name `TESTINATION`.
 At runtime, the SAP Cloud SDK will check the environment variable for a destination with the given name and use it if present.
-Note that the SAP Cloud SDK offers also a `mockTestDestination()` method, which reads in a `systems.json` and `credentials.json` to create destinations.
+Note that the SAP Cloud SDK also offers a `mockTestDestination()` method, which reads in a `systems.json` and `credentials.json` to create destinations.
 The advantage of files is that they can be excluded from the repository since they contain sensitive information.
 
 Note that this approach is not suitable for multi-tenant scenarios, because only the destination service can return destinations for different tenants.
 
 ### Register Destination via the SAP Cloud SDK
 
-:::caution Caution
+:::caution
 This functionality was introduced in version 2.0 of the SAP Cloud SDK.
 :::
 
-Usually, the destination service should be used in production to fetch a destination including an authentication token.
-In the case of frequent service to service communication, requesting the destination service every time for a target-specific `JWT` would mean a big overhead.
+Usually, the destination service should be used in production to fetch a destination, including an authentication token.
+In the case of frequent service-to-service communication, requesting the destination service every time for a target-specific `JWT` would mean a big overhead.
 Also in cases where the destination needs no authentication at all the detour over the destination service is sometimes not desirable.
-A solution for such use-cases is to register your destination in the SAP Cloud SDK cache:
+A solution for such use-cases is registering your destination in the SAP Cloud SDK cache:
 
 ```ts
 import { registerDestination } from '@sap-cloud-sdk/connectivity';
@@ -161,11 +161,11 @@ registerDestination(destination, options);
 MyRequest.execute({ destinationName: 'MY-DESTINATION' });
 ```
 
-If a registered destination is found the lookup is stopped and the call to the destination service is avoided.
-You can register a full destination object including authentication, but we do not recommend to store authentication information in registered destination.
+If a registered destination is found, the lookup is stopped, and the call to the destination service is avoided.
+You can register a full destination object, including authentication, but we do not recommend storing authentication information in the registered destination.
 
-Instead, we recommend to enable token forwarding on the destination.
-If you enable this option the token used to execute the request is forwarded to the destination:
+Instead, we recommend enabling token forwarding on the destination.
+If you enable this option, the token used to execute the request is forwarded to the destination:
 
 ```ts
 const destination = {
@@ -183,34 +183,37 @@ MyRequest.execute({
 ```
 
 This only works if your target system accepts the unchanged JWT.
-If a transformation is needed e.g. OAuth to SamlBearer you need to use the destination service for that.
+If a transformation is needed, e.g., OAuth to SamlBearer, you need to use the destination service for that.
 
 Note that the `registerDestination` method is tenant aware.
-We have a separate [guide](./destination-cache-isolation.mdx) on the cache options used by the `registerDestination` methods.
+We have a separate [guide](./destination-cache-isolation.mdx) on the cache options used by the `registerDestination` method.
 
 ### Service Binding Environment Variables
 
-The service credentials, in other words `VCAP_SERVICES` environment variables, may contain a destination.
-If you want to use this information, the name of the service instance must be provided as the destination name.
-Currently, two services types are supported out of the box `business-logging` and `s4-hana-cloud` with the following transformation functions:
+The service credentials, in other words `VCAP_SERVICES` environment variables, represent services bound to the destination.
+If you want to consume such a service, the SAP Cloud SDK can create a destination from the service binding for you.
+You do not need to create a dedicated destination in the destination service.
+Provide the name of the service instance as the destination name and the SAP Cloud SDK will:
+- Find the service binding with the given name
+- Extract the URL from the service binding
+- Fetch a client-credential-grant token if needed
+- Return a destination containing the token and URL
 
-```ts
-//business-logging
-(serviceBinding) => {
-  url: serviceBinding.credentials.writeUrl,
-  authentication: 'OAuth2ClientCredentials',
-  username: serviceBinding.credentials.uaa.clientid,
-  password: serviceBinding.credentials.uaa.clientsecret
-};
+Currently, 5 services types are supported out of the box:
 
-//s4-hana-cloud
-(serviceBinding) => {
-  url: serviceBinding.credentials.URL,
-  authentication: 'BasicAuthentication',
-  username: serviceBinding.credentials.User,
-  password: serviceBinding.credentials.Password
-};
-```
+- `business-logging`
+- `s4-hana-cloud`
+- `saas-registry`
+- `workflow`
+- `destination`
+- `service-manager`
+
+If you need a destination for a different service, create a custom `serviceBindingTransformFn` and pass it with `destinationFetchOptions` or consider creating a [feature request](https://github.com/SAP/cloud-sdk-js/issues/new?assignees=&labels=feature+request&template=feature_request.md&title=).
+Contributions providing transform functions are highly welcome.
+
+:::note
+The `serviceBindingTransformFn` was introduced in version 2.0 of the SAP Cloud SDK.
+:::
 
 ### Destination Service
 
@@ -237,22 +240,22 @@ For a simple service, this would be the end of the story.
 
 #### Multi-Tenancy
 
-However, the destination service is special in a way that it is a `tenant aware service`.
+However, the destination service is special in the way that it is a `tenant aware service`.
 Such services make it possible to build multi-tenant applications.
-So, what defines a tenant aware service?
+So, what defines a tenant-aware service?
 
-Assume you want to build a simple application showing the 5 newest business-partner in an SAP S/4HANA system.
+Assume you want to build a simple application showing the 5 newest business partners in an SAP S/4HANA system.
 You want to offer this application as a service to customers.
 Of course, you want to make this service cost-efficient and host it only once and let multiple customers use it.
-This leads now naturally to the requirement that your service needs to return the data related to the specific customers.
-A customer is represented by an account on the SAP BTP and a service considering the account is a `tenant aware service`.
+This now leads naturally to the requirement that your service needs to return the data related to specific customers.
+A customer is represented by an account on the SAP BTP and service considering the account is a `tenant aware service`.
 
-Tenant aware services on the SAP BTP are offered to customers via a `subscription` which works on a high level as follows:
+Tenant-aware services on the SAP BTP are offered to customers via a `subscription` which works on a high level as follows:
 If a customer wants to use a service, a subscription is created linking the customer account and the one account hosting the service.
-In the following the term `subscriber account` will be used for the accounts using a service and `provider account` for the one hosting it.
+In the following, the term `subscriber account` will be used for the accounts using a service and `provider account` for the one hosting it.
 
 After this little definition detour, let's go back to the destination service and the SAP Cloud SDK.
-For simplicity an optional argument of the destination lookup has been neglected in the beginning:
+For simplicity, an optional argument of the destination lookup has been neglected in the beginning:
 
 ```ts
 .execute({ destinationName: 'myDestination', jwt: 'yourJWT',})
@@ -260,7 +263,7 @@ For simplicity an optional argument of the destination lookup has been neglected
 
 The `jwt` argument takes the JSON web token (JWT) issued by an XSUAA as input.
 Additional information on how to retrieve JWTs can be found [here](../../guides/how-to-retrieve-jwt).
-This token contains a field `zid` holding the tenant id which will be used in the lookup process.
+This token contains a field `zid` holding the tenant id, which will be used in the lookup process.
 The lookup process done by the SAP Cloud SDK involves the following steps:
 
 - Request an access token for the destination service and a given tenant id from the XSUAA.
@@ -268,10 +271,10 @@ The lookup process done by the SAP Cloud SDK involves the following steps:
 - The token allows for calling the destination service on behalf of the given tenant.
   The tenant and service information is encoded in the access token.
 - Make a call to the destination service using the obtained access token.
-- The destination maintained in the given tenant are returned.
+- The destination maintained in the given tenant is returned.
 
-If no token is given or the destination is not found in the subscriber account the provider account is used as a fallback.
-To control this fallback behavior a selection strategy can be passed to the destination lookup:
+If no token is given or the destination is not found in the subscriber account, the provider account is used as a fallback.
+To control this fallback behavior, a selection strategy can be passed to the destination lookup:
 
 <Tabs groupId="version" defaultValue="major" values={[
 { label: 'SDK 1.x', value: 'deprecated'},
@@ -293,18 +296,18 @@ To control this fallback behavior a selection strategy can be passed to the dest
 </TabItem>
 </Tabs>
 
-There are three selection strategies defined in the SAP Cloud SDK: `alwaysSubscriber`, `alwaysProvider` and `subscriberFirst`.
+There are three selection strategies defined in the SAP Cloud SDK: `alwaysSubscriber`, `alwaysProvider`, and `subscriberFirst`.
 The selection strategy can be passed as an optional argument to the `.execute()` method.
 The default value is `subscriberFirst`.
 The selection strategies can be used to control for which account a destination lookup is attempted:
 
 - `AlwaysSubscriber`: Only try to get destinations from the subscriber account.
   A valid JWT is mandatory to receive something.
-- `AlwaysProvider`: Only try to get destination from the provider account.
+- `AlwaysProvider`: Only try to get the destination from the provider account.
   A JWT is not needed.
-  Even if you present a subscriber JWT the provider destination will be returned if present.
+  Even if you present a subscriber JWT, the provider destination will be returned if present.
 - `SubscriberFirst`: Tries to get from the subscriber first using the JWT.
-  If no valid JWT is provided or the destination is not found it tries the provider as described for `AlwaysProvider`.
+  If no valid JWT is provided or the destination is not found, it tries the provider as described for `AlwaysProvider`.
 
 :::note
 
@@ -317,8 +320,8 @@ In every request, these destinations are added to the destinations returned by t
 
 #### Destination Lookup Without a JSON Web Token
 
-There are situations where you do not have a JWT issued by the XSUAA but need to look a destination up e.g. in background processes.
-In such situations the property `iss` of the `DestinationAccessorOptions` can be used:
+There are situations where you do not have a JWT issued by the XSUAA but need to lookup a destination, e.g., in background processes.
+In such situations, the property `iss` of the `DestinationAccessorOptions` can be used:
 
 <Tabs groupId="version" defaultValue="major" values={[
 { label: 'SDK 1.x', value: 'deprecated'},
@@ -343,14 +346,14 @@ In such situations the property `iss` of the `DestinationAccessorOptions` can be
 </TabItem>
 </Tabs>
 
-The value for `iss` is supposed to be the same as in a JWT issued from the XSUAA e.g. `https://yourSubdomain.localhost:8080/uaa/oauth/token`.
-In principle only the host of the URL is relevant but since the same parsing and replacement methods are used for the JWT handling, the URL has to be provided in the format above.
+The value for `iss` is supposed to be the same as in a JWT issued from the XSUAA, e.g., `https://yourSubdomain.localhost:8080/uaa/oauth/token`.
+In principle, only the host of the URL is relevant, but since the same parsing and replacement methods are used for the JWT handling, the URL has to be provided in the format above.
 
 :::note
 
 If a JWT is used in the destination lookup, a validation of the provided token is performed.
 This validation ensures that the JWT has not been manipulated.
-If only the `iss` is provided no such validation is performed.
+If only the `iss` is provided, no such validation is performed.
 Note that the given subdomain value defines from which tenant destinations are fetched.
 So a wrong value may break the isolation for tenants.
 It is your responsibility as a developer to ensure that the provided value for the `iss` property is valid.
@@ -366,35 +369,36 @@ Most of the options are also available in version 1 but not all e.g. `timeout`.
 
 The `execute()`, `getDestination()` or `executeHttpRequest()` perform a destination lookup by name as discussed above.
 You can pass options to adjust how the destination is fetched.
-In the section above we listed already a few of the options but this sections gives a comprehensive overview:
+In the section above, we listed already a few of the options but this section gives a comprehensive overview:
 
 - `destinationName`: The name of the destination to be fetched.
   This is the only mandatory property, all the other parameters are optional.
+- `serviceBindingTransformFn`: A custom transformation function to control how a `Destination` is built from the given `ServiceBinding`.
 - `jwt`: The JSON web token.
-  Crucial in multi tenant scenarios or for user dependent authentication flows.
+  Crucial in multi-tenant scenarios or for user-dependent authentication flows.
 - `iss`: Issuer URL which can be used to obtain destination for a subscriber tenant if no JWT is present.
   Read the detailed documentation above before using this option.
 - `selectionStrategy`: Specifies the order in which accounts are searched for a destination.
   Default is `subscriberFirst`.
   Alternative values are `alwaysProvider` and `alwaysSubscriber`.
-- `iasToXsuaaTokenExchange`: Switches on token exchange form IAS format tokens to XSUAA if needed using the `@sap/xssec` library.
-  Default value is true.
+- `iasToXsuaaTokenExchange`: Switches on token exchange from IAS format tokens to XSUAA if needed using the `@sap/xssec` library.
+  The default value is true.
 - `cacheVerificationKeys`: Switches on caching for the verification certificates for the JWT.
-  Default value is true.
+  The default value is true.
 - `useCache`: Switches on caching for destinations received from the destination service.
-  Default value is false.
+  The default value is false.
 - `isolationStrategy`: Specifies how the destination cache is scoped.
   The value is automatically set but [under certain conditions](./destination-cache-isolation) you may want to optimize it.
-- `enableCircuitBreaker`: Switches on circuit breakers to protects the calls to the `XSUAA` and `destination-service`.
-  Default value is true.
+- `enableCircuitBreaker`: Switches on circuit breakers to protect the calls to the `XSUAA` and `destination-service`.
+  The default value is true.
 - `timeout`: Sets the timeout for the calls to SAP BTP services like `XSUAA` and `destination-service`.
   The value is in milliseconds and the default value is 10000 (10 seconds).
-  There is a second timeout options on the request level, setting the timeout for the calls to the destination target.
+  There is a second timeout option on the request level, setting the timeout for the calls to the destination target.
 
 ## Destination Properties
 
 The destination object may contain additional properties.
-The properties change the behavior how the SAP Cloud SDK handles the HTTP request at runtime.
+The properties change the behavior of how the SAP Cloud SDK handles the HTTP request at runtime.
 
 ### SAP Client
 
@@ -416,15 +420,15 @@ If you want to make HTTPS requests against systems that use certificates from ot
 2. TrustAll: The SAP Cloud SDK adds the inverted value as the [rejectUnauthorized](https://nodejs.org/api/tls.html#class-tlstlssocket)
 
 For additional information on trust configuration have a look at the more [detailed guide](../../guides/trust-and-key-stores.mdx).
-Please use the `TrustAll` with great caution since it opens the gate to man in the middle attacks.
+Please use the `TrustAll` with great caution since it opens the gate to man-in-the-middle attacks.
 
 ### JWT Validation
 
-If you use JWTs not issued by the XSUAA service you can configure validation by the destination service using the `x_user_token.jwks` or `x_user_token.jwks_uri` property.
-For more details on JWTs have a look at the more detailed [guide](../../guides/how-to-retrieve-jwt.mdx).
+If you use JWTs not issued by the XSUAA service, you can configure validation by the destination service using the `x_user_token.jwks` or `x_user_token.jwks_uri` property.
+For more details on JWTs, have a look at the more detailed [guide](../../guides/how-to-retrieve-jwt.mdx).
 
 :::caution
-If you want to use a custom JWT in combination with the destination cache the JWT must contain the properties `zid` and `user_id`.
+If you want to use a custom JWT in combination with the destination cache, the JWT must contain the properties `zid` and `user_id`.
 These properties are used to construct the cache key.
 :::
 
@@ -461,6 +465,6 @@ Headers or query parameters built by the SAP Cloud SDK are overwritten by additi
 Custom headers and query parameters, however, overwrite the additional properties.
 
 :::note
-**Header names** keep their casing but overwrite other headers independent of casing, e.g. `AUTHORIZATION` overwrites `authorization`.
+**Header names** keep their casing but overwrite other headers independent of the casing, e.g., `AUTHORIZATION` overwrites `authorization`.
 This does not apply to query **parameter names**`.
 :::

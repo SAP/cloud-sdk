@@ -21,8 +21,8 @@ import TabItem from '@theme/TabItem';
 
 In the SAP S/4HANA data model, addresses are related to the business partner entity.
 Each business partner can have multiple addresses assigned.
-You will develop an application which provides a REST API to manage addresses of business partners.
-In this part of the tutorial you will create the endpoints reading data.
+You will develop an application that provides a REST API to manage the addresses of business partners.
+In this part of the tutorial, you will create the endpoints reading data.
 You will learn:
 
 - How to retrieve a single business partner.
@@ -30,8 +30,8 @@ You will learn:
 
 The tutorial is based on the initial NestJs application explained in the [first part of the getting started tutorials](../getting-started/1-set-up-dev-environment.mdx).
 In that tutorial you already created [a first OData request](../getting-started/2-execute-odata-request.mdx) to get a list of business partners.
-You will extend the functionality of the API in this tutorial and the [follow up part](./change-addresses.mdx).
-Since the follow-up part is about changing data, we recommend to use a [local mock system](https://sap.github.io/cloud-s4-sdk-book/pages/mock-odata.html).
+You will extend the functionality of the API in this tutorial and the [follow-up part](./change-addresses.mdx).
+Since the follow-up part is about changing data, we recommend using a [local mock system](https://sap.github.io/cloud-s4-sdk-book/pages/mock-odata.html).
 Changing data is not possible on SAP API Business Hub and an actual SAP S/4HANA instance should not be polluted with test data.
 Note that both systems run locally but have different ports:
 
@@ -55,8 +55,9 @@ import {
 @Injectable()
 export class BusinessPartnerService {
   getAllBusinessPartners(): Promise<BusinessPartner[]> {
-    return businessPartnerService()
-      .businessPartnerApi.requestBuilder()
+    const { businessPartnerApi } = businessPartnerService();
+    return businessPartnerApi
+      .requestBuilder()
       .getAll()
       .addCustomHeaders({ apikey: process.env.APIKey })
       .execute({ url: 'http://localhost:3000' });
@@ -68,11 +69,11 @@ Let's walk you through the implementation of the service as a recap.
 You have imported the `businessPartnerService` which offers you many APIs and you picked the `businessPartnerApi`.
 With this API you requested all business partners using the `getAll` request builder.
 As discussed, you should use the local [mock system](https://sap.github.io/cloud-s4-sdk-book/pages/mock-odata.html).
-For simplicity the `url` is passed directly to the `execute()` method.
+For simplicity, the `url` is passed directly to the `execute()` method.
 
 :::caution
 
-In real applications you would use a real SAP S/4HANA system and the [destination service](../../features/connectivity/destination) to avoid leaking private or secret information through hard-coding system properties.
+In real applications, you would use a real SAP S/4HANA system and the [destination service](../../features/connectivity/destination) to avoid leaking private or secret information through hard-coding system properties.
 
 :::
 
@@ -90,7 +91,7 @@ Open the URL `http://localhost:8080/business-partners` and you should see the da
 ### Select Certain Fields
 
 The output from the previous sections shows all fields of the business partner entity.
-Like SQL, OData allows to select only specific properties of an entity.
+Like SQL, OData allows the selection of only specific properties of an entity.
 For our address manager, we only want to know the ID, first name, and last name of a business partner.
 Add a `select` statement to the service implementation:
 
@@ -150,9 +151,9 @@ businessPartnerApi
 As for `select`, you can use the properties of the `BusinessPartner` entity directly for filtering.
 Each property offers a set of functions for constructing filters.
 Every property has the `equals` and `notEquals` function.
-Depending on the type of the property, there can be additional functions like `greaterThan` or `greaterOrEqual`.
+Depending on the type of property, there can be additional functions like `greaterThan` or `greaterOrEqual`.
 
-Since, the type of the property is known, the typed client will prevent you from passing values of the wrong type.
+Since the type of the property is known, the typed client will prevent you from passing values of the wrong type.
 For example, `businessPartnerApi.schema.FIRST_NAME.equals(1)` would not compile when using TypeScript.
 In JavaScript, the code would only fail at run-time, but your editor may raise a warning for the type mismatch.
 
@@ -160,8 +161,8 @@ For more complicated filter conditions have a look at the [filter documentation]
 
 ## Get Addresses of Business Partner
 
-As a first step you created an endpoint for obtaining a list of business partners.
-In this part of the tutorial you will create the services to read the addresses.
+As a first step, you created an endpoint for obtaining a list of business partners.
+In this part of the tutorial, you will create the services to read the addresses.
 
 ### Get One Business Partner
 
@@ -182,7 +183,7 @@ As before, you call `businessPartnerApi.requestBuilder()` to select the type of 
 Since you only want to get a single business partner, you use the `getByKey` function and then call `execute` to execute the request.
 Again, you use the local mock server from the previous section for the `getAll` request.
 
-As a next step you need to expose the service via the controller.
+As a next step, you need to expose the service via the controller.
 Open the `business-partner.controller.ts` and add the following method:
 
 ```ts
@@ -201,14 +202,14 @@ Otherwise, an error message is sent.
 Restart your server and open `http://localhost:8080/business-partners` to get the list of all business partners.
 Copy one ID from the result list and execute `http://localhost:8080/business-partners/<yourId>`.
 You should see the details of the chosen business partner.
-Note that Nest applications have a build-in [exception filter](https://docs.nestjs.com/exception-filters), which maps exceptions to http messages shown to the client.
-By default the exceptions from the SAP Cloud SDK are mapped to a server side error.
+Note that Nest applications have a build-in [exception filter](https://docs.nestjs.com/exception-filters), which maps exceptions to HTTP messages shown to the client.
+By default, the exceptions from the SAP Cloud SDK are mapped to a server-side error.
 So if you provide a non-existing ID, you will receive a 500 response and not a 404.
 
 ### Navigate To Address
 
 As mentioned before, the address is a separate OData entity related to the business partner.
-In OData the address is a navigation property of the business partner.
+In OData, the address is a navigation property of the business partner.
 If you want to include such a related property in the query result, you have to include it in the select statement:
 
 ```ts
@@ -275,7 +276,7 @@ If you call the URL `http://localhost:8080/business-partners/<yourId>`, the serv
 
 ## Final Code Review
 
-In this tutorial you have created an API to read business partners.
+In this tutorial, you have created an API to read business partners.
 You created endpoints to read a list of business partners as well as a specific business partner by ID.
 You adjusted the results with `select` and `filter` statements to fit your needs.
 In the [next part](./change-addresses.mdx) you will extend the API to change data.
