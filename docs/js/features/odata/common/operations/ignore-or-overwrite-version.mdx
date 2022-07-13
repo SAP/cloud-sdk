@@ -17,6 +17,18 @@ businessPartnerApi
   .ignoreVersionIdentifier();
 ```
 
+You can also overwrite ETags using `setVersionIdentifier`:
+
+```ts
+const { businessPartnerApi } = businessPartnerService();
+businessPartnerApi
+  .requestBuilder()
+  .update(businessPartner)
+  .setVersionIdentifier('etag');
+```
+
+In the example above the ETag 'etag' is being used instead of the original one.
+
 </TabItem>
 <TabItem value="deprecated">
 
@@ -38,3 +50,4 @@ In the example above the ETag 'etag' is being used instead of the original one.
 
 </TabItem>
 </Tabs>
+

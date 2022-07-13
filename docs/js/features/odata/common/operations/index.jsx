@@ -8,7 +8,9 @@ import GetAllContent from './get-all.mdx';
 import GetByKeyContent from './get-by-key.mdx';
 import UpdateContent from './update.mdx';
 import ReplaceContent from './replace.mdx';
-import IgnoreOrOverwriteVersionContent from './ignore-or-overwrite-version.mdx'
+import IgnoreOrOverwriteVersionContent from './ignore-or-overwrite-version.mdx';
+import SetIgnoredFieldsContent from './set-ignored-fields.mdx';
+import SetRequiredFieldsContent from './set-required-fields.mdx';
 
 export function Count() {
   return <CountContent />;
@@ -48,4 +50,12 @@ export function Replace() {
 
 export function IgnoreOrOverwriteVersion() {
   return <IgnoreOrOverwriteVersionContent />
+}
+
+export function SetIgnoredFields() {
+  return <SetIgnoredFieldsContent />
+}
+
+export function SetRequiredFields() {
+  return <SetRequiredFieldsContent />
 }

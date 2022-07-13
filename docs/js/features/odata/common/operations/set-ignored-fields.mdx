@@ -1,0 +1,29 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+If you want to ignore specific fields which changed since the last update of an entity, you can use the `setIgnoredFields` method.
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+```ts
+const { businessPartnerApi } = businessPartnerService();
+businessPartnerApi
+  .requestBuilder()
+  .update(businessPartner)
+  .setIgnoredFields(businessPartnerApi.schema.FIRST_NAME)
+```
+
+</TabItem>
+<TabItem value="deprecated">
+
+```ts
+BusinessPartner.requestBuilder()
+  .update(businessPartner)
+  .setIgnoredFields(BusinessPartner.FIRST_NAME);
+```
+
+</TabItem>
+</Tabs>
+
+In this example, the `PATCH` request won't contain changes that were made to the `FIRST_NAME` property of the business partner.

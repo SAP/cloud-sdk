@@ -1,0 +1,29 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+If updating an entity requires a specific field, even thogh it didn't change, you can use the `setRequiredFields` method.
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+```ts
+const { businessPartnerApi } = businessPartnerService();
+businessPartnerApi
+  .requestBuilder()
+  .update(businessPartner)
+  .setRequiredFields(businessPartnerApi.schema.FIRST_NAME)
+```
+
+</TabItem>
+<TabItem value="deprecated">
+
+```ts
+BusinessPartner.requestBuilder()
+  .update(businessPartner)
+  .setRequiredFields(BusinessPartner.FIRST_NAME);
+```
+
+</TabItem>
+</Tabs>
+
+In this example, the `PATCH` request will contain the `FIRST_NAME` property of the business partner, even if it didn't change.
