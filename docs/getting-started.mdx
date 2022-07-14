@@ -1,0 +1,103 @@
+---
+id: getting-started
+title: Quick Start
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Quick Start
+description: SAP Cloud SDK is the simplest and fastest way to extend SAP services and applications in the cloud.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+## Create Your First App
+
+You can choose between `JavaScript` and `Java` when developing with the SAP Cloud SDK.
+Check these two examples to initialize an application for your favorite development environment.
+
+<Tabs
+defaultValue="js"
+values={[
+{ label: 'JavaScript', value: 'js', },
+{ label: 'Java', value: 'java', },
+]}>
+
+<TabItem value="js">
+
+:::note Prerequisites
+Make sure you have the latest stable version of [Node.js](https://nodejs.org/en/download/) and `npm` installed.
+This example assumes you're running macOS or Linux.
+Check out our detailed [getting started guide](/docs/js/getting-started) for more information.
+:::
+
+```bash
+$ npm install -g @sap-cloud-sdk/cli
+
+$ sap-cloud-sdk init my-sdk-project
+
++---------------------------------------------------------------+
+| ✅ Init finished successfully.                                |
+|                                                               |
+| 🚀 Next steps:                                                |
+| - Run the application locally (`npm run start:dev`)           |
+| - Deploy your application (`npm run deploy`)                  |
+|                                                               |
+| 🔨 Consider setting up Jenkins to continuously build your app |
+| Use `sap-cloud-sdk add-cx-server` to create the setup script  |
++---------------------------------------------------------------+
+```
+
+</TabItem>
+
+<TabItem value="java">
+
+:::note Prerequisites
+Make sure your have [Java 8](https://adoptopenjdk.net/) and [maven](https://maven.apache.org/install.html) installed.
+This example assumes you're running macOS or Linux.
+Check our detailed [getting started](/docs/java/getting-started) guide for more information.
+:::
+
+```bash
+$ mvn archetype:generate "-DarchetypeGroupId=com.sap.cloud.sdk.archetypes"\
+"-DarchetypeArtifactId=scp-cf-tomee" "-DarchetypeVersion=RELEASE"
+```
+
+</TabItem>
+</Tabs>
+
+## Hello, World!
+
+This example is not a classical `Hello World`.
+There is much more to it than just bootstrapping a starter application.
+The SAP Cloud SDK is a complex and flexible library addressing a vast range of use-cases.
+Each of them would require a `Hello World` of its own, and we have them!
+
+To continue discovering the SAP Cloud SDK for your favorite programming language check the respective getting started guides and comprehensive tutorials for multiple use cases.
+
+:::note
+There is no full feature parity between JavaScript and Java libraries.
+Please, review the respective documentation sections to find out more.
+:::
+
+### Getting Started - JavaScript
+
+- [A comprehensive getting started guide for JavaScript developers](/docs/js/getting-started)
+- [Tutorials covering SAP Cloud SDK for JavaScript on the SAP Developers portal](/docs/js/getting-started#tutorials)
+
+### Getting Started - Java
+
+- [A comprehensive getting started guide for Java developers](/docs/java/getting-started)
+- [Tutorials covering SAP Cloud SDK for Java on the SAP Developers portal](https://developers.sap.com/tutorial-navigator.html?tag=products:technology-platform/sap-cloud-sdk/sap-cloud-sdk&tag=topic:java)
+
+### Mock and Test Servers for OData and SAP S/4HANA
+
+- We created a [service](https://github.wdf.sap.corp/MA/book-bupa-mock-odata) that mocks SAP S/4HANA Business Partner service. You can host it on your own machine to practice with the SAP Cloud SDK.
+- [TripPin reference service](https://services.odata.org/V4/TripPinServiceRW) used in official OData v4 documentation to provide [tutorials and learning materials](https://www.odata.org/getting-started/basic-tutorial/).
+- [Northwind reference service](https://services.odata.org/V4/OData/) has a complex data model allowing to try out advanced OData v4 features with the SAP Cloud SDK.

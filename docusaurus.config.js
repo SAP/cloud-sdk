@@ -60,74 +60,27 @@ module.exports = {
       },
       items: [
         {
-          to: 'docs/overview/overview-cloud-sdk',
-          label: 'Docs',
+          label: 'Overview',
+          type: 'doc', 
+          docId: 'overview-cloud-sdk',
           position: 'left'
         },
         {
-          label: 'Support',
+          label: '☕ Java',
+          to: 'docs/java/overview-cloud-sdk-for-java',
           position: 'left',
-          items: [
-            {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/sap-cloud-sdk'
-            },
-            {
-              label: 'GitHub JavaScript',
-              href: 'https://github.com/SAP/cloud-sdk-js/issues/new/choose'
-            },
-            {
-              label: ' GitHub Java',
-              href: 'https://github.com/SAP/cloud-sdk/issues/new?assignees=&labels=Java&template=sap-cloud-sdk-for-java-issue.md&title='
-            },
-            {
-              label: 'Support Details',
-              to: 'docs/overview/get-support'
-            }
-          ]
+          docsPluginId: 'docs-java',
+          activeBasePath: 'docs/java',
+          sdkSwitch: true
         },
         {
-          label: 'Release Notes',
+          label: '🚀 JavaScript',
+          to: 'docs/js/overview-cloud-sdk-for-javascript',
           position: 'left',
-          items: [
-            {
-              label: 'Java',
-              to: 'docs/java/release-notes-sap-cloud-sdk-for-java'
-            },
-            {
-              label: 'JavaScript/TypeScript',
-              to: 'docs/js/release-notes-sap-cloud-sdk-for-javascript-and-typescript'
-            }
-          ]
+          docsPluginId: 'docs-js',
+          activeBasePath: 'docs/js',
+          sdkSwitch: true
         },
-        {
-          label: 'Maven Central',
-          href: 'https://search.maven.org/search?q=g:com.sap.cloud.sdk*',
-          position: 'left'
-        },
-        {
-          label: 'npm',
-          position: 'left',
-          items: [
-            {
-              label: 'Core Modules',
-              href: 'https://www.npmjs.com/search?q=sap-cloud-sdk*'
-            },
-            {
-              label: 'SAP S/4HANA Cloud',
-              href: 'https://www.npmjs.com/search?q=sap%2Fsap-cloud-vdm*'
-            },
-            {
-              label: 'SAP S/4HANA On-Premise',
-              href: 'https://www.npmjs.com/search?q=sap%2Fsap-cloud-op*'
-            }
-          ]
-        },
-        {
-          label: 'Feature Matrix',
-          position: 'left',
-          to: 'docs/overview/cloud-sdk-feature-matrix'
-        }
       ]
     },
     footer: {
@@ -202,11 +155,10 @@ module.exports = {
       {
         docs: {
           remarkPlugins: [require('mdx-mermaid')],
-          sidebarPath: require.resolve('./sidebars.js'),
-          showLastUpdateAuthor: true,
-          showLastUpdateTime: true,
+          sidebarPath: require.resolve('./sidebarsDocsCommon.js'),
           editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
-          routeBasePath: 'docs'
+          routeBasePath: 'docs/overview',
+          path: 'docs'
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css')
@@ -225,6 +177,34 @@ module.exports = {
   ],
   customFields: {},
   plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'docs-java',
+        path: 'docs-java',
+        routeBasePath: 'docs/java',
+        sidebarPath: require.resolve('./sidebarsDocsJava.js'),
+      }
+    ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'docs-js',
+        path: 'docs-js',
+        routeBasePath: 'docs/js',
+        sidebarPath: require.resolve('./sidebarsDocsJs.js'),
+      }
+    ],
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        createRedirects(existingPath) {
+          if (existingPath.includes('/community') || existingPath.includes('/related-projects')) {
+            return existingPath.replace('/docs/overview', '/docs');
+          }
+        },
+      }
+    ],
     function nodeWebpackPolyfillPlugin(context, options) {
       return {
         name: 'nodeWebpackPlyfill',
