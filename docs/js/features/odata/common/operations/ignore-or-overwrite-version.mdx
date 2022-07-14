@@ -2,7 +2,7 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
 Entities can only be updated or deleted if [ETags](#handling-of-etags) match.
-If you want to force an update or the deletion of the entity regardless of the ETag, configure the request to ignore version identifiers with `ignoreVersionIdentifier`.
+If you want to force either an update or the deletion of the entity regardless of the ETag, configure the request to ignore version identifiers with `ignoreVersionIdentifier`.
 
 Below is an example with an update:
 
@@ -29,7 +29,7 @@ businessPartnerApi
 
 <!-- vale off -->
 
-In the example above the ETag 'etag' is being used instead of the original one.
+In the example above, the ETag 'etag' is used instead of the original one.
 
 <!-- vale on -->
 
@@ -46,13 +46,13 @@ You can also overwrite ETags using `setVersionIdentifier`:
 
 ```ts
 BusinessPartner.requestBuilder()
-  .delete(businessPartner)
+  .update(businessPartner)
   .setVersionIdentifier('etag');
 ```
 
 <!-- vale off -->
 
-In the example above the ETag 'etag' is being used instead of the original one.
+In the example above, the ETag 'etag' is used instead of the original one.
 
 <!-- vale on -->
 
