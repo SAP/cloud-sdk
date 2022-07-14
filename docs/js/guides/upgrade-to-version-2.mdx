@@ -148,12 +148,15 @@ const { businessPartnerApi, businessPartnerAddressApi } = businessPartnerService
 :::danger
 You should use the object destructuring like the example above instead of calling the service multiple times for every API object, to avoid initializing multiple service instances.
 Here is a **BAD** example, that you should **NOT** follow:
+
 ```ts
 // do NOT do this
 const businessPartnerApi = businessPartnerService().businessPartnerApi;
 // do NOT do this
-const businessPartnerAddressApi = businessPartnerService().businessPartnerAddressApi;
+const businessPartnerAddressApi =
+  businessPartnerService().businessPartnerAddressApi;
 ```
+
 :::
 
 :::note

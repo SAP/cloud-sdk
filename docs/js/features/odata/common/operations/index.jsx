@@ -49,13 +49,13 @@ export function Replace() {
 }
 
 export function IgnoreOrOverwriteVersion() {
-  return <IgnoreOrOverwriteVersionContent />
+  return <IgnoreOrOverwriteVersionContent />;
 }
 
 export function SetIgnoredFields() {
-  return <SetIgnoredFieldsContent />
+  return <SetIgnoredFieldsContent />;
 }
 
 export function SetRequiredFields() {
-  return <SetRequiredFieldsContent />
+  return <SetRequiredFieldsContent />;
 }
