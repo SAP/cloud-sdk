@@ -156,8 +156,6 @@ module.exports = {
         docs: {
           remarkPlugins: [require('mdx-mermaid')],
           sidebarPath: require.resolve('./sidebarsDocsCommon.js'),
-          showLastUpdateAuthor: true,
-          showLastUpdateTime: true,
           editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
           routeBasePath: 'docs/overview',
           path: 'docs'
@@ -185,7 +183,6 @@ module.exports = {
         id: 'docs-java',
         path: 'docs-java',
         routeBasePath: 'docs/java',
-        remarkPlugins: [require('mdx-mermaid')],
         sidebarPath: require.resolve('./sidebarsDocsJava.js'),
       }
     ],
@@ -195,7 +192,6 @@ module.exports = {
         id: 'docs-js',
         path: 'docs-js',
         routeBasePath: 'docs/js',
-        remarkPlugins: [require('mdx-mermaid')],
         sidebarPath: require.resolve('./sidebarsDocsJs.js'),
       }
     ],
@@ -203,13 +199,9 @@ module.exports = {
       '@docusaurus/plugin-client-redirects',
       {
         createRedirects(existingPath) {
-          if (existingPath.includes('/community')) {
-            return existingPath.replace('/docs/overview/community', '/docs/community');
+          if (existingPath.includes('/community') || existingPath.includes('/related-projects')) {
+            return existingPath.replace('/docs/overview', '/docs');
           }
-          else if (existingPath.includes('/related-projects')) {
-            return existingPath.replace('/docs/overview/related-projects', '/docs/related-projects');
-          }
-          return undefined; // Return a falsy value: no redirect created
         },
       }
     ],
