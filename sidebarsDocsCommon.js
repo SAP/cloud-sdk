@@ -1,5 +1,5 @@
 module.exports = {
-    someSidebar: [
+    docsCommonSidebar: [
         'overview-cloud-sdk',
         'cloud-sdk-feature-matrix',
         'getting-started',

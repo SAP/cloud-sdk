@@ -1,5 +1,5 @@
 module.exports = {
-    someSidebar: [
+    docsJavaSidebar: [
         'overview-cloud-sdk-for-java',
         'getting-started',
         {

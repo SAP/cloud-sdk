@@ -1,5 +1,5 @@
 module.exports = {
-    someSidebar: [
+    docsJsSidebar: [
         'overview-cloud-sdk-for-javascript',
         'getting-started',
         {
