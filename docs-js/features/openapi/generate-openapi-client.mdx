@@ -28,19 +28,13 @@ Run the command below to install the OpenAPI generator as a `devDependency`:
 npm install -D @sap-cloud-sdk/openapi-generator
 ```
 
-or globally:
-
-```sh
-npm install -g @sap-cloud-sdk/openapi-generator
-```
-
 ## Generate a Client Using the Command Line Interface
 
 The SAP Cloud SDK generator is primarily intended to be used on the command line.
 You can generate an OpenAPI client by running:
 
 ```sh
-openapi-generator --input <input> --outputDir <outputDirectory>
+npx openapi-generator --input <input> --outputDir <outputDirectory>
 ```
 
 The `<input>` points to your specification file or a directory containing the specification(s) and `<outputDirectory>` to the target folder where the generated client(s) will be saved.
@@ -56,6 +50,15 @@ By default, the generated clients will each contain:
 
 The generation always includes the TypeScript sources.
 All other files can be excluded from the generation - see the options below.
+
+:::note
+
+We recommend to install the generator as a local dependency, because global installations hide the used generator version and cause problems when transpiling to JavaScript.
+If you must use a globally installed generator, install the`@types/node` and `@sap-cloud-sdk/openapi` package in your project to make the transpilation work.
+If you need to transpile sources without any local `node_modules`, you must manually execute the `tsc` on your own with a custom [path mapping](https://www.typescriptlang.org/docs/handbook/module-resolution.html#path-mapping).
+See [transpile](#Options) for more details in the options below.
+
+:::
 
 ## Options
 
