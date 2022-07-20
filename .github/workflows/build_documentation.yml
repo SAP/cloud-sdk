@@ -9,12 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
 
       - name: Vale Linter
         # You may pin to the exact commit or the version.
         # uses: errata-ai/vale-action@0da98680790f89b8d5b685de9c264f55addc971b
-        uses: errata-ai/vale-action@v1.4.3
+        uses: errata-ai/vale-action@v2.0.1
         with:
           # A list of styles to install prior to running Vale.
           # styles: # optional
@@ -31,12 +31,35 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '14.x'
+          node-version: 16
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build docs
         run: npm run build
+  dependabot:
+    runs-on: ubuntu-latest
+    if: ${{ github.actor == 'dependabot[bot]' && github.event_name == 'pull_request' }}
+    needs: [build]
+    permissions:
+      pull-requests: write
+      contents: write
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1.3.3
+        with:
+          github-token: '${{ secrets.GITHUB_TOKEN }}'
+      - name: Approve a PR
+        run: gh pr review --approve "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - name: Enable auto-merge for Dependabot PRs
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
