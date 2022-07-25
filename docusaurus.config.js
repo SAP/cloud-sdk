@@ -67,7 +67,7 @@ module.exports = {
         },
         {
           label: '☕ Java',
-          to: 'docs/java/overview-cloud-sdk-for-java',
+          to: 'docs/java/v3/overview-cloud-sdk-for-java',
           position: 'left',
           docsPluginId: 'docs-java',
           activeBasePath: 'docs/java',
@@ -81,6 +81,16 @@ module.exports = {
           activeBasePath: 'docs/js',
           sdkSwitch: true
         },
+        {
+          type: 'docsVersionDropdown',
+          position: 'right',
+          docsPluginId: 'docs-java',
+        },
+        {
+          type: 'docsVersionDropdown',
+          position: 'right',
+          docsPluginId: 'docs-js',
+        }
       ]
     },
     footer: {
@@ -184,6 +194,19 @@ module.exports = {
         path: 'docs-java',
         routeBasePath: 'docs/java',
         sidebarPath: require.resolve('./sidebarsDocsJava.js'),
+        lastVersion: 'v3',
+        versions: {
+          current: {
+            label: 'v4',
+            path: 'v4',
+            banner: 'unreleased',
+            badge: false
+          },
+          v3: {
+            label: 'v3',
+            badge: false
+          }
+        }
       }
     ],
     [
@@ -193,6 +216,19 @@ module.exports = {
         path: 'docs-js',
         routeBasePath: 'docs/js',
         sidebarPath: require.resolve('./sidebarsDocsJs.js'),
+        lastVersion: 'current',
+        versions: {
+          current: {
+            label: 'v2',
+            badge: false
+          },
+          v1: {
+            label: 'v1',
+            path: 'v1',
+            banner: 'unmaintained',
+            badge: false
+          }
+        }
       }
     ],
     [
