@@ -1,7 +1,7 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-If updating an entity requires a specific field, even though it didn't change, you can use the `setRequiredFields` method.
+If you want to send properties in the payload of the update request, that you did not change, use the `setRequiredFields` method to add them.
 
 In the following example, the `PATCH` request will contain the `FIRST_NAME` property of the business partner, even if it didn't change.
 
@@ -10,6 +10,16 @@ In the following example, the `PATCH` request will contain the `FIRST_NAME` prop
 
 ```ts
 const { businessPartnerApi } = businessPartnerService();
+// First we get a businesspartner with the id of "1".
+const businessPartner = businessPartnerApi
+    .requestBuilder()
+    .getByKey('1')
+    .execute({destinationName: 'myDestination'});
+
+// Then we change the business partner's last name to "Smith".
+businessPartner.then((businessPartnerResponse) => (businessPartnerResponse.lastName = 'Smith'));
+
+// Finally we update the business partner with the updated last name, but still include their first name in the "PATCH" request.
 businessPartnerApi
   .requestBuilder()
   .update(businessPartner)
@@ -20,7 +30,18 @@ businessPartnerApi
 <TabItem value="deprecated">
 
 ```ts
-BusinessPartner.requestBuilder()
+// First we get a businesspartner with the id of "1".
+const businessPartner = BusinessPartner
+    .requestBuilder()
+    .getByKey('1')
+    .execute({destinationName: 'myDestination'});
+
+// Then we change the business partner's last name to "Smith".
+businessPartner.then((businessPartnerResponse) => (businessPartnerResponse.lastName = 'Smith'));
+
+// Finally we update the business partner with the updated last name, but still include their first name in the "PATCH" request.
+BusinessPartner
+  .requestBuilder()
   .update(businessPartner)
   .setRequiredFields(BusinessPartner.FIRST_NAME);
 ```
