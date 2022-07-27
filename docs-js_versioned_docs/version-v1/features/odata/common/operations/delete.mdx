@@ -1,0 +1,33 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+The Delete request builder allows you to create `DELETE` requests, that delete an entity.
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+```ts
+/*
+  The following won't work on the real SAP S/4HANA BusinessPartner service because BusinessPartners cannot be deleted.
+  We added this only for the sake of the example.
+*/
+const { businessPartnerApi } = businessPartnerService();
+businessPartnerApi.requestBuilder().delete(businessPartner);
+```
+
+ </TabItem>
+<TabItem value="deprecated">
+
+```ts
+/*
+  The following won't work on the real SAP S/4HANA BusinessPartner service because BusinessPartners cannot be deleted.
+  We added this only for the sake of the example.
+*/
+BusinessPartner.requestBuilder().delete(businessPartner);
+```
+
+</TabItem>
+</Tabs>
+
+Be aware that delete requests will fail if their ETag doesn't match.
+Check out our [ETag](#handling-of-etags) section for more information.

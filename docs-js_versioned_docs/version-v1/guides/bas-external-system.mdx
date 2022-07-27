@@ -1,0 +1,250 @@
+---
+title: Connecting to External Systems From the Business Application Studio
+sidebar_label: Connecting to External Systems from BAS
+description: This article describes how the SDK helps to connect to external systems from the Business Application Studio.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - proxy
+  - connectivity
+  - Business Application Studio
+  - cloud-foundry
+  - JavaScript
+  - TypeScript
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import ThemedImage from '@theme/ThemedImage';
+
+## What is the Business Application Studio?
+
+The SAP Business Application Studio (BAS) is a development environment offered as a service on SAP BTP.
+You can subscribe to the BAS and from there quickly start developing without installing node, git, Visual Studio Code, nor other tools.
+The solution looks and feels like Visual Studio Code, which is no surprise since it is based on [Eclipse Theia](https://theia-ide.org/), the open source version of Visual Studio Code.
+
+However, SAP added a few useful features to the BAS.
+You can connect the BAS to your SAP BTP account, which allows you to reach all systems that you have configured on SAP BTP from your local machine.
+This includes systems that are connected through the Cloud Connector (CC) and are normally not reachable through the internet.
+Being able to test changes locally reduces the overhead of deploying remotely and thus increases convenience for developers.
+
+<!-- vale off -->
+
+<ThemedImage
+  alt="Connecting to On-premise systems"
+  sources={{
+    light: useBaseUrl('img/bas_light.svg'),
+    dark: useBaseUrl('img/bas_dark.svg')
+  }}
+  className="center"
+  width="100%"
+/>
+
+<!-- vale on -->
+
+## Case 1: Connection to an On-Premise System
+
+### Technical Background
+
+Companies do not expose their SAP S/4HANA On-premise systems to the internet.
+They are only reachable via a CC attached to an SAP BTP account.
+In principle, you cannot reach these systems outside the SAP BTP account.
+
+However, due to the subscription between the BAS and the SAP BTP account, there is a connection from the local application to the SAP S/4HANA system.
+On a high level the connection works the following way:
+
+- The BAS includes an HTTP_PROXY running at http://localhost:8887
+- This proxy forwards all `http` requests to the SAP BTP account
+- SAP BTP searches the existing destinations for one matching the name
+- If a destination is present, an initial request is sent to this destination
+- The proxy is a reverse proxy also piping back the response to the BAS
+
+### Prerequisite 1: The Business Application Studio (BAS)
+
+You have an SAP BTP account and a subscription to the BAS.
+Via the subscription, the BAS can access all destination in the subscribed account.
+
+### Prerequisite 2: Cloud Connector and Destination Setup
+
+You have set up a working Cloud Connector and configured a destination pointing to an On-premise system.
+Per default, destinations are not usable by a subscribed BAS.
+You need to set two properties `WebIDEEnabled` and `HTML5.DynamicDestination` to enable that feature for a specific destination.
+Go to the destination configuration on SAP BTP and add the properties:
+
+| Property                   | Value |
+| -------------------------- | ----- |
+| `WebIDEEnabled`            | true  |
+| `HTML5.DynamicDestination` | true  |
+
+### Checking the Connection
+
+Before you start the implementation, ensure that the connection is correctly configured.
+The connectivity proxy running in BAS expects a pattern of the kind `http://<destinationName>.dest`.
+When such a pattern is found the destination name is extracted and checked against the destinations in the related Cloud
+Foundry account.
+If a match is found and the `WebIDEEnabled` and `HTML5.DynamicDestination` properties are enabled for the destination the request is forwarded via this destination.
+All authorization information from the real destination is used.
+You can test this flow by using a simple `curl` command without any code.
+
+```bash
+curl <destinationName>.dest/path/to/service
+```
+
+So if your destination is called `S4H_Test.dest` and you want to query the catalog service the command would be:
+
+```bash
+curl -v -i "S4H_Test.dest/sap/opu/odata/iwfnd/catalogservice;v=2/ServiceCollection?%24top=1"
+```
+
+If the request responds with status code 200 for the service you want to use, you can start the implementation.
+The connectivity proxy has a built-in cache that needs to be emptied after you adjusted destinations.
+This is done by calling:
+
+```bash
+curl localhost:8887/reload
+```
+
+For more details on testing and troubleshooting have a look at [this guide](https://blogs.sap.com/2020/10/13/how-to-check-the-connectivity-to-your-backend-system-in-business-application-studio/).
+
+### Implementation
+
+If the connection is tested and working you can start the implementation.
+The SAP Cloud SDK helps you to consider the HTTP_PROXY automatically and makes it easy to use the same code base locally and in production on SAP BTP.
+The SAP Cloud SDK has a [destination lookup](../features/connectivity/destination) priority considering environment variables first.
+
+The trick is to define a `destinations` environment variable when you run locally, which works like a switch under the hood when you execute:
+
+```ts
+executeHttpRequest({ destinationName: 'myDestinationName', jwt: 'myJWT' });
+```
+
+The code is the same for local execution and production.
+The two situations are:
+
+**Case 1:** When run locally, the SAP Cloud SDK reads the destination from the environment variables.
+The `jwt` is irrelevant.
+The destination contains only the name and URL of the real SAP BTP destination.
+Since the destination has no proxy type specified, the SAP Cloud SDK takes the HTTP_PROXY into account, as is the default.
+From there the flow described above takes place.
+
+**Case 2:** When run on SAP BTP there is no environment variable present.
+The `jwt` is used to fetch the full destination from the service.
+The proxy type is `OnPremise` and the connectivity service provides all proxy information.
+
+:::note
+The `executeHttpRequest()` function is used by all request builders provided of the SAP Cloud SDK as well as by CAP applications connecting to an SAP S/4HANA system.
+:::
+
+You use [launch configurations](https://code.visualstudio.com/docs/editor/debugging#_launchjson-attributes) to run and debug applications locally.
+Either extend your existing `.vscode/launch.json` or create a new one.
+
+```JSON
+{"configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug my application",
+      "program": "${workspaceFolder}/dist/main.js",
+      "envFile": "${workspaceFolder}/.env",
+      "preLaunchTask": "npm: build",
+      "outFiles": [
+        "${workspaceFolder}/dist/**/*.js"
+      ]
+    }
+  ]
+}
+```
+
+In this example, we use a simple Nest.js application.
+The code will look almost identical for express or [CAP](https://community.sap.com/topics/cloud-application-programming) applications.
+The property `program` defines the script file executed when you run the configuration.
+In our case, the `main.js` script will start up the Nest server.
+The `preLaunchTask` executes the build before each run which compiles the TypeScript files to JavaScript.
+The `outFiles` property defines where the compiled files will be located.
+
+We have to set the `destinations` environment variable, to provide our destination.
+This will interrupt the [destination lookup](../features/connectivity/destination.mdx) and lead to a destination with the HTTP_PROXY considered.
+The easiest way to do that is via a `.env` file which is read when starting the application.
+If you do not have a `.env` file, create one or adjust the existing one.
+Just add the following entry to the `.env` file:
+
+```
+destinations="[{"name": "<destinationName>", "url": "http://<destinationName>.dest"}]"
+```
+
+Fill in the `name` and `url` of the destination you [configured on SAP BTP](#prerequisite-2-cloud-connector-and-destination-setup).
+You can use the same pattern `<name>.dest` that you have used for [testing the connection](#checking-the-connection).
+All requests done with the SAP Cloud SDK will now reach the SAP S/4HANA system via the BAS connectivity proxy.
+You can start your application via the launch button.
+
+:::note
+The SAP Cloud SDK also offers a `mockTestDestination()` method which reads destination information from a `system.json` and `credentials.json` file.
+In the end, this only sets the `destinations` environment variables as stored in the `.env` file, but could become advantageous if you have many systems.
+You can also set the `credentials.json` to your git ignore list so that they are not checked-in by accident and share the systems with your colleagues.
+:::
+
+For the simple case you would add `mockTestDestination(<destinationName>)` to your local startup script and have a `systems.json` in your project root:
+
+```JSON
+{
+    "systems": [
+        {
+            "alias": "your destination name",
+            "uri": "your destination url "
+        }
+    ]
+}
+```
+
+### Supported Authentication Types for On-premise Systems
+
+The supported authentication types are either `BasicAuthorization` or `PrincipalPropagation`.
+In case you use principal propagation, the BAS will fill the `SAP-Connectivity-Authentication` header as discussed in the [On-premise connectivity guide.](../features/connectivity/on-premise.mdx)
+The user logged into the BAS will be propagated.
+In case your BAS user is **not** a valid user of the On-premise system you can use a destination using basic authorization.
+
+### Supported Authentication Types for Cloud Systems
+
+For calls to Cloud Systems, i.e. systems that are reachable via Internet, the local BAS proxy is not needed.
+However, the web proxy will be used for all requests.
+In general, this does not cause problems because the proxy is totally transparent.
+
+An exception to this rule is destinations using `ClientCertificateAuthentication` because the http-agent does not yet [allow for certificate forwarding](https://github.com/TooTallNate/node-https-proxy-agent/pull/111).
+As a workaround you can add the target system to the `no_proxy` environment variable:
+
+```
+process.env.no_proxy = process.env.no_proxy  + ",<YourDestinationUrl>"
+```
+
+## Case 2: Connection to Cloud Systems
+
+Cloud systems are reachable via the internet and you do not need any cloud connector to reach them.
+The same is true for the destination service of the SAP Business Technology Platform.
+Hence, you can use the same approach locally and in production.
+
+### Prerequisite: Service Setup
+
+On Cloud Foundry, the access to services is granted via the `VCAP_SERVICE` variables.
+We assume that you have configured your application so that it can access the destination service.
+If not, follow the [steps in the Cloud Foundry tutorial](https://developers.sap.com/group.s4sdk-js-cloud-foundry.html).
+
+### Implementation
+
+You can mirror the `VCAP_SERVICE` variables from your Cloud Foundry account to your local BAS.
+Start the BAS and connect your BAS workspace to the SAP BTP account.
+This is done via the little connection icon (<img src={useBaseUrl('img/cf-connect-button.jpg')} />) on the left of the BAS.
+Then select the application from which you want to mirror the variables and select the folder containing the `.env` file to store it.
+Use the `envFile` property in the `launch.json` to load the file on your local application startup.
+
+Now your application will fetch the service credentials and call the destination service as in production.
+Note that there are certain limitations to this approach.
+Within the BAS you will not have a JWT issued for your user.
+This means that flows like `OAuth2SAMLBearerAssertion` and `OAuth2UserTokenExchange` can only work if you provide such a JWT.
+This is possible in principle, but difficult within the local development environment.
+We recommend creating dedicated development destinations with authentications flows like:
+
+- `OAuth2ClientCredentials`
+- `BasicAuthentication`
+- `ClientCertificateAuthentication` (here we wait for a fix on the [http-proxy-agent](https://github.com/TooTallNate/node-https-proxy-agent/pull/111) or you have to disable the proxy
+
+Note that for the connection to the cloud system the destinations do not need the two properties `WebIDEEnabled` and `HTML5.DynamicDestination`, because the BAS connectivity proxy is not needed.

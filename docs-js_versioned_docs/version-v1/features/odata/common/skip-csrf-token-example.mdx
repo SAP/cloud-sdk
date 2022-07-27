@@ -1,0 +1,25 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+```ts
+const { businessPartnerApi } = businessPartnerService();
+businessPartnerApi
+  .requestBuilder()
+  .update(businessPartner)
+  .skipCsrfTokenFetching();
+```
+
+  </TabItem>
+<TabItem value="deprecated">
+
+```ts
+BusinessPartner.requestBuilder()
+  .update(businessPartner)
+  .skipCsrfTokenFetching();
+```
+
+  </TabItem>
+  </Tabs>

@@ -1,0 +1,41 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+When reading entities, the API offers `select( ... )` on the builders.
+Note that for OData v4 a `select` does not automatically expand navigation properties.
+See [here](#expand-and-select) for details on select and expand.
+For non-navigational property the `select` behaves as follows:
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+<TabItem value="major">
+
+```ts
+const { businessPartnerApi } = businessPartnerService();
+businessPartnerApi
+  .requestBuilder()
+  .getAll()
+  .select(
+    businessPartnerApi.schema.FIRST_NAME,
+    businessPartnerApi.schema.LAST_NAME
+  )
+  .execute(destination);
+```
+
+</TabItem>
+<TabItem value="deprecated">
+
+```ts
+BusinessPartner.requestBuilder()
+  .getAll()
+  .select(BusinessPartner.FIRST_NAME, BusinessPartner.LAST_NAME)
+  .execute(destination);
+```
+
+</TabItem>
+</Tabs>
+
+The above translates to the following query parameters:
+
+```sql
+$select=FirstName,LastName
+```
