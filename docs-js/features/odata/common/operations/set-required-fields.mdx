@@ -10,16 +10,16 @@ In the following example, the `PATCH` request will contain the `FIRST_NAME` prop
 
 ```ts
 const { businessPartnerApi } = businessPartnerService();
-// First we get a businesspartner with the id of "1".
-const businessPartner = businessPartnerApi
+// Get a business partner
+const businessPartner = await businessPartnerApi
     .requestBuilder()
     .getByKey('1')
     .execute({destinationName: 'myDestination'});
 
-// Then we change the business partner's last name to "Smith".
-businessPartner.then((businessPartnerResponse) => (businessPartnerResponse.lastName = 'Smith'));
+// Change last name
+businessPartnerResponse.lastName = 'Smith';
 
-// Finally we update the business partner with the updated last name, but still include their first name in the "PATCH" request.
+// Send a PATCH request with `{ "LastName" : "Smith", "FirstName": "Steve" }`  and include the first name although it was not changed
 businessPartnerApi
   .requestBuilder()
   .update(businessPartner)
@@ -30,16 +30,16 @@ businessPartnerApi
 <TabItem value="deprecated">
 
 ```ts
-// First we get a businesspartner with the id of "1".
-const businessPartner = BusinessPartner
+// Get a business partner
+const businessPartner = await BusinessPartner
     .requestBuilder()
     .getByKey('1')
     .execute({destinationName: 'myDestination'});
 
-// Then we change the business partner's last name to "Smith".
-businessPartner.then((businessPartnerResponse) => (businessPartnerResponse.lastName = 'Smith'));
+// Change last name
+businessPartner.lastName = 'Smith';
 
-// Finally we update the business partner with the updated last name, but still include their first name in the "PATCH" request.
+// Send a PATCH request with `{ "LastName" : "Smith", "FirstName": "Steve" }`  and include the first name although it was not changed
 BusinessPartner
   .requestBuilder()
   .update(businessPartner)

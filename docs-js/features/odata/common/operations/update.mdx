@@ -1,7 +1,7 @@
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-The Update request builder allows you to change existing entities.
+The update request builder allows you to change existing entities.
 By default, `PATCH` is used to only update changed fields.
 
 In the following example, we first get a business partner, change one of its values, and then send an update request.
@@ -12,16 +12,16 @@ In the following example, we first get a business partner, change one of its val
 ```ts
 const { businessPartnerApi } = businessPartnerService();
 
-// First we get a businesspartner with the id of "1".
-const businessPartner = businessPartnerApi
+// Get a business partner
+const businessPartner = await businessPartnerApi
     .requestBuilder()
     .getByKey('1')
     .execute({destinationName: 'myDestination'});
 
-// Then we change the business partner's first name to "Steve".
-businessPartner.then((businessPartnerResponse) => (businessPartnerResponse.firstName = 'Steve'));
+// Change first name
+businessPartner.firstName = 'Steve'
 
-// Finally we update the business partner with the updated first name.
+// Send a PATCH request with `{ "FirstName" : "Steve" }`
 businessPartnerApi
     .requestBuilder()
     .update(businessPartner);
@@ -31,16 +31,16 @@ businessPartnerApi
 <TabItem value="deprecated">
 
 ```ts
-// First we get a businesspartner with the id of "1".
-const businessPartner = BusinessPartner
+// Get a business partner
+const businessPartner = await BusinessPartner
     .requestBuilder()
     .getByKey('1')
     .execute({destinationName: 'myDestination'});
 
-// Then we change the business partner's first name to "Steve".
-businessPartner.then((businessPartnerResponse) => (businessPartnerResponse.firstName = 'Steve'));
+// Change first name
+businessPartner.firstName = 'Steve';
 
-// Finally we update the business partner with the updated first name.
+// Send a PATCH request with `{ "FirstName" : "Steve" }`
 BusinessPartner
     .requestBuilder()
     .update(businessPartner);
@@ -49,8 +49,8 @@ BusinessPartner
 </TabItem>
 </Tabs>
 
-In the example above only the changed field of the given `businessPartner` instance,
-so in this case the first name, is sent to the `BusinessPartner` service using `PATCH`.
+In the example above we changed the first name of the given business partner.
+The payload sent to the service with PATCH includes only the first name.
 
-Be aware that update requests will fail if their ETag doesn't match.
+Be aware that update requests will fail if their ETags don't match.
 Check out our [ETag](#handling-of-etags) section for more information.

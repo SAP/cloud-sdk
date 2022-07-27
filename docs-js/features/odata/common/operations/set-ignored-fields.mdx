@@ -10,17 +10,17 @@ In the following example, the `PATCH` request won't contain changes that were ma
 
 ```ts
 const { businessPartnerApi } = businessPartnerService();
-// First we get a businesspartner with the id of "1".
-const businessPartner = businessPartnerApi
+// Get a business partner
+const businessPartner = await businessPartnerApi
     .requestBuilder()
     .getByKey('1')
     .execute({destinationName: 'myDestination'});
 
-// Then we change the business partner's first name to "Steve" and their last name to "Smith".
-businessPartner.then((businessPartnerResponse) => (businessPartnerResponse.firstName = 'Steve'));
-businessPartner.then((businessPartnerResponse) => (businessPartnerResponse.lastName = 'Smith'));
+// Change first name and last name
+businessPartner.firstName = 'Steve';
+businessPartner.lastName = 'Smith';
 
-// Finally we update the business partner with the updated last name, ignoring the changes to their first name.
+// Send a PATCH request with `{ "LastName" : "Smith" }`  and do not include the changed first name
 businessPartnerApi
   .requestBuilder()
   .update(businessPartner)
@@ -31,17 +31,17 @@ businessPartnerApi
 <TabItem value="deprecated">
 
 ```ts
-// First we get a businesspartner with the id of "1".
-const businessPartner = BusinessPartner
+// Get a business partner
+const businessPartner = await BusinessPartner
     .requestBuilder()
     .getByKey('1')
     .execute({destinationName: 'myDestination'});
 
-// Then we change the business partner's first name to "Steve" and their last name to "Smith".
-businessPartner.then((businessPartnerResponse) => (businessPartnerResponse.firstName = 'Steve'));
-businessPartner.then((businessPartnerResponse) => (businessPartnerResponse.lastName = 'Smith'));
+// Change first name and last name
+businessPartner.firstName = 'Steve';
+businessPartner.lastName = 'Smith';
 
-// Finally we update the business partner with the updated last name, ignoring the changes to their first name.
+// Send a PATCH request with `{ "LastName" : "Smith" }`  and do not include the changed first name
 BusinessPartner.requestBuilder()
   .update(businessPartner)
   .setIgnoredFields(BusinessPartner.FIRST_NAME);
