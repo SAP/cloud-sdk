@@ -135,7 +135,7 @@ export interface DestinationCacheInterface {
 Note that each item in the cache is represented using the type `CacheEntry<T>` which defines two properties:
 
 - `entry`, the item you want to store, and
-- `expires`, the expiration time for an individual cache item. This is optional.
+- `expires`, the expiration time for an individual cache item, this is optional.
 
 Once you have implemented your custom cache provider, you can tell the SAP Cloud SDK to use it in place of the default one.
 To do this, call the method `setDestinationCache` at the start of your application code, i.e., before the first calls to either the `getDestination` or the generic client's `executeHttpRequest` methods, and pass your cache provider instance as an argument to this method.
