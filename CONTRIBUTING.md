@@ -28,9 +28,8 @@ Feel free to also check this [guide on mindful writing](https://sap.github.io/cl
   docker run -it --rm -v "${pwd}:/doc" -w "/doc" --entrypoint "/bin/sh" -p 3000:3000 node:alpine3.10 -c "npm run start -- --port 3000 --host 0.0.0.0"
   ```
 
-## Dos and Don'ts
-
 <!-- vale off -->
+## Dos and Don'ts
 
 - Be concise.
 - Put each sentence on its own line to keep the changelogs clean.
