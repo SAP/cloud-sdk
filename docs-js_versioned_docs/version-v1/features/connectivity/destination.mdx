@@ -16,8 +16,6 @@ keywords:
 
 import LinkToLatestJsApiDocs from '@site/src/sap/sdk-js/LinkToLatestJsApiDocs';
 import useBaseUrl from '@docusaurus/useBaseUrl';
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
 
 Many applications on SAP Business Technology Platform (SAP BTP) communicate with other systems, e.g. line of business solutions.
 SAP BTP provides the concept of _destinations_ for convenient communication between SAP BTP and other systems.
@@ -41,28 +39,11 @@ The SAP Cloud SDK supports [OData](../odata/overview.mdx) and [OpenApi](../opena
 For both service types, the `execute()` method triggers a request to a target system.
 For OData services, you can invoke the method as:
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
-```ts
-const { businessPartnerApi } = businessPartnerService();
-const responseOData = await businessPartnerApi
-  .requestBuilder()
-  .getAll()
-  .execute(myDestination);
-```
-
-</TabItem>
-<TabItem value="deprecated">
-
 ```ts
 const responseOData = await BusinessPartner.requestBuilder()
   .getAll()
   .execute(myDestination);
 ```
-
-</TabItem>
-</Tabs>
 
 Similarly for OpenAPI:
 
@@ -277,25 +258,9 @@ The lookup process done by the SAP Cloud SDK involves the following steps:
 If no token is given or the destination is not found in the subscriber account, the provider account is used as a fallback.
 To control this fallback behavior, a selection strategy can be passed to the destination lookup:
 
-<Tabs groupId="version" defaultValue="major" values={[
-{ label: 'SDK 1.x', value: 'deprecated'},
-{ label: 'SDK 2.x', value: 'major'}]}>
-
-<TabItem value="major">
-
-```ts
-.execute({ destinationName: 'myDestination', jwt: 'yourJWT', selectionStrategy: 'alwaysSubscriber' })
-```
-
-</TabItem>
-<TabItem value="deprecated">
-
 ```ts
 .execute({ destinationName: 'myDestination', jwt: 'yourJWT' }, { selectionStrategy:'alwaysSubscriber' })
 ```
-
-</TabItem>
-</Tabs>
 
 There are three selection strategies defined in the SAP Cloud SDK: `alwaysSubscriber`, `alwaysProvider`, and `subscriberFirst`.
 The selection strategy can be passed as an optional argument to the `.execute()` method.
@@ -324,28 +289,12 @@ In every request, these destinations are added to the destinations returned by t
 There are situations where you do not have a JWT issued by the XSUAA but need to lookup a destination, e.g., in background processes.
 In such situations, the property `iss` of the `DestinationAccessorOptions` can be used:
 
-<Tabs groupId="version" defaultValue="major" values={[
-{ label: 'SDK 1.x', value: 'deprecated'},
-{ label: 'SDK 2.x', value: 'major'}]}>
-
-<TabItem value="major">
-
-```ts
-.execute({ destinationName: 'myDestination', iss: yourIssuerValue })
-```
-
-</TabItem>
-<TabItem value="deprecated">
-
 ```ts
 .execute(
   { destinationName: 'myDestination' },
   { iss: yourIssuerValue }
 )
 ```
-
-</TabItem>
-</Tabs>
 
 The value for `iss` is supposed to be the same as in a JWT issued from the XSUAA, e.g., `https://yourSubdomain.localhost:8080/uaa/oauth/token`.
 In principle, only the host of the URL is relevant, but since the same parsing and replacement methods are used for the JWT handling, the URL has to be provided in the format above.

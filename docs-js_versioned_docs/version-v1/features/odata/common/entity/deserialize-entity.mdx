@@ -1,33 +1,7 @@
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 In some cases you might retrieve raw data from an OData response.
 If you need to transform it to an SAP Cloud SDK representation of an entity, you can deserialize it using the `deserializeEntity` function.
 Fields unknown according to the specification are added as custom fields, without deserializing the according value.
 Note that this function is not part of a specific service and has to be imported from the SAP Cloud SDK core package.
-
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
-```ts
-import { deserializeEntity } from '@sap-cloud-sdk/odata-v2';
-
-const businessPartner = deserializeEntity(
-  {
-    FirstName: 'Peter',
-    LastName: 'Pan',
-    to_BusinessPartnerAddress: [
-      {
-        Country: 'Neverland'
-      }
-    ]
-  },
-  BusinessPartner
-);
-```
-
-</TabItem>
-<TabItem value="deprecated">
 
 ```ts
 import { deserializeEntity } from '@sap-cloud-sdk/core';
@@ -45,6 +19,3 @@ const businessPartner = deserializeEntity(
   BusinessPartner
 );
 ```
-
-</TabItem>
-</Tabs>

@@ -14,9 +14,6 @@ keywords:
   - TypeScript
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 The SAP Cloud SDK provides the option to cache destinations for efficiency reasons.
 If a destination is stored in the cache the question of isolation arises.
 Should the destination be cached for all users?
@@ -30,25 +27,9 @@ This reduces the number of calls to the destination service.
 All the discussed options apply to the `execute()` and `getDestination()` methods of the SAP Cloud SDK.
 The destination caching is disabled by default and you switch it on by the `useCache` flag:
 
-<Tabs groupId="version" defaultValue="major" values={[
-{ label: 'SDK 2.x', value: 'major'},
-{ label: 'SDK 1.x', value: 'deprecated'}]}>
-
-<TabItem value="major">
-
-```ts
-.execute({destinationName: 'myDestination', jwt: 'yourJWT', useCache: true})
-```
-
-</TabItem>
-<TabItem value="deprecated">
-
 ```ts
 .execute({ destinationName: 'myDestination', jwt: 'yourJWT' }, { useCache: true })
 ```
-
-</TabItem>
-</Tabs>
 
 A cached destination is stored for 5 minutes in the cache.
 The SAP Cloud SDK tries to set the proper isolation strategy for the destination automatically.
@@ -73,23 +54,6 @@ The `JWT` contains a `user_id` but the destination flow is user<span class="x x-
 The SAP Cloud SDK would use isolation `UserTenant`, although `Tenant` would be sufficient.
 In such a case you can manually enforce weaker isolation:
 
- <Tabs groupId="version" defaultValue="major" values={[
- { label: 'SDK 2.x', value: 'major'},
- { label: 'SDK 1.x', value: 'deprecated'}]}>
-
- <TabItem value="major">
-
-```ts
-.execute({
-  destinationName: 'myDestination',
-  jwt: 'yourJWT',
-  isolationStrategy: IsolationStrategy.Tenant
-})
-```
-
- </TabItem>
- <TabItem value="deprecated">
-
 ```ts
 .execute({
   destinationName: 'myDestination',
@@ -99,9 +63,6 @@ In such a case you can manually enforce weaker isolation:
   isolationStrategy: IsolationStrategy.Tenant
 })
 ```
-
- </TabItem>
- </Tabs>
 
 :::caution
 Be very careful with this option.

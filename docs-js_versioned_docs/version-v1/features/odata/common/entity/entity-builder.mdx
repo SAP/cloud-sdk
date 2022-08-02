@@ -1,40 +1,3 @@
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
-In version 2.0 of the SAP Cloud SDK, two new changes have been introduced:
-
-- an API class for each entity (e.g. `BusinessPartnerApi`), providing access to its properties via a `schema`, and
-- a common method, e.g. `businessPartnerService`, with accessors for all the API classes.
-
-To build an entity by assigning its properties, use the entity builders provided by the API class.
-First invoke the `.entityBuilder` method to access the builder, then you can set the properties and finally call the `.build` method to yield the entity.
-To set navigation properties that link to other entities, you have to create the linked entities using their respective builders.
-Navigation properties that are linked through a one-to-many relation, are set by passing an array (even if that array only contains one entity).
-One-to-one relations are assigned as objects.
-The example below shows how you can create the data from above using the entity builder.
-The relation to the business partner address is a one-to-many relation here.
-
-```ts
-import { businessPartnerService } from '@sap/cloud-sdk-vdm-business-partner-service';
-
-const { businessPartnerApi, businessPartnerAddressApi } =
-  businessPartnerService();
-businessPartnerApi
-  .entityBuilder()
-  .firstName('Peter')
-  .lastName('Pan')
-  .toBusinessPartnerAddress([
-    businessPartnerAddressApi.entityBuilder().country('Neverland').build()
-  ])
-  .build();
-```
-
-</TabItem>
-<TabItem value="deprecated">
-
 To build an entity by assigning its properties, you can use the entity builders provided by every entity class.
 Use the static `.builder` method to access the builder, set the properties and finally use the `.build` method to yield the entity.
 To set navigation properties, that link to other entities, you have to create the linked entities using their respective builder.
@@ -57,30 +20,8 @@ const businessPartner = BusinessPartner.builder()
   .build();
 ```
 
-</TabItem>
-</Tabs>
-
 You can also add fields, that are unknown according to the specification, if you add them as custom fields.
 To achieve this, pass an object the `.withCustomFields` method, where the keys denote the names of the custom fields, and the values their respective values.
-
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
-```ts
-import { businessPartnerService } from '@sap/cloud-sdk-vdm-business-partner-service';
-
-const { businessPartnerApi } = businessPartnerService();
-businessPartnerApi
-  .entityBuilder()
-  .firstName('Peter')
-  .withCustomFields({
-    myCustomField: 'this is custom'
-  })
-  .build();
-```
-
-</TabItem>
-<TabItem value="deprecated">
 
 ```ts
 import { BusinessPartner } from '@sap/cloud-sdk-vdm-business-partner-service';
@@ -92,6 +33,3 @@ const businessPartner = BusinessPartner.builder()
   })
   .build();
 ```
-
-</TabItem>
-</Tabs>

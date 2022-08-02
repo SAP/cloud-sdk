@@ -1,38 +1,7 @@
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 Depending on the context of the filter it will either filter the parent or the children.
 In our example, we have a `PERSON` related to zero to N `FRIENDS` which are both of type people.
 
 If you want to get all people with first name `John` the query is:
-
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
-```ts
-const { peopleApi } = peopleService();
-peopleApi
-  .requestBuilder()
-  .getAll()
-  .filter(peopleApi.schema.FIRST_NAME.equals('John'));
-```
-
-If you want to get all people who have at least one friend with first name `John` the query is:
-
-```ts
-const { peopleApi } = peopleService();
-peopleApi
-  .requestBuilder()
-  .getAll()
-  .filter(
-    peopleApi.schema.FRIENDS.filter(
-      any(peopleApi.schema.FIRST_NAME.equals('John'))
-    )
-  );
-```
-
-</TabItem>
-<TabItem value="deprecated">
 
 ```ts
 People.requestBuilder().getAll().filter(People.FIRST_NAME.equals('John'));
@@ -46,37 +15,15 @@ People.requestBuilder()
   .filter(People.FRIENDS.filter(any(People.FIRST_NAME.equals('John'))));
 ```
 
-</TabItem>
-</Tabs>
-
 The lambda `all` would enforce that all friends must have the first name `John`.
 The two queries above filter the parent entity person.
 
 In case you want to get all people but reduce the friends in the response, the filter has to be inside the expand:
-
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
-```ts
-const { peopleApi } = peopleService();
-peopleApi
-  .requestBuilder()
-  .getAll()
-  .expand(
-    peopleApi.schema.FRIENDS.filter(peopleApi.schema.FIRST_NAME.equals('John'))
-  );
-```
-
-</TabItem>
-<TabItem value="deprecated">
 
 ```ts
 People.requestBuilder()
   .getAll()
   .expand(People.FRIENDS.filter(People.FIRST_NAME.equals('John')));
 ```
-
-</TabItem>
-</Tabs>
 
 This will return all people but only the friends with the first name `John` will be included in the response.

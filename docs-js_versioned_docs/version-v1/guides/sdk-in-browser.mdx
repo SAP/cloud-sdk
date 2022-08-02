@@ -11,9 +11,6 @@ keywords:
   - sap cloud sdk
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 The SAP Cloud SDK for JavaScript can be used both as a backend and frontend library when used in a browser.
 Because of the specifics of a browser environment, some features might be unavailable.
 To help you get up and running faster in a browser, we'll outline the main steps and caveats of using SAP Cloud SDK on the frontend.
@@ -29,7 +26,7 @@ For example an [Angular application](https://angular.io/cli/new) via `ng new myP
 For most examples, we will use the business partner API.
 Add the package `@sap/cloud-sdk-vdm-business-partner-service` to your package.json and introduce some calls via:
 
-```
+```ts
 //In the .html part of the component
 <button (click)="callApi()">Click me!</button>
 
@@ -57,23 +54,7 @@ Please check out the [workaround](#workaround) for these kinds of errors.
 As discussed above the `myDest` can not be fetched via the destination service.
 When you run locally you can simply provide it.
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
-```
-import {Destination} from '@sap-cloud-sdk/connectivity'
-
-const myDest:Destination = {
-  url: 'https://my123456.s4hana.ondemand.com',
-  username: 'myUser',
-  password: 'myPassowrd'
-}
-```
-
-</TabItem>
-<TabItem value="deprecated">
-
-```
+```ts
 import {Destination} from '@sap-cloud-sdk/core'
 
 const myDest:Destination = {
@@ -82,9 +63,6 @@ const myDest:Destination = {
   password: 'myPassowrd'
 }
 ```
-
-</TabItem>
-</Tabs>
 
 When you execute `npm run serve` your project is compiled and hosted on a local server.
 
@@ -101,7 +79,7 @@ Alternatively, you can also create a second localhost proxy server that adds the
 For productive usage, the methods mentioned above for running locally are of course not needed.
 You configure the `xs-app.json` of the used app-router with an entry like this:
 
-```
+```json
 {
   "source": "/REMOTE-SYSTEM-IDENTIFIER/(.*)",
   "target": "/$1",
@@ -111,30 +89,12 @@ You configure the `xs-app.json` of the used app-router with an entry like this:
 
 and then in your application define the destination as:
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
-```
-import {Destination123} from '@sap-cloud-sdk/connectivity'
-
-const myDest:Destination = {
-  url: '/REMOTE-SYSTEM-IDENTIFIER'
-}
-```
-
-</TabItem>
-<TabItem value="deprecated">
-
-```
+```ts
 import {Destination123} from '@sap-cloud-sdk/core'
 
 const myDest:Destination = {
   url: '/REMOTE-SYSTEM-IDENTIFIER'
 }
-```
-
-</TabItem>
-</Tabs>
 ```
 
 The created request to `/REMOTE-SYSTEM-IDENTIFIER/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner` will be matched by the app-router and the destination with the given URL and credentials is used.
@@ -162,7 +122,7 @@ We hope to resolve these issues in the future but for now, here is a workaround:
 - Include `@angular-builders/custom-webpack` in the `devDependencies`
 - Create a custom webpack configuration named `node-webpack.config.js` and list the following node modules:
 
-```
+```js
 module.exports = {
   node: {
     crypto: true,
@@ -178,7 +138,7 @@ module.exports = {
 
 - In the `angular.json` adjust the `build` target to use the custom builder:
 
-```
+```json
  "build": {
    "builder": "@angular-builders/custom-webpack:browser",
    "options": {
@@ -190,14 +150,14 @@ module.exports = {
 
 - In the `angular.json` adjust the `serve` target to use the custom builder as well:
 
-```
+```json
  "serve": {
    "builder": "@angular-builders/custom-webpack:dev-server",
 ```
 
 - In the `package.json` exclude the node modules, that do not exist in the browser:
 
-```
+```json
 "browser": {
   "fs": false,
   "net": false,
