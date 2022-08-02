@@ -200,21 +200,54 @@ Provide the name of the service instance as the destination name and the SAP Clo
 - Fetch a client-credential-grant token if needed
 - Return a destination containing the token and URL
 
-Currently, 5 services types are supported out of the box:
+Example:
+
+```ts
+.execute({ destinationName: 'service-name' })
+```
+
+Currently, 5 services are supported out of the box:
 
 - `business-logging`
 - `s4-hana-cloud`
+- `destination`
 - `saas-registry`
 - `workflow`
-- `destination`
 - `service-manager`
 
-If you need a destination for a different service, create a custom `serviceBindingTransformFn` and pass it with `destinationFetchOptions` or consider creating a [feature request](https://github.com/SAP/cloud-sdk-js/issues/new?assignees=&labels=feature+request&template=feature_request.md&title=).
+If you need the destination for another custom service, create a function with type <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.ServiceBindingTransformFunction" name="ServiceBindingTransformFunction" /> to transform the <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.ServiceBinding" name="ServiceBinding interface" /> into the <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="Destination interface" />.
+Then pass it to `serviceBindingTransformFn` in `DestinationFetchOptions`.
+
+A simple example:
+
+```ts
+const serviceBindingTransformFn = async (serviceBinding: ServiceBinding) => ({
+  url: serviceBinding.credentials.sys
+});
+
+.execute({ destinationName: 'service-name', serviceBindingTransformFn })
+```
+
+More advanced examples with service token fetching can be found in [service-binding-to-destination.ts](https://github.com/SAP/cloud-sdk-js/blob/main/packages/connectivity/src/scp-cf/destination/service-binding-to-destination.ts).
+
+You can also consider creating a [feature request](https://github.com/SAP/cloud-sdk-js/issues/new?assignees=&labels=feature+request&template=feature_request.md&title=).
 Contributions providing transform functions are highly welcome.
 
 :::note
 The `serviceBindingTransformFn` was introduced in version 2.0 of the SAP Cloud SDK.
 :::
+
+To search the destination explicitly from service bindings, call <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.destinationForServiceBinding" name="destinationForServiceBinding" /> function with the service name and options.
+
+For example:
+
+```ts
+const destination = destinationForServiceBinding('service-name', {
+  serviceBindingTransformFn,
+  jwt: 'jwt',
+  useCache: false
+});
+```
 
 ### Destination Service
 
