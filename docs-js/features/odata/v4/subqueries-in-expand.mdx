@@ -1,10 +1,4 @@
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 Note that you can create very complex queries within the expand scope:
-
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
 
 ```ts
 const { peopleApi } = peopleService();
@@ -22,24 +16,6 @@ peopleApi
       .skip(1)
   );
 ```
-
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-People.requestBuilder()
-  .getAll()
-  .expand(
-    People.FRIENDS.select(People.FIRST_NAME, People.ADDRESS_INFO)
-      .filter(People.LAST_NAME.equals('Miller'))
-      .orderBy(asc(People.GENDER))
-      .top(1)
-      .skip(1)
-  );
-```
-
-</TabItem>
-</Tabs>
 
 In this example, the filter will reduce the number of friends to be shown.
 The effect of a filter depends on whether it is used inside or outside an `expand`.
