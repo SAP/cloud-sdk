@@ -30,9 +30,10 @@ Once you have generated a type-safe client, this is how you make your first API 
 This example uses the **BusinessPartner** service from the SAP S/4HANA suite.
 
 ```js
-BusinessPartner.requestBuilder()
+businessPartnerApi
+  .requestBuilder()
   .getAll()
-  .filter(BusinessPartner.BUSINESS_PARTNER_CATEGORY.equals('1'))
+  .filter(businessPartnerApi.schema.BUSINESS_PARTNER_CATEGORY.equals('1'))
   .top(5)
   .execute(yourDestination);
 ```
