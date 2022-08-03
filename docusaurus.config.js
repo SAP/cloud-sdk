@@ -82,10 +82,23 @@ module.exports = {
           sdkSwitch: true
         },
         {
+          type: 'dropdown',
+          label: 'API Reference',
+          position: 'right',
+          items: [
+            {
+              label: '2.6.0',
+              href: 'https://www.facebook.com',
+            }
+          ],
+          apiReference: true,
+          docsPluginId: 'docs-js'
+        },
+        {
           type: 'docsVersionDropdown',
           position: 'right',
           docsPluginId: 'docs-js',
-        }
+        },
       ]
     },
     footer: {
@@ -166,7 +179,7 @@ module.exports = {
           path: 'docs'
         },
         theme: {
-          customCss: require.resolve('./src/css/custom.css')
+          customCss: [require.resolve('./src/css/custom.css'), require.resolve('./src/css/api.css')]
         },
         sitemap: {
           changefreq: 'weekly',

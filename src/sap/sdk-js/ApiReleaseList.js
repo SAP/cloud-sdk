@@ -3,23 +3,14 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 function ApiReleaseList({ versions, basePath }) {
   return (
-    <ul>
-      {/* <li key="latest">
-        <a href={useBaseUrl('api/latest')}>Latest</a>
-      </li> */}
-      {versions.map((version, i) => (
-        <li key={`${version}`}>
-          <a href={useBaseUrl(`${basePath}/${version}/`)}>{`${version}`}</a>
-          {i ? (
-            ''
-          ) : (
-            <strong>
-              <em> - latest </em>
-            </strong>
-          )}
-        </li>
-      ))}
-    </ul>
+    <div className="dropdown">
+      <button className="dropbtn">API Reference</button>
+      <div className="dropdown-content">
+        {versions.map((version, i) => (
+            <a className="a" key={version} href={useBaseUrl(`${basePath}/${version}/`)}>{`${version}`}</a>
+        ))}
+      </div>
+    </div>
   );
 }
 
