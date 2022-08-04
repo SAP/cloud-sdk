@@ -5,7 +5,6 @@ import sdkVersions from '@site/static/api/versions';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import {
   useActiveVersion,
-  useActiveDocContext
 } from '@docusaurus/plugin-content-docs/client';
 
 export default function DropdownNavbarItemWrapper(props) {
