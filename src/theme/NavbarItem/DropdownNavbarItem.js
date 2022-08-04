@@ -1,14 +1,24 @@
 import React from 'react';
 import { shouldShow } from './helper';
 import DropdownNavbarItem from '@theme-original/NavbarItem/DropdownNavbarItem';
-import ApiReleaseList from '@site/src/sap/sdk-js/ApiReleaseList';
 import sdkVersions from '@site/static/api/versions';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
 export default function DropdownNavbarItemWrapper(props) {
-    if (shouldShow(props)) {
-      //<ApiReleaseList versions={sdkVersions} basePath={'api'} />
-      console.log(props);
-      return <DropdownNavbarItem {...props} />;
+    if (shouldShow(props) && props.apiReference) {
+      const newProps = {
+        ...props,
+        items: sdkVersions.reduce((prevArray, version) => {
+          return [
+            ...prevArray,
+            {
+              label: version,
+              href: useBaseUrl(`api/${version}/`)
+            }
+          ]
+        }, []) // use reduce algorithm here to return an array of all versions with the form of {label: 2.6.0, href={useBaseUrl(api/${version}/`)}>{`${version}`}}
+      }
+      return <DropdownNavbarItem {...newProps} />;
     }
-    return null;
+    return <DropdownNavbarItem {...props} />;
 }

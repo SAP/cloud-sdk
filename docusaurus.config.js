@@ -87,12 +87,12 @@ module.exports = {
           position: 'right',
           items: [
             {
-              label: '2.6.0',
-              href: 'https://www.facebook.com',
+              label: 'Swizzle Placeholder',
+              href: 'https://www.doesnt-exist.com',
             }
           ],
-          apiReference: true,
-          docsPluginId: 'docs-js'
+          docsPluginId: 'docs-js',
+          apiReference: true
         },
         {
           type: 'docsVersionDropdown',
