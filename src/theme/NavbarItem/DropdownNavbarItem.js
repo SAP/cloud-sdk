@@ -10,7 +10,6 @@ import {
 
 export default function DropdownNavbarItemWrapper(props) {
     if (shouldShow(props) && props.apiReference) {
-      console.log(useActiveDocContext(props.docsPluginId));
       const currentVersion = useActiveVersion(props.docsPluginId).label[1];
       const newProps = {
         ...props,

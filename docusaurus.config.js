@@ -98,7 +98,7 @@ module.exports = {
           type: 'docsVersionDropdown',
           position: 'right',
           docsPluginId: 'docs-js',
-        },
+        }
       ]
     },
     footer: {
