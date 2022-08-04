@@ -9,3 +9,7 @@ export function shouldShow(props) {
   const docPath = activeDocContext?.activeVersion?.path;
   return docPath?.includes(getPathFromPluginId(props.docsPluginId));
 }
+
+export function hasMoreThanOneVersion(docsPluginId) {
+  return Object.keys(useActiveDocContext(docsPluginId).alternateDocVersions).length >=2;
+}

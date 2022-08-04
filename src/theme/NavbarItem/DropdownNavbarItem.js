@@ -4,11 +4,13 @@ import DropdownNavbarItem from '@theme-original/NavbarItem/DropdownNavbarItem';
 import sdkVersions from '@site/static/api/versions';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import {
-  useActiveVersion
+  useActiveVersion,
+  useActiveDocContext
 } from '@docusaurus/plugin-content-docs/client';
 
 export default function DropdownNavbarItemWrapper(props) {
     if (shouldShow(props) && props.apiReference) {
+      console.log(useActiveDocContext(props.docsPluginId));
       const currentVersion = useActiveVersion(props.docsPluginId).label[1];
       const newProps = {
         ...props,

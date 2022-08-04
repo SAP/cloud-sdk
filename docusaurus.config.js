@@ -179,7 +179,7 @@ module.exports = {
           path: 'docs'
         },
         theme: {
-          customCss: [require.resolve('./src/css/custom.css'), require.resolve('./src/css/api.css')]
+          customCss: [require.resolve('./src/css/custom.css')]
         },
         sitemap: {
           changefreq: 'weekly',
