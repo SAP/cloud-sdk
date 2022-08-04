@@ -11,5 +11,5 @@ export function shouldShow(props) {
 }
 
 export function hasMoreThanOneVersion(docsPluginId) {
-  return Object.keys(useActiveDocContext(docsPluginId).alternateDocVersions).length >=2;
+  return Object.keys(useActiveDocContext(docsPluginId).alternateDocVersions).length > 1;
 }
