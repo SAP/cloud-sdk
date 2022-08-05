@@ -1,15 +1,24 @@
 import { useActiveDocContext } from '@docusaurus/plugin-content-docs/client';
 
+/**
+ * Recreates that path that docusaurus creates based on the plugin id.
+ */
 export function getPathFromPluginId(docsPluginId) {
   return docsPluginId?.split('-')?.join('/');
 }
 
+/**
+ * Checks if a component should be shown, by matching the current path with the path in the docsPluginId.
+ */
 export function shouldShow(props) {
   const activeDocContext = useActiveDocContext(props.docsPluginId);
   const docPath = activeDocContext?.activeVersion?.path;
   return docPath?.includes(getPathFromPluginId(props.docsPluginId));
 }
 
+/**
+ * Checks if multiple versions of the currently selected doc context exist.
+ */
 export function hasMoreThanOneVersion(docsPluginId) {
   return Object.keys(useActiveDocContext(docsPluginId).alternateDocVersions).length > 1;
 }

@@ -14,12 +14,12 @@ export default function NavbarNavLinkWrapper(props) {
   }
 
   if (props.sdkSwitch || shouldShow(props)) {
-    const v =
+    const version =
       useActiveVersion(props.docsPluginId) ||
       useLatestVersion(props.docsPluginId);
     const docId = props.docId || v?.mainDocId;
-    const to = `${v?.path}/${docId}`;
-    const newProps = v ? { ...props, to } : props;
+    const to = `${version?.path}/${docId}`;
+    const newProps = version ? { ...props, to } : props;
 
     return <NavbarNavLink {...newProps} />;
   }
