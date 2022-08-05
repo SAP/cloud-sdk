@@ -36,7 +36,7 @@ The SAP Cloud SDK tries to set the proper isolation strategy for the destination
 There are two options:
 
 - `Tenant`: The destination is cached for a tenant and different users will hit the same cache entry.
-- `UserTenant`: The destination is cached for each user of a tenant separately.
+- `TenantUser`: The destination is cached for each user of a tenant separately.
 
 The SAP Cloud SDK sets the isolation based on the provided `JWT`:
 
@@ -50,8 +50,10 @@ Examples of such a flow are `BasicAuthentication`, `ClientCertificateAuthenticat
 
 There are cases where the choice made by the SAP Cloud SDK is not optimal.
 Assume you have a multi-tenant scenario and you need to pass the `JWT` to obtain the destination for the right tenant.
-The `JWT` contains a `user_id` but the destination flow is user<span class="x x-first x-last">-</span><!--vale off-->independent<!--vale on-->.  
-The SAP Cloud SDK would use isolation `UserTenant`, although `Tenant` would be sufficient.
+
+The `JWT` contains a `user_id` but the destination flow is user<span class="x x-first x-last">-</span><!--vale off-->independent<!--vale on-->.
+The SAP Cloud SDK would use isolation `TenantUser`, although `Tenant` would be sufficient.
+
 In such a case you can manually enforce weaker isolation:
 
 ```ts
