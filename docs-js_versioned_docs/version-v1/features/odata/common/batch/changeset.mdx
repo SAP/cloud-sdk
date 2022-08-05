@@ -1,0 +1,40 @@
+A changeset is a collection of HTTP `POST`, `PUT`, `PATCH` and `DELETE` operations - requests built by [`CreateRequestBuilder`s](#create-request-builder), [`UpdateRequestBuilder`s](#update-request-builder), and [`DeleteRequestBuilder`s](#delete-request-builder) in terms of the SAP Cloud SDK.
+The order of execution within a changeset is not defined.
+This differs from the whole batch request itself, where the order is defined.
+Therefore, the requests within one changeset should not depend on each other.
+If the execution of any request within a changeset fails, the whole changeset will be reflected as an error in the response.
+The changeset will not be applied, much like a database transaction.
+
+Unlike retrieve requests, you can not pass change requests to the `batch` function directly.
+You have to combine them in a `changeset`, which in turn can be passed to the `batch` function.
+Once a batch request is executed, it returns a list of [`BatchResponse`s](#responses).
+
+If a changeset was executed successfully, its corresponding response is of type `WriteResponses` and contains a collection of all raw responses to the requests in the changeset.
+If the execution fails, the response is an `ErrorResponse`.
+
+In the example below, we create a list of [`UpdateRequestBuilder`s](#update-request-builder) from a list of addresses.
+We combine these change requests into one `changeset` and pass it to the `batch` request, which we execute against a destination.
+
+Once we execute the `batch` request, we get a list of `BatchResponse`s, which in this example contains one response only, i.e. the one for the changeset.
+
+```ts
+async function updateAddresses(
+  businessPartnerAddresses: BusinessPartnerAddress[]
+): Promise<BusinessPartnerAddress[]> {
+  // Create update requests
+  const updateRequests = businessPartnerAddresses.map(address =>
+    BusinessPartnerAddress.requestBuilder().update(address)
+  );
+
+  // Execute batch request with one changeset
+  const batchResponses = await batch(
+    // Combine update requests into one changeset
+    changeset(...updateRequests)
+  ).execute(destination);
+
+  // Get response for the changeset request
+  const changesetResponse = batchResponses[0];
+
+  // ...
+}
+```

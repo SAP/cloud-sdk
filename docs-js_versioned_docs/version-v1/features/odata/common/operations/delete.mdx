@@ -1,0 +1,12 @@
+The Delete request builder allows you to create `DELETE` requests, that delete an entity.
+
+```ts
+/*
+  The following won't work on the real SAP S/4HANA BusinessPartner service because BusinessPartners cannot be deleted.
+  We added this only for the sake of the example.
+*/
+BusinessPartner.requestBuilder().delete(businessPartner);
+```
+
+Be aware that delete requests will fail if their ETag doesn't match.
+Check out our [ETag](#handling-of-etags) section for more information.

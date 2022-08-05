@@ -31,9 +31,6 @@ To request an entity set, entities offer a fluent API.
 
 On an abstract level, creating a request using the fluent API always follows the same simple structure:
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
 ```ts
 import { myEntityService } from './outputDir/my-service';
 
@@ -56,32 +53,6 @@ import { pregeneratedEntityService } from '@sap/cloud-sdk-vdm-pregenerated-servi
 Destructure the service to get the API of the entity you want to make requests for - `myEntityApi` in the example above.
 
 Every entity API has a `requestBuilder` function, that allows to chain all types of request builders that are available for this entity, e.g. `myEntityApi.requestBuilder().getAll()` for the `getAll` request type.
-
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-import { MyEntity } from './outputDir/my-service';
-
-return MyEntity.requestBuilder()
-  .<requestType>(...)
-  .<additionalRequestConfiguration>(...)
-  .execute(destination);
-```
-
-If you are using an OData client, that you generated on your own, import an entity from the generated service directory (`my-service`) within the specified output directory (`outputDir`).
-The name of the service directory corresponds to the `directoryName` specified in the service mapping file (`serviceMapping.json` by default) in your input directory.
-
-If you are using one of the pregenerated OData clients, import it from the npm package.
-
-```ts
-import { PregeneratedEntity } from '@sap/cloud-sdk-vdm-pregenerated-service';
-```
-
-Every entity has a `requestBuilder` function, that allows to chain all types of request builders that are available for this entity, e.g. `MyEntity.requestBuilder().getAll()` for the `getAll` request type.
-
-</TabItem>
-</Tabs>
 
 See the list below for details on all available request types (denoted by `requestType` in the example above):
 
@@ -179,27 +150,12 @@ This will automatically construct your request URL and headers, execute the requ
 The SAP Cloud SDK automatically sets some necessary request headers on every request.
 You can specify additional custom headers using the `addCustomHeaders` function:
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
 ```ts
 const { myEntityApi } = myEntityService();
 myEntityApi.requestBuilder().getAll().addCustomHeaders({
   apikey: 'my-api-key'
 });
 ```
-
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-MyEntity.requestBuilder().getAll().addCustomHeaders({
-  apikey: 'my-api-key'
-});
-```
-
-</TabItem>
-</Tabs>
 
 The keys and values of the passed object correspond with the header names and values.
 Custom headers take priority over automatically generated headers.
@@ -220,27 +176,12 @@ Custom query parameters take precedence over those created by the SAP Cloud SDK.
 
 In the example below an additional query parameter `language=en` will be added to the request URL:
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
 ```ts
 const { myEntityApi } = myEntityService();
 myEntityApi.requestBuilder().getAll().withCustomQueryParameters({
   language: 'en'
 });
 ```
-
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-MyEntity.requestBuilder().getAll().withCustomQueryParameters({
-  language: 'en'
-});
-```
-
-</TabItem>
-</Tabs>
 
 :::note
 
@@ -254,9 +195,6 @@ If a service specification contains a specification for the `servicePath`, the S
 When there is no such path defined in the specification, it can be manually set in the `service-mapping.json`.
 It can also be adjusted per request by using the `withCustomServicePath` function:
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
 ```ts
 const { myEntityApi } = myEntityService();
 myEntityApi
@@ -264,18 +202,6 @@ myEntityApi
   .getAll()
   .withCustomServicePath('my/custom/service/path');
 ```
-
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-MyEntity.requestBuilder()
-  .getAll()
-  .withCustomServicePath('my/custom/service/path');
-```
-
-</TabItem>
-</Tabs>
 
 This will add the custom service path to your request.
 Executing the example request above against a destination with URL `https://my.s4-system.com` would result in a request against something like this: `https://my.s4-system.com/my/custom/service/path/MyEntity`.
@@ -284,9 +210,6 @@ Executing the example request above against a destination with URL `https://my.s
 
 <CustomRequestConfig />
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
 ```ts
 const { myEntityApi } = myEntityService();
 myEntityApi
@@ -294,18 +217,6 @@ myEntityApi
   .getAll()
   .addCustomRequestConfiguration({ responseType: 'arraybuffer' });
 ```
-
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-MyEntity.requestBuilder()
-  .getAll()
-  .addCustomRequestConfiguration({ responseType: 'arraybuffer' });
-```
-
-</TabItem>
-</Tabs>
 
 <CustomRequestConfigNote />
 
@@ -318,9 +229,6 @@ You have to use the `executeRaw(destination)` method to get results because we c
 
 The example below shows how to query a navigation property from a given entity.
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
 ```ts
 const { myEntityApi } = myEntityService();
 myEntityApi
@@ -333,22 +241,6 @@ myEntityApi
   .executeRaw(destination);
 ```
 
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-MyEntity.requestBuilder()
-  .getByKey('123')
-  .appendPath(
-    '/to_SingleValueNavigationProperty1',
-    '/to_SingleValueNavigationProperty2'
-  )
-  .executeRaw(destination);
-```
-
-</TabItem>
-</Tabs>
-
 It will build the request URL like below:
 `https://my.s4-system.com/service-path/MyEntity(key='123')/to_SingleValueNavigationProperty1/to_SingleValueNavigationProperty2`
 where:
@@ -360,9 +252,6 @@ where:
 
 You can specify a timeout for the request via the `timeout()` method on the request builder:
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
 ```ts
 const { myEntityApi } = myEntityService();
 const httpResponse: HttpResponse = myEntityApi
@@ -371,9 +260,6 @@ const httpResponse: HttpResponse = myEntityApi
   .timeout(1000)
   .execute(destination);
 ```
-
-</TabItem>
-</Tabs>
 
 The value is in milliseconds and the default value is 10000 (10 seconds)
 This timeout applies to the request sent to the target system given in the destination.
@@ -387,9 +273,6 @@ This relates to the calls made to SAP BTP services like `destination-service` or
 
 Example:
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
 ```ts
 const { myEntityApi } = myEntityService();
 const httpResponse: HttpResponse = myEntityApi
@@ -397,18 +280,6 @@ const httpResponse: HttpResponse = myEntityApi
   .getAll()
   .executeRaw(destination);
 ```
-
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-const httpResponse: HttpResponse = MyEntity.requestBuilder()
-  .getAll()
-  .executeRaw(destination);
-```
-
-</TabItem>
-</Tabs>
 
 <ExecuteRawUseCases />
 

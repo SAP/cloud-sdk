@@ -1,26 +1,9 @@
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 The Create request builder allows you to send a `POST` request to create a new entity:
-
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
 
 ```ts
 const { businessPartnerApi } = businessPartnerService();
 const businessPartner = businessPartnerApi.entityBuilder().build();
 businessPartnerApi.requestBuilder().create(businessPartner);
 ```
-
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-const businessPartner = BusinessPartner.builder().build();
-BusinessPartner.requestBuilder().create(businessPartner);
-```
-
-</TabItem>
-</Tabs>
 
 In the example above we created an instance of `BusinessPartner` and sent it to the `BusinessPartner` service in a `POST` request.

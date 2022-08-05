@@ -1,0 +1,29 @@
+A retrieve request represents an HTTP `GET` request.
+In terms of the SAP Cloud SDK this includes all requests built by [`GetAllRequestBuilder`](#getall-request-builder) and [`GetByKeyRequestBuilder`](#getbykey-request-builder).
+
+You can pass retrieve requests directly to the `batch` function.
+Once you execute a `batch` request you get a list of [`BatchResponse`](#responses).
+A `BatchResponse` that corresponds with a retrieve request can either be a `ReadResponse` or an `ErrorResponse`.
+
+In the example below, we map each given address ID to a [`GetByKeyRequestBuilder`](#getbykey-request-builder).
+These retrieve requests are combined into one `batch` request and executed against a destination.
+
+```ts
+async function getAddressesByIds(
+  businessPartnerId: string,
+  addressIds: string[]
+): Promise<BusinessPartnerAddress[]> {
+  const retrieveRequests = addressIds.map(addressId =>
+    // Create get by key request
+    BusinessPartnerAddress.requestBuilder().getByKey(
+      businessPartnerId,
+      addressId
+    )
+  );
+
+  // Execute batch request combining multiple retrieve requests
+  const batchResponses = await batch(...retrieveRequests).execute(destination);
+
+  // ...
+}
+```

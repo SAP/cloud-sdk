@@ -1,0 +1,18 @@
+By default, when you execute a batch request, the subrequests are serialized to a multipart representation of the request, which is essentially a string.
+This is what a create request for a business partner addresses would serialize to:
+
+```
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+POST /sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartnerAddress HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{"BusinessPartner":"1","PostalCode":"10001","City":"New York","Country":"USA"}
+
+```
+
+The first lines are request headers for the multipart request, followed by a blank line.
+The next line contains the request method and URL, followed by the request headers, a blank line, and the request payload.
+Every "atomic" request is serialized to a string of this kind, while `GET` and `DELETE` requests do not provide a payload.
