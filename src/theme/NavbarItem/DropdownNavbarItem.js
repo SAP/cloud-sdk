@@ -2,7 +2,6 @@ import React from 'react';
 import { shouldShow } from './helper';
 import DropdownNavbarItem from '@theme-original/NavbarItem/DropdownNavbarItem';
 import sdkVersions from '@site/static/api/versions';
-import useBaseUrl from '@docusaurus/useBaseUrl';
 import { useActiveVersion } from '@docusaurus/plugin-content-docs/client';
 
 /**
@@ -23,7 +22,7 @@ export default function DropdownNavbarItemWrapper(props) {
         .map(version => {
           return {
             label: version,
-            href: useBaseUrl(`api/${version}/`)
+            href: `https://sap.github.io/cloud-sdk/api/${version}/`
           };
         })
     };
