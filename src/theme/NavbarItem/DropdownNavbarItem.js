@@ -10,43 +10,24 @@ import { useActiveVersion } from '@docusaurus/plugin-content-docs/client';
  * the wrapper overwites its default `items` value with all versions matching the currently selected major version.
  */
 export default function DropdownNavbarItemWrapper(props) {
-    if (shouldShow(props) && props.apiReference) {
-      const currentSelectedVersion = useActiveVersion(props.docsPluginId).label[1];
-      /*
-      const newProps = {
-        ...props,
-        items: sdkVersions.reduce((prevArray, version) => {
-          const majorVersion = version[0]
-          if(majorVersion === currentSelectedVersion){
-            return [
-              ...prevArray,
-              {
-                label: version,
-                href: useBaseUrl(`api/${version}/`)
-              }
-            ]
-          }
-          return [
-            ...prevArray
-          ]
-        }, [])
-      }
-      */
-     const newProps = {
+  if (shouldShow(props) && props.apiReference) {
+    const currentSelectedVersion = useActiveVersion(props.docsPluginId)
+      .label[1];
+    const newProps = {
       ...props,
       items: sdkVersions
-      .filter(version => {
-        const majorVersion = version[0];
-        return majorVersion === currentSelectedVersion
-      })
-      .map(version => {
-        return {
-          label: version,
-          href: useBaseUrl(`api/${version}/`)
-        }
-      })
-     }
-      return <DropdownNavbarItem {...newProps} />;
-    }
-    return <DropdownNavbarItem {...props} />;
+        .filter(version => {
+          const majorVersion = version[0];
+          return majorVersion === currentSelectedVersion;
+        })
+        .map(version => {
+          return {
+            label: version,
+            href: useBaseUrl(`api/${version}/`)
+          };
+        })
+    };
+    return <DropdownNavbarItem {...newProps} />;
+  }
+  return <DropdownNavbarItem {...props} />;
 }

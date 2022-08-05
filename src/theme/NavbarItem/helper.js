@@ -20,5 +20,8 @@ export function shouldShow(props) {
  * Checks if multiple versions of the currently selected doc context exist.
  */
 export function hasMoreThanOneVersion(docsPluginId) {
-  return Object.keys(useActiveDocContext(docsPluginId).alternateDocVersions).length > 1;
+  return (
+    Object.keys(useActiveDocContext(docsPluginId).alternateDocVersions).length >
+    1
+  );
 }

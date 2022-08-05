@@ -17,7 +17,7 @@ export default function NavbarNavLinkWrapper(props) {
     const version =
       useActiveVersion(props.docsPluginId) ||
       useLatestVersion(props.docsPluginId);
-    const docId = props.docId || v?.mainDocId;
+    const docId = props.docId || version?.mainDocId;
     const to = `${version?.path}/${docId}`;
     const newProps = version ? { ...props, to } : props;
 
