@@ -1,7 +1,7 @@
 import { useActiveDocContext } from '@docusaurus/plugin-content-docs/client';
 
 /**
- * Recreates that path that docusaurus creates based on the plugin id.
+ * Recreates the path which docusaurus created from the plugin id.
  */
 export function getPathFromPluginId(docsPluginId) {
   return docsPluginId?.split('-')?.join('/');
