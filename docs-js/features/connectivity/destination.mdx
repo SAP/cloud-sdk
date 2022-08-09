@@ -41,9 +41,6 @@ The SAP Cloud SDK supports [OData](../odata/overview.mdx) and [OpenApi](../opena
 For both service types, the `execute()` method triggers a request to a target system.
 For OData services, you can invoke the method as:
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
 ```ts
 const { businessPartnerApi } = businessPartnerService();
 const responseOData = await businessPartnerApi
@@ -51,18 +48,6 @@ const responseOData = await businessPartnerApi
   .getAll()
   .execute(myDestination);
 ```
-
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-const responseOData = await BusinessPartner.requestBuilder()
-  .getAll()
-  .execute(myDestination);
-```
-
-</TabItem>
-</Tabs>
 
 Similarly for OpenAPI:
 
@@ -105,10 +90,6 @@ The SAP Cloud SDK searches for the destination by its name in the following loca
 The search stops, once a destination is found.
 Therefore, if a destination with the same name exists in multiple locations, the destination that occurs earliest during the search takes precedence over other destinations with the same name.
 
-:::note
-The second option `register a destination` was introduced in version 2.0 of the SAP Cloud SDK.
-:::
-
 ### Local Environment Variable
 
 This option is present for deployment and testing in a local environment outside the SAP BTP where no destination services are available.
@@ -138,10 +119,6 @@ The advantage of files is that they can be excluded from the repository since th
 Note that this approach is not suitable for multi-tenant scenarios, because only the destination service can return destinations for different tenants.
 
 ### Register Destination via the SAP Cloud SDK
-
-:::caution
-This functionality was introduced in version 2.0 of the SAP Cloud SDK.
-:::
 
 Usually, the destination service should be used in production to fetch a destination, including an authentication token.
 In the case of frequent service-to-service communication, requesting the destination service every time for a target-specific `JWT` would mean a big overhead.
@@ -213,10 +190,6 @@ Currently, the following services types are supported out of the box:
 If you need a destination for a different service, create a custom `serviceBindingTransformFn` and pass it with `destinationFetchOptions` or consider creating a [feature request](https://github.com/SAP/cloud-sdk-js/issues/new?assignees=&labels=feature+request&template=feature_request.md&title=).
 Contributions providing transform functions are highly welcome.
 
-:::note
-The `serviceBindingTransformFn` was introduced in version 2.0 of the SAP Cloud SDK.
-:::
-
 ### Destination Service
 
 In a productive environment, you will use a [Destination service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html) to retrieve destinations.
@@ -278,26 +251,9 @@ The lookup process done by the SAP Cloud SDK involves the following steps:
 If no token is given or the destination is not found in the subscriber account, the provider account is used as a fallback.
 To control this fallback behavior, a selection strategy can be passed to the destination lookup:
 
-<Tabs groupId="version" defaultValue="major" values={[
-{ label: 'SDK 1.x', value: 'deprecated'},
-{ label: 'SDK 2.x', value: 'major'}]}>
-
-<TabItem value="major">
-
 ```ts
 .execute({ destinationName: 'myDestination', jwt: 'yourJWT', selectionStrategy: 'alwaysSubscriber' })
 ```
-
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-.execute({ destinationName: 'myDestination', jwt: 'yourJWT' }, { selectionStrategy:'alwaysSubscriber' })
-```
-
-</TabItem>
-</Tabs>
-
 There are three selection strategies defined in the SAP Cloud SDK: `alwaysSubscriber`, `alwaysProvider`, and `subscriberFirst`.
 The selection strategy can be passed as an optional argument to the `.execute()` method.
 The default value is `subscriberFirst`.
@@ -325,28 +281,9 @@ In every request, these destinations are added to the destinations returned by t
 There are situations where you do not have a JWT issued by the XSUAA but need to lookup a destination, e.g., in background processes.
 In such situations, the property `iss` of the `DestinationAccessorOptions` can be used:
 
-<Tabs groupId="version" defaultValue="major" values={[
-{ label: 'SDK 1.x', value: 'deprecated'},
-{ label: 'SDK 2.x', value: 'major'}]}>
-
-<TabItem value="major">
-
 ```ts
 .execute({ destinationName: 'myDestination', iss: yourIssuerValue })
 ```
-
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-.execute(
-  { destinationName: 'myDestination' },
-  { iss: yourIssuerValue }
-)
-```
-
-</TabItem>
-</Tabs>
 
 The value for `iss` is supposed to be the same as in a JWT issued from the XSUAA, e.g., `https://yourSubdomain.localhost:8080/uaa/oauth/token`.
 In principle, only the host of the URL is relevant, but since the same parsing and replacement methods are used for the JWT handling, the URL has to be provided in the format above.
@@ -363,11 +300,6 @@ It is your responsibility as a developer to ensure that the provided value for t
 :::
 
 ### Destination Fetch Options
-
-:::note
-This section is written for version 2 of the SAP Cloud SDK.
-Most of the options are also available in version 1 but not all e.g. `timeout`.
-:::
 
 The `execute()`, `getDestination()` or `executeHttpRequest()` perform a destination lookup by name as discussed above.
 You can pass options to adjust how the destination is fetched.

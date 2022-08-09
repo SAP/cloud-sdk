@@ -1,0 +1,35 @@
+To build an entity by assigning its properties, you can use the entity builders provided by every entity class.
+Use the static `.builder` method to access the builder, set the properties and finally use the `.build` method to yield the entity.
+To set navigation properties, that link to other entities, you have to create the linked entities using their respective builder.
+Navigation properties, that are linked through a one-to-many relation have to be assigned in an array - one-to-one relations are assigned as single objects.
+The example below shows how you can create the data from above using the entity builder.
+The relation to the business partner address is a one-to-many relation here.
+
+```ts
+import {
+  BusinessPartner,
+  BusinessPartnerAddress
+} from '@sap/cloud-sdk-vdm-business-partner-service';
+
+const businessPartner = BusinessPartner.builder()
+  .firstName('Peter')
+  .lastName('Pan')
+  .toBusinessPartnerAddress([
+    BusinessPartnerAddress.builder().country('Neverland').build()
+  ])
+  .build();
+```
+
+You can also add fields, that are unknown according to the specification, if you add them as custom fields.
+To achieve this, pass an object the `.withCustomFields` method, where the keys denote the names of the custom fields, and the values their respective values.
+
+```ts
+import { BusinessPartner } from '@sap/cloud-sdk-vdm-business-partner-service';
+
+const businessPartner = BusinessPartner.builder()
+  .firstName('Peter')
+  .withCustomFields({
+    myCustomField: 'this is custom'
+  })
+  .build();
+```

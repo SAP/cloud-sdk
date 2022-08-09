@@ -81,6 +81,24 @@ module.exports = {
           activeBasePath: 'docs/js',
           sdkSwitch: true
         },
+        {
+          type: 'dropdown',
+          label: 'API Reference',
+          position: 'right',
+          items: [
+            {
+              label: 'Swizzle Placeholder',
+              href: 'https://www.doesnt-exist.com',
+            }
+          ],
+          docsPluginId: 'docs-js',
+          apiReference: true
+        },
+        {
+          type: 'docsVersionDropdown',
+          position: 'right',
+          docsPluginId: 'docs-js',
+        }
       ]
     },
     footer: {
@@ -161,7 +179,7 @@ module.exports = {
           path: 'docs'
         },
         theme: {
-          customCss: require.resolve('./src/css/custom.css')
+          customCss: [require.resolve('./src/css/custom.css')]
         },
         sitemap: {
           changefreq: 'weekly',
@@ -193,6 +211,19 @@ module.exports = {
         path: 'docs-js',
         routeBasePath: 'docs/js',
         sidebarPath: require.resolve('./sidebarsDocsJs.js'),
+        lastVersion: 'current',
+        versions: {
+          current: {
+            label: 'v2',
+            badge: false
+          },
+          v1: {
+            label: 'v1',
+            path: 'v1',
+            banner: 'unmaintained',
+            badge: false
+          }
+        }
       }
     ],
     [

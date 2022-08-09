@@ -1,0 +1,48 @@
+---
+title: Error Handling
+sidebar_label: Error Handling
+description: How to work with errors thrown by the SAP Cloud SDK
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - JavaScript
+  - TypeScript
+  - error
+  - cause
+  - root cause
+---
+
+There are many reasons for errors to occur when developing software.
+The SAP Cloud SDK tries to provide as much information as possible and necessary to understand what caused an error.
+Generally speaking, there is no difference in handling errors when working with the SAP Cloud SDK.
+However, some errors are caused by underlying errors.
+In these cases, the SAP Cloud SDK throws an `ErrorWithCause`, that allows access to the immediate cause and root cause of this error.
+These can be accessed by the `cause` and `rootCause` properties on `ErrorWithCause`.
+
+In the example below we try to create a business partner against https://example.com as a destination.
+As this is not an SAP S/4HANA system, this will fail and the error reveals the cause and root cause of the failure.
+
+```ts
+import { BusinessPartner } from '@sap/cloud-sdk-vdm-business-partner-service';
+
+BusinessPartner.requestBuilder()
+  .create(BusinessPartner.builder().build())
+  .execute({ url: 'https://example.com' })
+  .catch(err => {
+    console.log('Error:', err.message);
+    console.log('Cause:', err.cause?.message);
+    console.log('Root cause:', err.rootCause?.message);
+  });
+```
+
+The example above will yield the following output:
+
+```bash
+Error: Create request failed!
+Cause: post request to https://example.com/sap/opu/odata/sap/API_BUSINESS_PARTNER failed!
+Root cause: Request failed with status code 404
+```
+
+The final error is an `ErrorWithCause` that was caused by another `ErrorWithCause`.
+The root cause is an `Error` and reveals that the requested URL does not exist.

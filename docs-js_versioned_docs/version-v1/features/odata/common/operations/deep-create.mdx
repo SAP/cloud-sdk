@@ -1,0 +1,53 @@
+It is also possible to create an entity together with related entities in a single request:
+
+```ts
+// build a business partner instance with one linked address
+const businessPartner = BusinessPartner.builder()
+  .firstName('John')
+  .lastName('Doe')
+  .businessPartnerCategory('1')
+  .toBusinessPartnerAddress([
+    BusinessPartnerAddress.builder()
+      .country('DE')
+      .postalCode('14469')
+      .cityName('Potsdam')
+      .streetName('Konrad-Zuse-Ring')
+      .houseNumber('10')
+      .build()
+  ])
+  .build();
+
+// execute the create request
+BusinessPartner.requestBuilder().create(businessPartner).execute(myDestination);
+```
+
+:::note Troubleshooting
+
+When you try the example code above for testing the `deep create` feature, you might see some errors like `"operation module BUA_CHECK_ADDRESS_VALIDITY_ALL; a check table is missing"`.
+Typically, it can happen if you are using a new system with a default configuration.
+You need to configure an `address usage` field as shown in the example below to fix it.
+
+:::
+
+```ts
+const businessPartner = BusinessPartner.builder()
+  .firstName('John')
+  .lastName('Doe')
+  .businessPartnerCategory('1')
+  .toBusinessPartnerAddress([
+    BusinessPartnerAddress.builder()
+      .country('DE')
+      .postalCode('14469')
+      .cityName('Potsdam')
+      .streetName('Konrad-Zuse-Ring')
+      .houseNumber('10')
+      // additional code starts
+      .toAddressUsage([
+        BuPaAddressUsage.builder().addressUsage('XXDEFAULT').build()
+      ])
+      .build()
+  ])
+  .build();
+```
+
+You can also create an entity `asChildOf` another entity.

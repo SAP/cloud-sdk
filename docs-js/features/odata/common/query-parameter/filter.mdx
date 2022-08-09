@@ -1,11 +1,5 @@
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 When operating on a collection of entities, the API offers `filter( ... )` on the builders.
 It directly corresponds to the `$filter` parameter of the request.
-
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
 
 Filters are built via the fields available on the schema property of the entities API class:
 
@@ -40,35 +34,6 @@ The EDM primitive types support all six comparison operators:
 - `greaterOrEqual()`
 - `greaterThan()`
 
-</TabItem>
-
-<TabItem value="deprecated">
-
-Filters are built via the static property fields on entities:
-
-```ts
-/*
-  Get all business partners that either:
-    - Have first name 'Alice' but not last name 'Bob'
-    - Or have first name 'Mallory'
-*/
-BusinessPartner.requestBuilder()
-  .getAll()
-  .filter(
-    or(
-      and(
-        BusinessPartner.FIRST_NAME.equals('Alice'),
-        BusinessPartner.LAST_NAME.notEquals('Bob')
-      ),
-      BusinessPartner.FIRST_NAME.equals('Mallory')
-    )
-  )
-  .execute(destination);
-```
-
-</TabItem>
-</Tabs>
-
 The example above will translate to this filter parameter:
 
 ```sql
@@ -80,10 +45,7 @@ As `or` is invoked on the result of `and` it will form the outer expression whil
 
 In addition, the negation operator `not` can also be used for wrapping any filter expressions.
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
-```
+```ts
 /*
   Get all business partners that do not match any of the cases:
     - Have first name 'Alice'
@@ -99,28 +61,6 @@ In addition, the negation operator `not` can also be used for wrapping any filte
 )
 ```
 
-</TabItem>
-<TabItem value="deprecated">
-
-```
-/*
-  Get all business partners that do not match any of the cases:
-    - Have first name 'Alice'
-    - Have last name 'Bob'
-*/
-.filter(
-  not(
-    or(
-      BusinessPartner.FIRST_NAME.equals('Alice'),
-      BusinessPartner.LAST_NAME.equals('Bob')
-    )
-  )
-)
-```
-
-</TabItem>
-</Tabs>
-
 The `$filter` parameter will then be generated like below:
 
 ```sql
@@ -130,9 +70,6 @@ $filter=not (FirstName eq 'Alice') or (LastName eq 'Bob'))
 It is also possible to pass multiple filters to the same filter function without concatenating them with `and` or `or`.
 They will be concatenated with `and` by default.
 The two following examples are equal:
-
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
 
 ```ts
 .filter(
@@ -151,27 +88,3 @@ The example above can be shortened to:
   businessPartnerApi.schema.LAST_NAME.notEquals('Bob')
 )
 ```
-
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-.filter(
-  and(
-    BusinessPartner.FIRST_NAME.equals('Alice'),
-    BusinessPartner.LAST_NAME.notEquals('Bob')
-  )
-)
-```
-
-The example above can be shortened to:
-
-```ts
-.filter(
-  BusinessPartner.FIRST_NAME.equals('Alice'),
-  BusinessPartner.LAST_NAME.notEquals('Bob')
-)
-```
-
-</TabItem>
-</Tabs>
