@@ -177,6 +177,32 @@ Provide the name of the service instance as the destination name and the SAP Clo
 - Fetch a client-credential-grant token if needed
 - Return a destination containing the token and URL
 
+If you created a binding for the workflow service:
+
+```json
+{
+	"VCAP_SERVICES": {
+		"workflow": [
+			{
+				"label": "workflow",
+				"plan": "standard",
+				"name": "my-workflow-service",
+				"tags": [],
+				"instance_name": "my-workflow-service",
+				"credentials": {...}
+            }]
+        }
+}
+```
+
+you would consume the API using the instance name `my-workflow-service`:
+
+```ts
+import { WorkflowDefinitionsApi } from 'generated/SAP_CP_Workflow_CF'
+
+WorkflowDefinitionsApi.queryDefinitions().execute('my-workflow-service')
+```
+
 Currently, the following services types are supported out of the box:
 
 - `business-logging`
