@@ -82,7 +82,7 @@ You can construct a destination object manually and pass the destination informa
 The minimal requirement towards a manually constructed destination is that you provide a `url`.
 
 ```ts
-.execute({ url: 'https://example.com'})
+MyRequest.execute({ url: 'https://example.com'})
 ```
 
 This, however, is not recommended for productive use as you would lose the benefits of separating destinations from applications.
@@ -92,7 +92,7 @@ This, however, is not recommended for productive use as you would lose the benef
 Instead of defining your destination manually, you can reference it by a name:
 
 ```ts
-.execute({ destinationName: 'myDestination' })
+MyRequest.execute({ destinationName: 'myDestination' })
 ```
 
 The SAP Cloud SDK searches for the destination by its name in the following locations and the following order:
@@ -203,10 +203,10 @@ Provide the name of the service instance as the destination name and the SAP Clo
 Example:
 
 ```ts
-.execute({ destinationName: 'service-name' })
+MyRequest.execute({ destinationName: 'service-name' })
 ```
 
-Currently, 5 services are supported out of the box:
+Currently, the following services are supported out of the box:
 
 - `business-logging`
 - `s4-hana-cloud`
@@ -218,14 +218,15 @@ Currently, 5 services are supported out of the box:
 If you need the destination for another custom service, create a function with <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_connectivity.ServiceBindingTransformFunction" name="ServiceBindingTransformFunction type" /> to transform the <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.ServiceBinding" name="ServiceBinding interface" /> into the <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="Destination interface" />.
 Then pass it to `serviceBindingTransformFn` in `DestinationFetchOptions`.
 
-A simple example:
+For example:
 
 ```ts
 const serviceBindingTransformFn = async (serviceBinding: ServiceBinding) => ({
   url: serviceBinding.credentials.sys
 });
 
-.execute({ destinationName: 'service-name', serviceBindingTransformFn })
+// replace 'service-name' with one of the services above
+MyRequest.execute({ destinationName: 'service-name', serviceBindingTransformFn })
 ```
 
 More advanced examples with service token fetching can be found in [service-binding-to-destination.ts](https://github.com/SAP/cloud-sdk-js/blob/main/packages/connectivity/src/scp-cf/destination/service-binding-to-destination.ts).
@@ -233,13 +234,7 @@ More advanced examples with service token fetching can be found in [service-bind
 You can also consider creating a [feature request](https://github.com/SAP/cloud-sdk-js/issues/new?assignees=&labels=feature+request&template=feature_request.md&title=).
 Contributions providing transform functions are highly welcome.
 
-:::note
-The `serviceBindingTransformFn` was introduced in version 2.0 of the SAP Cloud SDK.
-:::
-
-To search the destination explicitly from service bindings, call <LinkToLatestJsApiDocs slug="functions/sap_cloud_sdk_connectivity.destinationForServiceBinding" name="destinationForServiceBinding" /> function with the service name and options.
-
-For example:
+To search the destination explicitly for service bindings, call <LinkToLatestJsApiDocs slug="functions/sap_cloud_sdk_connectivity.destinationForServiceBinding" name="destinationForServiceBinding" /> function with the service name and options.
 
 ```ts
 const destination = destinationForServiceBinding('service-name', {
@@ -292,7 +287,7 @@ After this little definition detour, let's go back to the destination service an
 For simplicity, an optional argument of the destination lookup has been neglected in the beginning:
 
 ```ts
-.execute({ destinationName: 'myDestination', jwt: 'yourJWT',})
+MyRequest.execute({ destinationName: 'myDestination', jwt: 'yourJWT',})
 ```
 
 The `jwt` argument takes the JSON web token (JWT) issued by an XSUAA as input.
@@ -317,14 +312,14 @@ To control this fallback behavior, a selection strategy can be passed to the des
 <TabItem value="major">
 
 ```ts
-.execute({ destinationName: 'myDestination', jwt: 'yourJWT', selectionStrategy: 'alwaysSubscriber' })
+MyRequest.execute({ destinationName: 'myDestination', jwt: 'yourJWT', selectionStrategy: 'alwaysSubscriber' })
 ```
 
 </TabItem>
 <TabItem value="deprecated">
 
 ```ts
-.execute({ destinationName: 'myDestination', jwt: 'yourJWT' }, { selectionStrategy:'alwaysSubscriber' })
+MyRequest.execute({ destinationName: 'myDestination', jwt: 'yourJWT' }, { selectionStrategy:'alwaysSubscriber' })
 ```
 
 </TabItem>
@@ -364,14 +359,14 @@ In such situations, the property `iss` of the `DestinationAccessorOptions` can b
 <TabItem value="major">
 
 ```ts
-.execute({ destinationName: 'myDestination', iss: yourIssuerValue })
+MyRequest.execute({ destinationName: 'myDestination', iss: yourIssuerValue })
 ```
 
 </TabItem>
 <TabItem value="deprecated">
 
 ```ts
-.execute(
+MyRequest.execute(
   { destinationName: 'myDestination' },
   { iss: yourIssuerValue }
 )
