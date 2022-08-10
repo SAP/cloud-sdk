@@ -24,9 +24,11 @@ In the example below we try to create a business partner against https://example
 As this is not an SAP S/4HANA system, this will fail and the error reveals the cause and root cause of the failure.
 
 ```ts
-import { BusinessPartner } from '@sap/cloud-sdk-vdm-business-partner-service';
+import { businessPartnerService } from '@sap/cloud-sdk-vdm-business-partner-service';
+const { businessPartnerApi } = businessPartnerService();
 
-BusinessPartner.requestBuilder()
+businessPartnerApi
+  .requestBuilder()
   .create(BusinessPartner.builder().build())
   .execute({ url: 'https://example.com' })
   .catch(err => {

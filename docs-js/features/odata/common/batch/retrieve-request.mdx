@@ -1,6 +1,3 @@
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 A retrieve request represents an HTTP `GET` request.
 In terms of the SAP Cloud SDK this includes all requests built by [`GetAllRequestBuilder`](#getall-request-builder) and [`GetByKeyRequestBuilder`](#getbykey-request-builder).
 
@@ -10,9 +7,6 @@ A `BatchResponse` that corresponds with a retrieve request can either be a `Read
 
 In the example below, we map each given address ID to a [`GetByKeyRequestBuilder`](#getbykey-request-builder).
 These retrieve requests are combined into one `batch` request and executed against a destination.
-
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
 
 ```ts
 // Destructure business partner service
@@ -35,29 +29,3 @@ async function getAddressesByIds(
   // ...
 }
 ```
-
-  </TabItem>
-<TabItem value="deprecated">
-
-```ts
-async function getAddressesByIds(
-  businessPartnerId: string,
-  addressIds: string[]
-): Promise<BusinessPartnerAddress[]> {
-  const retrieveRequests = addressIds.map(addressId =>
-    // Create get by key request
-    BusinessPartnerAddress.requestBuilder().getByKey(
-      businessPartnerId,
-      addressId
-    )
-  );
-
-  // Execute batch request combining multiple retrieve requests
-  const batchResponses = await batch(...retrieveRequests).execute(destination);
-
-  // ...
-}
-```
-
-  </TabItem>
-  </Tabs>
