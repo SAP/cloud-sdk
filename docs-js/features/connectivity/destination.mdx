@@ -67,7 +67,7 @@ You can construct a destination object manually and pass the destination informa
 The minimal requirement towards a manually constructed destination is that you provide a `url`.
 
 ```ts
-.execute({ url: 'https://example.com'})
+MyRequest.execute({ url: 'https://example.com'})
 ```
 
 This, however, is not recommended for productive use as you would lose the benefits of separating destinations from applications.
@@ -77,7 +77,7 @@ This, however, is not recommended for productive use as you would lose the benef
 Instead of defining your destination manually, you can reference it by a name:
 
 ```ts
-.execute({ destinationName: 'myDestination' })
+MyRequest.execute({ destinationName: 'myDestination' })
 ```
 
 The SAP Cloud SDK searches for the destination by its name in the following locations and the following order:
@@ -207,14 +207,40 @@ Currently, the following services are supported out of the box:
 
 - `business-logging`
 - `s4-hana-cloud`
+- `destination`
 - `saas-registry`
 - `workflow`
-- `destination`
 - `service-manager`
 - `xsuaa`
 
-If you need a destination for a different service, create a custom `serviceBindingTransformFn` and pass it with `destinationFetchOptions` or consider creating a [feature request](https://github.com/SAP/cloud-sdk-js/issues/new?assignees=&labels=feature+request&template=feature_request.md&title=).
+If you need the destination for another custom service, create a function with <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_connectivity.ServiceBindingTransformFunction" name="ServiceBindingTransformFunction type" /> to transform the <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.ServiceBinding" name="ServiceBinding interface" /> into the <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="Destination interface" />.
+Then pass it to `serviceBindingTransformFn` in `DestinationFetchOptions`.
+
+For example:
+
+```ts
+const serviceBindingTransformFn = async (serviceBinding: ServiceBinding) => ({
+  url: serviceBinding.credentials.sys
+});
+
+MyRequest.execute({ destinationName: 'my-service-name', serviceBindingTransformFn })
+```
+
+More advanced examples with service token fetching can be found in [service-binding-to-destination.ts](https://github.com/SAP/cloud-sdk-js/blob/main/packages/connectivity/src/scp-cf/destination/service-binding-to-destination.ts).
+
+You can also consider creating a [feature request](https://github.com/SAP/cloud-sdk-js/issues/new?assignees=&labels=feature+request&template=feature_request.md&title=).
 Contributions providing transform functions are highly welcome.
+
+The `execute()` or `getDestination()` try multiple things to retrieve a destination as discussed in the beginning.
+If you want to consider only the service bindings, call <LinkToLatestJsApiDocs slug="functions/sap_cloud_sdk_connectivity.destinationForServiceBinding" name="destinationForServiceBinding" /> function with the service name and options.
+
+```ts
+const destination = destinationForServiceBinding('my-service-name', {
+  serviceBindingTransformFn,
+  jwt: 'jwt',
+  useCache: false
+});
+```
 
 ### Destination Service
 
@@ -259,7 +285,7 @@ After this little definition detour, let's go back to the destination service an
 For simplicity, an optional argument of the destination lookup has been neglected in the beginning:
 
 ```ts
-.execute({ destinationName: 'myDestination', jwt: 'yourJWT',})
+MyRequest.execute({ destinationName: 'myDestination', jwt: 'yourJWT',})
 ```
 
 The `jwt` argument takes the JSON web token (JWT) issued by an XSUAA as input.
@@ -278,8 +304,9 @@ If no token is given or the destination is not found in the subscriber account, 
 To control this fallback behavior, a selection strategy can be passed to the destination lookup:
 
 ```ts
-.execute({ destinationName: 'myDestination', jwt: 'yourJWT', selectionStrategy: 'alwaysSubscriber' })
+MyRequest.execute({ destinationName: 'myDestination', jwt: 'yourJWT', selectionStrategy: 'alwaysSubscriber' })
 ```
+
 There are three selection strategies defined in the SAP Cloud SDK: `alwaysSubscriber`, `alwaysProvider`, and `subscriberFirst`.
 The selection strategy can be passed as an optional argument to the `.execute()` method.
 The default value is `subscriberFirst`.
@@ -308,7 +335,7 @@ There are situations where you do not have a JWT issued by the XSUAA but need to
 In such situations, the property `iss` of the `DestinationAccessorOptions` can be used:
 
 ```ts
-.execute({ destinationName: 'myDestination', iss: yourIssuerValue })
+MyRequest.execute({ destinationName: 'myDestination', iss: yourIssuerValue })
 ```
 
 The value for `iss` is supposed to be the same as in a JWT issued from the XSUAA, e.g., `https://yourSubdomain.localhost:8080/uaa/oauth/token`.
