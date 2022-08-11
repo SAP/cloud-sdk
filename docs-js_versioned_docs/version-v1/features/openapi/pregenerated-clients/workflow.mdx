@@ -1,0 +1,231 @@
+---
+title: Use the Pregenerated Workflow API Client for Cloud Foundry
+sidebar_label: SAP Workflow API for Cloud Foundry
+description: This article describes what the Workflow API for Cloud Foundry is and how to consume it with the SAP Cloud SDK.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - OpenAPI
+  - REST
+  - JavaScript
+  - TypeScript
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+The [SAP Workflow service](https://help.sap.com/viewer/product/WORKFLOW_SERVICE/Cloud/en-US) allows you to automate business processes across organizations and applications on SAP Business Technology Platform, both Cloud Foundry and Neo environment.
+It is technically separated into two services per environment:
+
+- Inbox API (OData)
+- Workflow API (OpenAPI)
+
+The Inbox API is mainly meant to build a personal inbox, while the Workflow API helps to manage workflows and tasks across recipients.
+
+The first SAP Cloud SDK pregenerated OpenAPI client is for the Workflow API.
+There is no pregenerated client for the Inbox API, yet.
+The remainder of this document refers to the OpenAPI Workflow API for Cloud Foundry only.
+
+:::note Prerequisites
+
+The following documentation explains how to use the pregenerated client for:
+
+- An existing instance of the SAP Workflow service
+- A user, who has the necessary roles to make the requests
+- An existing workflow definition that contains one simple user task
+
+To learn how to set up your environment for the SAP Workflow service, see the [Workflow service documentation](https://help.sap.com/viewer/e157c391253b4ecd93647bf232d18a83/Cloud/en-US/fc3d44872c354742afd672aa8d9c16b4.html).
+
+:::
+
+## Installation
+
+The client for the Workflow API is available as an npm package.
+To install it, run:
+
+```bash
+$ npm install @sap/cloud-sdk-workflow-service-cf
+```
+
+## Use the Client
+
+For this example, assume the following workflow definition:
+
+<img src={useBaseUrl('img/workflow-definition.png')} style={{ width: '50%' }} />
+
+It contains one task definition to approve a request through a form with one boolean field, `approve`.
+The use case shows how to initiate a workflow, retrieve its tasks, complete a task, and retrieve the execution logs.
+
+### Start a Workflow
+
+First, import the `WorkflowInstancesApi` from the Workflow API client.
+This API includes functionality to manage workflow instances.
+It allows you to start an instance of a workflow for an existing definition.
+Use the `startInstance` function to build a request to start a workflow instance for the definition with the ID `'myWorkflowDefinitionId'` and execute it against a [destination](../../connectivity/destination.mdx):
+
+```ts
+import { WorkflowDefinitionsApi } from '@sap/cloud-sdk-workflow-service-cf';
+
+function startWorkflow(): Promise<WorkflowInstance> {
+  return WorkflowInstancesApi.startInstance({
+    definitionId: 'myWorkflowDefinitionId'
+  }).execute(destination);
+}
+```
+
+The returned workflow instance looks something like this:
+
+```json
+{
+  "id": "<workflowInstanceId>",
+  "definitionId": "myworkflow",
+  "definitionVersion": "2",
+  "subject": "MyWorkflow",
+  "status": "RUNNING",
+  "businessKey": "",
+  "parentInstanceId": null,
+  "rootInstanceId": "<workflowInstanceId>",
+  "applicationScope": "own",
+  "startedAt": "2021-05-28T07:54:14.492Z",
+  "startedBy": "<serviceClientId>",
+  "completedAt": null
+}
+```
+
+It contains information on the started workflow, for example, `id`, the ID of the instance, `defintionId`, the ID of the definition, and `status`, which in this case is `'RUNNING'`.
+
+### Retrieve Tasks of a Workflow Instance
+
+To get the tasks that are part of an instance, use the `UserTaskInstancesApi`.
+It includes functionality around managing user tasks.
+To retrieve the tasks of a workflow, use the `queryInstances` function and pass the workflow instance ID as query parameter to filter the tasks by your workflow instance.
+Execute the request against a destination:
+
+```ts
+import { UserTaskInstancesApi } from '@sap/cloud-sdk-workflow-service-cf';
+
+async function getTask(
+  workflowInstance: WorkflowInstance
+): Promise<TaskInstance> {
+  const [taskInstance] = await UserTaskInstancesApi.queryInstances({
+    workflowInstanceId: workflowInstance.id
+  }).execute(destination);
+
+  return taskInstance;
+}
+```
+
+The function above returns an instance of a task, that looks as follows:
+
+```json
+{
+  "activityId": "usertask1",
+  "claimedAt": null,
+  "completedAt": null,
+  "createdAt": "2021-05-28T07:54:14.748Z",
+  "description": null,
+  "id": "<userTaskInstanceId>",
+  "processor": null,
+  "recipientUsers": ["<userId>"],
+  "recipientGroups": [],
+  "status": "READY",
+  "subject": "Approve a request",
+  "workflowDefinitionId": "myworkflow",
+  "workflowInstanceId": "<workflowInstanceId>",
+  "priority": "MEDIUM",
+  "dueDate": null,
+  "createdBy": "<serviceClientId>",
+  "definitionId": "usertask1@myworkflow",
+  "lastChangedAt": "2021-05-28T07:54:14.748Z",
+  "applicationScope": "own"
+}
+```
+
+This is an object with data on the task.
+It has properties like the ID of the instance and definition (`id` and `definitionId`), the `status`, `priority`, and so on.
+
+### Update the Status and Context of a Task
+
+To update a task, use the `updateInstance` on the `UserTaskInstancesApi`.
+Pass the mandatory instance ID as first parameter.
+The second parameter is the body to be sent with the update.
+Is has the type `UpdateTaskInstancePayload` and allows you to pass the parameters `context` and `status`, among others.
+In this example the task requires to give (or not to give) an approval.
+The form to execute this task has one boolean field, `approve`:
+
+<img src={useBaseUrl('img/workflow-task-form.png')} style={{ width: '50%' }} />
+
+It is defined to point to the context path `${context.approve}`.
+Therefore, you can set it on the context in the request body as in the example below.
+To complete the action, you can also set the `status` to `'COMPLETED'`.
+As in this example, this is the only task, it will also complete the workflow.
+Execute the request against a destination:
+
+```ts
+import { UserTaskInstancesApi } from '@sap/cloud-sdk-workflow-service-cf';
+
+function updateTask(taskInstance: TaskInstance): Promise<void> {
+  return UserTaskInstancesApi.updateInstance(taskInstance.id, {
+    context: {
+      approve: true
+    },
+    status: 'COMPLETED'
+  }).execute(destination);
+}
+```
+
+### Retrieve Execution Logs
+
+Every workflow tracks information on the events that occurred throughout its execution.
+The `WorkflowInstanceApi` provides the `queryInstanceExecutionLogs` function to retrieve the current logs for a workflow.
+Pass the ID of the workflow to this function and execute it against a destination to retrieve the logs:
+
+```ts
+import { WorkflowInstancesApi } from '@sap/cloud-sdk-workflow-service-cf';
+
+function getLogs(
+  workflowInstance: WorkflowInstance
+): Promise<WorkflowInstanceExecutionLog[]> {
+  return WorkflowInstancesApi.queryInstanceExecutionLogs(
+    workflowInstance.id
+  ).execute(destination);
+}
+```
+
+The returned logs for this exemplary use case would look something like this:
+
+```json
+[
+  {
+    "id": "48",
+    "type": "WORKFLOW_STARTED",
+    "timestamp": "2021-05-28T07:54:14.501Z",
+    "referenceInstanceId": "<workflowInstanceId>",
+    "userId": "<serviceClientId>"
+  },
+  {
+    "id": "49",
+    "type": "USERTASK_CREATED",
+    "timestamp": "2021-05-28T07:54:14.769Z",
+    "referenceInstanceId": "dd25391e-e426-49bf-bfbc-2e58d33fb4a8",
+    "activityId": "usertask1",
+    "subject": "Approve a request",
+    "recipientUsers": ["<userId>"],
+    "recipientGroups": [],
+    "initiatorId": "<serviceClientId>",
+    "taskId": "<userTaskInstanceId>"
+  },
+  {
+    "id": "50",
+    "type": "USERTASK_COMPLETED",
+    "timestamp": "2021-05-28T07:54:16.407Z",
+    "referenceInstanceId": "dd25391e-e426-49bf-bfbc-2e58d33fb4a8",
+    "activityId": "usertask1",
+    "userId": "<serviceClientId>",
+    "subject": "Approve a request",
+    "taskId": "<userTaskInstanceId>"
+  }
+]
+```
+
+The three items represented here are the initiation of the workflow, the creation of the task, and the completion of the task.

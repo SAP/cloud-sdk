@@ -1,0 +1,24 @@
+OData V4 introduces [lambda operators](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_LambdaOperators) e.g., `any`/`all` so that the root property of the one-to-many navigation properties can be filtered.
+Below is an example that demonstrates how to use the lambda operator `any`.
+
+```ts
+/*
+Get all people that have at least one friend that matches all the following conditions:
+  - Has first name 'John'
+  - Has last name 'Miller'
+*/
+.filter(
+  any(
+    People.FRIENDS.filter(
+      People.FIRST_NAME.equals('John'),
+      People.LAST_NAME.equals('Miller')
+    )
+  )
+)
+```
+
+The generated `$filter` parameter of the URL will be:
+
+```sql
+$filter=(/any(a0:((a0/Friends/FirstName eq 'John' and a0/Friends/LastName eq 'Miller'))))
+```

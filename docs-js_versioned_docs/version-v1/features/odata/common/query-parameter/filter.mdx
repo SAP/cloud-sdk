@@ -1,0 +1,77 @@
+When operating on a collection of entities, the API offers `filter( ... )` on the builders.
+It directly corresponds to the `$filter` parameter of the request.
+
+```ts
+/*
+  Get all business partners that either:
+    - Have first name 'Alice' but not last name 'Bob'
+    - Or have first name 'Mallory'
+*/
+BusinessPartner.requestBuilder()
+  .getAll()
+  .filter(
+    or(
+      and(
+        BusinessPartner.FIRST_NAME.equals('Alice'),
+        BusinessPartner.LAST_NAME.notEquals('Bob')
+      ),
+      BusinessPartner.FIRST_NAME.equals('Mallory')
+    )
+  )
+  .execute(destination);
+```
+
+The example above will translate to this filter parameter:
+
+```sql
+$filter=(((FirstName eq 'Alice') and (LastName ne 'Bob')) or (FirstName eq 'Mallory'))
+```
+
+Take note of the order of `and` and `or`.
+As `or` is invoked on the result of `and` it will form the outer expression while `and` is an inner expression in the first branch of `or`.
+
+In addition, the negation operator `not` can also be used for wrapping any filter expressions.
+
+```ts
+/*
+  Get all business partners that do not match any of the cases:
+    - Have first name 'Alice'
+    - Have last name 'Bob'
+*/
+.filter(
+  not(
+    or(
+      BusinessPartner.FIRST_NAME.equals('Alice'),
+      BusinessPartner.LAST_NAME.equals('Bob')
+    )
+  )
+)
+```
+
+The `$filter` parameter will then be generated like below:
+
+```sql
+$filter=not (FirstName eq 'Alice') or (LastName eq 'Bob'))
+```
+
+It is also possible to pass multiple filters to the same filter function without concatenating them with `and` or `or`.
+They will be concatenated with `and` by default.
+The two following examples are equal:
+
+```ts
+.filter(
+  and(
+    BusinessPartner.FIRST_NAME.equals('Alice'),
+    BusinessPartner.LAST_NAME.notEquals('Bob')
+  )
+)
+```
+
+The example above can be shortened to:
+
+```ts
+.filter(
+  BusinessPartner.FIRST_NAME.equals('Alice'),
+  BusinessPartner.LAST_NAME.notEquals('Bob')
+)
+```

@@ -1,0 +1,25 @@
+By default, URLs in the multipart representation of a request are serialized to a path relative to the service, e.g.:
+
+```
+GET /sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartnerAddress HTTP/1.1
+```
+
+However, some services might only understand URLs relative to the entity or even absolute URLs.
+
+To configure the serialization of the URLs within a batch request, you can set the subrequest path type with `withSubRequestPathType`.
+You can either set it to `'relativeToService'`, as is the default, `'relativeToEntity'`, which will yield URLs relative to the entity, or `'absolute'`, which will produce absolute URLs.
+See below for examples:
+
+Serialize subrequest path relative to entity:
+
+```ts
+// GET /A_BusinessPartnerAddress HTTP/1.1
+batch(...requests).withSubRequestPathType('relativeToEntity');
+```
+
+Serialize subrequest path as absolute URL:
+
+```ts
+// GET https://my-s4.system.com/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartnerAddress HTTP/1.1
+batch(...requests).withSubRequestPathType('absolute');
+```

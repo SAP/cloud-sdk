@@ -1,0 +1,36 @@
+There are predefined filter functions e.g. `length`, `substring`, `substringOf` in the core library, that allow for a wide range of filter expressions:
+
+```ts
+/*
+Fetch all business partners who have a first name shorter than 5 letters
+*/
+BusinessPartner.requestBuilder()
+  .getAll()
+  .filter(length(BusinessPartner.FIRST_NAME).lessThan(5))
+  .execute(destination);
+```
+
+For filter functions with `boolean` as the return type, the filter function can be used directly as a filter without `.equal(true)`.
+Logically, the two following examples are equivalent to each other:
+
+```ts
+/*
+  $filter=startswith(FirstName, 'Bob') eq true
+*/
+.filter(
+  startsWith(BusinessPartner.FIRST_NAME, 'Bob').equal(true)
+)
+```
+
+The filter expression can be shortened:
+
+```ts
+  /*
+    $filter=startswith(FirstName, 'Bob')
+  */
+  .filter(
+    startsWith(BusinessPartner.FIRST_NAME, 'Bob')
+  )
+```
+
+However, as some services might not support both versions shown above, you might have to choose one of them to fit the target system.

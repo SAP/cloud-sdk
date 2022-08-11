@@ -1,0 +1,99 @@
+---
+title: On-Premise Connectivity
+sidebar_label: On-Premise Systems
+description: How to connect to SAP S/4HANA On-premise systems using the SAP Cloud SDK
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - On-premise
+  - connectivity
+  - JavaScript
+  - TypeScript
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import ThemedImage from '@theme/ThemedImage';
+
+## Why On-Premise Systems Are Different
+
+The crucial problem with SAP S/4HANA On-premise systems is, that they are not exposed to the internet.
+Typically, they are located within a company's internal network.
+The SAP Cloud SDK provides helpful features that allow you to connect to On-premise systems.
+
+Since this isolation contradicts modern requirements of data availability, SAP has introduced the [Cloud Connector](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e6c7616abb5710148cfcf3e75d96d596.html?q=cloud%20connector).
+The Cloud Connector works like a reverse proxy, opening a connection between some allowlisted service endpoints of the On-premise system and the connected Cloud Foundry account.
+Only applications running in the connected Cloud Foundry account can access the services.
+Applications that are supposed to access On-premise systems need a binding to the [connectivity service](https://www.cloudfoundry.org/the-foundry/sap-cloud-platform-service-connectivity/).
+
+<!-- vale off -->
+
+<ThemedImage
+  alt="On Premise Connectivity"
+  sources={{
+    light: useBaseUrl('img/on-premise-connectivity_light.svg'),
+    dark: useBaseUrl('img/on-premise-connectivity_dark.svg')
+  }}
+  className="center"
+  width="100%"
+/>
+
+<!-- vale on -->
+
+## Implementation Details
+
+### Connectivity Service
+
+As a first step, the SAP Cloud SDK [looks up the destination](./destination.mdx).
+If the `Proxy Type` of the destination is `OnPremise` the SAP Cloud SDK will try to establish a connection via the Cloud Connector.
+
+As mentioned above, the application needs a service binding to the connectivity service.
+A service binding leads to client credentials in the `VCAP` environment variable.
+The environment variables are accessible for the application at runtime.
+The SAP Cloud SDK uses the client credentials and if given the tenant id of the JWT to obtain a [client credentials grant.](https://help.sap.com/viewer/8d8be6a74e4e49589a546c02ee193741/latest/en-US/f1eff1dd7907469491989b3a36e6a7c6.html)
+If multiple connectivity services bindings exist, the SAP Cloud SDK uses the first entry per default.
+
+The SAP Cloud SDK takes the client grant to call the connectivity service and receives the host, password, and authorization of the connectivity proxy.
+Then the SAP Cloud SDK creates an HTTP agent considering this proxy and the necessary `Proxy-Authorization` headers.
+The proxy is the entry point to the Cloud Connector instance connected to the account.
+The proxy is only reachable from the Cloud Foundry space, so you cannot use that flow for applications running outside of Cloud Foundry.
+For quick local test purposes, a deployment to Cloud Foundry is tedious and the following workarounds are possible:
+
+- [SAP Business Application Studio](../../guides/bas-external-system.mdx) has some built-in functionality to connect to Cloud Foundry.
+- If you are in a VPN from where the On-premise system is reachable, use a [environment destination](./destination.mdx) to access the system directly.
+- You can also use an existing application with a bound connectivity service as an ssh tunnel:
+  - Enable ssh for the application as described [here](https://docs.cloudfoundry.org/devguide/deploy-apps/ssh-apps.html)
+  - Open an ssh tunnel with forwarding via the ` cf ssh MY-APP -L LOCAL-HOST:LOCAL-PORT:REMOTE-HOST:REMOTE-HOST-PORT` command.
+    Use as remote host and port the `onpremise_proxy_host` and `onpremise_proxy_port` values from the VCAP service variables e.g. `connectivityproxy.internal.cf.eu10.hana.ondemand.com` and `20003`.
+    For the localhost and port use the localhost and some free port e.g. `localhost:8081`.
+  - Replace the `onpremise_proxy_host` and `onpremise_proxy_port` in your locally used `VCAP_SERVICE` variables with `localhost` and the free port you choose.
+
+The final destination in the productive scenario containing the [proxy information](./proxy.mdx) will look like this:
+
+```JSON
+{
+url: "https://my.onPremise.System.url.com",
+headers: {...},    //contains authorization headers for the SAP S/4HANA system
+proxyConfiguration?: {
+  host: "connectivity.service.proxy.host"
+  port: 1234
+  protocol: "http"
+  headers?: {
+      Proxy-Authorization: "AuthHeaderForTheProxy"
+    };,
+  }
+}
+```
+
+It will be used by the [HTTP client](generic-http-client.mdx) of the SAP Cloud SDK to execute the request.
+We would like to mention two minor aspects of the SAP Cloud SDK.
+
+### Principal Propagation
+
+In case the `Authentication` property on the destination is `PrincipalPropagation` the SAP Cloud SDK adds the `SAP-Connectivity-Authentication` header to the request.
+The header contains user information included in the `JWT` and enables user propagation from the cloud application to the SAP S/4HANA system.
+
+### Multiple Cloud Connectors
+
+If you have multiple Cloud Connectors connected to your account, the `LocationId` defines which one of these to use for the request.
+In case the destination contains a `LocationId` property, the SAP Cloud SDK adds the `SAP-Connectivity-SCC-Location_ID` header to the request.

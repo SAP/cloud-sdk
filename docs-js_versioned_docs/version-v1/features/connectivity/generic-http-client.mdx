@@ -1,0 +1,226 @@
+---
+title: Generic HTTP Client
+sidebar_label: Generic HTTP Client
+description: How to use the generic http client for untyped requests
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - odata
+  - HTTP
+  - JavaScript
+  - TypeScript
+---
+
+import LinkToLatestJsApiDocs from '@site/src/sap/sdk-js/LinkToLatestJsApiDocs';
+
+## What Is the Generic HTTP Client?
+
+In the [Executing a request using a generated OData client](../odata/execute-odata-request.mdx) section, we explained how to make OData requests using the generated OData client.
+This client is the highest layer of convenience and type safety for the user.
+Below the OData client uses the generic HTTP client of the SAP Cloud SDK.
+For the final HTTP calls, the SAP Cloud SDK for JavaScript uses the axios library.
+
+In this document, we explain when and how to use the middle layer directly.
+Different clients serve different purposes:
+
+**OData Client:**
+Provides strong typing for the request (payload, select, filter, etc.) and response.
+For each OData service, a separate client needs to be generated which defines the types and methods for this service.
+The client takes care of deserializing your request to a URL and JSON payload as well as serializing the response.
+The generated payload and URL are passed to the Generic HTTP Client.
+
+**Generic HTTP Client:**
+Adds SAP infrastructure-specific functionality on top of a standard HTTP Client.
+All OData services use the same generic HTTP client, so it contains no service-specific information.
+The client handles connectivity related issues such as:
+
+- [Destination lookup](../connectivity/destination.mdx)
+- Connections to [SAP S/4HANA On-premise](../connectivity/on-premise.mdx) via the connectivity service
+- [Web proxies](../connectivity/proxy.mdx).
+
+In the end, all information from the destination, connectivity service, and proxy configuration ends up in header fields and [proxy-agents](https://www.npmjs.com/package/proxy-agent).
+The information goes one level down to the axios client.
+
+**axios HTTP Client:**
+Is a widely used open-source [HTTP client for node](https://www.npmjs.com/package/axios).
+This client executes the actual HTTP requests in the end.
+
+## How to Use It
+
+To make a request using the Generic HTTP client use the `executeHttpRequest` function.
+
+```ts
+executeHttpRequest(destination, requestConfig, httpRequestOptions);
+```
+
+The `destination` argument is either a full <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="destination object" />, that you have already fetched or an <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions" name="object containing a destination name and an optional JWT" />.
+In the latter case, the SAP Cloud SDK fetches the destination for you.
+For more details, see [here](destination.mdx).
+The <LinkToLatestJsApiDocs slug="modules/sap_cloud_sdk_http_client#HttpRequestConfig" name="request configuration" /> argument contains the request configuration.
+A minimal configuration would look like this:
+
+```JSON
+{
+  method: 'get',
+  params: {
+    a: 'a',
+    b: 'b'
+  },
+  ...
+}
+```
+
+Note that you can also give values for `url` in the request configuration.
+The values you give in the request configuration will be merged with ones related to the destination:
+
+```ts
+{
+  ...destinationRequestConfig,
+  ...customRequestConfig,
+  headers: {
+   ...destinationRequestConfig.headers,
+   ...customRequestConfig.headers
+}
+```
+
+For keys that exist for both objects, the value from the custom request configuration will be used.
+For example, a request configuration with `authorization` headers will overwrite the authorization header information from the destination.
+
+You can also pass an optional third parameter `httpRequestOptions`, where you can indicate, for example, whether the SAP Cloud SDK should fetch `CSRF` token for a non-GET request.
+For a GET request, the `CSRF` token is not fetched and this option is ignored.
+
+Below is an example of the `httpRequestOptions` to delegate the `CSRF` token fetching to the SAP Cloud SDK.
+
+```JSON
+{
+     fetchCsrfToken: true
+}
+```
+
+By default, the value of `fetchCsrfToken` is false.
+
+## When to Use It
+
+You should consider the Generic HTTP client if:
+
+- You need to use an unsupported feature by the typed OData Client like `upsert` for example.
+  With this, you can profit from the aforementioned convenience in connectivity.
+- You want to ping a service or trigger a function import without a complicated payload.
+  In such a case the size of a full data model of the typed client is perhaps not worth the benefits.
+- You want to call a non-OData service that has no service definition.
+
+You should consider the OData client if:
+
+- You have to build complicated filter, selection, and/or expand conditions.
+  Here you will highly benefit from the help of the OData client.
+- You want to update or create new entities.
+  The OData Client has built-in `ETag` versions handling.
+  With the generic client, you have to manage versions on your own.
+
+## Headers and Query Parameters from Different Origins
+
+As partially described in the [destination guide](./destination#additional-headers-and-query-parameters-on-destinations), there are multiple possible origins for query parameters:
+
+- Provided by the user on the request level.
+  These parameters are referred to as `custom` parameters.
+- Defined by the destination object or properties.
+- Introduced by the SAP Cloud SDK.
+  These parameters are referred to as `internal` parameters.
+
+In case there are parameters with the same key from multiple origins the priority is:
+
+1. `Custom` headers and parameters
+2. `Destination` headers and parameters
+3. `Internal` headers and parameters
+
+### Custom Headers and Query Parameters
+
+The code snippets demonstrate how to provide custom headers and parameters:
+
+```ts
+executeHttpRequest(myDestination, {
+  headers: {
+    apiKey: 'my-api-key'
+  },
+  params: {
+    myParam: 'my-param'
+  }
+});
+```
+
+### Headers and Query Parameters from Destination
+
+You set these parameters on the destination object as described [here](./destination#additional-headers-and-query-parameters-on-destinations).
+The example below shows how to get:
+
+- parsed parameters in the `queryParameters` property of the destination object
+- `authentication` value from the destination object, which will be used for the authentication header
+
+```ts
+const { queryParameters, authentication } = await getDestination({
+  destinationName: 'myDestination',
+  jwt: 'yourJwt'
+});
+```
+
+### Provide Headers and Query Parameters with Origin information
+
+:::caution
+This is an SAP Cloud SDK version 2.x feature.
+:::
+
+In some situations you want to define the priority of headers and parameters:
+
+- You want to enforce a hard-coded API key/JWT and ignore the ones from e.g. the destination
+- You want a default query parameter, which can be overwritten by the destination properties
+
+Check the example below, how you can define the headers and parameters with origin information:
+
+```ts
+executeHttpRequestWithOrigin(myDestination, {
+  headers: {
+    custom: { apiKey: 'custom-header' },
+    requestConfig: { apiKey: 'default-header' }
+  },
+  params: {
+    custom: { myParam: 'custom-param' },
+    requestConfig: { myParam: 'default-param' }
+  }
+});
+```
+
+## Encoding
+
+:::info
+This section applies to version 2 of the SAP Cloud SDK.
+For version 1 of the SAP Cloud SDK, encoding is done on OData-related query parameters without a way to configure it.
+:::
+
+In the end, query parameters end up in the URL to the target system.
+Therefore, special characters with a meaning in a URL need to be [% encoded](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier).
+The SAP Cloud SDK takes care of this encoding depending on the origin you use.
+For calls executed via a typed client and generic HTTP client the encoding is done as:
+
+- `Custom` parameters are not encoded.
+  The idea behind this is to give you a way to send parameters with the highest priority to the target system as they are.
+- `Destination` parameters are encoded.
+- `Internal` parameters are encoded.
+
+For the `executeHttpRequest` method, an option is available to adjust the behavior.
+
+```ts
+const parameterEncoder = function (
+  params: Record<string, any>
+): Record<string, any> {
+  // your custom implementation
+};
+executeHttpRequest(destination, { parameterEncoder });
+```
+
+The `parameterEncoder` function is applied to the keys and values of all parameters of the request.
+In case you need to encode all parameters including custom ones, we exported a `encodeAllParameters` method to do that.
+Pass this method as the `parameterEncoder` to the `executeHttpRequest` call.
+
+Note that this option is not available for the OData and OpenApi clients.
+The typed clients take care of encoding already, and an additional encoding layer would lead to errors.
