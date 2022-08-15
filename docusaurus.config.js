@@ -20,7 +20,7 @@ module.exports = {
     'The one-stop shop for developing and extending SAP applications in the cloud.',
   url: 'https://sap.github.io',
   baseUrl: '/cloud-sdk/',
-  onBrokenLinks: 'warn',
+  onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   organizationName: 'SAP',
