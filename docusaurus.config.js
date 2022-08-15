@@ -21,7 +21,7 @@ module.exports = {
   url: 'https://sap.github.io',
   baseUrl: '/cloud-sdk/',
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
+  onBrokenMarkdownLinks: 'throw',
   favicon: 'img/favicon.ico',
   organizationName: 'SAP',
   projectName: 'cloud-sdk',
