@@ -13,6 +13,9 @@ keywords:
   - TypeScript
 ---
 
+import ThemedImage from '@theme/ThemedImage';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
 # Using the SAP Application Router with the SAP Cloud SDK
 
 In this guide, we will show you how to use the SAP Application Router together with the SAP Cloud SDK.
@@ -28,18 +31,19 @@ The application router checks if a given request has a valid JSON Web Token (JWT
 If the request contains a valid JWT, the application router forwards the request to the target service; if the request does not contain a valid JWT, the user must authenticate.
 As we can see in the diagram below, we use an Identity Provider (IdP) to authenticate, the request is redirected to an IdP where a user gets authenticated and then redirected back to the application router for passing further according to its desired destination.
 
-```mermaid
-sequenceDiagram
-  User->>Approuter: sending request
-  alt has no JWT
-    Approuter->>Identity Provider: redirecting
-    Identity Provider->>Identity Provider: authenticating
-    Identity Provider->>Identity Provider: granting JWT
-    Identity Provider->>Approuter: redirecting
-  else has JWT
-    Approuter->>Backend App: forwarding request
-  end
-```
+<!-- vale off -->
+
+<ThemedImage
+  alt="Application Router flow"
+  sources={{
+    light: useBaseUrl('img/approuter_light.svg'),
+    dark: useBaseUrl('img/approuter_dark.svg')
+  }}
+  className="center"
+  width="80%"
+/>
+
+<!-- vale on -->
 
 ### Application Router Setup
 
