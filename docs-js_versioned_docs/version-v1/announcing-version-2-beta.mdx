@@ -1,0 +1,117 @@
+import imports1 from '@site/static/img/imports-in-v1.png';
+import imports2 from '@site/static/img/imports-in-v2.png';
+import ecma2019 from '@site/static/img/ecma2019.png';
+import es5 from '@site/static/img/es5.png';
+import temporal from '@site/static/img/temporal.png';
+
+# Announcing Version 2 Beta
+
+## What Is Included in the Beta?
+
+We announced four noteworthy changes for our upcoming version increase:
+
+- Split packages and export only the public interface
+- Increase compilation target to ECMAScript 2019
+- Remove deprecated functionality
+- Remove generator options
+- Introduce customizable (de-)serialization
+
+The beta already provides many improvements, and we would love for you to try them.
+Let's take a look what was achieved so far.
+
+### Split Packages and Export Only the Public Interface
+
+There is no more `@sap-cloud-sdk/core` package anymore.
+Instead, there are the following packages:
+
+- `@sap-cloud-sdk/connectivity` (e.g. `getDestination()`)
+- `@sap-cloud-sdk/http-client` (e.g. `executeHttpRequest()`)
+- `@sap-cloud-sdk/openapi`, `@sap-cloud-sdk/odata-v2` and `@sap-cloud-sdk/odata-v4` (e.g. filter functions, request builder)
+
+Internal functions are not exported in our new packages to make it easier to find the right function for your use case.
+We expose internals via a special import path, but offer no stability guarantee for this internal interface.
+
+This means you will see this:
+
+<img
+  style={{ maxWidth: '75%', height: 'auto' }}
+  src={imports2}
+  alt="autocomplete for import from core"
+/>
+
+rather than this:
+
+<img
+  style={{ maxWidth: '75%', height: 'auto' }}
+  src={imports1}
+  alt="autocomplete for import from odata-v2"
+/>
+
+### Increase Compilation Target to ECMAScript 2019
+
+This will only affect you if you run your application in a legacy environment.
+It makes the compiled JavaScript code a little cleaner, as in this example.
+
+Old:
+
+<img
+  style={{ maxWidth: '75%', height: 'auto' }}
+  src={es5}
+  alt="file-generator in ES5"
+/>
+
+New:
+
+<img
+  style={{ maxWidth: '75%', height: 'auto' }}
+  src={ecma2019}
+  alt="file-generator in ECMAScript 2019"
+/>
+
+The differences are minor, but it saves five lines of code in this file alone.
+
+### Remove Deprecated Functionality
+
+We hope you replaced deprecated functionality already.
+If not, our upgrade guide lists all removed methods and their replacement.
+In total, we removed a bit more than 100 deprecated methods.
+
+### Remove Generator Options
+
+The following generator options are removed:
+
+- `generateTypedocJson`
+- `aggregatorDirectoryName`
+- `aggregatorNpmPackageName`
+
+For `generateTypedocJson` option, you can add `typedoc` or other documentation lib as a dependency to your `package.json` by your own.
+The options `aggregatorDirectoryName` and `aggregatorNpmPackageName` are not useful from the user perspective.
+
+### Introduce Customizable (De-)Serialization
+
+We added options to dynamically change the types in your entities.
+You can now define custom (de-)serializers - functions to convert data to and from the types you need.
+Here is an example for (de-)serializers to convert `Edm.DateTime`, `Edm.DateTimeOffset` and `Edm.Time` to/from Temporal:
+
+<img
+  style={{ maxWidth: '75%', height: 'auto' }}
+  src={temporal}
+  alt="example temporal serializer"
+/>
+
+Intrigued?
+You can get the Temporal-based (de-)serializers via npm (`npm install @sap-cloud-sdk/temporal-de-serializers@beta`).
+
+## How Can I Use It?
+
+We publish the beta version on `npm`.
+You can install it by adding `@beta` after the package name (e.g. `npm install @sap-cloud-sdk/generator@beta`).
+
+:::caution
+
+If you use an OData or OpenAPI client, make sure it was generated with the same version as your other SAP Cloud SDK dependencies.
+We do not provide pregenerated clients for beta versions.
+
+:::
+
+Check the [upgrade guide](./guides/upgrade-to-version-2.mdx) for detailed instructions how to upgrade.

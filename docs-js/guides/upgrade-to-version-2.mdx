@@ -121,7 +121,7 @@ Please create a [support issue](https://github.com/SAP/cloud-sdk-js/issues/new/c
 
 In version 1.X.Y of the SAP Cloud SDK, each entity (e.g. `BusinessPartner`) was imported directly:
 
-```
+```ts
 import { BusinessPartner, BusinessPartnerAddress } from '@sap/cloud-sdk-vdm-business-partner-service';
 ```
 
@@ -135,13 +135,13 @@ To do so, first update the imports following the steps:
 
 - Replace the entity imports with the service import. In most cases, the service name can be inferred from the npm package itself, i.e., everything after `@sap/cloud-sdk-vdm-` in camelCase. E.g.:
 
-```
+```ts
 import { businessPartnerService } from '@sap/cloud-sdk-vdm-business-partner-service';
 ```
 
 - Destructure this service to unpack the API objects you need.
 
-```
+```ts
 const { businessPartnerApi, businessPartnerAddressApi } = businessPartnerService();
 ```
 
@@ -343,25 +343,25 @@ This section lists the commands for removing old dependencies and installing new
 
 To remove the `@sap-cloud-sdk/core` package from `node_modules` and `package.json`, run the below command in your project's terminal:
 
-```
+```bash
 npm uninstall --save @sap-cloud-sdk/core
 ```
 
 Once you have found the new packages to replace `@sap-cloud-sdk/core`, install them using the relevant commands below:
 
-```
+```bash
 npm install @sap-cloud-sdk/http-client
 ```
 
-```
+```bash
 npm install @sap-cloud-sdk/connectivity
 ```
 
-```
+```bash
 npm install @sap-cloud-sdk/odata-v2
 ```
 
-```
+```bash
 npm install @sap-cloud-sdk/odata-v4
 ```
 

@@ -12,9 +12,6 @@ keywords:
   - kubernetes
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 # How to Migrate a CloudFoundry Application to a Kubernetes Cluster
 
 In this how-to, we will show step-by-step what is necessary to migrate an application from CloudFoundry to Kubernetes.
@@ -974,9 +971,6 @@ spec:
 
 <!-- vale Vale.Spelling = NO -->
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
 ```ts
 import { Injectable } from '@nestjs/common';
 import { BusinessPartner } from '@sap/cloud-sdk-vdm-business-partner-service';
@@ -996,29 +990,3 @@ export class PrincipalBusinessPartnerService {
   }
 }
 ```
-
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-import { Injectable } from '@nestjs/common';
-import { BusinessPartner } from '@sap/cloud-sdk-vdm-business-partner-service';
-import { retrieveJwt } from '@sap-cloud-sdk/core';
-import { Request } from 'express';
-
-@Injectable()
-export class PrincipalBusinessPartnerService {
-  async getFiveBusinessPartners(request: Request): Promise<BusinessPartner[]> {
-    return BusinessPartner.requestBuilder()
-      .getAll()
-      .top(5)
-      .execute({
-        destinationName: 'MY-DESTINATION',
-        jwt: retrieveJwt(request)
-      });
-  }
-}
-```
-
-</TabItem>
-</Tabs>

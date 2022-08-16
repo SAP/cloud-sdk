@@ -14,9 +14,6 @@ keywords:
   - TypeScript
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 The SAP Cloud SDK provides the option to cache destinations for efficiency reasons.
 If a destination is stored in the cache the question of isolation arises.
 Should the destination be cached for all users?
@@ -30,25 +27,9 @@ This reduces the number of calls to the destination service.
 All the discussed options apply to the `execute()` and `getDestination()` methods of the SAP Cloud SDK.
 The destination caching is disabled by default and you switch it on by the `useCache` flag:
 
-<Tabs groupId="version" defaultValue="major" values={[
-{ label: 'SDK 2.x', value: 'major'},
-{ label: 'SDK 1.x', value: 'deprecated'}]}>
-
-<TabItem value="major">
-
 ```ts
 .execute({destinationName: 'myDestination', jwt: 'yourJWT', useCache: true})
 ```
-
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-.execute({ destinationName: 'myDestination', jwt: 'yourJWT' }, { useCache: true })
-```
-
-</TabItem>
-</Tabs>
 
 A cached destination is stored for 5 minutes in the cache.
 The SAP Cloud SDK tries to set the proper isolation strategy for the destination automatically.
@@ -60,7 +41,7 @@ There are two options:
 The SAP Cloud SDK sets the isolation based on the provided `JWT`:
 
 - No `JWT`: Isolation is `Tenant` and value for the tenant is the provider account.
-- `JWT` without `user_id`: Isolation is `Tenant` and the value for the tenant is the `zid` of the `JWT`
+- `JWT` without `user_id`: Isolation is `Tenant` and the value for the tenant is the `zid` of the `JWT`.
 - `JWT` with `user_id`: Isolation is `TenantUser` and values are taken from `zid` and `user_id`.
 
 This is a safe choice ensuring that you do not run into privilege escalation due to caching.
@@ -69,15 +50,11 @@ Examples of such a flow are `BasicAuthentication`, `ClientCertificateAuthenticat
 
 There are cases where the choice made by the SAP Cloud SDK is not optimal.
 Assume you have a multi-tenant scenario and you need to pass the `JWT` to obtain the destination for the right tenant.
-The `JWT` contains a `user_id` but the destination flow is user<span class="x x-first x-last">-</span>independent.
+
+The `JWT` contains a `user_id` but the destination flow is user<span class="x x-first x-last">-</span><!--vale off-->independent<!--vale on-->.
 The SAP Cloud SDK would use isolation `TenantUser`, although `Tenant` would be sufficient.
+
 In such a case you can manually enforce weaker isolation:
-
- <Tabs groupId="version" defaultValue="major" values={[
- { label: 'SDK 2.x', value: 'major'},
- { label: 'SDK 1.x', value: 'deprecated'}]}>
-
- <TabItem value="major">
 
 ```ts
 .execute({
@@ -87,32 +64,10 @@ In such a case you can manually enforce weaker isolation:
 })
 ```
 
- </TabItem>
- <TabItem value="deprecated">
-
-```ts
-.execute({
-  destinationName: 'myDestination',
-  jwt: 'yourJWT'
-},{
-  useCache: true,
-  isolationStrategy: IsolationStrategy.Tenant
-})
-```
-
- </TabItem>
- </Tabs>
-
 :::caution
 Be very careful with this option.
 You should know what you're doing when manually downgrading the isolation strategy from the maximally possible `TenanUser` level.
 An erroneous configuration can lead to severe privilege escalation between users.
-:::
-
-:::info
-In version 1.X of the SAP Cloud SDK the isolation strategy is always TenantUser per default.
-You need to set it manually.
-You need to activate caching explicitly with the `useCache` option, even if you pass an isolation strategy.
 :::
 
 ### Custom Destination-Service Cache
@@ -152,7 +107,7 @@ All subsequent calls to fetch destinations will use the custom cache.
 
 ## Register-Destination Cache
 
-Version 2.0 introduced the `registerDestination()` method, which is like a manual cache for destinations.
+The `registerDestination()` method, is like manual cache for destinations.
 We explain the usage of this method in the guide on [destination lookup](./destination.mdx).
 The method behaves similarly to the destination-service cache discussed above.
 
@@ -170,7 +125,7 @@ registerDestination(destination, { jwt: 'yourJWT' });
 The isolation strategy is automatically detected and applied based on the given `JWT`:
 
 - No `JWT`: Isolation is `Tenant` and value for the tenant is the provider account.
-- `JWT` without `user_id`: Isolation is `Tenant` and the value for the tenant is the `zid` of the `JWT`
+- `JWT` without `user_id`: Isolation is `Tenant` and the value for the tenant is the `zid` of the `JWT`.
 - `JWT` with `user_id`: Isolation is `TenantUser` and values are taken from `zid` and `user_id`.
 
 You can override the automatically detected isolation strategy.

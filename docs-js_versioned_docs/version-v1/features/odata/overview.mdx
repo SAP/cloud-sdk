@@ -1,0 +1,73 @@
+---
+id: overview
+title: OData
+sidebar_label: Overview
+description: This article provides an overview of how the SAP Cloud SDK for JavaScript supports connecting to OData services.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - odata
+  - JavaScript
+  - TypeScript
+  - client
+  - generate
+---
+
+## What OData Protocol Versions Are Supported?
+
+| OData protocol version          | SAP Cloud SDK for JavaScript |
+| ------------------------------- | ---------------------------- |
+| [OData v2](odata-v2-client.mdx) | &#10003;                     |
+| [OData v4](odata-v4-client.mdx) | &#10003;                     |
+
+## What Is OData?
+
+[OData](https://www.odata.org/) is an open standard for building and consuming RESTful APIs.
+It defines a query language to send and retrieve data via HTTP and to perform operations on data.
+
+There are two widely used versions of the protocol: OData v2 and OData v4.
+The latter comes with more and improved functionality.
+Full details on the standards are to be found in the [documentation](https://www.odata.org/documentation/).
+
+## Pregenerated OData Clients
+
+The SAP Cloud SDK includes pregenerated JavaScript/TypeScript clients for all OData-based SAP S/4HANA Cloud and On-Premise services.
+Those clients simplify service consumption by exposing a typed and fluent API.
+This API allows you to explore and autocomplete requests against the SAP S/4HANA services.
+
+There are more than 400 pregenerated clients with the following naming patterns:
+
+- SAP S/4HANA Cloud: `@sap/cloud-sdk-vdm-<service name>-service`
+- SAP S/4HANA On-Premise: `@sap/cloud-sdk-op-vdm-<service name>-service`
+
+:::info Virtual Data Model (VDM)
+Sometimes the pregenerated clients for SAP S/4HANA are referred to as _Virtual Data Model (VDM)_.
+This is why the naming pattern for the pregenerated clients contains `vdm` as well.
+:::
+
+### Links
+
+- [How to use the clients](https://sap.github.io/cloud-sdk/docs/js/features/odata/execute-odata-request)
+- [Release Notes](../../release-notes-sap-cloud-sdk-for-javascript-and-typescript)
+- [SAP S/4HANA Cloud on the SAP Business Hub](https://api.sap.com/products/SAPS4HANACloud/overview)
+- [SAP S/4HANA On-Premise on the SAP Business Hub](https://api.sap.com/products/SAPS4HANA/overview)
+
+### Legal
+
+All SAP Cloud SDK's pregenerated client libraries are distributed under the [SAP developer license agreement](https://tools.eu1.hana.ondemand.com/developer-license-3_1.txt).
+This limits the use of the pregenerated clients to development purposes only.
+
+## Code Generator
+
+If you want to use an OData service, that has no pregenerated client, you can use the [client generator](generate-odata-client.mdx) to generate your own client.
+You can do it for any service either developed by yourself, provided by SAP, or by other 3rd parties.
+
+- Service definition usually comes in form of the `.edmx` file and contains metadata of OData service.
+  The simplest way to obtain it if you have access to the service is by navigating to the `http(s)://<service-path>/$metadata` endpoint.
+  You can generate a client for any 3rd party service or a service that you have built on your own.
+- You can invoke the code generator via our command-line interface (CLI).
+
+## Connectivity
+
+We simplify connectivity to SAP-enabled OData services via type-safe abstractions over [Destinations](../connectivity/destination), Authentication, and some other related concepts.
