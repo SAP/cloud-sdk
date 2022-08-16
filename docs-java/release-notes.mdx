@@ -55,6 +55,22 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed Issues
 -->
 
+## 3.74.0 - August 11, 2022
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.74.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
+
+### Compatibility Notes
+
+- Following modules have been marked as **deprecated** and will be **removed** with the upcoming release of SAP Cloud SDK 4.0:
+  - `OData Query Listener` and related classes in other modules
+  - `Remote Function Query Listener` and related classes in other modules
+  - `HTTP Client Listener` and related classes in other modules
+  - The remaining `Quality - Parent POM` and submodules
+
+### New Functionality
+
+- Update the OData VDM to the [newest release 2208 of SAP S/4HANA Cloud](https://blogs.sap.com/2022/08/01/highlights-of-the-sap-s-4hana-cloud-2208-release/). This includes completely new services (available as usual in packages `com.sap.cloud.sdk.s4hana.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types. The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/products/SAPS4HANACloud/overview).
+
 ## 3.73.0 - July 28, 2022
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.73.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
@@ -2375,7 +2391,7 @@ final DefaultHttpDestination defaultHttpDestination =
 
 ### New Functionality
 
-- The [Currency Conversion](extensions/sap-currency-conversion-extension-library-for-cloud-sdk-for-java) library has been added. You can use this library to facilitate currency exchange rate conversions within your Cloud application.
+- The Currency Conversion library has been added. You can use this library to facilitate currency exchange rate conversions within your Cloud application.
   - Note that no exchange rates are provided by the library. It is assumed that you have your own data providers for getting the exchange rates.
   - The library supports bulk conversions, direct one-to-one conversions from a source value to a target value, and indirect conversions based on inverse rates or a reference currency.
   - You can perform currency conversions based on a fixed currency exchange rate, or a non-fixed rate (if you want the library to select the most appropriate rate based on a list of data from various data providers).

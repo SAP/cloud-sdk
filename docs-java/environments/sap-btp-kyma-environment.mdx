@@ -20,6 +20,71 @@ While the Kyma runtime is improving over time, recent changes unfortunately rend
 We are currently re-evaluating and updating the information provided.
 Please follow the [official documentation](https://kyma-project.io/docs/kyma/latest/01-overview/).
 
+<details>
+  <summary>Workaround for On-Premise Connectivity</summary>
+
+Recent changes of the Kyma runtime environment prevent the SAP Cloud SDK's On-Premise connectivity from working as intended.
+While we are working on a permanent solution, please use the following workaround:
+
+<ol>
+  <li>Add following class to your project:
+
+```java
+public class OnPremiseHeaderProvider implements DestinationHeaderProvider
+{
+    @Override
+    @Nonnull
+    public List<Header> getHeaders( @Nonnull final DestinationRequestContext requestContext )
+    {
+        final Option<ProxyType> proxyType = requestContext.getDestination().get("ProxyType", ProxyType.class);
+        if( proxyType.getOrElse(ProxyType.INTERNET) != ProxyType.ON_PREMISE ) {
+            return Collections.emptyList();
+        }
+
+        final Option<AuthenticationType> authentication =
+            requestContext.getDestination().get("authentication", AuthenticationType.class);
+        if( authentication
+            .getOrElse(AuthenticationType.NO_AUTHENTICATION) != AuthenticationType.PRINCIPAL_PROPAGATION ) {
+            return Collections.emptyList();
+        }
+
+        final Try<String> maybeBearerToken =
+            AuthTokenAccessor
+                .tryGetCurrentToken()
+                .map(token -> String.format("Bearer %s", token.getJwt().getToken()));
+
+        if( maybeBearerToken.isEmpty() ) {
+            return Collections.emptyList();
+        }
+
+        return Collections.singletonList(new Header("SAP-Connectivity-Authentication", maybeBearerToken.get()));
+    }
+}
+```
+
+  </li>
+  <li>
+    Create following file in your application resources:
+
+```
+src/main/resources/META-INF/com.sap.cloud.sdk.cloudplatform.connectivity.DestinationHeaderProvider
+```
+
+  </li>
+  <li>
+    Fill the file with the fully qualified name of the newly created class. 
+    For example, the content should look like this:
+
+```
+name.of.your.package.OnPremiseHeaderProvider
+```
+
+  </li>
+
+</ol>
+
+</details>
+
 :::
 
 ## SAP Cloud SDK Features Supported on Kyma by SAP
