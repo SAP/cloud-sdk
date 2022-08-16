@@ -16,16 +16,16 @@ import LinkToLatestJsApiDocs from '@site/src/sap/sdk-js/LinkToLatestJsApiDocs';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-## Intro
+:::tip
 
-The [Executing a request using a generated OData client](../odata/execute-odata-request.mdx) section explains how to make OData requests using the generated OData client.
+If you want to use an OData API, the [Executing a request using a generated OData client](../odata/execute-odata-request.mdx) section is the right place to look.
 
 This page explains how you can perform arbitrary HTTP requests using the SAP Cloud SDK.
 The HTTP client provided by the SAP Cloud SDK provides some convinience features which are explained in detail on this page.
 
 ## When to use what?
 
-If a OData client can satisfy your requirements, it is always recommended to use that client directly as it provides the best convinience for interacting with OData APIs.
+If the [OData client](../odata/execute-odata-request.mdx) can satisfy your requirements, it is always recommended to use that client directly as it provides the best convinience for interacting with OData APIs.
 
 In case the OData client does not satisfy your requirements, the next thing you should look into is the HTTP client which is explained in this page.
 It is based on the open-source [axios HTTP client](https://axios-http.com) but provides convinience features which are specific to working on SAP Business Technology Platform.
@@ -67,11 +67,27 @@ Note that the `destination` and the `requestConfig` parameter have an overlap in
 For example, both have an `url` property.
 For keys that exist for both objects, the `requestConfig` takes precedence.
 
-The `executeHttpRequest` function returns an instance of <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_http_client.HttpResponse" name="HttpResponse" />.
+The `executeHttpRequest` function returns a promise of <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_http_client.HttpResponse" name="HttpResponse" />.
 
+### How to get a Destination from BTP
+
+- name
+- vcap services
 
 ### CSRF Token Fetching
 
+- not for get requests
+- enabled by default for non-get requests
+
+Will fetch a CSRF token.
+Not enabled for GET requests.
+Enabled by default for non-GET requests.
+
+
+
 ### Parameter Encoding
+
+- URL encoding
+- Automatic encoding for params except for custom param
 
 ## `executeHttpRequestWithOrigin`
