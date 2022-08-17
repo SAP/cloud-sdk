@@ -61,7 +61,7 @@ module.exports = {
       items: [
         {
           label: 'Overview',
-          type: 'doc', 
+          type: 'doc',
           docId: 'overview-cloud-sdk',
           position: 'left'
         },
@@ -88,7 +88,7 @@ module.exports = {
           items: [
             {
               label: 'Swizzle Placeholder',
-              href: 'https://www.doesnt-exist.com',
+              href: 'https://www.doesnt-exist.com'
             }
           ],
           docsPluginId: 'docs-js',
@@ -97,7 +97,7 @@ module.exports = {
         {
           type: 'docsVersionDropdown',
           position: 'right',
-          docsPluginId: 'docs-js',
+          docsPluginId: 'docs-js'
         }
       ]
     },
@@ -172,7 +172,6 @@ module.exports = {
       '@docusaurus/preset-classic',
       {
         docs: {
-          remarkPlugins: [require('mdx-mermaid')],
           sidebarPath: require.resolve('./sidebarsDocsCommon.js'),
           editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
           routeBasePath: 'docs/overview',
@@ -201,7 +200,7 @@ module.exports = {
         id: 'docs-java',
         path: 'docs-java',
         routeBasePath: 'docs/java',
-        sidebarPath: require.resolve('./sidebarsDocsJava.js'),
+        sidebarPath: require.resolve('./sidebarsDocsJava.js')
       }
     ],
     [
@@ -230,10 +229,13 @@ module.exports = {
       '@docusaurus/plugin-client-redirects',
       {
         createRedirects(existingPath) {
-          if (existingPath.includes('/community') || existingPath.includes('/related-projects')) {
+          if (
+            existingPath.includes('/community') ||
+            existingPath.includes('/related-projects')
+          ) {
             return existingPath.replace('/docs/overview', '/docs');
           }
-        },
+        }
       }
     ],
     function nodeWebpackPolyfillPlugin(context, options) {
