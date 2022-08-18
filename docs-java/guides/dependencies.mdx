@@ -30,7 +30,7 @@ For general information on how to deal with dependencies refer to the resources 
 
 ### The SAP Cloud SDK Bill-of-Material
 
-The SAP Cloud SDK provides a [Bill-of-Material](https://dzone.com/articles/the-bill-of-materials-in-maven).
+The SAP Cloud SDK provides a [Bill-of-Material](https://dzone.com/articles/the-bill-of-materials-in-maven) (BOM).
 It comprises all dependencies and their specific version that the SAP Cloud SDK relies upon.
 
 It can be used in the dependency management as follows:
@@ -280,10 +280,11 @@ The above dependencies should only be listed with scope `provided`.
 :::note
 
 Dependencies with the scope `provided` are not part of your `.war` file.
-This means you will need to adapt the scopes if you want to run your applications without the SAP Java Buildpack
+This means you need to adapt the scopes if you want to run your applications without the SAP Java Buildpack
 One common example for this is running your application locally.
 
-In our `scp-cf-tomee` archetype we provide a maven profile activated by the parameter `-Ddeployment=local`, which replaces our `sdk-buildpack-bom-tomee` (a convenience combination of the SAP Java Buildpack and our SAP Cloud SDK BOMs) with our `sdk-bom`.
-This basically removes the SAP Java Buildpack BOM from the `dependencyManagement` and adapts the scopes of your dependencies accordingly.
+In our `scp-cf-tomee` archetype we provide a maven profile activated by the parameter `-Ddeployment=local`.
+This replaces our `sdk-buildpack-bom-tomee` (a convenience combination of the SAP Java Buildpack and our SAP Cloud SDK BOMs) with our `sdk-bom`.
+As a result the SAP Java Buildpack BOM is removed from the `dependencyManagement`, which adapts the scopes of your dependencies for local deployment.
 
 :::
