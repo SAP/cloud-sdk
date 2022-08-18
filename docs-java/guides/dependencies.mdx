@@ -199,73 +199,14 @@ Still, the same strategy is also valid and useful for the community Buildpack.
 
 ### Avoiding Scope Conflicts
 
-We recommend using the BOMs provided by the SAP Java Buildpack.
+We recommend using the [BOMs provided by the SAP Java Buildpack](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/6c6936e8e4ea40c9a9a69f6783b1e978.html).
 
 This will set the version and the scope of the dependencies the SAP Java Buildpack adds to your application at runtime.
 The scope of the those dependencies is set to `provided`.
 
-Depending on the target runtime defined in your `manifest.yml` you should import one of the following dependencies in your `<dependencyManagement>` section:
+Depending on the [target runtime](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/83d241613dcd41c99ccc308ed0d26399.html) defined in your `manifest.yml` you should import the respective BOM in your `<dependencyManagement>` section.
 
-<Tabs defaultValue="tomcat" values={[
-{ label: 'Tomcat', value: 'tomcat', },
-{ label: 'TomEE', value: 'tomee', },
-{ label: 'TomEE7', value: 'tomee7', }
-]}>
-
-<TabItem value="tomcat">
-
-```xml
-<dependencyManagement>
-    <dependency>
-        <groupId>com.sap.cloud.sjb.cf</groupId>
-        <artifactId>cf-tomcat-bom</artifactId>
-        <version>your-buildpack-version</version>
-        <type>pom</type>
-        <scope>import</scope>
-    </dependency>
-    ...
-</dependencyManagement>
-```
-
-</TabItem>
-
-<TabItem value="tomee">
-
-```xml
-<dependencyManagement>
-    <dependency>
-        <groupId>com.sap.cloud.sjb.cf</groupId>
-        <artifactId>cf-tomee-bom</artifactId>
-        <version>your-buildpack-version</version>
-        <type>pom</type>
-        <scope>import</scope>
-    </dependency>
-    ...
-</dependencyManagement>
-```
-
-</TabItem>
-
-<TabItem value="tomee7">
-
-```xml
-<dependencyManagement>
-    <dependency>
-        <groupId>com.sap.cloud.sjb.cf</groupId>
-        <artifactId>cf-tomee7-bom</artifactId>
-        <version>your-buildpack-version</version>
-        <type>pom</type>
-        <scope>import</scope>
-    </dependency>
-    ...
-</dependencyManagement>
-```
-
-</TabItem>
-
-</Tabs>
-
-You can verify this behavior by searching for the scope of, for example, the `com.sap.cloud.security.xsuaa:token-client` dependency in your application.
+You can verify the behavior by searching for the scope of, for example, the `com.sap.cloud.security.xsuaa:token-client` dependency in your application.
 
 When you use the BOM of the SAP Java Buildpack, it should have the scope `provided`.
 If you are not using the BOM, it should have the scope `compile` or `test`.
@@ -280,11 +221,11 @@ The above dependencies should only be listed with scope `provided`.
 :::note
 
 Dependencies with the scope `provided` are not part of your `.war` file.
-This means you need to adapt the scopes if you want to run your applications without the SAP Java Buildpack
+This means you need to adapt the scopes if you want to run your applications without the SAP Java Buildpack.
 One common example for this is running your application locally.
 
 In our `scp-cf-tomee` archetype we provide a maven profile activated by the parameter `-Ddeployment=local`.
-This replaces our `sdk-buildpack-bom-tomee` (a convenience combination of the SAP Java Buildpack and our SAP Cloud SDK BOMs) with our `sdk-bom`.
+This replaces our `sdk-buildpack-bom` (a convenience combination of the SAP Java Buildpack and our SAP Cloud SDK BOMs) with our `sdk-bom`.
 As a result the SAP Java Buildpack BOM is removed from the `dependencyManagement`, which adapts the scopes of your dependencies for local deployment.
 
 :::
