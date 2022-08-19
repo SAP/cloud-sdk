@@ -16,8 +16,8 @@ import LinkToLatestJsApiDocs from '@site/src/sap/sdk-js/LinkToLatestJsApiDocs';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-This page explains how you can perform arbitrary HTTP requests using the SAP Cloud SDK.
-The HTTP client provided by the SAP Cloud SDK provides some convenience features which are explained in detail on this page.
+This guide explains how you execute arbitrary HTTP requests using the SAP Cloud SDK.
+The HTTP client provided by the SAP Cloud SDK provides some convenience features which are explained in detail in this guide.
 
 <!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
 :::tip
@@ -30,7 +30,7 @@ If you want to use an OData API, the [Executing a request using a generated ODat
 
 If the [OData client](../odata/execute-odata-request.mdx) can satisfy your requirements, it is always recommended to use that client directly as it provides the best convenience for interacting with OData APIs.
 
-In case the OData client does not satisfy your requirements, the next thing you should look into is the HTTP client which is explained in this page.
+In case the OData client does not satisfy your requirements, the next thing you should look into is the HTTP client which is explained in this guide.
 It is based on the open-source [axios HTTP client](https://axios-http.com) but provides convenience features which are specific to working on SAP Business Technology Platform.
 
 If the provided HTTP client does also not work for your use-case, we recommend using the [axios client](https://axios-http.com/docs/example) directly.
@@ -46,7 +46,7 @@ executeHttpRequest(destination, requestConfig, httpRequestOptions): Promise<Http
 <!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
 :::tip
 
-This page provides code snippets, fully executable example code can be found in the [SAP-samples/cloud-sdk-js repository on GitHub](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/http-client-examples).
+This guide provides code snippets, fully executable example code can be found in the [SAP-samples/cloud-sdk-js repository on GitHub](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/http-client-examples).
 
 :::
 
@@ -89,7 +89,7 @@ The `executeHttpRequest` function returns a promise of <LinkToLatestJsApiDocs sl
 
 [Cross-Site Request Forgery (CSRF)](https://en.wikipedia.org/wiki/Cross-site_request_forgery) is a common type of attack on web applications.
 The HTTP client provided by SAP Cloud SDK allows to automatically retrieve a CSRF token for HTTP APIs which support this.
-Fetching CSRF token is automatically enabled for all types of requests except HTTP `GET` requests.
+Fetching CSRF token is automatically enabled for all requests changing data e.g. `POST`, `DELETE` or `PATCH` requests.
 Fetching CSRF token is not available for HTTP `GET` requests.
 
 Can be enabled or disabled via the `options` parameter of `executeHttpRequest`:
