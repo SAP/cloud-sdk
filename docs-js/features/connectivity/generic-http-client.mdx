@@ -89,7 +89,7 @@ The `executeHttpRequest` function returns a promise of <LinkToLatestJsApiDocs sl
 
 [Cross-Site Request Forgery (CSRF)](https://en.wikipedia.org/wiki/Cross-site_request_forgery) is a common type of attack on web applications.
 The HTTP client provided by SAP Cloud SDK allows to automatically retrieve a CSRF token for HTTP APIs which support this.
-Fetching CSRF token is automatically enabled for all requests changing data e.g. `POST`, `DELETE` or `PATCH` requests.
+Fetching CSRF token is automatically enabled for all requests that typically might change data, such as `PUT`, `POST`, `DELETE` or `PATCH` requests.
 Fetching CSRF token is not available for HTTP `GET` requests.
 
 Can be enabled or disabled via the `options` parameter of `executeHttpRequest`:
@@ -108,6 +108,7 @@ For example, the space character is replaced with `%20`.
 The HTTP client automatically takes care of encoding parameters except for *custom parameters*.
 
 For example, given this `requestConfig` object, the `requestConfig` parameters will be automatically escaped, but the `custom` will not.
+Custom parameters can be useful when you need control excatly how values are transmitted to the backend system.
 
 ```ts
 {
@@ -126,7 +127,6 @@ For example, given this `requestConfig` object, the `requestConfig` parameters w
 #### Customized Parameter Encoding
 
 If you need to customize parameter encoding, you can provide your own function to take care of it like in this example.
-It uses the [encodeURI](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURI) function, but you can do the transformation according to your own needs.
 
 ```ts
 const myCustomParameterEncodingFunction: ParameterEncoder = function (
@@ -136,7 +136,7 @@ const myCustomParameterEncodingFunction: ParameterEncoder = function (
 
   for (const k in params) {
     // Customize your required encoding logic here
-    encodedParams[k] = encodeURI(params[k].toString());
+    encodedParams[k] = params[k].toString();
   }
 
   return encodedParams;
@@ -170,7 +170,7 @@ const encodingResponse = await executeHttpRequest(
 <!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
 :::caution
 
-The term "origin" as it is used in the context of this page does **not** refer to [an URL as you might expect](https://developer.mozilla.org/en-US/docs/Glossary/Origin).
+The term "origin" as it is used in the context of this guide does **not** refer to [an URL as in the "same-origin policy"](https://developer.mozilla.org/en-US/docs/Glossary/Origin).
 Instead it refers to the *origin* or *source* of HTTP client configuration.
 
 :::
