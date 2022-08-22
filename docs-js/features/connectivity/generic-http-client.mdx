@@ -29,10 +29,16 @@ In case you want to use an OpenAPI client, please refer to the [Execute a Reques
 
 ## When to Use What?
 
-If the [OData client](../odata/execute-odata-request.mdx) or [OpenAPI Client](../openapi/execute-openapi-request) can satisfy your requirements, it is always recommended to use that client directly as it provides the best convenience.
+The SAP Cloud SDK for JavaScript provides clients for [OData](../odata/execute-odata-request.mdx) and [OpenAPI](../openapi/execute-openapi-request).
+If you use OData or OpenAPI, we recommend to use those clients if possible.
 
-In case the OData client does not satisfy your requirements, the next thing you should look into is the HTTP client which is explained in this guide.
-It is based on the open-source [axios HTTP client](https://axios-http.com) but provides convenience features which are specific to working on SAP Business Technology Platform.
+In case the OData or OpenAPI client does not satisfy your requirements, the next thing you should look into is the HTTP client which is explained in this guide.
+
+The HTTP client is based on the open-source [axios HTTP client](https://axios-http.com) but provides convenience features which are specific to working on SAP Business Technology Platform, such as:
+
+- [Destination lookup](../connectivity/destination.mdx)
+- Connections to [SAP S/4HANA On-premise](../connectivity/on-premise.mdx) via the connectivity service
+- [Web proxies](../connectivity/proxy.mdx)
 
 If the provided HTTP client also does not work for your use-case, we recommend using the [axios client](https://axios-http.com/docs/example) directly.
 
@@ -60,8 +66,6 @@ const response = await executeHttpRequest(
     },
     {
         method: 'get'
-    },
-    {
     }
 );
 ```
@@ -96,9 +100,9 @@ Fetching CSRF token is not available for HTTP `GET` requests.
 Can be enabled or disabled via the `options` parameter of `executeHttpRequest`:
 
 ```ts
-  {
-    fetchCsrfToken: true,
-  }
+{
+  fetchCsrfToken: true,
+}
 ```
 
 ### Parameter Encoding
@@ -159,8 +163,7 @@ const encodingResponse = await executeHttpRequest(
     },
     // Pass your custom encoding fuction
     parameterEncoder: myCustomParameterEncodingFunction
-  },
-  {}
+  }
 );
 ```
 
