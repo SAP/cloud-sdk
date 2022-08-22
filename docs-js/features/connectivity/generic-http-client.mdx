@@ -16,7 +16,7 @@ import LinkToLatestJsApiDocs from '@site/src/sap/sdk-js/LinkToLatestJsApiDocs';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-This guide explains how you execute arbitrary HTTP requests using the SAP Cloud SDK.
+This guide explains how you can execute arbitrary HTTP requests using the SAP Cloud SDK.
 The HTTP client provided by the SAP Cloud SDK provides some convenience features which are explained in detail in this guide.
 
 <!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
@@ -72,14 +72,14 @@ const response = await executeHttpRequest(
   - This can either be a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="destination object" /> which was already fetched or an <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions" name="object containing a destination name and an optional JWT" />
 - `requestConfig` is of type <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_http_client.HttpRequestConfig" name="HttpRequestConfig" /> or <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_http_client.HttpRequestConfigWithOrigin" name="HttpRequestConfigWithOrigin" />
 - `httpRequestOptions` is of type `HttpRequestOptions`
-  - This parameter is optional and can be left out
+  - This parameter is optional
   - Can be used to enable [automatic CSRF token fetching](#csrf-token-fetching)
 
 <!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
 :::caution
 
 Note that the `destination` and the `requestConfig` parameter have an overlap in the keys they accept.
-For example, both have an `url` and an `authorization` property.
+For example, both have a `url` and an `authorization` property.
 For keys that exist for both objects, the `requestConfig` takes precedence.
 
 :::
@@ -171,14 +171,14 @@ const encodingResponse = await executeHttpRequest(
 <!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
 :::caution
 
-The term "origin" as it is used in the context of this guide does **not** refer to [an URL as in the "same-origin policy"](https://developer.mozilla.org/en-US/docs/Glossary/Origin).
+The term "origin" as it is used in the context of this guide does **not** refer to [a URL as in the "same-origin policy"](https://developer.mozilla.org/en-US/docs/Glossary/Origin).
 Instead it refers to the *origin* or *source* of HTTP client configuration.
 
 :::
 
-This function may be helpful in situations where you want to define the priority of headers and parameters, for example if``:
+This function may be helpful in situations where you want to define the priority of headers and parameters, for example if:
 
-- You want to enforce a hard-coded API key/JWT and ignore the ones from e.g. the destination
+- You want to enforce a hard-coded API key/JWT and ignore the ones from, e.g., the destination
 - You want a default query parameter, which can be overwritten by the destination properties
 
 Headers and query parameters with the same name are prioritized in the following order:
@@ -186,7 +186,7 @@ Headers and query parameters with the same name are prioritized in the following
 2. Destination related headers/query parameters
 3. `requestConfig`.
 
-In this example the `custom` `apiKey` and `myParam` override the request config:
+In this example, the `custom` `apiKey` and `myParam` override the request config:
 
 ```ts
 executeHttpRequestWithOrigin(
