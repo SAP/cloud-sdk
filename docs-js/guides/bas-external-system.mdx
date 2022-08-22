@@ -169,11 +169,20 @@ If you do not have a `.env` file, create one or adjust the existing one.
 Just add the following entry to the `.env` file:
 
 ```
-destinations="[{"name": "<destinationName>", "url": "http://<destinationName>.dest"}]"
+destinations="[{
+"name": "<destinationName>",
+"url": "http://<destinationName>.dest",
+"proxyConfiguration":{
+      "host": "127.0.0.1",
+      "port": 8887,
+      "protocol":"http"
+  }
+}]"
 ```
 
 Fill in the `name` and `url` of the destination you [configured on SAP BTP](#prerequisite-2-cloud-connector-and-destination-setup).
 You can use the same pattern `<name>.dest` that you have used for [testing the connection](#checking-the-connection).
+The proxy host and port are from the `http_proxy` environment variables BAS creates for you.
 All requests done with the SAP Cloud SDK will now reach the SAP S/4HANA system via the BAS connectivity proxy.
 You can start your application via the launch button.
 
