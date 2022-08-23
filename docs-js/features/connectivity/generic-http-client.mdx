@@ -32,7 +32,21 @@ In case you want to use an OpenAPI client, please refer to the [Execute a Reques
 The SAP Cloud SDK for JavaScript provides clients for [OData](../odata/execute-odata-request.mdx) and [OpenAPI](../openapi/execute-openapi-request).
 If you use OData or OpenAPI, we recommend to use those clients if possible.
 
-In case the OData or OpenAPI client does not satisfy your requirements, the next thing you should look into is the HTTP client which is explained in this guide.
+They provide convenience features such as:
+
+- Type-safe response objects
+- Convinient handling of filter, select and expand conditions
+- Built-in `ETag` versions handling
+
+<!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
+:::caution 
+
+Be sure to check if the clients for OData or OpenAPI support your use-case.
+For example, the OData client does not support the `upsert` operation.
+
+:::
+
+In case the OData or OpenAPI client does not satisfy your requirements, or you don't interact with OData or OpenAPI services, the next thing you should look into is the HTTP client which is explained in this guide.
 
 The HTTP client is based on the open-source [axios HTTP client](https://axios-http.com) but provides convenience features which are specific to working on SAP Business Technology Platform, such as:
 
