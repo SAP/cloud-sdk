@@ -130,6 +130,14 @@ ThreadContextExecutors.submit(myTask);
 
 ### Modifying the ThreadContext
 
+:::danger Caution
+
+Modifying the `ThreadContext` as depicted below is currently supported only when using the default `Facade` (e.g. `DefaultTenantFacade`) implementations.
+This is an issue especially when using the the CAP integration dependency `cds-integration-cloud-sdk`.
+To still manipulate the request context, please refer to [the CAP documentation](https://cap.cloud.sap/docs/java/request-contexts#defining-requestcontext).
+
+:::
+
 You may want to run an asynchronous operation in a completely new or custom context.
 By default, the executor will transfer any existing context to the new thread.
 
@@ -189,9 +197,11 @@ TenantAccessor.executeWithTenant(customTenant, () -> doStuff());
 ```
 
 :::caution CAP Integration
-The above does not apply for any accessors like `TenantAccessor`, `PrincipalAccessor`, `RequestHeaderAccessor` when using the CAP framework (with the `cds-integration-cloud-sdk` dependency).
-When using CAP the Tenant,Principal information and Headers are derived from the `RequestContext`.
+
+The above does not apply for accessors like `TenantAccessor`, `PrincipalAccessor`, `RequestHeaderAccessor` when using the CAP framework (with the `cds-integration-cloud-sdk` dependency).
+When using CAP the Tenant, Principal, and Headers are derived from the `RequestContext`.
 Please refer to [this section](https://cap.cloud.sap/docs/java/request-contexts#defining-requestcontext) on how to override existing values in the CAP context.
+
 :::
 
 :::caution

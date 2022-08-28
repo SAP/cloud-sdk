@@ -116,6 +116,13 @@ We'll add a respective integration dependency to the POM file under the `srv` di
 </dependency>
 ```
 
+:::danger Caution
+
+The `executeWith...()` methods offered by the _Accessor_ classes (e.g. `TenantAccessor`) are currently not supported when using the CAP integration.
+To still manipulate the request context, please refer to [the CAP documentation](https://cap.cloud.sap/docs/java/request-contexts#defining-requestcontext).
+
+:::
+
 :::note Multitenancy Integration with CAP
 You can learn more about how the multitenancy of the SAP Cloud SDK integrates with CAP in [this article](../features/multi-tenancy/multi-tenancy-thread-context#how-is-a-thread-context-created).
 :::
@@ -154,12 +161,6 @@ RequestContextRunner cdsContextRunner = context.getCdsRuntime().requestContext()
 
 Callable<Object> task = () -> cdsContextRunner.run(() -> ... ));
 ```
-
-:::caution Caution
-The `executeWith` methods of _Accessor_ classes cannot be currently used to execute asynchronous operations in the CAP context.
-
-Please note that the `RequestScopedHttpClientCache` which is the default being used by the SAP Cloud SDK cannot work with CAP integration, please use [`TimeScopedHttpClientCache`](../features/connectivity/sdk-connectivity-http-client#caching-httpclient) instead for caching `HttpClient`s.
-:::
 
 :::info Info
 In case you are using CAP/CDS versions earlier than `1.23.0`, additional steps are required.
