@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunksap_cloud_sdk_documentation=self.webpackChunksap_cloud_sdk_documentation||[]).push([[5163],{21855:(e,s,t)=>{t.r(s),t.d(s,{default:()=>d});var c=t(67294),u=t(76775);const d=function(){return c.createElement(u.l_,{to:"/cloud-sdk/docs/js/api"})}}}]);
