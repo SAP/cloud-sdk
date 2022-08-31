@@ -8,17 +8,15 @@ const { businessPartnerApi } = businessPartnerService();
 
 // Get a business partner
 const businessPartner = await businessPartnerApi
-    .requestBuilder()
-    .getByKey('1')
-    .execute({destinationName: 'myDestination'});
+  .requestBuilder()
+  .getByKey('1')
+  .execute({ destinationName: 'myDestination' });
 
 // Change first name
-businessPartner.firstName = 'Steve'
+businessPartner.firstName = 'Steve';
 
 // Send a PATCH request with `{ "FirstName" : "Steve" }`
-businessPartnerApi
-    .requestBuilder()
-    .update(businessPartner);
+businessPartnerApi.requestBuilder().update(businessPartner);
 ```
 
 In the example above we changed the first name of the given business partner.

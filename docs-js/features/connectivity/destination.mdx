@@ -67,7 +67,7 @@ You can construct a destination object manually and pass the destination informa
 The minimal requirement towards a manually constructed destination is that you provide a `url`.
 
 ```ts
-MyRequest.execute({ url: 'https://example.com'})
+MyRequest.execute({ url: 'https://example.com' });
 ```
 
 This, however, is not recommended for productive use as you would lose the benefits of separating destinations from applications.
@@ -77,7 +77,7 @@ This, however, is not recommended for productive use as you would lose the benef
 Instead of defining your destination manually, you can reference it by a name:
 
 ```ts
-MyRequest.execute({ destinationName: 'myDestination' })
+MyRequest.execute({ destinationName: 'myDestination' });
 ```
 
 The SAP Cloud SDK searches for the destination by its name in the following locations and the following order:
@@ -198,9 +198,11 @@ If you created a binding for the workflow service:
 you would call the service API using the instance name `my-workflow-service`:
 
 ```ts
-import { WorkflowDefinitionsApi } from 'generated/SAP_CP_Workflow_CF'
+import { WorkflowDefinitionsApi } from 'generated/SAP_CP_Workflow_CF';
 
-WorkflowDefinitionsApi.queryDefinitions().execute({destinationName: 'my-workflow-service'})
+WorkflowDefinitionsApi.queryDefinitions().execute({
+  destinationName: 'my-workflow-service'
+});
 ```
 
 Currently, the following services are supported out of the box:
@@ -223,7 +225,10 @@ const serviceBindingTransformFn = async (serviceBinding: ServiceBinding) => ({
   url: serviceBinding.credentials.sys
 });
 
-MyRequest.execute({ destinationName: 'my-service-name', serviceBindingTransformFn })
+MyRequest.execute({
+  destinationName: 'my-service-name',
+  serviceBindingTransformFn
+});
 ```
 
 More advanced examples with service token fetching can be found in [service-binding-to-destination.ts](https://github.com/SAP/cloud-sdk-js/blob/main/packages/connectivity/src/scp-cf/destination/service-binding-to-destination.ts).
@@ -285,7 +290,7 @@ After this little definition detour, let's go back to the destination service an
 For simplicity, an optional argument of the destination lookup has been neglected in the beginning:
 
 ```ts
-MyRequest.execute({ destinationName: 'myDestination', jwt: 'yourJWT',})
+MyRequest.execute({ destinationName: 'myDestination', jwt: 'yourJWT' });
 ```
 
 The `jwt` argument takes the JSON web token (JWT) issued by an XSUAA as input.
@@ -304,7 +309,11 @@ If no token is given or the destination is not found in the subscriber account, 
 To control this fallback behavior, a selection strategy can be passed to the destination lookup:
 
 ```ts
-MyRequest.execute({ destinationName: 'myDestination', jwt: 'yourJWT', selectionStrategy: 'alwaysSubscriber' })
+MyRequest.execute({
+  destinationName: 'myDestination',
+  jwt: 'yourJWT',
+  selectionStrategy: 'alwaysSubscriber'
+});
 ```
 
 There are three selection strategies defined in the SAP Cloud SDK: `alwaysSubscriber`, `alwaysProvider`, and `subscriberFirst`.
@@ -335,7 +344,7 @@ There are situations where you do not have a JWT issued by the XSUAA but need to
 In such situations, the property `iss` of the `DestinationAccessorOptions` can be used:
 
 ```ts
-MyRequest.execute({ destinationName: 'myDestination', iss: yourIssuerValue })
+MyRequest.execute({ destinationName: 'myDestination', iss: yourIssuerValue });
 ```
 
 The value for `iss` is supposed to be the same as in a JWT issued from the XSUAA, e.g., `https://yourSubdomain.localhost:8080/uaa/oauth/token`.

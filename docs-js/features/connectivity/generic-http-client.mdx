@@ -20,6 +20,7 @@ This guide explains how you can execute arbitrary HTTP requests using the SAP Cl
 The HTTP client provided by the SAP Cloud SDK provides some convenience features which are explained in detail in this guide.
 
 <!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
+
 :::tip
 
 If you want to use an OData API, please refer to the [Executing a request using a generated OData client](../odata/execute-odata-request.mdx) page.
@@ -39,7 +40,8 @@ They provide convenience features such as:
 - Built-in `ETag` versions handling
 
 <!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
-:::note 
+
+:::note
 
 Be sure to check if the clients for OData or OpenAPI support your use-case.
 For example, the OData client does not support the `upsert` operation.
@@ -65,6 +67,7 @@ executeHttpRequest(destination, requestConfig, httpRequestOptions): Promise<Http
 ```
 
 <!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
+
 :::tip
 
 This guide provides code snippets, fully executable example code can be found in the [SAP-samples/cloud-sdk-js repository on GitHub](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/http-client-examples).
@@ -76,7 +79,7 @@ In the most simple form, this can be invoked like this:
 ```ts
 const response = await executeHttpRequest(
   {
-    url: "https://httpbin.org/get"
+    url: 'https://httpbin.org/get'
   },
   {
     method: 'get'
@@ -94,6 +97,7 @@ const response = await executeHttpRequest(
   - Can be used to disable [automatic CSRF token fetching](#csrf-token-fetching)
 
 <!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
+
 :::caution
 
 Note that the `destination` and the `requestConfig` parameter have an overlap in the keys they accept.
@@ -123,7 +127,7 @@ Fetching the CSRF token can be enabled or disabled via the `options` parameter o
 [URL encoding](https://en.wikipedia.org/wiki/Percent-encoding) allows using characters as part of the URL which normally would cause issues such as spaces.
 For example, the space character is replaced with `%20`.
 
-The HTTP client automatically takes care of encoding parameters except for *custom parameters*.
+The HTTP client automatically takes care of encoding parameters except for _custom parameters_.
 
 For example, given this `requestConfig` object, the `requestConfig` parameters will be automatically escaped, but the `custom` will not.
 Custom parameters can be useful when you need control exactly how values are transmitted to the backend system.
@@ -162,17 +166,17 @@ const myCustomParameterEncodingFunction: ParameterEncoder = function (
 
 const encodingResponse = await executeHttpRequest(
   {
-    url: "http://localhost:3000/encoding",
+    url: 'http://localhost:3000/encoding'
   },
   {
-    method: "get",
+    method: 'get',
     params: {
       custom: {
-        customParam: "a/b c",
+        customParam: 'a/b c'
       },
       requestConfig: {
-        requestParam: "a/b c",
-      },
+        requestParam: 'a/b c'
+      }
     },
     // Pass your custom encoding fuction
     parameterEncoder: myCustomParameterEncodingFunction
@@ -185,10 +189,11 @@ const encodingResponse = await executeHttpRequest(
 `executeHttpRequestWithOrigin` is a variation of `executeHttpRequest` which allows more fine-grained control over configuration precedence.
 
 <!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
+
 :::caution
 
 The term "origin" as it is used in the context of this guide does **not** refer to [a URL as in the "same-origin policy"](https://developer.mozilla.org/en-US/docs/Glossary/Origin).
-Instead it refers to the *origin* or *source* of HTTP client configuration.
+Instead it refers to the _origin_ or _source_ of HTTP client configuration.
 
 :::
 
@@ -198,6 +203,7 @@ This function may be helpful in situations where you want to define the priority
 - You want a default query parameter, which can be overwritten by the destination properties
 
 Headers and query parameters with the same name are prioritized in the following order:
+
 1. `custom`
 2. Destination related headers/query parameters
 3. `requestConfig`.
@@ -207,7 +213,7 @@ In this example, the `custom` `apiKey` and `myParam` override the request config
 ```ts
 executeHttpRequestWithOrigin(
   {
-    url: "http://localhost:3000/",
+    url: 'http://localhost:3000/'
   },
   {
     method: 'get',
