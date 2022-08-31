@@ -51,6 +51,23 @@ async function getAddressesByIds(
 }
 ```
 
+Function imports using `GET` operation are part of the retrieve requests as well.
+As function imports are not entity based you obtain the response using the `responseTransformer` which is part of the `FunctionImportRequestBuilder`:
+
+```ts
+const {
+  functionImports: { getPdf }
+} = billingDocumentService();
+
+async function batchExample(billingDocument: string) {
+  const request = getPdf({ billingDocument });
+  const [response] = await batch(request).execute(destination);
+  if (response.isReadResponse()) {
+    const parsedResponse = request.responseTransformer(response.body);
+  }
+}
+```
+
 ### `WriteResponses`
 
 Successful changeset requests can be cast to `WriteResponses` which contains all subresponses for the changeset request.
@@ -73,8 +90,7 @@ Otherwise, the subresponses are transformed into instances of `BusinessPartnerAd
 
 ```ts
 // Destructure business partner service
-const { batch, businessPartnerAddressApi, changeset } =
-  businessPartnerService();
+const { batch, changeset } = businessPartnerService();
 
 async function updateAddresses(
   ...updateRequests: UpdateRequestBuilder<BusinessPartnerAddress>
@@ -99,6 +115,8 @@ async function updateAddresses(
   throw new Error('The changeset request was not successful.');
 }
 ```
+
+As discussed for the [read response](#ReadResponse) you have to use the `responseTransformer` method for write responses related to function or action imports.
 
 ### `ErrorResponse`
 
