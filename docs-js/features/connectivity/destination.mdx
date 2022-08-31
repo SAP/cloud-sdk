@@ -80,7 +80,7 @@ Instead of defining your destination manually, you can reference it by a name:
 MyRequest.execute({ destinationName: 'myDestination' });
 ```
 
-The SAP Cloud SDK searches for the destination by its name in the following locations and the following order:
+The SAP Cloud SDK searches for the destination by its name in the following locations and order:
 
 1. local environment variables
 2. register a destination in the SAP Cloud SDK
@@ -92,10 +92,17 @@ Therefore, if a destination with the same name exists in multiple locations, the
 
 ### Local Environment Variable
 
-This option is present for deployment and testing in a local environment outside the SAP BTP where no destination services are available.
-If a `destinations` environment variable is present, it will be used for the destination lookup as described above.
-The value is expected to be a stringified JSON array, where the items adhere to the <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="Destination interface" />.
-Example: `"[{\"name\": \"TESTINATION\", \"url\": \"http://url.hana.ondemand.com\", \"username\": \"DUMMY\", \"password\": \"dummy\"}]"`.
+This option should only be used for testing purposes in a local environment outside the SAP BTP where no destination services are available. 
+Use [Register Destination](#register-destination) to cache destinations in production.
+
+`destinations` environment variables are used for the destination lookup in the aforementioned order if they are presented.
+The value of the enviroment variable is expected to be a stringified JSON array, where the items adhere to the <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="Destination interface" />.
+
+Example: 
+
+```text
+"[{\"name\": \"TESTINATION\", \"url\": \"http://url.hana.ondemand.com\", \"username\": \"DUMMY\", \"password\": \"dummy\"}]"
+```
 
 The SAP Cloud SDK provides a `setTestDestination(destination)` function to add a destination to the environment variable for the current process programmatically.
 It takes a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="destination object" />, transforms it to a JSON object, and adds it to `process.env.destinations`.
@@ -111,14 +118,17 @@ setTestDestination({
 });
 ```
 
-This would set a destination with the name `TESTINATION`.
+The above example sets a destination with the name `TESTINATION`.
 At runtime, the SAP Cloud SDK will check the environment variable for a destination with the given name and use it if present.
-Note that the SAP Cloud SDK also offers a `mockTestDestination()` method, which reads in a `systems.json` and `credentials.json` to create destinations.
+
+The SAP Cloud SDK also offers a `mockTestDestination()` method, which reads in a `systems.json` and `credentials.json` to create destinations.
 The advantage of files is that they can be excluded from the repository since they contain sensitive information.
 
 Note that this approach is not suitable for multi-tenant scenarios, because only the destination service can return destinations for different tenants.
 
-### Register Destination via the SAP Cloud SDK
+Due to security concerns, the `forwardAuthToken` option is ignored and the `authTokens` is always empty.
+
+### Register Destination
 
 Usually, the destination service should be used in production to fetch a destination, including an authentication token.
 In the case of frequent service-to-service communication, requesting the destination service every time for a target-specific `JWT` would mean a big overhead.
@@ -138,9 +148,10 @@ registerDestination(destination, options);
 MyRequest.execute({ destinationName: 'MY-DESTINATION' });
 ```
 
-If a registered destination is found, the lookup is stopped, and the call to the destination service is avoided.
-You can register a full destination object, including authentication, but we do not recommend storing authentication information in the registered destination.
+Methods such as `execute()` and `executeHttpRequest()` call `getDestination()` internally for the destination lookup.
+During the lookup, if a registered destination is found, the lookup is stopped, and the call to the destination service is avoided.
 
+You can register a full destination object, including authentication, but we do not recommend storing authentication information in the registered destination.
 Instead, we recommend enabling token forwarding on the destination.
 If you enable this option, the token used to execute the request is forwarded to the destination:
 
