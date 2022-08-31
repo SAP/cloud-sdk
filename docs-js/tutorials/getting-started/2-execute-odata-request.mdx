@@ -89,19 +89,40 @@ npm run start:dev
 If you've terminated your application, you can restart it by running the start command again.
 Now, calling http://localhost:8080/business-partners should return our placeholder string.
 
-## Import Service Entities
+## Generate Service Entities
 
-To use the SAP Cloud SDK for JavaScript to make a call to an OData service, add the client library to your dependencies.
-For this tutorial, we are using the client library for the business partner service, `@sap/cloud-sdk-vdm-business-partner-service`.
-Install it with the following command:
+The SAP Cloud SDK for JavaScript requires client libraries to make calls to OData services.
+In this tutorial, we generate the client library for the business partner service using `@sap-cloud-sdk/generator`.
+More details of the OData generator can be found in [Generate an OData client for JavaScript](../../features/odata/generate-odata-client).
 
-```shell
-npm install @sap/cloud-sdk-vdm-business-partner-service@latest
-```
+Steps:
+1. Install the `@sap-cloud-sdk/generator` package as a local dependency.
+    ```bash
+    npm install -D @sap-cloud-sdk/generator
+    ```
+2. Create a folder `service-specifications` at the root of the project.
+3. Download the EDMX file for `Business Partner` in the [SAP API Business Hub](https://api.sap.com/api/BusinessPartner/overview).
+4. Copy the `BusinessPartner.edmx` file into the `service-specifications` folder.
+5. Create a `service-mapping.json` file in the `service-specifications` folder with the following content.
+    ```json
+    {
+      "BusinessPartner": {
+        "directoryName": "business-partner-service",
+        "servicePath": "/sap/opu/odata/sap/BusinessPartner",
+        "npmPackageName": "business-partner-service"
+      }
+    }
+    ```
+6. Generate the `BusinessPartner` service.
+    ```bash
+    npx generate-odata-client --inputDir service-specifications --outputDir services
+    ```
+
+The generated client library can be found in `services/business-partner-service`.
 
 :::note
-The SAP Cloud SDK for JavaScript offers packages for each OData service exposed by SAP S/4HANA Cloud.
-You can find a list of these services in the [SAP API Business Hub](https://api.sap.com/).
+A list of services exposed by SAP S/4HANA Cloud can be found in the [SAP API Business Hub](https://api.sap.com/).
+Use `@sap-cloud-sdk/generator` to generate OData client libraries you need similarly as mentioned above.
 :::
 
 ## Execute an OData Request
@@ -113,7 +134,7 @@ To create a service class `business-partners.service.ts`, execute:
 nest g service business-partners
 ```
 
-This creates a basic class inside `src/business-partners/` folder.
+This creates a basic class inside `src/business-partners` folder.
 
 ```ts
 import { Injectable } from '@nestjs/common';
@@ -138,7 +159,7 @@ To import the service function and entity exported by the client library, add th
 import {
   businessPartnerService,
   BusinessPartner
-} from '@sap/cloud-sdk-vdm-business-partner-service';
+} from 'services/business-partner-service';
 ```
 
 Create a function `getAllBusinessPartners`.
@@ -204,7 +225,7 @@ The `BusinessPartnersService` is injected through the class constructor:
 
 ```ts
 import { Controller, Get, HttpException } from '@nestjs/common';
-import { BusinessPartner } from '@sap/cloud-sdk-vdm-business-partner-service';
+import { BusinessPartner } from 'services/business-partner-service';
 import { BusinessPartnersService } from './business-partners.service';
 
 @Controller('business-partners')
@@ -310,7 +331,7 @@ Here are the code files discussed on this page, if you are using the mock server
 
 ```ts
 import { Controller, Get, HttpException } from '@nestjs/common';
-import { BusinessPartner } from '@sap/cloud-sdk-vdm-business-partner-service';
+import { BusinessPartner } from 'services/business-partner-service';
 import { BusinessPartnersService } from './business-partners.service';
 
 @Controller('business-partners')
@@ -339,7 +360,7 @@ import { Injectable } from '@nestjs/common';
 import {
   businessPartnerService,
   BusinessPartner
-} from '@sap/cloud-sdk-vdm-business-partner-service';
+} from 'services/business-partner-service';
 
 @Injectable()
 export class BusinessPartnersService {
