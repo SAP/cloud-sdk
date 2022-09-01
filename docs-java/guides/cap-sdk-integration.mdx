@@ -146,44 +146,6 @@ Make sure that you also add the package name of your application.
 </details>
 :::
 
-### Wrap Asynchronous Calls
-
-If your app uses asynchronous calls which spawn new threads or reuse pooled threads, the call must be decorated with the respective wrapper classes.
-This decoration is required to forward thread-specific information from the calling thread to the asynchronously running thread.
-
-For this purpose, you need to use the `RequestContextRunner` from [CAP](https://cap.cloud.sap/docs/java/provisioning-api#threading-requestcontext)
-
-Example:
-
-```java
-EventContext context;
-RequestContextRunner cdsContextRunner = context.getCdsRuntime().requestContext();
-
-Callable<Object> task = () -> cdsContextRunner.run(() -> ... ));
-```
-
-:::info Info
-In case you are using CAP/CDS versions earlier than `1.23.0`, additional steps are required.
-
-<details>
-<summary>Wrap asynchronous calls </summary>
-
-You need to additionally wrap your calls using the `ThreadContextExecutor` from the SAP Cloud SDK (refer to the [ThreadContext documentation](https://sap.github.io/cloud-sdk/docs/java/features/multi-tenancy/multi-tenancy-thread-context/#what-is-a-thread-context)) in conjunction with the `RequestContextRunner` from [CAP](https://cap.cloud.sap/docs/java/provisioning-api#threading-requestcontext).
-
-Hence, the code snippet from above would look like:
-
-```java
-EventContext context;
-ThreadContextExecutor threadContextExecutor = new ThreadContextExecutor();
-RequestContextRunner cdsContextRunner = context.getCdsRuntime().requestContext();
-
-Callable<Object> task = () -> cdsContextRunner.run(context ->
-                                        threadContextExecutor.execute(() -> ... ));
-```
-
-</details>
-:::
-
 :::success Integration finished
 
 Now the SAP Cloud SDK is integrated with the CAP application.
