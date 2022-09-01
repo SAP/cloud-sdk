@@ -3,13 +3,13 @@ Below is an example that demonstrates how to use the lambda operator `any`.
 
 ```ts
 /*
-Get all people that have at least one friend that matches all the following conditions:
+Get all people that have at least one friend that matches all of the following conditions:
   - Has first name 'John'
   - Has last name 'Miller'
 */
 .filter(
-  any(
-    peopleApi.schema.FRIENDS.filter(
+  peopleApi.schema.FRIENDS.filter(
+    any(
       peopleApi.schema.FIRST_NAME.equals('John'),
       peopleApi.schema.LAST_NAME.equals('Miller')
     )
@@ -20,5 +20,5 @@ Get all people that have at least one friend that matches all the following cond
 The generated `$filter` parameter of the URL will be:
 
 ```sql
-$filter=(/any(a0:((a0/Friends/FirstName eq 'John' and a0/Friends/LastName eq 'Miller'))))
+$filter=((Friends/any(a0:(a0/FirstName eq 'John' and a0/LastName eq 'Miller'))))
 ```
