@@ -5,18 +5,15 @@ In the following example, we first get a business partner, change one of its val
 
 ```ts
 // Get a business partner
-const businessPartner = await BusinessPartner
-    .requestBuilder()
-    .getByKey('1')
-    .execute({destinationName: 'myDestination'});
+const businessPartner = await BusinessPartner.requestBuilder()
+  .getByKey('1')
+  .execute({ destinationName: 'myDestination' });
 
 // Change first name
 businessPartner.firstName = 'Steve';
 
 // Send a PATCH request with `{ "FirstName" : "Steve" }`
-BusinessPartner
-    .requestBuilder()
-    .update(businessPartner);
+BusinessPartner.requestBuilder().update(businessPartner);
 ```
 
 In the example above we changed the first name of the given business partner.
