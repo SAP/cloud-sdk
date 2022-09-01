@@ -182,7 +182,19 @@ module.exports = {
         },
         sitemap: {
           changefreq: 'weekly',
-          priority: 0.5
+          priority: 0.5,
+          ignorePatterns: [
+            '/cloud-sdk/api/**',
+            '/cloud-sdk/components/**',
+            '/cloud-sdk/docs/js/v1/features/common/**',
+            '/cloud-sdk/docs/js/v1/features/odata/common/**',
+            '/cloud-sdk/docs/js/v1/features/odata/v2/**',
+            '/cloud-sdk/docs/js/v1/features/odata/v4/**',
+            '/cloud-sdk/docs/js/features/common/**',
+            '/cloud-sdk/docs/js/features/odata/common/**',
+            '/cloud-sdk/docs/js/features/odata/v2/**',
+            '/cloud-sdk/docs/js/features/odata/v4/**'
+          ]
         }
       }
     ]

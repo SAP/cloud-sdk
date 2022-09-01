@@ -59,7 +59,8 @@ module.exports = {
             'guides/trust-and-key-stores',
             'guides/how-to-use-the-approuter',
             'guides/how-to-add-resilience',
-            'guides/how-to-retrieve-jwt'
+            'guides/how-to-retrieve-jwt',
+            'guides/debug-remote-app'
           ]
         },
         {

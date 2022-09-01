@@ -23,6 +23,7 @@ Feel free to also check this [guide on mindful writing](https://sap.github.io/cl
 ### Docker Alternative
 
 - Consider the following commands (1) to install node dependencies and (2) to serve the continuously generated site:
+
   ```bash
   docker run -it --rm -v "${pwd}:/doc" -w "/doc" --entrypoint "/bin/sh" node:alpine3.10 -c "npm ci"
   docker run -it --rm -v "${pwd}:/doc" -w "/doc" --entrypoint "/bin/sh" -p 3000:3000 node:alpine3.10 -c "npm run start -- --port 3000 --host 0.0.0.0"
@@ -70,18 +71,18 @@ Once installed, add the following lines to your configuration.
 }
 ```
 
-### Prettier
+### ESLint and Prettier
 
-Please use [Prettier](https://prettier.io/) to keep the markdown files and code examples consistently formatted.
+Please use [ESLint](https://eslint.org) and [Prettier](https://prettier.io/) to keep the markdown files and code examples consistently formatted.
 
 ```bash
-# Prettier is part of the repositories dependencies
+# Install dependencies including ESLint and Prettier
 $ npm install
-# Use the npm script to run prettier
-$ npm run prettier
+# Run ESLint and Prettier
+$ npm run lint
+# Fix ESLint and Prettier issues automatically
+$ npm run lint:fix
 ```
-
-Prettier supports many editors and can be installed as a plugin to run the formatting automatically.
 
 ### External Grammar Checker
 
@@ -94,7 +95,7 @@ Please check your text manually with one of the mentioned tools before creating 
 ## Contributing as a Team Member
 
 1. Go to: https://opensource-portal.tools.sap.corp/
-2. Search for the `cloud-sdk-team` and ask the colleagues to add you.
+2. Search for the `cloud-sdk-team` and ask colleagues to add you.
 
 Once you are part of the team, you can submit `pull requests` without forking the repository.
 
