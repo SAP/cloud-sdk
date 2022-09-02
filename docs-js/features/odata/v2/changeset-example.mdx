@@ -14,7 +14,7 @@ async function batchExample(billOfMaterial: string) {
     .update(materialBomApi.entityBuilder().fromJson({ billOfMaterial }));
 
   // Execute batch request with one changeset
-  const changesetResponse = await batch(
+  const batchResponses = await batch(
     changeset(functionImportRequest, updateRequestBuilder)
   ).execute(destination);
 

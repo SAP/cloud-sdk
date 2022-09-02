@@ -14,7 +14,7 @@ async function batchExample(id: string) {
     .update(materialsActiveApi.entityBuilder().fromJson({ id }));
 
   // Execute batch request with one changeset
-  const changesetResponse = await batch(
+  const batchResponses = await batch(
     changeset(actionImportRequestBuilder, updateRequestBuilder)
   ).execute(destination);
 

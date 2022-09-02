@@ -6,7 +6,7 @@ In the example below, we map each given address ID to a [`GetByKeyRequestBuilder
 These retrieve requests are combined into one `batch` request and executed against a destination.
 
 The example below is based on the [Bills of Material service](https://api.sap.com/api/OP_API_BILLING_DOCUMENT_SRV_0001/overview), which contains a function import called `getPdf`.
-This service is a OData v2 service, but the syntax is the same for OData v2 and v4.
+This service is an OData v2 service, but the syntax is the same for OData v2 and v4.
 
 ```ts
 const {
@@ -18,14 +18,14 @@ async function batchExample(documentIds: string[]): Promise<void> {
   const getByKeyRequests = documentIds.map(billingDocument =>
     billingDocumentApi.requestBuilder().getByKey(billingDocument)
   );
-  const functionImportRequest = documentIds.map(billingDocument =>
+  const functionImportRequests = documentIds.map(billingDocument =>
     getPdf({ billingDocument })
   );
 
   // Execute batch request combining multiple retrieve requests
   const batchResponses = await batch(
     ...getByKeyRequests,
-    ...functionImportRequest
+    ...functionImportRequests
   );
 }
 ```
