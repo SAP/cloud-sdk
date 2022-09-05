@@ -114,7 +114,7 @@ The `executeHttpRequest` function returns a promise of <LinkToLatestJsApiDocs sl
 The HTTP client provided by SAP Cloud SDK allows to automatically retrieve a CSRF token for HTTP APIs which support this.
 Fetching CSRF token is automatically enabled for all requests that typically might change data, such as `PUT`, `POST`, `DELETE` or `PATCH` requests, and is not available for `GET` requests.
 
-Fetching the CSRF token can be enabled or disabled via the `httpRequestOptions` parameter of `executeHttpRequest`:
+Fetching the CSRF token can be enabled or disabled via the `httpRequestOptions.fetchCsrfToken` parameter of `executeHttpRequest`:
 
 ```ts
 {
@@ -139,7 +139,7 @@ const response = await executeHttpRequest(
 ```
 
 In this example, we can only do the request when `fetchCsrfToken` is set to `false` because the httpbin endpoint does not implement CSRF token fetching.
-For an example with CSRF token fetching enabled see the [http-client.spec.ts](https://github.com/SAP-samples/cloud-sdk-js/blob/main/samples/http-client-examples/http-client.spec.ts) example.
+For an example with CSRF token fetching enabled see [http-client.spec.ts](https://github.com/SAP-samples/cloud-sdk-js/blob/main/samples/http-client-examples/http-client.spec.ts).
 
 ### Parameter Encoding
 
