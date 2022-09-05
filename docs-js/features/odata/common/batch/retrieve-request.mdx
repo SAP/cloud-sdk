@@ -14,7 +14,7 @@ const {
   functionImports: { getPdf }
 } = billingDocumentService();
 
-async function batchExample(documentIds: string[]): Promise<void> {
+async function batchExample(documentIds: string[]) {
   const getByKeyRequests = documentIds.map(billingDocument =>
     billingDocumentApi.requestBuilder().getByKey(billingDocument)
   );
