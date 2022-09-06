@@ -84,11 +84,6 @@ You can also use this functionality with Springs `@Async` annotation.
 Refer to the [dedicated section below](#spring-integration).
 :::
 
-:::caution CAP Integration
-In case you are using CAP, note that the CAP Request Context also needs to be passed on (in addition to the `ThreadContext`).
-Please refer to [this guide](../../guides/cap-sdk-integration.mdx) on how to achieve this.
-:::
-
 ### Spring Integration
 
 You can conveniently integrate this functionality to work with Springs `@Async` annotation.
@@ -109,6 +104,39 @@ public class AsynchronousConfiguration implements AsyncConfigurer {
 ```
 
 You can read more about the `@Async` functionality [here](https://www.baeldung.com/spring-async).
+
+### Passing on Other ThreadLocals
+
+Other libraries and frameworks may also rely on `ThreadLocal` variables to hold contextual data.
+For example, the CAP `RequestContext` is also bound to the current Thread.
+
+To not lose this state when creating a new Thread they can be passed on by implementing a `ThreadContextDecorator`.
+A typical implementation for this purpose should look like this:
+
+```java
+@Override
+public <T> Callable<T> decorateCallable( @Nonnull final Callable<T> callable ) {
+  Object valueToPass = YourThreadLocal.get();
+
+  return () -> {
+    Object initial = YourThreadLocal.get();
+    YourThreadLocal.set(valueToPass);
+    try {
+      return callable.call();
+    }
+    finally {
+      YourThreadLocal.set(initial);
+    }
+  };
+}
+```
+
+Such a custom `ThreadContextDecorator` can be registered via `DefaultThreadContextDecoratorChain.registerDefaultDecorator`.
+
+:::tip
+The SAP Cloud SDK already comes with a default decorator that passes on the `SecurityContext` of `com.sap.cloud.security:java-api`.
+If the [CAP integration](../../guides/cap-sdk-integration.mdx) is used, also the `RequestContext` is passed on (requires CDS version `1.28` or higher).
+:::
 
 ### Configuring the Executor
 
