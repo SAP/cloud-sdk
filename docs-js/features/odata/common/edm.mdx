@@ -1,0 +1,75 @@
+---
+id: edm
+title: Entity Data Model (EDM) Types
+sidebar_label: Entity Data Model (EDM) Types
+description: This article describes how the SAP Cloud SDK handles Entity Data Model (EDM) types.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - odata
+  - JavaScript
+  - TypeScript
+  - client
+  - generate
+---
+
+## Type conversions
+
+The SAP Cloud SDK for JavaScript automatically converts values encoded in EDM to respective types in JavaScript and TypeScript.
+Some types are specific to an OData version.
+
+For definition of the EDM data types in OData, see [the v2 spec](https://www.odata.org/documentation/odata-version-2-0/overview/) or the [v4 spec](http://docs.oasis-open.org/odata/odata/v4.0/os/part3-csdl/odata-v4.0-os-part3-csdl.html#_The_edm:Documentation_Element) of OData.
+
+The SAP Cloud SDK converts EDM types into TypeScript types as described by the following tables.
+
+### OData v2 and OData v4 types
+
+| EDM Type             | TypeScript Type |
+| -------------------- | --------------- |
+| `Edm.String`         | `string`        |
+| `Edm.Boolean`        | `boolean`       |
+| `Edm.Guid`           | `string`        |
+| `Edm.Decimal`        | `BigNumber`     |
+| `Edm.Int16`          | `number`        |
+| `Edm.Int32`          | `number`        |
+| `Edm.Int64`          | `BigNumber`     |
+| `Edm.Single`         | `number`        |
+| `Edm.Double`         | `number`        |
+| `Edm.Float`          | `number`        |
+| `Edm.Byte`           | `number`        |
+| `Edm.SByte`          | `number`        |
+| `Edm.DateTimeOffset` | `Moment`        |
+| `Edm.Binary`         | `string`        |
+| `Edm.Any`            | `any`           |
+
+### OData v2 specific
+
+| EDM Type       | TypeScript Type |
+| -------------- | --------------- |
+| `Edm.DateTime` | `Moment`        |
+| `Edm.Time`     | `Time`          |
+
+:::caution Precision of Conversion
+
+While converting `Edm.DateTime` to `Moment` the smallest considered unit is milliseconds.
+
+`Edm.Time` does not consider the time zone.
+
+:::
+
+### OData v4 specific
+
+| EDM Type        | TypeScript Type |
+| --------------- | --------------- |
+| `Edm.Date`      | `Moment`        |
+| `Edm.Duration`  | `Duration`      |
+| `Edm.TimeOfDay` | `Time`          |
+
+:::caution Precision of Conversion
+
+While converting `Edm.DateTime` to `Moment` the smallest considered unit is milliseconds.
+
+`Edm.TimeOfDay` does not consider the time zone.
+
+:::
