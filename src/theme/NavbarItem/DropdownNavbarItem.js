@@ -6,7 +6,7 @@ import { useActiveVersion } from '@docusaurus/plugin-content-docs/client';
 
 /**
  * If the dropdown navbar item contains the apiReference prop,
- * the wrapper overwites its default `items` value with all versions matching the currently selected major version.
+ * the wrapper overwrites its default `items` value with all versions matching the currently selected major version.
  */
 export default function DropdownNavbarItemWrapper(props) {
   if (shouldShow(props) && props.apiReference) {
