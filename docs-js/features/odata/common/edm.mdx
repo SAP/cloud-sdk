@@ -14,16 +14,19 @@ keywords:
   - generate
 ---
 
-## Type conversions
+import LinkToLatestJsApiDocs from '@site/src/sap/sdk-js/LinkToLatestJsApiDocs';
+
+## Type Conversions
 
 The SAP Cloud SDK for JavaScript automatically converts values encoded in EDM to respective types in JavaScript and TypeScript.
 Some types are specific to an OData version.
 
 For definition of the EDM data types in OData, see [the v2 spec](https://www.odata.org/documentation/odata-version-2-0/overview/) or the [v4 spec](http://docs.oasis-open.org/odata/odata/v4.0/os/part3-csdl/odata-v4.0-os-part3-csdl.html#_The_edm:Documentation_Element) of OData.
 
-The SAP Cloud SDK converts EDM types into TypeScript types as described by the following tables.
+By default, the SAP Cloud SDK converts EDM types into TypeScript types as described by the following tables.
+This can be changed by providing custom serializers and deserializers as described [here for OData v2](../odata-v2-client.mdx#customize-de-serialization) and [here for OData v4](../odata-v4-client.mdx#customize-de-serialization).
 
-### OData v2 and OData v4 types
+### OData v2 and OData v4 Types
 
 | EDM Type             | TypeScript Type |
 | -------------------- | --------------- |
@@ -39,36 +42,36 @@ The SAP Cloud SDK converts EDM types into TypeScript types as described by the f
 | `Edm.Float`          | `number`        |
 | `Edm.Byte`           | `number`        |
 | `Edm.SByte`          | `number`        |
-| `Edm.DateTimeOffset` | `Moment`        |
+| `Edm.DateTimeOffset` | `moment.Moment` |
 | `Edm.Binary`         | `string`        |
 | `Edm.Any`            | `any`           |
 
-### OData v2 specific
+### OData v2 Specific
 
-| EDM Type       | TypeScript Type |
-| -------------- | --------------- |
-| `Edm.DateTime` | `Moment`        |
-| `Edm.Time`     | `Time`          |
+| EDM Type       | TypeScript Type                                                                         |
+| -------------- | --------------------------------------------------------------------------------------- |
+| `Edm.DateTime` | `moment.Moment`                                                                         |
+| `Edm.Time`     | <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_odata_common.Time" name="Time" /> |
 
 :::caution Precision of Conversion
 
-While converting `Edm.DateTime` to `Moment` the smallest considered unit is milliseconds.
+While converting `Edm.DateTime` to `moment.Moment` the smallest considered unit is milliseconds.
 
 `Edm.Time` does not consider the time zone.
 
 :::
 
-### OData v4 specific
+### OData v4 Specific
 
-| EDM Type        | TypeScript Type |
-| --------------- | --------------- |
-| `Edm.Date`      | `Moment`        |
-| `Edm.Duration`  | `Duration`      |
-| `Edm.TimeOfDay` | `Time`          |
+| EDM Type        | TypeScript Type    |
+| --------------- | ------------------ |
+| `Edm.Date`      | `moment.Moment`    |
+| `Edm.Duration`  | `moment.Duration ` |
+| `Edm.TimeOfDay` | `Time`             |
 
 :::caution Precision of Conversion
 
-While converting `Edm.DateTime` to `Moment` the smallest considered unit is milliseconds.
+While converting `Edm.DateTime` to `moment.Moment` the smallest considered unit is milliseconds.
 
 `Edm.TimeOfDay` does not consider the time zone.
 
