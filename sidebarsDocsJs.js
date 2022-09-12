@@ -95,11 +95,7 @@ module.exports = {
     {
       type: 'category',
       label: 'Releases',
-      items: [
-        'release-policy',
-        'announcing-version-2',
-        'announcing-version-2-beta'
-      ]
+      items: ['release-policy']
     },
     {
       type: 'category',
