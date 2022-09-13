@@ -211,6 +211,7 @@ module.exports = {
       {
         id: 'docs-java',
         path: 'docs-java',
+        editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
         routeBasePath: 'docs/java',
         sidebarPath: require.resolve('./sidebarsDocsJava.js')
       }
@@ -220,6 +221,7 @@ module.exports = {
       {
         id: 'docs-js',
         path: 'docs-js',
+        editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
         routeBasePath: 'docs/js',
         sidebarPath: require.resolve('./sidebarsDocsJs.js'),
         lastVersion: 'current',
