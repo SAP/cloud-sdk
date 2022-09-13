@@ -4,17 +4,19 @@ The SAP Cloud SDK will try to read version identifiers from responses and set th
 Consider the following example:
 
 ```ts
-async function modifyBusinessPartner(id) {
-  const destination = { url: 'https://my.s4-system.com' };
+const { businessPartnerApi } = businessPartnerService();
 
-  const businessPartner = await BusinessPartner.requestBuilder()
+async function modifyBusinessPartner(id) {
+  const businessPartner = await businessPartnerApi
+    .requestBuilder()
     .getByKey(id)
-    .execute(myDestination);
+    .execute(destination);
 
   // do some modification
   applyModification(businessPartner);
 
-  return BusinessPartner.requestBuilder()
+  return businessPartnerApi
+    .requestBuilder()
     .update(businessPartner)
     .execute(destination);
 }
