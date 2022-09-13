@@ -145,6 +145,15 @@ The last step when making a request using the SAP Cloud SDK is the request execu
 Once the request is configured use the `execute` function and pass a [destination](../connectivity/destination) to it.
 This will automatically construct your request URL and headers, execute the request, and return a typed response if applicable.
 
+### Conversion of OData Types
+
+OData uses the Entity Data Model (EDM) to represent values such as strings, numbers, dates and times.
+Calling the `execute` function by default automatically converts OData Entity Data Model (EDM) values to their respective types in JavaScript and TypeScript.
+
+See the [page on edm](./common/edm.mdx) for details and limitations of that conversion.
+
+If you require the raw OData response you can look into [getting the raw response and the original request](#getting-the-raw-response-and-the-original-request).
+
 ### Setting Custom Request Headers
 
 The SAP Cloud SDK automatically sets some necessary request headers on every request.
