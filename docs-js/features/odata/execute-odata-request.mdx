@@ -15,6 +15,7 @@ keywords:
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import LinkToLatestJsApiDocs from '@site/src/sap/sdk-js/LinkToLatestJsApiDocs';
 import {
   CustomRequestConfig,
   CustomRequestConfigNote,
@@ -150,7 +151,35 @@ This will automatically construct your request URL and headers, execute the requ
 OData uses the Entity Data Model (EDM) to represent values such as strings, numbers, dates and times.
 Calling the `execute` function by default automatically converts OData Entity Data Model (EDM) values to their respective types in JavaScript and TypeScript.
 
-See the [page on edm](./common/edm.mdx) for details and limitations of that conversion.
+By default, the SAP Cloud SDK converts EDM types into TypeScript types as described by the following tables.
+This can be changed by providing custom serializers and deserializers as described [here for OData v2](./odata-v2-client.mdx#customize-de-serialization) and [here for OData v4](./odata-v4-client.mdx#customize-de-serialization).
+
+For definition of the EDM data types in OData, see [the v2 spec](https://www.odata.org/documentation/odata-version-2-0/overview/) or the [v4 spec](http://docs.oasis-open.org/odata/odata/v4.0/os/part3-csdl/odata-v4.0-os-part3-csdl.html#_The_edm:Documentation_Element) of OData.
+
+The following table describes how types are mapped by default:
+
+| EDM Type             | TypeScript Type                                                                         | Notes                                                 |
+| -------------------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| `Edm.String`         | `string`                                                                                |                                                       |
+| `Edm.Boolean`        | `boolean`                                                                               |                                                       |
+| `Edm.Guid`           | `string`                                                                                |                                                       |
+| `Edm.Decimal`        | `BigNumber`                                                                             |                                                       |
+| `Edm.Int16`          | `number`                                                                                |                                                       |
+| `Edm.Int32`          | `number`                                                                                |                                                       |
+| `Edm.Int64`          | `BigNumber`                                                                             |                                                       |
+| `Edm.Single`         | `number`                                                                                |                                                       |
+| `Edm.Double`         | `number`                                                                                |                                                       |
+| `Edm.Float`          | `number`                                                                                | Not an actual edm type, implemented for compatibility |
+| `Edm.Byte`           | `number`                                                                                |                                                       |
+| `Edm.SByte`          | `number`                                                                                |                                                       |
+| `Edm.DateTimeOffset` | `moment.Moment`                                                                         |                                                       |
+| `Edm.Binary`         | `string`                                                                                |                                                       |
+| `Edm.DateTime`       | `moment.Moment`                                                                         | OData v2 only, precision limited to milliseconds      |
+| `Edm.Time`           | <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_odata_common.Time" name="Time" /> | OData v2 only, does not consider time-zones           |
+| `Edm.Date`           | `moment.Moment`                                                                         | OData v4 only                                         |
+| `Edm.Duration`       | `moment.Duration`                                                                       | OData v4 only                                         |
+| `Edm.TimeOfDay`      | <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_odata_common.Time" name="Time" /> | OData v4 only, does not consider time-zones           |
+| Any other type       | `any`                                                                                   |                                                       |
 
 If you require the raw OData response you can look into [getting the raw response and the original request](#getting-the-raw-response-and-the-original-request).
 
