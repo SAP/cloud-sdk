@@ -374,19 +374,21 @@ It is your responsibility as a developer to ensure that the provided value for t
 :::
 
 ### Getting All Destinations
+
 Currently, we only support getting all destinations from the destination service.
-This is possible through the `getAllDestinationsFromDestionService` function.
+This is possible through the `getAllDestinationsFromDestinationService` function.
 Based on the provided JWT, you will either receive all subscriber or provider destinations.
 
 Example:
+
 ```ts
-import { getAllDestinationsFromDestionService } from '@sap-cloud-sdk/connectivity';
+import { getAllDestinationsFromDestinationService } from '@sap-cloud-sdk/connectivity';
 
 // Will attempt to get all provider destinations
-getAllDestinationsFromDestionService();
+getAllDestinationsFromDestinationService();
 
 // Will attempt to get all subscriber destinations
-getAllDestinationsFromDestionService(subscriberJWT);
+getAllDestinationsFromDestinationService(subscriberJWT);
 ```
 
 It's important to note that these destinations won't contain an authentication token.
@@ -495,6 +497,5 @@ Custom headers and query parameters, however, overwrite the additional propertie
 **Header names** keep their casing but overwrite other headers independent of the casing, e.g., `AUTHORIZATION` overwrites `authorization`.
 This does not apply to query **parameter names**`.
 :::
-
 
 ##
