@@ -23,10 +23,8 @@ import {
   ExecuteRawUseCases
 } from '../common';
 
-Once you have generated a typed OData client using the SAP Cloud SDK generator or if you decided to use one of the pregenerated OData clients for SAP S/4HANA, you can use your OData client to execute HTTP requests against your service.
+Once you have generated a typed OData client using the SAP Cloud SDK generator, you can use this OData client to execute HTTP requests for your service.
 The client provides request builders for the different types of requests and abstractions of the entity sets of the given service, which we refer to as _entities_.
-
-To request an entity set, entities offer a fluent API.
 
 ## General Request Structure
 
@@ -44,12 +42,6 @@ return myEntityApi.requestBuilder()
 
 If you are using an OData client, that you generated on your own, import the service function, e.g. `myEntityService`, from the generated service directory (`my-service`) within the specified output directory (`outputDir`).
 The name of the service directory corresponds to the `directoryName` specified in the service mapping file (`serviceMapping.json` by default) in your input directory.
-
-If you are using one of the pregenerated OData clients, import it from the npm package.
-
-```ts
-import { pregeneratedEntityService } from '@sap/cloud-sdk-vdm-pregenerated-service';
-```
 
 Destructure the service to get the API of the entity you want to make requests for - `myEntityApi` in the example above.
 
