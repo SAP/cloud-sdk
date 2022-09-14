@@ -88,7 +88,7 @@ module.exports = {
           items: [
             {
               label: 'Swizzle Placeholder',
-              href: 'https://www.doesnt-exist.com'
+              href: 'https://www.example.com'
             }
           ],
           docsPluginId: 'docs-js',
