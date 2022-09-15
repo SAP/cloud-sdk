@@ -13,12 +13,10 @@
 - Run `npm start`
 - The SAP Cloud SDK documentation portal should open in a new browser window
 
-### How to Document
+### How To Document
 
-Read the [getting started guide](https://sap.github.io/cloud-sdk/docs/dzen/getting-started).
 The markdown files for the documentation are in the `docs` directory.
 Add or change an article and create a pull request.
-Feel free to also check this [guide on mindful writing](https://sap.github.io/cloud-sdk/docs/dzen/how-to-write-documentation).
 
 ### Docker Alternative
 
