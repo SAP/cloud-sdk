@@ -154,10 +154,6 @@ module.exports = {
               href: 'https://www.npmjs.com/search?q=%40sap-cloud-sdk'
             },
             {
-              label: 'Typescript client libraries for SAP S/4HANA',
-              href: 'https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*'
-            },
-            {
               label: 'SAP Cloud SDK for Java',
               href: 'https://search.maven.org/search?q=g:com.sap.cloud.sdk*'
             }
