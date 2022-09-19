@@ -88,7 +88,7 @@ module.exports = {
           items: [
             {
               label: 'Swizzle Placeholder',
-              href: 'https://www.doesnt-exist.com'
+              href: 'https://www.example.com'
             }
           ],
           docsPluginId: 'docs-js',
@@ -154,10 +154,6 @@ module.exports = {
               href: 'https://www.npmjs.com/search?q=%40sap-cloud-sdk'
             },
             {
-              label: 'Typescript client libraries for SAP S/4HANA',
-              href: 'https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*'
-            },
-            {
               label: 'SAP Cloud SDK for Java',
               href: 'https://search.maven.org/search?q=g:com.sap.cloud.sdk*'
             }
@@ -211,6 +207,7 @@ module.exports = {
       {
         id: 'docs-java',
         path: 'docs-java',
+        editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
         routeBasePath: 'docs/java',
         sidebarPath: require.resolve('./sidebarsDocsJava.js')
       }
@@ -220,6 +217,7 @@ module.exports = {
       {
         id: 'docs-js',
         path: 'docs-js',
+        editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
         routeBasePath: 'docs/js',
         sidebarPath: require.resolve('./sidebarsDocsJs.js'),
         lastVersion: 'current',

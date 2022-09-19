@@ -34,12 +34,7 @@ module.exports = {
           items: [
             'features/openapi/overview',
             'features/openapi/generate-openapi-client',
-            'features/openapi/execute-openapi-request',
-            {
-              type: 'category',
-              label: 'Pregenerated Clients',
-              items: ['features/openapi/pregenerated-clients/workflow']
-            }
+            'features/openapi/execute-openapi-request'
           ]
         },
         'features/error-handling',
@@ -95,11 +90,7 @@ module.exports = {
     {
       type: 'category',
       label: 'Releases',
-      items: [
-        'release-policy',
-        'announcing-version-2',
-        'announcing-version-2-beta'
-      ]
+      items: ['release-policy']
     },
     {
       type: 'category',

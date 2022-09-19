@@ -43,7 +43,7 @@ They provide convenience features such as:
 
 :::note
 
-Be sure to check if the clients for OData or OpenAPI support your use-case.
+Be sure to check if the clients for OData or OpenAPI support your use case.
 For example, the OData client does not support the `upsert` operation.
 
 :::
@@ -56,7 +56,7 @@ The HTTP client is based on the open-source [axios HTTP client](https://axios-ht
 - Connections to [SAP S/4HANA On-premise](../connectivity/on-premise.mdx) via the connectivity service
 - [Web proxies](../connectivity/proxy.mdx)
 
-If the provided HTTP client also does not work for your use-case, we recommend using the [axios client](https://axios-http.com/docs/example) directly.
+If the provided HTTP client also does not work for your use case, we recommend using the [axios client](https://axios-http.com/docs/example) directly.
 
 ## `executeHttpRequest`
 
@@ -79,7 +79,7 @@ In the most simple form, this can be invoked like this:
 ```ts
 const response = await executeHttpRequest(
   {
-    url: 'https://httpbin.org/get'
+    url: 'https://example.com'
   },
   {
     method: 'get'
@@ -112,14 +112,32 @@ The `executeHttpRequest` function returns a promise of <LinkToLatestJsApiDocs sl
 
 [Cross-Site Request Forgery (CSRF)](https://en.wikipedia.org/wiki/Cross-site_request_forgery) is a common type of attack on web applications.
 The HTTP client provided by SAP Cloud SDK allows to automatically retrieve a CSRF token for HTTP APIs which support this.
+
+<!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
+
+:::info
+
 Fetching CSRF token is automatically enabled for all requests that typically might change data, such as `PUT`, `POST`, `DELETE` or `PATCH` requests, and is not available for `GET` requests.
 
-Fetching the CSRF token can be enabled or disabled via the `options` parameter of `executeHttpRequest`:
+:::
+
+Fetching the CSRF token can be enabled or disabled via the `httpRequestOptions.fetchCsrfToken` parameter of `executeHttpRequest`.
+See its <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_http_client.HttpRequestOptions" name="API documentation" /> for details.
+
+For example, to avoid CSRF token fetching when doing a `PUT`, `POST`, `DELETE` or `PATCH` request, disable it like in this example:
 
 ```ts
-{
-  fetchCsrfToken: true,
-}
+const response = await executeHttpRequest(
+  {
+    url: `https://example.com`
+  },
+  {
+    method: 'post'
+  },
+  {
+    fetchCsrfToken: false
+  }
+);
 ```
 
 ### Parameter Encoding
@@ -128,27 +146,15 @@ Fetching the CSRF token can be enabled or disabled via the `options` parameter o
 For example, the space character is replaced with `%20`.
 
 The HTTP client automatically takes care of encoding parameters except for _custom parameters_.
-
-For example, given this `requestConfig` object, the `requestConfig` parameters will be automatically escaped, but the `custom` will not.
 Custom parameters can be useful when you need control exactly how values are transmitted to the backend system.
-
-```ts
-{
-  method: "get",
-  params: {
-    custom: {
-      customParam: "a/b c",
-    },
-    requestConfig: {
-      requestParam: "a/b c",
-    },
-  }
-}
-```
 
 #### Customized Parameter Encoding
 
-If you need to customize parameter encoding, you can provide your own function to take care of it like in this example:
+If you need to customize parameter encoding, you can provide your own function to do the transformation.
+This feature is meant for cases where backends have special requirements for the encoding that don't work with the default URL-encoding done by the HTTP client.
+We recommend to only use this if it is required as it adds additional complexity to your application code.
+
+In this example we do a simple string replace:
 
 ```ts
 const myCustomParameterEncodingFunction: ParameterEncoder = function (
@@ -158,31 +164,29 @@ const myCustomParameterEncodingFunction: ParameterEncoder = function (
 
   for (const k in params) {
     // Customize your required encoding logic here
-    encodedParams[k] = params[k].toString();
+    encodedParams[k] = params[k].toString().replace('x', 'y');
   }
 
   return encodedParams;
 };
 
-const encodingResponse = await executeHttpRequest(
+const response = await executeHttpRequest(
   {
-    url: 'http://localhost:3000/encoding'
+    url: 'https://example.com'
   },
   {
     method: 'get',
     params: {
-      custom: {
-        customParam: 'a/b c'
-      },
-      requestConfig: {
-        requestParam: 'a/b c'
-      }
+      param1: 'a/bx',
+      param2: 'x1'
     },
-    // Pass your custom encoding fuction
+    // Pass your custom encoding function
     parameterEncoder: myCustomParameterEncodingFunction
   }
 );
 ```
+
+The HTTP request in this example will contain the parameter values `a/by` and `y1` because our parameter encoder function replaced the `x` with a `y`.
 
 ## `executeHttpRequestWithOrigin`
 
@@ -208,16 +212,15 @@ Headers and query parameters with the same name are prioritized in the following
 2. Destination related headers/query parameters
 3. `requestConfig`.
 
-In this example, the `custom` `apiKey` and `myParam` override the request config:
+In this example the HTTP request will contain the URL parameter `myParam` with the value `custom-param` and the HTTP header `apiKey` with the value `custom-header`:
 
 ```ts
-executeHttpRequestWithOrigin(
+const response = await executeHttpRequestWithOrigin(
   {
-    url: 'http://localhost:3000/'
+    url: 'https://example.com'
   },
   {
     method: 'get',
-    url: '/origin',
     headers: {
       custom: { apiKey: 'custom-header' },
       requestConfig: { apiKey: 'default-header' }
