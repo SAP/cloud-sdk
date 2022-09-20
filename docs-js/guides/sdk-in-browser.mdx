@@ -24,15 +24,17 @@ For example an [Angular application](https://angular.io/cli/new) via `ng new myP
 ## Include the SAP Cloud SDK
 
 For most examples, we will use the business partner API.
-Add the package `@sap/cloud-sdk-vdm-business-partner-service` to your package.json and introduce some calls via:
+To learn how to generate an API client from the service definition, look at [this article](features/odata/generate-odata-client.mdx).
 
 ```ts
 //In the .html part of the component
 <button (click)="callApi()">Click me!</button>
 
 //In the .ts part of the component
-import { businessPartnerService } from '@sap/cloud-sdk-vdm-business-partner-service';
+import { businessPartnerService } from './generated/business-partner-service';
+
 const { businessPartnerApi } = businessPartnerService();
+
 async function callApi(){
   const result = await businessPartnerApi.requestBuilder().getAll().execute(myDest)
   console.log(result)
