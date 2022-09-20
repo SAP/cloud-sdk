@@ -88,7 +88,7 @@ module.exports = {
           items: [
             {
               label: 'Swizzle Placeholder',
-              href: 'https://www.doesnt-exist.com'
+              href: 'https://www.example.com'
             }
           ],
           docsPluginId: 'docs-js',
@@ -152,10 +152,6 @@ module.exports = {
             {
               label: 'SAP Cloud SDK for JavaScript',
               href: 'https://www.npmjs.com/search?q=%40sap-cloud-sdk'
-            },
-            {
-              label: 'Typescript client libraries for SAP S/4HANA',
-              href: 'https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*'
             },
             {
               label: 'SAP Cloud SDK for Java',
