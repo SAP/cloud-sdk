@@ -62,23 +62,6 @@ To continue using the latest features outlined in the release notes for version 
 ### Compatibility Notes
 
 - The `RequestAccessor` API (along all the related classes - e.g. the `RequestThreadContextListener` and `RequestFacade`) has been deprecated. For a replacement, please refer to the `RequestHeaderAccessor`.
-  - Before:
-
-    ```
-    HttpServletRequest request;
-
-    RequestAccessor.executeWithRequest(request, () -> { ... });
-    ```
-
-  - After:
-    ```
-    HttpServletRequest request;
-    Map<String, Collection<String>> headers = Collections.list(request.getHeaderNames())
-      .stream()
-      .collect(Collectors.toMap(Function.identity(), key -> Collections.list(request.getHeaders(key))));
-
-    RequestHeaderAccessor.executeWithHeaderContainer(headers, () -> { ... });
-    ```
 
 ### New Functionality
 
