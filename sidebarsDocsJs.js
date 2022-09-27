@@ -40,9 +40,7 @@ module.exports = {
         {
           type: 'category',
           label: 'Mail Client',
-          items: [
-            'features/mail-client/mail-client'
-          ]
+          items: ['features/mail-client/mail-client']
         },
         'features/error-handling',
         'features/logging',
