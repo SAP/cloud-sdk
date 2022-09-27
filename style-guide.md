@@ -6,13 +6,7 @@ This style guide covers some general text-formatting conventions that should be 
 
 ### Code Format for Inline Code
 
-Use code font to mark up code, such as
-
-- class names
-- method names
-- HTTP status codes/verbs/content-types
-- env variables
-- console output, etc.
+Use code font to mark up code, such as class names, method names, HTTP status codes/verbs/content-types, env variables, console output, etc.
 
 ✅ instance of the `BusinessPartner` entity class
 
@@ -39,7 +33,7 @@ When placeholders occur in a sentence use code format in italics.
 
 ❌ where `<YOUR-APPLICATION-NAME>` is replaced by the name you specified.
 
-Sometimes, italics can be skipped(URL, inline code sample).
+Sometimes, italics can be skipped (URL, inline code sample).
 
 ✅ as in a JWT issued from the XSUAA, e.g., `https://YOUR_SUBDOMAIN.localhost:8080/uaa/oauth/token`.
 
@@ -148,7 +142,7 @@ Use code format for text that should be entered by user
 
 ❌ We do not guarantee any API compatibility for future updates
 
-## SDK Version
+## Version
 
 Unless a text relates to a specific version, do not use formats x.y or x.y.z
 
@@ -156,7 +150,11 @@ Unless a text relates to a specific version, do not use formats x.y or x.y.z
 
 ❌ This mapping applies to the move to open source version 1.X.Y..
 
-❌ This has been changed in version 2.0.
+Avoid words like "currently" and "new".
+
+✅ In version 2, we allow to specify the origin of the header
+
+❌ In the new version we allow to specify the origin of the header
 
 ## Punctuation
 
