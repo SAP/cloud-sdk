@@ -23,7 +23,11 @@ Use all caps with underscore delimiters.
 
 ❌ Placeholder-Name
 
+<!-- vale off -->
+
 ❌ placeholderName
+
+<!-- vale on -->
 
 ### User-Replaced Placeholders in Inline Text
 
@@ -148,7 +152,11 @@ Unless a text relates to a specific version, do not use formats x.y or x.y.z
 
 ✅ This mapping applies to the move to open source version 1.
 
+<!-- vale off -->
+
 ❌ This mapping applies to the move to open source version 1.X.Y..
+
+<!-- vale on -->
 
 Avoid words like "currently" and "new".
 
