@@ -15,8 +15,8 @@ keywords:
   - TypeScript
 ---
 
-This documentation describes how you can send e-mails from application deployed on the BTP to your e-mail servers.
-When defining e-mail servers by using the `destination` service on the BTP, both `Internet` and `On-Prem` destinations are supported.
+This documentation describes how you can send e-mails from application deployed on the SAP BTP to your e-mail servers.
+When defining e-mail servers by using the `destination` service on the SAP BTP, both `Internet` and `On-Prem` destinations are supported.
 
 ## Installation
 
@@ -30,9 +30,9 @@ npm install @sap-cloud-sdk/mail-client
 
 Let's get started by writing a minimal example.
 
-### Send an e-mail
+### Send an E-mail
 
-First, create a `mailConfig` that contains all the essential information of an e-mail, including the following below, just like how you send e-mails manually by using e.g., Outlook or Gmail:
+First, create a `mailConfig` that contains all the essential information of an e-mail, including the following below:
 
 - the e-mail address of the sender
 - the e-mail addresses of the recipients
@@ -61,7 +61,7 @@ sendMail({ destinationName: 'my-mail-destination' }, [mailConfig]);
 ```
 
 The first parameter is either a [destination](https://sap.github.io/cloud-sdk/api/2.9.0/interfaces/sap_cloud_sdk_connectivity.Destination) object or [DestinationFetchOptions](https://sap.github.io/cloud-sdk/api/2.9.0/interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions).
-For productive environment, you should use the `destination service` on BTP and reference the destination by name just like the example above.
+For productive environment, you should use the `destination service` on the SAP BTP and reference the destination by name just like the example above.
 `{ destinationName: 'my-mail-destination' }` is the minimal object that is typed as `DestinationFetchOptions`.
 For test environment, in addition to using the `DestinationFetchOptions`, you can also pass a complete `destination` object.
 
@@ -73,7 +73,7 @@ As the destination object might contain credentials, using it in production shou
 
 You can read more about the abstraction of the `destination` in the documentation [here](https://sap.github.io/cloud-sdk/docs/js/features/connectivity/destination).
 
-### Send multiple e-mails
+### Send Multiple E-mails
 
 The code snippets below shows how to send 2 e-mails with the `mailConfig` that we created in the previous example.
 The e-mails are sent in parallel by default.
@@ -82,7 +82,7 @@ The e-mails are sent in parallel by default.
 sendMail({ destinationName: 'my-mail-destination' }, [mailConfig, mailConfig]);
 ```
 
-#### Send e-mails in sequential
+#### Send E-mails in Sequential
 
 Sometimes you prefer sending e-mail in sequential instead of in parallel due to e.g., the limit of your e-mail server.
 You can also provide an optional parameter like the example below:
@@ -105,7 +105,7 @@ As the parallelization is the default behaviour, you don't have to set `parallel
 
 The SAP Cloud SDK uses a node package `nodemailer` under the wood.
 The `nodemailer` supports creating a `transport` based on options listed in their [documentation](https://nodemailer.com/smtp/).
-The SDK exposes these options (as `SmtpTransportOptions`) and will transfer them based on user input.
+The SAP Cloud SDK exposes these options (as `SmtpTransportOptions`) and will transfer them based on user input.
 For example, you can provide the `tls` option like below to solve the self signed certificate issue.
 
 ```ts
@@ -116,7 +116,7 @@ sendMail({ destinationName: 'my-mail-destination' }, [mailConfig], {
 });
 ```
 
-The SDK API documentation of the complete `SmtpTransportOptions` can be found in the api doc [here](https://sap.github.io/cloud-sdk/api/2.9.0/interfaces/mailclient_src.SmtpTransportOptions).
+The SAP Cloud SDK API documentation of the complete `SmtpTransportOptions` can be found in the API doc [here](https://sap.github.io/cloud-sdk/api/2.9.0/interfaces/mailclient_src.SmtpTransportOptions).
 
 #### Proxy
 
@@ -139,22 +139,22 @@ We assume the `nodemailer` lib handles it properly.
 
 :::
 
-## `On-Prem` destination
+## On-Premise destination
 
-The SAP Cloud SDK supports using `On-Prem` destination as well.
-From the SDK API perspective, the code looks similar, no matter you use `On-Prem` destinations or `Internet` destinations.
+The SAP Cloud SDK supports using `OnPremise` destination as well.
+From the SAP Cloud SDK API perspective, the code looks similar, no matter you use `OnPremise` destinations or `Internet` destinations.
 The only difference is that you have to reference the name of the On-Prem destination, which is obvious.
 
-### What's the difference
+### What's the Difference
 
-First, for applications deployed on the BTP, you need a `connectivity` service for connecting to an `On-Prem` destination.
-Second, a `Cloud Connector` is used as a proxy for accessing the `On-Prem` system.
+First, for applications deployed on the SAP BTP, you need a `connectivity` service for connecting to an `OnPremise` destination.
+Second, a `Cloud Connector` is used as a proxy for accessing the `On-Premise system.
 Therefore, you have to make sure the configuration set up is working.
-Here you can find some [documentation](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/8d1f989deca1455dabc3d81b433fbdaf.html) from the BTP.
+Here you can find some [documentation](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/8d1f989deca1455dabc3d81b433fbdaf.html) from the SAP BTP.
 
-### SDK scope
+### SDK Scope
 
-As mentioned in this [documentation](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/cd1583775afa43f0bb9ec69d9dbcc880.html?locale=en-US) of the BTP, using `SOCKS5` proxy for accessing `On-Prem` systems from applications on BTP needs `SOCKS5` authentication flow.
+As mentioned in this [documentation](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/cd1583775afa43f0bb9ec69d9dbcc880.html?locale=en-US) of the SAP BTP, using `SOCKS5` proxy for accessing `On-Prem` systems from applications on SAP BTP needs `SOCKS5` authentication flow.
 The SDK handles the `SOCKS5` implementation for the user when detecting an `On-Prem` mail destination.
 The `On-Prem` connectivity is end-to-end tested, but is sometimes flaky due to most likely the target `On-Prem` system.
 
