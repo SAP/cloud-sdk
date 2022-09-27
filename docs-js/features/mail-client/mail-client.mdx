@@ -82,7 +82,7 @@ The e-mails are sent in parallel by default.
 sendMail({ destinationName: 'my-mail-destination' }, [mailConfig, mailConfig]);
 ```
 
-#### Send E-mails in Sequential
+#### Send E-mails In Sequential
 
 Sometimes you prefer sending e-mail in sequential instead of in parallel due to e.g., the limit of your e-mail server.
 You can also provide an optional parameter like the example below:
@@ -143,7 +143,7 @@ We assume the `nodemailer` lib handles it properly.
 
 The SAP Cloud SDK supports using `OnPremise` destination as well.
 From the SAP Cloud SDK API perspective, the code looks similar, no matter you use `OnPremise` destinations or `Internet` destinations.
-The only difference is that you have to reference the name of the On-Prem destination, which is obvious.
+The only difference is that you have to reference the name of the On-Premise destination, which is obvious.
 
 ### What's the Difference
 
@@ -152,10 +152,10 @@ Second, a `Cloud Connector` is used as a proxy for accessing the `On-Premise sys
 Therefore, you have to make sure the configuration set up is working.
 Here you can find some [documentation](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/8d1f989deca1455dabc3d81b433fbdaf.html) from the SAP BTP.
 
-### `SOCKS5` implementation
+### `SOCKS5` Proxy Implementation
 
 As mentioned in this [documentation](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/cd1583775afa43f0bb9ec69d9dbcc880.html?locale=en-US) of the SAP BTP, using `SOCKS5` proxy for accessing On-Premise systems from applications on SAP BTP needs `SOCKS5` authentication flow.
-The SAP Cloud SDK handles the `SOCKS5` implementation for the user when detecting an `OnPremise` mail destination.
+The SAP Cloud SDK handles the `SOCKS5` proxy implementation for the user when detecting an `OnPremise` mail destination.
 The On-Premise connectivity is end-to-end tested, but is sometimes flaky due to most likely the target On-Premise system.
 
 :::tip
