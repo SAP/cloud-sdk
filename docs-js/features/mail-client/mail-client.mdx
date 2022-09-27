@@ -30,7 +30,7 @@ npm install @sap-cloud-sdk/mail-client
 
 Let's get started by writing a minimal example.
 
-### Send an E-mail
+### Send an E-Mail
 
 First, create a `mailConfig` that contains all the essential information of an e-mail, including the following below:
 
@@ -73,7 +73,7 @@ As the destination object might contain credentials, using it in production shou
 
 You can read more about the abstraction of the `destination` in the documentation [here](https://sap.github.io/cloud-sdk/docs/js/features/connectivity/destination).
 
-### Send Multiple E-mails
+### Send Multiple E-Mails
 
 The code snippets below shows how to send 2 e-mails with the `mailConfig` that we created in the previous example.
 The e-mails are sent in parallel by default.
@@ -139,7 +139,7 @@ We assume the `nodemailer` lib handles it properly.
 
 :::
 
-## On-Premise destination
+## On-Premise Destination
 
 The SAP Cloud SDK supports using `OnPremise` destination as well.
 From the SAP Cloud SDK API perspective, the code looks similar, no matter you use `OnPremise` destinations or `Internet` destinations.
@@ -152,15 +152,15 @@ Second, a `Cloud Connector` is used as a proxy for accessing the `On-Premise sys
 Therefore, you have to make sure the configuration set up is working.
 Here you can find some [documentation](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/8d1f989deca1455dabc3d81b433fbdaf.html) from the SAP BTP.
 
-### SDK Scope
+### `SOCKS5` implementation
 
-As mentioned in this [documentation](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/cd1583775afa43f0bb9ec69d9dbcc880.html?locale=en-US) of the SAP BTP, using `SOCKS5` proxy for accessing `On-Prem` systems from applications on SAP BTP needs `SOCKS5` authentication flow.
-The SDK handles the `SOCKS5` implementation for the user when detecting an `On-Prem` mail destination.
-The `On-Prem` connectivity is end-to-end tested, but is sometimes flaky due to most likely the target `On-Prem` system.
+As mentioned in this [documentation](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/cd1583775afa43f0bb9ec69d9dbcc880.html?locale=en-US) of the SAP BTP, using `SOCKS5` proxy for accessing On-Premise systems from applications on SAP BTP needs `SOCKS5` authentication flow.
+The SAP Cloud SDK handles the `SOCKS5` implementation for the user when detecting an `OnPremise` mail destination.
+The On-Premise connectivity is end-to-end tested, but is sometimes flaky due to most likely the target On-Premise system.
 
 :::tip
 
-For some `On-Prem` e-mail server, including our test server, the parallelization of sending email might be a challenge.
+For some On-Premise e-mail server, including our test server, the parallelization of sending email might be a challenge.
 You can disable the parallelization by passing `parallel: false` as mentioned before.
 
 :::
