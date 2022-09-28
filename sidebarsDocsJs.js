@@ -62,6 +62,7 @@ module.exports = {
       type: 'category',
       label: 'Tutorials',
       items: [
+        'tutorials/multi-tenant-application',
         {
           type: 'category',
           label: 'Getting Started',
