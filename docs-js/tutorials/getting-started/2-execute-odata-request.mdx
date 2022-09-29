@@ -41,7 +41,7 @@ This will create a folder `business-partners` in the `src/` directory containing
 import { Controller } from '@nestjs/common';
 
 @Controller('business-partners')
-export class BusinessPartnersController {}
+export class BusinessPartnerController {}
 ```
 
 The `@Controller(business-partners)` decorator marks the class `BusinessPartnerController` as a controller (i.e. a thing that handles requests).
@@ -52,7 +52,7 @@ This will tell Nest to create a handler for this endpoint for HTTP requests.
 import { Controller, Get } from '@nestjs/common';
 
 @Controller('business-partners')
-export class BusinessPartnersController {
+export class BusinessPartnerController {
   @Get()
   getBusinessPartners() {
     return 'We will implement this in a minute.';
@@ -70,11 +70,11 @@ The generate command updates the `app.module.ts` automatically and looks like th
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { BusinessPartnersController } from './business-partners/business-partners.controller';
+import { BusinessPartnerController } from './business-partners/business-partners.controller';
 
 @Module({
   imports: [],
-  controllers: [AppController, BusinessPartnersController],
+  controllers: [AppController, BusinessPartnerController],
   providers: [AppService]
 })
 export class AppModule {}
@@ -154,7 +154,7 @@ The service is also registered in the `provider` array within the `@Module()` de
 ```ts
 @Module({
   imports: [],
-  controllers: [AppController, BusinessPartnersController],
+  controllers: [AppController, BusinessPartnerController],
   providers: [AppService, BusinessPartnerService],
 })
 ```
@@ -226,7 +226,7 @@ async getAllBusinessPartners(): Promise<BusinessPartner[]> {
 
 As network requests are asynchronous by nature, the return value of this function is a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) to a list of business partners `(Promise<BusinessPartner[]>)`.
 
-Now that we have a service class to retrieve business partners, let's use it in the `BusinessPartnersController`.
+Now that we have a service class to retrieve business partners, let's use it in the `BusinessPartnerController`.
 The `BusinessPartnerService` is injected through the class constructor:
 
 ```ts
@@ -235,7 +235,7 @@ import { BusinessPartner } from '../../services/business-partner-service';
 import { BusinessPartnerService } from './business-partners.service';
 
 @Controller('business-partners')
-export class BusinessPartnersController {
+export class BusinessPartnerController {
   constructor(private businessPartnerService: BusinessPartnerService) {}
 
   @Get()
@@ -305,7 +305,7 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [ConfigModule.forRoot()],
-  controllers: [AppController, BusinessPartnersController],
+  controllers: [AppController, BusinessPartnerController],
   providers: [AppService, BusinessPartnerService],
 })
 ```
@@ -341,7 +341,7 @@ import { BusinessPartner } from '../../services/business-partner-service';
 import { BusinessPartnerService } from './business-partners.service';
 
 @Controller('business-partners')
-export class BusinessPartnersController {
+export class BusinessPartnerController {
   constructor(private businessPartnerService: BusinessPartnerService) {}
 
   @Get()
@@ -386,12 +386,12 @@ export class BusinessPartnerService {
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { BusinessPartnersController } from './business-partners/business-partners.controller';
+import { BusinessPartnerController } from './business-partners/business-partners.controller';
 import { BusinessPartnerService } from './business-partners/business-partners.service';
 
 @Module({
   imports: [],
-  controllers: [AppController, BusinessPartnersController],
+  controllers: [AppController, BusinessPartnerController],
   providers: [AppService, BusinessPartnerService]
 })
 export class AppModule {}
