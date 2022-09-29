@@ -146,7 +146,7 @@ This creates a basic class inside `src/business-partners` folder.
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class BusinessPartnersService {}
+export class BusinessPartnerService {}
 ```
 
 The service is also registered in the `provider` array within the `@Module()` decorator in `app.module.ts`.
@@ -155,7 +155,7 @@ The service is also registered in the `provider` array within the `@Module()` de
 @Module({
   imports: [],
   controllers: [AppController, BusinessPartnersController],
-  providers: [AppService, BusinessPartnersService],
+  providers: [AppService, BusinessPartnerService],
 })
 ```
 
@@ -227,16 +227,16 @@ async getAllBusinessPartners(): Promise<BusinessPartner[]> {
 As network requests are asynchronous by nature, the return value of this function is a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) to a list of business partners `(Promise<BusinessPartner[]>)`.
 
 Now that we have a service class to retrieve business partners, let's use it in the `BusinessPartnersController`.
-The `BusinessPartnersService` is injected through the class constructor:
+The `BusinessPartnerService` is injected through the class constructor:
 
 ```ts
 import { Controller, Get, HttpException } from '@nestjs/common';
 import { BusinessPartner } from '../../services/business-partner-service';
-import { BusinessPartnersService } from './business-partners.service';
+import { BusinessPartnerService } from './business-partners.service';
 
 @Controller('business-partners')
 export class BusinessPartnersController {
-  constructor(private businessPartnerService: BusinessPartnersService) {}
+  constructor(private businessPartnerService: BusinessPartnerService) {}
 
   @Get()
   async getBusinessPartners(): Promise<BusinessPartner[]> {
@@ -306,7 +306,7 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [ConfigModule.forRoot()],
   controllers: [AppController, BusinessPartnersController],
-  providers: [AppService, BusinessPartnersService],
+  providers: [AppService, BusinessPartnerService],
 })
 ```
 
@@ -338,11 +338,11 @@ Here are the code files discussed on this page, if you are using the mock server
 ```ts
 import { Controller, Get, HttpException } from '@nestjs/common';
 import { BusinessPartner } from '../../services/business-partner-service';
-import { BusinessPartnersService } from './business-partners.service';
+import { BusinessPartnerService } from './business-partners.service';
 
 @Controller('business-partners')
 export class BusinessPartnersController {
-  constructor(private businessPartnerService: BusinessPartnersService) {}
+  constructor(private businessPartnerService: BusinessPartnerService) {}
 
   @Get()
   async getBusinessPartners(): Promise<BusinessPartner[]> {
@@ -369,7 +369,7 @@ import {
 } from '../../services/business-partner-service';
 
 @Injectable()
-export class BusinessPartnersService {
+export class BusinessPartnerService {
   async getAllBusinessPartners(): Promise<BusinessPartner[]> {
     const { businessPartnerApi } = businessPartnerService();
     return await businessPartnerApi.requestBuilder().getAll().execute({
@@ -387,12 +387,12 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BusinessPartnersController } from './business-partners/business-partners.controller';
-import { BusinessPartnersService } from './business-partners/business-partners.service';
+import { BusinessPartnerService } from './business-partners/business-partners.service';
 
 @Module({
   imports: [],
   controllers: [AppController, BusinessPartnersController],
-  providers: [AppService, BusinessPartnersService]
+  providers: [AppService, BusinessPartnerService]
 })
 export class AppModule {}
 ```
