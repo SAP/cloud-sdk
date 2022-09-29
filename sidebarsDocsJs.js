@@ -98,6 +98,7 @@ module.exports = {
       items: ['video/demo-of-cloud-sdk-for-javascript-with-calm-and-cap']
     },
     'release-notes-sap-cloud-sdk-for-javascript-and-typescript',
-    'frequently-asked-questions'
+    'frequently-asked-questions',
+    'trouble-shooting'
   ]
 };
