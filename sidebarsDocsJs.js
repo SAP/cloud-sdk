@@ -37,11 +37,6 @@ module.exports = {
             'features/openapi/execute-openapi-request'
           ]
         },
-        {
-          type: 'category',
-          label: 'Mail Client',
-          items: ['features/mail-client/mail-client']
-        },
         'features/error-handling',
         'features/logging',
         'features/eslint-configuration'
