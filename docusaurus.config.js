@@ -20,8 +20,8 @@ module.exports = {
     'The one-stop shop for developing and extending SAP applications in the cloud.',
   url: 'https://sap.github.io',
   baseUrl: '/cloud-sdk/',
-  onBrokenLinks: 'warn',
-  onBrokenMarkdownLinks: 'warn',
+  onBrokenLinks: 'throw',
+  onBrokenMarkdownLinks: 'throw',
   favicon: 'img/favicon.ico',
   organizationName: 'SAP',
   projectName: 'cloud-sdk',
@@ -61,7 +61,7 @@ module.exports = {
       items: [
         {
           label: 'Overview',
-          type: 'doc', 
+          type: 'doc',
           docId: 'overview-cloud-sdk',
           position: 'left'
         },
@@ -81,6 +81,24 @@ module.exports = {
           activeBasePath: 'docs/js',
           sdkSwitch: true
         },
+        {
+          type: 'dropdown',
+          label: 'API Reference',
+          position: 'right',
+          items: [
+            {
+              label: 'Swizzle Placeholder',
+              href: 'https://www.example.com'
+            }
+          ],
+          docsPluginId: 'docs-js',
+          apiReference: true
+        },
+        {
+          type: 'docsVersionDropdown',
+          position: 'right',
+          docsPluginId: 'docs-js'
+        }
       ]
     },
     footer: {
@@ -136,10 +154,6 @@ module.exports = {
               href: 'https://www.npmjs.com/search?q=%40sap-cloud-sdk'
             },
             {
-              label: 'Typescript client libraries for SAP S/4HANA',
-              href: 'https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*'
-            },
-            {
               label: 'SAP Cloud SDK for Java',
               href: 'https://search.maven.org/search?q=g:com.sap.cloud.sdk*'
             }
@@ -154,18 +168,29 @@ module.exports = {
       '@docusaurus/preset-classic',
       {
         docs: {
-          remarkPlugins: [require('mdx-mermaid')],
           sidebarPath: require.resolve('./sidebarsDocsCommon.js'),
           editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
           routeBasePath: 'docs/overview',
           path: 'docs'
         },
         theme: {
-          customCss: require.resolve('./src/css/custom.css')
+          customCss: [require.resolve('./src/css/custom.css')]
         },
         sitemap: {
           changefreq: 'weekly',
-          priority: 0.5
+          priority: 0.5,
+          ignorePatterns: [
+            '/cloud-sdk/api/**',
+            '/cloud-sdk/components/**',
+            '/cloud-sdk/docs/js/v1/features/common/**',
+            '/cloud-sdk/docs/js/v1/features/odata/common/**',
+            '/cloud-sdk/docs/js/v1/features/odata/v2/**',
+            '/cloud-sdk/docs/js/v1/features/odata/v4/**',
+            '/cloud-sdk/docs/js/features/common/**',
+            '/cloud-sdk/docs/js/features/odata/common/**',
+            '/cloud-sdk/docs/js/features/odata/v2/**',
+            '/cloud-sdk/docs/js/features/odata/v4/**'
+          ]
         }
       }
     ]
@@ -182,8 +207,9 @@ module.exports = {
       {
         id: 'docs-java',
         path: 'docs-java',
+        editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
         routeBasePath: 'docs/java',
-        sidebarPath: require.resolve('./sidebarsDocsJava.js'),
+        sidebarPath: require.resolve('./sidebarsDocsJava.js')
       }
     ],
     [
@@ -191,18 +217,35 @@ module.exports = {
       {
         id: 'docs-js',
         path: 'docs-js',
+        editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
         routeBasePath: 'docs/js',
         sidebarPath: require.resolve('./sidebarsDocsJs.js'),
+        lastVersion: 'current',
+        versions: {
+          current: {
+            label: 'v2',
+            badge: false
+          },
+          v1: {
+            label: 'v1',
+            path: 'v1',
+            banner: 'unmaintained',
+            badge: false
+          }
+        }
       }
     ],
     [
       '@docusaurus/plugin-client-redirects',
       {
         createRedirects(existingPath) {
-          if (existingPath.includes('/community') || existingPath.includes('/related-projects')) {
+          if (
+            existingPath.includes('/community') ||
+            existingPath.includes('/related-projects')
+          ) {
             return existingPath.replace('/docs/overview', '/docs');
           }
-        },
+        }
       }
     ],
     function nodeWebpackPolyfillPlugin(context, options) {

@@ -56,7 +56,7 @@ It is used to set and get a value from the cache.
 :::caution
 If your cached method relies on authentication/authorization like an HTTP call, be sure your cache preserves user isolation.
 This means that the cache key must include the user making the request.
-Also, ensure that it is not possible to manipulate the cache key generation to retrieve results related to other users.
+Also, ensure that it is impossible to manipulate the cache key generation to retrieve results related to other users.
 The same rules apply if you create a multi-tenant application with respect to tenant isolation.
 :::
 
@@ -105,8 +105,10 @@ You should consider some rules for implementing retries:
 - The error should be the exception, not the default.
 - The error should happen randomly so a second call has a high likelihood of giving something.
 - The source of the error is out of your domain to fix.
-- Consistent errors should not trigger a retry. For example, an HTTP request failing with 401 should not trigger a retry because the user is simply unauthorized.
-- The number of retries should be limited to a low digit number. There should be some appropriate waiting time between retries.
+- Consistent errors should not trigger a retry.
+  For example, an HTTP request failing with 401 should not trigger a retry because the user is unauthorized.
+- The number of retries should be limited to a low digit number.
+  There should be some appropriate waiting time between retries.
 
 Typical options for a retry library are:
 

@@ -1,0 +1,428 @@
+---
+id: release-notes-sap-cloud-sdk-for-javascript-and-typescript
+title: Release Notes
+sidebar_label: Release Notes
+description: Release notes of the SAP Cloud SDK for JavaScript and TypeScript, stay up to date with the recent features, fixes, dependency updates, and recommendations.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud-native
+  - cloud sdk
+  - sap cloud sdk
+---
+
+import BuildBadge from '@site/src/sap/sdk-js/BuildBadge';
+import LicenseBadge from '@site/src/sap/sdk-js/LicenseBadge';
+
+<BuildBadge /> <LicenseBadge />
+
+## Should I Update?
+
+We highly recommend updating to the latest SAP Cloud SDK version regularly.
+
+It will help you:
+
+- Ensure access to the latest SAP Cloud SDK features
+- Keep up with the latest changes on SAP Business Technology Platform
+- Update client libraries giving access to the latest SAP services on SAP Business Technology Platform and SAP S/4HANA.
+- Protect yourself from bugs and breaking changes in the future
+
+:::tip What are pregenerated typed client libraries (VDM)?
+
+These libraries are free (but not open-source) and distributed under the SAP Developer license through [npmjs.com](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*).
+You can generate a typed client library yourself by using our [OData generator](features/odata/generate-odata-client.mdx) and [Open API](features/openapi/generate-openapi-client.mdx).
+To easily search for services and get typed client library for them, use our [API Business Hub integration](https://blogs.sap.com/2021/09/17/the-sap-cloud-sdk-integrates-with-the-sap-api-business-hub/).
+
+:::
+
+<!-- Copy and fill
+## 1.xx.x [Core Modules] - Jan 1, 2022
+
+[GitHub](https://github.com/SAP/cloud-sdk-js/releases/tag/v1.52.0) | [npm](https://www.npmjs.com/search?q=%40sap-cloud-sdk)
+
+### Known Issues
+
+### Compatibility Notes
+
+### New Functionality
+
+### Improvements
+
+### Fixed Issues
+-->
+<!-- vale off -->
+<!-- This line is used for our release notes automation -->
+
+# 2.6.0 [Core Modules] - July 15, 2022
+
+## Compatibility Notes
+
+- [odata-v4, temporal-de-serializers] Adjust parsing of `Edm.Date`, `Edm.DateTimeOffset`, `Edm.Time`, and `Edm.Duration` to be closer to the OData v4 specification.
+  There may be loss of precision if using the default (de-)serializers with high-precision fractional seconds. (de851289)
+- [generator] Deprecate generator option `versionInPackageJson`. If you need to set the version, use the new `include` option to add your own `package.json` file instead. (069aa168)
+- [generator] The hidden generator option `additionalFiles` is renamed to `include`. (069aa168)
+- [connectivity] Rename `transformationFn` into `serviceBindingTransformFn` in `DestinationForServiceBindingsOptions` to avoid ambiguity and make the function async. (8fdfebd6)
+
+## New Functionalities
+
+- [connectivity] Support JWTs without a `JKU` property. (cb598c16)
+- [connectivity] Add interface `DestinationCacheInterface` and method `setDestinationCache` to support implementation of custom destination cache. (09094607)
+- [connectivity] Fetch client credential token for destinations created by service bindings. (93d41281)
+- [generator] New generator option `include` which allows to add files to generated packages. (069aa168)
+
+## Improvements
+
+- [http-client] Make `requestConfig` of `OriginOptions` optional. (e46bb51d)
+
+## Fixed Issues
+
+- [connectivity] Fix `getDestination()` to allow passing an async transform function `serviceBindingTransformFn` in `options`. The transform function can also be passed by `execute()`, `executeHttpRequest()`, `executeRaw()`, etc.
+- [http-client] Fix the `executeHttpRequest`/`executeHttpRequestWithOrigin` function, so the warning is only shown when overwriting headers by using custom headers. (e44c214a)
+- [odata-common, odata-v4, temporal-de-serializers] Fix parsing of `Edm.DateTimeOffset` with high-precision fractional seconds and edge-cases like 5-digit years. (de851289)
+- [odata-common, generator] Allow OData service to contain an entity name 'entity'. (0675ee3b)
+- [odata-v2] Support negative epoch timestamps in serialization. (9ffe0824)
+
+## 2.1.0 [Client Libraries] - Jul 5, 2022
+
+### New Functionality
+
+- **We released a regular update for pregenerated client libraries (also known as VDM) for the [latest SAP S/4HANA OnPremise release 2021 FPS2](https://blogs.sap.com/2022/06/09/sap-s-4hana-2021-feature-pack-stack-2-fps02/).**
+  - The update covers all the changes to existing OData services, but does not introduce new ones.
+
+### Compatibility Notes
+
+- Reduce the exposed API to avoid confusion. Some internal APIs were exposed in previous versions. Those should not be used and would lead to erroneous behavior.
+
+# 2.5.0 [Core Modules] - June 13, 2022
+
+## Compatibility Notes
+
+- [odata-common, generator] Change `Edm.String`, `Edm.Boolean` and `Edm.Guid` to be orderable to support `lt`/`lessThan()`, `le`/`lessOrEqual()`, `gt`/`greaterThan()`, and `ge`/`greaterOrEqual` operators. Re-generate odata services to adopt the changes. (c3166ff6)
+- [util] Stop using `VCAP_SERVICES` to determine the log format. Use `setLogFormat` and `setGlobalLogFormat` to specify the log format. By default, the log format is set to `kibana` for `NODE_ENV=production` and `local` otherwise. (89f1c423)
+
+## Fixed Issues
+
+- [http-client] Fix the `executeHttpRequest` function, so it accepts the same parameters as in version 1.
+  [Compatibility Note] Deprecate one overload of the `executeHttpRequest` function, that accepts `HttpRequestConfigWithOrigin` as a parameter. Use the new function `executeHttpRequestWithOrigin` as replacement.
+  [New Functionality] Support defining header options and query parameter options with origins. (9481ec69)
+
+# 2.4.0 [Core Modules] - May 20, 2022
+
+## Compatibility Notes
+
+- [connectivity] Mark the function `noDestinationErrorMessage` as internal API.
+- [odata-v4] Mark the function `uriConverter` as internal API.
+- [eslint-config] Switch the following `jsdoc` related levels from `warn` to `error`:
+  - `jsdoc/check-param-names`
+  - `jsdoc/require-description-complete-sentence`
+  - `jsdoc/require-jsdoc`
+  - `jsdoc/require-param`
+  - `jsdoc/require-returns`
+- [connectivity, http-client] Only log the successful retrieval of destinations on the `info` log level, log everything else as `debug` or `warn`.
+
+## New Functionality
+
+- [connectivity] Support self-signed certificate using the `trustStore` property of the destination object.
+
+## Improvements
+
+- [connectivity, http-client] Reduce default log output on the `info` level significantly.
+
+## Fixed Issues
+
+- [util] Fix a bug in the implementation of the trim method.
+
+## 2.3.0 [Core Modules] - Apr 22, 2022
+
+## Compatibility Notes
+
+- [odata-common, odata-v2, odata-v4] Remove all `$format=json` query parameters since header `Accept: application/json` is sent by default.
+
+## New Functionality
+
+- [odata-common] Generate mandatory `Content-Id` headers for changeset parts in batch request payloads (see [OData Spec](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_MultipartBatchRequestBody)).
+- [odata-common] Support transforming response data for function and action imports before deserialization. [#682](https://github.com/SAP/cloud-sdk-js/issues/682).
+
+## Improvements
+
+- [generator] Change log level from `warn` to `error` if service path cannot be determined from the service specification (`VALUE_IS_UNDEFINED`).
+- [generator] Reduce memory usage of `schema` in API classes (e.g., `BusinessPartnerAPI`).
+
+## Fixed Issues
+
+- [openapi-generator, openapi] Support path parameters that are not separated by '/', e.g., `/path/{param}:{param}`.
+
+## 2.2.0 [Core Modules] - Apr 6, 2022
+
+### Compatibility Notes
+
+- [eslint-config] Replace `valid-jsdoc` with `eslint-plugin-jsdoc` plugin for checking JSDoc comments, since the `valid-jsdoc` rule is deprecated in ESLint.
+  To stop your project from using a specific rule, turn it off by setting the rule ID to `off` under the `rules` key inside your configuration file.
+- [generator] Stop exporting service classes (e.g., `BusinessPartnerService`) from generated clients, use `businessPartnerService()` instead.
+- [generator] Stop exporting API classes (e.g., `BusinessPartnerAPI`) from generated clients, use `businessPartnerService().businessPartnerApi` instead.
+
+### New Functionality
+
+- [http-client] Introduce the `parameterEncoder` option to the request configuration of the `http-client` to allow custom parameter encoding.
+- [http-client] Remove `method` from `defaultDisallowedKeys` to not filter out custom http method when using `filterCustomRequestConfig`.
+- [odata-common] Support adding custom http method in `addCustomRequestConfiguration` to overwrite the default http method.
+- [openapi] Support adding custom http method in `addCustomRequestConfiguration` to overwrite the default http method.
+
+### Improvements
+
+- [generator] Remove unused imports (e.g, `moment`, `bignumber.js` and `EdmTypeField`) in API classes (e.g., `BusinessPartnerAPI`) to reduce memory usage.
+- [http-client] Introduce consistent query parameter encoding for all non custom parameters.
+
+## 2.1.0 [Core Modules] - Feb 18, 2022
+
+### Improvements
+
+- [connectivity] Add details to error message for missing "URL" properties in destinations.
+- [util] Add `sanitizeRecord` function to `cloud-sdk-logger` which replaces potentially sensitive information in a `Record<string, any>` based on a list of sensitive keys.
+- [generator] The new CLI option `licenceInPackageJson` offers the possibility to specify the license property in a generated `package.json`.
+
+### Fixed Issues
+
+- [openapi-generator] Add `@sap-cloud-sdk/openapi` as a dependency to the OpenAPI generator to fix errors during generation with `--transpile` enabled.
+- [connectivity] Fix an issue when using registering destinations with a JWT but without XSUAA service binding.
+- [connectivity] Fix a missing export `DestinationSelectionStrategies`.
+- [odata-common] Fix URL encoding for `getByKey`
+
+## 1.54.1 [Core Modules] - Feb 18, 2022
+
+### Improvements
+
+- [core] Announce 2.0 release in the `postinstall` script.
+
+## 2.0.0 [Client Libraries] - Feb 10, 2022
+
+### New Functionality
+
+- **We released a regular update for pregenerated client libraries (also known as VDM) for the [latest SAP S/4HANA Cloud release 2022](https://blogs.sap.com/2022/01/26/highlights-of-the-sap-s-4hana-cloud-2202-release/).**
+  - The update covers all the changes to existing OData services and introduces new ones.
+- **We released a regular update for pregenerated client libraries (also known as VDM) for the latest RTC release 2021 FPS1 of SAP S/4HANA On-premise.**
+  - The update covers all the changes to existing OData services and introduces new ones.
+
+## 2.0.0 [Core Modules] - Feb 03, 2022
+
+We released version 2 :partying_face:
+Be mindful of breaking changes when upgrading.
+Enjoy multiple improvements and new features.
+Check the [upgrade guide](https://sap.github.io/cloud-sdk/docs/js/guides/upgrade-to-version-2).
+
+### Compatibility Notes
+
+- Upgrade the ES version to `es2019`.
+
+### New Functionality
+
+- [connectivity] Create a new package with minimal API.
+- [connectivity] Add `registerDestination` function to create destinations in the `destinations` environment variable.
+- [connectivity] Support the `SamlAssertion` flow in destination retrieval.
+- [http-client] Create a new package with minimal API.
+
+### Removed functionality
+
+- [generator] Remove the option: `aggregatorDirectoryName` and `aggregatorNpmPackageName`
+- [generator] Remove the option: `generateTypedocJson`
+- [generator] Remove `packageJson` function from aggregator-package
+- [core] Remove some functions
+- [analytics] Remove the `@sap-cloud-sdk/analytics` package
+
+### New module structure
+
+- [core] We have split the `core` package into smaller packages, so functions are moved to the target package.
+
+### Changed signatures
+
+- [core] `EdmTypeField` only support EDM types, no field types in generics
+
+### Changed implementation
+
+- [generator] changed the following implementations
+  - `ServiceNameFormatter` deprecated constructor removed, reserverdName parameter from typeNameToFactoryName method removed
+  - `VdmNavigationpropety` multiplicity, isMultiLink removed
+  - `VdmFunctionImportReturnType` isMulti removed
+- [openapi] changed the following implementations
+  - `execute` Request Builder APIs changed to use a single parameter, either a Destination or DestinationFetchOptions.
+  - `executeRaw` Request Builder APIs changed to use a single parameter, either a Destination or DestinationFetchOptions.
+- [odata-common] changed the following implementations
+  - `ComplexTypeField` deprecated constructors removed
+  - `Constructable` Selectable removed
+  - `CreateRequestBuilderBase` prepare removed
+  - `EntityBase` getCurrentMapKey, initializeCustomFields removed
+  - `EnumField` edmType removed
+  - `Filter` \_fieldName property removed
+  - `FilterFunction` toString, transformParameter removed
+  - `Link` clone, selects removed
+  - `MethodRequestBuilder` withCustomHeaders, withCustomQueryParameters, withCustomServicePath removed, build protected
+  - `ODataRequestConfig` contentType, deprecated constructor removed
+  - `ODataBatchRequestConfig` batchId, content_type_prefix removed
+  - `OneToOneLink` clone removed
+  - `UpdateRequestBuilderBase` prepare, requiredFields, ignoredFields, withCustomVersionIdentifier removed
+  - `execute` Request Builder APIs changed to use a single parameter, either a Destination or DestinationFetchOptions..
+  - `executeRaw` Request Builder APIs changed to use a single parameter, either a Destination or DestinationFetchOptions.
+- [odata-v2] changed the following implementations
+  - `execute` Request Builder APIs changed to use a single parameter, either a Destination or DestinationFetchOptions.
+  - `executeRaw` Request Builder APIs changed to use a single parameter, either a Destination or DestinationFetchOptions.
+- [odata-v4] changed the following implementations
+  - `execute` Request Builder APIs changed to use a single parameter, either a Destination or DestinationFetchOptions.
+  - `executeRaw` Request Builder APIs changed to use a single parameter, either a Destination or DestinationFetchOptions.
+- [connectivity] changed the following implementations
+  - `getDestination` changed to use DestinationFetchOptions as single parameter.
+  - `getProxyRelatedAuthHeaders` legacyNoAuthOnPremiseProxy case removed
+  - `serviceToken` uses `JWT` instead of userJwt now.
+  - `jwtBearerToken` uses `JWT` instead of userJwt now.
+  - `fetchVerificationKeys` merged with `executeFetchVerificationKeys`, now only accepts URL as parameter
+- [http-client] changed the following implementations
+  - `executeHttpRequest` fetches CsrfToken for non-GET requests by default.
+
+## 1.54.0 [Core Modules] - Feb 02, 2022
+
+### New Functionality
+
+- [core] A new proxy type `PrivateLink` is now supported. This proxy type is used when your destination represents a tunnel created via [Private Link Service](https://help.sap.com/products/PRIVATE_LINK/42acd88cb4134ba2a7d3e0e62c9fe6cf/6c7c8a9282e344979295efb882637cd4.html?locale=en-US).
+
+## 1.53.1 [Core Modules] - Jan 18, 2022
+
+[GitHub](https://github.com/SAP/cloud-sdk-js/releases/tag/v1.53.1) | [npm](https://www.npmjs.com/search?q=%40sap-cloud-sdk)
+
+### Improvements
+
+- We updated the version of `@sap/edm-converters` to ensure Node 14 compatibility for the OData code generator.
+
+### Fixed Issues
+
+- We fixed the missing token in the header issue for `OAuth2Password` authentication type.
+
+## [CLI] - Jan 5, 2022
+
+[GitHub](https://github.com/SAP-archive/cloud-sdk-cli) | [npm](https://www.npmjs.com/package/@sap-cloud-sdk/cli)
+
+- Archive the GitHub repository.
+- Deprecate the npm package.
+
+## [Sample Projects] - Jan 5, 2022
+
+[GitHub](https://github.com/SAP-samples/cloud-sdk-js)
+
+- Publish the GitHub repository, showcasing the SAP Cloud SDK for JavaScript.
+
+## 1.53.0 [Core Modules] - December 9, 2021
+
+[GitHub](https://github.com/SAP/cloud-sdk-js/releases/tag/v1.53.0) | [npm](https://www.npmjs.com/search?q=%40sap-cloud-sdk)
+
+### Fixed Issues
+
+- Fix destination retrieval in multi-tenant use cases and user based authorization flows like `OAuth2UserTokenExchange`, `OAuth2SAMLBearerAssertion` or `OAuth2JWTBearer`.
+  If the destination is maintained in the provider account and a subscriber JWT is provided the `X-user-token` is set with the subscriber JWT.
+  This is crucial to determine the tenant, if the `tokenServiceUrlType` of the destination is [common](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e3c333f9de6245fca326993f2397c13a.html).
+- Fix missing X-tenant header, if the authentication flow is `OAuth2ClientCredentials` and the `tokenServiceUrlType` of the destination is [common](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/4e1d742a3d45472d83b411e141729795.html).
+
+## 1.28.2 [Client Libraries] - November 17, 2021
+
+### Compatibility Notes
+
+- We stopped generating API documentation for typed client libraries.
+  You can discover all required API information via your IDE features like autocomplete and IntelliSense.
+
+### New Functionality
+
+- **We released a regular update for pregenerated client libraries (also known as VDM) for the [latest RTC release 2111 of SAP S/4HANA Cloud](https://news.sap.com/2021/10/sap-s4hana-cloud-2111-innovating-business-futures/).**
+  - The update covers all the changes to existing OData services and introduces new ones.
+- **We released a regular update for pregenerated client libraries (also known as VDM) for the latest RTC release 2021 FPS0 of SAP S/4HANA On-premise.**
+  - The update covers all the changes to existing OData services and introduces new ones.
+- **We released a regular update for pregenerated client libraries for [Workflow API for Cloud Foundry](https://api.sap.com/api/SAP_CP_Workflow_CF/resource).**
+
+## 1.52.0 [Core Modules] - November 5, 2021
+
+[GitHub](https://github.com/SAP/cloud-sdk-js/releases/tag/v1.52.0) | [npm](https://www.npmjs.com/search?q=%40sap-cloud-sdk)
+
+### Compatibility Notes
+
+- We changed default cache isolation strategy from `IsolationStrategy.Tenant` to `IsolationStrategy.Tenant_User`.
+  This applies when you set `useCache` to `true` while using a `getDestination` method for a destination lookup.
+
+### Fixed Issues
+
+- We now cache a destination only when a `JWT` contains all necessary information about a `Tenant` and a `User`.
+  For example, when using `IsolationStrategy.Tenant_User`, the JWT has to contain both **tenant id** and **user id**.
+- If `JWT` has an expiration time, we'll use it to override the default cache expiration time of 5 minutes.
+- A **provider** token won't be used to retrieve a destination from cache from now on.
+
+## 1.27.0 [Client Libraries] - Aug 20, 2021
+
+### New Functionality
+
+- **We released a regular update for pregenerated client libraries (also known as VDM) for the [latest RTC release 2108 of SAP S/4HANA Cloud](https://news.sap.com/2021/08/sap-s4hana-cloud-2108-engineering-innovations/).**
+  - The update covers all the changes to existing OData services and introduces new ones.
+  - The service `API_CDR_FILE_DOWNLOAD_SRV` is not included and will be released with the next release or on-demand.
+
+## 1.26.0 [Client Libraries] - June 04, 2021
+
+- [API documentation](https://help.sap.com/doc/c6112985e09f40ec97dd43ad791ebaef/1.0/en-US/index.html)
+
+- **We released a regular update for pregenerated client libraries (also known as VDM) for the latest RTC release 2020 FPS2 of SAP S/4HANA On-premise.**
+  - The update covers all the changes to existing OData services and introduces new ones.
+- **We released a regular update for pregenerated client libraries (also known as VDM) for the [latest RTC release 2105 of SAP S/4HANA Cloud](https://news.sap.com/2021/05/sap-s4hana-cloud-release-2105/).**
+  - The update covers all the changes to existing OData services and introduces new ones.
+  - The missing service `CACREDITWORTHINESS_0001` is included.
+- **We released a regular update for pregenerated client libraries for [Workflow API for Cloud Foundry](https://api.sap.com/api/SAP_CP_Workflow_CF/resource).**
+
+## 1.25.0 [Client Libraries] - May 20, 2021
+
+### New Functionality
+
+- **We released a regular update for pregenerated client libraries (also known as VDM) for the [latest RTC release 2105 of SAP S/4HANA Cloud](https://news.sap.com/2021/05/sap-s4hana-cloud-release-2105/).**
+  - The update covers all the changes to existing OData services and introduces new ones.
+  - The service `CACREDITWORTHINESS_0001` is not included and will be released later.
+
+## 1.24.0 [Client Libraries] - January 18, 2021
+
+- [API documentation](https://help.sap.com/doc/38ea0a832f064060a834a2d328038ceb/1.0/en-US/index.html)
+
+### Compatibility Notes
+
+- A few operations were removed from some SAP S/4HANA Cloud 2102 services. These operations were never supported by the SAP S/4HANA system (like CRUD support for some entities), so no existing functionality is affected. The following services are affected:
+  <!-- vale off -->
+  - _Nota Fiscal – Create, Update_ - `API_LOGBR_NOTAFISCAL_SRV`
+  - _Purchase Contracts_ - `API_PURCHASECONTRACT_PROCESS_SRV`
+  - _Outbound Delivery (A2X)_ - `API_OUTBOUND_DELIVERY_SRV_0002`
+  <!-- vale on -->
+- The service `@sap/cloud-sdk-vdm-purchasing-inforecord-service` was renamed to `@sap/cloud-sdk-vdm-purchasing-info-record-service`.
+
+### New Functionality
+
+- **We released a regular update for pregenerated client libraries (also known as VDM) for the [latest RTC release 2102 of SAP S/4HANA Cloud](https://news.sap.com/2021/02/sap-s4hana-cloud-2102-empowering-businesses-seize-opportunities/).**
+  - The update covers all the changes to existing OData services and introduces new ones.
+- **We released a regular update for pregenerated client libraries (also known as VDM) for the latest RTC release 2020 FPS1 of SAP S/4HANA On-premise.**
+  - The update covers all the changes to existing OData services and introduces new ones.
+
+## 1.22.0 [Client Libraries] - November 6, 2020
+
+- [API documentation](https://help.sap.com/doc/2d72cf72c3b946b0ab2b210d8d2d74da/1.0/en-US/index.html)
+
+### New Functionality
+
+- **We released a regular update for pregenerated client libraries (also known as VDM) for the [latest RTC release 2011 of SAP S/4HANA Cloud](https://blogs.sap.com/2020/10/28/sap-s-4hana-cloud-2011-release/).**
+  - The update covers all the changes to existing OData services and introduces new ones.
+
+## 1.21.0 [Client Libraries] - September 10, 2020
+
+- [API documentation](https://help.sap.com/doc/a87270cbfc6140abaa7968558ab10b84/1.0/en-US/index.html)
+
+### New Functionality
+
+- **We released an extracurricular update for pregenerated client libraries (also known as VDM) for the [latest RTC release 2008 of SAP S/4HANA Cloud](https://blogs.sap.com/2020/07/29/sap-s-4hana-cloud-2008-release/).**
+  - The update introduces new libraries for the SAP S/4HANA OData v4 services.
+
+## 1.20.0 [Client Libraries] - August 13, 2020
+
+- [API documentation](https://help.sap.com/doc/c0ae2e82b25e4b77855f00ec098ddf8f/1.0/en-US/index.html)
+- [npm](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*)
+
+### New Functionality
+
+- **We released a regular update for pregenerated client libraries (also known as VDM) for the [latest RTC release 2008 of SAP S/4HANA Cloud](https://blogs.sap.com/2020/07/29/sap-s-4hana-cloud-2008-release/).**
+  - The update covers all the changes to existing OData v2 services and introduces new ones.

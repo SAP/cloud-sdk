@@ -32,7 +32,7 @@ The tutorial is based on the initial NestJs application explained in the [first 
 In that tutorial you already created [a first OData request](../getting-started/2-execute-odata-request.mdx) to get a list of business partners.
 You will extend the functionality of the API in this tutorial and the [follow-up part](./change-addresses.mdx).
 Since the follow-up part is about changing data, we recommend using a [local mock system](https://sap.github.io/cloud-s4-sdk-book/pages/mock-odata.html).
-Changing data is not possible on SAP API Business Hub and an actual SAP S/4HANA instance should not be polluted with test data.
+Changing data is impossible on SAP API Business Hub and an actual SAP S/4HANA instance should not be polluted with test data.
 Note that both systems run locally but have different ports:
 
 - `localhost:3000` is the mock system imitating the SAP S/4HANA system.
@@ -42,7 +42,7 @@ Note that both systems run locally but have different ports:
 
 ### Recap Existing Service
 
-In the previous [tutorial](../getting-started/2-execute-odata-request.mdx) you created a OData request to retrieve business partners.
+In the previous [tutorial](../getting-started/2-execute-odata-request.mdx), you created an OData request to retrieve business partners.
 You included the following code in your `business-partner.service.ts`
 
 ```ts
@@ -50,7 +50,7 @@ import { Injectable } from '@nestjs/common';
 import {
   BusinessPartner,
   businessPartnerService
-} from '@sap/cloud-sdk-vdm-business-partner-service';
+} from '../../services/business-partner-service';
 
 @Injectable()
 export class BusinessPartnerService {
@@ -202,7 +202,7 @@ Otherwise, an error message is sent.
 Restart your server and open `http://localhost:8080/business-partners` to get the list of all business partners.
 Copy one ID from the result list and execute `http://localhost:8080/business-partners/<yourId>`.
 You should see the details of the chosen business partner.
-Note that Nest applications have a build-in [exception filter](https://docs.nestjs.com/exception-filters), which maps exceptions to HTTP messages shown to the client.
+Note that Nest applications have a built-in [exception filter](https://docs.nestjs.com/exception-filters), which maps exceptions to HTTP messages shown to the client.
 By default, the exceptions from the SAP Cloud SDK are mapped to a server-side error.
 So if you provide a non-existing ID, you will receive a 500 response and not a 404.
 
@@ -293,7 +293,7 @@ import {
   BusinessPartner,
   BusinessPartnerAddress,
   businessPartnerService
-} from '@sap/cloud-sdk-vdm-business-partner-service';
+} from '../../services/business-partner-service';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -371,7 +371,7 @@ import {
 import {
   BusinessPartner,
   BusinessPartnerAddress
-} from '@sap/cloud-sdk-vdm-business-partner-service';
+} from '../../services/business-partner-service';
 import { BusinessPartnerService } from './business-partner.service';
 
 @Controller('business-partners')

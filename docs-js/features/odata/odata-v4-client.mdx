@@ -30,11 +30,16 @@ import {
   Delete,
   Update,
   GetAll,
-  GetByKey
+  GetByKey,
+  Replace,
+  IgnoreOrOverwriteVersion,
+  SetRequiredFields,
+  SetIgnoredFields
 } from './common/operations';
 import {
   Top,
   Skip,
+  OrderBy,
   Filter,
   FilterOneToOne,
   FilterFunctions
@@ -53,7 +58,7 @@ import {
   Responses,
   ConfigureSerialization
 } from './common/batch';
-import { Csrf, SkipCsrfExample } from './common';
+import { Csrf, SkipCsrfExample, ETag } from './common';
 import {
   ExpandSelect,
   FilterOneToMany,
@@ -62,7 +67,8 @@ import {
   Select,
   FunctionImportKnownIssues,
   ActionImport,
-  ActionImportKnownIssues
+  ActionImportKnownIssues,
+  ChangeSetExample
 } from './v4';
 
 This guide explains how to use features of the [OData v4 protocol](https://www.odata.org/documentation/) supported by the SAP Cloud SDK.
@@ -144,6 +150,10 @@ More advanced filter expressions can be found [here](#available-filter-expressio
 
 <Top />
 
+### OrderBy
+
+<OrderBy />
+
 ### Count
 
 <Count />
@@ -174,21 +184,29 @@ Note that we currently do not support the usage of count within a filter conditi
 
 <Update />
 
+### Replace the Entity With PUT
+
+<Replace />
+
+### Set Required Fields
+
+<SetRequiredFields />
+
+### Set Ignored Fields
+
+<SetIgnoredFields />
+
 ## Delete Request Builder
 
 <Delete />
 
-## Entity Builder
-
-<EntityBuilder />
-
-### Building an Entity From JSON
-
-<FromJson />
-
 ## Handling of ETags
 
 <ETag />
+
+### Ignore or Overwrite the Version Identifier
+
+<IgnoreOrOverwriteVersion />
 
 ## Handling of Cross-Site Request Forgery Tokens
 
@@ -237,11 +255,18 @@ Note that we currently do not support the usage of count within a filter conditi
 
 ### Retrieve Request
 
+A retrieve request represents an HTTP `GET` request.
+In terms of the SAP Cloud SDK this includes all requests built by [`GetAllRequestBuilder`](#getall-request-builder), [`GetByKeyRequestBuilder`](#getbykey-request-builder) and [`FunctionImportRequestBuilder`](#function-imports).
+
 <RetrieveRequests />
 
 ### Changeset
 
+A changeset is a collection of HTTP `POST`, `PUT`, `PATCH` and `DELETE` operations.
+Such operations are built by the [`CreateRequestBuilder`s](#create-request-builder), [`UpdateRequestBuilder`s](#update-request-builder), [`DeleteRequestBuilder`s](#delete-request-builder) or [`ActionImportRequestBuilder`](#action-imports).
+
 <ChangeSet />
+<ChangeSetExample />
 
 ### Responses
 

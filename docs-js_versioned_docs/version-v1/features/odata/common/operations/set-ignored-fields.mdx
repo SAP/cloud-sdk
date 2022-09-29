@@ -1,0 +1,19 @@
+If you changed properties on an entity, that you do not want to send in the payload of the update request, use the `setIgnoredFields` method to ignore them.
+
+In the following example, the `PATCH` request won't contain changes that were made to the `FIRST_NAME` property of the business partner.
+
+```ts
+// Get a business partner
+const businessPartner = await BusinessPartner.requestBuilder()
+  .getByKey('1')
+  .execute({ destinationName: 'myDestination' });
+
+// Change first name and last name
+businessPartner.firstName = 'Steve';
+businessPartner.lastName = 'Smith';
+
+// Send a PATCH request with `{ "LastName" : "Smith" }`  and do not include the changed first name
+BusinessPartner.requestBuilder()
+  .update(businessPartner)
+  .setIgnoredFields(BusinessPartner.FIRST_NAME);
+```

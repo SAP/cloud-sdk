@@ -12,9 +12,6 @@ keywords:
   - kubernetes
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 # How to Migrate a CloudFoundry Application to a Kubernetes Cluster
 
 In this how-to, we will show step-by-step what is necessary to migrate an application from CloudFoundry to Kubernetes.
@@ -338,7 +335,7 @@ CMD ["npm", "run", "start:prod"]
 You can see that our `Dockerfile` reflects the information from the `manifest.yml`.
 We specify `Node` as an environment, `/deployment` as a path to copy our application to, and the command to run when the container image is fully loaded.
 
-### Deployment YAML
+### Deployment Configuration
 
 Next, we need to create a `deployment.yml` that contains the following data:
 
@@ -453,7 +450,7 @@ Exposing an application this way is good only for testing.
 
 If you want to expose your cluster under Domain name with TLS and/or basic authentication check out the [Configure TLS and obtain a Domain in SAP Gardener](#configure-tls-and-obtain-a-domain-in-sap-gardener) part for an `SAP Gardener` setup or the official Kubernetes [documentation](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/) for a general setup.
 
-## Create a CI/CD Pipeline
+## Create a Continuous Integration Pipeline
 
 You can create a simple CI/CD pipeline with GitHub Actions or change your existing pipeline.
 To automatically deploy your application into the K8s cluster, two things are needed:
@@ -800,10 +797,10 @@ url: aHR0cHM6Ly9teS1hcGkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tCg==
 ## Principal Propagation
 
 You can use the Application Router also known as approuter to propagate a principal in Kubernetes and achieve multi-tenancy.
-It works in a similar fashion to SAP BTP CloudFoundry.
+It works in a similar fashion to SAP BTP Cloud Foundry.
 
 1. You need an XSUAA instance that can redirect to a Kubernetes URI.
-   For this the parameter `redirect-uris` is important, however, if you use one parameter while creating a service, you have to use all of them.
+   The parameter `redirect-uris` is important, however, if you use one parameter while creating a service, you have to use all.
 
 Below is an example using the SAP BTP Operator, to create an XSUAA with a very generic rule specifying the allowed URI with wildcards `https://*/**`.
 For your application, it is recommended to point directly at your specific URI.
@@ -974,14 +971,11 @@ spec:
 
 <!-- vale Vale.Spelling = NO -->
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
 ```ts
 import { Injectable } from '@nestjs/common';
-import { BusinessPartner } from '@sap/cloud-sdk-vdm-business-partner-service';
 import { retrieveJwt } from '@sap-cloud-sdk/connectivity';
 import { Request } from 'express';
+import { businessPartnerService } from './generated/business-partner-service';
 
 @Injectable()
 export class PrincipalBusinessPartnerService {
@@ -996,29 +990,3 @@ export class PrincipalBusinessPartnerService {
   }
 }
 ```
-
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-import { Injectable } from '@nestjs/common';
-import { BusinessPartner } from '@sap/cloud-sdk-vdm-business-partner-service';
-import { retrieveJwt } from '@sap-cloud-sdk/core';
-import { Request } from 'express';
-
-@Injectable()
-export class PrincipalBusinessPartnerService {
-  async getFiveBusinessPartners(request: Request): Promise<BusinessPartner[]> {
-    return BusinessPartner.requestBuilder()
-      .getAll()
-      .top(5)
-      .execute({
-        destinationName: 'MY-DESTINATION',
-        jwt: retrieveJwt(request)
-      });
-  }
-}
-```
-
-</TabItem>
-</Tabs>

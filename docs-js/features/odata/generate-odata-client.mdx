@@ -11,9 +11,6 @@ keywords:
   - generate
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 The OData client generator allows you to generate custom OData client libraries for OData services.
 You can then access these services from your code using the client libraries.
 
@@ -92,9 +89,6 @@ All other files can be excluded from the generation - see the options below.
 
 Run `generate-odata-client --help` for additional options.
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
 | Option, Aliases <div style={{ width: "225px" }}></div> |             Default             | Description                                                                                                                                                                                            |
 | :----------------------------------------------------- | :-----------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `-i`, `--inputDir` _(required)_                        |                -                |  This directory will be recursively searched for `.edmx`/`.xml` files.                                                                                                                                 |
@@ -111,34 +105,10 @@ Run `generate-odata-client --help` for additional options.
 | `--processesJsGeneration`                              |              `16`               |  Number of processes used for transpilation of JavaScript files.                                                                                                                                       |
 | `--generateCSN`                                        |             `false`             |  A CSN file will be generated for each service definition in the output directory.                                                                                                                     |
 
-</TabItem>
-<TabItem value="deprecated">
-
-| Option, Aliases <div style={{ width: "225px" }}></div> |             Default             | Description                                                                                                                                                                                            |
-| :----------------------------------------------------- | :-----------------------------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `-i`, `--inputDir` _(required)_                        |                -                |  This directory will be recursively searched for `.edmx`/`.xml` files.                                                                                                                                 |
-| `-o`, `--outputDir` _(required)_                       |                -                |  Directory to save the generated code in.                                                                                                                                                              |
-| `-s`, `--serviceMapping`,                              | `inputDir/service-mapping.json` |  Configuration file to ensure consistent names between multiple generation runs with updated / changed metadata files. Will be generated if not existent.                                              |
-| `--forceOverwrite`                                     |             `false`             |  Exit when encountering a file that already exists. When set to true, it will be overwritten instead. Please note that compared to the `--clearOutputDir` option, this will not delete outdated files. |
-| `--clearOutputDir`                                     |             `false`             |  Deletes EVERYTHING in the specified output directory before generating code.                                                                                                                          |
-| `--generateNpmrc` _(deprecated)_                       |             `true`              |  Generate a `.npmrc` file specifying a registry for `@sap` scoped dependencies.                                                                                                                        |
-| `--generateTypedocJson`                                |             `true`              |  Generates a `typedoc.json` file for each package, used for the corresponding "doc" npm script.                                                                                                        |
-| `--generatePackageJson`                                |             `true`              |  Generate a `package.json` file, specifying dependencies and scripts for compiling and generating documentation.                                                                                       |
-| `--versionInPackageJson`                               |    Version of the generator     |  By default, when generating `package.json` file, the generator will set a version by using the generator version. It can also be set to a specific version.                                           |
-| `--generateJs`                                         |             `true`              |  Generates transpiled `.js`, `.js.map`, `.d.ts` and `.d.ts.map` files. When set to false, the generator will only generate `.ts` files.                                                                |
-| `--processesJsGeneration`                              |              `16`               |  Number of processes used for transpilation of JavaScript files.                                                                                                                                       |
-| `--generateCSN`                                        |             `false`             |  A CSN file will be generated for each service definition in the output directory.                                                                                                                     |
-
-</TabItem>
-</Tabs>
-
 ## Generate a Client Programmatically
 
 You can also use the generator programmatically.
 You will have to provide the options.
-
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
 
 ```ts
 import { generate } from '@sap-cloud-sdk/generator';
@@ -175,48 +145,7 @@ generate({
 });
 ```
 
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-import { generate } from '@sap-cloud-sdk/generator';
-
-// Create your options, adapt the input & output directory as well as the package name according to your setup.
-const inputDir = 'service-specifications';
-const outputDir = 'odata-client';
-
-// Create your project datastructure with all sourcefiles based on your options
-const generatorConfig = {
-  forceOverwrite: true,
-  generateJs: false,
-  useSwagger: false,
-  writeReadme: false,
-  clearOutputDir: true,
-  generateNpmrc: false,
-  generateTypedocJson: false,
-  generatePackageJson: false,
-  generateCSN: false,
-  sdkAfterVersionScript: false,
-  s4hanaCloud: false
-  /* optional:
-    serviceMapping: 'test/directory',
-    changelogFile: 'test/directory',
-    versionInPackageJson: 'version'
-  */
-};
-
-// generate your project, you can also redefine options
-generate({
-  ...generatorConfig,
-  inputDir,
-  outputDir
-});
-```
-
-</TabItem>
-</Tabs>
-
-## npm Packages vs. Local clients
+## npm Packages Versus Local Clients
 
 The SAP Cloud SDK OData client generator generates TypeScript code.
 By default, the generator creates all sources needed for an npm package.

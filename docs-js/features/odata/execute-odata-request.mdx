@@ -15,6 +15,7 @@ keywords:
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
+import LinkToLatestJsApiDocs from '@site/src/sap/sdk-js/LinkToLatestJsApiDocs';
 import {
   CustomRequestConfig,
   CustomRequestConfigNote,
@@ -22,17 +23,12 @@ import {
   ExecuteRawUseCases
 } from '../common';
 
-Once you have generated a typed OData client using the SAP Cloud SDK generator or if you decided to use one of the pregenerated OData clients for SAP S/4HANA, you can use your OData client to execute HTTP requests against your service.
+Once you have generated a typed OData client using the SAP Cloud SDK generator, you can use this OData client to execute HTTP requests for your service.
 The client provides request builders for the different types of requests and abstractions of the entity sets of the given service, which we refer to as _entities_.
-
-To request an entity set, entities offer a fluent API.
 
 ## General Request Structure
 
 On an abstract level, creating a request using the fluent API always follows the same simple structure:
-
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
 
 ```ts
 import { myEntityService } from './outputDir/my-service';
@@ -47,41 +43,9 @@ return myEntityApi.requestBuilder()
 If you are using an OData client, that you generated on your own, import the service function, e.g. `myEntityService`, from the generated service directory (`my-service`) within the specified output directory (`outputDir`).
 The name of the service directory corresponds to the `directoryName` specified in the service mapping file (`serviceMapping.json` by default) in your input directory.
 
-If you are using one of the pregenerated OData clients, import it from the npm package.
-
-```ts
-import { pregeneratedEntityService } from '@sap/cloud-sdk-vdm-pregenerated-service';
-```
-
 Destructure the service to get the API of the entity you want to make requests for - `myEntityApi` in the example above.
 
 Every entity API has a `requestBuilder` function, that allows to chain all types of request builders that are available for this entity, e.g. `myEntityApi.requestBuilder().getAll()` for the `getAll` request type.
-
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-import { MyEntity } from './outputDir/my-service';
-
-return MyEntity.requestBuilder()
-  .<requestType>(...)
-  .<additionalRequestConfiguration>(...)
-  .execute(destination);
-```
-
-If you are using an OData client, that you generated on your own, import an entity from the generated service directory (`my-service`) within the specified output directory (`outputDir`).
-The name of the service directory corresponds to the `directoryName` specified in the service mapping file (`serviceMapping.json` by default) in your input directory.
-
-If you are using one of the pregenerated OData clients, import it from the npm package.
-
-```ts
-import { PregeneratedEntity } from '@sap/cloud-sdk-vdm-pregenerated-service';
-```
-
-Every entity has a `requestBuilder` function, that allows to chain all types of request builders that are available for this entity, e.g. `MyEntity.requestBuilder().getAll()` for the `getAll` request type.
-
-</TabItem>
-</Tabs>
 
 See the list below for details on all available request types (denoted by `requestType` in the example above):
 
@@ -174,13 +138,47 @@ The last step when making a request using the SAP Cloud SDK is the request execu
 Once the request is configured use the `execute` function and pass a [destination](../connectivity/destination) to it.
 This will automatically construct your request URL and headers, execute the request, and return a typed response if applicable.
 
+### Conversion of OData Types
+
+OData uses the Entity Data Model (EDM) to represent values such as strings, numbers, dates, and times.
+Calling the `execute` function by default automatically converts OData Entity Data Model (EDM) values to their respective types in JavaScript and TypeScript.
+
+By default, the SAP Cloud SDK converts EDM types into TypeScript types as described by the following tables.
+This can be changed by providing custom serializers and deserializers as described [here for OData v2](./odata-v2-client.mdx#customize-de-serialization) and [here for OData v4](./odata-v4-client.mdx#customize-de-serialization).
+
+For definition of the EDM data types in OData, see [the v2 spec](https://www.odata.org/documentation/odata-version-2-0/json-format/) or the [v4 spec](http://docs.oasis-open.org/odata/odata/v4.0/os/part3-csdl/odata-v4.0-os-part3-csdl.html#_The_edm:Documentation_Element) of OData.
+
+The following table describes how types are mapped by default:
+
+| EDM Type             | TypeScript Type                                                                         | Notes                                                 |
+| -------------------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| `Edm.String`         | `string`                                                                                |                                                       |
+| `Edm.Boolean`        | `boolean`                                                                               |                                                       |
+| `Edm.Guid`           | `string`                                                                                |                                                       |
+| `Edm.Decimal`        | `BigNumber`                                                                             |                                                       |
+| `Edm.Int16`          | `number`                                                                                |                                                       |
+| `Edm.Int32`          | `number`                                                                                |                                                       |
+| `Edm.Int64`          | `BigNumber`                                                                             |                                                       |
+| `Edm.Single`         | `number`                                                                                |                                                       |
+| `Edm.Double`         | `number`                                                                                |                                                       |
+| `Edm.Float`          | `number`                                                                                | Not an actual edm type, implemented for compatibility |
+| `Edm.Byte`           | `number`                                                                                |                                                       |
+| `Edm.SByte`          | `number`                                                                                |                                                       |
+| `Edm.DateTimeOffset` | `moment.Moment`                                                                         |                                                       |
+| `Edm.Binary`         | `string`                                                                                |                                                       |
+| `Edm.DateTime`       | `moment.Moment`                                                                         | OData v2 only, precision limited to milliseconds      |
+| `Edm.Time`           | <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_odata_common.Time" name="Time" /> | OData v2 only, does not consider time zones           |
+| `Edm.Date`           | `moment.Moment`                                                                         | OData v4 only                                         |
+| `Edm.Duration`       | `moment.Duration`                                                                       | OData v4 only                                         |
+| `Edm.TimeOfDay`      | <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_odata_common.Time" name="Time" /> | OData v4 only, does not consider time-zones           |
+| Any other type       | `any`                                                                                   |                                                       |
+
+If you require the raw OData response, you can look into [getting the raw response and the original request](#getting-the-raw-response-and-the-original-request).
+
 ### Setting Custom Request Headers
 
 The SAP Cloud SDK automatically sets some necessary request headers on every request.
 You can specify additional custom headers using the `addCustomHeaders` function:
-
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
 
 ```ts
 const { myEntityApi } = myEntityService();
@@ -188,18 +186,6 @@ myEntityApi.requestBuilder().getAll().addCustomHeaders({
   apikey: 'my-api-key'
 });
 ```
-
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-MyEntity.requestBuilder().getAll().addCustomHeaders({
-  apikey: 'my-api-key'
-});
-```
-
-</TabItem>
-</Tabs>
 
 The keys and values of the passed object correspond with the header names and values.
 Custom headers take priority over automatically generated headers.
@@ -220,27 +206,12 @@ Custom query parameters take precedence over those created by the SAP Cloud SDK.
 
 In the example below an additional query parameter `language=en` will be added to the request URL:
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
 ```ts
 const { myEntityApi } = myEntityService();
 myEntityApi.requestBuilder().getAll().withCustomQueryParameters({
   language: 'en'
 });
 ```
-
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-MyEntity.requestBuilder().getAll().withCustomQueryParameters({
-  language: 'en'
-});
-```
-
-</TabItem>
-</Tabs>
 
 :::note
 
@@ -254,9 +225,6 @@ If a service specification contains a specification for the `servicePath`, the S
 When there is no such path defined in the specification, it can be manually set in the `service-mapping.json`.
 It can also be adjusted per request by using the `withCustomServicePath` function:
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
 ```ts
 const { myEntityApi } = myEntityService();
 myEntityApi
@@ -264,18 +232,6 @@ myEntityApi
   .getAll()
   .withCustomServicePath('my/custom/service/path');
 ```
-
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-MyEntity.requestBuilder()
-  .getAll()
-  .withCustomServicePath('my/custom/service/path');
-```
-
-</TabItem>
-</Tabs>
 
 This will add the custom service path to your request.
 Executing the example request above against a destination with URL `https://my.s4-system.com` would result in a request against something like this: `https://my.s4-system.com/my/custom/service/path/MyEntity`.
@@ -284,9 +240,6 @@ Executing the example request above against a destination with URL `https://my.s
 
 <CustomRequestConfig />
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
 ```ts
 const { myEntityApi } = myEntityService();
 myEntityApi
@@ -294,18 +247,6 @@ myEntityApi
   .getAll()
   .addCustomRequestConfiguration({ responseType: 'arraybuffer' });
 ```
-
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-MyEntity.requestBuilder()
-  .getAll()
-  .addCustomRequestConfiguration({ responseType: 'arraybuffer' });
-```
-
-</TabItem>
-</Tabs>
 
 <CustomRequestConfigNote />
 
@@ -318,9 +259,6 @@ You have to use the `executeRaw(destination)` method to get results because we c
 
 The example below shows how to query a navigation property from a given entity.
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
 ```ts
 const { myEntityApi } = myEntityService();
 myEntityApi
@@ -333,22 +271,6 @@ myEntityApi
   .executeRaw(destination);
 ```
 
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-MyEntity.requestBuilder()
-  .getByKey('123')
-  .appendPath(
-    '/to_SingleValueNavigationProperty1',
-    '/to_SingleValueNavigationProperty2'
-  )
-  .executeRaw(destination);
-```
-
-</TabItem>
-</Tabs>
-
 It will build the request URL like below:
 `https://my.s4-system.com/service-path/MyEntity(key='123')/to_SingleValueNavigationProperty1/to_SingleValueNavigationProperty2`
 where:
@@ -360,9 +282,6 @@ where:
 
 You can specify a timeout for the request via the `timeout()` method on the request builder:
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
 ```ts
 const { myEntityApi } = myEntityService();
 const httpResponse: HttpResponse = myEntityApi
@@ -371,9 +290,6 @@ const httpResponse: HttpResponse = myEntityApi
   .timeout(1000)
   .execute(destination);
 ```
-
-</TabItem>
-</Tabs>
 
 The value is in milliseconds and the default value is 10000 (10 seconds)
 This timeout applies to the request sent to the target system given in the destination.
@@ -387,9 +303,6 @@ This relates to the calls made to SAP BTP services like `destination-service` or
 
 Example:
 
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
 ```ts
 const { myEntityApi } = myEntityService();
 const httpResponse: HttpResponse = myEntityApi
@@ -397,18 +310,6 @@ const httpResponse: HttpResponse = myEntityApi
   .getAll()
   .executeRaw(destination);
 ```
-
-</TabItem>
-<TabItem value="deprecated">
-
-```ts
-const httpResponse: HttpResponse = MyEntity.requestBuilder()
-  .getAll()
-  .executeRaw(destination);
-```
-
-</TabItem>
-</Tabs>
 
 <ExecuteRawUseCases />
 

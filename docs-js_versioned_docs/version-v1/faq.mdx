@@ -1,0 +1,123 @@
+---
+id: frequently-asked-questions
+title: Frequently Asked Questions
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: FAQ
+description: You asked! We answered! We collected here the most frequent question about SAP Cloud SDK for JavaScript.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+---
+
+import BuildBadge from '@site/src/sap/sdk-js/BuildBadge';
+import LicenseBadge from '@site/src/sap/sdk-js/LicenseBadge';
+
+<BuildBadge /> <LicenseBadge />
+
+## Generic Questions
+
+### Is SAP Cloud SDK for JavaScript Open Source
+
+Yes.
+The SAP Cloud SDK for JavaScript is Open Source and available under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0).
+You can find the source code on [GitHub](https://github.com/SAP/cloud-sdk-js) and the modules on [npm](https://www.npmjs.com/search?q=%40sap-cloud-sdk).
+
+### What Is a Virtual Data Model?
+
+In simple words, the Virtual Data Model is a nickname for pregenerated type-safe client libraries for allowlisted OData services of [SAP S/4HANA Cloud](https://www.sap.com/germany/products/s4hana-erp.html).
+These libraries are a part of SAP Cloud SDK for JavaScript, but they are **not** Open Source and shipped under SAP Developer license.
+You can find them on [npm](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*).
+
+### Do You Continuously Develop the SAP Cloud SDK for JavaScript?
+
+A team of experienced SAP engineers develops and maintains the SAP Cloud SDK for JavaScript.
+Publishing the SAP Cloud SDK as Open Source allows anyone to benefit from library value adds, instantly contribute new functionality, faster fix issues, and speed up feature development.
+
+### Can I Contribute to the SAP Cloud SDK for JavaScript?
+
+We are happy to accept and review your valuable contribution.
+For details on contributing check our [contribution guide](https://github.com/SAP/cloud-sdk/blob/main/CONTRIBUTING.md).
+
+### How Often Do You Release a New SAP Cloud SDK Version?
+
+We usually release [bi-weekly](https://github.com/SAP/cloud-sdk-js/releases).
+All features that are in _Generally Available_ or _experimental_ state get into the next release.
+
+We intend to release a new major version of the SAP Cloud SDK for JavaScript every six to twelve months.
+For details check our [release policy](release-policy.mdx).
+
+Pregenerated type-safe client libraries are released quarterly to follow the SAP S/4HANA Cloud release cycle.
+
+### Do You Release Hotfixes?
+
+Yes, we do.
+They usually have a higher `patch` number according to [`semver`](https://semver.org/), i.e: 1.24.1 instead of 1.24.0.
+Check our [release notes](https://github.com/SAP/cloud-sdk-js/releases) for more details.
+
+### Should I Update With Every Release?
+
+The general recommendation is _YES_.
+This way you'll reduce the effort to keep up with the fast pace of cloud development.
+We try to keep stable functionality consistent and explicitly notify about breaking changes.
+Be cautious about using features annotated as _Beta_ because their API can change with every release.
+
+### Which Node Versions Are Supported by the SAP Cloud SDK?
+
+We support and recommend the [latest active LTS version of Node](https://nodejs.org/en/about/releases/).
+You can try using a later Node version at your own risk.
+
+### Can I Use Features Annotated as Beta in Production?
+
+We **do not recommend** using APIs that are marked unstable in productive code.
+We do not guarantee any API compatibility for future updates and the features might be experimental.
+You can use these features to test new functionality, provide us feedback, and plan migration steps when _Beta_ features are released as _General Availability_.
+
+### I Think I Found a Bug in the SAP Cloud SDK, What Should I Do?
+
+Please, report it to us through any available channel.
+The preferred support channel is [GitHub](https://github.com/SAP/cloud-sdk-js/issues/new/choose).
+
+### I'm Creating a BCP Incident, What's Your Component Name?
+
+Choose `XX-S4C-SDK` if you are reporting an issue via BCP.
+
+## OData Related Questions
+
+### What Versions of OData Protocol Do You Support?
+
+We support OData v2 and OData v4 services.
+You can use pregenerated client libraries supplied with SAP Cloud SDK or generate your client from the SAP Cloud SDK specification.
+[Find more details here.](features/odata/overview)
+
+### Do You Support All OData Features?
+
+We support most of the OData features that are exposed by SAP services.
+However, the [OData specification](https://www.odata.org/documentation/) is huge and contains many features that would see rare to no use.
+If you found a feature that you need, but it is not yet supported by SAP Cloud SDK for Java, please, make a feature request via [GitHub](https://github.com/SAP/cloud-sdk-js/issues/new/choose)
+
+### I Receive an OData Error/Exception When Using SAP Cloud SDK for JavaScript
+
+You may see some errors while developing.
+These errors are not always caused by flaws in the SAP Cloud SDK as we often see inconsistent OData protocol handling by different services.
+Some of them even have known flaws for which we have workarounds.
+If you can't solve your issue via debugging and experimenting, please, report your incident via [Stack Overflow](https://stackoverflow.com/questions/tagged/sap-cloud-sdk) or [GitHub](https://github.com/SAP/cloud-sdk-js/issues/new/choose).
+
+## REST Related Questions
+
+### Do You Support REST Client Libraries?
+
+We're working on it.
+The current support is experimental and not ready for production use.
+
+## Questions About SAP Business Technology Platform
+
+### Do You Support SAP Business Technology Platform, Cloud Foundry Environment?
+
+SAP Cloud SDK for JavaScript has first-class support for the [SAP BTP, Cloud Foundry environment](https://www.sap.com/products/cloud-platform.html).
+We provide plenty of helpful abstractions for [connectivity](features/connectivity/destination) and authentication that make developing apps a pleasant and rewarding experience.
+Let us know if you miss functionality of the SAP BTP in the SAP Cloud SDK for JavaScript.

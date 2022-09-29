@@ -1,0 +1,42 @@
+The function import request builder helps build a request for service operations including their parameters.
+Not all services expose function imports.
+We will use the [Warehouse Outbound Delivery Order service](https://api.sap.com/api/API_WHSE_OUTB_DLV_ORDER/resource) as an example.
+The according SAP Cloud SDK for JavaScript package is named `@sap/cloud-sdk-vdm-warehouse-outbound-delivery-order-service`.
+
+The example below creates a function import request builder for the service operation `PostGoodsIssue` and then executes it against your destination.
+
+```ts
+postGoodsIssue({ outboundDeliveryOrder: 'order' }).execute(destination);
+```
+
+The service operation is defined in the service metadata.
+
+If the response structure does not match the transformation type, the promise from `execute(destination)` will be resolved into `undefined`.
+
+The default transformer expects the following response format:
+
+```json
+{
+  "d": {
+    "Count": 0
+  }
+}
+```
+
+Assume the actual response has an additional layer `Foo`:
+
+```json
+{
+  "d": {
+    "Foo": {
+      "Count": 0
+    }
+  }
+}
+```
+
+In this case, `dataAccessor` can be used in the following way to modify the response into the desired form for further deserialization.
+
+```ts
+functionImportRequestBuilder.execute(destination, data => data.d.Foo);
+```

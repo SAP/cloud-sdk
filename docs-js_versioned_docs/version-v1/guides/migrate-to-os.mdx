@@ -1,0 +1,55 @@
+---
+id: migrate-to-open-source-version-of-cloud-sdk-for-javascript-typescript
+title: Migrate to our Open Source Version
+sidebar_label: Migrate to Open Source
+description: We open-sourced the SAP Cloud SDK for JS/TS in the beginning of 2020. This guide will help you with migration to the open source version.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+---
+
+## Switch To the Open Source Version
+
+Some packages of the SAP Cloud SDK for JavaScript have been migrated to [github.com](https://github.com/SAP/cloud-sdk-js).
+As a result, the packages were renamed as shown in the table below.
+No Breaking changes were made.
+Please use the new packages from now on.
+
+| old package name           | new package name           |
+| -------------------------- | -------------------------- |
+| `@sap/cloud-sdk-util`      | `@sap-cloud-sdk/util`      |
+| `@sap/cloud-sdk-analytics` | `@sap-cloud-sdk/analytics` |
+| `@sap/cloud-sdk-core`      | `@sap-cloud-sdk/core`      |
+| `@sap/cloud-sdk-generator` | `@sap-cloud-sdk/generator` |
+| `@sap/cloud-sdk-test-util` | `@sap-cloud-sdk/test-util` |
+
+This mapping applies to the move to open source version 1.X.Y..
+Since version 2.0.0, the `core` package has been split into smaller packages and the `analytics` package has been removed.
+We recommend first migrating to version 1.52.0 of the open-source version.
+Once this is done, follow the [upgrade guide](upgrade-to-version-2.mdx) to do the transition to version 2.0.0.
+
+##### How To Use the Open Source Version
+
+1.  Search for all your `dependencies`/`devDependencies`/`peerDependencies` in your `package.json`.
+1.  Replace the old package name e.g., `@sap/cloud-sdk-core` with the new one e.g.`@sap-cloud-sdk/core`.
+1.  Use a stable version of the SAP Cloud SDK e.g., `^1.18.0`.
+1.  Delete your `node_modules` and the `package-lock.json`.
+1.  Install your dependencies, run: `npm i`.
+1.  Search your source code for references to the old packages (e.g. in import statements) and replace them with the new names.
+
+## What About Support and Future Development?
+
+SAP Cloud SDK team fully maintains the Open Source version which is the only one existing.
+We continue developing and releasing new functionality as well as supporting developers and fixing found bugs.
+
+## How Can I Report an Issue or Make a Feature Request?
+
+Please, create an issue in our [GitHub repository](https://github.com/SAP/cloud-sdk-js/issues/new/choose).
+
+## Can I Contribute?
+
+We are happily accepting contributions via pull requests on our [GitHub repository](https://github.com/SAP/cloud-sdk-js).

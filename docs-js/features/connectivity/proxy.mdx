@@ -16,37 +16,28 @@ keywords:
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-The SAP Cloud SDK for JavaScript offers a convenient way to connect to various systems offering public APIs.
-The most famous one is SAP S/4HANA which comes in two flavors Cloud and On-premise.
-We pregenerate type-safe clients for SAP S/4HANA APIs and publish them to [npm](https://www.npmjs.com/search?q=%40sap%2Fcloud-sdk-vdm-*) for your convenience.
-
-For different systems like SAP SuccessFactors, SAP Cloud for Customer, and many others you can generate a type-safe client yourself.
-All you have to do it look up an API definition on [SAP API BusinessHub](https://api.sap.com/) and invoke a [generator](../odata/generate-odata-client.mdx) supplied with [SAP Cloud SDK for JavaScript](https://github.com/SAP/cloud-sdk-js).
-This [comprehensive tutorial](../../tutorials/getting-started/introduction) and will guide you through this process step by step.
+To learn how to generate an OData client, follow this [tutorial](../../tutorials/getting-started/introduction).
+For this article, we assume you have generated a client for the [Business Partner service from SAP S/4HANA Cloud](https://api.sap.com/api/API_BUSINESS_PARTNER/overview).
 
 ## Making a First API Call
 
-Once you have generated a type-safe client, this is how you make your first API call.
-This example uses the **BusinessPartner** service from the SAP S/4HANA suite.
+Once you have generated a client, this is how you make your first API call.
 
 ```js
-BusinessPartner.requestBuilder()
+businessPartnerApi
+  .requestBuilder()
   .getAll()
-  .filter(BusinessPartner.BUSINESS_PARTNER_CATEGORY.equals('1'))
+  .filter(businessPartnerApi.schema.BUSINESS_PARTNER_CATEGORY.equals('1'))
   .top(5)
   .execute(yourDestination);
 ```
 
-The SAP Cloud SDK does a lot of heavy lifting under the hood to take care of complexity so that you can fully concentrate on your app's logic.
-A detailed step-by-step guide on using a type-safe client is provided in this [tutorial series](../../tutorials/getting-started/introduction).
-
-**To name a few things handled by SAP Cloud SDK for JavaScript:**
+What happens in the background for this call:
 
 - Destination fetching
 - Handling of ETag
 - Handling of CSRF token
 - Serializing and deserializing the request
-- And more
 
 In this document, we focus on the **proxy** part and explain how proxies are handled by the SAP Cloud SDK.
 

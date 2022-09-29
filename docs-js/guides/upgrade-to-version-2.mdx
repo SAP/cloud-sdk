@@ -111,7 +111,7 @@ Note that in the 2.0 version, the default remains Moment.js.
 
 ### Get Support
 
-**Prerequisite\_**: You tried to do the steps above but hit some impediments.
+**Prerequisite**: You tried to do the steps above but hit some impediments.
 
 Please create a [support issue](https://github.com/SAP/cloud-sdk-js/issues/new/choose) describing the problem you have.
 
@@ -121,8 +121,11 @@ Please create a [support issue](https://github.com/SAP/cloud-sdk-js/issues/new/c
 
 In version 1.X.Y of the SAP Cloud SDK, each entity (e.g. `BusinessPartner`) was imported directly:
 
-```
-import { BusinessPartner, BusinessPartnerAddress } from '@sap/cloud-sdk-vdm-business-partner-service';
+```ts
+import {
+  BusinessPartner,
+  BusinessPartnerAddress
+} from '@sap/cloud-sdk-vdm-business-partner-service';
 ```
 
 This has been changed in version 2.0.
@@ -133,16 +136,18 @@ This has been changed in version 2.0.
 To access an entity, you need to import the service and destructure the API class objects.
 To do so, first update the imports following the steps:
 
-- Replace the entity imports with the service import. In most cases, the service name can be inferred from the npm package itself, i.e., everything after `@sap/cloud-sdk-vdm-` in camelCase. E.g.:
+- Replace the entity imports with the service import.
+  Usually, the service name can be inferred from the npm package itself, i.e., everything after `@sap/cloud-sdk-vdm-` in camelCase. E.g.:
 
-```
+```ts
 import { businessPartnerService } from '@sap/cloud-sdk-vdm-business-partner-service';
 ```
 
 - Destructure this service to unpack the API objects you need.
 
-```
-const { businessPartnerApi, businessPartnerAddressApi } = businessPartnerService();
+```ts
+const { businessPartnerApi, businessPartnerAddressApi } =
+  businessPartnerService();
 ```
 
 :::danger
@@ -343,25 +348,25 @@ This section lists the commands for removing old dependencies and installing new
 
 To remove the `@sap-cloud-sdk/core` package from `node_modules` and `package.json`, run the below command in your project's terminal:
 
-```
+```bash
 npm uninstall --save @sap-cloud-sdk/core
 ```
 
 Once you have found the new packages to replace `@sap-cloud-sdk/core`, install them using the relevant commands below:
 
-```
+```bash
 npm install @sap-cloud-sdk/http-client
 ```
 
-```
+```bash
 npm install @sap-cloud-sdk/connectivity
 ```
 
-```
+```bash
 npm install @sap-cloud-sdk/odata-v2
 ```
 
-```
+```bash
 npm install @sap-cloud-sdk/odata-v4
 ```
 

@@ -1,78 +1,26 @@
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+The update request builder allows you to change existing entities.
+By default, `PATCH` is used to only update changed fields.
 
-The Update request builder allows you to send `PUT` or `PATCH` requests.
-By default, `PATCH` is used to only update the changed fields:
-
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
+In the following example, we first get a business partner, change one of its values, and then send an update request.
 
 ```ts
 const { businessPartnerApi } = businessPartnerService();
+
+// Get a business partner
+const businessPartner = await businessPartnerApi
+  .requestBuilder()
+  .getByKey('1')
+  .execute({ destinationName: 'myDestination' });
+
+// Change first name
+businessPartner.firstName = 'Steve';
+
+// Send a PATCH request with `{ "FirstName" : "Steve" }`
 businessPartnerApi.requestBuilder().update(businessPartner);
 ```
 
-</TabItem>
-<TabItem value="deprecated">
+In the example above we changed the first name of the given business partner.
+The payload sent to the service with PATCH includes only the first name.
 
-```ts
-BusinessPartner.requestBuilder().update(businessPartner);
-```
-
-</TabItem>
-</Tabs>
-
-In the example above only the changed fields of the given `businessPartner` instance are sent to the `BusinessPartner` service using `PATCH`.
-
-To update the whole entity use `replaceWholeEntityWithPut`:
-
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
-```ts
-const { businessPartnerApi } = businessPartnerService();
-businessPartnerApi
-  .requestBuilder()
-  .update(businessPartner)
-  .replaceWholeEntityWithPut();
-```
-
-  </TabItem>
-<TabItem value="deprecated">
-
-```ts
-BusinessPartner.requestBuilder()
-  .update(businessPartner)
-  .replaceWholeEntityWithPut();
-```
-
-  </TabItem>
-  </Tabs>
-
-This will send a `PUT` request and thereby replace the whole entity.
-
-Entities can only be updated if [ETags](#handling-of-etags) match.
-If you want to force an update of the entity regardless of the ETag configure the request to ignore version identifiers with `ignoreVersionIdentifier`:
-
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
-
-```ts
-const { businessPartnerApi } = businessPartnerService();
-businessPartnerApi
-  .requestBuilder()
-  .update(businessPartner)
-  .ignoreVersionIdentifier();
-```
-
-  </TabItem>
-<TabItem value="deprecated">
-
-```ts
-BusinessPartner.requestBuilder()
-  .update(businessPartner)
-  .ignoreVersionIdentifier();
-```
-
-  </TabItem>
-  </Tabs>
+Be aware that update requests will fail if their ETags don't match.
+Check out our [ETag](#handling-of-etags) section for more information.
