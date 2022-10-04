@@ -62,7 +62,6 @@ module.exports = {
       type: 'category',
       label: 'Tutorials',
       items: [
-        'tutorials/multi-tenant-application',
         {
           type: 'category',
           label: 'Getting Started',
@@ -80,7 +79,8 @@ module.exports = {
             'tutorials/address-manager/read-addresses',
             'tutorials/address-manager/change-addresses'
           ]
-        }
+        },
+        'tutorials/multi-tenant-application'
       ]
     },
     {
