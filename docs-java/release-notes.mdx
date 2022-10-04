@@ -55,6 +55,33 @@ To continue using the latest features outlined in the release notes for version 
 ### Fixed Issues
 -->
 
+## 3.75.0 - September 21, 2022
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.75.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
+
+### Compatibility Notes
+
+- The `RequestAccessor` API (along all the related classes - e.g. the `RequestThreadContextListener` and `RequestFacade`) has been deprecated. For a replacement, please refer to the `RequestHeaderAccessor`.
+
+### New Functionality
+
+- Add public method `getAllDestinations()` to `EnvVarDestinationLoader` to resolve all destinations from the configured system environment variable (default: `destinations`).
+
+### Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update XSUAA Library from `2.12.2` to `2.12.3`
+  - Other dependency updates:
+    - Minor version updates:
+      - Update Spring from `5.3.21` to `5.3.22`
+      - Update Spring Security from `5.7.2` to `5.7.3`
+
+### Fixed Issues
+
+- Fix an issue with OData request payloads containing incomplete entity type indicators.
+- Fix an issue with JWT payload parsing from incoming requests: `aud` claim can be an atomic string or an array of strings.
+
 ## 3.74.0 - August 11, 2022
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.74.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
@@ -92,10 +119,10 @@ To continue using the latest features outlined in the release notes for version 
     - Update NEO Web API from `4.29.8` to `4.32.0`
   - Other dependency updates:
     - Minor version updates:
-        - Update Spring from `5.3.20` to `5.3.21`
-        - Update Spring Security from `5.7.1` to `5.7.2`
-        - Update `org.scyscreamer:jsonassert` from `1.5.0` to `1.5.1`
-        - Update `org.liquibase:liquibase-core` from `4.12.0` to `4.13.0`
+      - Update Spring from `5.3.20` to `5.3.21`
+      - Update Spring Security from `5.7.1` to `5.7.2`
+      - Update `org.scyscreamer:jsonassert` from `1.5.0` to `1.5.1`
+      - Update `org.liquibase:liquibase-core` from `4.12.0` to `4.13.0`
 
 ### Fixed Issues
 
