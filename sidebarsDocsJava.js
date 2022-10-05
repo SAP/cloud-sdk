@@ -66,7 +66,8 @@ module.exports = {
         'environments/sap-btp-environments-overview',
         'environments/sap-btp-cloud-foundry-environment',
         'environments/sap-btp-kubernetes-environment-with-sap-gardener',
-        'environments/sap-btp-kyma-environment'
+        'environments/sap-btp-kyma-environment',
+        'features/service-bindings/load-service-bindings-from-environment'
       ]
     },
     {
