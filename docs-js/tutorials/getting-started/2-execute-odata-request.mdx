@@ -27,32 +27,32 @@ In this part of the tutorial, you will do the following:
 ## Add a Custom Route
 
 Initially, the app contains a basic controller with a single route that returns the string "Hello World!".
-We will add another route for `business-parters` that will list all available business partners.
+We will add another route for `business-partner` that will list all available business partners.
 
 Create a new controller by executing the command:
 
 ```shell
-nest g controller business-partners
+nest g controller business-partner
 ```
 
-This will create a folder `business-partners` in the `src/` directory containing the controller `business-partners.controller.ts`.
+This will create a folder `business-partner` in the `src/` directory containing the controller `business-partner.controller.ts`.
 
 ```ts
 import { Controller } from '@nestjs/common';
 
-@Controller('business-partners')
-export class BusinessPartnersController {}
+@Controller('business-partner')
+export class BusinessPartnerController {}
 ```
 
-The `@Controller(business-partners)` decorator marks the class `BusinessPartnerController` as a controller (i.e. a thing that handles requests).
+The `@Controller(business-partner)` decorator marks the class `BusinessPartnerController` as a controller (i.e. a thing that handles requests).
 Next, we will add a method `getBusinessPartners` with a `@Get('')` decorator.
 This will tell Nest to create a handler for this endpoint for HTTP requests.
 
 ```ts
 import { Controller, Get } from '@nestjs/common';
 
-@Controller('business-partners')
-export class BusinessPartnersController {
+@Controller('business-partner')
+export class BusinessPartnerController {
   @Get()
   getBusinessPartners() {
     return 'We will implement this in a minute.';
@@ -61,7 +61,7 @@ export class BusinessPartnersController {
 ```
 
 Notice that we did not add any path information in the decorator.
-Nest will map GET `/business-partners` requests to this handler.
+Nest will map GET `/business-partner` requests to this handler.
 
 For the controller to work, you need to include it in the `controllers` array within the `@Module()` decorator in `app.module.ts`.
 The generate command updates the `app.module.ts` automatically and looks like this:
@@ -70,11 +70,11 @@ The generate command updates the `app.module.ts` automatically and looks like th
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { BusinessPartnersController } from './business-partners/business-partners.controller';
+import { BusinessPartnerController } from './business-partner/business-partner.controller';
 
 @Module({
   imports: [],
-  controllers: [AppController, BusinessPartnersController],
+  controllers: [AppController, BusinessPartnerController],
   providers: [AppService]
 })
 export class AppModule {}
@@ -87,7 +87,7 @@ npm run start:dev
 ```
 
 If you've terminated your application, you can restart it by running the start command again.
-Now, calling http://localhost:8080/business-partners should return our placeholder string.
+Now, calling http://localhost:8080/business-partner should return our placeholder string.
 
 ## Generate Service Entities
 
@@ -134,19 +134,19 @@ Use `@sap-cloud-sdk/generator` to generate OData client libraries you need, as m
 ## Execute an OData Request
 
 Next, we will create a service that will be responsible for fetching the business partners.
-To create a service class `business-partners.service.ts`, execute:
+To create a service class `business-partner.service.ts`, execute:
 
 ```shell
-nest g service business-partners
+nest g service business-partner
 ```
 
-This creates a basic class inside `src/business-partners` folder.
+This creates a basic class inside `src/business-partner` folder.
 
 ```ts
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class BusinessPartnersService {}
+export class BusinessPartnerService {}
 ```
 
 The service is also registered in the `provider` array within the `@Module()` decorator in `app.module.ts`.
@@ -154,8 +154,8 @@ The service is also registered in the `provider` array within the `@Module()` de
 ```ts
 @Module({
   imports: [],
-  controllers: [AppController, BusinessPartnersController],
-  providers: [AppService, BusinessPartnersService],
+  controllers: [AppController, BusinessPartnerController],
+  providers: [AppService, BusinessPartnerService],
 })
 ```
 
@@ -226,17 +226,17 @@ async getAllBusinessPartners(): Promise<BusinessPartner[]> {
 
 As network requests are asynchronous by nature, the return value of this function is a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) to a list of business partners `(Promise<BusinessPartner[]>)`.
 
-Now that we have a service class to retrieve business partners, let's use it in the `BusinessPartnersController`.
-The `BusinessPartnersService` is injected through the class constructor:
+Now that we have a service class to retrieve business partners, let's use it in the `BusinessPartnerController`.
+The `BusinessPartnerService` is injected through the class constructor:
 
 ```ts
 import { Controller, Get, HttpException } from '@nestjs/common';
 import { BusinessPartner } from '../../services/business-partner-service';
-import { BusinessPartnersService } from './business-partners.service';
+import { BusinessPartnerService } from './business-partner.service';
 
-@Controller('business-partners')
-export class BusinessPartnersController {
-  constructor(private businessPartnerService: BusinessPartnersService) {}
+@Controller('business-partner')
+export class BusinessPartnerController {
+  constructor(private businessPartnerService: BusinessPartnerService) {}
 
   @Get()
   async getBusinessPartners(): Promise<BusinessPartner[]> {
@@ -254,7 +254,7 @@ export class BusinessPartnersController {
 
 Nest will handle the `Promise` we return automatically.
 We add a `.catch` handler to specify how errors are handled (otherwise it would only show an internal server error when something goes wrong).
-Reload the http://localhost:8080/business-partners URL to retrieve a list of business partners.
+Reload the http://localhost:8080/business-partner URL to retrieve a list of business partners.
 
 Congratulations, you just made your first call with the SAP Cloud SDK!
 
@@ -305,8 +305,8 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [ConfigModule.forRoot()],
-  controllers: [AppController, BusinessPartnersController],
-  providers: [AppService, BusinessPartnersService],
+  controllers: [AppController, BusinessPartnerController],
+  providers: [AppService, BusinessPartnerService],
 })
 ```
 
@@ -332,17 +332,17 @@ You configured the destinations environment variable using a `.env` file.
 
 Here are the code files discussed on this page, if you are using the mock server:
 
-<Tabs groupId="code-files" defaultValue="bupa-controller" values={[{ label: 'src/business-partners/business-partners.controller.ts', value: 'bupa-controller'}, { label: 'src/business-partners/business-partners.service.ts', value: 'bupa-service'}, { label: 'src/app.module.ts', value: 'app-module'}]}>
+<Tabs groupId="code-files" defaultValue="bupa-controller" values={[{ label: 'src/business-partner/business-partner.controller.ts', value: 'bupa-controller'}, { label: 'src/business-partner/business-partner.service.ts', value: 'bupa-service'}, { label: 'src/app.module.ts', value: 'app-module'}]}>
 <TabItem value="bupa-controller">
 
 ```ts
 import { Controller, Get, HttpException } from '@nestjs/common';
 import { BusinessPartner } from '../../services/business-partner-service';
-import { BusinessPartnersService } from './business-partners.service';
+import { BusinessPartnerService } from './business-partner.service';
 
-@Controller('business-partners')
-export class BusinessPartnersController {
-  constructor(private businessPartnerService: BusinessPartnersService) {}
+@Controller('business-partner')
+export class BusinessPartnerController {
+  constructor(private businessPartnerService: BusinessPartnerService) {}
 
   @Get()
   async getBusinessPartners(): Promise<BusinessPartner[]> {
@@ -369,7 +369,7 @@ import {
 } from '../../services/business-partner-service';
 
 @Injectable()
-export class BusinessPartnersService {
+export class BusinessPartnerService {
   async getAllBusinessPartners(): Promise<BusinessPartner[]> {
     const { businessPartnerApi } = businessPartnerService();
     return await businessPartnerApi.requestBuilder().getAll().execute({
@@ -386,13 +386,13 @@ export class BusinessPartnersService {
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { BusinessPartnersController } from './business-partners/business-partners.controller';
-import { BusinessPartnersService } from './business-partners/business-partners.service';
+import { BusinessPartnerController } from './business-partner/business-partner.controller';
+import { BusinessPartnerService } from './business-partner/business-partner.service';
 
 @Module({
   imports: [],
-  controllers: [AppController, BusinessPartnersController],
-  providers: [AppService, BusinessPartnersService]
+  controllers: [AppController, BusinessPartnerController],
+  providers: [AppService, BusinessPartnerService]
 })
 export class AppModule {}
 ```
