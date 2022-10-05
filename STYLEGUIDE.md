@@ -2,6 +2,8 @@
 
 - [Formatting](#formatting)
   - [Inline Code](#inline-code)
+    - [Method Names](#method-names)
+      - [Function and Method](#function-and-method)
   - [Placeholders](#placeholders)
     - [Inline Text](#inline-text)
     - [Code Block](#code-block)
@@ -47,6 +49,26 @@ Items that should NOT be put in code format are listed below:
 - Email addresses
 - [Names of products, services, and organizations](#software-products)
 - URLs that the reader is supposed to follow in a browser
+
+### Method Names
+
+When referring to a method name in text:
+
+- omit the class name except where including it would prevent ambiguity
+- put an empty pair of parentheses after a method name to indicate that it's a method
+
+✅ This can be done by using the `asChildOf()` method
+
+❌ This can be done by using the `.asChildOf` method
+
+#### Function and Method
+
+If a function is part of an instance of a class then it is a method, else it is a function.
+Use those terms accordingly.
+
+✅ Functions such as `execute()` and `executeHttpRequest()` call `getDestination()` internally
+
+❌ Methods such as `execute()` and `executeHttpRequest()` call `getDestination()` internally
 
 ## Placeholders
 
@@ -117,7 +139,6 @@ URLs that the reader is supposed to follow in a browser should be in ordinary fo
 
 ✅ against a destination with URL `https://my.s4-system.com`
 
-
 ## Example Domains
 
 For generic domain name in examples, use `example.com`.
@@ -149,7 +170,6 @@ Enclose error messages in quotation marks when referring to them in text.
 ✅ If you see the error "Module not found: "Error: Can't resolve 'https' in""
 
 ❌ If you see the error `Module not found: Error: Can't resolve 'https' in`
-
 
 ## Graphical User Interface Elements
 
