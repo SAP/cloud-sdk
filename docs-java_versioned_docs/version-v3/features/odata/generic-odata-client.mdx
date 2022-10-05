@@ -14,7 +14,7 @@ keywords:
 
 :::danger Advanced! Use on your own discretion.
 
-The API for generic OData client is not intended to be used by application developers unless absolutely required.
+The API for generic OData client is not intended to be used by application developers unless required.
 Its API is a subject to change and non-breaking changes are not guaranteed.
 
 Please, make sure you know what you're doing and check if stable type-safe OData client API can solve you problem.
@@ -23,7 +23,8 @@ Please, make sure you know what you're doing and check if stable type-safe OData
 
 ## Overview
 
-Together with type-safe OData client, we provide a more generic and untyped OData client implementation to be used in **advanced** use-cases when the capabilities of typed OData client are not enough to achieve your development goals.
+Together with type-safe OData client, we provide a more generic and untyped OData client implementation to be used in **advanced** use-cases.
+When the capabilities of typed OData client are not enough to achieve your development goals.
 You can leverage generic untyped OData client for:
 
 - Workarounds and quick fixes
@@ -129,10 +130,12 @@ We collect popular use-cases and scenarios leveraging the Generic OData Client i
 ### Handling OData Delta Token
 
 [OData v4 specification](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_RequestingChanges) provides capabilities to return only a delta between your last and ongoing request.
-For example, if your previous request loaded information from the service which continues to be updated with new records, then with your next request you can ask to provide you only with the difference between what you've already loaded and current records on the service side.
+For example, if your previous request loaded information from the service which continues to be updated with new records.
+Then with your next request you can ask to provide you only with the difference between what you've already loaded and current records on the service side.
 For that, you can leverage `$deltatokens` query parameter.
 
-We do not provide convenience API for delta tokens in our type-safe client, but you can leverage generic OData client to fetch the delta token from the `response` as in the code snippet below:
+We do not provide convenience API for delta tokens in our type-safe client.
+But you can leverage generic OData client to fetch the delta token from the `response` as in the code snippet below:
 
 ```java
 ODataRequestResultGeneric response = request.execute(httpClient);
@@ -242,7 +245,7 @@ ODataRequestResultGeneric result = request.execute(client);
 
 ```
 
-### Fetching Raw Stream Data from /$value Endpoint
+### Fetching Raw Stream Data From /$value Endpoint
 
 You can get `fileStream` and `responseHeaders` in a single request by using the low-level Generic OData Client.
 Let's take this dummy OData request as an example: `/FileService/FileCollection(id='abc')/$value?foo=bar`

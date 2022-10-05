@@ -98,7 +98,7 @@ module.exports = {
           type: 'docsVersionDropdown',
           position: 'right',
           docsPluginId: 'docs-js'
-        },
+        }
         /*{
           type: 'docsVersionDropdown',
           position: 'right',
@@ -217,16 +217,16 @@ module.exports = {
         sidebarPath: require.resolve('./sidebarsDocsJava.js'),
         lastVersion: 'current',
         versions: {
-            current: {
+          current: {
             label: 'v4',
             badge: false
           },
-            v3: {
+          v3: {
             label: 'v3',
             path: 'v3',
             badge: false
-          },
-        },
+          }
+        }
       }
     ],
     [

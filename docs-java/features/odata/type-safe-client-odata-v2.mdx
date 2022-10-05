@@ -71,7 +71,7 @@ To leverage the type-safe OData v2 client, you need to add following dependencie
 
 :::tip Discover services on the SAP API Business Hub
 
-If you would like to consume a specific service, try searching for it on the [SAP API Business Hub](https://api.sap.com/) and visit an **SAP Cloud SDK** tab on the landing page of that service.
+If you would like to consume a specific service, try searching for it on the [SAP API Business Hub](https://api.sap.com/) and visit the **SAP Cloud SDK** tab on the landing page of that service.
 There you will find detailed instructions on how to use the SAP Cloud SDK to get a client library for that specific service.
 Learn more about the integration with the SAP API Business Hub in the [blog](https://blogs.sap.com/2021/09/17/the-sap-cloud-sdk-integrates-with-the-sap-api-business-hub/).
 
@@ -126,7 +126,7 @@ As of SAP Cloud SDK `3.29.1`, we have deprecated the old OData client.
 - Doesn't share a code base with OData v4 client
 - Has good performance, but not optimized for optimal metadata handling
 
-### Which One to Choose?
+### Which One To Choose?
 
 - We recommend using the new improved OData client for new development.
 - For existing code, we recommend [adjusting your code](#switch-to-improved-odata-vdm-beta) to switch to the new OData client.
@@ -837,13 +837,15 @@ POST /ODataService/API_BUSINESS_PARTNER/A_BusinessPartner(123)/to_BusinessPartne
 Pagination describes the practice of splitting a collection of entities from reading requests into one or many pages.
 The paging behavior is determined by both the server and the client.
 
-OData service operators may decide to enable server-driven pagination to limit the amount of data that is fetched and sent over the network to the client, in case generic query options yield huge amounts of data.
+OData service operators may decide to enable server-driven pagination to limit the amount of data that is fetched and sent over the network to the client.
+Generic query options can yield huge amounts of data.
 By splitting the result-set into sequential pages of entities, the data can be requested incrementally.
 This reduces initial network load and improves overall response times.
 If the payload of an OData response contains a link including a `$skiptoken`, then it indicates a next page to the result-set.
 The iterable result-set is a consistent snapshot of the data, it can not change between reading individual pages.
 
-In comparison, the OData consumer may use query options `$top` and `$skip` (client-driven paging) to read partial data from the result-set, but relying on a consistent state while browsing through the data can be problematic.
+In comparison, the OData consumer may use query options `$top` and `$skip` (client-driven paging) to read partial data from the result-set.
+But relying on a consistent state while browsing through the data can be problematic.
 Between individual requests, another user could delete or add an item.
 This would result in an inconsistent aggregation of data.
 

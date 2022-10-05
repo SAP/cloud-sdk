@@ -41,7 +41,8 @@ To improve readability, we use the term _BAPI_ to refer to both BAPIs and RFC mo
 SAP offers the [SAP Java Connector](https://support.sap.com/en/product/connectors/jco.html) library, hereafter referred to as _JCo_ in short, that allows native access to BAPIs inside SAP systems.
 That means, one can also invoke BAPIs without using the SAP Cloud SDK by solely leveraging JCo.
 
-SAP Cloud SDK offers a convenient Java API on top of JCo that integrates with other SAP Cloud SDK core concepts, such as the destination retrieval on SCP, as well as a nice way to mapping Java entity classes to BAPI input parameters and result sets.
+SAP Cloud SDK offers a convenient Java API on top of JCo that integrates with other SAP Cloud SDK core concepts, such as the destination retrieval on SCP.
+It's also a nice way to mapping Java entity classes to BAPI input parameters and result sets.
 
 :::caution JCo is not packaged with SAP Cloud SDK
 SAP Cloud SDK does _not_ package JCo as a library with its dependencies.
@@ -203,7 +204,8 @@ final List<CostCenter> costCenterList = result
 ```
 
 This helps you automatically retrieve `List<CostCenter>` and can access the output in a type-safe way.
-On the return type of `result.get("COSTCENTERLIST")` you call `getAsCollection()` to treat this parameter as a collection and then you instruct the SAP Cloud SDK to transfer the contained entries into individual `CostCenter` instances with `asList(...)`.
+On the return type of `result.get("COSTCENTERLIST")` you call `getAsCollection()` to treat this parameter as a collection.
+And then you instruct the SAP Cloud SDK to transfer the contained entries into individual `CostCenter` instances with `asList(...)`.
 
 Further processing depends on the use case.
 For example, we could print the cost centers to the servlet response.
@@ -314,7 +316,8 @@ For performance improvements of your app, please consider using optional propert
 
 :::info
 
-This destination setup is exemplary for accessing an On-premise SAP S/4HANA system directly, if you want to access it e.g. via message server logon or you want to access a cloud system via WebSocketRFC, please adapt the properties as described in the [official documentation](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/ab6eac92978f469e9eabe3d477ca2411.html).
+This destination setup is exemplary for accessing an On-premise SAP S/4HANA system directly.
+If you want to access it e.g. via message server logon or you want to access a cloud system via WebSocketRFC, please adapt the properties as described in the [official documentation](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/ab6eac92978f469e9eabe3d477ca2411.html).
 
 :::
 
@@ -445,7 +448,7 @@ final HttpDestination httpDestination = DestinationAccessor.getDestination(desti
 final DefaultErpHttpDestination erpHttpDestination = httpDestination.decorate(DefaultErpHttpDestination::new);
 ```
 
-Simply speaking, for RFC destinations such decorations do not exist.
+For RFC destinations, such decorations do not exist.
 
 ### Local Deployment
 

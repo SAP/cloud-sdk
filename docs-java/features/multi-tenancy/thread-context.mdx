@@ -119,7 +119,7 @@ Tenant retrieveProviderTenant()
 The `RequestHeaderAccessor#getHeaderContainer()` method provides convenient access to the HTTP headers of the current incoming request.
 It returns an instance of `RequestHeaderContainer`, which is, by API contract, an **immutable** container that allows _case insensitive_ access to HTTP header values.
 Although the `RequestHeaderContainer` cannot be altered once created, there are scenarios where manipulating HTTP headers is required.
-In such cases, a new instance of `RequestHeaderContainer` can easily be created in a few different ways.
+In such cases, a new instance of `RequestHeaderContainer` can be created in a few different ways.
 
 #### Create a new RequestHeaderContainer From Scratch
 
@@ -134,10 +134,10 @@ An example for how the returned `Builder` can be used is shown in the chapter be
 
 Additionally, to make customizing the current HTTP headers even easier, the `RequestHeaderAccessor` comes with an overload of the `executeWithHeaderContainer` method that accepts a `Map<String, String>`.
 
-#### Updating an existing RequestHeaderContainer
+#### Updating an Existing RequestHeaderContainer
 
 As pointed out above, the `RequestHeaderContainer` is an **immutable** structure.
-Therefore, updating an already existing instance is not possible.
+Therefore, updating an already existing instance is impossible.
 
 **However**, in cases where you would like to, for example, just add a new custom header to the set of existing headers, the `RequestHeaderContainer` offers the `toBuilder` method.
 As the name suggests, this method can be used to retrieve an instance of `RequestHeaderContainer.Builder`.
@@ -170,9 +170,9 @@ Note how accessing the values for specific HTTP headers will work independent of
 
 Now let's say your use case requires that HTTP cookies shall not be leaked into further application execution.
 Additionally, you have to make sure that the `x-app-specific-header` contains an additional application provided value.
-Last but not least, your application should always serve German customers and, therefore, you need to make sure the `Accept-Language` header is always adjusted accordingly.
+Lastly, our application should always serve German customers and, therefore, you need to make sure the `Accept-Language` header is always adjusted accordingly.
 
-Luckily, using the `Builder` API, fulfilling these requirements is straightforward:
+Using the `Builder` API, fulfilling these requirements is straightforward:
 
 ```java
 RequestHeaderContainer updatedHeaders =
@@ -230,7 +230,7 @@ Please refer to [this guide](../../guides/cap-sdk-integration.mdx) on how to ach
 
 Be cautious with long-running, asynchronous operations.
 A propagated thread context will only persist as long as the thread lives that it was created on.
-So when the parent thread dies the context will cease to exist and no longer be available in any of the threads.
+When the parent thread dies the context will cease to exist and no longer be available in any of the threads.
 
 <details>
 <summary> Workaround </summary>
