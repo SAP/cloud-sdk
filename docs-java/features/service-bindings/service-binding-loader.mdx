@@ -47,7 +47,7 @@ final ScpCfCloudPlatform cloudPlatform = new ScpCfCloudPlatform();
 cloudPlatform.setServiceBindingAccessor(() -> Collections.singletonList(mock(ServiceBinding.class)));
 ```
 
-### Default behavior
+### Default Behavior
 
 If nothing else has been specified, i.e. the `ScpCfCloudPlatform#setServiceBindingAccessor(ServiceBindingAccessor)` method hasn't been used, the SAP Cloud SDK will automatically use the `DefaultServiceBindingAccessor#getInstance` to load service bindings.
 
@@ -59,3 +59,21 @@ That way, changing the default `ServiceBindingAccessor` (through the `DefaultSer
 :::
 
 This default behavior can always be enabled by using `ScpCfCloudPlatform.setServiceBindingAccessor(null)`.
+
+### Custom _Environment Variable Reader_
+
+:::danger Bad Practice
+
+The below approach is considered bad practice and exists mainly for compatibility.
+Please prefer the `ScpCfCloudPlatform#setServiceBindingAccessor` API whenever possible.
+
+:::
+
+In addition to the `ScpCfCloudPlatform#setServiceBindingAccessor` API, modifying the _environment variable reader_ via the `CloudPlatform#setEnvironmentVariableReader` method will also affect the [`ServiceBindingAccessor`](https://github.com/SAP/btp-environment-variable-access/blob/main/api-parent/access-api/src/main/java/com/sap/cloud/environment/servicebinding/api/ServiceBindingAccessor.java) used by the `ScpCfCloudPlatform` instance.
+When this method is used, a custom `ServiceBindingAccessor` will be created by the `ScpCfCloudPlatform` in the following way:
+
+1. Use the _Service Loader Pattern_ to get a list of `ServiceBindingAccessor` instances.
+2. If the lists contains an instance of [`SapVcapServicesServiceBindingAccessor`](https://github.com/SAP/btp-environment-variable-access/blob/main/sap-vcap-services/src/main/java/com/sap/cloud/environment/servicebinding/SapVcapServicesServiceBindingAccessor.java), replace it with a new `SapVcapServicesServiceBindingAccessor` instance that uses the custom _environment variable reader_ (instead of `System.getenv`).
+3. Combine the results of the `ServiceBindingAccessor` instances using the [`ServiceBindingMerger`](https://github.com/SAP/btp-environment-variable-access/blob/main/api-parent/access-api/src/main/java/com/sap/cloud/environment/servicebinding/api/ServiceBindingMerger.java).<br/>
+**Note**: The `ServiceBindingMerger` will only consider unique service bindings.
+4. Lastly, to reduce computational effort for consecutive lookups, use a [`SimpleServiceBindingCache`](https://github.com/SAP/btp-environment-variable-access/blob/main/api-parent/access-api/src/main/java/com/sap/cloud/environment/servicebinding/api/SimpleServiceBindingCache.java).
