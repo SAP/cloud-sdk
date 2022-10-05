@@ -86,7 +86,7 @@ npm start
 ```
 
 When the server is running, you should see a message like: `[NestApplication] Nest application successfully started` and some mappings related to the listed controllers.
-Open the URL `http://localhost:8080/business-partners` and you should see the data of the mock server.
+Open the URL `http://localhost:8080/business-partner` and you should see the data of the mock server.
 
 ### Select Certain Fields
 
@@ -121,7 +121,7 @@ If your IDE supports code completion, you can see all properties that can be sel
 Depending on your IDE, the list may show automatically or when you trigger the code completion manually (often by pressing `Ctrl` + `Space`).
 This saves you from having to look up the properties in the metadata and prevents errors due to mistyping.
 
-If you open the URL `http://localhost:8080/business-partners`, you should see only the ID, first name, and last name of the business partners.
+If you open the URL `http://localhost:8080/business-partner`, you should see only the ID, first name, and last name of the business partners.
 
 ![Get all business partners.](../img/get-all-business-partners.png)
 
@@ -199,8 +199,8 @@ Otherwise, an error message is sent.
 
 ### Test GetById Service
 
-Restart your server and open `http://localhost:8080/business-partners` to get the list of all business partners.
-Copy one ID from the result list and execute `http://localhost:8080/business-partners/<yourId>`.
+Restart your server and open `http://localhost:8080/business-partner` to get the list of all business partners.
+Copy one ID from the result list and execute `http://localhost:8080/business-partner/<yourId>`.
 You should see the details of the chosen business partner.
 Note that Nest applications have a built-in [exception filter](https://docs.nestjs.com/exception-filters), which maps exceptions to HTTP messages shown to the client.
 By default, the exceptions from the SAP Cloud SDK are mapped to a server-side error.
@@ -254,7 +254,7 @@ return businessPartnerApi
 
 Properties like `POSTAL_CODE`, `CITY_NAME`, and so on are part of the address API and related schema.
 The `businessPartnerAddressApi` is also part of the business partner service.
-If you call the URL `http://localhost:8080/business-partners/<yourId>`, the service returns a single business partner with the selected address information:
+If you call the URL `http://localhost:8080/business-partner/<yourId>`, the service returns a single business partner with the selected address information:
 
 ```json
 {
@@ -374,7 +374,7 @@ import {
 } from '../../services/business-partner-service';
 import { BusinessPartnerService } from './business-partner.service';
 
-@Controller('business-partners')
+@Controller('business-partner')
 export class BusinessPartnerController {
   constructor(
     private readonly businessPartnerService: BusinessPartnerService
