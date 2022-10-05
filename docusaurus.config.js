@@ -98,7 +98,12 @@ module.exports = {
           type: 'docsVersionDropdown',
           position: 'right',
           docsPluginId: 'docs-js'
-        }
+        },
+        /*{
+          type: 'docsVersionDropdown',
+          position: 'right',
+          docsPluginId: 'docs-java'
+        }*/
       ]
     },
     footer: {
@@ -209,7 +214,19 @@ module.exports = {
         path: 'docs-java',
         editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
         routeBasePath: 'docs/java',
-        sidebarPath: require.resolve('./sidebarsDocsJava.js')
+        sidebarPath: require.resolve('./sidebarsDocsJava.js'),
+        lastVersion: 'current',
+        versions: {
+            current: {
+            label: 'v4',
+            badge: false
+          },
+            v3: {
+            label: 'v3',
+            path: 'v3',
+            badge: false
+          },
+        },
       }
     ],
     [
