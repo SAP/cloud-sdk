@@ -300,8 +300,7 @@ For example, to filter based on a field `ShoeSize` use:
 
 ```java
 ValueBoolean filterExpression = FieldReference.of("ShoeSize").equalTo(42);
-UncheckedFilterExpression<MyEntity> customFilter =
-            new UncheckedFilterExpression<>(filterExpression);
+ExpressionFluentHelper<MyEntity> customFilter = new ExpressionFluentHelper<>(filterExpression);
 
 // use the custom filter in the .filter() method of your request builder
 myService.getAllBusinessPartner().filter(customFilter).executeRequest(destination);
