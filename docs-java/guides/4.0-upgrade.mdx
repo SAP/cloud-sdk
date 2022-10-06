@@ -1,0 +1,335 @@
+---
+id: 4.0-upgrade
+title: Update to Version 4.0 of the SAP Cloud SDK
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Update to Version 4.0
+description: Update your application to use version 4.0 of the SAP Cloud SDK
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+  - 4.0
+  - Update
+---
+
+## Introduction
+
+-> Marketing
+-> Link blog post for new features?
+
+
+There is a good chance that simply bumping the version to 4.0.0 is already enough, without the need for any further adjustments.
+In particular, updating may be straightforward if you are not using any deprecated API or spawn new threads.
+
+## Before You Update
+
+Before you increase the SAP Cloud SDK version to 4 it can be beneficial to migrate any usage of **deprecated API** first.
+Follow the deprecation note of the Javadoc in case you are still using deprecated API from the SAP Cloud SDK.
+Almost all deprecated API is removed With version 4 (exception being audit logging).
+
+## Update Your POM.XML
+
+Begin by upgrading the version to `4.0.0`.
+Make sure to apply this for all the places where you declare the SAP Cloud SDK version.
+Typically, this is the `sdk-bom` in the dependency management section.
+
+In case you are using any of the code generators (OData, OpenAPI) also increase the version for those.
+
+:::tip Verify the version
+You can run `mvn dependency:tree | grep 'com.sap.cloud.sdk'` to verify that all entries are consistently on version 4.
+:::
+
+Finally, version 4.0 discontinued some (legacy) modules and plugins.
+Most notably are:
+* Usage analytics maven plugin
+* Test utilities (contained the `MockUtil` class)
+
+Remove them if they are present in your pom files.
+
+<details>
+    <summary>Full list of removed modules</summary>
+
+  * On-premise VDM:
+    * `s4hana-api-odata-onpremise-2020`
+    * `s4hana-api-odata-v4-onpremise-2020`
+  * DataModel - Enterprise Messaging:
+    * `messaging-jms`
+    * `messaging-generator`
+    * `messaging-core`
+    * `s4hana-api-messaging`
+  * Framework integrations (`com.sap.cloud.sdk.frameworks`)
+    * `cxf`
+    * `eclipselink`
+    * `eclipselink-javaee`
+    * `jaxrs-gson`
+    * `jaxrs`
+    * `javaee`
+    * `liquibase`
+    * `liquibase-javaee`
+    * `togglz`
+    * `spring-boot-multitenancy-scp-cf`
+    * `spring-web`
+  * Testing utilities (`com.sap.cloud.sdk.testutil`)
+    * `testutil-parent`
+    * `testutil-core`
+    * `testutil-resources`
+  * Currency Conversion (`com.sap.cloud.sdk.integration`)
+    * `integration-object-currency-conversion-simple`
+    * `integration-object-currency-conversion-simple-artifact`
+    * `integration-object-currency-conversion-simple-srv`
+    * `integration-parent`
+    * `currency-conversion-adapter-simple-integration-objects-mrm`
+    * `currency-conversion-adapter-simple-integration-objects`
+    * `currency-conversion-core`
+    * `currency-conversion-datamodel`
+    * `currency-conversion-parent`
+  * Quality (`com.sap.cloud.sdk.quality`)
+    * `common`
+    * `httpclient-listener`
+    * `listeners-all`
+    * `odata-querylistener`
+    * `pmd-plugin`
+    * `pmd-rules`
+    * `rfc-querylistener`
+  * Others:
+    * `com.sap.cloud.sdk.services:graph`
+    * `com.sap.cloud.sdk.services:recast-ai`
+    * `com.sap.cloud.sdk.services:scp-machine-learning`
+    * `com.sap.cloud.sdk.plugins:usage-analytics`
+    * `com.sap.cloud.sdk.plugins:usage-analytics-maven-plugin`
+    * `com.sap.cloud.sdk.cloudplatform:metering`
+    * `com.sap.cloud.sdk.cloudplatform:metering-scp-neo`
+
+</details>
+
+### Managing Dependencies
+
+With version 4.0 we also reduce the amount of dependencies the SAP Cloud SDK brings.
+This gives you more flexibility and requires less dependency management.
+
+Because the `sdk-bom` now brings less dependencies you may need to add explicit version declarations to dependencies that were previously managed by the `sdk-bom`.
+If this is the case Maven will inform you about it with a message similar to `'dependencies.dependency.version' for ... is missing`.
+
+<details>
+    <summary>Full list of dependencies removed from the BOM</summary>
+
+  * io.swagger:swagger-annotations
+  * javax.validation:validation-api
+  * javax.ws.rs:javax.ws.rs-api
+  * javax.jms:javax.jms-api
+  * javax:javaee-api
+  * javax:javaee-web-api
+  * javax.ejb:javax.ejb-api
+  * org.hamcrest:hamcrest-core
+  * org.eclipse.persistence:eclipselink
+  * org.eclipse.persistence:javax.persistence
+  * org.liquibase:liquibase-core
+  * org.apache.commons:commons-csv
+  * org.apache.cxf:cxf-core
+  * org.apache.cxf:cxf-rt-management
+  * org.apache.cxf:cxf-rt-transports-http
+  * org.apache.cxf:cxf-rt-bindings-soap
+  * org.apache.cxf:cxf-rt-bindings-xml
+  * org.apache.cxf:cxf-rt-ws-addr
+  * org.apache.cxf:cxf-rt-ws-rm
+  * org.apache.cxf:cxf-rt-ws-policy
+  * org.apache.cxf:cxf-rt-ws-mex
+  * org.apache.cxf:cxf-rt-ws-security
+  * org.apache.cxf:cxf-rt-frontend-jaxws
+  * org.apache.cxf:cxf-rt-frontend-jaxrs
+  * org.apache.cxf:cxf-rt-rs-client
+  * org.apache.cxf:cxf-rt-rs-extension-providers
+  * org.apache.cxf:cxf-rt-rs-extension-search
+  * org.apache.cxf:cxf-rt-rs-security-cors
+  * org.apache.cxf:cxf-rt-rs-security-oauth2
+  * org.apache.cxf:cxf-rt-rs-security-xml
+  * org.apache.cxf:cxf-rt-rs-security-sso-saml
+  * org.slf4j:jul-to-slf4j
+  * org.slf4j:log4j-over-slf4j
+  * org.slf4j:slf4j-simple
+  * org.springframework:spring-framework-bom
+  * org.springframework:spring-security-bom
+  * org.togglz:togglz-core
+  * org.togglz:togglz-servlet
+  * org.togglz:togglz-console
+  * org.togglz:togglz-testing
+  * org.togglz:togglz-junit
+  * com.jayway.jsonpath:json-path
+  * com.fasterxml.jackson:jackson-bom
+  * com.google.guava:guava-testlib
+  * com.sap.cloud.servicesdk:odatav2-connectivity-sdk3
+  * com.sap.cloud.servicesdk:odata-v2-lib
+  * com.sap.cloud.servicesdk.prov:api
+  * com.sap.cloud.servicesdk.prov:odatav4
+  * com.sap.cloud.servicesdk.prov:odata2.web
+  * com.sap.cloud.servicesdk.prov:odata2.xsa
+  * com.sap.cloud.servicesdk.prov:odatav2-hybrid
+  * com.sap.cloud.servicesdk.prov:odatav2-prov
+  * com.sap.cloud:neo-javaee7-wp-api
+  * com.sap.cloud:neo-java-web-api
+  * com.sap.xs.java:xs-env
+  * com.sap.xs2.security:security-commons
+  * com.sap.xs2.security:java-container-security
+  * com.sap.conn.jco:com.sap.conn.jco.sapjco3
+  * com.sap.conn.jco:sapjco3
+  * com.sap.hcp.cf.logging:cf-java-logging-support-logback
+  * com.squareup.okhttp3:okhttp
+
+</details>
+
+
+**If you are using the SAP Java Buildpack (SJB)** together with a `.war` based deployment you should check out our new BOM dedicated to the SJB.
+You can use the new BOM by replacing `sdk-bom` with `sdk-sjb-bom` in your dependency management section.
+
+For more information and help in case of dependency problems refer to the [dedicated guide on managing dependencies](/manage-dependencies).
+
+:::tip Check your setup
+Run `mvn validate` to verify your updated project configuration.
+:::
+
+## Working with Threads and the ThreadContext
+
+Up until now, working with threads was cumbersome.
+Any code that runs a task in a **new thread / asynchronously** had to preserve the `ThreadContext` like so:
+
+```java
+ThreadContextExecutor executor = new ThreadContextExecutor();
+Callable operationWithContext = () -> executor.execute(() -> operation());
+
+invokeAsynchronously(operationWithContext);
+```
+
+With version 4.0 you can simplify your code for running asynchronous tasks with the newly introduced `ThreadContextExecutors`:
+
+```java
+Future runningTask = ThreadContextExecutors.submit(() -> operation());
+```
+
+The new API also integrates conveniently with CAP and can be integrated to work with Springs `@Async`.
+Refer to the [full documentation](../features/multi-tenancy/multi-tenancy-thread-context) for more details on these features.
+
+## Further Changes
+
+At this point the update is probably already complete.
+There are more technically breaking API changes in version 4 that likely won't affect your project.
+Still, they are listed here for completeness and easy access.
+
+### OData
+
+For the OData features most notable are:
+
+* (OData V2) Change any reference of `UncheckedFilterExpression` to `ExpressionFluentHelper`
+* (OData V2) Change any exception handling for `com.sap.cloud.sdk.odatav2.connectivity.ODataException`
+    * Catch `com.sap.cloud.sdk.datamodel.odata.client.exception.*` instead
+    * This should only apply for any usages of `get...OrFetch()` methods on entities
+
+<details>
+    <summary>Full list of OData related changes</summary>
+
+  * Remove `com.sap.cloud.sdk.s4hana.datamodel.odata.adapter.ODataCalendarAdapter` and child classes
+    `ODataDateTimeAdapter`, `ODataDateTimeOffsetAdapter`, and `ODataTimeAdapter`.
+  * Remove the obsolete helper classes `FilterExpressionWrapper`, `UncheckedFilterExpression`, `FilterExpressionHelper` and `FilterFunction`
+  * The `ODataTypeValueSerializer` class has been removed as it is no longer needed with the removal of the `servicesdk` dependency
+  * Remove the obsolete class `com.sap.cloud.sdk.s4hana.connectivity.RequestBody`
+  * Remove the following deprecated methods from all OData V2 request builders (FluentHelper classes):
+    * `execute`
+    * `withErrorHandler`
+    * `getHeadersForRequestOnly`
+    * `getHeadersForRequestAndImplicitRequests`
+    * `and`
+    * `onRequestAndImplicitRequests`
+    * `onRequestOnly`
+    * `cachingMetadata`
+    * `withoutCachingMetadata`
+    * `toQuery`
+    * `ignoringVersionIdentifier`
+    * All constructors that required the `servicePath` as single argument, now the second argument `entityCollection` is mandatory
+  * For OData v2 generated classes (the OData v2 VDM), the method signature has changed for lazily resolving navigation properties in entity classes.
+    A checked exception is no longer thrown for methods named _fetchX()_ and _getXOrFetch()_:
+    ```
+    Entity entity;
+    try {
+      entity.fetchProperty();
+      entity.getPropertyOrFetch()
+    }
+    catch( com.sap.cloud.sdk.odatav2.connectivity.ODataException e ) {
+    }
+    ```
+    If you still want to evaluate the error details (like HTTP payload or status code), please feel free to explore the hierarchy and properties of our OData unchecked exception types.
+  * Removed the now obsolete method `VdmEntityUtil#fromFields`
+  * The modules `odata-client` and `odata-v4-core` have been moved out of beta state and are now considered stable
+  * The decprecated modules `s4hana-api-odata-onpremise-2020` and `s4hana-api-odata-v4-onpremise-2020` are removed
+
+</details>
+
+### CloudPlatform
+
+On the `CloudPlatform` and related accessor classes the most notable changes are:
+
+* The deprecated `RequestAccessor` has been removed together with its related API
+* The `RequestHeaderContainer` received minor changes to the collection types used
+
+<details>
+    <summary>Full list of CloudPlatform related changes</summary>
+
+  * The deprecated `com.sap.cloud.sdk.cloudplatform.servlet.RequestAccessor` has been removed together with its related API:
+    * `RequestAccessor`
+    * `RequestFacade`
+    * `DefaultRequestFacade`
+    * `RequestThreadContextListener`
+  * Moved the `AuthTokenAccessor`, `AuthToken` classes and the `AuthTokenFacade` interface from the `security-scp-cf` into the `security` module.
+    * Renamed `DefaultAuthTokenFacade` to `ScpCfAuthTokenFacade`.
+    * Only functional implementation of `AuthTokenFacade` is the `ScpCfAuthTokenFacade` in the `security-scp-cf` module.
+    * If no implementation of the facade interface can be found via the ServiceLoader pattern, all invocations on the `AuthTokenAccessor` will throw an Exception.
+    * SCP CF related methods on the `AuthTokenAccessor` are removed from there and only accessible via the `ScpCfAuthTokenFacade`.
+  * Public API in `RequestHeaderContainer` has the following breaking changes:
+    * `RequestHeaderContainer#getHeaderNames()` now returns a `List<String>` instead of `Set<String>`. Only headers which have at least one non-null value are returned by the method. 
+    * `RequestHeaderContainer#getHeaderValues()` now returns a `List<String>` instead of `Collection<String>`
+    * `DefaultRequestHeaderContainer#fromMultiValueMap` also allows generic inputs to be passed.
+       The signature of the method has changed from `DefaultRequestHeaderContainer#fromMultiValueMap( Map<String, Collection<String>> headers )` to `DefaultRequestHeaderContainer#fromMultiValueMap( Map<String, ? extends Iterable<String>> headers )`
+
+</details>
+
+
+### ThreadContext
+
+:::caution
+The `ThreadContext` interface and all related API have received substantial changes.
+In most cases [the above mentioned change](#working-with-threads-and-the-threadcontext) should suffice.
+
+If this is not the case for your project and you find yourself affected by any of the below changes please **reach out to us directly**.
+:::
+
+<details>
+    <summary>Full list of ThreadContext related changes</summary>
+
+  * The `ThreadContext` interface received the following changes:
+    * Method `Property<T> getProperty(String name)` has been replaced with `Try<T> getPropertyValue(String name)`
+    * Method `setPropertyIfAbsent` has been changed to now accept a `Callable<Property<?>>` instead of `Callable<?>`
+  * The `Property<T>` class has been expanded with convenience methods to decorate a callable:
+    * `Callable<Property<?>> decorateCallable( Callable<?> valueGenerator )` 
+    * `Callable<Property<?>> decorateConfidentialCallable( Callable<?> valueGenerator )` 
+  * `ThreadContextExecutor` changes:
+    * `ThreadContext` instances are no longer implicitly shared when using `ThreadContextExecutor`. Instead:
+    * `fromCurrentContext()` will duplicate the current context into a new context object
+    * `fromNewContext()` will use a new, empty context object
+    * `fromCurrentOrNewContext()` behaves like `fromCurrentContext` but will fall back to a new context, if none is available
+    * `using(context)` will duplicate the provided context and its properties into a new context object
+    * Duplicating the current context solves persistence and concurrency issues with dynamic thread life cycles.
+    * Additionally, the `ThreadContext` is duplicated every time the `ThreadContextExecutor#execute` method is called.
+    * Therefore, the steps `beforeDestroy()` and `afterDestroy()` are removed from the `ThreadContextListener`.
+  * `ThreadContextListener` has no longer access to values from a potential parent thread-context.
+    Instead, any values from a potential parent context are already present and can be altered.
+  * The `ThreadContextDecorator` has been changed to now enable passing arbitrary `ThreadLocal` related data to new threads created via `DefaultThreadContextExecutorService`
+    * The existing `SecurityThreadContextDecorator` has been improved to pass on the full security library's `SecurityContext`
+    * The related `cds-integration-cloudsdk` module has been improved to pass on the full CDS `RequestContext`
+    * The now obsolete `SecurityContextThreadContextListener` has been removed.
+    * The `ScpNeoThreadContextDecorator` has been renamed to `ScpNeoThreadContextDecoratorInternal` and moved to `com.sap.cloud.sdk.cloudplatform.thread`. Additionally, it is no longer implementing the `ThreadContextDecorator` interface.
+  
+</details>
+
+
