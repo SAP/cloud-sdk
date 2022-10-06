@@ -31,5 +31,5 @@ export default function DropdownNavbarItemWrapper(props) {
     newProps = props;
   }
 
-  return newProps?.items?.length? <DropdownNavbarItem {...newProps} /> : null
+  return newProps?.items?.length ? <DropdownNavbarItem {...newProps} /> : null;
 }
