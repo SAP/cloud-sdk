@@ -31,6 +31,16 @@ Before you increase the SAP Cloud SDK version to 4 it can be beneficial to migra
 Follow the deprecation note of the Javadoc in case you are still using deprecated API from the SAP Cloud SDK.
 Almost all deprecated API is removed With version 4 (exception being audit logging).
 
+<details>
+    <summary>Full list of deprecated API</summary>
+
+  | API             	| Replacement           	| Comment 	|
+  |-----------------	|-----------------------	|---------	|
+  | RequestAccessor 	| RequestHeaderAccessor 	|         	|
+  |                 	|                       	|         	|
+
+</details>    
+
 ## Update Your POM.XML
 
 Begin by upgrading the version to `4.0.0`.
@@ -181,7 +191,9 @@ If this is the case Maven will inform you about it with a message similar to `'d
 
 </details>
 
-**If you are using the SAP Java Buildpack (SJB)** together with a `.war` based deployment you should check out our new BOM dedicated to the SJB.
+### Dependencies for the SAP Java Buildpack
+
+If you are using the SAP Java Buildpack (SJB) together with a `.war` based deployment you should check out our new BOM dedicated to the SJB.
 You can use the new BOM by replacing `sdk-bom` with `sdk-sjb-bom` in your dependency management section.
 
 For more information and help in case of dependency problems refer to the [dedicated guide on managing dependencies](/manage-dependencies).
@@ -208,7 +220,7 @@ With version 4 you can simplify your code for running asynchronous tasks with th
 Future runningTask = ThreadContextExecutors.submit(() -> operation());
 ```
 
-The new API also integrates conveniently with CAP and can be integrated to work with Spring`s `@Async`.
+The new API also integrates conveniently with CAP and can be integrated to work with Spring's `@Async`.
 Refer to the [full documentation](../features/multi-tenancy/multi-tenancy-thread-context) for more details on these features.
 
 ## Further Changes
