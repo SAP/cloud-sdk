@@ -189,22 +189,17 @@ Do not use italics or quotes.
 
 ❌ On the settings page, click _Show API Key_.
 
-✅ In the drop-down, select **BasicAuthentication** as the authentication type
+Focus on the feature and its functionality, not the UI element and gestures.
+
+✅ In the **Authentication** drop-down, select **BasicAuthentication**
 
 ❌ In the dropdown, choose `BasicAuthentication` as the authentication type
 
-- When a label is all uppercase, use sentence-style capitalization.
-- If a label ends with a colon/an ellipsis, don't include that end punctuation.
-  <!-- vale off -->
-  Example - Button label: LAUNCH...
-  <!-- vale on -->
-  ✅ To start the application, click **Launch**.
+Follow the capitalization as it appears on the page.
 
-✅ **Launch** starts the application.
+✅ Click `Get New Access Token` to retrieve a token
 
-❌ You can start your application via the "launch.." button.
-
-❌ You can start your application via the "LAUNCH" button.
+❌ press the `Get new access token` button to retrieve a token
 
 ### Type of Element
 
@@ -293,6 +288,7 @@ Be polite, but using please in a set of instructions is overdoing the politeness
 
 Use 'please' only when asking for permission or forgiveness.
 For example, when what you're asking for:
+
 - benefits us
 - inconveniences a reader
 - or suggests a potential issue with a product
