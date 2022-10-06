@@ -1,5 +1,5 @@
 import React from 'react';
-import { shouldShow } from './helper';
+import { containsCurrentDocsPluginId } from './helper';
 import DropdownNavbarItem from '@theme-original/NavbarItem/DropdownNavbarItem';
 import sdkVersions from '@site/static/api/versions';
 import { useActiveVersion } from '@docusaurus/plugin-content-docs/client';
@@ -9,10 +9,11 @@ import { useActiveVersion } from '@docusaurus/plugin-content-docs/client';
  * the wrapper overwrites its default `items` value with all versions matching the currently selected major version.
  */
 export default function DropdownNavbarItemWrapper(props) {
-  if (shouldShow(props) && props.apiReference) {
+  let newProps = null;
+  if (containsCurrentDocsPluginId(props) && props.apiReference) {
     const currentSelectedVersion = useActiveVersion(props.docsPluginId)
       .label[1];
-    const newProps = {
+    newProps = {
       ...props,
       items: sdkVersions
         .filter(version => {
@@ -26,7 +27,13 @@ export default function DropdownNavbarItemWrapper(props) {
           };
         })
     };
-    return <DropdownNavbarItem {...newProps} />;
+  } else {
+    newProps = props;
   }
-  return <DropdownNavbarItem {...props} />;
+
+  if (!newProps || !newProps.items || !newProps.items.length) {
+    return null;
+  }
+
+  return <DropdownNavbarItem {...newProps} />;
 }
