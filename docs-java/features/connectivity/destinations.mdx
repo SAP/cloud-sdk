@@ -106,7 +106,7 @@ Using the [`SAMLAssertion`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc7
 This is because upon authentication at the target system, a session cookie is returned, which is stored within the used `HttpClient` instance.
 For subsequent calls, the service then expects authenticated clients to include their session cookie.
 
-By default, the SAP Cloud SDK uses the `RequestScopedHttpClientCache` to store `HttpClient` instances during a specific (incoming) request.
+By default, the SAP Cloud SDK uses the `RequestScopedHttpClientCache` to store `HttpClient` instances for the duration of a specific (incoming) request.
 Using this default strategy results into deleting the `HttpClient` (together with the session cookie) that was used to authorize at the target system, once the initial request has been handled.
 To avoid authorizing over and over again, the SAP Cloud SDK offers the `TimeScopedHttpClientCache`, which keeps existing `HttpClient`s for a certain period of time.
 These instances are then automatically reused for consecutive (incoming) requests, so that the session is retained.
@@ -552,7 +552,7 @@ By adding `"forwardAuthToken": "true"` to your destination, you will forward the
 
 For this destination types we need to access the **Destination** and **Connectivity** services on SAP BTP.
 To achieve that you have to bind them and inject via [CAP Development Kit](#automatically-inject-service-bindings-via-cap-development-kit).
-Or by manually providing your [`VCAP_SERVIES`](#create-and-provide-vcap_services-variable) variable.
+Or manually provide your [`VCAP_SERVIES`](#create-and-provide-vcap_services-variable) variable.
 
 :::tip When your Client and On-Premise Service are in the Same Network
 If your local development environment and an On-Premise service are in the same network, you can use a simple HTTP destination by providing it via `destinations` environment variable instead of relying on the SAP BTP Connectivity service.
