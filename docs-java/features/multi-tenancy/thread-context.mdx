@@ -271,7 +271,21 @@ A common way to represent HTTP headers is to use `Map<String, String>` for `1:1`
 To make the transition from either of those representations to the SAP Cloud SDK's `RequestHeaderContainer` as easy as possible, the `DefaultRequestHeaderContainer` offers corresponding factory methods:
 
 - `fromSingleValueMap(Map<String, String>)` and
-- `fromMultiValueMap(Map<String, Collection<String>>)`
+- `fromMultiValueMap(Map<String, ? extends Iterable<String>>)`
+
+The latter one also enables convenient interoperability with the [Spring Headers](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/HttpHeaders.html):
+
+```java
+@RequestMapping( method = RequestMethod.GET )
+public ResponseEntity<ExampleResponse> getExample( @RequestHeader final HttpHeaders headers)
+{
+  final RequestHeaderContainer container = DefaultRequestHeaderContainer.fromMultiValueMap(headers);
+
+  RequestHeaderAccessor.executeWithHeaderContainer(container, () -> {
+      Tenant tenant = TenantAccessor.getCurrentTenant();
+  });
+}
+```
 
 Besides these two factory methods, the `DefaultRequestHeaderContainer` also offers the possibility to create an instance of `RequestHeaderContainer.Builder` through the static `builder()` method.
 An example for how the returned `Builder` can be used is shown in the chapter below.
@@ -285,7 +299,7 @@ Therefore, updating an already existing instance is not possible.
 
 **However**, in cases where you would like to, for example, just add a new custom header to the set of existing headers, the `RequestHeaderContainer` offers the `toBuilder` method.
 As the name suggests, this method can be used to retrieve an instance of `RequestHeaderContainer.Builder`.
-In contrast to the `RequestHeaderContainer`, the `Builder` can be **changed** as much as needed.
+In contrast to the `RequestHeaderContainer`, the `Builder` can be **mutated** as much as needed.
 Additionally, the `toBuilder` method will make sure that the returned `Builder` instance is already pre-filled with all HTTP headers that are also present in the instance of `RequestHeaderContainer`.
 
 To make things less theoretical, let's examine an example.
