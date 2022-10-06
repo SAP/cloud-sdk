@@ -151,7 +151,7 @@ Include the word file after the filename.
 
 ✅ Add your own `package.json` file.
 
-✅ This creates a basic class inside `src/business-partners` folder.
+✅ This creates a basic class inside the `src/business-partners` folder.
 
 ## File Type
 
@@ -291,7 +291,11 @@ Be polite, but using please in a set of instructions is overdoing the politeness
 
 ❌ Please note that the `CUSTOMER_NAME` and `CUSTOMER_ACCOUNT_GROUP` are properties of the entity
 
-Use please only when asking for permission or forgiveness—for example, when what you're asking for benefits us, inconveniences a reader, or suggests a potential issue with a product.
+Use 'please' only when asking for permission or forgiveness.
+For example, when what you're asking for:
+- benefits us
+- inconveniences a reader
+- or suggests a potential issue with a product
 
 ✅ Please create a support issue
 
