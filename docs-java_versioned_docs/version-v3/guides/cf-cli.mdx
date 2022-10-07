@@ -1,0 +1,55 @@
+---
+id: cf-cli
+title: Cloud Foundry
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Cloud Foundry CLI
+description: Configure you Cloud Foundry CLI and bind it to SAP Business Technology Platform
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+---
+
+## Cloud Foundry Command-Line Interface
+
+To deploy your app developed with SAP Cloud SDK to [SAP Business Technology Platform](https://www.sap.com/products/cloud-platform.html) you'll need Cloud Foundry command-line interface (CLI).
+You can download latest release of DEB package [from the official CF GitHub repository](https://github.com/cloudfoundry/cli/releases) or follow [instructions](https://github.com/cloudfoundry/cli#installing-using-a-package-manager) to install it with you package manager: `apt-get`, `yum` and `homebrew` are supported.
+
+After installing the CLI you might need to reload you shell before it becomes available.
+To check if it works run:
+
+```bash
+cf
+```
+
+## Bind Your Command-Line Interface to an API Endpoint
+
+Let's associate your Cloud Foundry CLI to your SAP account by providing an API endpoint and logging in with your account.
+
+**Select endpoint depending on your region:**
+
+- Europe <https://api.cf.eu10.hana.ondemand.com>
+- US East: <https://api.cf.us10.hana.ondemand.com>
+- US CENTRAL: <https://api.cf.us20.hana.ondemand.com>
+
+To use a snippet for Europe run:
+
+```bash
+cf api https://api.cf.eu10.hana.ondemand.com
+```
+
+Provide your credentials for SAP BTP:
+
+```bash
+cf login
+```
+
+For more details on the Cloud Foundry CLI and SAP BTP follow this [official tutorial](https://developers.sap.com/tutorials/cp-cf-download-cli.html).
+
+## SAP Business Technology Platform
+
+Find out more about the SAP Business Technology Platform, Cloud Foundry environment in the [official documentation](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/73beb06e127f4e47b849aa95344aabe1.html).
