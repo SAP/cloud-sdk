@@ -10,7 +10,7 @@ export function getPathFromPluginId(docsPluginId) {
 /**
  * Checks if a component should be shown, by matching the current path with the path in the docsPluginId.
  */
-export function shouldShow(props) {
+export function containsCurrentDocsPluginId(props) {
   const activeDocContext = useActiveDocContext(props.docsPluginId);
   const docPath = activeDocContext?.activeVersion?.path;
   return docPath?.includes(getPathFromPluginId(props.docsPluginId));

@@ -134,7 +134,7 @@ Similarly, for BAPI endpoints you need to use `asRfc()`:
 DestinationAccessor.getDestination("my-destination").asRfc();
 ```
 
-### Connect to SAP S/4HANA On-Premise
+### Connect To SAP S/4HANA On-Premise
 
 If your destination is exposing an SAP S/4HANA On-premise service via a **[Cloud Connector](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e6c7616abb5710148cfcf3e75d96d596.html)** you need to decorate the destination with `DefaultErpHttpDestination`:
 
@@ -263,7 +263,7 @@ It expects a key-value pair with a key formatted as `URL.headers.<key>` and an a
 ### How It Works
 
 You can add query parameters to a specific destination using properties.
-So they will always be included in the query string when calling the target system.
+They will always be included in the query string when calling the target system.
 
 ### Add Query Parameters via Destination Properties
 
@@ -443,11 +443,12 @@ By adding `"forwardAuthToken": "true"` to your destination, you will forward the
    The SAP Cloud SDK tries to fetch the destination from the SAP BTP Destination service using the given destination name.
 
 **_Reaching On Premise Systems via the SAP BTP Connectivity Service_**
-In case the destination is of proxy type `OnPremise`, the SAP Cloud SDK performs an additional query to the SAP BTP Connectivity service to obtain further proxy information and an authorization token.
+In case the destination is of proxy type `OnPremise`, the SAP Cloud SDK performs an additional query to the SAP BTP Connectivity service.
+Further proxy information and an authorization token are obtained.
 
 </details>
 
-### Automatically inject service bindings via CAP Development Kit
+### Automatically Inject Service bindings via Cloud Application Programming Development Kit
 
 If you already have a SAP BTP account with all the service binding and want to leverage them in you local environment - try [CAP Development Kit](https://cap.cloud.sap/docs/advanced/hybrid-testing#run-with-service-bindings).
 The SAP Cloud SDK will do the rest of the destination retrieval job for you as described above.
@@ -504,7 +505,8 @@ By adding `"forwardAuthToken": "true"` to your destination, you will forward the
 #### Destinations With Proxy Type `OnPremise`
 
 For this destination types we need to access the **Destination** and **Connectivity** services on SAP BTP.
-To achieve that you have to bind them and inject via [CAP Development Kit](#automatically-inject-service-bindings-via-cap-development-kit) or by manually providing your [`VCAP_SERVIES`](#create-and-provide-vcap_services-variable) variable.
+To achieve that you have to bind them and inject via [CAP Development Kit](#automatically-inject-service-bindings-via-cap-development-kit).
+Or manually provide your [`VCAP_SERVIES`](#create-and-provide-vcap_services-variable) variable.
 
 :::tip When your Client and On-Premise Service are in the Same Network
 If your local development environment and an On-Premise service are in the same network, you can use a simple HTTP destination by providing it via `destinations` environment variable instead of relying on the SAP BTP Connectivity service.

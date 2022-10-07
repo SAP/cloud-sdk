@@ -75,7 +75,7 @@ To test the new service, you need an HTTP client like [postman](https://learning
 Create a new request with the following parameters:
 
 ```
-POST http://localhost:8080/business-partners/1003764/address
+POST http://localhost:8080/business-partner/1003764/address
 BODY
 {
     "postalCode": "14469",
@@ -85,12 +85,12 @@ BODY
 }
 ```
 
-You find the ID of a business partner via the endpoint `http://localhost:8080/business-partners`.
+You find the ID of a business partner via the endpoint `http://localhost:8080/business-partner`.
 The request should return `201` as a [status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#successful_responses).
 
 ![Create an address with postman.](../img/create-business-partner-address.png)
 
-If you execute `GET http://localhost:8080/business-partners/1003764` afterward, you should see the additional address for the business partner.
+If you execute `GET http://localhost:8080/business-partner/1003764` afterward, you should see the additional address for the business partner.
 
 ## Update Service
 
@@ -140,14 +140,14 @@ The update request is triggered by the PUT method.
 Execute the update request in your HTTP client (e.g. [postman](https://learning.postman.com/docs/getting-started/installation-and-updates/)):
 
 ```
-PUT http://localhost:8080/business-partners/1003764/address/28238
+PUT http://localhost:8080/business-partner/1003764/address/28238
 BODY
 {
     "houseNumber": "123"
 }
 ```
 
-After the update, a `GET http://localhost:8080/business-partners/1003764` should show the updated house number 123.
+After the update, a `GET http://localhost:8080/business-partner/1003764` should show the updated house number 123.
 
 ## Delete Address
 
@@ -187,10 +187,10 @@ You use the HTTP method DELETE to trigger a deletion and the status 204 indicate
 ### Test Delete Service
 
 You can test the service in the following way.
-Execute `GET http://localhost:8080/business-partners/1003764` and note the ID of an address you want to delete e.g. 28241.
-Then execute `DELETE http://localhost:8080/business-partners/1003764/address/28241` in your HTTP client.
+Execute `GET http://localhost:8080/business-partner/1003764` and note the ID of an address you want to delete e.g. 28241.
+Then execute `DELETE http://localhost:8080/business-partner/1003764/address/28241` in your HTTP client.
 This should return 204 if existing IDs are passed.
-To verify you can execute `GET http://localhost:8080/business-partners/1003764` afterward and the selected address should be removed.
+To verify you can execute `GET http://localhost:8080/business-partner/1003764` afterward and the selected address should be removed.
 
 ## Final Code Review
 
@@ -346,7 +346,7 @@ import {
 } from '../../services/business-partner-service';
 import { BusinessPartnerService } from './business-partner.service';
 
-@Controller('business-partners')
+@Controller('business-partner')
 export class BusinessPartnerController {
   constructor(
     private readonly businessPartnerService: BusinessPartnerService
