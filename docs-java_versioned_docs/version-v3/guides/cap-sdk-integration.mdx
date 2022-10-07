@@ -1,0 +1,204 @@
+---
+id: cap-sdk-integration
+title: Integration With Cloud Application Programming Model
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Integration With CAP
+description: Integrate the SAP Cloud SDK into your CAP application
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+  - cap
+---
+
+This document outlines how you integrate the SAP Cloud SDK into an application based on the [SAP Cloud Application Programming Model](https://cap.cloud.sap/docs/) (referred to as CAP in the remainder).
+
+:::success Check out the tutorial as well
+
+While this document provides a general overview of this topic, we have published a practical [tutorial on SAP Developers](https://developers.sap.com/tutorials/cloudsdk-integrate-cap.html) which illustrates all steps on a comprehensive example.
+
+:::
+
+:::success Guide on the traditional Spring deployment
+
+We provide a [guide](spring-boot-war-deployment) on how to leverage the traditional Spring deployment in conjunction with CAP.
+That guide is applicable for your project if you need to invoke BAPIs via the SAP Java Connector library.
+
+:::
+
+## Integration Steps
+
+:::note Assumption
+The following instructions assume that you have an existing CAP project that can be built successfully.
+Furthermore, we assume that you deploy your app to the SAP BTP, Cloud Foundry environment.
+:::
+
+### Add the SAP Cloud SDK Bill-of-Material
+
+Add the SAP Cloud SDK Bill-of-Material (BOM) into the `dependencyManagement` section of the root POM.
+Here is the XML snippet:
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.sap.cloud.sdk</groupId>
+            <artifactId>sdk-bom</artifactId>
+            <version>use-latest-version-here</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
+:::success Use the latest SAP Cloud SDK version
+
+We recommend using the **latest** SAP Cloud SDK version always.
+Check out the [release notes](../release-notes-sap-cloud-sdk-for-java) to see the release history.
+
+:::
+
+:::note SAP Cloud SDK Modules Bill-of-Material
+
+By default, the SAP Cloud SDK archetypes reference the SAP Cloud SDK Bill-of-Material `sdk-bom`, which manages dependency versions for all SAP Cloud SDK modules and transitive dependencies.
+If you face dependency conflicts, you can instead try using the SAP Cloud SDK Modules Bill-of-Material `sdk-modules-bom` in the `dependencyManagement` section of your Maven POM file.
+
+:::
+
+### Add the SAP Cloud SDK Dependencies
+
+Add the respective SAP Cloud SDK dependencies to the POM file under the `srv` directory.
+
+```xml
+<dependency>
+    <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
+    <artifactId>scp-cf</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>com.sap.cloud.sdk.s4hana</groupId>
+    <artifactId>s4hana-all</artifactId>
+    <exclusions>
+        <exclusion>
+		    <groupId>com.sap.cloud.servicesdk</groupId>
+		    <artifactId>odata-v2-lib</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+```
+
+:::caution
+Please use the same exclusion also on any other OData V2 related dependencies from the SAP Cloud SDK you may be using.
+:::
+
+:::note Version information controlled through the SAP Cloud SDK BOM
+
+Note that the `version` tags can be omitted, because the SAP Cloud SDK BOM controls the version of all the SAP Cloud SDK modules.
+That is, you only need to increase the version of the BOM and all modules get updated automatically.
+
+:::
+
+:::tip
+
+The two mentioned dependencies are modules that cover a broad range of possible the SAP Cloud SDK use cases.
+You may choose a more fine-grained selection of the SAP Cloud SDK dependencies according to your specific use case.
+
+:::
+
+### Add the Integration Dependency
+
+If your app uses multitenancy features and/or a protected backend, we have to integrate the tenant and user concepts of CAP and the SAP Cloud SDK.
+We'll add a respective integration dependency to the POM file under the `srv` directory (same place as the previous step).
+
+```xml
+<dependency>
+  <groupId>com.sap.cds</groupId>
+  <artifactId>cds-integration-cloud-sdk</artifactId>
+</dependency>
+```
+
+:::note Multitenancy Integration with CAP
+You can learn more about how the multitenancy of the SAP Cloud SDK integrates with CAP in [this article](../features/multi-tenancy/multi-tenancy-thread-context#how-is-a-thread-context-created).
+:::
+
+:::info
+This step is only required if you are using CAP/CDS versions earlier than `1.23.0`.
+
+<details>
+<summary>Enable the Component Scan for SAP Cloud SDK Package</summary>
+
+Let the Spring component scan crawl the SAP Cloud SDK package.
+We'll annotate the Spring Boot application class which is annotated with `@SpringBootApplication` as follows.
+
+```java
+@ComponentScan({"com.sap.cloud.sdk", "com.mycompany.myapplication"})
+@ServletComponentScan({"com.sap.cloud.sdk", "com.mycompany.myapplication"})
+```
+
+Make sure that you also add the package name of your application.
+
+</details>
+:::
+
+### Wrap Asynchronous Calls
+
+If your app uses asynchronous calls which spawn new threads or reuse pooled threads, the call must be decorated with the respective wrapper classes.
+This decoration is required to forward thread-specific information from the calling thread to the asynchronously running thread.
+
+For this purpose, you need to use the `RequestContextRunner` from [CAP](https://cap.cloud.sap/docs/java/provisioning-api#threading-requestcontext)
+
+Example:
+
+```java
+EventContext context;
+RequestContextRunner cdsContextRunner = context.getCdsRuntime().requestContext();
+
+Callable<Object> task = () -> cdsContextRunner.run(() -> ... ));
+```
+
+:::caution Caution
+The `executeWith` methods of _Accessor_ classes cannot be currently used to execute asynchronous operations in the CAP context.
+
+Please note that the `RequestScopedHttpClientCache` which is the default being used by the SAP Cloud SDK cannot work with CAP integration, please use [`TimeScopedHttpClientCache`](../features/connectivity/sdk-connectivity-http-client#caching-httpclient) instead for caching `HttpClient`s.
+:::
+
+:::info Info
+In case you are using CAP/CDS versions earlier than `1.23.0`, additional steps are required.
+
+<details>
+<summary>Wrap asynchronous calls </summary>
+
+You need to additionally wrap your calls using the `ThreadContextExecutor` from the SAP Cloud SDK (refer to the [ThreadContext documentation](https://sap.github.io/cloud-sdk/docs/java/features/multi-tenancy/multi-tenancy-thread-context/#what-is-a-thread-context)) in conjunction with the `RequestContextRunner` from [CAP](https://cap.cloud.sap/docs/java/provisioning-api#threading-requestcontext).
+
+Hence, the code snippet from above would look like:
+
+```java
+EventContext context;
+ThreadContextExecutor threadContextExecutor = new ThreadContextExecutor();
+RequestContextRunner cdsContextRunner = context.getCdsRuntime().requestContext();
+
+//If the operation returns something
+Callable<Object> task = () -> cdsContextRunner.run(ctx -> {
+                                return threadContextExecutor.execute(() -> operation());
+                                });
+
+//If the operation does not return something
+Callable<Object> task = () -> cdsContextRunner.run(ctx -> {
+                                threadContextExecutor.execute(() -> operation());
+                                });
+```
+
+</details>
+:::
+
+:::success Integration finished
+
+Now the SAP Cloud SDK is integrated with the CAP application.
+You can go ahead using the SAP Cloud SDK features, such as querying OData services.
+
+:::

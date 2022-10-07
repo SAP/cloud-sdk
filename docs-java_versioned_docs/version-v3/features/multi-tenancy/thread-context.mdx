@@ -1,0 +1,249 @@
+---
+id: multi-tenancy-thread-context
+title: Multitenancy With the Thread Context
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Thread Context
+description: This article describes how the SAP Cloud SDK for Java provides an application context that is stored in a thread-safe manner and enables cloud-native features to be used out of the box.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - thread context
+  - multi tenancy
+  - cloud native
+  - tenant
+  - user
+  - principal
+  - JWT
+  - AuthToken
+---
+
+## What Is a Thread Context?
+
+The SAP Cloud SDK for Java provides a so-called `ThreadContext`.
+It serves as thread-safe storage for potentially sensitive information.
+Specifically, the following three objects are stored:
+
+- The current _Tenant_
+- The current _Principal_ (User)
+- The [JSON Web Token](https://jwt.io) (JWT)
+
+This information is used throughout the SAP Cloud SDK to provide features like tenant and principal isolation, JWT verification and authorization against other systems and services.
+To ensure different tenants and users are properly isolated in an application, this information is always limited to the thread it was created on unless it is explicitly passed on by the application (see [Propagating the Thread Context](#running-asynchronous-operations)).
+
+:::info
+Multi-tenancy describes the access of different, technically separated user groups to the same instance of an application.
+In the terms of XSUAA service, these user groups are called Tenants, while in terms of Identity Authentication Service (IAS) they are called Zones.
+
+The SAP Cloud SDK for Java uses the term _Tenant_ to refer to both XSUAA Tenants and IAS Zones.
+This implies, that the _tenantId_ exposed in the _Tenant_ interface either returns the _tenantId_ or _zoneId_, depending on the context you are currently running in.
+:::
+
+## How Is a Thread Context Created?
+
+The SAP Cloud SDK provides a [`RequestFilter`](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/servlet/RequestAccessorFilter.html) that will listen to incoming HTTP requests.
+This filter will extract **all** provided HTTP headers from the incoming request and store them in the `ThreadContext`.
+Additionally, if the `Authorization` header contains a `JWT` from the [`AppRouter`](https://blogs.sap.com/2020/04/03/sap-application-router/), the filter will:
+
+- Verify this token
+- Store it in the `ThreadContext` and
+- Pull the _Tenant_ and _Principal_ information from it
+
+:::tip Integration with CAP
+In case you are using CAP (with the `cds-integration-cloud-sdk` dependency) the Tenant,Principal information and Headers will **instead** be derived from the [CAP Request Context](https://cap.cloud.sap/docs/java/request-contexts).
+That also means that the `ThreadContext` will not be used when accessing this information.
+Please note that the `RequestScopedHttpClientCache` which is the default being used by the SAP Cloud SDK cannot work with this approach.
+:::
+
+## How Can the Thread Context Be Used?
+
+### Accessing Information
+
+The Thread context can be accessed via the static [`ThreadContextAccessor`](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/thread/ThreadContextAccessor.html).
+
+For the frequently needed _HTTP Headers_, _Tenant_, _Principal_, and _JWT_ there are also dedicated accessors:
+
+- `RequestHeaderAccessor`
+- [`TenantAccessor`](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/tenant/TenantAccessor.html)
+- [`PrincipalAccessor`](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html)
+- [`AuthTokenAccessor`](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/security/AuthTokenAccessor.html)
+
+### Storing Information
+
+The [`ThreadContext`](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/thread/ThreadContext.html) allows for some manipulation by the application.
+However, oftentimes it is more convenient to leverage the `executeWith...()` functionality offered by the dedicated accessors.
+
+Consider a scenario where some part of the code should run on behalf of a specific tenant.
+In that case you can override the current tenant explicitly:
+
+```java
+TenantAccessor.executeWithTenant(customTenant, () -> doStuff());
+```
+
+:::caution CAP Integration
+The above does not apply for any accessors like `TenantAccessor`, `PrincipalAccessor`, `RequestHeaderAccessor` when using the CAP framework (with the `cds-integration-cloud-sdk` dependency).
+When using CAP the Tenant,Principal information and Headers are derived from the `RequestContext`.
+Please refer to [this section](https://cap.cloud.sap/docs/java/request-contexts#defining-requestcontext) on how to override existing values in the CAP context.
+:::
+
+:::caution
+Be aware, that the `executeWith` methods shown above only replaces the given property, but does not update properties derived from it.
+
+Example: You have a special `AuthToken`, that you propagate with `AuthTokenAccessor.executeWithAuthToken`.
+Inside the given code block only the `AuthToken` will be replaced, while e.g. the `Tenant` is the same as in the original context.
+
+If you want to start a fresh context based on a given `AuthToken`, for example accessing information of the provider tenant while in a subscriber context, have a look at this code:
+
+```java
+
+Tenant retrieveProviderTenant()
+{
+    // retrieves an access token from the provider context
+    AuthToken providerXsuaaAccessToken = AuthTokenAccessor.getXsuaaServiceToken();
+    return new ThreadContextExecutor()
+        // don't reuse the original context
+        .withoutParentThreadContext()
+        // add the provider token into the new context
+        .withListeners(new AuthTokenThreadContextListener(providerXsuaaAccessToken))
+        // return the actual provider tenant
+        .execute(TenantAccessor::getCurrentTenant);
+}
+
+```
+
+:::
+
+### Manipulating HTTP Headers
+
+The `RequestHeaderAccessor#getHeaderContainer()` method provides convenient access to the HTTP headers of the current incoming request.
+It returns an instance of `RequestHeaderContainer`, which is, by API contract, an **immutable** container that allows _case insensitive_ access to HTTP header values.
+Although the `RequestHeaderContainer` cannot be altered once created, there are scenarios where manipulating HTTP headers is required.
+In such cases, a new instance of `RequestHeaderContainer` can be created in a few different ways.
+
+#### Create a new RequestHeaderContainer From Scratch
+
+A common way to represent HTTP headers is to use `Map<String, String>` for `1:1` relationships between header names and values or even `Map<String, Collection<String>>` for `1:n` relationships.
+To make the transition from either of those representations to the SAP Cloud SDK's `RequestHeaderContainer` as easy as possible, the `DefaultRequestHeaderContainer` offers corresponding factory methods:
+
+- `fromSingleValueMap(Map<String, String>)` and
+- `fromMultiValueMap(Map<String, Collection<String>>)`
+
+Besides these two factory methods, the `DefaultRequestHeaderContainer` also offers the possibility to create an instance of `RequestHeaderContainer.Builder` through the static `builder()` method.
+An example for how the returned `Builder` can be used is shown in the chapter below.
+
+Additionally, to make customizing the current HTTP headers even easier, the `RequestHeaderAccessor` comes with an overload of the `executeWithHeaderContainer` method that accepts a `Map<String, String>`.
+
+#### Updating an Existing RequestHeaderContainer
+
+As pointed out above, the `RequestHeaderContainer` is an **immutable** structure.
+Therefore, updating an already existing instance is impossible.
+
+**However**, in cases where you would like to, for example, just add a new custom header to the set of existing headers, the `RequestHeaderContainer` offers the `toBuilder` method.
+As the name suggests, this method can be used to retrieve an instance of `RequestHeaderContainer.Builder`.
+In contrast to the `RequestHeaderContainer`, the `Builder` can be **changed** as much as needed.
+Additionally, the `toBuilder` method will make sure that the returned `Builder` instance is already pre-filled with all HTTP headers that are also present in the instance of `RequestHeaderContainer`.
+
+To make things less theoretical, let's examine an example.
+
+<details>
+        <summary>Example: Usage of the Builder</summary>
+
+Assume your application received an HTTP request that contains the following headers
+
+- `Authorization: Bearer DUMMY_JWT`
+- `Set-Cookie: cookie-1; cookie-2`
+- `Accept-Language: en-US`
+- `x-app-specific-header: customer-value`
+
+These values can be accessed as follows:
+
+```java
+RequestHeaderContainer headers = RequestHeaderAccessor.getHeaderContainer();
+headers.getHeaderValues("authorization"); // will return ["Bearer DUMMY_JWT"]
+headers.getHeaderValues("set-cookie"); // will return ["cookie-1", "cookie-2"]
+headers.getHeaderValues("accept-language"); // will return ["en-US"]
+headers.getHeaderValues("x-app-specific-header"); // will return ["customer-value"]
+```
+
+Note how accessing the values for specific HTTP headers will work independent of the casing of the provided name.
+
+Now let's say your use case requires that HTTP cookies shall not be leaked into further application execution.
+Additionally, you have to make sure that the `x-app-specific-header` contains an additional application provided value.
+Lastly, our application should always serve German customers and, therefore, you need to make sure the `Accept-Language` header is always adjusted accordingly.
+
+Using the `Builder` API, fulfilling these requirements is straightforward:
+
+```java
+RequestHeaderContainer updatedHeaders =
+    headers
+        .toBuilder()
+        .withoutHeader("set-cookie")
+        .withHeader("x-app-specific-header", "application-value")
+        .replaceHeader("accept-language", "de-DE")
+        .build();
+```
+
+Once again, the API guarantees that header names are treated _case insensitively_.
+
+Finally, to make sure the updated headers are also taken into consideration, you have to overwrite the existing headers in our `ThreadContext`.
+This can be done using the following code:
+
+```java
+RequestHeaderAccessor.executeWithHeaderContainer(updatedHeaders, () -> yourBusinessLogic());
+```
+
+</details>
+
+### Running Asynchronous Operations
+
+As the name suggests the `ThreadContext` is bound to a thread, more specifically to the one it was created.
+If asynchronous operations need to access the information, it has to be propagated to the new threads.
+
+The following code achieves this:
+
+```java
+ThreadContextExecutor executor = new ThreadContextExecutor();
+Callable operationWithContext = () -> executor.execute(() -> operation());
+
+invokeAsynchronously(operationWithContext);
+```
+
+Take note that the `ThreadContextExecutor` is created _before_ performing the asynchronous operation.
+This is important because only at that time the context is available and will be propagated.
+
+A similar approach can be applied with the `RequestHeader`, `Tenant`, `Principal` and `AuthToken` accessors.
+This code runs an asynchronous operation with a dedicated tenant:
+
+```java
+Callable operationWithTenant = TenantAccessor.executeWithTenant(customTenant, () -> operation());
+
+invokeAsynchronously(operationWithContext);
+```
+
+:::caution CAP Integration
+In case you are using CAP the CAP Request Context needs to be passed on instead of the `ThreadContext`.
+Please refer to [this guide](../../guides/cap-sdk-integration.mdx) on how to achieve this.
+:::
+
+:::danger Thread Lifecycle
+
+Be cautious with long-running, asynchronous operations.
+A propagated thread context will only persist as long as the thread lives that it was created on.
+When the parent thread dies the context will cease to exist and no longer be available in any of the threads.
+
+<details>
+<summary> Workaround </summary>
+You can work around this limitation with the following approach:
+
+```java
+RequestHeaderContainer requestHeaders = RequestHeaderAccessor.tryGetHeaderContainer().getOrElse(RequestHeaderContainer.EMPTY);
+ThreadContextExecutor executor = new ThreadContextExecutor().withThreadContext(new DefaultThreadContext())
+        .withListeners(new RequestHeaderThreadContextListener(requestHeaders));
+
+Callable operationWithContext = () -> executor.execute(() -> operation());
+invokeAsynchronously(operationWithContext);
+```
+
+</details>
+:::

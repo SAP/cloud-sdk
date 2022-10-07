@@ -14,7 +14,7 @@ keywords:
 
 :::danger Advanced! Use on your own discretion.
 
-The API for generic OData client is not intended to be used by application developers unless absolutely required.
+The API for generic OData client is not intended to be used by application developers unless required otherwise.
 
 Please, make sure you know what you're doing and check if the type-safe OData client API can solve you problem.
 :::
@@ -128,10 +128,12 @@ We collect popular use-cases and scenarios leveraging the Generic OData Client i
 ### Handling OData Delta Token
 
 [OData v4 specification](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_RequestingChanges) provides capabilities to return only a delta between your last and ongoing request.
-For example, if your previous request loaded information from the service which continues to be updated with new records, then with your next request you can ask to provide you only with the difference between what you've already loaded and current records on the service side.
+For example, if your previous request loaded information from the service which continues to be updated with new records.
+Then with your next request you can ask to provide you only with the difference between what you've already loaded and current records on the service side.
 For that, you can leverage `$deltatokens` query parameter.
 
-We do not provide convenience API for delta tokens in our type-safe client, but you can leverage generic OData client to fetch the delta token from the `response` as in the code snippet below:
+We do not provide convenience API for delta tokens in our type-safe client.
+But you can leverage generic OData client to fetch the delta token from the `response` as in the code snippet below:
 
 ```java
 ODataRequestResultGeneric response = request.execute(httpClient);

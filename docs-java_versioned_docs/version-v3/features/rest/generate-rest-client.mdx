@@ -1,0 +1,340 @@
+---
+id: generate-rest-client
+title: Generate a Typed OpenAPI Client
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Generate a Typed OpenAPI Client
+description: This article describes how to leverage the OpenAPI client generator to obtain Java classes from a service definition. These classes can then be used to build type-safe OpenAPI requests.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - rest
+  - java
+  - VDM
+  - generate
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+The SAP Cloud SDK offers an OpenAPI client generator as a Maven plugin and as a command-line tool.
+Either can be used to generate a client library for a REST API based on its OpenAPI specification.
+The OpenAPI generator is a wrapper around the public open-source [OpenAPI Generator](https://github.com/OpenAPITools/openapi-generator) where we have adjusted the `mustache` templates to integrate the generated client library with the SAP Cloud SDK core.
+
+The generated Java classes need the following dependency to be present in your project:
+
+```xml
+<dependency>
+	<groupId>com.sap.cloud.sdk.datamodel</groupId>
+	<artifactId>openapi-core</artifactId>
+</dependency>
+```
+
+To use the generated client library, either the SAP Cloud SDK BOM should be part of your project's `<dependencyManagement>` section, or the version for the `openapi-core` artifact must be mentioned explicitly here.
+
+## Customize Java Class and Method Names with OpenAPI Vendor Extensions
+
+The OpenAPI generator uses the `tag` field to determine the Java service class name and the `operationId` to determine the Java method for each service operation.
+You can influence the service class name and the method names by adding extension fields to the OpenAPI specification.
+Thereby you can leave the `tag` and `operationId` fields untouched if they need to stay stable.
+
+### Java Class Name
+
+The Java class name can be influenced with the extension field `x-sap-cloud-sdk-api-name`.
+The OpenAPI generator takes the value of `x-sap-cloud-sdk-api-name` and adds an `Api` suffix (if not already present) to determine the class name.
+
+In the following example the custom value `CustomOperations` takes precedence over the `tag` value `Operations`
+
+```yml
+/operation/path:
+  get:
+    summary: My operation
+    operationId: myOperation
+    x-sap-cloud-sdk-api-name: CustomOperations
+    tags:
+      - Operations
+```
+
+The Java class for this service operation will be named `CustomOperationsApi`.
+
+You can use the extension field `x-sap-cloud-sdk-api-name` on an operation, on a path or on the root level of the OpenAPI specification.
+All subordinated objects inherit its value automatically.
+For instance, if you assign the field `x-sap-cloud-sdk-api-name` to one path, all operations under that path inherit this field automatically.
+
+### Java Method Name
+
+The Java method name can be overwritten with the extension field `x-sap-cloud-sdk-operation-name`.
+
+In the following example the custom value `performMyOperation` takes precedence over the `operationId` value `myOperation`.
+
+```yml
+/operation/path:
+  get:
+    summary: My Operation
+    x-sap-cloud-sdk-operation-name: performMyOperation
+    operationId: myOperation
+```
+
+The Java method for this service operation will be named `peformMyOperation`.
+
+:::tip Field Order
+The order of fields in the OpenAPI specification does not matter.
+Only the right nesting is necessary, that is, the two fields `x-sap-cloud-sdk-operation-name` and `x-sap-cloud-sdk-api-name` should be assigned to an operation (get, post, etc).
+:::
+
+## Using the OpenAPI Generator Maven Plugin
+
+To use the Maven plugin following XML snippet should be added to the POM file of your project:
+
+```xml
+<plugin>
+	<groupId>com.sap.cloud.sdk.datamodel</groupId>
+	<artifactId>openapi-generator-maven-plugin</artifactId>
+	<!-- Maintain Maven property sap-cloud-sdk.version in your POM with the latest SAP Cloud SDK version -->
+	<version>${sap-cloud-sdk.version}</version>
+    <executions>
+		<execution>
+			<goals>
+				<goal>generate</goal>
+			</goals>
+			<phase>generate-sources</phase>
+		</execution>
+	</executions>
+	<configuration>
+   		<inputSpec>${project.basedir}/sample.yaml</inputSpec>
+		<outputDirectory>${project.basedir}/openapi</outputDirectory>
+        <apiPackage>com.mycompany.openapi.sample.api</apiPackage>
+		<modelPackage>com.mycompany.openapi.sample.model</modelPackage>
+		<apiMaturity>released</apiMaturity>
+		<logLevel>info</logLevel>
+		<!-- (Optional) You can add a custom copyright header:
+		<copyrightHeader>Copyright (c) this year, my company</copyrightHeader>
+
+		Or use the SAP copyright header:
+		<sapCopyrightHeader>true</sapCopyrightHeader>
+		-->
+	</configuration>
+</plugin>
+```
+
+Maven requires that we specify the version for plugins explicitly.
+In above code snippet you can see the `version` tag pointing to the Maven property `sap-cloud-sdk.version`.
+Maintain such a property in your POM and ensure that you always use the latest SAP Cloud SDK version.
+
+```xml
+<properties>
+    <!-- Use latest version always as per https://sap.github.io/cloud-sdk/docs/java/release-notes-sap-cloud-sdk-for-java -->
+	<sap-cloud-sdk.version>3.42.0</sap-cloud-sdk.version>
+</properties>
+```
+
+Maven will run the generator within the `generate-sources` phase which is executed before `compile`.
+
+:::note
+
+The phase `generate-sources` is just a recommendation from our side, it can be changed per your project's requirement.
+Refer to the [Maven build lifecycle guide](https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#Lifecycle_Reference) for a complete explanation.
+
+:::
+
+Please note that the version of the above plugin must be specified at least once in your project, preferably in the root POM.
+Also, the version of the plugin should be the same as of the SAP Cloud SDK.
+We recommend using a Maven property for defining the version of both the Maven plugin and the SAP Cloud SDK BOM.
+
+### Generating Java Client Library for Multiple OpenAPI Specifications
+
+This Maven plugin processes one OpenAPI specification per execution.
+In case you want to generate sources for multiple OpenAPI specifications then you need to create multiple executions of the plugin each corresponding to a particular OpenAPI specification.
+As an example refer to the plugin XML below:
+
+```xml
+<plugin>
+	<groupId>com.sap.cloud.sdk.datamodel</groupId>
+	<artifactId>openapi-generator-maven-plugin</artifactId>
+	<executions>
+		<execution>
+			<id>generate-sample1-id</id>
+			<goals>
+				<goal>generate</goal>
+			</goals>
+			<configuration>
+				<inputSpec>${project.basedir}/sample1.yaml</inputSpec>
+			</configuration>
+		</execution>
+		<execution>
+			<id>generate-sample2-id</id>
+			<goals>
+				<goal>generate</goal>
+			</goals>
+			<configuration>
+				<inputSpec>${project.basedir}/sample2.yaml</inputSpec>
+			</configuration>
+		</execution>
+	</executions>
+	<configuration>
+		<apiPackage>com.mycompany.openapi.sample.api</apiPackage>
+		<modelPackage>com.mycompany.openapi.sample.api.model</modelPackage>
+		<outputDirectory>${project.basedir}/openapi</outputDirectory>
+		<apiMaturity>released</apiMaturity>
+	</configuration>
+</plugin>
+```
+
+## Using the OpenAPI Generator CLI
+
+1. Download the latest command-line interface (CLI) of the generator from [Maven Central](https://search.maven.org/artifact/com.sap.cloud.sdk.datamodel/openapi-generator-cli).
+   Rename it to `openapi-generator-cli.jar` and put it in a directory of your choice.
+
+1. Run `java -jar openapi-generator-cli.jar -i /path/to/input/specification -o /path/to/output/folder -a name.of.api.package -m name.of.model.package`.
+   A full list of parameters is [available here](#available-parameters).
+
+1. Put the generated Java source files from the output folder into your project that is using the SAP Cloud SDK so that they are picked up by Java.
+   For example, move them to the `application/src/main/java` folder.
+
+## Available Parameters
+
+:::tip Passing Additional Properties to the Underlying OpenAPI Generator
+
+You can pass arbitrary additional configuration properties to the underlying [open source OpenAPI generator](https://openapi-generator.tech/docs/generators/java/) via `<additionalProperties>` or `--additional-properties`.
+:::
+
+The complete list of available parameters with their description is as follows:
+
+<Tabs defaultValue="maven" values={[ { label: 'Maven Plugin', value: 'maven', }, { label: 'CLI', value: 'cli', }]}>
+
+<TabItem value="maven">
+
+| Parameter                 |  Default   | Required | Description                                                                                                                                                                                                                                                                                                                                                                     |
+| :------------------------ | :--------: | :------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `<inputSpec>`             |     -      |   Yes    | Location of the OpenAPI specification file                                                                                                                                                                                                                                                                                                                                      |
+| `<outputDirectory>`       |     -      |   Yes    | Output directory for generated sources                                                                                                                                                                                                                                                                                                                                          |
+| `<apiPackage>`            |     -      |   Yes    | Package name for the generated API classes                                                                                                                                                                                                                                                                                                                                      |
+| `<modelPackage>`          |     -      |   Yes    | Package name for the generated Model classes                                                                                                                                                                                                                                                                                                                                    |
+| `<deleteOutputDirectory>` |  `False`   |    No    | Determines whether to delete the output directory before running the generator                                                                                                                                                                                                                                                                                                  |
+| `<apiMaturity>`           | `released` |    No    | Defines the maturity of the OpenAPI for which Java classes are generated. Possible values are `released` and `beta`. Please note if you define it as `beta` then [@Beta annotations](https://www.javadoc.io/doc/com.google.guava/guava/latest/com/google/common/annotations/Beta.html) are added to the generated classes which indicate that they are in an experimental state |
+| `<compileScope>`          |   `NONE`   |    No    | Adds the generated sources to the compilation or test phase. Respective values are `COMPILE` and `TEST_COMPILE`                                                                                                                                                                                                                                                                 |
+| `<copyrightHeader>`       |   `null`   |    No    | Copyright header to be added at the top of generated files                                                                                                                                                                                                                                                                                                                      |
+| `<logLevel>`              |   `info`   |    No    | Defines the log level of the OpenAPI Generator. Possible values are `info` and `debug`                                                                                                                                                                                                                                                                                          |
+| `<sapCopyrightHeader>`    |  `False`   |    No    | Add the SAP copyright header (overrides `copyrightHeader`)                                                                                                                                                                                                                                                                                                                      |
+| `<additionalProperties>`  |    `[]`    |    No    | Defines a map of key-value pairs that will be passed to the Java generator. E.g. `<param>value</param>`                                                                                                                                                                                                                                                                         |
+
+</TabItem>
+<TabItem value="cli">
+
+| Parameter                 | Alias |  Default   | Required | Description                                                                                                                                                                                                                                                                                                                                                                       |
+| :------------------------ | :---: | :--------: | :------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--input-spec`            | `-i`  |     -      |   Yes    | Location of the OpenAPI specification file                                                                                                                                                                                                                                                                                                                                        |
+| `--output-dir`            | `-o`  |     -      |   Yes    | Output directory for generated sources                                                                                                                                                                                                                                                                                                                                            |
+| `--api-package`           | `-a`  |     -      |   Yes    | Package name for the generated API classes                                                                                                                                                                                                                                                                                                                                        |
+| `--model-package`         | `-m`  |     -      |   Yes    | Package name for the generated Model classes                                                                                                                                                                                                                                                                                                                                      |
+| `--delete-output-dir`     | `-d`  |  `False`   |    No    | Determines whether to delete the output directory before running the generator                                                                                                                                                                                                                                                                                                    |
+| `--api-maturity`          | none  | `released` |    No    | Defines the maturity of the OpenAPI for which Java classes are generated. Possible values are `released` and `beta`. Please note if you define it as `beta` then [`@Beta` annotations](https://www.javadoc.io/doc/com.google.guava/guava/latest/com/google/common/annotations/Beta.html) are added to the generated classes which indicate that they are in an experimental state |
+| `--user-copyright`        | `-c`  |     -      |    No    | Copyright header to be added at the top of generated files                                                                                                                                                                                                                                                                                                                        |
+| `--log-level`             | `-l`  |   `info`   |    No    | Defines the log level of the OpenAPI Generator. Possible values are `info` and `debug`                                                                                                                                                                                                                                                                                            |
+| `--use-sap-copyright`     | `-u`  |  `False`   |    No    | Add the SAP copyright header (overrides `copyrightHeader`)                                                                                                                                                                                                                                                                                                                        |
+| `--additional-properties` | `-p`  |     -      |    No    | Defines a list of key-value pairs that will be passed to the Java generator in the format: `key1=val1,key2=val2`.                                                                                                                                                                                                                                                                 |
+
+</TabItem>
+</Tabs>
+
+## Solving Compilation Issues After Generation
+
+:::info
+
+From version `3.58` of the SAP Cloud SDK, the OpenAPI generator has been enhanced to fail if the input specification contains keywords `anyOf` or `oneOf` in certain positions.
+
+:::
+
+In certain cases although the generation of the client succeeds the subsequent compilation fails due to multiple reasons.
+
+If you observe that you notice `Cannot find Symbol for AnyOf{ClassName} Classes` or `Cannot find symbol OneOf{ClassName} Classes` or `Cannot find symbol UNKNOWN_BASE_TYPE` during compilation, check if your specification contains keywords `anyOf` or `oneOf`.
+
+The public open-source [OpenAPI Generator](https://github.com/OpenAPITools/openapi-generator) that is used by the SAP Cloud SDK under the hood generates non-compilable code if `anyOf` or `oneOf` are present in certain parts of the input specification.
+
+Compilation fails if:
+
+- These keywords exist under the `paths` part, under any operation while defining either the `requestbody` or `responses`
+
+<details>
+  <summary>Keywords under paths</summary>
+
+```
+paths:
+ /APIPath:
+        put:
+          summary: ...
+          requestBody:
+            description: ...
+            content:
+              application/json:
+                schema:
+                  oneOf:
+                    - $ref: '#/components/schemas/SomeSchema'
+                    - $ref: '#/components/schemas/SomeOtherSchema'
+          responses:
+            '200':
+              description: ...
+              content:
+                application/json:
+                  schema:
+                    oneOf:
+                      - $ref: '#/components/schemas/SomeSchema'
+                      - type: array
+                        items:
+                          $ref: '#/components/schemas/SomeOtherSchema'
+```
+
+</details>
+
+- These keywords exist under any of the `schemas` either under any property in `properties` or under `additionalProperties`
+
+<details>
+  <summary>Keywords under properties of schema</summary>
+
+```
+components:
+  schemas:
+    SampleSchema:
+      title: SampleSchema
+      description: ...
+      type: object
+      properties:
+        embeddedData:
+          $ref: '#/components/schemas/EmbeddedData'
+        questions:
+          type: array
+          title: questions
+          items:
+            title: Question
+            oneOf:
+              - $ref: '#/components/schemas/mc'
+              - $ref: '#/components/schemas/te'
+              - $ref: '#/components/schemas/db'
+            discriminator:
+              propertyName: type
+      AnotherSampleSchema:
+        description: ...
+        type: ...
+        anotherProperty:
+            description: ...
+            oneOf:
+              - type: string
+                enum:
+                  - ENDOFBLOCK
+                  - ENDOFSURVEY
+              - $ref: '#/components/schemas/SurveyID'
+        additionalProperties:
+          oneOf:
+            - $ref: '#/components/schemas/SomeSchema'
+            - $ref: '#/components/schemas/SomeOtherSchema'
+```
+
+</details>
+
+To make the compilation succeed, please remove these keywords from your specification and generate the client again.
+
+Please note that while removing these keywords from a property, you must also supply a meaningful replacement.
+Sometimes you may also choose to drop the property altogether for e.g, in the case of `additionalProperties`
+
+Refer to the [Swagger documentation](https://swagger.io/docs/specification/data-models/oneof-anyof-allof-not/) to understand more about the usage of these keywords and to derive their replacement.
