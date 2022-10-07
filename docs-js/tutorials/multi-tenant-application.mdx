@@ -251,22 +251,42 @@ You can find all files in the [approuter folder](https://github.com/SAP-samples/
 <Tabs groupId="code-files" defaultValue="manifest.yml" values={[{ label: 'manifest.yml', value: 'manifest.yml'},{ label: 'xs-app.json', value: 'xs-app.json'}]}>
 <TabItem value="manifest.yml" className="code-block-height-js thin-scrollbar">
 
+```yml
+applications:
+- name: approuter
+routes:
+- route: 'route-prefix-YOUR_SUBDOMAIN.cfapps.YOUR_REGION.hana.ondemand.com'
+path: .
+memory: 128M
+buildpacks:
+- nodejs_buildpack
+env:
+TENANT_HOST_PATTERN: 'route-prefix-(.*).cfapps.YOUR_REGION.hana.ondemand.com'
+destinations: >
+[
+{"name":"multi-tenant-app","url":"https://multi-tenant-app.cfapps.YOUR_REGION.hana.ondemand.com","forwardAuthToken":true}
+]
+services:
+- xsuaa
+- destination
+```
+
 </TabItem>
 
 <TabItem value="xs-app.json" className="code-block-height-js thin-scrollbar">
 
-    ```json
+```json
+{
+  "welcomeFile": "index.html",
+  "routes": [
     {
-        "welcomeFile": "index.html",
-        "routes": [
-    {
-        "source": "(.*)",
-        "target": "/$1",
-        "destination": "multi-tenant-app"
+      "source": "(.*)",
+      "target": "/$1",
+      "destination": "multi-tenant-app"
     }
-        ]
-    }
-    ```
+  ]
+}
+```
 
 </TabItem>
 </Tabs>
