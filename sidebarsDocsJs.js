@@ -84,7 +84,8 @@ module.exports = {
             'tutorials/address-manager/read-addresses',
             'tutorials/address-manager/change-addresses'
           ]
-        }
+        },
+        'tutorials/multi-tenant-application'
       ]
     },
     {
