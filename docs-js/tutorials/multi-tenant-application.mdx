@@ -251,9 +251,44 @@ You can find all files in the [approuter folder](https://github.com/SAP-samples/
 <Tabs groupId="code-files" defaultValue="manifest.yml" values={[{ label: 'manifest.yml', value: 'manifest.yml'},{ label: 'xs-app.json', value: 'xs-app.json'}]}>
 <TabItem value="manifest.yml" className="code-block-height-js thin-scrollbar">
 
+```yml
+
+    applications:
+    - name: approuter
+    routes:
+    - route: 'route-prefix-YOUR_SUBDOMAIN.cfapps.YOUR_REGION.hana.ondemand.com'
+    path: .
+    memory: 128M
+    buildpacks:
+    - nodejs_buildpack
+    env:
+    TENANT_HOST_PATTERN: 'route-prefix-(.*).cfapps.YOUR_REGION.hana.ondemand.com'
+    destinations: >
+    [
+    {"name":"multi-tenant-app","url":"https://multi-tenant-app.cfapps.YOUR_REGION.hana.ondemand.com","forwardAuthToken":true}
+    ]
+    services:
+    - xsuaa
+    - destination
+
+    ```
+
 </TabItem>
 
 <TabItem value="xs-app.json" className="code-block-height-js thin-scrollbar">
+
+    ```json
+    {
+        "welcomeFile": "index.html",
+        "routes": [
+    {
+        "source": "(.*)",
+        "target": "/$1",
+        "destination": "multi-tenant-app"
+    }
+        ]
+    }
+    ```
 
 </TabItem>
 </Tabs>
@@ -271,7 +306,9 @@ Once the approuter is deployed, you will see it running as a separate applicatio
 When you open the approuter application you see one route created by the manifest:
 
 ```
+
 GET https://route-prefix-YOUR_SUBDOMAIN.cfapps.YOUR_REGION.hana.ondemand.com/
+
 ```
 
 When you follow this route you, will get redirected to the `welcomeFile` defined in the `xs-app.json`.
@@ -292,13 +329,17 @@ The reason for introducing the approuter was the missing JWT in the request.
 If you call the service via the approuter:
 
 ```
+
 GET https://route-prefix-YOUR_SUBDOMAIN.cfapps.YOUR_REGION.hana.ondemand.com/service
+
 ```
 
 you will see a response like:
 
 ```
+
 You are on tenant: a89ea924-d9c2-4gaf-84fb-3ffcff123456. The destination description is: Provider Destination Description
+
 ```
 
 which shows that the request contains a JWT issued for the provider account.
