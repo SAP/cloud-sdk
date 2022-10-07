@@ -2,35 +2,72 @@
 
 - [Formatting](#formatting)
   - [Inline Code](#inline-code)
-    - [Method Names](#method-names)
-      - [Function and Method](#function-and-method)
+    - [Use Code Font](#use-code-font)
+      - [Use Code Format for Method Names](#use-code-format-for-method-names)
+      - [Use `Function` vs `Method` Accordingly](#use-function-vs-method-accordingly)
+    - [Exceptions](#exceptions)
   - [Placeholders](#placeholders)
-    - [Inline Text](#inline-text)
-    - [Code Block](#code-block)
-  - [Software Products](#software-products)
+    - [Use Code Format in Italics in Inline Text](#use-code-format-in-italics-in-inline-text)
+    - [Use Normal Placeholder Syntax in URL or Inline Code Sample](#use-normal-placeholder-syntax-in-url-or-inline-code-sample)
+    - [Use Normal Placeholder Syntax Inside a Code Block](#use-normal-placeholder-syntax-inside-a-code-block)
+  - [Use Ordinary Font for Software Products](#use-ordinary-font-for-software-products)
   - [URL and Domains](#url-and-domains)
-  - [Example Domains](#example-domains)
-  - [Filenames and FilePaths](#filenames-and-filePaths)
+    - [Use Code Font for URLs in Commands and Code](#use-code-font-for-urls-in-commands-and-code)
+    - [Use Ordinary Font for URLs that Reader Should Follow in a Browser](#use-ordinary-font-for-urls-that-reader-should-follow-in-a-browser)
+  - [Use `example.com` for Example Domain](#use-examplecom-for-example-domain)
+  - [Filenames and FilePaths](#filenames-and-filepaths)
+    - [Use Code Font](#use-code-font)
+    - [Include the Word File After the Filename](#include-the-word-file-after-the-filename)
+    - [Use Hyphens, Not Underscores, To Separate Words](#use-hyphens-not-underscores-to-separate-words)
   - [File Type](#file-type)
-  - [Error Messages in Text](#error-messages-in-text)
+    - [Use Formal File Type Name in Ordinary Font](#use-formal-file-type-name-in-ordinary-font)
+    - [Exception: Use Extension in Code Format To Mention File Ending](#exception-use-extension-in-code-format-to-mention-file-ending)
+  - [Use Quotation Marks for Error Messages in Text](#use-quotation-marks-for-error-messages-in-text)
   - [Graphical User Interface Elements](#graphical-user-interface-elements)
-    - [Format](#format)
-    - [Type of Element](#type-of-element)
+    - [Use Bold Format for Names](#use-bold-format-for-names)
+    - [Focus on the Feature and Its Functionality, Not the UI Element and Gestures](#focus-on-the-feature-and-its-functionality-not-the-ui-element-and-gestures)
+    - [Follow the Capitalization as It Appears on the Page](#follow-the-capitalization-as-it-appears-on-the-page)
+    - [Don’t Include the Type of UI Element](#dont-include-the-type-of-ui-element)
   - [User Entered Text](#user-entered-text)
   - [Version](#version)
+    <!-- vale off -->
+    - [Do Not Use Formats X.Y or X.Y.Z](#do-not-use-formats-xy-or-xyz)
+    <!-- vale on -->
+    - [Avoid Using `Currently` and `New`](#avoid-using-currently-and-new)
 - [Language and Style](#language-and-style)
-  - [Active and Passive Voice](#active-and-passive-voice)
-    - [Exceptions](#exceptions)
-  - [Pronouns](#pronouns)
-    - [First Person](#first-person)
-    - [Second Person](#second-person)
+  - [Use Active Voice Over Passive](#use-active-voice-over-passive)
+  - [Exceptions: Use Passive Voice](#exceptions-use-passive-voice)
+  - [First Person](#first-person)
+    - [Avoid Using `We`](#avoid-using-we)
+    - [Avoid Using `Our`](#avoid-using-our)
+    - [Exception: The Questions in FAQs](#exception-the-questions-in-faqs)
+  - [Second Person](#second-person)
+    - [Use the Imperative Form in Instructions](#use-the-imperative-form-in-instructions)
+    - [Avoid Using `Your`](#avoid-using-your)
+    - [Don't Use `We` or `Our` When Addressing the Reader(You)](#dont-use-we-or-our-when-addressing-the-reader-you)
   - [Politeness](#politeness)
+    - [Don’t Use `Please` in Instructions](#dont-use-please-in-instructions)
+    - [Don't Use the Phrase `Please Note`](#dont-use-the-phrase-please-note)
+    - [Use `Please` Only for Permission or Forgiveness](#use-please-only-for-permission-or-forgiveness)
   - [Words](#words)
+    - [Words To Avoid](#words-to-avoid)
+    - [Usage Guidance for Commonly Used Terms](#usage-guidance-for-commonly-used-terms)
 - [Punctuation](#punctuation)
+  - [Use Oxford Comma in a Series of Three or More Items](#use-oxford-comma-in-a-series-of-three-or-more-items)
+  - [Avoid Exclamation Point and Ellipses](#avoid-exclamation-point-and-ellipses)
+  - [Lists](#lists)
+    - [Introduce List by Using a Complete Sentence](#introduce-list-by-using-a-complete-sentence)
+    - [Start Each List Item With Capital Letter and End With Period](#start-each-list-item-with-capital-letter-and-end-with-period)
+      - [Exceptions: End Punctuation](#exceptions-end-punctuation)
+    - [Use Numbered List for Steps To Be Performed in Order](#use-numbered-list-for-steps-to-be-performed-in-order)
+    - [Use Description List With Headings for Describing Terms](#use-description-list-with-headings-for-describing-terms)
+      - [Exception: Capital Letter](#exception-capital-letter)
 
 # Formatting
 
 ## Inline Code
+
+### Use Code Font
 
 Use code font to mark up code, such as:
 
@@ -44,39 +81,38 @@ Use code font to mark up code, such as:
 
 ✅ instance of the `BusinessPartner` entity class
 
-Items that should NOT be put in code format are listed below:
-
-- Email addresses
-- [Names of products, services, and organizations](#software-products)
-- URLs that the reader is supposed to follow in a browser
-
-### Method Names
+#### Use Code Format for Method Names
 
 When referring to a method name in text:
 
 - omit the class name except where including it would prevent ambiguity
 - put an empty pair of parentheses after a method name to indicate that it's a method
 
-✅ This can be done by using the `asChildOf()` method
-
 ❌ This can be done by using the `.asChildOf` method
 
-#### Function and Method
+✅ This can be done by using the `asChildOf()` method
+
+#### Use `Function` vs `Method` Accordingly
 
 If a function is part of an instance of a class then it is a method, else it is a function.
-Use those terms accordingly.
+
+❌ Methods such as `execute()` and `executeHttpRequest()` call `getDestination()` internally
 
 ✅ Functions such as `execute()` and `executeHttpRequest()` call `getDestination()` internally
 
-❌ Methods such as `execute()` and `executeHttpRequest()` call `getDestination()` internally
+### Exceptions
+
+Items that should NOT be put in code format are listed below:
+
+- Email addresses
+- [Names of products, services, and organizations](#software-products)
+- URLs that the reader is supposed to follow in a browser
 
 ## Placeholders
 
 Use all caps with underscore delimiters.
 [Explain your placeholders](https://developers.google.com/style/placeholders#explain-placeholders).
 It should have a descriptive name as a default value.
-
-✅ PLACEHOLDER_NAME
 
 ❌ PLACEHOLDER-Name
 
@@ -88,23 +124,21 @@ It should have a descriptive name as a default value.
 
 <!-- vale on -->
 
-### Inline Text
+✅ PLACEHOLDER_NAME
 
-When placeholders occur in a sentence use code format in italics.
-
-✅ Replace _`YOUR_APPLICATION_NAME`_ with the application name.
+### Use Code Format in Italics in Inline Text
 
 ❌ where `<YOUR-APPLICATION-NAME>` is replaced by the name you specified.
 
-Sometimes, italics can be skipped (URL, inline code sample).
+✅ Replace _`YOUR_APPLICATION_NAME`_ with the application name.
 
-✅ as in a JWT issued from the XSUAA, e.g., `https://YOUR_SUBDOMAIN.localhost:8080/uaa/oauth/token`.
+### Use Normal Placeholder Syntax in URL or Inline Code Sample
 
 ❌ as in a JWT issued from the XSUAA, e.g., `https://yourSubdomain.localhost:8080/uaa/oauth/token`.
 
-### Code Block
+✅ as in a JWT issued from the XSUAA, e.g., `https://YOUR_SUBDOMAIN.localhost:8080/uaa/oauth/token`.
 
-Use the normal placeholder syntax.
+### Use Normal Placeholder Syntax Inside a Code Block
 
 ✅
 
@@ -122,58 +156,84 @@ applications:
     path: .
 ```
 
-## Software Products
+## Use Ordinary Font for Software Products
 
 Use ordinary font for the name of a project or product.
 
-✅ You will need the Cloud Foundry CLI
-
-❌ You will need the **Cloud Foundry CLI**
+❌ You will need the --Cloud Foundry CLI--
 
 ❌ You will need the `Cloud Foundry CLI`
 
+✅ You will need the Cloud Foundry CLI
+
 ## URL and Domains
 
-URLs used in commands and code should be in code font.
-URLs that the reader is supposed to follow in a browser should be in ordinary font.
+### Use Code Font for URLs in Commands and Code
 
-✅ against a destination with URL `https://my.s4-system.com`
+❌ create a business partner against https://example.com as a destination.
 
-## Example Domains
+✅ create a business partner against `https://example.com` as a destination.
+
+### Use Ordinary Font for URLs that Reader Should Follow in a Browser
+
+❌ find the ID of a business partner via the endpoint `http://localhost:8080/business-partner`.
+
+✅ find the ID of a business partner via the endpoint http://localhost:8080/business-partner.
+
+❌ execute `GET http://localhost:8080/business-partner/1003764`
+
+✅ execute `GET` request for URL http://localhost:8080/business-partner/1003764
+
+## Use `example.com` for Example Domain
 
 For generic domain name in examples, use `example.com`.
 
+✅ create a business partner against `https://example.com` as a destination.
+
 ## Filenames and FilePaths
 
-Use code font.
-Use hyphens, not underscores, to separate words.
-Include the word file after the filename.
+### Use Code Font
+
+❌ Replace the default tsconfig.json
+
+✅ Replace the default `tsconfig.json`
+
+### Include the Word File After the Filename
 
 ✅ Add your own `package.json` file.
+
+### Use Hyphens, Not Underscores, To Separate Words
 
 ✅ This creates a basic class inside the `src/business-partners` folder.
 
 ## File Type
 
-When discussing a file type generically, use the formal file type name (not filename extension) in ordinary format.
-When a specific file ending needs to be mentioned, use code format.
+### Use Formal File Type Name in Ordinary Font
 
-✅ EDMX metadata specification (files ending in `.edmx` or `.xml`).
+When discussing a file type generically, use the formal file type name in ordinary format.
 
-❌ `EDMX` metadata specification (files ending in `.edmx` or `.xml`).
+❌ Download the `EDMX` file for the business partner service
 
-## Error Messages in Text
+✅ Download the EDMX file for the business partner service
 
-Sentence-style capitalization.
+### Exception: Use Extension in Code Format To Mention File Ending
+
+Use only when you need to specifically mention a file ending.
+
+✅ base64 ASCII (e.g. `.pem`) and binary (e.g. `.der`).
+
+## Use Quotation Marks for Error Messages in Text
+
 Enclose error messages in quotation marks when referring to them in text.
-
-✅ If you see the error "Module not found: "Error: Can't resolve 'https' in""
+Follow sentence-style capitalization.
 
 ❌ If you see the error `Module not found: Error: Can't resolve 'https' in`
 
+✅ If you see the error "Module not found: "Error: Can't resolve 'https' in""
+
 ## Graphical User Interface Elements
 
-### Format
+### Use Bold Format for Names
 
 Bold all graphical user interface element names, including:
 
@@ -185,51 +245,61 @@ Bold all graphical user interface element names, including:
 
 Do not use italics or quotes.
 
-✅ On the **Settings** page, click **Show API Key**
+❌ On the settings page, click _Show API Key_
 
-❌ On the settings page, click _Show API Key_.
+✅ On the --Settings-- page, click --Show API Key--
 
-Focus on the feature and its functionality, not the UI element and gestures.
+<!-- vale off -->
 
-✅ In the **Authentication** drop-down, select **BasicAuthentication**
+### Focus on the Feature and Its Functionality, Not the UI Element and Gestures
+
+<!-- vale on -->
 
 ❌ In the dropdown, choose `BasicAuthentication` as the authentication type
 
-Follow the capitalization as it appears on the page.
+✅ In the --Authentication-- drop-down, select --BasicAuthentication--
 
-✅ Click `Get New Access Token` to retrieve a token
+### Follow the Capitalization as It Appears on the Page
 
 ❌ press the `Get new access token` button to retrieve a token
 
-### Type of Element
+✅ Click `Get New Access Token` to retrieve a token
+
+<!-- vale off -->
+
+### Don’t Include the Type of UI Element
+
+<!-- vale on -->
 
 Don't include the type of UI element, such as button or checkbox, unless it adds needed clarity.
 
-✅ To start your application, click **Launch**.
+❌ You can start your application via the --Launch-- button.
 
-❌ You can start your application via the "launch" button.
+✅ To start the application, click --Launch--.
 
 ## User Entered Text
 
 Use code format for text that should be entered by user
 
-✅ In the **Name** field, enter `my-destination`
+✅ In the --Name-- field, enter `my-destination`
 
-❌ In the **Name** field, enter my-destination
+❌ In the --Name-- field, enter my-destination
 
 ## Version
+
+<!-- vale off -->
+
+### Do Not Use Formats X.Y or X.Y.Z
 
 Unless a text relates to a specific version, do not use formats x.y or x.y.z
 
 ✅ This mapping applies to the move to open source version 1.
 
-<!-- vale off -->
-
 ❌ This mapping applies to the move to open source version 1.X.Y..
 
 <!-- vale on -->
 
-Avoid words like "currently" and "new".
+### Avoid Using `Currently` and `New`
 
 ✅ In version 2, you can specify the origin of the header
 
@@ -237,57 +307,86 @@ Avoid words like "currently" and "new".
 
 # Language and Style
 
-## Active and Passive Voice
+## Use Active Voice Over Passive
 
 In general, use active voice instead of passive voice.
 
-### Exceptions
+## Exceptions: Use Passive Voice
 
-In certain cases, it's okay to use passive voice
+In certain cases, it's okay to use passive voice:
 
-- To emphasize an object over an action.
-- To de-emphasize a subject or actor.
-- If the reader does not need to know who's responsible for the action.
-
-✅ More than 100 deprecated methods have been removed.
+- To emphasize an object over an action
+- To de-emphasize a subject or actor
+- When the reader does not need to know who's responsible for the action
 
 ❌ We removed a bit more than 100 deprecated methods.
 
-## Pronouns
+✅ More than 100 deprecated methods have been removed.
 
-### First Person
+## First Person
 
-Avoid using we, us, our, ours and I.
+In general, use second person rather than first person — you instead of we.
 
-✅ The SAP Cloud SDK does not guarantee any API compatibility for future updates
+### Avoid Using `We`
 
 ❌ We do not guarantee any API compatibility for future updates
 
-### Second Person
+✅ The SAP Cloud SDK does not guarantee any API compatibility for future updates
 
-Use you instead of we.
+### Avoid Using `Our`
+
+❌ Check out our ETag section for more information.
+
+✅ Check out the ETag section for more information.
+
+### Exception: The Questions in FAQs
+
+✅ We are happy to review and incorporate contributions.
+
+## Second Person
+
+### Use the Imperative Form in Instructions
+
 When telling the reader to do something, use the imperative (implicit you).
-Avoid your.
-
-✅ Create an Ingress to make the application available from outside the cluster.
-
-❌ To make your application available from outside the cluster we will create an Ingress.
-
-✅ Create a simple application that uses the approuter
 
 ❌ You will need to create a simple application that uses the approuter
 
+✅ Create a simple application that uses the approuter
+
+### Avoid Using `Your`
+
+❌ Deploy your application as usual by running the command:
+
+✅ Deploy the application as usual by running the command:
+
+### Don't Use `We` or `Our` When Addressing the Reader(You)
+
+Either try to change to second person or use the imperative form.
+
+❌ Now that we have defined our destinations, we need to make sure that they are available in our process.
+
+✅ Now that the destinations are defined, make sure that they are available in the process.
+
 ## Politeness
 
-Be polite, but using please in a set of instructions is overdoing the politeness.
+### Don’t Use `Please` in Instructions
 
-- Don't use please when explaining a procedure, even when explaining a difficult task.
-- Don't use the phrase **Please note**
+Be polite, but using please in a set of instructions is overdoing the politeness.
+Don't use please when explaining a procedure, even when explaining a difficult task.
+
+❌ Please make sure the mail destination is configured correctly
+
+✅ Make sure the mail destination is configured correctly
+
+### Don't Use the Phrase `Please Note`
 
 ❌ Please note that the `CUSTOMER_NAME` and `CUSTOMER_ACCOUNT_GROUP` are properties of the entity
 
-Use 'please' only when asking for permission or forgiveness.
-For example, when what you're asking for:
+✅ Note that the `CUSTOMER_NAME` and `CUSTOMER_ACCOUNT_GROUP` are properties of the entity
+
+### Use `Please` Only for Permission or Forgiveness
+
+Use 'please' only when what you're asking for:
 
 - benefits us
 - inconveniences a reader
@@ -297,7 +396,7 @@ For example, when what you're asking for:
 
 ## Words
 
-Avoid certain words:
+### Words To Avoid
 
 - currently - For features, as this is implied
 - soon, new, future - Avoid in timeless documentation because such words can become outdated
@@ -314,6 +413,8 @@ Avoid certain words:
 
 - typically - Use to describe what is usual or expected under normal circumstances.
   Don't use as the first word in a sentence, as doing so can leave the meaning open to misinterpretation.
+
+### Usage Guidance for Commonly Used Terms
 
 <!-- vale off -->
 
@@ -338,7 +439,119 @@ Avoid certain words:
 
 # Punctuation
 
-- Use serial (Oxford) commas before the final **and**/**or** in a list of three or more items
-- Avoid exclamation point and ellipses
-- When using Hyphens, refer to the rules described [here](https://developers.google.com/style/hyphens)
-- For lists, end punctuation should follow [these rules](https://developers.google.com/style/lists#numbered-lettered-bulleted-lists)
+## Use Oxford Comma in a Series of Three or More Items
+
+Use serial (Oxford) comma before the final **and**/**or** in a series of three or more items
+
+❌ define the `get`, `set`, and `clear` methods.
+
+✅ define the `get`, `set` and `clear` methods.
+
+## Avoid Exclamation Point and Ellipses
+
+- Avoid exclamation point and ellipses (except in rare exciting moments)
+
+❌ Enjoy the hands-on experience delivered by SAP Cloud SDK developers!
+
+## Lists
+
+### Introduce List by Using a Complete Sentence
+
+Introduce a list with a complete sentence, **not a partial one that's completed by the list items**.
+
+❌
+
+```
+You should include a circuit-breaker if:
+
+- The resource is essential in your infrastructure and should be protected.
+- The resource reacts poorly to heavy load.
+```
+
+✅
+
+```
+You should include a circuit-breaker in the following scenarios:
+
+- The resource is essential in your infrastructure and should be protected.
+- The resource reacts poorly to heavy load.
+```
+
+### Start Each List Item With Capital Letter and End With Period
+
+✅
+
+```
+The introduction of a cache is most effective in the following cases:
+
+- The execution of a method consumes a lot of resources.
+- The method is a pure function, meaning the function arguments contain all the information and no hidden state affects the result of the function.
+- The function is invoked multiple times for the same arguments or context.
+```
+
+#### Exceptions: End Punctuation
+
+Don't add end punctuation if the item satisfies any of the below conditions:
+
+- Consists of a single word
+- Doesn't include a verb
+- Is entirely in code font, is a link text, or a document title
+
+### Use Numbered List for Steps To Be Performed in Order
+
+❌
+
+```
+You can obtain the JWT using Postman:
+
+- create a new request
+- go to the "Authorization tab of the request
+- select "OAuth 2.0" as a type
+```
+
+✅
+
+```
+To obtain the JWT using Postman, follow these steps:
+
+1. Create a new request
+2. Go to the "Authorization tab of the request
+3. Select "OAuth 2.0" as a type
+```
+
+### Use Description List With Headings for Describing Terms
+
+- Start the term with capital letter and text that follows colons with a lowercase letter.
+- Use bold formatting for the term and punctuation.
+- If term is an attribute, use code font.
+- Use colon and **not dash** to set off a description.
+
+❌
+
+```
+Typical parameters to configure a circuit-breaker are:
+
+- "failure threshold"- Failure rate above which the circuit-breaker will open.
+- "reset timeout"- The time after which the circuit-breaker will close.
+- Fallback- Some alternative actions you want to perform when the breaker is open.
+```
+
+✅
+
+```
+Typical parameters to configure a circuit-breaker are:
+
+- **Failure threshold**: failure rate above which the circuit-breaker will open.
+- **Reset timeout**: the time after which the circuit-breaker will close.
+- **Fallback**: some alternative actions you want to perform when the breaker is open.
+```
+
+#### Exception: Capital Letter
+
+If the case is an important part of the information conveyed by the list - such as in a list of glossary terms.
+
+✅
+
+```
+- `minTimeout`: initial waiting time for the first retry.
+```
