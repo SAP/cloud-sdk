@@ -13,7 +13,7 @@ keywords:
   - tutorial
   - tenancy
   - tenant
-  - SAAS
+  - SaaS
 ---
 
 import Tabs from '@theme/Tabs';
@@ -21,16 +21,16 @@ import TabItem from '@theme/TabItem';
 
 ## Overview
 
-The code discussed in this guide can be found on the [samples repository](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/cf-multi-tenant-application).
+The code discussed in this guide can be found in the [samples repository](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/cf-multi-tenant-application).
 The idea behind this tutorial is to explain the main concepts of multi-tenant applications and how to implement them on SAP BTP.
-The code in example is not a copy-paste solution for productive use, but a didactic sample.
+The code in the example is not a copy-paste solution for productive use but a didactic sample.
 You need to adjust things like application names or routes for your use case.
 
-The term `multi-tenant application` is more or less a synonym for a software as a service (SAAS) offering.
-The idea behind this architecture is, that the consumers share the application resources so that they are more effectively used.
-On SAP BTP different organization are modelled by subaccounts and multi-tenant application are subscribed per subaccount.
+The term `multi-tenant application` is more or less a synonym for a software as a service (SaaS) offering.
+The idea behind this architecture is that the consumers share the application resources, so they are used more effectively.
+On SAP BTP, organizations are modeled by subaccounts, and multi-tenant applications are subscribed per subaccount.
 These organizations are potentially different companies or strongly separated parts of one company.
-In any case, each organization has its subaccount on SAP BTP and subscribes to your multi-tenant application.
+In any case, each organization has its subaccount on SAP BTP and subscribes to a multi-tenant application.
 
 Some vocabulary is necessary to understand the next chapters of this tutorial:
 
@@ -43,14 +43,14 @@ Some vocabulary is necessary to understand the next chapters of this tutorial:
 
 :::note
 This is not a complete guide on the multi-tenancy topic in SAP, but rather covers only points where the SAP Cloud SDK team saw the need of a more detailed guide with samples.
-Please also have a look at the following guides and tutorials offering detailed information:
+Have a look at the following guides and tutorials offering detailed information:
 
 - The [SAP-Hana-Academy](https://github.com/saphanaacademy/generator-saphanaacademy-saas) contains a complete SaaS example for CF and K8s.
 - The [multi-tenant application documentation](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/5e8a2b74e4f2442b8257c850ed912f48.html) contains all technical details for development.
 - The [approuter documentation](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/01c5f9ba7d6847aaaf069d153b981b51.html) explains the approuter concepts.
 - There are many blogs talking about multi-tenant application development: For example, the blog from [Sandeep provides a good overview](https://blogs.sap.com/2018/10/25/using-saas-registry-to-develop-multitenant-application-on-sap-cloud-platform-cloud-foundry-environment/) or [the blog from Raja is also a good starting point](https://blogs.sap.com/2022/08/27/fundamentals-of-multitenancy-in-sap-btp/).
 - This tutorial skips important topics like [Custom domains](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/2291aea5e22440f7a161bdeb9c16b664.html) or [Role and authorization concepts](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/56a71531fc154717bf221f9e293ba215.html).
-  :::
+:::
 
 :::info
 
@@ -63,7 +63,7 @@ In case you want to offer a service across global accounts you may follow the [s
 
 To execute this tutorial, you need:
 
-- Two CF subaccounts in the same global account to represent provider and subscriber account.
+- Two CF subaccounts in the same global account to represent provider and subscriber accounts.
 - The provider account needs some quota:
   - To host two applications (sample application and approuter)
   - To create a service instance for the destination and XSUAA service
@@ -74,13 +74,13 @@ To execute this tutorial, you need:
 The application is a minimal example which contains only one endpoint containing business logic.
 This endpoint will call the destination service using the SAP Cloud SDK.
 Since the destination service is tenant aware, it can be used to illustrate service usage within your multi-tenant application.
-You find the application code in the [multi-tenant-app folder](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/cf-multi-tenant-application).
+You can find the application code in the [multi-tenant-app folder](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/cf-multi-tenant-application).
 The relevant application logic and configuration is located in the following three files:
 
 - In the `application.ts` file, the different endpoints are defined.
   For now, only the `/service` endpoint is relevant, which represents our multi-tenant service.
 - In the `manifest.yml` file, the route to the application is given and the used services are defined.
-- In the `service-endpoint.ts` a tenant-aware service (destination service) is called and tenant information are collected.
+- In the `service-endpoint.ts` a tenant-aware service (destination service) is called and tenant information is collected.
   The endpoint represents the service offering for the subscriber accounts.
 
 <!-- vale off -->
@@ -198,7 +198,7 @@ There is an `xs-sercurity.json` file in the `service-config` folder to create th
 Align the name of your service instances with the ones in the `manifest.yml`.
 Also, adjust the route to use the region of your CF, e.g., `cfapps.us10.hana.ondemand.com`, and the route path to make it unique in the region.
 
-Now you log into CF using the CLI `cf login` and enter the account information of the provider account.
+Now, log into CF using the CLI `cf login` and enter the account information of the provider account.
 Navigate to the `multi-tenant-app` folder and execute `cf push` to deploy the application.
 
 ### Call the Service
@@ -212,7 +212,7 @@ GET https://multi-tenant-app.cfapps.YOUR_REGION.hana.ondemand.com/service
 The implementation of `service-endpoint.ts` does the following:
 
 - Extracts a JSON web token (JWT) from the request.
-- Fetch a destination with the name `myDestination` using the destination service.
+- Fetches a destination with the name `myDestination` using the destination service.
 
 Since there is no destination with that name, the service will return `404`.
 
@@ -231,14 +231,14 @@ Just think of the approuter as an application taking requests and initiating the
 Once the user enters their credentials, the request is sent to the target with the JWT issued for the user and account.
 
 :::note
-More information on the app router topic can be found in [this guide](../guides/how-to-use-the-approuter.mdx).
+More information on the approuter topic can be found in [this guide](../guides/how-to-use-the-approuter.mdx).
 :::
 
 In a productive case, the approuter may redirect requests to multiple applications.
 In our simple example, there is just one route.
 
 The approuter does not require code, only configuration.
-You find all files in the [approuter folder](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/cf-multi-tenant-application/approuter).
+You can find all files in the [approuter folder](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/cf-multi-tenant-application/approuter).
 
 - The `manifest.yml` file contains the config for the approuter
 - The `xs-app.json` file contains the config for the route resolution.
@@ -268,7 +268,7 @@ Once the approuter is deployed, you will see it running as a separate applicatio
 When you open the approuter application you see one route created by the manifest:
 
 ```
-GET https://route-prefix-YOUR-SUBDOMAIN.cfapps.YOUR_REGION.hana.ondemand.com/
+GET https://route-prefix-YOUR_SUBDOMAIN.cfapps.YOUR_REGION.hana.ondemand.com/
 ```
 
 When you follow this route you, will get redirected to the `welcomeFile` defined in the `xs-app.json`.
@@ -289,7 +289,7 @@ The reason for introducing the approuter was the missing JWT in the request.
 If you call the service via the approuter:
 
 ```
-GET https://route-prefix-YOUR-SUBDOMAIN.cfapps.YOUR_REGION.hana.ondemand.com/service
+GET https://route-prefix-YOUR_SUBDOMAIN.cfapps.YOUR_REGION.hana.ondemand.com/service
 ```
 
 you will see a response like:
@@ -305,7 +305,7 @@ which shows that the request contains a JWT issued for the provider account.
 Up to now, you called the application via the provider account.
 In this chapter you learn how to call the service from a different account.
 
-The first thing to do is to create an instance of the `SAAS provisioning service` in your provider account.
+The first thing to do is to create an instance of the `SaaS provisioning service` in your provider account.
 You find the `saas-registry-config.json` in the [samples repository](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/cf-multi-tenant-application).
 This makes the service subscribable from other accounts.
 You need to adjust the `providerTenantId` to contain your ID and the `appUrls` to match your region and application URL.
@@ -418,12 +418,12 @@ However, the subscriber account does not know anything about the internal detail
 Therefore, the `/dependencies` endpoint provides the information that the destination service may be used also from the subscriber account.
 
 Remember to add all SAP BTP services used by your application in the response of the [dependencies endpoint](https://github.com/SAP-samples/cloud-sdk-js/blob/2b31c670f6bcd4b89a9d1c8b88fd20974d1d5470/samples/cf-multi-tenant-application/multi-tenant-app/src/dependencies-endpoint.ts#L4).
-If you do not do that you retrieve a 403 error from the XSUAA when you request a service token on behalf of a subscriber account.
+If you do not do that, you retrieve a `403` error from the XSUAA when you request a service token on behalf of a subscriber account.
 
 ### Creating a Subscription
 
-After you created the instance of the `SAAS provisioning service` in the provider account, you can create a subscription via the user interface.
-A subscription is only a route to the provider application including the unique subdomain of subscriber account.
+After you have created an instance of the `SaaS provisioning service` in the provider account, you can create a subscription via the user interface.
+A subscription is a route to the provider application, including the unique subdomain of the subscriber account.
 The `TENANT_HOST_PATTERN` in the `manifest.yml` of the approuter defines how to extract the subscriber account from the URL.
 A route like:
 
@@ -433,7 +433,7 @@ GET https://route-prefix-YOUR_SUBDOMAIN.cfapps.YOUR_REGION.hana.ondemand.com/ser
 
 would mean that the subscriber account is _`YOUR_SUBDOMAIN`_.
 Of course, you want to automate onboarding of new accounts as much as possible.
-Hence, a script in the `subscription-endpoint.ts` creates a route automatically:
+To automate the onboarding of new accounts, the script in `subscription-endpoint.ts` does the following:
 
 - It creates a route
 - Binds the created route to the approuter.
@@ -441,7 +441,7 @@ Hence, a script in the `subscription-endpoint.ts` creates a route automatically:
 
 The creation of the route uses the [CF API](https://v3-apidocs.cloudfoundry.org/version/3.126.0/index.html).
 Unfortunately, there is no out-of-the-box access of this API when you are in the context of an application.
-The code assume a destination with the name `cf-api` in the sample implementation which contains the access data for the CF API:
+The code assumes a destination with the name `cf-api` in the sample implementation which contains the access data for the CF API:
 
 | property          | value                                                        |
 | ----------------- | ------------------------------------------------------------ |
@@ -455,7 +455,7 @@ The code assume a destination with the name `cf-api` in the sample implementatio
 | URL               | `https://api.cf.YOUR_REGION.hana.ondemand.com`               |
 
 You have to adjust the URL and token service URL to for your region e.g. `https://api.cf.us10.hana.ondemand.com`.
-Once the destination is present you can subscribe the application and routes are created automatically.
+Once the destination is present, you can subscribe to the application and routes are created automatically.
 
 Log into your second SAP BTP account. Go to **Service->Instances and Subscriptions** and create a subscription to the `multi-tenant-app`.
 Once the application is subscribed, you can have a look at the approuter in the provider account.
@@ -473,20 +473,20 @@ You are on tenant: a89ea924-d9c2-4gaf-84fb-3ffcff7891011. The destination descri
 ```
 
 The approuter has extracted the subscriber subdomain from the URL and issued a token for this account.
-As an application developer you can use the token to determine the account which currently calls your code.
+As an application developer, you can use the token to determine the account which currently calls your code.
 
 ### Removing a Subscription
 
 If the consumer deletes the subscription, the SAP BTP will invoke the `DELETE` method on the subscription-endpoint.
-The code will remove the route from the app router and make the application not reachable anymore for that user.
+The code will remove the route from the approuter and make the application unreachable for that consumer.
 The details of the implementation can be found in the `subscription-endpoint.ts` of the sample application.
 
 ## Real World View
 
 The presented example is totally artificial.
-This chapter tries to elaborate a bit more how an actual multi-tenant application would look like and how the SAP Cloud SDK helps you.
+This chapter elaborate a bit on what an actual multi-tenant application would look like and how the SAP Cloud SDK helps you.
 Different consumer are divided by their unique application URL including their subdomain.
-However, up to know nothing subscriber specific is happening in the implementation.
+However, up to now, nothing subscriber-specific is happening in the implementation.
 
 To get an idea create a destination in the subscriber account with the same name `myDestination` with a different description e.g. `Subscriber Destination`.
 A call to the same `/service` endpoint will lead now :
@@ -501,8 +501,8 @@ This enables consumers to maintain their custom destination used within a multi-
 The destination from the provider account could be seen as a fallback.
 
 This is only one example of a tenant-aware service.
-You could imagine a database with a `tenantId` column to store consumer specific configuration.
-You extract the value from the JWT as shown in the minimal example:
+Imagine a database with a `tenantId` column to store consumer specific configuration.
+You can extract the value from the JWT as shown in the example:
 
 ```ts
 const jwt = retrieveJwt(req);
