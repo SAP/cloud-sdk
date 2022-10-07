@@ -31,13 +31,45 @@ Before you increase the SAP Cloud SDK version to 4 it can be beneficial to migra
 Follow the deprecation note of the Javadoc in case you are still using deprecated API from the SAP Cloud SDK.
 Almost all deprecated API is removed With version 4 (exception being audit logging).
 
+| API                                                         | Replacement                                                     | Comment                                              |
+|-------------------------------------------------------------|-----------------------------------------------------------------|------------------------------------------------------|
+| RequestAccessor                                             | RequestHeaderAccessor                                           |                                                      |
+| RequestFacade                                               | RequestHeaderFacade                                             |                                                      |
+| DefaultRequestFacade                                        | DefaultRequestHeaderFacade                                      |                                                      |
+| RequestThreadContextListener                                | RequestHeaderThreadContextListener                              |                                                      |
+| retrieveAccessTokenHeaderViaUserTokenExchange               | retrieveAccessTokenHeaderViaUserTokenGrant                      |                                                      |
+| retrieveAccessTokenViaUserTokenExchange                     | retrieveAccessTokenViaUserTokenGrant                            |                                                      |
+| OAuth2ServiceSettings                                       | -                                                               | Moved to `security` package                          |
+| ScpCfHttpDestination.Builder.uri                            | ScpCfHttpDestination.builder(name, uri)                         |                                                      |
+| Default(Erp)HttpDestination.Builder.uri                     | Default(Erp)HttpDestination.builder(uri)                        |                                                      |
+| Default(Erp)HttpDestination.Builder.network                 | Default(Erp)HttpDestination.Builder.proxyType                   |                                                      |
+| DestinationHeaderProvider.getHeaders                        | DestinationHeaderProvider.getHeaders                            | Argument type changed to `DestinationRequestContext` |
+| ScpCfDestinationRetrievalStrategy.SUBSCRIBER_THEN_PROVIDER  | ScpCfDestinationRetrievalStrategy.CURRENT_TENANT_THEN_PROVIDER  |                                                      |
+| ScpCfDestinationRetrievalStrategy.ALWAYS_SUBSCRIBER         | ScpCfDestinationRetrievalStrategy.CURRENT_TENANT                | Or use the new `ONLY_SUBSCRIBER`                     |
+| ScpNeoDestinationRetrievalStrategy.SUBSCRIBER_THEN_PROVIDER | ScpNeoDestinationRetrievalStrategy.CURRENT_TENANT_THEN_PROVIDER |                                                      |
+| ScpNeoDestinationRetrievalStrategy.ALWAYS_SUBSCRIBER        | ScpNeoDestinationRetrievalStrategy.CURRENT_TENANT               | Or use the new `ONLY_SUBSCRIBER`                     |
+| CachingDecorator                                            | GenericDecorator                                                |                                                      |
+| RetryConfiguration.ofDefaults                               | RetryConfiguration.of                                           |                                                      |
+| ResilienceDecorator.invalidateCache                         | ResilienceDecorator.clearAllCacheEntries                        | Or use the new `clearCache`                          |
+| ResilienceDecorationStrategy.invalidateCache                | ResilienceDecorationStrategy.clearAllCacheEntries               | Or use the new `clearCache`                          |
+| Resilience4jDecorationStrategy.invalidateCache              | Resilience4jDecorationStrategy.clearAllCacheEntries             | Or use the new `clearCache`                          |
+| CloudLoggerFactory                                          | LoggerFactory                                                   |                                                      |
+| (OData V2) .execute                                         | .executeRequest                                                 |                                                      |
+| (OData V2) .withErrorHandler                                | -                                                               | Catch the dedicated exceptions                       |
+| (OData V2) .getHeadersForRequestOnly                        | .getHeaders                                                     | There is no implicit metadata request anymore        |
+| (OData V2) .getHeadersForRequestAndImplicitRequests         | .getHeaders                                                     | There is no implicit metadata request anymore        |
+| (OData V2) .onRequestOnly                                   | -                                                               | There is no implicit metadata request anymore        |
+| (OData V2) .onRequestAndImplicitRequests                    | -                                                               | There is no implicit metadata request anymore        |
+| (OData V2) .cachingMetadata                                 | -                                                               | There is no implicit metadata request anymore        |
+| (OData V2) .withoutCachingMetadata                          | -                                                               | There is no implicit metadata request anymore        |
+| (OData V2) .and                                             | .withHeaders                                                 |                                                      |
+| (OData V2) .toQuery                                             | .toRequest                                                 |                                                      |
+| (OData V2) .ignoringVersionIdentifier   | .matchAnyVersionIdentifier                                                 | Or use the new `disableVersionIdentifier`                                        |
+|  MockUtil                                                   | -                                                               |                                                      |
+
+
 <details>
     <summary>Full list of deprecated API</summary>
-
-  | API             	| Replacement           	| Comment 	|
-  |-----------------	|-----------------------	|---------	|
-  | RequestAccessor 	| RequestHeaderAccessor 	|         	|
-  |                 	|                       	|         	|
 
 </details>    
 
