@@ -85,12 +85,7 @@ module.exports = {
           type: 'dropdown',
           label: 'API Reference',
           position: 'right',
-          items: [
-            {
-              label: 'Swizzle Placeholder',
-              href: 'https://www.example.com'
-            }
-          ],
+          items: [],
           docsPluginId: 'docs-js',
           apiReference: true
         },
