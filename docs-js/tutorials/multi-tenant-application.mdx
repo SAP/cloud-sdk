@@ -309,7 +309,7 @@ GET https://route-prefix-YOUR_SUBDOMAIN.cfapps.YOUR_REGION.hana.ondemand.com/
 
 ```
 
-When you follow this route you, will get redirected to the `welcomeFile` defined in the `xs-app.json`.
+When you follow this route, you will get redirected to the `welcomeFile` defined in the `xs-app.json`.
 The `index.html` is located in the [application](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/cf-multi-tenant-application/multi-tenant-app).
 How did the routing work:
 
@@ -348,7 +348,7 @@ Up to now, you called the application via the provider account.
 In this chapter you learn how to call the service from a different account.
 
 The first thing to do is to create an instance of the `SaaS provisioning service` in your provider account.
-You find the `saas-registry-config.json` in the [samples repository](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/cf-multi-tenant-application).
+You can find the `saas-registry-config.json` in the [samples repository](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/cf-multi-tenant-application).
 This makes the service subscribable from other accounts.
 You need to adjust the `providerTenantId` to contain your ID and the `appUrls` to match your region and application URL.
 Within the `saas-registry-config.json` two URLs are mentioned: the `getDependencies` and `onSubscription`.
@@ -474,7 +474,6 @@ GET https://route-prefix-YOUR_SUBDOMAIN.cfapps.YOUR_REGION.hana.ondemand.com/ser
 ```
 
 would mean that the subscriber account is _`YOUR_SUBDOMAIN`_.
-Of course, you want to automate onboarding of new accounts as much as possible.
 To automate the onboarding of new accounts, the script in `subscription-endpoint.ts` does the following:
 
 - It creates a route
