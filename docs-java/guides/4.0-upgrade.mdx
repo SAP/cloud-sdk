@@ -543,6 +543,12 @@ If this is not the case for your project and you find yourself affected by any o
 
 ### Others
 
+The most notable remaining changes are:
+
+* The OpenAPI generator has been updated to version `6.0.1`
+* Minor class renaming in the modules `scp-workflow-cf` and `btp-business-rules`
+* Marking formerly experimental API as stable, most prominently the OData V4 API
+
 <details>
     <summary>Full list of other changes</summary>
 
@@ -557,5 +563,71 @@ If this is not the case for your project and you find yourself affected by any o
   * The `TimeScopedHttpClientCache` has been renamed to `DefaultHttpClientCache`.
     It is replacing the removed `RequestScopedHttpClientCache` as the default implementation of `HttpClientCache` in the `HttpClientAccessor`.
     Furthermore, the isolation strategy has been changed: Http clients are now also cached in case either the current tenant or principal (or both) are missing.
+  * Minor re-namings of generated classes in `btp-business-rules`
+    * `DecisionTableCell` to	`DecisionTableCellInner`
+    * `DecisionTableColumn` to	`DecisionTableColumnInner`
+    * `DecisionTableCondition` to	`DecisionTableColumnInnerCondition`
+    * `DecisionTableResult` to	`DecisionTableColumnInnerResult`
+    * `DecisionTableRow` to	`DecisionTableRowInner`
+    * `ElementValuesEnumeration` to	`ElementValuesEnumerationInner`
+    * `ErrorErrorDetails` to	`ErrorErrorDetailsInner`
+    * `StructureComponent` to	`StructureComponentInner`
+    * `StructureAssociation` to	`StructureComponentInnerAssociation`
+    * `StructureAssociationCondition` to	`StructureComponentInnerAssociationConditionInner`
+    * `StructureAssociationSource` to	`StructureComponentInnerAssociationConditionInnerSource`
+    * `StructureAssociationTarget` to	`StructureComponentInnerAssociationConditionInnerTarget`
+    * `TableParameter` to	`TableParameterInner`
+    * `TextBranches` to	`TextBranchesInner`
+    * `TextCondition` to	`TextBranchesInnerCondition`
+    * `TextOperation` to	`TextBranchesInnerOperationInner`
+    * `TextPredefined` to	`TextPredefinedInner`
+    * `StructureAssociationTarget` to	`VocabularyInputInner`
+  * Minor re-namings of generated classes in `scp-workflow-cf`
+    * `ErrorMessageErrorDetails` to	`ErrorMessageErrorDetailsInner`
+    * `AttachmentsContextGroups`to `AttachmentsContextGroupsValue`
+    * `AttachmentsContextRefs`to `AttachmentsContextGroupsValueRefsInner`
+    * `FormMetadataWorkflowDefinitions`to `FormMetadataWorkflowDefinitionsInner`
+    * `TechnicalErrorErrorDetails`to `TechnicalErrorErrorDetailsInner`
+  * Stabilize the following, formerly marked experimental, API:
+    * In package `com.sap.cloud.sdk.cloudplatform.resilience` stabilise:
+      * `CacheFilter` class
+      * `ResilienceDecorationStrategy.clearCache()`
+      * `ResilienceDecorator.clearCache()`
+    * In package `com.sap.cloud.sdk.frameworks.resilience4j` stabilise:
+      * `Resilience4jDecorationStrategy.clearCache()`
+      * `Resilience4jDecorationStrategy.Resilience4jDecorationStrategyBuilder` static class
+    * In package `com.sap.cloud.sdk.cloudplatform.connectivity` stabilise:
+      * Constructor `ScpCfDestinationLoader( Duration timeLimiterTimeout )`
+      * `ScpCfDestinationTokenExchangeStrategy` class and all related API
+      * `ScpCfServiceDestinationLoader` class and all related API
+      * `SecurityConfigurationStrategy` class and all related API
+      * `appendDestinationLoader` and `prependDestinationLoader` on `DestinationAccessor`
+      * `WrappedDestination` class
+    * In module `security`
+      * `Audience`
+      * `ClientCertificate`
+      * `DefaultPrincipal`
+      * `getAuthorizationsByAudience()` in `Principal`
+    * In module `security-scp-cf`
+      * `OAuth2ServiceProvider`
+      * `OAuth2ServiceSettings`
+      * `OAuth2TokenServiceCache`
+      * `SecurityContextThreadContextDecorator`
+    * In module `odata-v4-core`
+      * `BatchResponse` and `of()` in `BatchResponse`
+      * `BoundAction`
+      * `BoundFunction`
+      * `BoundOperation`
+      * `toRequest()` in `RequestBuilder`
+      * `SimpleProperty`
+      * `VdmComplex`
+      * `VdmEntity`
+      * `VdmEntitySet`
+      * `VdmEntityUtil`
+      * `VdmEnum`
+      * `VdmObject`
+    * In module `rfc`
+      * `RemoteFunctionCache`
+      * `SoapNamespace`  
   
 </details>
