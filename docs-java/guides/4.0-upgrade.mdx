@@ -18,58 +18,205 @@ keywords:
 
 ## Introduction
 
--> Marketing
--> Link blog post for new features?
+Version 4 of the SAP Cloud SDK is here and we highly recommend updating to it as soon as possible.
+It brings various improvements while keeping the necessary adjustments to an absolute minimum.
 
-
-There is a good chance that simply bumping the version to `4.0.0` is already enough, without the need for any further adjustments.
+There is a good chance that just bumping the version to `4.0.0` is already enough, without the need for any further adjustments.
 In particular, updating may be straightforward if you are not using any deprecated API or spawn new threads.
+
+:::note Release Blog Post
+For more information also check out our [version 4 release blog post](https://blogs.sap.com/2022/03/01/sap-cloud-sdk-for-java-4.0-building-the-next-major-version/).
+:::
 
 ## Before You Update
 
 Before you increase the SAP Cloud SDK version to 4 it can be beneficial to migrate any usage of **deprecated API** first.
 Follow the deprecation note of the Javadoc in case you are still using deprecated API from the SAP Cloud SDK.
-Almost all deprecated API is removed With version 4 (exception being audit logging).
-
-| API                                                         | Replacement                                                     | Comment                                              |
-|-------------------------------------------------------------|-----------------------------------------------------------------|------------------------------------------------------|
-| RequestAccessor                                             | RequestHeaderAccessor                                           |                                                      |
-| RequestFacade                                               | RequestHeaderFacade                                             |                                                      |
-| DefaultRequestFacade                                        | DefaultRequestHeaderFacade                                      |                                                      |
-| RequestThreadContextListener                                | RequestHeaderThreadContextListener                              |                                                      |
-| retrieveAccessTokenHeaderViaUserTokenExchange               | retrieveAccessTokenHeaderViaUserTokenGrant                      |                                                      |
-| retrieveAccessTokenViaUserTokenExchange                     | retrieveAccessTokenViaUserTokenGrant                            |                                                      |
-| OAuth2ServiceSettings                                       | -                                                               | Moved to `security` package                          |
-| ScpCfHttpDestination.Builder.uri                            | ScpCfHttpDestination.builder(name, uri)                         |                                                      |
-| Default(Erp)HttpDestination.Builder.uri                     | Default(Erp)HttpDestination.builder(uri)                        |                                                      |
-| Default(Erp)HttpDestination.Builder.network                 | Default(Erp)HttpDestination.Builder.proxyType                   |                                                      |
-| DestinationHeaderProvider.getHeaders                        | DestinationHeaderProvider.getHeaders                            | Argument type changed to `DestinationRequestContext` |
-| ScpCfDestinationRetrievalStrategy.SUBSCRIBER_THEN_PROVIDER  | ScpCfDestinationRetrievalStrategy.CURRENT_TENANT_THEN_PROVIDER  |                                                      |
-| ScpCfDestinationRetrievalStrategy.ALWAYS_SUBSCRIBER         | ScpCfDestinationRetrievalStrategy.CURRENT_TENANT                | Or use the new `ONLY_SUBSCRIBER`                     |
-| ScpNeoDestinationRetrievalStrategy.SUBSCRIBER_THEN_PROVIDER | ScpNeoDestinationRetrievalStrategy.CURRENT_TENANT_THEN_PROVIDER |                                                      |
-| ScpNeoDestinationRetrievalStrategy.ALWAYS_SUBSCRIBER        | ScpNeoDestinationRetrievalStrategy.CURRENT_TENANT               | Or use the new `ONLY_SUBSCRIBER`                     |
-| CachingDecorator                                            | GenericDecorator                                                |                                                      |
-| RetryConfiguration.ofDefaults                               | RetryConfiguration.of                                           |                                                      |
-| ResilienceDecorator.invalidateCache                         | ResilienceDecorator.clearAllCacheEntries                        | Or use the new `clearCache`                          |
-| ResilienceDecorationStrategy.invalidateCache                | ResilienceDecorationStrategy.clearAllCacheEntries               | Or use the new `clearCache`                          |
-| Resilience4jDecorationStrategy.invalidateCache              | Resilience4jDecorationStrategy.clearAllCacheEntries             | Or use the new `clearCache`                          |
-| CloudLoggerFactory                                          | LoggerFactory                                                   |                                                      |
-| (OData V2) .execute                                         | .executeRequest                                                 |                                                      |
-| (OData V2) .withErrorHandler                                | -                                                               | Catch the dedicated exceptions                       |
-| (OData V2) .getHeadersForRequestOnly                        | .getHeaders                                                     | There is no implicit metadata request anymore        |
-| (OData V2) .getHeadersForRequestAndImplicitRequests         | .getHeaders                                                     | There is no implicit metadata request anymore        |
-| (OData V2) .onRequestOnly                                   | -                                                               | There is no implicit metadata request anymore        |
-| (OData V2) .onRequestAndImplicitRequests                    | -                                                               | There is no implicit metadata request anymore        |
-| (OData V2) .cachingMetadata                                 | -                                                               | There is no implicit metadata request anymore        |
-| (OData V2) .withoutCachingMetadata                          | -                                                               | There is no implicit metadata request anymore        |
-| (OData V2) .and                                             | .withHeaders                                                 |                                                      |
-| (OData V2) .toQuery                                             | .toRequest                                                 |                                                      |
-| (OData V2) .ignoringVersionIdentifier   | .matchAnyVersionIdentifier                                                 | Or use the new `disableVersionIdentifier`                                        |
-|  MockUtil                                                   | -                                                               |                                                      |
-
+All deprecated API is removed With version 4 (exception being audit logging).
 
 <details>
     <summary>Full list of deprecated API</summary>
+  
+  <table>
+    <thead>
+        <tr>
+            <td><b>API</b></td>
+            <td><b>Replacement</b></td>
+            <td><b>Comment</b></td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>RequestAccessor</td>
+            <td>RequestHeaderAccessor</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>RequestFacade</td>
+            <td>RequestHeaderFacade</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>DefaultRequestFacade</td>
+            <td>DefaultRequestHeaderFacade</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>RequestThreadContextListener</td>
+            <td>RequestHeaderThreadContextListener</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>retrieveAccessTokenHeaderViaUserTokenExchange</td>
+            <td>retrieveAccessTokenHeaderViaUserTokenGrant</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>retrieveAccessTokenViaUserTokenExchange</td>
+            <td>retrieveAccessTokenViaUserTokenGrant</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>OAuth2ServiceSettings</td>
+            <td>-</td>
+            <td>Moved to `security` package</td>
+        </tr>
+        <tr>
+            <td>ScpCfHttpDestination.Builder.uri</td>
+            <td>ScpCfHttpDestination.builder(name, uri)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Default(Erp)HttpDestination.Builder.uri</td>
+            <td>Default(Erp)HttpDestination.builder(uri)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Default(Erp)HttpDestination.Builder.network</td>
+            <td>Default(Erp)HttpDestination.Builder.proxyType</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>DestinationHeaderProvider.getHeaders</td>
+            <td>DestinationHeaderProvider.getHeaders</td>
+            <td>Argument type changed to `DestinationRequestContext`</td>
+        </tr>
+        <tr>
+            <td>ScpCfDestinationRetrievalStrategy.SUBSCRIBER_THEN_PROVIDER</td>
+            <td>ScpCfDestinationRetrievalStrategy.CURRENT_TENANT_THEN_PROVIDER</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>ScpCfDestinationRetrievalStrategy.ALWAYS_SUBSCRIBER</td>
+            <td>ScpCfDestinationRetrievalStrategy.CURRENT_TENANT</td>
+            <td>Or use the new `ONLY_SUBSCRIBER`</td>
+        </tr>
+        <tr>
+            <td>ScpNeoDestinationRetrievalStrategy.SUBSCRIBER_THEN_PROVIDER</td>
+            <td>ScpNeoDestinationRetrievalStrategy.CURRENT_TENANT_THEN_PROVIDER</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>ScpNeoDestinationRetrievalStrategy.ALWAYS_SUBSCRIBER</td>
+            <td>ScpNeoDestinationRetrievalStrategy.CURRENT_TENANT</td>
+            <td>Or use the new `ONLY_SUBSCRIBER`</td>
+        </tr>
+        <tr>
+            <td>CachingDecorator</td>
+            <td>GenericDecorator</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>RetryConfiguration.ofDefaults</td>
+            <td>RetryConfiguration.of</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>ResilienceDecorator.invalidateCache</td>
+            <td>ResilienceDecorator.clearAllCacheEntries</td>
+            <td>Or use the new `clearCache`</td>
+        </tr>
+        <tr>
+            <td>ResilienceDecorationStrategy.invalidateCache</td>
+            <td>ResilienceDecorationStrategy.clearAllCacheEntries</td>
+            <td>Or use the new `clearCache`</td>
+        </tr>
+        <tr>
+            <td>Resilience4jDecorationStrategy.invalidateCache</td>
+            <td>Resilience4jDecorationStrategy.clearAllCacheEntries</td>
+            <td>Or use the new `clearCache`</td>
+        </tr>
+        <tr>
+            <td>CloudLoggerFactory</td>
+            <td>LoggerFactory</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>(OData V2) .execute</td>
+            <td>.executeRequest</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>(OData V2) .withErrorHandler</td>
+            <td>-</td>
+            <td>Catch the dedicated exceptions</td>
+        </tr>
+        <tr>
+            <td>(OData V2) .getHeadersForRequestOnly</td>
+            <td>.getHeaders</td>
+            <td>There is no implicit metadata request anymore</td>
+        </tr>
+        <tr>
+            <td>(OData V2) .getHeadersForRequestAndImplicitRequests</td>
+            <td>.getHeaders</td>
+            <td>There is no implicit metadata request anymore</td>
+        </tr>
+        <tr>
+            <td>(OData V2) .onRequestOnly</td>
+            <td>-</td>
+            <td>There is no implicit metadata request anymore</td>
+        </tr>
+        <tr>
+            <td>(OData V2) .onRequestAndImplicitRequests</td>
+            <td>-</td>
+            <td>There is no implicit metadata request anymore</td>
+        </tr>
+        <tr>
+            <td>(OData V2) .cachingMetadata</td>
+            <td>-</td>
+            <td>There is no implicit metadata request anymore</td>
+        </tr>
+        <tr>
+            <td>(OData V2) .withoutCachingMetadata</td>
+            <td>-</td>
+            <td>There is no implicit metadata request anymore</td>
+        </tr>
+        <tr>
+            <td>(OData V2) .and</td>
+            <td>.withHeaders</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>(OData V2) .toQuery</td>
+            <td>.toRequest</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>(OData V2) .ignoringVersionIdentifier</td>
+            <td>.matchAnyVersionIdentifier</td>
+            <td>Or use the new `disableVersionIdentifier`</td>
+        </tr>
+        <tr>
+            <td>MockUtil</td>
+            <td>-</td>
+            <td>Removed without replacement</td>
+        </tr>
+    </tbody>
+</table>
+
+  Note on the `MockUtil` class:
+  Most API allows for easy mocking already.
+  Please reach out to us directly if you use this class and are not sure how to replace it.
 
 </details>    
 
@@ -228,7 +375,7 @@ If this is the case Maven will inform you about it with a message similar to `'d
 If you are using the SAP Java Buildpack (SJB) together with a `.war` based deployment you should check out our new BOM dedicated to the SJB.
 You can use the new BOM by replacing `sdk-bom` with `sdk-sjb-bom` in your dependency management section.
 
-For more information and help in case of dependency problems refer to the [dedicated guide on managing dependencies](/manage-dependencies).
+For more information and help in case of dependency problems refer to the [dedicated guide on managing dependencies](/docs/java/guides/manage-dependencies).
 
 :::tip Check your setup
 Run `mvn validate` to verify your updated project configuration.
@@ -255,6 +402,13 @@ Future runningTask = ThreadContextExecutors.submit(() -> operation());
 The new API also integrates conveniently with CAP and can be integrated to work with Spring's `@Async`.
 Refer to the [full documentation](../features/multi-tenancy/multi-tenancy-thread-context) for more details on these features.
 
+## Get Support
+
+Having trouble with any of the update steps?
+Please don't hesitate to reach out to us!
+
+You can find our [public and internal support channels here](/docs/overview/get-support).
+
 ## Further Changes
 
 At this point the update is probably already complete.
@@ -278,19 +432,6 @@ For the OData features most notable are:
   * Remove the obsolete helper classes `FilterExpressionWrapper`, `UncheckedFilterExpression`, `FilterExpressionHelper` and `FilterFunction`
   * The `ODataTypeValueSerializer` class has been removed as it is no longer needed with the removal of the `servicesdk` dependency
   * Remove the obsolete class `com.sap.cloud.sdk.s4hana.connectivity.RequestBody`
-  * Remove the following deprecated methods from all OData V2 request builders (FluentHelper classes):
-    * `execute`
-    * `withErrorHandler`
-    * `getHeadersForRequestOnly`
-    * `getHeadersForRequestAndImplicitRequests`
-    * `and`
-    * `onRequestAndImplicitRequests`
-    * `onRequestOnly`
-    * `cachingMetadata`
-    * `withoutCachingMetadata`
-    * `toQuery`
-    * `ignoringVersionIdentifier`
-    * All constructors that required the `servicePath` as single argument, now the second argument `entityCollection` is mandatory
   * For OData v2 generated classes (the OData v2 VDM), the method signature has changed for lazily resolving navigation properties in entity classes.
     A checked exception is no longer thrown for methods named _fetchX()_ and _getXOrFetch()_:
     ```
@@ -313,17 +454,13 @@ For the OData features most notable are:
 
 On the `CloudPlatform` and related accessor classes the most notable changes are:
 
-* The deprecated `RequestAccessor` has been removed together with its related API
+* The deprecated `RequestAccessor` has been replaced by the `RequestHeaderAccessor`
 * The `RequestHeaderContainer` received minor changes to the collection types used
+* The latest version of the [SAP BTP Service Operator](https://github.com/SAP/sap-btp-service-operator) is now supported
 
 <details>
     <summary>Full list of CloudPlatform related changes</summary>
 
-  * The deprecated `com.sap.cloud.sdk.cloudplatform.servlet.RequestAccessor` has been removed together with its related API:
-    * `RequestAccessor`
-    * `RequestFacade`
-    * `DefaultRequestFacade`
-    * `RequestThreadContextListener`
   * Moved the `AuthTokenAccessor`, `AuthToken` classes and the `AuthTokenFacade` interface from the `security-scp-cf` into the `security` module.
     * Renamed `DefaultAuthTokenFacade` to `ScpCfAuthTokenFacade`.
     * Only functional implementation of `AuthTokenFacade` is the `ScpCfAuthTokenFacade` in the `security-scp-cf` module.
@@ -337,16 +474,17 @@ On the `CloudPlatform` and related accessor classes the most notable changes are
   * The `Accessor` (e.g. `TenantAccessor`) classes will now throw an `ThreadContextExecutionException` in their `executeWith` methods in case a custom `Facade` implementation is used that is not a (subtype of)   `DefaultFacade`.
    This was changed to make a current shortcoming regarding the `executeWith` API apparent to users that are using a different `ThreadContext`.
    For example, when running in a CAP context, `TenantAccessor.executeWithTenant` doesn't correctly update the CDS Context so that the operation doesn't lead to the expected result.
-   Previously, this error would go unnoticed, which led to the wrong impression that everything was working as expected.
+   Before, this error would go unnoticed, which led to the wrong impression that everything was working as expected.
    Now, the aforementioned `ThreadContextExecutionException` will be thrown to make users aware of the issue.     
   * Introduce support for the [BTP Environment Variable Access](https://github.com/SAP/btp-environment-variable-access) (_Service Binding_) library.
     * The `ScpCfCloudPlatform` now offers a `setServiceBindingAccessor` method, which should be used instead of the `setEnvironmentVariableReader` method to override the access to the `VCAP_SERVICES` environment variable.  
   * Following public behavior in the `cloudplatform-core-scp-cf` module has been changed:
-    * `ScpCfCloudPlatform#invalidateCaches`: The service bindings are no longer statically cached. Therefore, using the `invalidateCaches` method will no longer affect service bindings (for example as returned by the `getVcapServices` method)
+    * `ScpCfCloudPlatform#invalidateCaches`: The service bindings are no longer statically cached.
+    Therefore, using the `invalidateCaches` method will no longer affect service bindings (for example as returned by the `getVcapServices` method)
     * `ScpCfCloudPlatform#getVcapServices`: This method will no longer thrown a `CloudPlatformException` in case no service bindings are found 
   * Following experimental classes in the `cloudplatform-core` module have been removed:
     * All classes in the `com.sap.cloud.sdk.cloudplatform.servicebinding` package
-  * Following experimental methods in the `cloudplatform-core-scp-cf` module have been removed:
+  * experimental methods in the `cloudplatform-core-scp-cf` module have been removed:
     * `ScpCfCloudPlatform#setServiceBindingsRootLocation`
     * `ScpCfCloudPlatform#getServiceBindingsRootLocation`
     * `ScpCfCloudPlatform#setServiceBindingLoader`
@@ -357,9 +495,11 @@ On the `CloudPlatform` and related accessor classes the most notable changes are
 
 :::caution
 The `ThreadContext` interface and all related API have received substantial changes.
+<!-- vale off -->
 In most cases [the above mentioned change](#working-with-threads-and-the-threadcontext) should suffice.
 
 If this is not the case for your project and you find yourself affected by any of the below changes please **reach out to us directly**.
+<!-- vale on -->
 :::
 
 <details>
@@ -389,40 +529,33 @@ If this is not the case for your project and you find yourself affected by any o
     * The related `cds-integration-cloudsdk` module has been improved to pass on the full CDS `RequestContext`
     * The now obsolete `SecurityContextThreadContextListener` has been removed.
     * The `ScpNeoThreadContextDecorator` has been renamed to `ScpNeoThreadContextDecoratorInternal` and moved to `com.sap.cloud.sdk.cloudplatform.thread`. Additionally, it is no longer implementing the `ThreadContextDecorator` interface.
+  * Introduce a new API for running asynchronous tasks:
+    * `ThreadContextExecutorService` is an extension of `ExecutorService` and can be used to submit `Callable` and `Runnable` tasks.
+    * It will ensure the current (or a custom) `ThreadContext` is passed on to the newly scheduled `Thread`
+    * Since it is an `ExecutorService` it can be passed to other frameworks and libraries that create new Threads, e.g. Springs `@Async`
+    * `ThreadContextExecutors` gives static access to a single (default) instance of `ThreadContextExecutorService`
+    * The `DefaultThreadContextExecutorService` is also customizable, e.g. to use a different `ThreadPool`
+    * Update the `AbstractRequestEnsurer` to use a `ThreadContextExecutorService` by default to propagate the `ThreadContext` to its tasks.
+    * Update the `ResilienceDecorationStrategy` to use a `ThreadContextExecutorService` by default to propagate the `ThreadContext` to its tasks.  
   
 </details>
 
 
 ### Others
 
-Update OpenAPI generator to version 6.0.1, bringing serveral improvements:
-  - The generator now conforms to a [list of reserved keywords](https://openapi-generator.tech/docs/generators/java/#reserved-words) to prevent naming clashes
-  - The generator now generates dedicated classes for some nested list types that were previously only represented via `List<Object>`
+<details>
+    <summary>Full list of other changes</summary>
 
-- Update the `ResilienceDecorationStrategy` to use a `ThreadContextExecutorService` by default to propagate the `ThreadContext` to its tasks.
-- Enable customization of SAP Passport properties, e.g. 
-  - `SapPassportPostProcessor customProcessor = builder -> builder.withStaticPreviousSystemId("FooBar");`
-  - `SapPassportAccessor.setPassportFacade(new SapPassportFacade(new SapPassportFactory(customProcessor));`  
+  * Update OpenAPI generator to version 6.0.1, bringing several improvements:
+    * The generator now conforms to a [list of reserved keywords](https://openapi-generator.tech/docs/generators/java/#reserved-words) to prevent naming clashes
+    * The generator now generates dedicated classes for some nested list types that were formerly only represented via `List<Object>`
+  * Enable customization of SAP Passport properties, e.g. 
+    * `SapPassportPostProcessor customProcessor = builder -> builder.withStaticPreviousSystemId("FooBar");`
+    * `SapPassportAccessor.setPassportFacade(new SapPassportFacade(new SapPassportFactory(customProcessor));`  
+  * The `RequestScopedHttpClientCache` has been removed in favor of the `DefaultHttpClientCache` (formerly known as `TimeScopedHttpClientCache` - see next note).
+    This change renders the `HttpClientsThreadContextListener` useless, which is why this class has also been removed.
+  * The `TimeScopedHttpClientCache` has been renamed to `DefaultHttpClientCache`.
+    It is replacing the removed `RequestScopedHttpClientCache` as the default implementation of `HttpClientCache` in the `HttpClientAccessor`.
+    Furthermore, the isolation strategy has been changed: Http clients are now also cached in case either the current tenant or principal (or both) are missing.
   
-- The `RequestScopedHttpClientCache` has been removed in favor of the `DefaultHttpClientCache` (previously known as `TimeScopedHttpClientCache` - see next note).
-  This change renders the `HttpClientsThreadContextListener` useless, which is why this class has also been removed.
-- The `TimeScopedHttpClientCache` has been renamed to `DefaultHttpClientCache`.
-  It is replacing the removed `RequestScopedHttpClientCache` as the default implementation of `HttpClientCache` in the `HttpClientAccessor`.
-  Furthermore, the isolation strategy has been changed: Http clients are now also cached in case either the current tenant or principal (or both) are missing.
-- The previously deprecated destination retrieval strategy `ALWAYS_SUBSCRIBER` has been removed.
-  It is replaced by `CURRENT_TENANT` and `ONLY_SUBSCRIBER`
-
-  - Remove the following deprecated methods and classes of the cloudplatform modules:
-  - `retrieveAccessTokenHeaderViaUserTokenExchange` and `retrieveAccessTokenViaUserTokenExchange` on
-`com.sap.cloud.sdk.cloudplatform.connectivity.AbstractOAuth2Service`
-  - `com.sap.cloud.sdk.cloudplatform.connectivity.AuthorizationServerSettings`
-  - `uri` on `com.sap.cloud.sdk.cloudplatform.connectivity.ScpCfHttpDestination.Builder`
-  - `network` and `uri` on `com.sap.cloud.sdk.cloudplatform.connectivity.DefaultHttpDestination.Builder` and
-`com.sap.cloud.sdk.s4hana.connectivity.DefaultErpHttpDestination.Builder`
-  - `getHeaders(DEstinationProperties)` on `com.sap.cloud.sdk.cloudplatform.connectivity.DestinationHeaderProvider`
-  - `com.sap.cloud.sdk.cloudplatform.logging.CloudLoggerFactory`
-  - `ScpNeoUserSessionCallable(HttpServeltRequest, Callable)` on `com.sap.cloud.sdk.cloudplatform.concurrency.ScpNeoUserSessionCallable`
-  - `ofDefaults` on `com.sap.cloud.sdk.cloudplatform.resilience.ResilienceConfiguration.RetryConfiguration`
-  - `invalidateCache` on `com.sap.cloud.sdk.cloudplatform.resilience.ResilienceDecorationStrategy`,
-`com.sap.cloud.sdk.cloudplatform.resilience.ResilienceDecorator` and `com.sap.cloud.sdk.cloudplatform.resilience.Resilience4jDecorationStrategy`
-  - Remove the deprecated `com.sap.cloud.sdk.frameworks.resilience4j.CachingDecorator`  
+</details>
