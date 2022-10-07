@@ -38,8 +38,6 @@ Some vocabulary is necessary to understand the next chapters of this tutorial:
   This account is under the control of the application developer.
 - `subscriber accounts` - The accounts using the application.
   These accounts are controlled by the consumer.
-- Note that the subscriber and provider account need to be in the same global account.
-  In case you want to offer a service across global accounts you may follow the [service broker approach](https://blogs.sap.com/2022/03/11/consumability-across-global-btp-accounts-via-custom-service-brokers/) which has other limitations.
 - `tenant-aware service` - a service which separates the data of different `subscriber accounts` rigorously.
   If you build a multi-tenant application, all services handling account specific data need to be tenant-aware services.
 
@@ -53,6 +51,13 @@ Please also have a look at the following guides and tutorials offering detailed 
 - There are many blogs talking about multi-tenant application development: For example, the blog from [Sandeep provides a good overview](https://blogs.sap.com/2018/10/25/using-saas-registry-to-develop-multitenant-application-on-sap-cloud-platform-cloud-foundry-environment/) or [the blog from Raja is also a good starting point](https://blogs.sap.com/2022/08/27/fundamentals-of-multitenancy-in-sap-btp/).
 - This tutorial skips important topics like [Custom domains](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/2291aea5e22440f7a161bdeb9c16b664.html) or [Role and authorization concepts](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/56a71531fc154717bf221f9e293ba215.html).
   :::
+
+:::info
+
+Note that the subscriber and provider account need to be in the same global account.
+In case you want to offer a service across global accounts you may follow the [service broker approach](https://blogs.sap.com/2022/03/11/consumability-across-global-btp-accounts-via-custom-service-brokers/) which has other limitations.
+
+:::
 
 ## Prerequisites
 
@@ -127,7 +132,7 @@ export default new App().app;
 
 ```yml
 applications:
-    - name: multi-tenant-sample-app
+    - name: multi-tenant-app
     path: .
     memory: 256M
     buildpacks:
@@ -298,11 +303,11 @@ which shows that the request contains a JWT issued for the provider account.
 ## The Subscription
 
 Up to now, you called the application via the provider account.
-In this chapter you learn how to create the possibility to call the service from a different account.
+In this chapter you learn how to call the service from a different account.
 
 The first thing to do is to create an instance of the `SAAS provisioning service` in your provider account.
 You find the `saas-registry-config.json` in the [samples repository](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/cf-multi-tenant-application).
-This makes the service subscribable form other accounts.
+This makes the service subscribable from other accounts.
 You need to adjust the `providerTenantId` to contain your ID and the `appUrls` to match your region and application URL.
 Within the `saas-registry-config.json` two URLs are mentioned: the `getDependencies` and `onSubscription`.
 
@@ -409,10 +414,10 @@ These two endpoints are the entry point for the SAP BTP platform to:
 
 In our example the application uses the destination service.
 The application has a binding to a service instance, so it is clear that the application may call the service.
-However, the subscriber account does not know anything about the internal details of our application.
+However, the subscriber account does not know anything about the internal details of the application.
 Therefore, the `/dependencies` endpoint provides the information that the destination service may be used also from the subscriber account.
 
-Remember to add all SAP BTP services used by your application in this list.
+Remember to add all SAP BTP services used by your application in the response of the [dependencies endpoint](https://github.com/SAP-samples/cloud-sdk-js/blob/2b31c670f6bcd4b89a9d1c8b88fd20974d1d5470/samples/cf-multi-tenant-application/multi-tenant-app/src/dependencies-endpoint.ts#L4).
 If you do not do that you retrieve a 403 error from the XSUAA when you request a service token on behalf of a subscriber account.
 
 ### Creating a Subscription
@@ -452,7 +457,7 @@ The code assume a destination with the name `cf-api` in the sample implementatio
 You have to adjust the URL and token service URL to for your region e.g. `https://api.cf.us10.hana.ondemand.com`.
 Once the destination is present you can subscribe the application and routes are created automatically.
 
-Log into your second SAP BTP account and create a subscription to the `multi-tenant-app` in the cockpit under **Service->Instances and Subscriptions**.
+Log into your second SAP BTP account. Go to **Service->Instances and Subscriptions** and create a subscription to the `multi-tenant-app`.
 Once the application is subscribed, you can have a look at the approuter in the provider account.
 You should see a second route with the subdomain of the subscriber.
 If you call the new route:
