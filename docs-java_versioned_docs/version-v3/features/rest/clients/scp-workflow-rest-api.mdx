@@ -1,0 +1,361 @@
+---
+id: scp-workflow-rest-api
+title: Type-Safe Client for SAP Workflow service
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: SAP Workflow service
+description: Learn how to access the SAP BTP Workflow REST API with the type-safe client from the SAP Cloud SDK for Java
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - rest
+  - scp
+  - workflow
+---
+
+import MvnBadge from '@site/src/sap/sdk-java/MvnBadge';
+
+<MvnBadge />
+
+:::tip Generally Available
+
+This library is released for **productive usage** as of November 19, 2020.
+
+:::
+
+## Overview
+
+The [SAP Workflow service](https://help.sap.com/viewer/product/WORKFLOW_SERVICE/Cloud/en-US) is available on the Cloud Foundry environment [since April 2019](https://blogs.sap.com/2019/04/03/workflow-and-business-rules-now-available-in-cloud-foundry-environment-of-sap-cloud-platform/).
+It helps you build, run, and manage workflows to model processes that span from simple approval steps to complex business scenarios with several involved parties.
+
+Imagine a business scenario involving multiple parties, complex validation logic, and parallel execution flows.
+**SCP Workflow service** solves exactly this problem.
+To benefit from features offered by the REST API of the SAP BTP Workflow service you can leverage the type-safe client library provided by the **SAP Cloud SDK** and discover it via your IDE or [manually integrate it into your application](https://help.sap.com/viewer/e157c391253b4ecd93647bf232d18a83/Cloud/en-US/df943e71122448caaf3c49f5ffd80627.html).
+
+Refer to [this blog post](https://blogs.sap.com/2018/01/09/sap-cloud-platform-workflow-developer-center/) for an overview of all resources about the SAP BTP Workflow Service.
+
+## Example Use Case for This Guide
+
+### Problem
+
+We need to model a business workflow involving multiple parties, complex validation logic, and parallel flows execution together with other business logic in your app hosted on the SAP Business Technology Platform.
+
+### Solution
+
+Use SAP Workflow service and its REST API.
+You can do workflow modeling using a convenient visual editor and call the SAP BTP Workflow REST API via type-safe client library module provided by the SAP Cloud SDK for Java.
+Additionally, you'll get other benefits from the SAP Cloud SDK like destinations and authentication handling, complete type-safety, multi-tenancy, easy resilience, and caching configuration.
+
+## Consume the SAP Workflow REST API in SAP BTP Cloud Foundry environment
+
+### Prerequisites
+
+Add the latest version of the [SAP Cloud SDK](https://search.maven.org/artifact/com.sap.cloud.sdk/sdk-bom) to your Java application dependencies or [generate a new one from archetypes that we provide](../../../getting-started).
+
+After we have an SAP Cloud SDK-based Java app, we can invoke the SAP BTP Workflow REST API in our business logic.
+More specifically, we are interested in retrieving a list of all workflow definitions that exist in the connected SAP BTP Workflow service instance which corresponds to the API endpoint `/v1/workflow-definitions`.
+You can find it under the section `Workflow Definitions` on the left-hand side of your CF cockpit.
+
+### Cloud Foundry Configuration
+
+Let's look in detail at all necessary steps of Cloud Foundry configuration to run this scenario.
+
+#### Bind App to SAP Business Technology Platform Workflow Service instance
+
+Refer to the documentation on [help.sap.com](https://help.sap.com/viewer/e157c391253b4ecd93647bf232d18a83/Cloud/en-US/e8d88dd056f14c75af59e68d6b20345f.html) for the full picture.
+We'll outline the essentials with the assumption that you understand or have the following:
+
+- Which Cloud Foundry subaccount and space you want to use
+- You have access to the SAP BTP Workflow Service feature
+- You possess all necessary authorizations on Cloud Foundry
+- [You have installed the Cloud Foundry Command Line Interface (CLI) on your machine](../../../guides/cf-cli).
+
+##### Identifying Necessary OAuth Scopes
+
+:::tip
+The SAP BTP Workflow REST API is protected and requires authenticating with an OAuth 2.0 access token.
+Each particular API endpoint requires the client to provide an access token valid for the respective endpoint.
+The token must be issued for the respective OAuth scope that corresponds to the desired API endpoint.
+:::
+
+Let's figure out which OAuth scope is relevant for our application.
+For that, we have to check [SCP Workflow API documentation](https://api.sap.com/api/SAP_CP_Workflow_CF/resource) to find out that the endpoint `/v1/workflow-definitions` is assigned to the scope `WORKFLOW_DEFINITION_GET`.
+
+##### Create Service Instance Configuration
+
+Open a text editor and create a JSON file with the following content:
+
+```json
+{
+  "authorities": ["WORKFLOW_DEFINITION_GET"]
+}
+```
+
+Remember where you've saved the file, you'll need it later.
+
+##### Create Service Instance
+
+Open the command line and authenticate at your Cloud Foundry organization by invoking `cf login`.
+
+Consider specifying the respective **subaccount**, **organization**, and **space** with `cf target` if necessary.
+
+Use `cd` to navigate to the directory that contains the `JSON` configuration file we created before and run the following to create the service instance:
+
+```bash
+cf create-service workflow standard my-workflow -c <path-to-json-file>
+```
+
+This command creates an instance of the SAP BTP Workflow Service in the CF space that your CLI points to.
+More specifically, it uses the service plan "standard" and takes the `JSON` configuration into account.
+Note that we named the service instance `my-workflow`.
+If you have chosen a different name, please, remember the name as you'll need it for your deployment descriptor `manifest.yml` later on.
+
+Once the service instance creation is finished, you can see the service instance in your CF space under `Services` and `Service Instances` in the left-hand side menu.
+
+##### Bind your App to Service Instance
+
+Open the file `manifest.yml` in your project and mention your service instance under `services` as follows:
+
+```yaml
+applications:
+  - name: awesome-app
+    memory: 1024M
+    timeout: 600
+    random-route: false
+    path: application/target/awesome-app-application.war
+    buildpacks:
+      - sap_java_buildpack
+    env:
+      TARGET_RUNTIME: tomee7
+      SET_LOGGING_LEVEL: '{ROOT: INFO, com.sap.cloud.sdk: INFO}'
+      JBP_CONFIG_SAPJVM_MEMORY_SIZES: metaspace:128m..
+    services:
+      - my-destination
+      - my-workflow
+    routes:
+      - route: <omitted-on-purpose>
+```
+
+This ensures that the `VCAP_SERVICES` environment variable of the CF application gets enhanced with an additional entry containing the connection details of the newly bound workflow service.
+Now, redeploy your app with `cf push`.
+
+### Develop Your App
+
+#### Dependency Assumptions
+
+We assume that you have a Java project using the SAP Cloud SDK.
+If not, we recommend going ahead and [creating one from one of the Maven archetypes](https://sap.github.io/cloud-sdk/docs/java/getting-started).
+You should also have [Apache Maven](https://maven.apache.org/download.cgi) installed and be able to successfully run `mvn clean install` from the root of your project.
+
+Make sure that you have the SAP Cloud SDK Bill-of-Material (BOM) in your `dependencyManagement` section of your `pom.xml` structure like on the example below.
+
+:::caution Always use the latest version of SAP Cloud SDK
+Current version is: <MvnBadge />
+:::
+
+```xml title="pom.xml"
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>com.sap.cloud.sdk</groupId>
+      <artifactId>sdk-bom</artifactId>
+      <!-- WF API is supported in ver 3.19.1 of the SDK and above. Please, always use the latest version -->
+      <version>3.XX.X</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+  </dependencies>
+</dependencyManagement>
+```
+
+#### Add SAP Workflow Service Dependency To Your Project
+
+You can refer to the Java client library for the SAP BTP Workflow service with the following Maven dependency:
+
+```xml title="pom.xml"
+<dependency>
+    <groupId>com.sap.cloud.sdk.services</groupId>
+    <artifactId>scp-workflow-cf</artifactId>
+</dependency>
+```
+
+After adding the dependency to your `pom.xml` file, run `mvn clean install` to let `Maven` install it.
+
+### Invoke the Java Client Library
+
+#### Create Destination
+
+Let's create a Java representation of this destination.
+You can use `ScpCfServiceDestinationLoader.getDestinationForService` to create a destination by reading properties from the `VCAP_SERVICES` environment variable entry for the workflow service.
+
+```java
+final HttpDestination destination =
+                ScpCfServiceDestinationLoader.getDestinationForService(
+                        ScpCfServiceDestinationLoader.CfServices.WORKFLOW,
+                        "my-workflow");
+```
+
+:::caution
+The `ScpCfServiceDestinationLoader.getDestinationForService` API currently only works out of the box for a handful of services.
+For other services, the alternative would be to create a Destination manually in CF using values in the `VCAP_SERVICES` and then accessing the destination using the `DestinationAccessor`.
+For details refer to [Additional information](scp-workflow-rest-api#additional-information) section.
+:::
+
+#### Invoke the SAP BTP Workflow API
+
+Now we can make the first call to SAP BTP Workflow API by invoking the method to get the list of all existing workflow definitions.
+For that, we pass the HTTP destination as an argument to the constructor of the API class.
+
+```java
+final List<WorkflowDefinition> workflowDefinitions =
+        new WorkflowDefinitionsApi(httpDestination).queryDefinitions();
+```
+
+This is how we call the SAP BTP Workflow REST API in a type-safe manner and benefit from type-safe access to the resulting response objects.
+For instance, we can read particular details about each workflow definition.
+We'll log them for demonstration purposes.
+
+```java
+workflowDefinitions.forEach(workflowDefinition -> {
+    log.info(workflowDefinition.getName());
+    log.info(workflowDefinition.getVersion());
+    log.info(workflowDefinition.getCreatedAt().toString());
+});
+```
+
+Another benefit is that the SAP BTP Workflow API library allows us to inspect all jobs related to a particular workflow definition together with many other properties.
+You can check the SAP BTP Workflow API's model definition on the [SAP API Business Hub](https://api.sap.com/package/SAPCPWorkflowAPIs?section=Artifacts) or use your IDE to discover available properties via its auto-complete function.
+
+```java
+final WorkflowDefinition workflowDefinition = workflowDefinitions.get(0);
+workflowDefinition.getJobs().forEach(job -> {
+    log.info(job.getId());
+    log.info(job.getPurpose().toString());
+});
+```
+
+## Capabilities and Limitations
+
+### Capabilities and Benefits
+
+The Java client library for SAP BTP Workflow enables the developer to:
+
+- Invoke the REST API in a type-safe and convenient manner
+- Provides Java abstractions for all REST API endpoints along with the respective model classes
+- Relieves the developer from all the `HTTP-related` development work like interpreting `status codes`, `JSON de-/serialization`, etc
+- It lets the developer focus on the business logic instead of coding low-level API calls
+- We keep the library up to date with the latest Workflow API specification which simplifies the maintainability of your app's code
+- We integrate the SAP BTP Workflow library with SAP Cloud SDK capabilities, such as tenant-aware destination retrieval and many more
+
+### Known Limitations
+
+- We support SAP Workflow service API only on the SAP BTP Cloud Foundry environment.
+  The SAP Business Technology Platform Neo environment is **Not supported!**
+
+## Additional Information
+
+:::info
+
+Please note the steps outlined in the below section are only required if you chose to skip using the convenience API `ScpCfServiceDestinationLoader.getDestinationForService` introduced [here](scp-workflow-rest-api#create-destination) and instead would like to use `DestinationAccessor` for e.g. while trying to use generated clients of other services.
+
+:::
+
+### Creating HTTP Destinations Manually
+
+To create HTTP destinations manually in CF from the values read from `VCAP_SERVICES` of the CF application, please follow the below steps.
+The steps below can be continued in this example from the [Bind your App to Service Instance](scp-workflow-rest-api#bind-your-app-to-service-instance) section.
+
+### Take Note of API endpoint and OAuth Credentials
+
+Once the app is bound to the SAP Workflow service (here in our example) and app deployment has finished, go to your CF space and navigate to `Services\Instances and Subscriptions`.
+You should see the service instance you created along with the information that is bound to your application.
+
+Click on the service instance name, for instance `my-workflow`, in the upcoming screen you should see the headline `Service Instance: my-workflow - Referencing Apps`.
+Make sure that the entry that belongs to your app is selected in the table below, given that multiple apps are bound to the same service instance.
+
+Consider the `JSON` content below the table.
+For your convenience, we recommend copying that `JSON` to a text editor.
+Here is a quick example:
+
+```json
+{
+  "endpoints": {
+    "workflow_odata_url": "foo",
+    "workflow_rest_url": "bar"
+  },
+  "html5-apps-repo": {
+    "app_host_id": "foo"
+  },
+  "uaa": {
+    "uaadomain": "bar",
+    "tenantmode": "dedicated",
+    "sburl": "bar",
+    "clientid": "foo",
+    "verificationkey": "bar",
+    "apiurl": "foo",
+    "xsappname": "bar",
+    "identityzone": "foo",
+    "identityzoneid": "bar",
+    "clientsecret": "foo",
+    "tenantid": "bar",
+    "url": "foo"
+  },
+  "sap.cloud.service": "com.sap.bpm.workflow",
+  "saasregistryappname": "workflow",
+  "content_endpoint": "foo"
+}
+```
+
+Next look at the `JSON` content and collect the values for the following `JSON` keys:
+
+- `workflow_rest_url`
+- `url`
+- `clientid`
+- `clientsecret`
+
+You'll need these values in the next step.
+
+### Create HTTP Destination
+
+Go to your CF subaccount, navigate to `Connectivity\Destinations` in the left-hand side menu, and create a new HTTP destination with the following properties:
+
+- Name: Workflow-Api
+- Type: HTTP
+- URL: The value of `workflow_rest_url`
+- Proxy Type: Internet
+- Authentication: OAuth2ClientCredentials
+- Client ID: The value of `clientid`
+- Client Secret: The value of `clientsecret`
+- Token Service URL: The value of `url` appended by `/oauth/token?grant_type=client_credentials`
+
+Click Save.
+Restart your app by navigating to `Spaces\<you-space-name>\Applications`.
+Chose your app from the list by clicking on the link with its name and find the restart button on the page that loads.
+
+### Create Destination Programmatically
+
+The invocation of the workflow client remains the same, the only difference in code is while trying to fetch the destination.
+The name of the HTTP destination that we configured in the SAP BTP cockpit is Workflow-API.
+Let's create a Java representation of this destination.
+
+```java
+final String destinationName = "Workflow-Api";
+final HttpDestination httpDestination = DestinationAccessor.getDestination(destinationName).asHttp();
+```
+
+That's it, the invocation to the java client library would remain the [same](scp-workflow-rest-api#invoke-the-scp-workflow-api) and no more changes are required.
+
+## Video Tutorial
+
+This video tutorial by the developer advocate team of SAP Business Technology Platform will help you get up to speed with SAP Cloud SDK for Java and Workflow service API in 60 minutes.
+
+<div class="sdk-video-container">
+  <iframe
+    class="sdk-video"
+    src="https://www.youtube.com/embed/ug2UcXK2lH4"
+    frameborder="0"
+    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen
+  ></iframe>
+</div>

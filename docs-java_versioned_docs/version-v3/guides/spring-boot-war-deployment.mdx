@@ -1,0 +1,137 @@
+---
+id: spring-boot-war-deployment
+title: Use WAR Deployment with Spring Boot
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Use WAR Deployment with Spring Boot
+description: Adjust a Spring Boot project to use WAR deployment
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+  - cap
+---
+
+This document outlines how to adjust a Spring Boot project to use WAR deployment (also known as traditional deployment).
+The traditional deployment of Spring helps overcome exceptions related to the SAP JCo library.
+
+## Modern and Traditional Spring Deployment
+
+Traditionally, Java projects based on Spring were built as war files which had to be deployed to standalone application servers, such as Tomcat.
+With the rise of Spring Boot, the target file type changed to jar files where the application server is already built in.
+The advantage of that modern deployment form is that the application can be started directly without the need to administer a complex application server.
+
+## Target Projects of This Guide
+
+This guide is applicable to all Spring-based Java projects which use the modern deployment of Spring as jar file.
+That comprises in the first place any project using the [new CAP stack](https://cap.cloud.sap/docs/) as well as the [Spring Boot Maven archetype](https://search.maven.org/artifact/com.sap.cloud.sdk.archetypes/scp-cf-spring) of the SAP Cloud SDK.
+
+The problem with the modern deployment is that the [SAP Java Connector](https://support.sap.com/en/product/connectors/jco.html) library cannot be used when the application gets deployed as jar file.
+That results in runtime exceptions like `java.lang.NoClassDefFoundError: com/sap/conn/jco/JCoException`.
+
+To overcome this problem, we'll outline how to adjust your project to leverage the traditional Spring deployment instead.
+
+## Use Traditional Spring Deployment
+
+Perform the following steps to switch your project from using the modern to the traditional Spring deployment.
+
+### Change Maven Packaging
+
+In your `pom.xml`, change the packaging setting from `jar` to `war`.
+
+```xml
+<!-- before: -->
+<!-- <packaging>jar</packaging> -->
+
+<!-- after: -->
+<packaging>war</packaging>
+```
+
+:::tip Use the right `pom.xml`
+
+When your project uses multiple Maven modules, you need to choose the `pom.xml` that contains your application code.
+For instance, in a CAP project use the `pom.xml` of the `srv` module.
+
+:::
+
+### Add Maven WAR Plugin
+
+Add the Maven WAR plugin to the `pom.xml`:
+
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-war-plugin</artifactId>
+    <!-- use latest version here -->
+    <version>3.3.1</version>
+    <configuration>
+      <attachClasses>true</attachClasses>
+    </configuration>
+</plugin>
+```
+
+:::tip Use the latest plugin version
+
+We recommend you use the [latest version](https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-war-plugin) of this Maven plugin.
+
+:::
+
+### Let Application Class Inherit from `SpringBootServletInitializer`
+
+Make your application class a subclass of the class `SpringBootServletInitializer`.
+
+```java
+@SpringBootApplication
+public class Application extends SpringBootServletInitializer {
+
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+  }
+}
+
+```
+
+### Change the Deployment Configuration
+
+Go to your deployment descriptor, for instance to your mta.yaml, and locate the module that contains your application under `modules`.
+For that particular module, perform the following changes:
+
+- Change the `type` from `java` to `java.tomcat`.
+- Change the `build-result` so that the file extension is `war`.
+- If not present, add the property `USE_JCO` with the value `true` under `properties`.
+
+In the following example we have commented the old values for your reference:
+
+```yaml
+modules:
+  - name: example-project-srv
+    #type: java
+    type: java.tomcat
+    path: srv
+    properties:
+      SPRING_PROFILES_ACTIVE: cloud
+      # make sure that the property USE_JCO is present
+      USE_JCO: true
+    build-parameters:
+      builder: custom
+      commands:
+        - mvn clean package
+      #build-result: target/*-exec.[wj]ar
+      build-result: target/*-exec.war
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: my-destination
+```
+
+## Build and Deploy the Project
+
+The presented changes do not lead to any changes in the build and deployment process.
+Hence, you can build and deploy your Java project as usually.
+
+From now on, the JCo classes should be found during runtime.
