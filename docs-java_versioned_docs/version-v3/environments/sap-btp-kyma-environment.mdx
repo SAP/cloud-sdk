@@ -1,0 +1,666 @@
+---
+title: Develop your App for the Kyma Environment with Java SDK
+sidebar_label: SAP Kyma
+description: Learn how to develop an application with the SAP Cloud SDK for Java in the Kyma environment
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+---
+
+[Kyma](https://kyma-project.io/) is an application runtime that provides you a flexible and easy way to connect, extend, and customize your applications in the cloud-native world of Kubernetes.
+Find more details in the [official documentation](https://kyma-project.io/docs/kyma/latest/01-overview/).
+
+:::caution Document is outdated!
+
+While the Kyma runtime is improving over time, recent changes unfortunately rendered parts of this document outdated.
+We are currently re-evaluating and updating the information provided.
+Please follow the [official documentation](https://kyma-project.io/docs/kyma/latest/01-overview/).
+
+<details>
+  <summary>Workaround for On-Premise Connectivity</summary>
+
+Recent changes of the Kyma runtime environment prevent the SAP Cloud SDK's On-Premise connectivity from working as intended.
+While we are working on a permanent solution, please use the following workaround:
+
+<ol>
+  <li>Add following class to your project:
+
+```java
+public class OnPremiseHeaderProvider implements DestinationHeaderProvider {
+
+  @Override
+  @Nonnull
+  public List<Header> getHeaders(
+    @Nonnull final DestinationRequestContext requestContext
+  ) {
+    final Option<ProxyType> proxyType = requestContext
+      .getDestination()
+      .get("ProxyType", ProxyType.class);
+    if (proxyType.getOrElse(ProxyType.INTERNET) != ProxyType.ON_PREMISE) {
+      return Collections.emptyList();
+    }
+
+    final Option<AuthenticationType> authentication = requestContext
+      .getDestination()
+      .get("authentication", AuthenticationType.class);
+    if (
+      authentication.getOrElse(AuthenticationType.NO_AUTHENTICATION) !=
+      AuthenticationType.PRINCIPAL_PROPAGATION
+    ) {
+      return Collections.emptyList();
+    }
+
+    final Try<String> maybeBearerToken = AuthTokenAccessor
+      .tryGetCurrentToken()
+      .map(token -> String.format("Bearer %s", token.getJwt().getToken()));
+
+    if (maybeBearerToken.isEmpty()) {
+      return Collections.emptyList();
+    }
+
+    return Collections.singletonList(
+      new Header("SAP-Connectivity-Authentication", maybeBearerToken.get())
+    );
+  }
+}
+
+```
+
+  </li>
+  <li>
+    Create following file in your application resources:
+
+```
+src/main/resources/META-INF/com.sap.cloud.sdk.cloudplatform.connectivity.DestinationHeaderProvider
+```
+
+  </li>
+  <li>
+    Fill the file with the fully qualified name of the newly created class. 
+    For example, the content should look like this:
+
+```
+name.of.your.package.OnPremiseHeaderProvider
+```
+
+  </li>
+
+</ol>
+
+</details>
+
+:::
+
+## SAP Cloud SDK Features Supported on Kyma by SAP
+
+Find below the list of features we currently support:
+Legend: ✅ - supported, ❗- partially supported, ❌ - not supported
+
+- ✅ Consume SAP BTP services like Destination, Connectivity, IAS, XSUAA, and others
+- ✅ Multitenancy
+- ✅ Resilience & Caching
+- ✅ Connect to and consume services from SAP S/4HANA Cloud
+- ✅ Connect to and consume services from SAP S/4HANA On-Premise
+- ✅ Seamless use of typed clients provided by the SAP Cloud SDK
+
+## Getting Started with the SAP Cloud SDK on Kyma
+
+This detailed guide will help get your SAP Cloud SDK Java application up and running in Kyma.
+You can also use this guide to migrate your existing application to Kyma.
+
+### Prerequisites
+
+To follow this guide you will need:
+
+- An [SAP BTP Kyma environment](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/09dd313bf6644250a14f8f38c3d644c0.html?locale=en-US) instance
+- [Docker](https://www.docker.com/) and a publicly reachable Docker repository
+- A [Spring Boot](https://spring.io/projects/spring-boot) Application using the SAP Cloud SDK
+
+:::tip Tip
+
+When deploying applications to Kyma, you are not limited to Spring Boot applications.
+In fact, you may deploy any application that can be executed within a Docker container.
+The examples in this document, however, do use a Spring Boot app.
+
+:::
+
+Check out the details below in case you are uncertain about any of the prerequisites.
+
+<details>
+  <summary>Kyma Environment</summary>
+
+This guide assumes you already have a Global Account, a subaccount on SAP BTP platform and have [Kubernetes CLI](https://kubernetes.io/docs/tasks/tools/#kubectl) installed on your local machine.
+If not, please refer to these guides on getting a [Global Account](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/d61c2819034b48e68145c45c36acba6e.html?locale=en-US) and creating a [subaccount](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/05280a123d3044ae97457a25b3013918.html?locale=en-US)
+
+In your subaccount in SAP BTP cockpit, create a [Kyma Environment instance](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/09dd313bf6644250a14f8f38c3d644c0.html?locale=en-US).
+Make sure that you select an appropriate [plan](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/befe01d5d8864e59bf847fa5a5f3d669.html?locale=en-US#azure) and also assign the necessary [roles](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/148ae38b7d6f4e61bbb696bbfb3996b2.html?locale=en-US) to users.
+
+:::note Kyma Setup Time
+
+Creating a Kyma environment instance can take up to 30 minutes.
+
+:::
+
+Once your Kyma environment is created, you can download a [Kubeconfig file](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/) directly from the SAP BTP cockpit.
+
+![Kubeconfig file download](sap-btp-kyma-environment/btp-cockpit-kubeconfig-url.png)
+
+</details>
+
+<details>
+  <summary>Docker</summary>
+
+This guide assumes you have [Docker](https://www.docker.com/) installed on your local machine.
+
+Furthermore, you need a **Docker repository** where you can store images.
+The repository needs to be publicly accessible in order for the cluster to access and download the Docker image we are going to create.
+
+In case you don't have such a repository yet we recommend either:
+
+- [Docker Hub](https://hub.docker.com/)
+- [Artifactory DMZ](https://common.repositories.cloud.sap/ui/) (for SAP internal developers)
+
+Access to images in a repository may be limited to authenticated and/or authorized users, depending on your configuration.
+
+Make sure you are logged in to your repository on your local machine by running:
+
+```bash
+docker login (your-repo) --username=(your-username)
+```
+
+And check your configuration which is usually located under `(your-home-directory)/.docker/config.json`.
+
+:::tip
+In case AuthN/AuthZ is required to download images make sure you have a secret configured in your cluster
+
+```bash
+kubectl create secret docker-registry (name-of-the-secret) --docker-username=(username) --docker-password=(API-token) --docker-server=(your-repo)
+```
+
+:::
+
+</details>
+
+<details>
+  <summary>Application using the SAP Cloud SDK</summary>
+
+If you don't have an application already you can comfortably [create one from our archetypes](../getting-started).
+
+</details>
+
+### Containerize the Application
+
+To run on Kyma the application needs to be shipped in a container.
+For this guide we will be using Docker.
+
+Create a `Dockerfile` in the project root directory:
+
+```dockerfile {2}
+FROM openjdk:8-jdk-slim
+ARG JAR_FILE=application/target/*.jar
+COPY ${JAR_FILE} app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
+```
+
+If needed, update the `JAR_FILE` to point to your JAR file.
+
+:::tip
+You can find more information on how to containerize Spring Boot applications in [this guide](https://spring.io/guides/gs/spring-boot-docker/) (in particular, check the _Containerize It_ section).
+:::
+
+Compile and push the image by running:
+
+```bash
+docker build -t <your-repo>/<your-image-name> .
+docker push <your-repo>/<your-image-name>
+
+# alternatively, you may add a tag to your image
+docker build -t <your-repo>/<your-image-name>:<your-tag> .
+docker push <your-repo>/<your-image-name>:<your-tag>
+```
+
+:::tip Tip
+
+In case you are facing authorization issues when pushing to your repository refer to the dedicated section under [Prerequisites](#prerequisites).
+
+:::
+
+### Create a Kyma Deployment
+
+1. Create a new YAML file:
+
+   ```yml title="deployment.yml" {17,31}
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: my-app-deployment
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: my-app
+      template:
+        metadata:
+          labels:
+            app: my-app
+        spec:
+          containers:
+            # Configure the docker image you just pushed to your repository here
+            - image: <name-of-the-image>
+              name: my-app
+              imagePullPolicy: Always
+              resources:
+                requests:
+                  memory: '1.5Gi'
+                  cpu: '500m'
+                limits:
+                  memory: '2Gi'
+                  cpu: '1000m'
+              # Volume mounts needed for injecting SAP BTP service credentials
+              volumeMounts:
+          imagePullSecrets:
+            # In case your repository requires a login, reference your secret here
+            - name: <your-secret-for-docker-login>
+          volumes:
+    ----
+    apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        app: my-app
+      name:  my-app
+    spec:
+      type: NodePort
+      ports:
+        - port: 8080
+          targetPort: 8080
+          protocol: TCP
+      selector:
+        app: my-app
+   ```
+
+2. Install the configuration via `kubectl apply -f path/to/deployment/file/deployment.yml`.
+
+3. Monitor the status of the deployment by running: `kubectl get deployment my-app-deployment`.
+
+Eventually, you should see an output similar to:
+
+```bash
+kubectl get deployment my-app-deployment
+
+NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+my-app-deployment     1/1     1            1           15s
+```
+
+:::tip
+In case something went wrong use `kubectl describe` together with `deployment` or `pod` to get more information about the status of your application.
+:::
+
+### Access Your Application
+
+To access your application without further configuration you need to find the name of the application pod by listing out all available pods:
+
+```bash
+kubectl get pods
+```
+
+Now use the name of the application pod and forward the application port to your local machine:
+
+```bash
+kubectl port-forward [pod-name] [local-port]:[application-port]
+```
+
+In case you started with an SAP Cloud SDK Archetype, you can test the `hello` endpoint:
+
+```
+curl localhost:[local-port]/hello
+```
+
+<details>
+  <summary>Example</summary>
+
+If your application is running on port `8080` (default configuration) in it's pod, you can use the following command to gain access to your app:
+
+```bash
+kubectl port-forward my-app-pod-XYZ :8080
+```
+
+Please note that we skipped the `[local-port]` parameter in the command above.
+This will let `kubectl` choose a random available port on your local machine every time you run the command.
+
+If everything worked as expected, you should see an output similar to the following:
+
+```bash
+Forwarding from 127.0.0.1:50309 -> 8080
+Forwarding from [::1]:50309 -> 8080
+```
+
+In this example, `kubectl` chose the local port `50309`.
+Hence, you should be able to successfully run the following `curl` command:
+
+```bash
+curl localhost:50309/hello
+```
+
+</details>
+
+:::tip SSH Access to your Pods
+
+If port-forwarding is not enough for you, you can also get SSH access to your application pods:
+
+```bash
+kubectl exec --stdin --tty [pod-name] -- /bin/sh
+```
+
+:::
+
+### Bind SAP BTP Services to the Application
+
+The SAP Business Technology Platform offers various services that can be used by applications.
+To access services from a Kyma environment, instances have to be created and bound to the application.
+
+For this guide we'll assume we want to use two services:
+
+1. Destination Service
+2. XSUAA Service
+
+#### Bind the Destination Service
+
+1. Open your Kyma dashboard by clicking the link in your SAP BTP cockpit:
+
+![Kyma Console URL](sap-btp-kyma-environment/btp-cockpit-kyma-console-url.png)
+
+2. In the Kyma dashboard, select your Kyma namespace (top right hand side of the screen), navigate to `Service Management > Catalog`, and select the `Destination` service.
+
+![Destination Service Selection](sap-btp-kyma-environment/btp-kyma-dashboard-destination-service-selection.png)
+
+3. Configure your new service instance by first clicking on the `Add +` button followed by selecting both a name and a plan.
+
+4. Finalize the service instance creation by confirming your configuration with a click on the `Create` button.
+
+![Destination Service Creation](sap-btp-kyma-environment/btp-kyma-dashboard-destination-service-creation.png)
+
+<details>
+  <summary>Alternative: Using Kubernetes Descriptors</summary>
+
+1. Create a new YAML file :
+
+```yml title="destination-service.yaml"{8}
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: destination-service
+spec:
+  clusterServiceClassExternalName: destination
+  clusterServicePlanExternalName: <your-desired-plan>
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBinding
+metadata:
+  name: my-destination-service-binding
+spec:
+  instanceRef:
+    name: destination-service
+  secretName: my-dest-secret
+```
+
+2. Install the configuration via `kubectl apply -f destination-service.yml`.
+
+3. Monitor the status via `kubectl describe ServiceInstance destination-service`.
+   Eventually this should automatically create a Kubernetes secret named `my-dest-secret`.
+   This secret will contain the actual service binding information.
+
+4. Mount the `my-dest-secret` secret into the file system of the application as follows:
+
+   1. Find the empty list of `volumes` at the end of your `deployment.yml`.
+      Add a new volume, referencing the secret:
+
+      ```yml title="volumes:"
+      - name: my-destination-service-binding-volume
+        secret:
+          secretName: my-dest-secret
+      ```
+
+   2. Mount this volume into the file system of your application.
+      Add it to the empty list of `volumeMounts` in the `container` section of your `deployment.yml`:
+
+      ```yml title="volumeMounts:"
+      - name: my-destination-service-binding-volume
+        mountPath: '/etc/secrets/sapcp/destination/my-destination-service-binding'
+        readOnly: true
+      ```
+
+5. Update the configuration via `kubectl apply -f deployment.yml`.
+
+</details>
+
+#### Bind the XSUAA Service
+
+1. Open your Kyma dashboard (see previous section) and select the `Authorization and Trust Management Service` in `Service Managament > Catalog`:
+
+![XSUAA Service Selection](sap-btp-kyma-environment/btp-kyma-dashboard-xsuaa-service-selection.png)
+
+2. Configure your new service instance by clicking the `Add +` button and selecting both a name and a plan or your new service instance.
+   Complete the process by clicking the `Create` button.
+
+![XSUAA Service Creation](sap-btp-kyma-environment/btp-kyma-dashboard-xsuaa-service-creation.png)
+
+<details>
+  <summary>Alternative: Using Kubernetes Descriptors</summary>
+
+1. Create a new YAML file :
+
+```yml title="xsuaa-service.yaml"{8}
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: xsuaa-service
+spec:
+  clusterServiceClassExternalName: xsuaa
+  clusterServicePlanExternalName: <your-desired-plan>
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBinding
+metadata:
+  name: my-xsuaa-service-binding
+spec:
+  instanceRef:
+    name: xsuaa-service
+  secretName: my-xsuaa-secret
+```
+
+2. Repeat the same steps 2-5 from the previous section but make use of `my-xsuaa-secret` for the steps.
+
+</details>
+
+#### Known XSUAA Service Incompatibility
+
+We have observed that the property `plan` is missing in the XSUAA secret created in the previous section.
+This property, however, is required by the SAP Cloud SDK and it's absence causes runtime errors in the application while trying to read this service binding.
+
+To fix this issue you need to edit the secret so that it contains the `plan` property.
+The easiest way, when you are already using the CLI, is by using the `kubectl edit` command:
+
+```bash
+kubectl edit secrets my-xsuaa-secret
+```
+
+In there, you can now add a `plan` property with one of the following base64 encoded values:
+
+| plan          | base64 encoded value |
+| ------------- | -------------------- |
+| `application` | `YXBwbGljYXRpb24K`   |
+| `broker`      | `YnJva2VyCg==`       |
+| `space`       | `c3BhY2UK`           |
+| `apiaccess`   | `YXBpYWNjZXNzCg==`   |
+
+The resulting service binding can now be consumed with the SAP Cloud SDK.
+
+### Expose your Application to the Internet
+
+During the next steps, you will configure and deploy an [approuter](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/01c5f9ba7d6847aaaf069d153b981b51.html?locale=en-US) so that only authenticated users can access your application.
+For that, you will need to create a simple application that uses the [@sap/approuter](https://www.npmjs.com/package/@sap/approuter) and starts it for this purpose.
+
+1. Based on the approuter application you used, containerize your application and push the image to a docker repository of your choice.
+2. Create a new YAML file describing the approuter deployment:
+   <!-- vale off -->
+
+   ```yml title="deployment.yml" {18,21,31,32,37}
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+     name: my-approuter-deployment
+     labels:
+       app: my-approuter
+   spec:
+     replicas: 1
+     selector:
+       matchLabels:
+         app: my-approuter
+     template:
+       metadata:
+         labels:
+           app: my-approuter
+       spec:
+         imagePullSecrets:
+           - name: <your-secret-for-docker-login>
+         containers:
+           # Configure the docker image of your approuter application here
+           - image: <name-of-the-image>
+             imagePullPolicy: Always
+             name: my-approuter
+             env:
+               - name: PORT
+                 value: '5000'
+               - name: destinations
+                 value: >
+                   [
+                     {
+                       "name": "<name-for-the-backend-app>",
+                       "url": "<URL-to-access-backend-app>",
+                       "forwardAuthToken": true
+                     }
+                   ]
+               - name: TENANT_HOST_PATTERN
+                 value: <URL-pattern-for-outside-cluster-access>
+             volumeMounts:
+               - name: my-xsuaa-service-binding-volume
+                 mountPath: '/etc/secrets/sapcp/xsuaa/my-xsuaa-service-binding'
+         volumes:
+           - name: my-xsuaa-service-binding-volume
+             secret:
+               secretName: my-xsuaa-secret
+         restartPolicy: Always
+
+   ---
+   apiVersion: v1
+   kind: Service
+   metadata:
+     labels:
+       app: my-approuter
+     name: my-approuter
+   spec:
+     type: NodePort
+     ports:
+       - port: 5000
+         targetPort: 5000
+         protocol: TCP
+         nodePort: 31002
+     selector:
+       app: my-approuter
+   ```
+
+3. Also adapt the `xs-app.json` file:
+
+```json{5,7,8}
+{
+    "welcomeFile": "/web-pages/index.html",
+    "routes": [
+        {
+            "source": "/<path-for-backend-endpoints>/(.*)",
+            "target": "$1",
+            "destination": "<name-for-the-backend-app>",
+            "identityProvider": "<optional-identity-provider-id>",
+            "csrfProtection": false
+        }
+    ]
+}
+```
+
+4. Follow steps similar to steps 2-3 in [Create a Kyma Deployment section](#create-a-kyma-deployment) to deploy the approuter and check if the deployment is successful.
+
+5. Update the already created XSUAA service instance with few parameters like `xsappname` and `oauth2-configuration`.
+   This is required to provide authenticated access to backend application via the approuter.
+
+```yml title="xsuaa-service.yaml"{9-15}
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceInstance
+metadata:
+  name: xsuaa-service
+spec:
+  clusterServiceClassExternalName: xsuaa
+  clusterServicePlanExternalName: <your-desired-plan>
+  parameters:
+    xsappname: <your-backend-app-name>
+    oauth2-configuration:
+      allowedproviders:
+        - <your-idp-key>
+      redirect-uris:
+        - <URL-pattern-for-outside-cluster-access>
+---
+apiVersion: servicecatalog.k8s.io/v1beta1
+kind: ServiceBinding
+metadata:
+  name: my-xsuaa-service-binding
+spec:
+  instanceRef:
+    name: xsuaa-service
+  secretName: my-xsuaa-secret
+```
+
+6. Update the configuration via `kubectl apply -f xsuaa-service.yaml`.
+
+7. Make the approuter accessible outside the cluster by creating an API rule:
+
+```yml title="create-api-rule.yml"{4,15}
+apiVersion: gateway.kyma-project.io/v1alpha1
+kind: APIRule
+metadata:
+  name: <your-rule-name>
+spec:
+  gateway: kyma-gateway.kyma-system.svc.cluster.local
+  rules:
+    - accessStrategies:
+        - config: {}
+          handler: noop
+      methods:
+        - GET
+      path: /.*
+  service:
+    host: <subaccount-prefix>.<URL-pattern-for-outside-cluster-access>
+    name: my-approuter
+    port: 5000
+```
+
+8. Update the configuration via `kubectl apply -f create-api-rule.yml`.
+
+9. Finally, access the application by using the host address provided in the API rule created and appending the `path-for-backend-endpoints` given in `xs-app.json` along with the an actual end point of your backend application.
+
+:::tip
+You need not necessarily push an Approuter to access your application outside a cluster.
+You could also go ahead and expose the service for your application directly by creating an APIRule.
+But, this would mean that access to your application would not be authenticated first.
+:::
+
+You can also refer to this additional material available for getting started with SAP Cloud SDK on Kyma:
+
+- [Sample Application with Setup Guide](https://github.com/SAP-samples/kyma-runtime-extension-samples/tree/main/sample-cloudsdk-java)
+- [Blog Post on a Sample Use Case](https://blogs.sap.com/2022/01/11/use-sap-cloud-sdk-on-kyma-runtime-to-connect-to-external-systems-with-client-cert-authentication/)
+- [Using the Service Catalog with the SAP Cloud SDK](https://sap.github.io/cloud-sdk/docs/java/environments/sap-btp-kubernetes-environment-with-sap-gardener#excursion-bind-services-created-by-the-service-catalog)
