@@ -190,7 +190,7 @@ To avoid multiple wrappings, in particular when changing multiple values, you ca
 Tenant myTenant = new DefaultTenant("foo");
 Principal myPrincipal = new DefaultPrincipal("bar", Collections.emptySet(), Collections.emptyMap());
 
-ThreadContextExecutor customExecutor = new ThreadContextExecutor()
+ThreadContextExecutor customExecutor = ThreadContextExecutor.fromNewContext()
             .withListeners(
                 new TenantThreadContextListener(myTenant),
                 new PrincipalThreadContextListener(myPrincipal)
