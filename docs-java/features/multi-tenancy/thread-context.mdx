@@ -245,10 +245,10 @@ If you want to start a fresh context based on a given `AuthToken`, for example a
 Tenant retrieveProviderTenant()
 {
     // retrieves an access token from the provider context
-    AuthToken providerXsuaaAccessToken = AuthTokenAccessor.getXsuaaServiceToken();
-    return new ThreadContextExecutor()
+    AuthToken providerXsuaaAccessToken = new ScpCfAuthTokenFacade().tryGetXsuaaServiceToken().get();
+    ThreadContextExecutor
         // create a new, empty context
-        .withThreadContext(new DefaultThreadContext())
+        .fromNewContext()
         // add the provider token into the new context
         .withListeners(new AuthTokenThreadContextListener(providerXsuaaAccessToken))
         // return the actual provider tenant
