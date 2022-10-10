@@ -34,6 +34,7 @@ Before you increase the SAP Cloud SDK version to 4 it can be beneficial to migra
 Follow the deprecation note of the Javadoc in case you are still using deprecated API from the SAP Cloud SDK.
 All deprecated API is removed With version 4 (exception being audit logging).
 
+<!-- vale off -->
 <details>
     <summary>Full list of deprecated API</summary>
   
@@ -218,9 +219,10 @@ All deprecated API is removed With version 4 (exception being audit logging).
   Most API allows for easy mocking already.
   Please reach out to us directly if you use this class and are not sure how to replace it.
 
-</details>    
+</details>
 
 ## Update Your POM.XML
+<!-- vale on -->
 
 Begin by upgrading the version to `4.0.0`.
 Make sure to apply this for all the places where you declare the SAP Cloud SDK version.
@@ -300,7 +302,7 @@ Remove them if they are present in your pom files.
 With version 4 we also reduce the amount of dependencies the SAP Cloud SDK brings.
 This gives you more flexibility and requires less dependency management.
 
-Because the `sdk-bom` now brings less dependencies you may need to add explicit version declarations to dependencies that were previously managed by the `sdk-bom`.
+Because the `sdk-bom` now brings fewer dependencies, you may need to add explicit version declarations to dependencies that were managed by the `sdk-bom`.
 If this is the case Maven will inform you about it with a message similar to `'dependencies.dependency.version' for ... is missing`.
 
 <details>

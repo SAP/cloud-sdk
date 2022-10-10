@@ -82,7 +82,7 @@ module.exports = {
         'guides/cloud-foundry-xsuaa-service',
         'guides/cf-deploy',
         'guides/cf-cli',
-        'guides/sap-cloud-sdk-linux-how-to',
+        'guides/sap-cloud-sdk-linux-how-to'
       ]
     },
     {
