@@ -40,6 +40,8 @@ For each squared box, a dedicated section gives instructions below.
 Often the issue is related to a framework that uses the SAP Cloud SDK and not the code itself.
 Therefore, add the minimal example to the code to ensure the error is related to the SAP Cloud SDK.
 
+<!-- vale off -->
+
 ```ts
 import { executeHttpRequest } from '@sap-cloud-sdk/http-client';
 import { getDestination } from '@sap-cloud-sdk/connectivity';
@@ -68,6 +70,8 @@ async function minimalTest() {
   console.log('Data Retrieved.');
 }
 ```
+
+<!-- vale on -->
 
 Replace _`YOUR_SERVICE_URL`_ with the URL of your service, e.g., `/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner?%24top=1`.
 Use the same service you also plan to call in production to observe authorization issues in the test case as well.
@@ -114,7 +118,7 @@ To see if a request reaches the backend system, activate the HTTP logs.
 
 1. Go to transaction **SMICM**.
 1. Navigate to **GOTO->Trace Level** and set the trace level to 3 and activate HTTP logs.
-1.You may want to reset the log file to have no old logs **GOTO->Trace File**.
+   1.You may want to reset the log file to have no old logs **GOTO->Trace File**.
 1. Trigger your request.
 1. Remember to switch back the trace level after you send the request.
 1. Go to transaction **ST11** and investigate the file `dev_icm`
@@ -140,7 +144,8 @@ Usually the content of the [HTTP logs](#activate-backend-logs) should give you a
 In the end requests get rejected for the same reasons as in the [cloud case](#fix-cloud-issues).
 In addition, there are On-premise specific problems:
 
-- The default client is not the client with your user and configuration. Set the `sap-client` explicitly on the destination.
+- The default client is not the client with your user and configuration.
+  Set the `sap-client` explicitly on the destination.
 - The principal propagation is more difficult to configure.
   If a destination with basic authentication works you know for sure you have a problem with user propagation.
 - The [user mapping](https://help.sap.com/docs/SAP_NETWEAVER_AS_ABAP_FOR_SOH_740/d528eef3dca14679bcb47b069aa17a9d/c830fd902dc8473b9e59db1576cc784b.html?version=7.40.16&locale=en-US) is not correctly configured for principal propagation.
