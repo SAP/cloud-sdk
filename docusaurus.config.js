@@ -240,6 +240,11 @@ module.exports = {
           ) {
             return existingPath.replace('/docs/overview', '/docs');
           }
+
+          if (existingPath.includes('/js/frequently-asked-questions')) {
+            return existingPath.replace('frequently-asked-questions', 'overview-cloud-sdk-for-javascript');
+          }
+          return undefined;
         }
       }
     ],
