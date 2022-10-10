@@ -44,27 +44,29 @@ Therefore, add the minimal example to the code to ensure the error is related to
 import { executeHttpRequest } from '@sap-cloud-sdk/http-client';
 import { getDestination } from '@sap-cloud-sdk/connectivity';
 
-const destination = await getDestination({
-  destinationName: YOUR_DESTINATION_NAME
-});
-if (destination) {
-  destination.authTokens?.forEach(authToken => {
-    if (authToken.error) {
-      throw new Error(`Error in authToken ${authToken.error}`);
-    }
+async function minimalTest() {
+  const destination = await getDestination({
+    destinationName: YOUR_DESTINATION_NAME
   });
-} else {
-  throw new Error('Destination is undefined.');
+  if (destination) {
+    destination.authTokens?.forEach(authToken => {
+      if (authToken.error) {
+        throw new Error(`Error in authToken ${authToken.error}`);
+      }
+    });
+  } else {
+    throw new Error('Destination is undefined.');
+  }
+  console.log('Destination Retrieved.');
+  const response = await executeHttpRequest(destination, {
+    method: 'get',
+    url: YOUR_SERVICE_URL
+  });
+  if (!response.data) {
+    throw new Error('No data returned');
+  }
+  console.log('Data Retrieved.');
 }
-console.log('Destination Retrieved.');
-const response = await executeHttpRequest(destination, {
-  method: 'get',
-  url: YOUR_SERVICE_URL
-});
-if (!response.data) {
-  throw new Error('No data returned');
-}
-console.log('Data Retrieved.');
 ```
 
 Replace _`YOUR_SERVICE_URL`_ with the URL of your service, e.g., `/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner?%24top=1`.
@@ -82,9 +84,9 @@ You retrieved an error in the process of getting the destination.
 This can have multiple reasons:
 
 - The destination name is not correct or the destination is not present in your SAP BTP account.
-- The destination has errors in the `authToken` object the destination service can not perform the token exchange.
-  Adjust the configuration according to the error message.
-- The destination service is missing not bound to your application.
+- The destination has errors in the `authToken` object.
+  Adjust the configuration according to the error message until the destination service can receive a token.
+- The destination service is not bound to your application.
 - The destination service is missing as a [dependency of your application](./tutorials/multi-tenant-application).
   This is only relevant in multi-tenant applications if you make the call via a subscriber account.
 
@@ -110,12 +112,12 @@ You have a problem connecting to an On-premise system via a Cloud Connector and 
 Often there is an issue in the Cloud Connector setup.
 To see if a request reaches the backend system, activate the HTTP logs.
 
-- Go to transaction **SMICM**.
-- Navigate to **GOTO->Trace Level** and set the trace level to 3 and activate HTTP logs.
-- You may want to reset the log file to have no old logs **GOTO->Trace File**.
-- Trigger your request.
-- Remember to switch back the trace level after you send the request.
-- Go to transaction **ST11** and investigate the file `dev_icm`
+1. Go to transaction **SMICM**.
+1. Navigate to **GOTO->Trace Level** and set the trace level to 3 and activate HTTP logs.
+1.You may want to reset the log file to have no old logs **GOTO->Trace File**.
+1. Trigger your request.
+1. Remember to switch back the trace level after you send the request.
+1. Go to transaction **ST11** and investigate the file `dev_icm`
 
 If you see entries related to your request, your connection is working.
 
