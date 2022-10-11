@@ -27,6 +27,14 @@ module.exports = {
   projectName: 'cloud-sdk',
   trailingSlash: false,
   themeConfig: {
+    announcementBar: {
+      id: 'feedback_survey',
+      content:
+        'How do you like the SAP Cloud SDK? Share your <a href="https://sapinsights.eu.qualtrics.com/jfe/form/SV_0P69X6kJ0Pdxqbc" style="color: var(--ifm-link-color);text-decoration: var(--ifm-link-decoration);transition: color var(--ifm-transition-fast) var(--ifm-transition-timing-default)">feedback</a>.',
+      backgroundColor: 'var(--ifm-color-secondary)',
+      // textColor: '#091E42',
+      isCloseable: false
+    },
     prism: {
       additionalLanguages: ['powershell', 'java', 'groovy'],
       theme: require('prism-react-renderer/themes/github'),
