@@ -155,6 +155,10 @@ module.exports = {
             {
               label: 'SAP Cloud SDK on SAP Help',
               href: 'https://help.sap.com/viewer/product/SAP_CLOUD_SDK/1.0/en-US?task=discover_task'
+            },
+            {
+              label: 'Feedback',
+              href: 'https://sapinsights.eu.qualtrics.com/jfe/form/SV_0P69X6kJ0Pdxqbc'
             }
           ]
         }
