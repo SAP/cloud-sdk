@@ -84,7 +84,8 @@ module.exports = {
             'tutorials/address-manager/read-addresses',
             'tutorials/address-manager/change-addresses'
           ]
-        }
+        },
+        'tutorials/multi-tenant-application'
       ]
     },
     {
@@ -102,7 +103,6 @@ module.exports = {
       label: 'Video Tutorials',
       items: ['video/demo-of-cloud-sdk-for-javascript-with-calm-and-cap']
     },
-    'release-notes-sap-cloud-sdk-for-javascript-and-typescript',
-    'frequently-asked-questions'
+    'release-notes-sap-cloud-sdk-for-javascript-and-typescript'
   ]
 };
