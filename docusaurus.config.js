@@ -85,12 +85,7 @@ module.exports = {
           type: 'dropdown',
           label: 'API Reference',
           position: 'right',
-          items: [
-            {
-              label: 'Swizzle Placeholder',
-              href: 'https://www.example.com'
-            }
-          ],
+          items: [],
           docsPluginId: 'docs-js',
           apiReference: true
         },
@@ -99,6 +94,11 @@ module.exports = {
           position: 'right',
           docsPluginId: 'docs-js'
         }
+        /*{
+          type: 'docsVersionDropdown',
+          position: 'right',
+          docsPluginId: 'docs-java'
+        }*/
       ]
     },
     footer: {
@@ -209,7 +209,19 @@ module.exports = {
         path: 'docs-java',
         editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
         routeBasePath: 'docs/java',
-        sidebarPath: require.resolve('./sidebarsDocsJava.js')
+        sidebarPath: require.resolve('./sidebarsDocsJava.js'),
+        lastVersion: 'current',
+        versions: {
+          current: {
+            label: 'v4',
+            badge: false
+          },
+          v3: {
+            label: 'v3',
+            path: 'v3',
+            badge: false
+          }
+        }
       }
     ],
     [
@@ -245,6 +257,14 @@ module.exports = {
           ) {
             return existingPath.replace('/docs/overview', '/docs');
           }
+
+          if (existingPath.includes('/js/frequently-asked-questions')) {
+            return existingPath.replace(
+              'frequently-asked-questions',
+              'overview-cloud-sdk-for-javascript'
+            );
+          }
+          return undefined;
         }
       }
     ],
