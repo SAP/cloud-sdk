@@ -140,19 +140,19 @@ It should have a descriptive name as a default value.
 
 ### Use Normal Placeholder Syntax Inside a Code Block
 
-✅
-
-```YAML
-applications:
-  - name: YOUR_APPLICATION_NAME
-    path: .
-```
-
 ❌
 
 ```YAML
 applications:
   - name: <YOUR-APPLICATION-NAME>
+    path: .
+```
+
+✅
+
+```YAML
+applications:
+  - name: YOUR_APPLICATION_NAME
     path: .
 ```
 
