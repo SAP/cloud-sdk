@@ -66,6 +66,14 @@ This is the first release of the SAP Cloud SDK version 4.
 As this is a new major version, this release contains a lot of (under the hood) improvements, refactorings, and other changes.
 Please refer to the [Upgrade Guide](./guides/4.0-upgrade) for details instructions on how to upgrade your SAP Cloud SDK dependecy to our new major version and for a detailed list of changes.
 
+### Compatibility Notes
+
+- We are aware of the vulnerability [CVE-2022-42003](https://nvd.nist.gov/vuln/detail/CVE-2022-42003), which affects a version of `jackson-databind` that is shipped as part of the `sdk-bom`.
+  After careful investigation we found that the described exploit **does not** affect the SAP Cloud SDK.
+  Nevertheless, customers should be aware of this vulnerability and check their code.
+
+  We will update the affected dependency as soon as a production ready fix is available.
+
 ### Known issues
 
 - We are aware of a version conflict of the `com.sap.cloud.environment.servicebinding:*` dependencies when the SAP Cloud SDK is used in combination with CAP ([`cds-integration-cloud-sdk`](https://search.maven.org/search?q=g:com.sap.cds%20AND%20a:cds-integration-cloud-sdk)).
