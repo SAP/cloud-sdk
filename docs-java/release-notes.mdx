@@ -59,3 +59,65 @@ To continue using the latest features outlined in the release notes below, pleas
 ## 4.0.0 - October 12, 2022
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:4.0.0)
+
+### Improvements
+
+This is the first release of the SAP Cloud SDK version 4.
+As this is a new major version, this release contains a lot of (under the hood) improvements, refactorings, and other changes.
+Please refer to the [Upgrade Guide](./guides/4.0-upgrade) for details instructions on how to upgrade your SAP Cloud SDK dependecy to our new major version and for a detailed list of changes.
+
+### Known issues
+
+- We are aware of a version conflict of the `com.sap.cloud.environment.servicebinding:*` dependencies when the SAP Cloud SDK is used in combination with CAP ([`cds-integration-cloud-sdk`](https://search.maven.org/search?q=g:com.sap.cds%20AND%20a:cds-integration-cloud-sdk)).
+  This conflict can be resolved by including following dependency in the `<dependencyManagement>` section of your project:
+
+  ```xml
+<!-- Service Binding Library -->
+<dependency>
+    <groupId>com.sap.cloud.environment.servicebinding</groupId>
+    <artifactId>java-modules-bom</artifactId>
+    <version>0.5.0</version>
+    <type>pom</type>
+    <scope>import</scope>
+</dependency>
+  ```
+
+  <details>
+  <summary>Resulting <code>pom.xml</code></summary>
+
+  ```xml
+  <dependencyManagement>
+      <dependencies>
+
+          <!-- CDS SERVICES -->
+          <dependency>
+              <groupId>com.sap.cds</groupId>
+              <artifactId>cds-services-bom</artifactId>
+              <version>${cds.services.version}</version>
+              <type>pom</type>
+              <scope>import</scope>
+          </dependency>
+
+          <!-- Cloud SDK -->
+          <dependency>
+              <groupId>com.sap.cloud.sdk</groupId>
+              <artifactId>sdk-modules-bom</artifactId>
+              <version>4.0.0</version>
+              <type>pom</type>
+              <scope>import</scope>
+          </dependency>
+
+          <!-- Service Binding Library -->
+          <dependency>
+              <groupId>com.sap.cloud.environment.servicebinding</groupId>
+              <artifactId>java-modules-bom</artifactId>
+              <version>0.5.0</version>
+              <type>pom</type>
+              <scope>import</scope>
+          </dependency>
+
+      </dependencies>
+  </dependencyManagement>
+  ```
+
+  </details>
