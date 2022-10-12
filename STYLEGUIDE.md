@@ -15,14 +15,15 @@
     - [Use Code Font for URLs in Commands and Code](#use-code-font-for-urls-in-commands-and-code)
     - [Use Ordinary Font for URLs that Reader Should Follow in a Browser](#use-ordinary-font-for-urls-that-reader-should-follow-in-a-browser)
   - [Use `example.com` for Example Domain](#use-examplecom-for-example-domain)
-  - [Filenames and FilePaths](#filenames-and-filepaths)
+  - [Filenames and File Paths](#filenames-and-file-paths)
     - [Use Code Font](#use-code-font)
     - [Include the Word File After the Filename](#include-the-word-file-after-the-filename)
-    - [Use Hyphens, Not Underscores, To Separate Words](#use-hyphens-not-underscores-to-separate-words)
+    - [Prefer Hyphens, Not Underscores, To Separate Words in File Paths](#prefer-hyphens-not-underscores-to-separate-words-in-file-paths)
   - [File Type](#file-type)
     - [Use Formal File Type Name in Ordinary Font](#use-formal-file-type-name-in-ordinary-font)
     - [Exception: Use Extension in Code Format To Mention File Ending](#exception-use-extension-in-code-format-to-mention-file-ending)
-  - [Use Quotation Marks for Error Messages in Text](#use-quotation-marks-for-error-messages-in-text)
+  - [Use Quotation Marks for Inline Error Messages in Text](#use-quotation-marks-for-inline-error-messages-in-text)
+  - [Use Block Quotes for Separated Error Messages](#use-block-quotes-for-separated-error-messages)
   - [Graphical User Interface Elements](#graphical-user-interface-elements)
     - [Use Bold Format for Names](#use-bold-format-for-names)
     - [Focus on the Feature and Its Functionality, Not the UI Element and Gestures](#focus-on-the-feature-and-its-functionality-not-the-ui-element-and-gestures)
@@ -44,7 +45,7 @@
   - [Second Person](#second-person)
     - [Use the Imperative Form in Instructions](#use-the-imperative-form-in-instructions)
     - [Avoid Using `Your`](#avoid-using-your)
-    - [Don't Use `We` or `Our` When Addressing the Reader(You)](#dont-use-we-or-our-when-addressing-the-reader-you)
+    - [Don't Use `We` or `Our` When Addressing the Reader (You)](#dont-use-we-or-our-when-addressing-the-reader-you)
   - [Politeness](#politeness)
     - [Don’t Use `Please` in Instructions](#dont-use-please-in-instructions)
     - [Don't Use the Phrase `Please Note`](#dont-use-the-phrase-please-note)
@@ -190,7 +191,7 @@ For generic domain name in examples, use `example.com`.
 
 ✅ create a business partner against `https://example.com` as a destination.
 
-## Filenames and FilePaths
+## Filenames and File Paths
 
 ### Use Code Font
 
@@ -202,7 +203,7 @@ For generic domain name in examples, use `example.com`.
 
 ✅ Add your own `package.json` file.
 
-### Use Hyphens, Not Underscores, To Separate Words
+### Prefer Hyphens, Not Underscores, To Separate Words in File Paths
 
 ✅ This creates a basic class inside the `src/business-partners` folder.
 
@@ -222,7 +223,7 @@ Use only when you need to specifically mention a file ending.
 
 ✅ base64 ASCII (e.g. `.pem`) and binary (e.g. `.der`).
 
-## Use Quotation Marks for Error Messages in Text
+## Use Quotation Marks for Inline Error Messages in Text
 
 Enclose error messages in quotation marks when referring to them in text.
 Follow sentence-style capitalization.
@@ -230,6 +231,21 @@ Follow sentence-style capitalization.
 ❌ If you see the error `Module not found: Error: Can't resolve 'https' in`
 
 ✅ If you see the error "Module not found: "Error: Can't resolve 'https' in""
+
+## Use Block Quotes for Separated Error Messages
+
+Put error messages in block quotes when displaying them outside of a sentence.
+Follow sentence-style capitalization.
+
+❌
+
+An error like this can occur: `Module not found: Error: Can't resolve 'https' in`
+
+✅
+
+An error like this can occur:
+
+> Module not found: "Error: Can't resolve 'https' in"
 
 ## Graphical User Interface Elements
 
@@ -247,7 +263,7 @@ Do not use italics or quotes.
 
 ❌ On the settings page, click _Show API Key_
 
-✅ On the --Settings-- page, click --Show API Key--
+✅ On the **Settings** page, click **Show API Key**
 
 <!-- vale off -->
 
@@ -255,9 +271,9 @@ Do not use italics or quotes.
 
 <!-- vale on -->
 
-❌ In the dropdown, choose `BasicAuthentication` as the authentication type
+❌ In the drop-down, choose `BasicAuthentication` as the authentication type
 
-✅ In the --Authentication-- drop-down, select --BasicAuthentication--
+✅ In the **Authentication** drop-down, select **BasicAuthentication**
 
 ### Follow the Capitalization as It Appears on the Page
 
@@ -273,17 +289,17 @@ Do not use italics or quotes.
 
 Don't include the type of UI element, such as button or checkbox, unless it adds needed clarity.
 
-❌ You can start your application via the --Launch-- button.
+❌ You can start your application via the **Launch** button.
 
-✅ To start the application, click --Launch--.
+✅ To start the application, click **Launch**.
 
 ## User Entered Text
 
-Use code format for text that should be entered by user
+Use code format for text that should be entered by user.
 
-✅ In the --Name-- field, enter `my-destination`
+❌ In the **Name** field, enter my-destination
 
-❌ In the --Name-- field, enter my-destination
+✅ In the **Name** field, enter `my-destination`
 
 ## Version
 
@@ -293,17 +309,17 @@ Use code format for text that should be entered by user
 
 Unless a text relates to a specific version, do not use formats x.y or x.y.z
 
-✅ This mapping applies to the move to open source version 1.
-
 ❌ This mapping applies to the move to open source version 1.X.Y..
+
+✅ This mapping applies to the move to open source version 1.
 
 <!-- vale on -->
 
 ### Avoid Using `Currently` and `New`
 
-✅ In version 2, you can specify the origin of the header
-
 ❌ In the new version we allow to specify the origin of the header
+
+✅ In version 2, you can specify the origin of the header
 
 # Language and Style
 
@@ -359,7 +375,7 @@ When telling the reader to do something, use the imperative (implicit you).
 
 ✅ Deploy the application as usual by running the command:
 
-### Don't Use `We` or `Our` When Addressing the Reader(You)
+### Don't Use `We` or `Our` When Addressing the Reader (You)
 
 Either try to change to second person or use the imperative form.
 
@@ -429,7 +445,7 @@ Use 'please' only when what you're asking for:
 | hardcode (verb), hardcoded (adjective)     | hard-coded                   |
 | login (noun or adjective), log in (verb)   | ❌ login to CF               |
 | multi-tenant                               | multi tenant                 |
-| pop-up                                     | dialog/menu                  |
+| dialog/menu                                | pop-up                       |
 | read-only                                  | read only                    |
 | real time (noun), real-time (adjective)    | ❌ in real-time              |
 | repository                                 | repo                         |
@@ -443,13 +459,13 @@ Use 'please' only when what you're asking for:
 
 Use serial (Oxford) comma before the final **and**/**or** in a series of three or more items
 
-❌ define the `get`, `set`, and `clear` methods.
+❌ define the `get`, `set` and `clear` methods.
 
-✅ define the `get`, `set` and `clear` methods.
+✅ define the `get`, `set`, and `clear` methods.
 
 ## Avoid Exclamation Point and Ellipses
 
-- Avoid exclamation point and ellipses (except in rare exciting moments)
+Avoid exclamation point and ellipses (except in rare exciting moments)
 
 ❌ Enjoy the hands-on experience delivered by SAP Cloud SDK developers!
 
@@ -495,9 +511,13 @@ Don't add end punctuation if the item satisfies any of the below conditions:
 
 - Consists of a single word
 - Doesn't include a verb
-- Is entirely in code font, is a link text, or a document title
+- Is entirely in code font
+- Is a link text
+- Is a document title
 
 ### Use Numbered List for Steps To Be Performed in Order
+
+Numbered lists follow the same rules that apply to general lists.
 
 ❌
 
@@ -514,9 +534,9 @@ You can obtain the JWT using Postman:
 ```
 To obtain the JWT using Postman, follow these steps:
 
-1. Create a new request
-2. Go to the "Authorization tab of the request
-3. Select "OAuth 2.0" as a type
+1. Create a new request.
+2. Go to the **Authorization** tab of the request.
+3. In the **Type** drop-down, select **OAuth 2.0**.
 ```
 
 ### Use Description List With Headings for Describing Terms
