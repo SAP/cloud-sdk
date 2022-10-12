@@ -103,6 +103,7 @@ module.exports = {
     'sdk-java-troubleshooting-frequent-problems',
     'release-policy',
     'release-notes-sap-cloud-sdk-for-java',
+    'support-java',
     'frequently-asked-questions',
     {
       type: 'link',
