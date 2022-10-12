@@ -190,7 +190,7 @@ For generic domain name in examples, use `example.com`.
 
 ✅ create a business partner against `https://example.com` as a destination.
 
-## Filenames and Filepaths
+## Filenames and File Paths
 
 ### Use Code Font
 
@@ -202,7 +202,7 @@ For generic domain name in examples, use `example.com`.
 
 ✅ Add your own `package.json` file.
 
-### Prefer Hyphens, Not Underscores, To Separate Words in Filepaths
+### Prefer Hyphens, Not Underscores, To Separate Words in File Paths
 
 ✅ This creates a basic class inside the `src/business-partners` folder.
 
@@ -231,20 +231,20 @@ Follow sentence-style capitalization.
 
 ✅ If you see the error "Module not found: "Error: Can't resolve 'https' in""
 
-## Use Blockquotes for Separated Error Messages
+## Use Block Quotes for Separated Error Messages
 
-Put error messages in blockquotes when displaying them outside of a sentence.
+Put error messages in block quotes when displaying them outside of a sentence.
 Follow sentence-style capitalization.
 
 ❌
 
 An error like this can occur: `Module not found: Error: Can't resolve 'https' in`
 
-✅ 
+✅
 
 An error like this can occur:
-> Module not found: "Error: Can't resolve 'https' in"
 
+> Module not found: "Error: Can't resolve 'https' in"
 
 ## Graphical User Interface Elements
 
