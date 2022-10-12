@@ -536,7 +536,7 @@ To obtain the JWT using Postman, follow these steps:
 
 1. Create a new request.
 2. Go to the **Authorization** tab of the request.
-3. Select **OAuth 2.0** as a type.
+3. In the **Type** drop-down, select **OAuth 2.0**.
 ```
 
 ### Use Description List With Headings for Describing Terms
