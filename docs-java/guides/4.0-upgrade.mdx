@@ -35,6 +35,7 @@ Follow the deprecation note of the Javadoc in case you are still using deprecate
 All deprecated API is removed With version 4 (exception being audit logging).
 
 <!-- vale off -->
+
 <details>
     <summary>Full list of deprecated API</summary>
   
@@ -215,13 +216,14 @@ All deprecated API is removed With version 4 (exception being audit logging).
     </tbody>
 </table>
 
-  Note on the `MockUtil` class:
-  Most API allows for easy mocking already.
-  Please reach out to us directly if you use this class and are not sure how to replace it.
+Note on the `MockUtil` class:
+Most API allows for easy mocking already.
+Please reach out to us directly if you use this class and are not sure how to replace it.
 
 </details>
 
 ## Update Your POM.XML
+
 <!-- vale on -->
 
 Begin by upgrading the version to `4.0.0`.
@@ -236,64 +238,65 @@ You can run `mvn dependency:tree | grep 'com.sap.cloud.sdk'` to verify that all 
 
 Finally, version 4 discontinued some (legacy) modules and plugins.
 Most notably are:
-* Usage analytics maven plugin
-* Test utilities (contained the `MockUtil` class)
+
+- Usage analytics maven plugin
+- Test utilities (contained the `MockUtil` class)
 
 Remove them if they are present in your pom files.
 
 <details>
     <summary>Full list of removed modules</summary>
 
-  * On-premise VDM:
-    * `s4hana-api-odata-onpremise-2020`
-    * `s4hana-api-odata-v4-onpremise-2020`
-  * DataModel - Enterprise Messaging:
-    * `messaging-jms`
-    * `messaging-generator`
-    * `messaging-core`
-    * `s4hana-api-messaging`
-  * Framework integrations (`com.sap.cloud.sdk.frameworks`)
-    * `cxf`
-    * `eclipselink`
-    * `eclipselink-javaee`
-    * `jaxrs-gson`
-    * `jaxrs`
-    * `javaee`
-    * `liquibase`
-    * `liquibase-javaee`
-    * `togglz`
-    * `spring-boot-multitenancy-scp-cf`
-    * `spring-web`
-  * Testing utilities (`com.sap.cloud.sdk.testutil`)
-    * `testutil-parent`
-    * `testutil-core`
-    * `testutil-resources`
-  * Currency Conversion (`com.sap.cloud.sdk.integration`)
-    * `integration-object-currency-conversion-simple`
-    * `integration-object-currency-conversion-simple-artifact`
-    * `integration-object-currency-conversion-simple-srv`
-    * `integration-parent`
-    * `currency-conversion-adapter-simple-integration-objects-mrm`
-    * `currency-conversion-adapter-simple-integration-objects`
-    * `currency-conversion-core`
-    * `currency-conversion-datamodel`
-    * `currency-conversion-parent`
-  * Quality (`com.sap.cloud.sdk.quality`)
-    * `common`
-    * `httpclient-listener`
-    * `listeners-all`
-    * `odata-querylistener`
-    * `pmd-plugin`
-    * `pmd-rules`
-    * `rfc-querylistener`
-  * Others:
-    * `com.sap.cloud.sdk.services:graph`
-    * `com.sap.cloud.sdk.services:recast-ai`
-    * `com.sap.cloud.sdk.services:scp-machine-learning`
-    * `com.sap.cloud.sdk.plugins:usage-analytics`
-    * `com.sap.cloud.sdk.plugins:usage-analytics-maven-plugin`
-    * `com.sap.cloud.sdk.cloudplatform:metering`
-    * `com.sap.cloud.sdk.cloudplatform:metering-scp-neo`
+- On-premise VDM:
+  - `s4hana-api-odata-onpremise-2020`
+  - `s4hana-api-odata-v4-onpremise-2020`
+- DataModel - Enterprise Messaging:
+  - `messaging-jms`
+  - `messaging-generator`
+  - `messaging-core`
+  - `s4hana-api-messaging`
+- Framework integrations (`com.sap.cloud.sdk.frameworks`)
+  - `cxf`
+  - `eclipselink`
+  - `eclipselink-javaee`
+  - `jaxrs-gson`
+  - `jaxrs`
+  - `javaee`
+  - `liquibase`
+  - `liquibase-javaee`
+  - `togglz`
+  - `spring-boot-multitenancy-scp-cf`
+  - `spring-web`
+- Testing utilities (`com.sap.cloud.sdk.testutil`)
+  - `testutil-parent`
+  - `testutil-core`
+  - `testutil-resources`
+- Currency Conversion (`com.sap.cloud.sdk.integration`)
+  - `integration-object-currency-conversion-simple`
+  - `integration-object-currency-conversion-simple-artifact`
+  - `integration-object-currency-conversion-simple-srv`
+  - `integration-parent`
+  - `currency-conversion-adapter-simple-integration-objects-mrm`
+  - `currency-conversion-adapter-simple-integration-objects`
+  - `currency-conversion-core`
+  - `currency-conversion-datamodel`
+  - `currency-conversion-parent`
+- Quality (`com.sap.cloud.sdk.quality`)
+  - `common`
+  - `httpclient-listener`
+  - `listeners-all`
+  - `odata-querylistener`
+  - `pmd-plugin`
+  - `pmd-rules`
+  - `rfc-querylistener`
+- Others:
+  - `com.sap.cloud.sdk.services:graph`
+  - `com.sap.cloud.sdk.services:recast-ai`
+  - `com.sap.cloud.sdk.services:scp-machine-learning`
+  - `com.sap.cloud.sdk.plugins:usage-analytics`
+  - `com.sap.cloud.sdk.plugins:usage-analytics-maven-plugin`
+  - `com.sap.cloud.sdk.cloudplatform:metering`
+  - `com.sap.cloud.sdk.cloudplatform:metering-scp-neo`
 
 </details>
 
@@ -308,67 +311,67 @@ If this is the case Maven will inform you about it with a message similar to `'d
 <details>
     <summary>Full list of dependencies removed from the BOM</summary>
 
-  * `io.swagger:swagger-annotations`
-  * `javax.validation:validation-api`
-  * `javax.ws.rs:javax.ws.rs-api`
-  * `javax.jms:javax.jms-api`
-  * `javax:javaee-api`
-  * `javax:javaee-web-api`
-  * `javax.ejb:javax.ejb-api`
-  * `org.hamcrest:hamcrest-core`
-  * `org.eclipse.persistence:eclipselink`
-  * `org.eclipse.persistence:javax.persistence`
-  * `org.liquibase:liquibase-core`
-  * `org.apache.commons:commons-csv`
-  * `org.apache.cxf:cxf-core`
-  * `org.apache.cxf:cxf-rt-management`
-  * `org.apache.cxf:cxf-rt-transports-http`
-  * `org.apache.cxf:cxf-rt-bindings-soap`
-  * `org.apache.cxf:cxf-rt-bindings-xml`
-  * `org.apache.cxf:cxf-rt-ws-addr`
-  * `org.apache.cxf:cxf-rt-ws-rm`
-  * `org.apache.cxf:cxf-rt-ws-policy`
-  * `org.apache.cxf:cxf-rt-ws-mex`
-  * `org.apache.cxf:cxf-rt-ws-security`
-  * `org.apache.cxf:cxf-rt-frontend-jaxws`
-  * `org.apache.cxf:cxf-rt-frontend-jaxrs`
-  * `org.apache.cxf:cxf-rt-rs-client`
-  * `org.apache.cxf:cxf-rt-rs-extension-providers`
-  * `org.apache.cxf:cxf-rt-rs-extension-search`
-  * `org.apache.cxf:cxf-rt-rs-security-cors`
-  * `org.apache.cxf:cxf-rt-rs-security-oauth2`
-  * `org.apache.cxf:cxf-rt-rs-security-xml`
-  * `org.apache.cxf:cxf-rt-rs-security-sso-saml`
-  * `org.slf4j:jul-to-slf4j`
-  * `org.slf4j:log4j-over-slf4j`
-  * `org.slf4j:slf4j-simple`
-  * `org.springframework:spring-framework-bom`
-  * `org.springframework:spring-security-bom`
-  * `org.togglz:togglz-core`
-  * `org.togglz:togglz-servlet`
-  * `org.togglz:togglz-console`
-  * `org.togglz:togglz-testing`
-  * `org.togglz:togglz-junit`
-  * `com.jayway.jsonpath:json-path`
-  * `com.fasterxml.jackson:jackson-bom`
-  * `com.google.guava:guava-testlib`
-  * `com.sap.cloud.servicesdk:odatav2-connectivity-sdk3`
-  * `com.sap.cloud.servicesdk:odata-v2-lib`
-  * `com.sap.cloud.servicesdk.prov:api`
-  * `com.sap.cloud.servicesdk.prov:odatav4`
-  * `com.sap.cloud.servicesdk.prov:odata2.web`
-  * `com.sap.cloud.servicesdk.prov:odata2.xsa`
-  * `com.sap.cloud.servicesdk.prov:odatav2-hybrid`
-  * `com.sap.cloud.servicesdk.prov:odatav2-prov`
-  * `com.sap.cloud:neo-javaee7-wp-api`
-  * `com.sap.cloud:neo-java-web-api`
-  * `com.sap.xs.java:xs-env`
-  * `com.sap.xs2.security:security-commons`
-  * `com.sap.xs2.security:java-container-security`
-  * `com.sap.conn.jco:com.sap.conn.jco.sapjco3`
-  * `com.sap.conn.jco:sapjco3`
-  * `com.sap.hcp.cf.logging:cf-java-logging-support-logback`
-  * `com.squareup.okhttp3:okhttp`
+- `io.swagger:swagger-annotations`
+- `javax.validation:validation-api`
+- `javax.ws.rs:javax.ws.rs-api`
+- `javax.jms:javax.jms-api`
+- `javax:javaee-api`
+- `javax:javaee-web-api`
+- `javax.ejb:javax.ejb-api`
+- `org.hamcrest:hamcrest-core`
+- `org.eclipse.persistence:eclipselink`
+- `org.eclipse.persistence:javax.persistence`
+- `org.liquibase:liquibase-core`
+- `org.apache.commons:commons-csv`
+- `org.apache.cxf:cxf-core`
+- `org.apache.cxf:cxf-rt-management`
+- `org.apache.cxf:cxf-rt-transports-http`
+- `org.apache.cxf:cxf-rt-bindings-soap`
+- `org.apache.cxf:cxf-rt-bindings-xml`
+- `org.apache.cxf:cxf-rt-ws-addr`
+- `org.apache.cxf:cxf-rt-ws-rm`
+- `org.apache.cxf:cxf-rt-ws-policy`
+- `org.apache.cxf:cxf-rt-ws-mex`
+- `org.apache.cxf:cxf-rt-ws-security`
+- `org.apache.cxf:cxf-rt-frontend-jaxws`
+- `org.apache.cxf:cxf-rt-frontend-jaxrs`
+- `org.apache.cxf:cxf-rt-rs-client`
+- `org.apache.cxf:cxf-rt-rs-extension-providers`
+- `org.apache.cxf:cxf-rt-rs-extension-search`
+- `org.apache.cxf:cxf-rt-rs-security-cors`
+- `org.apache.cxf:cxf-rt-rs-security-oauth2`
+- `org.apache.cxf:cxf-rt-rs-security-xml`
+- `org.apache.cxf:cxf-rt-rs-security-sso-saml`
+- `org.slf4j:jul-to-slf4j`
+- `org.slf4j:log4j-over-slf4j`
+- `org.slf4j:slf4j-simple`
+- `org.springframework:spring-framework-bom`
+- `org.springframework:spring-security-bom`
+- `org.togglz:togglz-core`
+- `org.togglz:togglz-servlet`
+- `org.togglz:togglz-console`
+- `org.togglz:togglz-testing`
+- `org.togglz:togglz-junit`
+- `com.jayway.jsonpath:json-path`
+- `com.fasterxml.jackson:jackson-bom`
+- `com.google.guava:guava-testlib`
+- `com.sap.cloud.servicesdk:odatav2-connectivity-sdk3`
+- `com.sap.cloud.servicesdk:odata-v2-lib`
+- `com.sap.cloud.servicesdk.prov:api`
+- `com.sap.cloud.servicesdk.prov:odatav4`
+- `com.sap.cloud.servicesdk.prov:odata2.web`
+- `com.sap.cloud.servicesdk.prov:odata2.xsa`
+- `com.sap.cloud.servicesdk.prov:odatav2-hybrid`
+- `com.sap.cloud.servicesdk.prov:odatav2-prov`
+- `com.sap.cloud:neo-javaee7-wp-api`
+- `com.sap.cloud:neo-java-web-api`
+- `com.sap.xs.java:xs-env`
+- `com.sap.xs2.security:security-commons`
+- `com.sap.xs2.security:java-container-security`
+- `com.sap.conn.jco:com.sap.conn.jco.sapjco3`
+- `com.sap.conn.jco:sapjco3`
+- `com.sap.hcp.cf.logging:cf-java-logging-support-logback`
+- `com.squareup.okhttp3:okhttp`
 
 </details>
 
@@ -421,34 +424,34 @@ Still, they are listed here for completeness and easy access.
 
 For the OData features most notable are:
 
-* (OData V2) Change any reference of `UncheckedFilterExpression` to `ExpressionFluentHelper`
-* (OData V2) Change any exception handling for `com.sap.cloud.sdk.odatav2.connectivity.ODataException`
-    * Catch `com.sap.cloud.sdk.datamodel.odata.client.exception.*` instead
-    * This should only apply for any usages of `get...OrFetch()` methods on entities
+- (OData V2) Change any reference of `UncheckedFilterExpression` to `ExpressionFluentHelper`
+- (OData V2) Change any exception handling for `com.sap.cloud.sdk.odatav2.connectivity.ODataException`
+  - Catch `com.sap.cloud.sdk.datamodel.odata.client.exception.*` instead
+  - This should only apply for any usages of `get...OrFetch()` methods on entities
 
 <details>
     <summary>Full list of OData related changes</summary>
 
-  * Remove `com.sap.cloud.sdk.s4hana.datamodel.odata.adapter.ODataCalendarAdapter` and child classes
-    `ODataDateTimeAdapter`, `ODataDateTimeOffsetAdapter`, and `ODataTimeAdapter`.
-  * Remove the obsolete helper classes `FilterExpressionWrapper`, `UncheckedFilterExpression`, `FilterExpressionHelper` and `FilterFunction`
-  * The `ODataTypeValueSerializer` class has been removed as it is no longer needed with the removal of the `servicesdk` dependency
-  * Remove the obsolete class `com.sap.cloud.sdk.s4hana.connectivity.RequestBody`
-  * For OData v2 generated classes (the OData v2 VDM), the method signature has changed for lazily resolving navigation properties in entity classes.
-    A checked exception is no longer thrown for methods named _fetchX()_ and _getXOrFetch()_:
-    ```
-    Entity entity;
-    try {
-      entity.fetchProperty();
-      entity.getPropertyOrFetch()
-    }
-    catch( com.sap.cloud.sdk.odatav2.connectivity.ODataException e ) {
-    }
-    ```
-    If you still want to evaluate the error details (like HTTP payload or status code), please feel free to explore the hierarchy and properties of our OData unchecked exception types.
-  * Removed the now obsolete method `VdmEntityUtil#fromFields`
-  * The modules `odata-client` and `odata-v4-core` have been moved out of beta state and are now considered stable
-  * The decprecated modules `s4hana-api-odata-onpremise-2020` and `s4hana-api-odata-v4-onpremise-2020` are removed
+- Remove `com.sap.cloud.sdk.s4hana.datamodel.odata.adapter.ODataCalendarAdapter` and child classes
+  `ODataDateTimeAdapter`, `ODataDateTimeOffsetAdapter`, and `ODataTimeAdapter`.
+- Remove the obsolete helper classes `FilterExpressionWrapper`, `UncheckedFilterExpression`, `FilterExpressionHelper` and `FilterFunction`
+- The `ODataTypeValueSerializer` class has been removed as it is no longer needed with the removal of the `servicesdk` dependency
+- Remove the obsolete class `com.sap.cloud.sdk.s4hana.connectivity.RequestBody`
+- For OData v2 generated classes (the OData v2 VDM), the method signature has changed for lazily resolving navigation properties in entity classes.
+  A checked exception is no longer thrown for methods named _fetchX()_ and _getXOrFetch()_:
+  ```
+  Entity entity;
+  try {
+    entity.fetchProperty();
+    entity.getPropertyOrFetch()
+  }
+  catch( com.sap.cloud.sdk.odatav2.connectivity.ODataException e ) {
+  }
+  ```
+  If you still want to evaluate the error details (like HTTP payload or status code), please feel free to explore the hierarchy and properties of our OData unchecked exception types.
+- Removed the now obsolete method `VdmEntityUtil#fromFields`
+- The modules `odata-client` and `odata-v4-core` have been moved out of beta state and are now considered stable
+- The decprecated modules `s4hana-api-odata-onpremise-2020` and `s4hana-api-odata-v4-onpremise-2020` are removed
 
 </details>
 
@@ -456,40 +459,40 @@ For the OData features most notable are:
 
 On the `CloudPlatform` and related accessor classes the most notable changes are:
 
-* The deprecated `RequestAccessor` has been replaced by the `RequestHeaderAccessor`
-* The `RequestHeaderContainer` received minor changes to the collection types used
-* The latest version of the [SAP BTP Service Operator](https://github.com/SAP/sap-btp-service-operator) is now supported
+- The deprecated `RequestAccessor` has been replaced by the `RequestHeaderAccessor`
+- The `RequestHeaderContainer` received minor changes to the collection types used
+- The latest version of the [SAP BTP Service Operator](https://github.com/SAP/sap-btp-service-operator) is now supported
 
 <details>
     <summary>Full list of CloudPlatform related changes</summary>
 
-  * Moved the `AuthTokenAccessor`, `AuthToken` classes and the `AuthTokenFacade` interface from the `security-scp-cf` into the `security` module.
-    * Renamed `DefaultAuthTokenFacade` to `ScpCfAuthTokenFacade`.
-    * Only functional implementation of `AuthTokenFacade` is the `ScpCfAuthTokenFacade` in the `security-scp-cf` module.
-    * If no implementation of the facade interface can be found via the ServiceLoader pattern, all invocations on the `AuthTokenAccessor` will throw an Exception.
-    * SCP CF related methods on the `AuthTokenAccessor` are removed from there and only accessible via the `ScpCfAuthTokenFacade`.
-  * Public API in `RequestHeaderContainer` has the following breaking changes:
-    * `RequestHeaderContainer#getHeaderNames()` now returns a `List<String>` instead of `Set<String>`. Only headers which have at least one non-null value are returned by the method. 
-    * `RequestHeaderContainer#getHeaderValues()` now returns a `List<String>` instead of `Collection<String>`
-    * `DefaultRequestHeaderContainer#fromMultiValueMap` also allows generic inputs to be passed.
-       The signature of the method has changed from `DefaultRequestHeaderContainer#fromMultiValueMap( Map<String, Collection<String>> headers )` to `DefaultRequestHeaderContainer#fromMultiValueMap( Map<String, ? extends Iterable<String>> headers )`
-  * The `Accessor` (e.g. `TenantAccessor`) classes will now throw an `ThreadContextExecutionException` in their `executeWith` methods in case a custom `Facade` implementation is used that is not a (subtype of)   `DefaultFacade`.
-   This was changed to make a current shortcoming regarding the `executeWith` API apparent to users that are using a different `ThreadContext`.
-   For example, when running in a CAP context, `TenantAccessor.executeWithTenant` doesn't correctly update the CDS Context so that the operation doesn't lead to the expected result.
-   Before, this error would go unnoticed, which led to the wrong impression that everything was working as expected.
-   Now, the aforementioned `ThreadContextExecutionException` will be thrown to make users aware of the issue.     
-  * Introduce support for the [BTP Environment Variable Access](https://github.com/SAP/btp-environment-variable-access) (_Service Binding_) library.
-    * The `ScpCfCloudPlatform` now offers a `setServiceBindingAccessor` method, which should be used instead of the `setEnvironmentVariableReader` method to override the access to the `VCAP_SERVICES` environment variable.  
-  * Following public behavior in the `cloudplatform-core-scp-cf` module has been changed:
-    * `ScpCfCloudPlatform#invalidateCaches`: The service bindings are no longer statically cached.
+- Moved the `AuthTokenAccessor`, `AuthToken` classes and the `AuthTokenFacade` interface from the `security-scp-cf` into the `security` module.
+  - Renamed `DefaultAuthTokenFacade` to `ScpCfAuthTokenFacade`.
+  - Only functional implementation of `AuthTokenFacade` is the `ScpCfAuthTokenFacade` in the `security-scp-cf` module.
+  - If no implementation of the facade interface can be found via the ServiceLoader pattern, all invocations on the `AuthTokenAccessor` will throw an Exception.
+  - SCP CF related methods on the `AuthTokenAccessor` are removed from there and only accessible via the `ScpCfAuthTokenFacade`.
+- Public API in `RequestHeaderContainer` has the following breaking changes:
+  - `RequestHeaderContainer#getHeaderNames()` now returns a `List<String>` instead of `Set<String>`. Only headers which have at least one non-null value are returned by the method.
+  - `RequestHeaderContainer#getHeaderValues()` now returns a `List<String>` instead of `Collection<String>`
+  - `DefaultRequestHeaderContainer#fromMultiValueMap` also allows generic inputs to be passed.
+    The signature of the method has changed from `DefaultRequestHeaderContainer#fromMultiValueMap( Map<String, Collection<String>> headers )` to `DefaultRequestHeaderContainer#fromMultiValueMap( Map<String, ? extends Iterable<String>> headers )`
+- The `Accessor` (e.g. `TenantAccessor`) classes will now throw an `ThreadContextExecutionException` in their `executeWith` methods in case a custom `Facade` implementation is used that is not a (subtype of) `DefaultFacade`.
+  This was changed to make a current shortcoming regarding the `executeWith` API apparent to users that are using a different `ThreadContext`.
+  For example, when running in a CAP context, `TenantAccessor.executeWithTenant` doesn't correctly update the CDS Context so that the operation doesn't lead to the expected result.
+  Before, this error would go unnoticed, which led to the wrong impression that everything was working as expected.
+  Now, the aforementioned `ThreadContextExecutionException` will be thrown to make users aware of the issue.
+- Introduce support for the [BTP Environment Variable Access](https://github.com/SAP/btp-environment-variable-access) (_Service Binding_) library.
+  - The `ScpCfCloudPlatform` now offers a `setServiceBindingAccessor` method, which should be used instead of the `setEnvironmentVariableReader` method to override the access to the `VCAP_SERVICES` environment variable.
+- Following public behavior in the `cloudplatform-core-scp-cf` module has been changed:
+  - `ScpCfCloudPlatform#invalidateCaches`: The service bindings are no longer statically cached.
     Therefore, using the `invalidateCaches` method will no longer affect service bindings (for example as returned by the `getVcapServices` method)
-    * `ScpCfCloudPlatform#getVcapServices`: This method will no longer thrown a `CloudPlatformException` in case no service bindings are found 
-  * Following experimental classes in the `cloudplatform-core` module have been removed:
-    * All classes in the `com.sap.cloud.sdk.cloudplatform.servicebinding` package
-  * experimental methods in the `cloudplatform-core-scp-cf` module have been removed:
-    * `ScpCfCloudPlatform#setServiceBindingsRootLocation`
-    * `ScpCfCloudPlatform#getServiceBindingsRootLocation`
-    * `ScpCfCloudPlatform#setServiceBindingLoader`
+  - `ScpCfCloudPlatform#getVcapServices`: This method will no longer thrown a `CloudPlatformException` in case no service bindings are found
+- Following experimental classes in the `cloudplatform-core` module have been removed:
+  - All classes in the `com.sap.cloud.sdk.cloudplatform.servicebinding` package
+- experimental methods in the `cloudplatform-core-scp-cf` module have been removed:
+  - `ScpCfCloudPlatform#setServiceBindingsRootLocation`
+  - `ScpCfCloudPlatform#getServiceBindingsRootLocation`
+  - `ScpCfCloudPlatform#setServiceBindingLoader`
 
 </details>
 
@@ -497,139 +500,142 @@ On the `CloudPlatform` and related accessor classes the most notable changes are
 
 :::caution
 The `ThreadContext` interface and all related API have received substantial changes.
+
 <!-- vale off -->
+
 In most cases [the above mentioned change](#working-with-threads-and-the-threadcontext) should suffice.
 
 If this is not the case for your project and you find yourself affected by any of the below changes please **reach out to us directly**.
+
 <!-- vale on -->
+
 :::
 
 <details>
     <summary>Full list of ThreadContext related changes</summary>
 
-  * The `ThreadContext` interface received the following changes:
-    * Method `Property<T> getProperty(String name)` has been replaced with `Try<T> getPropertyValue(String name)`
-    * Method `setPropertyIfAbsent` has been changed to now accept a `Callable<Property<?>>` instead of `Callable<?>`
-    * Enable `equals` and `hashCode` for `DefaultThreadContext`.
-    * Method `getThread()` has been removed
-  * The `Property<T>` class has been expanded with convenience methods to decorate a callable:
-    * `Callable<Property<?>> decorateCallable( Callable<?> valueGenerator )` 
-    * `Callable<Property<?>> decorateConfidentialCallable( Callable<?> valueGenerator )` 
-  * `ThreadContextExecutor` changes:
-    * `ThreadContext` instances are no longer implicitly shared when using `ThreadContextExecutor`. Instead:
-    * `fromCurrentContext()` will duplicate the current context into a new context object
-    * `fromNewContext()` will use a new, empty context object
-    * `fromCurrentOrNewContext()` behaves like `fromCurrentContext` but will fall back to a new context, if none is available
-    * `using(context)` will duplicate the provided context and its properties into a new context object
-    * Duplicating the current context solves persistence and concurrency issues with dynamic thread life cycles.
-    * Additionally, the `ThreadContext` is duplicated every time the `ThreadContextExecutor#execute` method is called.
-    * Therefore, the steps `beforeDestroy()` and `afterDestroy()` are removed from the `ThreadContextListener`.
-  * `ThreadContextListener` has no longer access to values from a potential parent thread-context.
-    Instead, any values from a potential parent context are already present and can be altered.
-  * The `ThreadContextDecorator` has been changed to now enable passing arbitrary `ThreadLocal` related data to new threads created via `DefaultThreadContextExecutorService`
-    * The existing `SecurityThreadContextDecorator` has been improved to pass on the full security library's `SecurityContext`
-    * The related `cds-integration-cloudsdk` module has been improved to pass on the full CDS `RequestContext`
-    * The now obsolete `SecurityContextThreadContextListener` has been removed.
-    * The `ScpNeoThreadContextDecorator` has been renamed to `ScpNeoThreadContextDecoratorInternal` and moved to `com.sap.cloud.sdk.cloudplatform.thread`. Additionally, it is no longer implementing the `ThreadContextDecorator` interface.
-  * Introduce a new API for running asynchronous tasks:
-    * `ThreadContextExecutorService` is an extension of `ExecutorService` and can be used to submit `Callable` and `Runnable` tasks.
-    * It will ensure the current (or a custom) `ThreadContext` is passed on to the newly scheduled `Thread`
-    * Since it is an `ExecutorService` it can be passed to other frameworks and libraries that create new Threads, e.g. Springs `@Async`
-    * `ThreadContextExecutors` gives static access to a single (default) instance of `ThreadContextExecutorService`
-    * The `DefaultThreadContextExecutorService` is also customizable, e.g. to use a different `ThreadPool`
-    * Update the `AbstractRequestEnsurer` to use a `ThreadContextExecutorService` by default to propagate the `ThreadContext` to its tasks.
-    * Update the `ResilienceDecorationStrategy` to use a `ThreadContextExecutorService` by default to propagate the `ThreadContext` to its tasks.  
-  
-</details>
+- The `ThreadContext` interface received the following changes:
+  - Method `Property<T> getProperty(String name)` has been replaced with `Try<T> getPropertyValue(String name)`
+  - Method `setPropertyIfAbsent` has been changed to now accept a `Callable<Property<?>>` instead of `Callable<?>`
+  - Enable `equals` and `hashCode` for `DefaultThreadContext`.
+  - Method `getThread()` has been removed
+- The `Property<T>` class has been expanded with convenience methods to decorate a callable:
+  - `Callable<Property<?>> decorateCallable( Callable<?> valueGenerator )`
+  - `Callable<Property<?>> decorateConfidentialCallable( Callable<?> valueGenerator )`
+- `ThreadContextExecutor` changes:
+  - `ThreadContext` instances are no longer implicitly shared when using `ThreadContextExecutor`. Instead:
+  - `fromCurrentContext()` will duplicate the current context into a new context object
+  - `fromNewContext()` will use a new, empty context object
+  - `fromCurrentOrNewContext()` behaves like `fromCurrentContext` but will fall back to a new context, if none is available
+  - `using(context)` will duplicate the provided context and its properties into a new context object
+  - Duplicating the current context solves persistence and concurrency issues with dynamic thread life cycles.
+  - Additionally, the `ThreadContext` is duplicated every time the `ThreadContextExecutor#execute` method is called.
+  - Therefore, the steps `beforeDestroy()` and `afterDestroy()` are removed from the `ThreadContextListener`.
+- `ThreadContextListener` has no longer access to values from a potential parent thread-context.
+  Instead, any values from a potential parent context are already present and can be altered.
+- The `ThreadContextDecorator` has been changed to now enable passing arbitrary `ThreadLocal` related data to new threads created via `DefaultThreadContextExecutorService`
+  - The existing `SecurityThreadContextDecorator` has been improved to pass on the full security library's `SecurityContext`
+  - The related `cds-integration-cloudsdk` module has been improved to pass on the full CDS `RequestContext`
+  - The now obsolete `SecurityContextThreadContextListener` has been removed.
+  - The `ScpNeoThreadContextDecorator` has been renamed to `ScpNeoThreadContextDecoratorInternal` and moved to `com.sap.cloud.sdk.cloudplatform.thread`. Additionally, it is no longer implementing the `ThreadContextDecorator` interface.
+- Introduce a new API for running asynchronous tasks:
+  - `ThreadContextExecutorService` is an extension of `ExecutorService` and can be used to submit `Callable` and `Runnable` tasks.
+  - It will ensure the current (or a custom) `ThreadContext` is passed on to the newly scheduled `Thread`
+  - Since it is an `ExecutorService` it can be passed to other frameworks and libraries that create new Threads, e.g. Springs `@Async`
+  - `ThreadContextExecutors` gives static access to a single (default) instance of `ThreadContextExecutorService`
+  - The `DefaultThreadContextExecutorService` is also customizable, e.g. to use a different `ThreadPool`
+  - Update the `AbstractRequestEnsurer` to use a `ThreadContextExecutorService` by default to propagate the `ThreadContext` to its tasks.
+  - Update the `ResilienceDecorationStrategy` to use a `ThreadContextExecutorService` by default to propagate the `ThreadContext` to its tasks.
 
+</details>
 
 ### Others
 
 The most notable remaining changes are:
 
-* The OpenAPI generator has been updated to version `6.0.1`
-* Minor class renaming in the modules `scp-workflow-cf` and `btp-business-rules`
-* Marking formerly experimental API as stable, most prominently the OData V4 API
+- The OpenAPI generator has been updated to version `6.0.1`
+- Minor class renaming in the modules `scp-workflow-cf` and `btp-business-rules`
+- Marking formerly experimental API as stable, most prominently the OData V4 API
 
 <details>
     <summary>Full list of other changes</summary>
 
-  * Update OpenAPI generator to version 6.0.1, bringing several improvements:
-    * The generator now conforms to a [list of reserved keywords](https://openapi-generator.tech/docs/generators/java/#reserved-words) to prevent naming clashes
-    * The generator now generates dedicated classes for some nested list types that were formerly only represented via `List<Object>`
-  * Enable customization of SAP Passport properties, e.g. 
-    * `SapPassportPostProcessor customProcessor = builder -> builder.withStaticPreviousSystemId("FooBar");`
-    * `SapPassportAccessor.setPassportFacade(new SapPassportFacade(new SapPassportFactory(customProcessor));`  
-  * The `RequestScopedHttpClientCache` has been removed in favor of the `DefaultHttpClientCache` (formerly known as `TimeScopedHttpClientCache` - see next note).
-    This change renders the `HttpClientsThreadContextListener` useless, which is why this class has also been removed.
-  * The `TimeScopedHttpClientCache` has been renamed to `DefaultHttpClientCache`.
-    It is replacing the removed `RequestScopedHttpClientCache` as the default implementation of `HttpClientCache` in the `HttpClientAccessor`.
-    Furthermore, the isolation strategy has been changed: Http clients are now also cached in case either the current tenant or principal (or both) are missing.
-  * Minor re-namings of generated classes in `btp-business-rules`
-    * `DecisionTableCell` to	`DecisionTableCellInner`
-    * `DecisionTableColumn` to	`DecisionTableColumnInner`
-    * `DecisionTableCondition` to	`DecisionTableColumnInnerCondition`
-    * `DecisionTableResult` to	`DecisionTableColumnInnerResult`
-    * `DecisionTableRow` to	`DecisionTableRowInner`
-    * `ElementValuesEnumeration` to	`ElementValuesEnumerationInner`
-    * `ErrorErrorDetails` to	`ErrorErrorDetailsInner`
-    * `StructureComponent` to	`StructureComponentInner`
-    * `StructureAssociation` to	`StructureComponentInnerAssociation`
-    * `StructureAssociationCondition` to	`StructureComponentInnerAssociationConditionInner`
-    * `StructureAssociationSource` to	`StructureComponentInnerAssociationConditionInnerSource`
-    * `StructureAssociationTarget` to	`StructureComponentInnerAssociationConditionInnerTarget`
-    * `TableParameter` to	`TableParameterInner`
-    * `TextBranches` to	`TextBranchesInner`
-    * `TextCondition` to	`TextBranchesInnerCondition`
-    * `TextOperation` to	`TextBranchesInnerOperationInner`
-    * `TextPredefined` to	`TextPredefinedInner`
-    * `StructureAssociationTarget` to	`VocabularyInputInner`
-  * Minor re-namings of generated classes in `scp-workflow-cf`
-    * `ErrorMessageErrorDetails` to	`ErrorMessageErrorDetailsInner`
-    * `AttachmentsContextGroups`to `AttachmentsContextGroupsValue`
-    * `AttachmentsContextRefs`to `AttachmentsContextGroupsValueRefsInner`
-    * `FormMetadataWorkflowDefinitions`to `FormMetadataWorkflowDefinitionsInner`
-    * `TechnicalErrorErrorDetails`to `TechnicalErrorErrorDetailsInner`
-  * Stabilize the following, formerly marked experimental, API:
-    * In package `com.sap.cloud.sdk.cloudplatform.resilience` stabilise:
-      * `CacheFilter` class
-      * `ResilienceDecorationStrategy.clearCache()`
-      * `ResilienceDecorator.clearCache()`
-    * In package `com.sap.cloud.sdk.frameworks.resilience4j` stabilise:
-      * `Resilience4jDecorationStrategy.clearCache()`
-      * `Resilience4jDecorationStrategy.Resilience4jDecorationStrategyBuilder` static class
-    * In package `com.sap.cloud.sdk.cloudplatform.connectivity` stabilise:
-      * Constructor `ScpCfDestinationLoader( Duration timeLimiterTimeout )`
-      * `ScpCfDestinationTokenExchangeStrategy` class and all related API
-      * `ScpCfServiceDestinationLoader` class and all related API
-      * `SecurityConfigurationStrategy` class and all related API
-      * `appendDestinationLoader` and `prependDestinationLoader` on `DestinationAccessor`
-      * `WrappedDestination` class
-    * In module `security`
-      * `Audience`
-      * `ClientCertificate`
-      * `DefaultPrincipal`
-      * `getAuthorizationsByAudience()` in `Principal`
-    * In module `security-scp-cf`
-      * `OAuth2ServiceProvider`
-      * `OAuth2ServiceSettings`
-      * `OAuth2TokenServiceCache`
-      * `SecurityContextThreadContextDecorator`
-    * In module `odata-v4-core`
-      * `BatchResponse` and `of()` in `BatchResponse`
-      * `BoundAction`
-      * `BoundFunction`
-      * `BoundOperation`
-      * `toRequest()` in `RequestBuilder`
-      * `SimpleProperty`
-      * `VdmComplex`
-      * `VdmEntity`
-      * `VdmEntitySet`
-      * `VdmEntityUtil`
-      * `VdmEnum`
-      * `VdmObject`
-    * In module `rfc`
-      * `RemoteFunctionCache`
-      * `SoapNamespace`  
-  
+- Update OpenAPI generator to version 6.0.1, bringing several improvements:
+  - The generator now conforms to a [list of reserved keywords](https://openapi-generator.tech/docs/generators/java/#reserved-words) to prevent naming clashes
+  - The generator now generates dedicated classes for some nested list types that were formerly only represented via `List<Object>`
+- Enable customization of SAP Passport properties, e.g.
+  - `SapPassportPostProcessor customProcessor = builder -> builder.withStaticPreviousSystemId("FooBar");`
+  - `SapPassportAccessor.setPassportFacade(new SapPassportFacade(new SapPassportFactory(customProcessor));`
+- The `RequestScopedHttpClientCache` has been removed in favor of the `DefaultHttpClientCache` (formerly known as `TimeScopedHttpClientCache` - see next note).
+  This change renders the `HttpClientsThreadContextListener` useless, which is why this class has also been removed.
+- The `TimeScopedHttpClientCache` has been renamed to `DefaultHttpClientCache`.
+  It is replacing the removed `RequestScopedHttpClientCache` as the default implementation of `HttpClientCache` in the `HttpClientAccessor`.
+  Furthermore, the isolation strategy has been changed: Http clients are now also cached in case either the current tenant or principal (or both) are missing.
+- Minor re-namings of generated classes in `btp-business-rules`
+  - `DecisionTableCell` to `DecisionTableCellInner`
+  - `DecisionTableColumn` to `DecisionTableColumnInner`
+  - `DecisionTableCondition` to `DecisionTableColumnInnerCondition`
+  - `DecisionTableResult` to `DecisionTableColumnInnerResult`
+  - `DecisionTableRow` to `DecisionTableRowInner`
+  - `ElementValuesEnumeration` to `ElementValuesEnumerationInner`
+  - `ErrorErrorDetails` to `ErrorErrorDetailsInner`
+  - `StructureComponent` to `StructureComponentInner`
+  - `StructureAssociation` to `StructureComponentInnerAssociation`
+  - `StructureAssociationCondition` to `StructureComponentInnerAssociationConditionInner`
+  - `StructureAssociationSource` to `StructureComponentInnerAssociationConditionInnerSource`
+  - `StructureAssociationTarget` to `StructureComponentInnerAssociationConditionInnerTarget`
+  - `TableParameter` to `TableParameterInner`
+  - `TextBranches` to `TextBranchesInner`
+  - `TextCondition` to `TextBranchesInnerCondition`
+  - `TextOperation` to `TextBranchesInnerOperationInner`
+  - `TextPredefined` to `TextPredefinedInner`
+  - `StructureAssociationTarget` to `VocabularyInputInner`
+- Minor re-namings of generated classes in `scp-workflow-cf`
+  - `ErrorMessageErrorDetails` to `ErrorMessageErrorDetailsInner`
+  - `AttachmentsContextGroups`to `AttachmentsContextGroupsValue`
+  - `AttachmentsContextRefs`to `AttachmentsContextGroupsValueRefsInner`
+  - `FormMetadataWorkflowDefinitions`to `FormMetadataWorkflowDefinitionsInner`
+  - `TechnicalErrorErrorDetails`to `TechnicalErrorErrorDetailsInner`
+- Stabilize the following, formerly marked experimental, API:
+  - In package `com.sap.cloud.sdk.cloudplatform.resilience` stabilise:
+    - `CacheFilter` class
+    - `ResilienceDecorationStrategy.clearCache()`
+    - `ResilienceDecorator.clearCache()`
+  - In package `com.sap.cloud.sdk.frameworks.resilience4j` stabilise:
+    - `Resilience4jDecorationStrategy.clearCache()`
+    - `Resilience4jDecorationStrategy.Resilience4jDecorationStrategyBuilder` static class
+  - In package `com.sap.cloud.sdk.cloudplatform.connectivity` stabilise:
+    - Constructor `ScpCfDestinationLoader( Duration timeLimiterTimeout )`
+    - `ScpCfDestinationTokenExchangeStrategy` class and all related API
+    - `ScpCfServiceDestinationLoader` class and all related API
+    - `SecurityConfigurationStrategy` class and all related API
+    - `appendDestinationLoader` and `prependDestinationLoader` on `DestinationAccessor`
+    - `WrappedDestination` class
+  - In module `security`
+    - `Audience`
+    - `ClientCertificate`
+    - `DefaultPrincipal`
+    - `getAuthorizationsByAudience()` in `Principal`
+  - In module `security-scp-cf`
+    - `OAuth2ServiceProvider`
+    - `OAuth2ServiceSettings`
+    - `OAuth2TokenServiceCache`
+    - `SecurityContextThreadContextDecorator`
+  - In module `odata-v4-core`
+    - `BatchResponse` and `of()` in `BatchResponse`
+    - `BoundAction`
+    - `BoundFunction`
+    - `BoundOperation`
+    - `toRequest()` in `RequestBuilder`
+    - `SimpleProperty`
+    - `VdmComplex`
+    - `VdmEntity`
+    - `VdmEntitySet`
+    - `VdmEntityUtil`
+    - `VdmEnum`
+    - `VdmObject`
+  - In module `rfc`
+    - `RemoteFunctionCache`
+    - `SoapNamespace`
+
 </details>
