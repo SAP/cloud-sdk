@@ -334,7 +334,7 @@ See also [AsciiDoc Recommended Practices](https://asciidoctor.org/docs/asciidoc-
 
 ❌ Don't put multiple sentences of prose into one line.
 
-✅ Follow the 'one sentence per line' paradigma.
+✅ Follow the 'one sentence per line' paradigm.
 
 # Language and Style
 
