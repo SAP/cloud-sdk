@@ -231,23 +231,3 @@ You may experience the follow-up error message: `"ODataConnectionException: Conn
   To solve the issue there are many tutorials on how to register certificates.
   However, if you require a quick solution for your local development environmment, you can add a special flag to your `"destinations"` environment variable: `"TrustAll" : "true"`.
   This will disable the certificate validation on your local runtime.
-
-## Olingo Dependency Conflicts
-
-:::info **Symptoms**
-In your CAP based application you encounter exception messages like `NoSuchMethodError` or `ClassDefNotFoundException` on methods or classes of `org.apache.olingo.odata2`.
-:::
-
-**Possible causes:**
-
-- The SAP Cloud SDK brings the dependency `com.sap.cloud.servicesdk:odata-v2-lib` which internally repackages Olingo.
-  If you don't rely on any deprecated OData V2 functionality of the SAP Cloud SDK this dependency is not required and can be excluded.
-
-  Add this exclusion in all places where `odata-v2-lib` is coming into your `mvn dependency:tree`:
-
-  ```xml
-  <exclusion>
-    <groupId>com.sap.cloud.servicesdk</groupId>
-    <artifactId>odata-v2-lib</artifactId>
-  </exclusion>
-  ```

@@ -101,12 +101,12 @@ module.exports = {
           type: 'docsVersionDropdown',
           position: 'right',
           docsPluginId: 'docs-js'
-        }
-        /*{
+        },
+        {
           type: 'docsVersionDropdown',
           position: 'right',
           docsPluginId: 'docs-java'
-        }*/
+        }
       ]
     },
     footer: {
