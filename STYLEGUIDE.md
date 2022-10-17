@@ -161,7 +161,7 @@ applications:
 
 Use ordinary font for the name of a project or product.
 
-❌ You will need the --Cloud Foundry CLI--
+❌ You will need the **Cloud Foundry CLI**
 
 ❌ You will need the `Cloud Foundry CLI`
 
