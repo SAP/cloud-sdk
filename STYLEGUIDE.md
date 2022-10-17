@@ -326,7 +326,7 @@ Unless a text relates to a specific version, do not use formats x.y or x.y.z
 In markdown, an empty line denotes the start of a new paragraph.
 Use paragraphs to structure your text into individual units.
 
-### Sentence per Line
+### Use One Sentence per Line
 
 A line break inside a paragraph is not visible in the rendered text.
 Using newlines after each sentence make it easier to restructure text and to view diffs of prose.
