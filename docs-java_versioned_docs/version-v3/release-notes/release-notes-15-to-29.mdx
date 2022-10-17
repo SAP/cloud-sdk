@@ -1,55 +1,3 @@
-## 3.30.0 - October 8, 2020
-
-[Javadoc](https://help.sap.com/doc/0a2f2acc08ef4bf4a21c1e346f249afe/1.0/en-US/index.html) | [Release blog](https://blogs.sap.com/?p=1207517) | [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.30.0)
-
-### Compatibility Notes
-
-To unify OData V2 client to OData V4 client APIs, the API of custom header configuration has been simplified and partially deprecated on OData V2 side:
-
-```java
-    requestV2
-        .withHeader("Authorization", "Basic user:secret")
-        .onRequestAndImplicitRequests() // deprecated
-        .withHeader("User-Agent", "Robot")
-        .onRequestOnly() // deprecated
-        .execute(httpDestination);
-
-    // ... still works, but should be migrated to:
-
-    requestV2
-        .withHeader("Authorization", "Basic user:secret")
-        .withHeader("User-Agent", "Robot")
-        .executeRequest(httpDestination);
-```
-
-The deprecated code ist still usable. No breaking changes in code or behavior are introduced.
-
-The internal fluent helper class `FluentHelperCustomHttpHeader` is changed to a deprecated interface. The related methods `getHeadersForRequestAndImplicitRequests` and `getHeadersForRequestOnly` are deprecated. The former modifier will be used by default in the future. Please use the existing `withHeader` and `withHeaders` methods without the stating a deprecated modifier.
-
-The internal protected methods `getHeadersForRequestOnly` and `getHeadersForRequestAndImplicitRequests` from abstract base class `FluentHelperBasic` are deprecated. Please use protected `getHeaders()` instead.
-
-The internal interface `CsrfTokenRetriever` defines another `retrieveCsrfToken` method with additional `headers` parameter to be passed in the HTTP request.
-
-### New Functionality
-
-Blockchain Business Services update:
-
-- It is now possible to send, receive, and validate notarizations. Sending a document will automatically also send its notarizations if the visibility configuration is set to include notarizations.
-
-### Improvements
-
-- In case a `DefaultErpHttpDestination` decorates an on-premise `HttpDestination` and the destination configuration
-  lacks a `sap-client` property, an information message is logged to raise awareness for potential authentication issues.
-- Dependency Updates:
-  - Update Spring Boot from `2.3.3.RELEASE` to `2.3.4.RELEASE`
-  - Update JUnit Jupiter from `5.6.2` to `5.7.0`
-  - Update Spring from `5.2.8.RELEASE` to `5.2.9.RELEASE`
-  - Update Spring Security from `5.3.4.RELEASE` to `5.4.0`
-  - Update Mockito from `3.5.10` to `3.5.11`
-- Maven Plugin Updates in Archetypes:
-  - Update Maven Surefire Plugin from `3.0.0-M4` to `3.0.0-M5`
-  - Update Maven Jacoco Plugin from `0.8.5` to `0.8.6`
-
 ## 3.29.1 - September 24, 2020
 
 [Javadoc](https://help.sap.com/doc/19a252e3d0314162a6faac1dad67a102/1.0/en-US/index.html) | [Release blog](https://blogs.sap.com/2020/09/25/new-versions-of-sap-cloud-sdk-3.29.1-for-java-and-1.28.2-for-javascript/) | [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.29.1)
@@ -723,3 +671,68 @@ Release date: July 16, 2020
   - `#` and `&` in filter and select expressions
   - `'` in string literals and in string parameters being passed in functions and `GetByKey` requests
   - `"` and `\` in search expressions
+
+## 3.15.1
+
+- Release date: March 12, 2020
+- Javadoc: <https://help.sap.com/doc/19838225037e4e52ba36d2bb95176126/1.0/en-US/index.html>
+- Release blog: <https://blogs.sap.com/?p=1060707>
+
+### Compatibility Notes
+
+- Use the library [XSUAA Token Client and Token Flow API](https://github.com/SAP/cloud-security-xsuaa-integration/tree/master/token-client) for handling communication with [XSUAA](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/ea0281368f11472b8d2b145a2a28666c.html) service instances.
+
+  - If you mock XSUAA service requests in your tests, some assertions might need to be updated. When using the new library, XSUAA request parameters should be passed as _HTTP body content_ instead of query arguments.
+  - The internally used types `SubdomainReplacer` and `DefaultSubdomainReplacer` became obsolete and were removed. The usage of this classes was replaced by the new library.
+  - The behavior of following methods in the utility class `XsuaaService` has been changed.
+    - `retrieveAccessTokenViaUserTokenGrant()`
+    - `retrieveAccessTokenHeaderViaUserTokenGrant()`
+      The old behavior is implemented in following methods.
+    - `retrieveAccessTokenViaUserTokenExchange()`
+    - `retrieveAccessTokenHeaderViaUserTokenExchange()`
+      The change was made in order to better reflect on the internal logic of these methods. In addition to "Token Grant", the "Token Exchange" flavored operation will perform an authorization request with "Refresh Token" flow, which is required for [Principal Propagation](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/67b0b94f09f2446598787eea0855e56b.html) when manually consuming the CloudFoundry _Connectivity Service_. Please update your code accordingly.
+
+- The module `com.sap.cloud.sdk.services:blockchain` has been renamed to `com.sap.cloud.sdk.services:blockchain-client-multichain` to better reflect its focus on the Multichain Service.
+
+### New Functionality
+
+- Stabilize OData v4 Virtual Data Model (VDM). Following parts are considered stable as of this release:
+  - `execute()` on all request builders (e.g., `CreateRequestBuilder)
+  - `select()`, `filter()`, `top()`, `skip()`, and `search()` on `GetAllRequestBuilder`
+  - `GetByKeyRequestBuilder.select()`
+  - `of()`, `and()`, `or()`, `not()` for defining a `SearchExpression`
+  - `includingFields()`, `replacingEntity()`, `modifyingEntity()` on `UpdateRequestBuilder`
+  - The generic exception class `ODataException`
+  - The classes `NavigationProperty`, `ComplexProperty` and `SimpleProperty`
+  - The OData v4 generator now generates `ComplexProperty` fields on entities that can be used to build queries. Single instances and collections of complex types are supported.
+- Provide support for unbound functions in OData v4. The OData v4 generator generates unbound functions at the service level.
+- The OData v4 generator now creates entity classes that are only referenced by navigation properties and functions (not part of an entity set).
+
+### Improvements
+
+- Introduce snakeyaml version `1.26` as direct dependency and exclude the one used by the jackson library to overcome the security vulnerability [CVE-2017-18640](https://bitbucket.org/asomov/snakeyaml/issues/377/allow-configuration-for-preventing-billion).
+- Replace the SAP Cloud SDK implementation for handling authentication and authorization within the SAP Cloud Platform landscape by the library [XSUAA Token Client and Token Flow API](https://github.com/SAP/cloud-security-xsuaa-integration/tree/master/token-client) version `2.5.1`. See the compatibility notes for details.
+- Update Dependencies
+  - [SAP Cloud Application Programming Model](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/00823f91779d4d42aa29a498e0535cdf.html) from version `1.37.1` to `1.38.0`
+  - Lombok from version `1.18.10` to `1.18.12`
+  - Caffeine from version `2.8.0` to `2.8.1`
+  - Commons CSV from version `1.7` to `1.8`
+  - Apache HTTP Components CSV from version `4.5.10` to `4.5.11`
+  - EclipseLink CSV from version `2.7.5` to `2.7.6`
+  - Liquibase CSV from version `3.6.3` to `3.8.6`
+  - Resilience4J CSV from version `1.2.0` to `1.3.1`
+  - JUnit CSV from version `5.5.2` to `5.6.0`
+  - JUnit Pioneer from version `0.5.1` to `0.5.4`
+  - Jetty from version `9.4.25.v20191220` to `9.4.26.v20200117`
+  - Spring Security from version `5.2.1.RELEASE` to `5.2.2.RELEASE`
+  - Hibernate Validator from version `6.0.17.Final` to `6.1.2.Final`
+  - Java JWT from version `3.9.0` to `3.10.0`
+  - AssertJ from version `3.14.0` to `3.15.0`
+  - Mockito from version `3.2.4` to `3.3.0`
+  - Wiremock from version `2.20.0` to `2.26.1`
+  - SAP Cloud Platform SDK For Neo Environment (Java EE 7 Web Profile TomEE 7) to version `1.69.18`
+
+### Fixed Issues
+
+- Fix an issue where the OData v2 URL query generation was not escaping single-quotes `'` in String literals correctly. This character can now be used as part of entity keys and filter expressions.
+- Fix an issue with `Decimal` OData values being formatted in unexpected scientific notation (e.g. `4.2e-7`) instead of expected decimal form (e.g. `0.00000042`). The solution is provided for serializing entity properties of Java type `BigDecimal`.

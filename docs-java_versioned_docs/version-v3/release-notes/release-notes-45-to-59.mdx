@@ -1,28 +1,3 @@
-## 3.60.0 - December 16, 2021
-
-[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.60.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
-
-### Compatibility Notes
-
-- Add deprecation notice to public methods of service classes in `s4hana-api-odata-onpremise-2020` and `s4hana-api-odata-v4-onpremise-2020`.
-  The deprecated API remains functional.
-  We recommend using the latest [OData API of your SAP S/4HANA On-Premise release](https://help.sap.com/viewer/product/SAP_S4HANA_ON-PREMISE/2021/en-US), which can be used with the new dependencies `s4hana-api-odata-onpremise` and `s4hana-api-odata-v4-onpremise` respectively.
-
-### Improvements
-
-- Dependency Updates:
-  - SAP dependency updates:
-    - Update [Neo JavaEE7 WP API](https://search.maven.org/search?q=g:com.sap.cloud%20a:neo-javaee7-wp-api) (`com.sap.cloud:neo-javaee7-wp-api`) from `1.110.3` to `1.111.8`
-    - Update [Neo Java Web API](https://search.maven.org/artifact/com.sap.cloud/neo-java-web-api) (`com.sap.cloud:neo-java-web-api`) from `4.14.6` to `4.15.7`
-  - Other dependency updates:
-    - Minor version updates:
-      - Update [JUnit Jupiter](https://search.maven.org/search?q=g:org.junit.jupiter%20a:junit-jupiter-engine) (`org.junit.jupiter:junit-jupiter-engine`) and [JUnit Vintage](https://search.maven.org/search?q=g:org.junit.vintage%20a:junit-vintage-engine) (`org.junit.vintage:junit-vintage-engine`) from `5.8.1` to `5.8.2`
-      - Update [Bouncycastle](https://search.maven.org/artifact/org.bouncycastle/bcpkix-jdk15on) (`org.bouncycastle:bcpkix-jdk15on, bcprov-jdk15on`) from `1.69` to `1.70`
-
-### Fixed Issues
-
-- Remove the superfluous WARN log message that appeared whenever a new mTLS HTTP client was built.
-
 ## 3.59.0 - December 02, 2021
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.59.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
@@ -710,3 +685,107 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
   - Update Reactor from `3.4.5` to `3.4.6`
   - Update Wiremock from `2.27.2` to `2.28.0`
   - Update Protobuf from `3.15.8` to `3.17.0`
+
+  ## 3.45.0 - May 20, 2021
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.45.0) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
+
+### New Functionality
+
+- Function import calls in OData V2 using the HTTP POST method can now be embedded in batch requests.
+  Within the batch request, the function import call is wrapped inside a change set since function imports can also alter business data.
+  You can execute a batch request containing a function import call as follows:
+
+  ```java
+  service.batch()
+    .beginChangeSet()
+    .addFunctionImport(service.callSomeFunction())
+    .endChangeSet()
+    .executeRequest(destination);
+  ```
+
+- For the [Generic OData Client](https://sap.github.io/cloud-sdk/docs/java/features/odata/generic-untyped-odata-client) filterable values and fields can now use the `in` operator in expressions.
+
+  ```java
+  StructuredQuery query;
+
+  // Age in (40,41,42)
+  query.filter(FieldReference.of("Age").in( 40,41,42 ));
+
+  // BestFriend in Friends
+  query.filter(FieldReference.of("BestFriend").in( FieldReference.of("Friends").asCollection()) );
+
+  // 'Green' in Colors
+  query.filter(ValueString.literal("Green").in( FieldReference.of("Colors").asCollection()) );
+  ```
+
+- For the [OData V4 Typed Client](https://sap.github.io/cloud-sdk/docs/java/features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java) filterable fields can now use the `in` operator in expressions.
+
+  ```java
+  GetAllRequestBuilder<Person> request;
+
+  // Age in (40,41,42)
+  request.filter(Person.AGE.in(40,41,42));
+
+  // BestFriend in Friends
+  query.filter(Person.TO_BEST_FRIEND.in( Person.TO_FRIENDS ) );
+  ```
+
+- Add new module `btp-business-rules` for out-of-the-box support of
+
+  - the [SAP Business Rules Authoring](https://api.sap.com/api/SAP_CF_BusinessRules_Repository/resource) service,
+
+  ```java
+  // requires dependency com.sap.cloud.sdk.services:btp-business-rules
+  HttpDestination authoringDestination =
+    ScpCfServiceDestinationLoader
+        .getDestinationForService(
+            ScpCfServiceDestinationLoader.CfServices.BUSINESS_RULES_AUTHORING,
+            "my-business-rules");
+
+  ProjectsApi projectsApi = new ProjectsApi(authoringDestination);
+  List<ProjectVersionObject> allProjects = projectsApi.readProjects();
+  ```
+
+  - and the [SAP Business Rules Execution](https://api.sap.com/api/SAP_CF_BusinessRules_Runtime_V2/resource) service.
+
+  ```java
+  // requires dependency com.sap.cloud.sdk.services:btp-business-rules
+  HttpDestination executionDestination =
+    ScpCfServiceDestinationLoader
+        .getDestinationForService(
+            ScpCfServiceDestinationLoader.CfServices.BUSINESS_RULES_EXECUTION,
+            "my-business-rules");
+
+  DeployUndeployRuleServiceApi deployService = new DeployUndeployRuleServiceApi(executionDestination);
+  List<WorkingsetRuleServiceDefinitionResult> deployedWorkingSets = deployService.readWorkingsetRuleServices();
+  ```
+
+- We updated the [OData type-safe client also known as a VDM](https://sap.github.io/cloud-sdk/docs/java/features/odata/overview/) to the [newest release 2105 of SAP S/4HANA Cloud](https://news.sap.com/2021/05/sap-s4hana-cloud-release-2105/).
+  This includes completely new services (available as usual in packages `com.sap.cloud.sdk.s4hana.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types.
+  The following two services were however not updated:
+  - (OData V2) Trial Balance - Read - `C_TRIALBALANCE_CDS`
+  - (OData V4) Bank - `BANK_0001`
+
+### Improvements
+
+- Using a Swagger file to generate OData V4 entity classes will now mark entities accessible on service root path as `VdmEntitySet`.
+  This enables the experimental API to [query the OData service over navigation properties directly](https://sap.github.io/cloud-sdk/docs/java/features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java#navigation-properties).
+  This feature was originally enabled for entities generated by EDMX metadata files in version [`3.20.0`](https://sap.github.io/cloud-sdk/docs/java/release-notes-sap-cloud-sdk-for-java#3200).
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update BTP Neo Tomcat 8 SDK from `3.124.9.2` to `3.127.13.3`
+    - Update Neo JavaEE 7 SDK from `1.95.7` to `1.96.13.1`
+    - Update BTP CF Logging from `3.3.0` to `3.4.0`
+  - Other dependency updates:
+    - Minor version updates:
+      - Update JSON Smart from `2.4.2` to `2.4.7`
+      - Update Togglz from `2.9.6` to `2.9.8`
+      - Update Fabric Gateway Java from `2.2.1` to `2.2.2`
+      - Update jOOQ from `3.14.8` to `3.14.9`
+      - Update Hibernate Core from `5.4.39.Final` to `5.4.40.Final`
+
+### Fixed issues
+
+- Using `null` in OData v2 filter expressions does no longer lead to a `NullPointerException` when executing the request.
+- Fix an edge case where some `BigDecimal` values where not serialized correctly in OData V2 requests.

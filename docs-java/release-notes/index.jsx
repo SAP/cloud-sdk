@@ -1,6 +1,6 @@
 import React from 'react';
-import Notes400To415 from './release-notes-4.0.0-to-4.15.0.mdx';
+import Notes0To14 from './release-notes-0-to-14.mdx';
 
-export function ReleaseNotes400To415() {
-    return <Notes400To415 />
+export function ReleaseNotes0To14() {
+    return <Notes0To14 />
 }
