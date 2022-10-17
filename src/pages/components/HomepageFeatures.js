@@ -12,7 +12,7 @@ const FeatureList = [
     Svg: require('../../../static/img/logo-java.svg').default,
     badge: <MvnBadge />,
     description: (
-      <>
+      <div data-nosnippet>
         The SAP Cloud SDK for Java allows you to develop, extend, and
         communicate with SAP solutions SAP S/4HANA Cloud, SAP SuccessFactors,
         and many others.
@@ -20,7 +20,7 @@ const FeatureList = [
         <a href="docs/java/getting-started">
           Get started with the SDK for Java.
         </a>
-      </>
+      </div>
     )
   },
   {
@@ -33,7 +33,7 @@ const FeatureList = [
       </>
     ),
     description: (
-      <>
+      <div data-nosnippet>
         The SAP Cloud SDK for JavaScript (and TypeScript) helps you build
         cloud-based apps and extensions to SAP solutions using the power and
         flexibility of Node.js and its ecosystem.
@@ -41,7 +41,7 @@ const FeatureList = [
         <a href="docs/js/getting-started">
           Get started with the SDK for JavaScript
         </a>
-      </>
+      </div>
     )
   }
 ];
