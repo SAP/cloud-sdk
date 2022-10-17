@@ -346,7 +346,6 @@ metadata:
 spec:
   serviceInstanceName: destination-service
   secretName: my-destination-service-secret
-  secretRootKey: my-destination-service-key
 ```
 
 2. Install the configuration via `kubectl apply -f destination-service.yml`.
@@ -371,7 +370,7 @@ spec:
 
       ```yml title="volumeMounts:"
       - name: my-destination-service-binding-volume
-        mountPath: '/etc/secrets/sapcp/destination/my-destination-service'
+        mountPath: '/etc/secrets/sapbtp/destination/my-destination-service'
         readOnly: true
       ```
 
@@ -406,7 +405,6 @@ metadata:
 spec:
   serviceInstanceName: my-identity-service
   secretName: my-identity-service-secret
-  secretRootKey: my-identity-service-key
 ```
 
 2. Repeat the same steps 2-5 from the previous section, always replacing `destination` with `identity`.
