@@ -90,11 +90,6 @@ module.exports = {
     },
     {
       type: 'category',
-      label: 'Extensions',
-      items: ['extensions/currency-conversion']
-    },
-    {
-      type: 'category',
       label: 'Releases',
       items: ['release-policy']
     },
