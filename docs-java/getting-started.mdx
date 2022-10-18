@@ -130,7 +130,7 @@ skipUsageAnalytics: false
 [INFO] Parameter: skipUsageAnalytics, Value: false
 [INFO] Parameter: gitignore, Value: .gitignore
 [INFO] Parameter: artifactId, Value: mydreamapp
-[INFO] Project created from Archetype in dir: /home/i531196/dev/temp/mydreamapp
+[INFO] Project created from Archetype in dir: /home/user/dev/temp/mydreamapp
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
@@ -159,7 +159,7 @@ Applications created with our SAP Cloud SDK Archetypes give you the possibility 
 ```bash
 mvn clean install
 cd application/
-mvn spring-boot:run
+mvn spring-boot:run -D"spring-boot.run.profiles"=local
 ```
 
 </TabItem>
@@ -235,12 +235,11 @@ If your application is running on **SAP Business Technology Platform** please ad
 </Tabs>
 
 If you want to connect to an **SAP S/4HANA** system via the **OData** protocol, you should also add a dependency to the client libraries of the SAP Cloud SDK.
-The dependencies differ with respect to the type of **SAP S/4HANA** system([**SAP S/4HANA Cloud**](https://api.sap.com/package/SAPS4HANACloud?section=Artifacts) or [**SAP S/4HANA On-premise 2020/2021**](https://api.sap.com/package/S4HANAOPAPI?section=Artifacts)):
+The dependencies differ with respect to the type of **SAP S/4HANA** system([**SAP S/4HANA Cloud**](https://api.sap.com/package/SAPS4HANACloud?section=Artifacts) or [**SAP S/4HANA On-premise**](https://api.sap.com/package/S4HANAOPAPI?section=Artifacts)):
 
 <Tabs groupId="s4" defaultValue="s4hc" values={[
 { label: 'SAP S/4HANA Cloud', value: 's4hc', },
-{ label: 'SAP S/4HANA On-premise 2020', value: 's4op2020', },
-{ label: 'SAP S/4HANA On-premise 2021', value: 's4op2021', }]}>
+{ label: 'SAP S/4HANA On-premise', value: 's4hop', }]}>
 
 <TabItem value="s4hc">
 
@@ -255,30 +254,7 @@ The dependencies differ with respect to the type of **SAP S/4HANA** system([**SA
 
 </TabItem>
 
-<TabItem value="s4op2020">
-
-```xml
-<dependency>
-    <groupId>com.sap.cloud.sdk.s4hana</groupId>
-    <artifactId>s4hana-api-odata-onpremise-2020</artifactId>
-</dependency>
-<dependency>
-    <groupId>com.sap.cloud.sdk.s4hana</groupId>
-    <artifactId>s4hana-api-odata-v4-onpremise-2020</artifactId>
-</dependency>
-<dependency>
- <groupId>com.sap.cloud.sdk.s4hana</groupId>
- <artifactId>s4hana-connectivity</artifactId>
-</dependency>
-<dependency>
- <groupId>com.sap.cloud.sdk.s4hana</groupId>
- <artifactId>s4hana-core</artifactId>
-</dependency>
-```
-
-</TabItem>
-
-<TabItem value="s4op2021">
+<TabItem value="s4hop">
 
 ```xml
 <dependency>
@@ -300,7 +276,6 @@ The dependencies differ with respect to the type of **SAP S/4HANA** system([**SA
 ```
 
 <!-- vale on -->
-
 </TabItem>
 </Tabs>
 
@@ -312,32 +287,6 @@ In case you have a **CAP application** which uses **multitenancy** features and/
   <artifactId>cds-integration-cloud-sdk</artifactId>
 </dependency>
 ```
-
-We also recommend that you include the following plugin:
-
-```xml
-<plugin>
-    <groupId>com.sap.cloud.sdk.plugins</groupId>
-    <artifactId>usage-analytics-maven-plugin</artifactId>
-    <version>use-latest-version-here</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>usage-analytics</goal>
-            </goals>
-            <configuration>
-                <skipUsageAnalytics>false</skipUsageAnalytics>
-                <generateSalt>true</generateSalt>
-            </configuration>
-        </execution>
-    </executions>
-</plugin>
-```
-
-It sends _[anonymized usage data](https://blogs.sap.com/2018/10/23/usage-analytics-s4sdk/)_ such as the SAP Cloud SDK version used and helps us with improving the SAP Cloud SDK.
-Furthermore, the plugin is capable of generating a report with useful information about the project setup.
-Invoking `diagnosis-report` will print out the SAP Cloud SDK modules used and their version but also other information like the Java and Maven version.
-This is helpful when you are facing an issue and are reaching out to us for help.
 
 ### Framework Integration
 
