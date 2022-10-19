@@ -1,0 +1,253 @@
+---
+id: sdk-java-troubleshooting-frequent-problems
+title: Troubleshooting SDK Java
+sidebar_label: Troubleshooting
+description: This article is a collection of frequently occurring symptoms and a short guidance on how to address them.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - debugging
+  - FAQ
+  - common mistakes
+  - problems
+---
+
+import MvnBadge from '@site/src/sap/sdk-java/MvnBadge';
+
+<MvnBadge />
+
+## Solving Common Problems
+
+- Check if you're using the latest [SAP Cloud SDK version](release-notes.mdx).
+  We release significant updates bi-weekly.
+- Try searching on [Stack Overflow](https://stackoverflow.com/questions/tagged/sap-cloud-sdk)
+  You can [ask there questions](https://stackoverflow.com/questions) as well by tagging it with `sap-cloud-sdk`
+- Check this page for known solutions for most frequent problems
+- Welcome to our [awesome support](/docs/overview/get-support) if nothing else helps.
+
+## Tenant or Principal Not Available
+
+:::info **Symptoms**
+Tenant or principal information is not available or an incorrect tenant is used.
+:::
+
+**Possible causes:**
+
+- A subscriber based JWT is passed in, but its validation fails, causing the SAP Cloud SDK to fall back to the provider account.
+  See [JWT validation fails](#json-web-token-validation-fails).
+
+- An operation is performed in an asynchronous manner without propagating the `ThreadContext`.
+  See [Running Asynchronous Operations](features/multi-tenancy/multi-tenancy-thread-context#running-asynchronous-operations).
+
+- The SAP Cloud SDK components are not registered as listeners on incoming requests.
+  See [Framework Support](getting-started#framework-integration).
+
+- There was no JWT in the authorization header.
+
+- A BAPI/RFC call was attempted while using resilience or multithreading capabilities of the SAP Cloud SDK.
+  See [Subscriber Tenant Is Not Found at Runtime](features/bapi-and-rfc/bapi-and-rfc-overview#subscriber-tenant-is-not-found-at-runtime)
+
+## Provider Instead of Subscriber Account Used
+
+:::info **Symptoms**
+Destinations are returned only for the provider account, but not for a subscriber account.
+:::
+
+**Possible causes:**
+
+- The SAP Cloud SDK defaults back to the provider account if no tenant information is available.
+  See the above section on [Tenant or Principal not available](#tenant-or-principal-not-available).
+
+## JSON Web Token Validation Fails
+
+:::info **Symptoms:**
+Logs show JWT validation exceptions, Tenant information is not available.
+:::
+
+**Possible causes:**
+
+- The SAP Cloud SDK version might be outdated.
+  Check with the [latest SAP Cloud SDK version](https://search.maven.org/artifact/com.sap.cloud.sdk/sdk-bom).
+
+## Connecting to an ERP System fails
+
+:::info **Symptoms:**
+The ERP system unexpectedly responds with _401: Unauthorized_ or _403: Forbidden_.
+:::
+
+**Possible causes:**
+
+- The SAP Client and Locale headers will be missing if the `Destination` is not an `ErpHttpDestination`.
+  See [Connecting to SAP S/4HANA](features/connectivity/sdk-connectivity-destination-service#connect-to-on-premise-s4hana-system).
+
+## Compilation Failures in the Generated OData Virtual Data Model Classes
+
+:::info **Symptoms:**
+Compilation fails due to missing _Getters_ and _Setters_ on entity objects.
+:::
+
+**Possible causes:**
+
+- Getters and Setters will be missing if [Lombok](https://projectlombok.org/) is not present in the dependency tree of your project.
+  See [Using the OData Generator](http://localhost:3000/cloud-sdk/docs/java/features/odata/generate-typed-odata-v2-and-v4-client-for-java#using-the-odata-generator).
+- Getters and Setters will be shown red if your IDE does not support Lombok. Hence, install the Lombok plugin for your IDE.
+  - For IntelliJ, install [the Lombok plugin](https://plugins.jetbrains.com/plugin/6317-lombok).
+  - For Eclipse, follow [this guide](https://projectlombok.org/setup/eclipse).
+
+## Compilation or Runtime Failures After Updating the SAP Cloud SDK Version
+
+:::info **Symptoms:**
+`MethodNotFound`, `ClassDefNotFound` or similar exceptions occur.
+:::
+
+**Possible causes:**
+
+- Conflicting dependency versions may cause such issues.
+  See the section on [Managing Dependencies](guides/dependencies.mdx#dealing-with-dependency-conflicts).
+
+## The Java App Has Good Performance on Your Local Machine but Utilizes 100% CPU on SAP Business Technology Platform, Cloud Foundry Environment
+
+:::info **Symptoms:**
+
+- The Java app executes multiple threads and runs with good performance on a powerful local machine.
+- The performance significantly drops after the app is deployed to SAP Business Technology Platform - Cloud Foundry and CPU utilization is always around 100%.
+
+:::
+
+**Possible causes:**
+
+- A powerful developer's machine usually has much better CPU and memory capacity than a standard cloud instance.
+- SAP BTP, Cloud Foundry environment provides 1/4 of CPU unit per every GB of memory.
+  With maximum memory per instance of 8 GB, you can get a maximum of 2 CPU cores.
+- All the limitations are subject to change.
+  Please check the latest details about [SAP BTP, Cloud Foundry Environment quotas and limitations](https://help.sap.com/viewer/3504ec5ef16548778610c7e89cc0eac3/Cloud/en-US/9c7092c7b7ae4d49bc8ae35fdd0e0b18.html#loio9809fa4f02cb4696baea5c23d6eaac94)
+- If even after achieving the maximum vertical scale of your instance, your app doesn't reach the desired performance level, try to optimize it.
+  Consider scaling it horizontally or different custom solutions to boost performance where it lags.
+
+## Request via Cloud Connector Fails with HTTP 407
+
+:::info **Symptoms**
+In your application log you find the HTTP error code 407 and the request targets an On-Premise system via the SAP Cloud Connector.
+:::
+
+**Possible causes:**
+
+- You are caching the `HttpDestination` instance in your application code instead of retrieving it for each request.
+  Since the `HttpDestination` object stores the JWT needed for passing the SAP Cloud Connector, the JWT does not get refreshed after its expiration.
+
+  To solve this issue, retrieve the `HttpDestination` for each request again with the `DestinationAccessor` API.
+  There is no need to worry about performance, because the SAP Cloud SDK uses an optimized built-in cache for Destinations.
+
+## `No Such Method: com.google.gson.JsonParser.parseReader`
+
+:::info **Symptoms**
+In your application log you find exception `java.lang.NoSuchMethodError: com.google.gson.JsonParser.parseReader(Lcom/google/gson/stream/JsonReader;)Lcom/google/gson/JsonElement;`.
+:::
+
+**Possible causes:**
+
+- Your project uses the [GSON library](https://github.com/google/gson) in version `2.8.5` or earlier.
+  This could happen if you do not use the SAP Cloud SDK Bill-of-Material.
+  To solve this issue, update GSON to at least version `2.8.6`.
+
+## `Class Not Found: JsonEncoder`
+
+:::info **Symptoms**
+Your application does not start and fails with the error message `"Could not create component [encoder] of type [com.sap.hcp.cf.logback.encoder.JsonEncoder] java.lang.ClassNotFoundException: com.sap.hcp.cf.logback.encoder.JsonEncoder"`.
+:::
+
+**Possible causes:**
+
+- Your project uses the [Logback library](http://logback.qos.ch/) for application logging.
+  The required dependency `com.sap.hcp.cf.logging:cf-java-logging-support-logback` is missing.
+  To solve this issue, add this dependency to your project.
+  Also, use the SAP Cloud SDK Bill-Of-Material in your POM to manage the version of this dependency.
+
+## OData Request Rejected by or Failed in OData Service
+
+:::info **Symptoms**
+Your OData request returns with a 400 (bad request) or 500 (server error) HTTP code.
+:::
+
+**Possible causes:**
+
+- The service may not be implemented correctly or deviate from the OData standard / conventions.
+
+  Check the request being sent out ([looking at HTTP logs](./guides/logging-overview)) against the [OData documentation](https://www.odata.org/documentation/).
+  If the service deviates from OData conventions, try using the more [low-level generic OData client](./features/odata/generic-untyped-odata-client) which gives you more flexibility to adapt requests.
+
+- The SAP Cloud SDK may send an incorrect OData request.
+
+  Verify that the request the SAP Cloud SDK sends out ([looking at HTTP logs](./guides/logging-overview)) does not conform to the [OData documentation](https://www.odata.org/documentation/).
+  In that case please [raise an issue on our GitHub](https://github.com/SAP/cloud-sdk/issues/new?assignees=&labels=Java&template=sap-cloud-sdk-for-java-issue.md&title=).
+
+  In addition, you can leverage the [low-level generic OData client](./features/odata/generic-untyped-odata-client) which gives you more flexibility to adapt requests to overcome potential issues with the typed APIs.
+
+## `java.lang.IllegalArgumentException: JClass name empty`
+
+:::info **Symptoms**
+While generating a type-safe API client for an OData service, you encounter the exception message `"java.lang.IllegalArgumentException: JClass name empty"`.
+:::
+
+**Possible causes:**
+
+- The service specification (`EDMX` file) contains an entity that is named `Type`, `Type_`, or just `_`.
+
+  By default, both the OData V2 and V4 VDM generators use the `S4HanaNamingStrategy` to generate valid Java names from the given service specification.
+  Hereby, it removes pre- and suffixes that are commonly used in SAP service specifications, such as the suffixes `Type` and `_` for entities.
+  In special cases, where an entity name consist of those suffixes only, that logic leads to the generation of an empty class name, which, in turn, then results in the observed exception.
+
+  To solve that issue, you can change the naming strategy used by the generator.
+  The SAP Cloud SDK additionally includes the `com.sap.cloud.sdk.datamodel.odata.utility.SimpleNamingStrategy` out-of-the-box, which does not perform any unnecessary pre- and suffix removal.
+
+## `DestinationAccessException: Failed to read authentication token. The destination service responded with an error: Could not verify the provided CSRF token because your session was not found`
+
+:::info **Symptoms**
+When running `Destination#asHttp()` you encounter an exception message like `"DestinationAccessException: Failed to read authentication token. The destination service responded with an error: Could not verify the provided CSRF token because your session was not found"`.
+:::
+
+**Possible causes:**
+
+- The Destination Service on Cloud Foundry is unable to generate an authentication token that will be used in later requests.
+  In the service configuration, the destination entry references a token service endpoint that could not communicate correctly with the Destination Service.
+
+  To solve that issue, please check every field in the destination configuration for valid input.
+  Please find the official [documentation from the Destination Service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/42a0e6b966924f2e902090bdf435e1b2.html) for more details.
+  The value for field "Token Service URL" may require the full service endpoint path, including e.g. `/oauth/token`.
+
+## `SSLHandshakeException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target`
+
+:::info **Symptoms**
+When accessing an On-Premise system from your local machine the HTTP client is unable to establish a secure connection to the target server.
+You may experience the follow-up error message: `"ODataConnectionException: Connection was aborted."`
+:::
+
+**Possible causes:**
+
+- To validate the SSL connection your Java runtime would need to check the chain of trusted certificates.
+  Please review your local Java trust store.
+
+  To solve the issue there are many tutorials on how to register certificates.
+  However, if you require a quick solution for your local development environmment, you can add a special flag to your `"destinations"` environment variable: `"TrustAll" : "true"`.
+  This will disable the certificate validation on your local runtime.
+
+## Olingo Dependency Conflicts
+
+:::info **Symptoms**
+In your CAP based application you encounter exception messages like `NoSuchMethodError` or `ClassDefNotFoundException` on methods or classes of `org.apache.olingo.odata2`.
+:::
+
+**Possible causes:**
+
+- The SAP Cloud SDK brings the dependency `com.sap.cloud.servicesdk:odata-v2-lib` which internally repackages Olingo.
+  If you don't rely on any deprecated OData V2 functionality of the SAP Cloud SDK this dependency is not required and can be excluded.
+
+  Add this exclusion in all places where `odata-v2-lib` is coming into your `mvn dependency:tree`:
+
+  ```xml
+  <exclusion>
+    <groupId>com.sap.cloud.servicesdk</groupId>
+    <artifactId>odata-v2-lib</artifactId>
+  </exclusion>
+  ```

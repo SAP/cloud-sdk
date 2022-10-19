@@ -1,0 +1,134 @@
+---
+id: release-policy
+title: Minor and Major Release Policy for the SAP Cloud SDK for Java
+sidebar_label: Release Policy
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+  - upgrade
+  - strategy
+  - major
+  - release
+  - support
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+## Planned Major Releases
+
+| Version | Status      | Release Date | Planned scope | Upgrade guide |
+| :------ | ----------- | :----------- | :------------ | ------------- |
+| 2.x     | Deprecated  | May 2017     | N/A           | N/A           |
+| 3.x     | Released GA | August 2019  | N/A           | N/A           |
+| 4.x     | Planned     | July 2022    | TBD           | TBD           |
+| 5.x     | Planned     | January 2023 | TBD           | TBD           |
+
+## Minor and Major Release Policy
+
+We follow [Semantic Versioning](https://semver.org/) for our releases.
+
+### Minor Release Schedule
+
+Our regular **minor version** release happens every **two weeks**.
+It includes new functionality, fixes, and maintenance updates that we communicate in the [release notes](./release-notes.mdx).
+
+We sometimes change our release frequency to:
+
+- Provide a patch version to the latest minor release when a critical bug fix is necessary.
+- Accommodate a longer development cycle.
+  We can extend an interval between **minor version** releases.
+
+:::tip Upgrading between minor releases
+
+Usually, an upgrade between minor releases does not involve any effort.
+All the changes are incremental and backward compatible.
+We do not remove any deprecated code before the next major release.
+
+:::
+
+### Major Release Schedule
+
+We intend to release a new **major version** every **six months** to introduce significant feature upgrades, refactor existing features, and clean up deprecated code.
+
+- **Major version** release interval is indicative and may change.
+- We will announce planned date and scope of the next **major version** release in this [document](#planned-major-release-schedule) and [release notes](./release-notes.mdx) at least 3 months before the planned release date.
+
+:::caution Upgrading between major versions
+
+Major releases include incompatible API changes.
+An upgrade will usually involve a certain effort to make your code benefit from new APIs.
+We intend to minimize this effort between adjacent major versions.
+
+- We provide a step-by-step upgrade guide for each major version.
+- Following the upgrade steps should take less than a day of development effort regardless of the project size.
+
+:::
+
+### Documentation
+
+The documentation is always up to date with the **latest major release**.
+We provide documentation for the two most recent major versions at the same time.
+We will use tabs to demonstrate a difference between them where required.
+See example below
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 4.x', value: 'major' }, { label: 'SDK 3.x', value: 'deprecated' } ]}>
+
+<TabItem value="major">
+
+```
+
+Major version documentation
+
+```
+
+</TabItem>
+
+<TabItem value="deprecated">
+
+```
+
+Deprecated version documentation
+
+```
+
+</TabItem>
+
+</Tabs>
+
+With every new major version release, the oldest documented version is removed from the documentation portal.
+
+:::tip
+
+We will always provide a branch with the latest snapshot of the documentation before the major version release.
+You can use that branch to host documentation for the earlier version locally.
+
+:::
+
+### Maintenance and Support
+
+- We provide new features and fixes **only** for the **latest major release** of the SAP Cloud SDK for Java.
+- We continue to [support](/docs/overview/get-support) customers using any version of the SAP Cloud SDK for Java.
+  In case the identified solution resides in upgrading to the newer version of the SAP Cloud SDK - it will be the default recommended solution.
+
+:::tip Upgrade regularly
+
+We recommend upgrading to the latest major version immediately or at least not later than within 3 months after its release.
+This guarantees:
+
+- easy upgrade path
+- compatibility to the latest features of SAP Business Technology Platform
+- protection of your development process from disruptions in the future.
+  Upgrading gets more complex if you have to migrate between more than one major version.
+
+:::
+
+## Support and Feedback
+
+Let us know if you have any questions about our release policy.
+We usually respond within one day.
+Check our [support channels](/docs/overview/get-support) and choose the one working best for you.

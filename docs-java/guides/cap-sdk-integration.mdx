@@ -83,12 +83,6 @@ Add the respective SAP Cloud SDK dependencies to the POM file under the `srv` di
 <dependency>
     <groupId>com.sap.cloud.sdk.s4hana</groupId>
     <artifactId>s4hana-all</artifactId>
-    <exclusions>
-        <exclusion>
-		    <groupId>com.sap.cloud.servicesdk</groupId>
-		    <artifactId>odata-v2-lib</artifactId>
-        </exclusion>
-    </exclusions>
 </dependency>
 ```
 
@@ -98,7 +92,7 @@ Please use the same exclusion also on any other OData V2 related dependencies fr
 
 :::note Version information controlled through the SAP Cloud SDK BOM
 
-Note that the `version` tags can be omitted, because the previously added the SAP Cloud SDK BOM controls the version of all the SAP Cloud SDK modules.
+Note that the `version` tags can be omitted, because the SAP Cloud SDK BOM controls the version of all the SAP Cloud SDK modules.
 That is, you only need to increase the version of the BOM and all modules get updated automatically.
 
 :::
@@ -122,8 +116,17 @@ We'll add a respective integration dependency to the POM file under the `srv` di
 </dependency>
 ```
 
+:::danger Caution
+
+The `executeWith...()` methods offered by the _Accessor_ classes (e.g. `TenantAccessor`) are currently not supported when using the CAP integration.
+To still manipulate the request context, please refer to [the CAP documentation](https://cap.cloud.sap/docs/java/request-contexts#defining-requestcontext).
+
+:::
+
 :::note Multitenancy Integration with CAP
 You can learn more about how the multitenancy of the SAP Cloud SDK integrates with CAP in [this article](../features/multi-tenancy/multi-tenancy-thread-context#how-is-a-thread-context-created).
+Please make sure you are using a CDS version that is up to date.
+For the integration at least `1.28` is required.
 :::
 
 :::info
@@ -141,57 +144,6 @@ We'll annotate the Spring Boot application class which is annotated with `@Sprin
 ```
 
 Make sure that you also add the package name of your application.
-
-</details>
-:::
-
-### Wrap Asynchronous Calls
-
-If your app uses asynchronous calls which spawn new threads or reuse pooled threads, the call must be decorated with the respective wrapper classes.
-This decoration is required to forward thread-specific information from the calling thread to the asynchronously running thread.
-
-For this purpose, you need to use the `RequestContextRunner` from [CAP](https://cap.cloud.sap/docs/java/provisioning-api#threading-requestcontext)
-
-Example:
-
-```java
-EventContext context;
-RequestContextRunner cdsContextRunner = context.getCdsRuntime().requestContext();
-
-Callable<Object> task = () -> cdsContextRunner.run(() -> ... ));
-```
-
-:::caution Caution
-The `executeWith` methods of _Accessor_ classes cannot be currently used to execute asynchronous operations in the CAP context.
-
-Please note that the `RequestScopedHttpClientCache` which is the default being used by the SAP Cloud SDK cannot work with CAP integration, please use [`TimeScopedHttpClientCache`](../features/connectivity/sdk-connectivity-http-client#caching-httpclient) instead for caching `HttpClient`s.
-:::
-
-:::info Info
-In case you are using CAP/CDS versions earlier than `1.23.0`, additional steps are required.
-
-<details>
-<summary>Wrap asynchronous calls </summary>
-
-You need to additionally wrap your calls using the `ThreadContextExecutor` from the SAP Cloud SDK (refer to the [ThreadContext documentation](https://sap.github.io/cloud-sdk/docs/java/features/multi-tenancy/multi-tenancy-thread-context/#what-is-a-thread-context)) in conjunction with the `RequestContextRunner` from [CAP](https://cap.cloud.sap/docs/java/provisioning-api#threading-requestcontext).
-
-Hence, the code snippet from above would look like:
-
-```java
-EventContext context;
-ThreadContextExecutor threadContextExecutor = new ThreadContextExecutor();
-RequestContextRunner cdsContextRunner = context.getCdsRuntime().requestContext();
-
-//If the operation returns something
-Callable<Object> task = () -> cdsContextRunner.run(ctx -> {
-                                return threadContextExecutor.execute(() -> operation());
-                                });
-
-//If the operation does not return something
-Callable<Object> task = () -> cdsContextRunner.run(ctx -> {
-                                threadContextExecutor.execute(() -> operation());
-                                });
-```
 
 </details>
 :::

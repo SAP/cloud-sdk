@@ -37,6 +37,11 @@ module.exports = {
             'features/openapi/execute-openapi-request'
           ]
         },
+        {
+          type: 'category',
+          label: 'Mail Client',
+          items: ['features/mail-client/mail-client']
+        },
         'features/error-handling',
         'features/logging',
         'features/eslint-configuration'
@@ -79,13 +84,9 @@ module.exports = {
             'tutorials/address-manager/read-addresses',
             'tutorials/address-manager/change-addresses'
           ]
-        }
+        },
+        'tutorials/multi-tenant-application'
       ]
-    },
-    {
-      type: 'category',
-      label: 'Extensions',
-      items: ['extensions/currency-conversion']
     },
     {
       type: 'category',
@@ -98,6 +99,6 @@ module.exports = {
       items: ['video/demo-of-cloud-sdk-for-javascript-with-calm-and-cap']
     },
     'release-notes-sap-cloud-sdk-for-javascript-and-typescript',
-    'frequently-asked-questions'
+    'support-js'
   ]
 };

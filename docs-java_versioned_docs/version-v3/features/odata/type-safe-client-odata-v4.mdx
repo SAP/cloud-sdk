@@ -1,0 +1,738 @@
+---
+id: use-typed-odata-v4-client-in-sap-cloud-sdk-for-java
+title: Use the OData v4 Type-safe Client API
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: OData v4 Client API
+description: Use SAP Cloud SDK for Java to build and run OData v4 requests in a type-safe way.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - odata
+  - java
+  - VDM
+  - generate
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import NotImplemented from '@site/src/components/NotImplemented.js';
+
+## Prerequisites
+
+To leverage the type-safe OData v4 client, you need to add following dependencies to the `dependencies` section of your `pom.xml`:
+
+<Tabs groupId="odataClientType" defaultValue="PregeneratedCloud" values={[ { label: 'Pregenerated Clients (Cloud)', value: 'PregeneratedCloud' }, { label: 'Pregenerated Clients (On-Premise)', value: 'PregeneratedOnPremise' }, { label: 'Self Generated Clients', value: 'Selfgenerated' } ]}>
+
+<TabItem value="Selfgenerated">
+
+```xml
+<dependency>
+    <groupId>com.sap.cloud.sdk.datamodel</groupId>
+    <artifactId>odata-v4-core</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <scope>provided</scope>
+</dependency>
+<dependency>
+    <groupId>javax.inject</groupId>
+    <artifactId>javax.inject</artifactId>
+    <scope>provided</scope>
+</dependency>
+```
+
+</TabItem>
+
+<TabItem value="PregeneratedCloud">
+
+```xml
+<dependency>
+    <groupId>com.sap.cloud.sdk.s4hana</groupId>
+    <artifactId>s4hana-api-odata-v4</artifactId>
+</dependency>
+```
+
+</TabItem>
+
+<TabItem value="PregeneratedOnPremise">
+
+```xml
+<dependency>
+    <groupId>com.sap.cloud.sdk.s4hana</groupId>
+    <artifactId>s4hana-api-odata-v4-onpremise</artifactId>
+</dependency>
+```
+
+</TabItem>
+</Tabs>
+
+:::tip Discover services on the SAP API Business Hub
+
+If you would like to consume a specific service, try searching for it on the [SAP API Business Hub](https://api.sap.com/) and visit an **SAP Cloud SDK** tab on the landing page of that service.
+There you will find detailed instructions on how to use the SAP Cloud SDK to get a client library for that specific service.
+Learn more about the integration with the SAP API Business Hub in the [blog](https://blogs.sap.com/2021/09/17/the-sap-cloud-sdk-integrates-with-the-sap-api-business-hub/).
+
+:::
+
+## Build and Execute OData Requests With the Typed OData Client
+
+The typed OData v4 client allows building type-safe OData v4 requests for a given service.
+The Java classes represent the _data model_ and the available _operations_ of the service.
+As a consequence, all requests that are built through the typed OData client are not only _syntactically valid_ but also _semantically valid_.
+
+:::info Generic OData Client
+The type-safe client may in some situations not be suitable for your needs.
+For instance a service might not fully conform to the OData standard, forcing you to perform customized requests.
+Or the typed API doesn't support a specific OData feature just yet.
+
+For such cases we recommend leveraging our [low-level generic OData client](./generic-untyped-odata-client).
+Or to fallback directly to the HTTP client level if that's not enough.
+
+In all the other situations the type-safe client is preferable and considered best practice.
+:::
+
+## Using the Fluent API
+
+The typed OData v4 client consists of _service_ and _data model_ classes.
+The service classes mirror the API provided by the OData service and serve as entry point for creating requests.
+They provide a builder that allows for fluently adding further parameters.
+
+To execute HTTP requests the OData client uses _Destinations_ and are documented in more detail <a href={useBaseUrl('docs/java/features/connectivity/sdk-connectivity-destination-service')}>here</a>.
+The following code snippets assume that such a destination is in place:
+
+```java
+HttpDestination destination;
+```
+
+On an abstract level requests are generally build up according to the following pattern:
+
+```java
+result = service.operation()
+    .withParameter(...)
+    .execute(destination);
+```
+
+- `operation` corresponds to the service's capabilities for entities e.g. `createEntity` or `readEntities`.
+- `withParameter` corresponds to:
+  - OData v4 query parameters e.g. `filter` or `orderby`
+  - Or other modifiers like custom headers
+- Which OData v4 parameters are available depends on the operation.
+  For example, when updating entities the `$filter` parameter is not available.
+
+Below different OData features are documented using the [Business Partner Service](https://api.sap.com/api/API_BUSINESS_PARTNER/resource) on SAP S/4HANA as an example.
+It is represented by the `BusinessPartnerService` class which is part of the pregenerated type-safe client for SAP S/4HANA also known as the Virtual Data Model (VDM).
+The following code snippets assume that an instance of this service is set up:
+
+```java
+BusinessPartnerService service = new DefaultBusinessPartnerService();
+```
+
+## OData Features
+
+### Basic CRUD Operations
+
+Create, Read, Update and Delete operations on entities are build from the associated service class:
+
+```java
+service.createBusinessPartner(partner);
+service.getBusinessPartnerByKey("id");
+service.getAllBusinessPartner();
+service.updateBusinessPartner(partner);
+service.deleteBusinessPartnerAddress(address);
+```
+
+Each of the above statements returns a builder object that allows for specifying certain request parameters, depending on the operation.
+
+The following query parameters and request options are available for these operations:
+
+Query parameters:
+
+- `$select`, `$expand` and `$search` are available when reading a single value or multiple entities
+- `$filter`, `$top`, `$skip` and `$orderby` are available only when reading a collection of entities
+
+Request parameters:
+
+- Update operations allow to set either `modifyingEntity()` or `replacingEntity()` which will result in `HTTP PATCH` or `HTTP PUT` respectively.
+  By default, entities are modified via `PATCH`.
+- Update and delete operations allow modifying how ETags are handled:
+  - By default, an ETag is sent if one is present on the entity being modified.
+  - `matchAnyVersionIdentifier()` will instead always send a `*` which acts as a wildcard to match all ETags.
+  - `ignoreAnyVersionIdentifier()` will ensure that no ETag is sent.
+- All operations allow for adding custom headers via `withHeader(...)`
+
+#### Handling of ETags
+
+An [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag) is a version identifier that is often used to implement an optimistic locking mechanism.
+The SAP Cloud SDK will try to read version identifiers from responses and set them when sending OData requests.
+
+Consider the following example:
+
+```java
+partner = service.getBusinessPartnerByKey("id")
+                 .execute(destination);
+response = service.updateBusinessPartner(partner)
+                 .execute(destination);
+// update the partner reference
+partner = response.getModifiedEntity();
+```
+
+On the read request, the SAP Cloud SDK will automatically try to extract the version identifier from the response and store it within the `partner` object.
+When updating it will be taken from there and sent with the `If-match` header.
+
+:::note
+If a service requires this header to be sent: Fetching the entity from the service first is essential to ensure that the ETag is present and up to date.
+:::
+
+### Handling of Cross-Site Request Forgery Tokens
+
+For create, update and delete requests the SAP Cloud SDK will try to send a [cross-site request forgery (CSRF) token](https://en.wikipedia.org/wiki/Cross-site_request_forgery#Cookie-to-header_token).
+Upon execution, the request will try to fetch a token first before issuing the create request.
+Many services require this behavior for security reasons.
+However, the create request will be made without a CSRF token if none could be obtained.
+
+### Select
+
+When reading entities, the API offers `select( ... )` on the builders.
+Through it, the query parameters `$select` and `$expand` are set.
+It takes in the properties of the entity being queried.
+Primitive properties are added to `$select` while complex and navigational properties are added to `$expand`.
+This handling is done automatically by the SAP Cloud SDK.
+
+The properties that can be selected or expanded are represented via static _fields on the entity_ class.
+There will be a field for each property.
+E.g. for the business partner entity one can find `BusinessPartner.FIRST_NAME` and `BusinessPartner.LAST_NAME`.
+
+```java
+service.getBusinessPartnerByKey("id")
+    .select(BusinessPartner.FIRST_NAME, BusinessPartner.LAST_NAME, BusinessPartner.TO_BUSINESS_PARTNER_ADDRESS)
+    .execute(destination);
+```
+
+The above translates to the following query parameters:
+
+```
+$select=FirstName,LastName&$expand=to_BusinessPartnerAddress
+```
+
+OData v4 allows for formulating nested, fully featured queries on complex and navigational properties.
+Querying nested objects is possible within an expand statement.
+That means the following query is possible:
+
+```java
+service.getBusinessPartnerByKey("id")
+    .select(BusinessPartner.TO_BUSINESS_PARTNER_ADDRESS
+        .select(BusinessPartnerAddress.CITY_CODE, BusinessPartnerAddress.COUNTRY)
+        .filter(BusinessPartnerAddress.CITY_CODE.notEqualTo("1234"))
+        .orderBy(BusinessPartnerAddress.COUNTRY.desc())
+    )
+    .execute(destination);
+```
+
+The above translates to the following `expand` query parameter:
+
+```
+$expand=to_BusinessPartnerAddress($select=CityCode,Country;$filter=CityCode eq '1234';$orderby=Country desc)
+```
+
+### Filter
+
+When operating on a collection of entities, the API offers `filter( ... )` on the builders.
+It directly corresponds to the `$filter` parameter of the request.
+Filters are also built via the static property fields on entities.
+
+The following example:
+
+```java
+/*
+Get all business partners that either:
+  - Have first name 'Alice' but not last name 'Bob'
+  - Or have first name 'Mallory'
+*/
+service.getAllBusinessPartner()
+    .filter(BusinessPartner.FIRST_NAME.equalTo("Alice")
+        .and(BusinessPartner.LAST_NAME.notEqualTo("Bob"))
+        .or(BusinessPartner.FIRST_NAME.equalTo("Mallory"))
+    )
+    .execute(destination);
+```
+
+Will translate to this filter parameter:
+
+```
+$filter=(((FirstName eq 'Alice') and (LastName ne 'Bob')) or (FirstName eq 'Mallory'))
+```
+
+Take note of the order of `and` and `or`.
+As `or` is invoked on the result of `and` it will form the outer expression while `and` is an inner expression in the first branch of `or`.
+
+To achieve a different order with `and` as the top level statement one would nest the `or` within `and(...)`:
+
+```java
+.and(BusinessPartner.LAST_NAME.notEqualTo("Bob")
+    .or(BusinessPartner.FIRST_NAME.equalTo("Mallory"))
+)
+```
+
+#### Available Filter Expressions
+
+<!-- TODO: Explain filters on complex types and navigational properties -->
+
+The [OData v4 standard](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionfilter) allows for a wide range of filter expressions.
+A detailed list of what is available in the SAP Cloud SDK can be obtained from [the Javadoc](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/datamodel/odatav4/expression/package-summary.html).
+The functionality can also be discovered through the fluent API.
+
+The below example leverages OData v4 exclusive features to build a more complex request:
+
+```java
+/*
+Fetch all business partners where:
+- the last name is at least twice as long as the first name
+- AND the combined string of first and last name does not contain 'bob'
+*/
+service.getAllBusinessPartner()
+    .filter(BusinessPartner.FIRST_NAME.length().multiply(2).lessThan(BusinessPartner.LAST_NAME.length())
+        .and(BusinessPartner.FIRST_NAME.concat(BusinessPartner.LAST_NAME).contains("bob"))
+    )
+    .execute(destination);
+```
+
+### OData Functions and Actions
+
+OData defines bound and unbound [functions and actions](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_Operations).
+
+#### Unbound Operations
+
+Unbound functions and actions can be performed via their respective methods on the service:
+
+```java
+service.myFunction("paramValue1", "paramValue2")
+      .execute(destination);
+```
+
+#### Bound Operations
+
+Functions and actions bound to entity types can be invoked by navigating to any instance or collection of the entity type on the service.
+
+For functions use `applyFunction`:
+
+```java
+Entity myEntity;
+service.forEntity(myEntity)
+      .applyFunction(Entity.myFunction())
+      .execute(destination);
+```
+
+This will invoke the following HTTP call, assuming that `myEntity` is identified by `"my-entity"`:
+
+```txt
+GET /service-root/Entity('my-entity')/MyNamespace.MyFunction()
+```
+
+Similarly, for actions use `applyAction`:
+
+```java
+Entity myEntity;
+service.forEntity(myEntity)
+      .applyAction(Entity.myAction())
+      .execute(destination);
+```
+
+:::tip Obtaining an Entity to Operate on
+To get an entity object to operate on it is generally recommended to download it from the service first via its respective `getByKey` method.
+Fetching an entity will also ensure that ETag is handled if OData Action is invoked, which often leads to a change of a state of an entity.
+
+Another way is to use a builder on an Entity object to create an instance if you are aware of the key properties that are required.
+:::
+
+#### Bound Operations on Collections
+
+Functions and actions may also be bound to collections of entities.
+They are also invoked via `applyFunction` and `applyAction` but on the `service` instance itself:
+
+```java
+service.applyAction(Entity.myAction())
+      .execute(destination);
+```
+
+This will invoke the following HTTP call:
+
+```txt
+POST /service-root/Entity/MyNamespace.MyAction()
+```
+
+Furthermore, OData allows invoking bound operations not only on entities but also on navigation properties.
+The API allows you to navigate to any navigation property of an entity to invoke an operation:
+
+```java
+Entity myEntity;
+service.forEntity(myEntity)
+      .navigateTo(Entity.NAVIGATION_PROPERTY)
+      .applyFunction(NavigationEntity.myFunction())
+      .execute(destination);
+```
+
+This would yield:
+
+```txt
+GET /service-root/Entity('my-entity')/NavigationProperty/MyNamespace.MyFunction()
+```
+
+#### Composable Functions
+
+Finally, functions may be composable.
+If `IsComposable` is set to `true` in the service metadata the service allows to use the result of a function within another operation.
+
+Consider the following request:
+
+```
+GET /Entities('my-entity')/ComputeRelatedEntity()/EntityPropertyList?$top=5
+```
+
+The service will first perform the function `ComputeRelatedEntity` and then access the `EntityPropertyList` property of the result entity.
+Then the top five elements are returned.
+
+Such a request can be built with the API as follows:
+
+```java
+Entity myEntity;
+service.forEntity(myEntity)
+      .withFunction(Entity.computeRelatedEntity())
+      .navigateTo(RelatedEntity.ENTITY_PROPERTY_LIST)
+      .getAll()
+      .top(5)
+      .execute(destination);
+```
+
+For more details on the API see also the section about [operating on navigation properties](#navigation-properties) directly.
+
+### Accessing Extensible or Custom Fields
+
+The concept of **In-app Extensibility** allows users to introduce additional fields to an existing SAP S/4HANA service.
+To consume and work with such custom fields in your application code, SAP Cloud SDK introduces the concept of custom fields.
+
+You can set custom fields on an entity through the `.setCustomField` method and read the value in the entity using `.getCustomField(fieldName)`
+
+```java
+businessPartner.setCustomField("shoeSize", 10);
+
+final int shoeSize = businessPartner.getCustomField("shoeSize");
+```
+
+If you are unsure about the custom fields added by the customer, you can still use `getCustomFieldNames()` to obtain the set of custom fields introduced.
+Use this set further on to pull values from the entity.
+
+For e.g.
+
+```java
+final Set<String> customfieldNames = businessPartner.getCustomFieldNames();
+
+for(String customFieldName: customfieldNames){
+    final Object customField = businessPartner.getCustomField(customFieldName);
+ }
+```
+
+The accessors for custom fields respect multitenancy.
+`getCustomFieldNames()`, for example, fetches only custom field names available in the context of the current tenant.
+
+#### Using Custom Fields In System Query Options
+
+You can also pass custom fields to select or filter system query options:
+
+```java
+service.getAllBusinessPartner()
+         .select(new SimpleProperty.NumericInteger<>(BusinessPartner.class, "ShoeSize"))
+         .select(() -> "AnotherCustomField")
+         .filter(new SimpleProperty.NumericInteger<>(BusinessPartner.class, "ShoeSize").equalTo(42))
+         .execute(destination)
+```
+
+Please be aware that such an example can work for all tenants only if `ShoeSize` and `AnotherCustomField` are custom fields that have been defined by all tenants.
+
+### Batch Requests
+
+Batch requests allow wrapping multiple OData requests into one single batch call.
+Thereby we reduce the number of round trips to the remote server.
+Refer to the [official OData V4 spec](http://docs.oasis-open.org/odata/odata/v4.0/os/part1-protocol/odata-v4.0-os-part1-protocol.html#_Toc372793748) for further reference about batch requests, their semantics, and the request/response format.
+
+:::warning
+The described API is subject to change
+:::
+
+#### Execute Batch Request
+
+The `service` object offers the method `batch` which allows access to the batch-related methods that help build the batch request.
+
+Multiple single requests (like `createBusinessPartnerRequest`) can be wrapped into so-called changesets.
+A changeset can be added by `addChangeset` and the corresponding create, update, or delete operations can be passed as parameters into it.
+You can wrap multiple changesets into one batch request.
+Similarly, retrieve operations can be added to the batch request by using `addReadOperations`.
+
+Use `execute` to issue the batch request to the remote system.
+We receive an instance of `BatchResponse` as the result object.
+
+```java
+GetAllRequestBuilder<BusinessPartner> getBusinessPartners = service.getAllBusinessPartner();
+GetByKeyRequestBuilder<BusinessPartner> getBusinessPartnerByKey = ...
+CreateRequestBuilder<BusinessPartner> createBusinessPartnerRequest1 = ...
+CreateRequestBuilder<BusinessPartner> createBusinessPartnerRequest2 = ...
+DeleteRequestBuilder<BusinessPartner> deleteBusinessPartnerRequest = ...
+
+BatchResponse result =
+    service
+        .batch()
+        .addReadOperations(getBusinessPartners, getBusinessPartnerByKey)
+        .addChangeset(createBusinessPartnerRequest1, createBusinessPartnerRequest2, deleteBusinessPartnerRequest)
+        .execute(destination);
+```
+
+#### Access Batch Response
+
+Use `getModificationResult` to access the response for a specific create, update, or delete operation.
+
+```java
+ModificationResponse<BusinessPartner> createResult = response.getModificationResult(createBusinessPartnerRequest1);
+ModificationResponse<BusinessPartner> deleteResult = response.getModificationResult(deleteBusinessPartnerRequest);
+```
+
+Similarly, use the method `getReadResult` to access the response for a specific retrieve request.
+
+```java
+List<BusinessPartners> readAllResult = response.getReadResult(getBusinessPartners);
+BusinessPartner readByKeyResult = response.getReadResult(getBusinessPartnerByKey);
+```
+
+Per the OData specification, either all operations or none within the same changeset are successful.
+Hence, if the changeset was a failure then evaluating the result of the contained requests will contain the failure of the changeset.
+
+## Entity Update Strategies
+
+The SAP Cloud SDK supports different strategies for updating entities which differ in the HTTP method and the payload of the update request.
+
+:::info
+To update an entity it should first be retrieved from the service.
+This ensures the latest state of the entity is updated.
+Otherwise, updating with old data could erase changes that have been made to the entity in the meantime.
+Many services will enforce this behavior with optimistic locking mechanisms.
+Refer to the [section about ETags for details](#handling-of-etags).
+:::
+
+<Tabs groupId="updateStrategy" defaultValue="modify" values={[ { label: 'Modify Entity (default)', value: 'modify', }, { label: 'Replace Entity', value: 'replace', }, ]}>
+
+<TabItem value="modify">
+
+The default strategy is the _modifying entity update strategy_ which attempts to modify only the necessary entity fields in the remote system.
+It issues a PATCH request and includes only the fields in the request payload whose values were _changed by its setter method_.
+Hence, fields whose values remain unchanged are not sent to the target system.
+Calling the method `includingFields(fields ...)` instructs the SAP Cloud SDK to add the mentioned fields explicitly in the update request.
+You could also add navigation properties to your request using the method.
+This is useful for backend systems that require some unchanged fields in the request payload for given reasons.
+
+This update strategy can be explicitly chosen by invoking the method `modifyingEntity()` while building the update request.
+
+```java
+service.updateBusinessPartner(partner)
+    //method call optional, since active by default
+    .modifyingEntity()
+    //add the Business Partner full name and address explicitly to the update request
+    .includingFields(BusinessPartner.BUSINESS_PARTNER_FULL_NAME,BusinessPartner.TO_BUSINESS_PARTNER_ADDRESS)
+    .executeRequest(destination);
+```
+
+To update a complex property use the following API
+
+```java
+Entity entity;
+entity.setComplexProperty(new ComplexProperty("Foo"));
+```
+
+Transitive changes inside a complex property will automatically be detected.
+
+</TabItem>
+
+<TabItem value="replace">
+
+The _replacing entity update strategy_ attempts to replace the full entity in the remote system.
+It issues a PUT request and submits all fields in the update request, regardless of any field changes.
+
+This update strategy can be explicitly chosen by invoking the method `replacingEntity()` while building the update request.
+
+```java
+service.updateBusinessPartner(partner)
+    .replacingEntity()
+    .executeRequest(destination);
+```
+
+For excluding read-only fields or dependent properties that are not tied to key properties from your `PUT` request payload, use `excludingFields()` on your update request
+It also allows you to exclude navigation properties from your request.
+
+```java
+service.updateBusinessPartner(partner)
+    .replacingEntity()
+    .excludingFields(BusinessPartner.BUSINESS_PARTNER_FULL_NAME,BusinessPartner.TO_BUSINESS_PARTNER_ADDRESS)
+    .executeRequest(destination);
+```
+
+</TabItem>
+
+</Tabs>
+
+:::note
+It depends on the capabilities of the specific OData service in the remote system which update strategies are supported in an end-to-end scenario.
+For example, there are cases where OData services do not support PUT requests.
+:::
+
+## Error Handling
+
+Sometimes requests fail and the SAP Cloud SDK provides a flexible way to deal with such failures on multiple levels.
+All `execute` methods may throw a runtime exception (extending) `ODataException`.
+This will always contain the request which was (attempted to be) sent out as well as the cause of the exception.
+To handle all kind of failures consider the following code:
+
+```java
+try { ... }
+ catch( final ODataException e ) {
+    ODataQueryGeneric query = e.getQuery();
+    logger.debug("The following query failed: {}", query);
+    // do something else
+}
+```
+
+This handling is the most generic, handling all possible failures.
+For more specific information, dedicated exceptions are inheriting from `ODataException`.
+Please check the [documentation](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/datamodel/odata/client/exception/ODataException.html) for details on all the exception types.
+
+To handle different kinds of failure one can list multiple catch clauses to cover different levels or cases that might occur, e.g.:
+
+```java
+try { ... }
+catch( ODataServiceErrorException e ) {
+    // handle the specific error message from the response payload
+    ODataServiceError odataError = e.getODataError();
+    logger.debug("The OData service responded with an error: {}", odataError);
+} catch( ODataDeserializationException e ) {
+    // handle failures in deserialization
+} catch( ODataResponseException e ) {
+    // handle all other errors originating from handling the HTTP response
+    int httpCode = e.getHttpCode();
+    Collection<Header> httpCode = e.getHttpHeaders();
+    Option<String> httpBody = e.getHttpBody();
+}
+```
+
+Note that instead of applying `try/catch` one can also make use of `tryExecute` on the request builders.
+
+## Navigation Properties
+
+A navigation property describes a unidirectional relationship between two entity types.
+Like other properties, it has a name and declares a multiplicity, i.e. whether to expect a single value or multiple values.
+Additionally, a navigation property allows for dedicated CRUD operations, that may not be exposed by default on entity sets of the service root.
+Such operations also provide a convenient way to access the nested resources of entities.
+
+The typed OData client for OData v4 supports the following operations on (arbitrarily nested) navigation properties:
+
+- Create
+- Read
+- Update
+- Delete
+- Count
+
+The below example leverages the creation of a nested entity in relation to an existing entity:
+
+```java
+/*
+Create a new address for a specific business partner.
+*/
+BusinessPartner businessPartnerById = BusinessPartner.builder().businessPartner("123").build();
+BusinessPartnerAddress addressItem = BusinessPartnerAddress.builder().country("DE").build();
+
+service.forEntity( businessPartnerById )
+    .navigateTo( BusinessPartner.TO_BUSINESS_PARTNER_ADDRESS )
+    .create( addressItem )
+    .execute( destination );
+```
+
+This sample API call translates to the following service request:
+
+```
+POST /ODataService/API_BUSINESS_PARTNER/A_BusinessPartner(123)/to_BusinessPartnerAddress
+{
+  "country": "de"
+}
+```
+
+## Server-Driven Paging
+
+Pagination describes the practice of splitting a collection of entities from reading requests into one or many pages.
+The paging behavior is determined by both the server and the client.
+
+OData service operators may decide to enable server-driven pagination to limit the amount of data that is fetched and sent over the network to the client, in case generic query options yield huge amounts of data.
+By splitting the result-set into sequential pages of entities, the data can be requested incrementally.
+This reduces initial network load and improves overall response times.
+If the payload of an OData response contains a link including a `$skiptoken`, then it indicates a next page to the result-set.
+The iterable result-set is a consistent snapshot of the data, it can not change between reading individual pages.
+
+In comparison, the OData consumer may use query options `$top` and `$skip` (client-driven paging) to read partial data from the result-set, but relying on a consistent state while browsing through the data can be problematic.
+Between individual requests, another user could delete or add an item.
+This would result in an inconsistent aggregation of data.
+
+By default, the SAP Cloud SDK automatically resolves all pages of a result-set if server-driven paging is encountered.
+For the API consumer, it is not necessary to parse the next link and instantiate follow-up requests to aggregate the full result-set.
+
+```java
+List<BusinessPartner> iterablePagesOfEntities = service
+  .getAllBusinessPartner()
+  .execute( destination );
+```
+
+In case memory efficiency and response time of the consuming application becomes a priority, then the advanced API provides additional means to manually iterate through the internal pages.
+While accessing the following methods, the internal HTTP requests are executed lazily:
+
+```java
+Iterable<List<BusinessPartner>> iterablePagesOfEntities = service
+  .getAllBusinessPartner()
+  .iteratingPages()
+  .execute( destination );
+
+Iterable<BusinessPartner> iterableEntities = service
+  .getAllBusinessPartner()
+  .iteratingEntities()
+  .execute(destination);
+
+Stream<BusinessPartner> streamingEntities = service
+  .getAllBusinessPartner()
+  .streamingEntities()
+  .execute(destination);
+```
+
+The request builder allows for setting the optional parameter for preferred page size, e.g.:
+
+```java
+Iterable<List<BusinessPartner>> iterablePagesOfEntities = service
+  .getAllBusinessPartner()
+  .withPreferredPageSize(20)
+  .iteratingPages()
+  .execute( destination );
+```
+
+:::caution
+Please note that the OData service is not obliged to respect this setting.
+:::
+
+## Asynchronous OData API Calls
+
+<NotImplemented />
+
+The [OData v4 standard ](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_AsynchronousRequests) has introduced means for server-side asynchronous requests.
+This feature is also supported in the [SAP Gateway Foundation](https://help.sap.com/viewer/DRAFT/68bf513362174d54b58cddec28794093/202009.latest/en-US/b9c4dd6344694418b94c4bb3bdebfee1.html).
+At the moment the SAP Cloud SDK for Java does not provide a typed API to make such requests.
+However, you can leverage our [Generic OData Client](generic-odata-client.mdx) to simplify the logic of making such requests.
+
+:::note Process Synchronous OData Request in Asynchronous Fashion on the client side
+
+You can leverage `queueCallable` from our [resilience API](../resilience/resilience.mdx#execution-variants) to run multiple OData requests in asynchronous & non-blocking way on the **client side**.
+
+:::

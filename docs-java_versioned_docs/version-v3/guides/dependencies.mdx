@@ -1,0 +1,237 @@
+---
+id: manage-dependencies
+title: Managing Dependencies
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Dependency Management
+description: How to manage dependencies, detect and resolve conflicts
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - dependency
+  - dependency conflicts
+  - manage dependencies
+  - how-to
+---
+
+## General Information
+
+The SAP Cloud SDK for Java is a set of libraries that itself depends on other libraries.
+To manage these relationships it relies on the [dependency management functionality](https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html) of [Maven](https://maven.apache.org/index.html).
+
+This article shows how to manage dependencies for the SAP Cloud SDK for Java specifically.
+For general information on how to deal with dependencies refer to the resources linked above and throughout this page.
+
+### The SAP Cloud SDK Bill-of-Material
+
+The SAP Cloud SDK provides a [Bill-of-Material](https://dzone.com/articles/the-bill-of-materials-in-maven).
+It comprises all dependencies and their specific version that the SAP Cloud SDK relies upon.
+
+It can be used in the dependency management as follows:
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.sap.cloud.sdk</groupId>
+            <artifactId>sdk-bom</artifactId>
+            <version>use-latest-version-here</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
+It helps in various ways:
+
+- Minimizing the effort for updating SAP Cloud SDK versions
+- Ensuring all SAP Cloud SDK components are used consistently with the same version
+- Compatibility with some other key SAP libraries or frameworks like [XSUAA](https://github.com/SAP/cloud-security-xsuaa-integration) and [CAP](https://cap.cloud.sap/docs/).
+- Avoiding some potential dependency conflicts
+- Checking which components & their respective version the SAP Cloud SDK depends upon
+
+For these reasons we highly recommend using the `sdk-bom` in your project.
+
+:::tip Alternative: SAP Cloud SDK Modules Bill-of-Material
+Besides the SAP Cloud SDK Bill-of-Material `sdk-bom` there is also the SAP Cloud SDK Modules Bill-of-Material `sdk-modules-bom`.
+It manages the version of all SAP Cloud SDK modules only.
+`sdk-modules-bom` does not manage versions of transitive dependencies and hence can be chosen to resolve dependency version conflicts.
+:::
+
+:::info SAP Cloud SDK Maven Plugins
+Please be aware that neither the `sdk-bom` nor the `modules-bom` will manage the versions of any SAP Cloud SDK Maven plugins (like the `odata-generator-maven-plugin`) you may use.
+It is required to specify a version for such plugins explicitly, otherwise dependency conflicts may occur.
+:::
+
+## Dealing With Dependency Conflicts
+
+When using multiple libraries, you will probably run into a version conflict at some point.
+This is caused by the way dependencies are resolved.
+If you are using two libraries `A` and `B` where both depend on a different version of `C` you encounter a conflict.
+
+This conflict can only be solved by you as the consumer be explicitly stating which version of `C` should be used.
+
+[This guide](https://dzone.com/articles/solving-dependency-conflicts-in-maven) outlines this problem in more detail and provides general guidance on how to find and resolve such problems.
+
+### Updating the SAP Cloud SDK Version
+
+You may run into dependency related problems when updating SAP Cloud SDK versions since its dependencies are frequently updated.
+Here are some recommendations from our experience that should help to mitigate any problems:
+
+We recommend increasing the SAP Cloud SDK version in a dedicated change e.g. a pull request.
+
+- This isolates the change and makes finding problems easier.
+
+Look out for `MethodNotFound` and `ClassDefNotFound` exceptions.
+
+- They are common when a library is provided with an unexpected version.
+
+Check out our [release notes](../release-notes.mdx).
+
+- Under improvements, you will see all dependency changes.
+
+Use `mvn dependency:tree` to analyze the dependency tree.
+
+- It shows where dependencies are used and in which version.
+
+Google the error message.
+
+- Usually, you will at least get an idea which library is causing the problems.
+
+Update the SAP Cloud SDK version frequently.
+
+- This mitigates the risk per update and ensures you are up to date.
+
+### Overriding Dependency Versions of the SAP Cloud SDK Bill-of-Material
+
+Sometimes you may want to override the version of a specific dependency the SAP Cloud SDK is using.
+You can achieve this by listing it in the dependency management _before the SAP Cloud SDK BOM_.
+
+For example to override the version of SLF4J:
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>your-slf4j-version</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sap.cloud.sdk</groupId>
+            <artifactId>sdk-bom</artifactId>
+            <version>latest-sdk-version</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
+:::note
+Remember that including a dependency in the `<dependencyManagement>` section only enforces its version.
+It does not yet include it as a dependency in your project.
+:::
+
+## Notes on the SAP Java Buildpack
+
+The [SAP Java Buildpack](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/a3f90069d6cd41da82f34a6123d82ce6.html) brings some dependencies that are also brought by the SAP Cloud SDK.
+
+### Dependency Version Conflicts
+
+The dependency versions from the `sdk-bom` and the Buildpack may differ.
+
+Consider this example:
+
+- Buildpack version `1.43` contains `java-security:2.10.5`
+- SAP Cloud SDK version `3.59` contains `java-security:2.11.2`
+
+If there are breaking API changes in `java-security` this can lead to runtime errors.
+
+:::note
+
+There is no way to solve this versioning problem on SAP Cloud SDK or Buildpack side.
+Generally, we try to keep the versions as consistent as possible.
+
+However, the exact combination of Buildpack and SAP Cloud SDK depends on the release schedule of the two products.
+In addition to that, it also depends on the time an application updates the SAP Cloud SDK version & deploys it.
+
+:::
+
+### Dependency Scope Conflicts
+
+In addition to potential version conflicts also scope problems can occur.
+
+Consider this example:
+
+- Buildpack contains `java-security`
+- SAP Cloud SDK depends on `java-security` with scope `compile`
+
+As a result, the classes from `java-security` will be on the classpath twice.
+Once from the Buildpack and once packaged by maven into the deployment artifact.
+
+### Recommended Strategy: Avoiding Version Conflicts
+
+We recommend setting a fixed Buildpack version in the `manifest.yml` and updating it regularly.
+Use `cf buildpacks` to see which Buildpacks are currently available.
+Please note that usually only the last 3 Buildpack versions are kept alive, and usually every two weeks a new version is released.
+Consequently, with this strategy, you should update at least once a month.
+
+In general, this is safer than using always the latest Buildpack.
+Because this strategy avoids that a simple restart can break your application due to a changed Buildpack.
+
+In particular, it ensures that the specific Buildpack + SAP Cloud SDK combination has been tested.
+
+Also see [this note](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/a3f90069d6cd41da82f34a6123d82ce6.html) on Buildpack versioning.
+
+:::note
+
+There are no known dependencies in the [Community Java Buildpack](https://github.com/cloudfoundry/java-buildpack) that could interfere with the ones provided by the SAP Cloud SDK.
+Still, the same strategy is also valid and useful for the community Buildpack.
+:::
+
+### Avoiding Scope Conflicts
+
+We recommend overriding the scope for selected dependencies when using the SAP Java Buildpack.
+
+The respective dependencies are:
+
+- `com.sap.cloud.security:java-api`
+- `com.sap.cloud.security:java-security`
+- `com.sap.cloud.security.xsuaa:token-client`
+
+You can override the scope by setting including these dependencies explicitly in your `pom.xml` with scope `provided`.
+
+At the top of your `<dependencyManagement>` section, **_before_** including any SAP Cloud SDK dependencies in your project, insert the following:
+
+```xml
+<dependency>
+    <groupId>com.sap.cloud.security</groupId>
+    <artifactId>java-api</artifactId>
+    <version>latest-version-here</version>
+    <scope>provided</scope>
+</dependency>
+<dependency>
+    <groupId>com.sap.cloud.security</groupId>
+    <artifactId>java-security</artifactId>
+    <version>latest-version-here</version>
+    <scope>provided</scope>
+</dependency>
+<dependency>
+    <groupId>com.sap.cloud.security.xsuaa</groupId>
+    <artifactId>token-client</artifactId>
+    <version>latest-version-here</version>
+    <scope>provided</scope>
+</dependency>
+```
+
+:::tip
+
+Verify your dependency tree via `mvn dependency:tree`.
+The above dependencies should only be listed with scope `provided`.
+
+:::

@@ -27,6 +27,14 @@ module.exports = {
   projectName: 'cloud-sdk',
   trailingSlash: false,
   themeConfig: {
+    announcementBar: {
+      id: 'feedback_survey',
+      content:
+        'How do you like the SAP Cloud SDK? Share your <a href="https://sapinsights.eu.qualtrics.com/jfe/form/SV_0P69X6kJ0Pdxqbc" style="color: var(--ifm-link-color);text-decoration: var(--ifm-link-decoration);transition: color var(--ifm-transition-fast) var(--ifm-transition-timing-default)">feedback</a>.',
+      backgroundColor: 'var(--ifm-color-secondary)',
+      // textColor: '#091E42',
+      isCloseable: false
+    },
     prism: {
       additionalLanguages: ['powershell', 'java', 'groovy'],
       theme: require('prism-react-renderer/themes/github'),
@@ -85,12 +93,7 @@ module.exports = {
           type: 'dropdown',
           label: 'API Reference',
           position: 'right',
-          items: [
-            {
-              label: 'Swizzle Placeholder',
-              href: 'https://www.example.com'
-            }
-          ],
+          items: [],
           docsPluginId: 'docs-js',
           apiReference: true
         },
@@ -98,6 +101,11 @@ module.exports = {
           type: 'docsVersionDropdown',
           position: 'right',
           docsPluginId: 'docs-js'
+        },
+        {
+          type: 'docsVersionDropdown',
+          position: 'right',
+          docsPluginId: 'docs-java'
         }
       ]
     },
@@ -105,23 +113,44 @@ module.exports = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'SAP Cloud SDK for Java',
           items: [
             {
-              label: 'SAP Cloud SDK overview',
-              to: 'docs/overview/overview-cloud-sdk'
-            },
-            {
-              label: 'SAP Cloud SDK for Java',
-              to: 'docs/java/getting-started'
-            },
-            {
-              label: 'SAP Cloud SDK for JS',
-              to: 'docs/js/getting-started'
-            },
-            {
-              label: 'SAP Cloud SDK Tutorials',
+              label: 'Tutorials',
               href: 'https://developers.sap.com/tutorial-navigator.html?tag=products:technology-platform/sap-cloud-sdk/sap-cloud-sdk'
+            },
+            {
+              label: 'Maven',
+              href: 'https://search.maven.org/search?q=g:com.sap.cloud.sdk*'
+            },
+            {
+              label: 'Support',
+              to: 'docs/java/support-java'
+            }
+          ]
+        },
+        {
+          title: 'SAP Cloud SDK for JavaScript',
+          items: [
+            {
+              label: 'Tutorials',
+              to: 'docs/js/tutorials/getting-started/introduction'
+            },
+            {
+              label: 'npm',
+              href: 'https://www.npmjs.com/search?q=%40sap-cloud-sdk'
+            },
+            {
+              label: 'GitHub',
+              href: 'https://github.com/SAP/cloud-sdk-js'
+            },
+            {
+              label: 'Sample repository',
+              href: 'https://github.com/SAP-samples/cloud-sdk-js'
+            },
+            {
+              label: 'Support',
+              to: 'docs/js/support-js'
             }
           ]
         },
@@ -133,29 +162,20 @@ module.exports = {
               href: 'https://stackoverflow.com/questions/tagged/sap-cloud-sdk'
             },
             {
-              label: 'SAP Developers Portal',
-              href: 'https://developers.sap.com/topics/cloud-sdk.html'
-            },
-            {
               label: 'SAP Cloud SDK Community Page',
               href: 'https://community.sap.com/topics/cloud-sdk'
             },
             {
-              label: 'SAP Cloud SDK on SAP Help',
-              href: 'https://help.sap.com/viewer/product/SAP_CLOUD_SDK/1.0/en-US?task=discover_task'
-            }
-          ]
-        },
-        {
-          title: 'Package Repositories',
-          items: [
-            {
-              label: 'SAP Cloud SDK for JavaScript',
-              href: 'https://www.npmjs.com/search?q=%40sap-cloud-sdk'
+              label: 'SAP Cloud SDK on SAP Answers',
+              href: 'https://answers.sap.com/tags/73555000100800000895'
             },
             {
-              label: 'SAP Cloud SDK for Java',
-              href: 'https://search.maven.org/search?q=g:com.sap.cloud.sdk*'
+              label: 'SAP Cloud SDK on SAP Help',
+              href: 'https://help.sap.com/viewer/product/SAP_CLOUD_SDK/1.0/en-US?task=discover_task'
+            },
+            {
+              label: 'Feedback',
+              href: 'https://sapinsights.eu.qualtrics.com/jfe/form/SV_0P69X6kJ0Pdxqbc'
             }
           ]
         }
@@ -209,7 +229,19 @@ module.exports = {
         path: 'docs-java',
         editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
         routeBasePath: 'docs/java',
-        sidebarPath: require.resolve('./sidebarsDocsJava.js')
+        sidebarPath: require.resolve('./sidebarsDocsJava.js'),
+        lastVersion: 'current',
+        versions: {
+          current: {
+            label: 'v4',
+            badge: false
+          },
+          v3: {
+            label: 'v3',
+            path: 'v3',
+            badge: false
+          }
+        }
       }
     ],
     [
@@ -245,6 +277,14 @@ module.exports = {
           ) {
             return existingPath.replace('/docs/overview', '/docs');
           }
+
+          if (existingPath.includes('/js/frequently-asked-questions')) {
+            return existingPath.replace(
+              'frequently-asked-questions',
+              'overview-cloud-sdk-for-javascript'
+            );
+          }
+          return undefined;
         }
       }
     ],

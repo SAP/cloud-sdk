@@ -1,0 +1,309 @@
+---
+id: btp-business-rules-rest-api
+title: Type-Safe Client for SAP Business Rules service
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: SAP Business Rules service
+description: Learn how to access the SAP BTP Business Rules REST API with the type-safe client from the SAP Cloud SDK for Java
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - rest
+  - scp
+  - business-rules
+---
+
+import MvnBadge from '@site/src/sap/sdk-java/MvnBadge';
+
+<MvnBadge />
+
+:::caution Beta State
+
+This library is released in **beta state** only and is subject to change.
+
+:::
+
+## Overview
+
+The [SAP Business Rules service](https://help.sap.com/viewer/product/BUSINESS_RULES/Cloud/en-US) for Cloud Foundry helps customers to translate complex business logic into a natural language.
+It consists of multiple APIs that can be used for modelling, authoring, and simulating business rules.
+
+To benefit from features offered by the REST APIs of the SAP BTP Business Rules service, you can leverage the type-safe client library provided by the **SAP Cloud SDK** and discover it via your IDE.
+
+### Prerequisites
+
+Add the latest version of the [SAP Cloud SDK](https://search.maven.org/artifact/com.sap.cloud.sdk/sdk-bom) to your Java application dependencies or [generate a new one from archetypes that we provide](../../../getting-started).
+
+After you created an SAP Cloud SDK-based Java app, you can invoke the SAP BTP Business Rules REST API in your business logic.
+More precisely, the SAP Cloud SDK offers abstractions for the [Rule Authoring API](https://api.sap.com/api/SAP_CF_BusinessRules_Repository/resource) and the [Rule Execution API](https://api.sap.com/api/SAP_CF_BusinessRules_Runtime_V2/resource).
+Both of them can be accessed conveniently once the initial configuration is completed.
+
+### Cloud Foundry Configuration
+
+Let's look in detail at all necessary steps to configure your Cloud Foundry app to use the SAP BTP Business Rules service.
+
+#### Bind App to SAP Business Technology Platform Business Rules Service Instance
+
+Refer to the documentation on [help.sap.com](https://help.sap.com/viewer/0e4dd38c4e204f47b1ffd09e5684537b/Cloud/en-US/82b7be2d1a5f4ade823ad8e740d88834.html) for the full picture.
+We'll outline the essentials with the assumption that you understand or have all the following:
+
+- Which Cloud Foundry subaccount and space you want to use
+- You have access to the SAP BTP Business Rules Service feature
+- [You have installed the Cloud Foundry Command Line Interface (CLI) on your machine](../../../guides/cf-cli).
+
+##### Create Service Instance
+
+Open the command line and authenticate at your Cloud Foundry organization by invoking `cf login`.
+
+Consider specifying the respective **subaccount**, **organization**, and **space** with `cf target` if necessary.
+
+Use `cd` to navigate to the directory of your app and run the following to create the service instance:
+
+```bash
+cf create-service business-rules lite my-business-rules
+```
+
+This command creates an instance of the SAP BTP Business Rules Service in the CF space that your CLI points to.
+Note that we named the service instance `my-business-rules`.
+If you have chosen a different name, please, remember the name as you'll need it for your deployment descriptor `manifest.yml` later on.
+
+Once the service instance creation is finished, you can see the service instance in your CF space under `Services\Instances` in the left-hand side menu.
+
+##### Bind your App to Service Instance
+
+Open the file `manifest.yml` in your project and mention your service instance under `services` as follows:
+
+```yaml
+applications:
+  - name: awesome-app
+    memory: 1024M
+    timeout: 600
+    random-route: false
+    path: application/target/awesome-app-application.war
+    buildpacks:
+      - sap_java_buildpack
+    env:
+      TARGET_RUNTIME: tomee7
+      SET_LOGGING_LEVEL: '{ROOT: INFO, com.sap.cloud.sdk: INFO}'
+      JBP_CONFIG_SAPJVM_MEMORY_SIZES: metaspace:128m..
+    services:
+      - my-destination
+      - my-business-rules
+    routes:
+      - route: <omitted-on-purpose>
+```
+
+This ensures that the `VCAP_SERVICES` environment variable of the CF application gets enhanced with an additional entry containing the connection details of the newly bound SAP BTP Business Rules service.
+Now, redeploy your app with `cf push`.
+
+### Develop Your App
+
+#### Dependency Assumptions
+
+This guide assumes that you have a Java project using the SAP Cloud SDK.
+If not, we recommend going ahead and [creating one from one of the Maven archetypes](https://sap.github.io/cloud-sdk/docs/java/getting-started).
+You should also have [Apache Maven](https://maven.apache.org/download.cgi) installed and be able to successfully run `mvn clean install` from the root of your project.
+
+Make sure that you have the SAP Cloud SDK Bill-of-Material (BOM) in your `dependencyManagement` section of your `pom.xml` structure like in the example below.
+
+:::caution Always use the latest version of SAP Cloud SDK
+Current version is: <MvnBadge />
+:::
+
+```xml title="pom.xml"
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>com.sap.cloud.sdk</groupId>
+      <artifactId>sdk-bom</artifactId>
+      <!-- Business Rules API is supported in ver 3.45.0 of the SDK and above. Please, always use the latest version -->
+      <version>3.XX.X</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+  </dependencies>
+</dependencyManagement>
+```
+
+#### Add SAP BTP Business Rules Service Dependency To Your Project
+
+You can refer to the Java client library for the SAP BTP Business Rules service with the following Maven dependency:
+
+```xml title="pom.xml"
+<dependency>
+    <groupId>com.sap.cloud.sdk.services</groupId>
+    <artifactId>btp-business-rules</artifactId>
+</dependency>
+```
+
+After adding the dependency to your `pom.xml` file, run `mvn clean install` to let `Maven` install it.
+
+### Invoke the Java Client Library
+
+#### Create Destination
+
+Let's create a Java representation of this destination.
+You can use `ScpCfServiceDestinationLoader.getDestinationForService` to create a destination by reading properties from the `VCAP_SERVICES` environment variable entry for the Business Rules service:
+
+```java
+// get destination for Rule Authoring API
+final HttpDestination ruleAuthoringDestination =
+                ScpCfServiceDestinationLoader.getDestinationForService(
+                        ScpCfServiceDestinationLoader.CfServices.BUSINESS_RULES_AUTHORING,
+                        "my-business-rules");
+
+// get destination for Rule Execution API
+final HttpDestination ruleExecutionDestination =
+                ScpCfServiceDestinationLoader.getDestinationForService(
+                        ScpCfServiceDestinationLoader.CfServices.BUSINESS_RULES_EXECUTION,
+                        "my-business-rules");
+```
+
+:::caution
+
+The `ScpCfServiceDestinationLoader.getDestinationForService` API currently only works out of the box for a handful of services.
+For other services, the alternative would be to create a Destination manually in CF using values in the `VCAP_SERVICES` and then accessing the destination using the `DestinationAccessor`.
+For details refer to [Additional information](btp-business-rules-rest-api#additional-information) section.
+
+:::
+
+#### Invoke the APIs
+
+Once you created a destination that points to the API of your choice, you can make the first call to that API.
+
+For example, you can list all existing projects from the Rule Authoring API:
+
+```java
+final List<ProjectVersionObject> allProjects =
+                new ProjectsApi(authoringDestination).readProjects();
+```
+
+This is how we call the APIs of the SAP BTP Business Rules service in a type-safe manner and benefit from type-safe access to the resulting response objects.
+For instance, we can read particular details about each project definition:
+
+```java
+allProjects.forEach(project -> {
+    log.info(project.getId());
+    log.info(project.getName());
+    log.info(project.getVersion().toString());
+});
+```
+
+You can check the SAP BTP Business Rules API's model definition on the [SAP API Business Hub](https://api.sap.com/package/SAPCPBusinessRulesAPIs?section=Artifacts) or use your IDE to discover available properties via its auto-complete function.
+
+## Capabilities and Limitations
+
+### Capabilities and Benefits
+
+The Java client library for SAP BTP Business Rules service enables the developer to:
+
+- Invoke the REST API in a type-safe and convenient manner
+- Provides Java abstractions for the [Rule Authoring](https://api.sap.com/api/SAP_CF_BusinessRules_Repository/resource) and the [Rule Execution](https://api.sap.com/api/SAP_CF_BusinessRules_Runtime_V2/resource) REST API endpoints along with the respective model classes
+- Relieves the developer from all the `HTTP-related` development work like interpreting `status codes`, `JSON de-/serialization`, etc
+- It lets the developer focus on the business logic instead of coding low-level API calls
+- We keep the library up to date with the latest API specifications which simplifies the maintainability of your app's code
+- We integrate the SAP BTP Business Rules library with SAP Cloud SDK capabilities, such as tenant-aware destination retrieval and many more
+
+### Known Limitations
+
+- We support SAP BTP Business Rules service APIs only on the SAP BTP Cloud Foundry environment.
+  The SAP Business Technology Platform Neo environment is **Not supported!**
+
+## Additional Information
+
+:::info
+Please note the steps outlined in the below section are only required if you chose to skip using the convenience API `ScpCfServiceDestinationLoader.getDestinationForService` introduced [here](btp-business-rules-rest-api#create-destination) and instead would like to use `DestinationAccessor`.
+This could be case, for example, if you are interested in trying to use generated clients of other services.
+:::
+
+### Creating HTTP Destinations Manually
+
+To create HTTP destinations manually in CF from the values read from `VCAP_SERVICES` of the CF application, please follow the below steps.
+The steps below can be continued in this example from the [Bind your App to Service Instance](btp-business-rules-rest-api#bind-your-app-to-service-instance) section.
+
+### Take Note of API endpoint and OAuth Credentials
+
+Once the app is bound to the Business Rules service instance and app deployment has finished, go to your CF space and navigate to `Services\Instances`.
+You should see the service instance you created along with the information that is bound to your application.
+
+Click on the service instance name, for example `my-business-rules`.
+On the right-hand side, you can see all apps that are bound to that service instance along with a button `View Credentials`.
+Make sure that the entry that belongs to your app is selected in the table below, given that multiple apps are bound to the same service instance, and click the `View Credentials` button.
+
+Consider the `JSON` content in the new pop-up window.
+Here is a quick example:
+
+```json
+{
+  "endpoints": {
+    "rule_repository_url": "foo",
+    "rule_runtime_url": "bar"
+  },
+  "html5-apps-repo": {
+    "app_host_id": "foo"
+  },
+  "uaa": {
+    "uaadomain": "bar",
+    "tenantmode": "dedicated",
+    "sburl": "bar",
+    "clientid": "foo",
+    "verificationkey": "bar",
+    "apiurl": "foo",
+    "xsappname": "bar",
+    "identityzone": "foo",
+    "identityzoneid": "bar",
+    "clientsecret": "foo",
+    "tenantid": "bar",
+    "url": "foo"
+  },
+  "sap.cloud.service": "com.sap.bpm.rule"
+}
+```
+
+Next, look at the `JSON` content and collect the values for the following `JSON` keys:
+
+- `rule_repository_url` (this one is needed if you want to use the Rule Authoring API)
+- `rule_runtime_url` (this one is needed if you want to use the Rule Execution API)
+- `uaa\url`
+- `uaa\clientid`
+- `uaa\clientsecret`
+
+You'll need these values in the next step.
+
+### Create HTTP Destination
+
+Go to your CF subaccount, navigate to `Connectivity\Destinations` in the left-hand side menu, and create a new HTTP destination with the following properties:
+
+- Name: Business-Rules-Authoring-Api
+- Type: HTTP
+- URL: The value of `rule_repository_url`
+- Proxy Type: Internet
+- Authentication: OAuth2ClientCredentials
+- Client ID: The value of `clientid`
+- Client Secret: The value of `clientsecret`
+- Token Service URL: The value of `url` appended by `/oauth/token?grant_type=client_credentials`
+
+:::note Rule Execution Destination
+
+The above example shows how to configure the destination for the Rule Authoring API.
+You can configure the destination to point to the Rule Execution API by adapting the Name, the URL, and the Token Service URL fields accordingly.
+
+:::
+
+Click Save.
+Restart your app by navigating to `Spaces\<you-space-name>\Applications`.
+Chose your app from the list by clicking on the link with its name and find the restart button on the page that loads.
+
+### Create Destination Programmatically
+
+The invocation of the Business Rules client remains the same, the only difference in code is while trying to fetch the destination.
+The name of the HTTP destination that we configured in the SAP BTP cockpit is Business-Rules-Authoring-Api.
+Let's create a Java representation of this destination.
+
+```java
+final String destinationName = "Business-Rules-Authoring-Api";
+final HttpDestination ruleAuthoringDestination = DestinationAccessor.getDestination(destinationName).asHttp();
+```
+
+That's it, the invocation to the java client library would remain the [same](btp-business-rules-rest-api#invoke-the-apis) and no more changes are required.

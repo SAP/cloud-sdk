@@ -66,23 +66,23 @@ module.exports = {
         'environments/sap-btp-environments-overview',
         'environments/sap-btp-cloud-foundry-environment',
         'environments/sap-btp-kubernetes-environment-with-sap-gardener',
-        'environments/sap-btp-kyma-environment',
-        'features/service-bindings/load-service-bindings-from-environment'
+        'environments/sap-btp-kyma-environment'
       ]
     },
     {
       type: 'category',
       label: 'Guides',
       items: [
-        'guides/cf-cli',
-        'guides/cf-deploy',
-        'guides/cloud-foundry-xsuaa-service',
+        'guides/4.0-upgrade',
         'guides/manage-dependencies',
-        'guides/logging-overview',
-        'guides/tutorial-overview-sdk-java',
-        'guides/sap-cloud-sdk-linux-how-to',
         'guides/cap-sdk-integration',
-        'guides/spring-boot-war-deployment'
+        'guides/logging-overview',
+        'guides/spring-boot-war-deployment',
+        'guides/tutorial-overview-sdk-java',
+        'guides/cloud-foundry-xsuaa-service',
+        'guides/cf-deploy',
+        'guides/cf-cli',
+        'guides/sap-cloud-sdk-linux-how-to'
       ]
     },
     {
@@ -103,6 +103,7 @@ module.exports = {
     'sdk-java-troubleshooting-frequent-problems',
     'release-policy',
     'release-notes-sap-cloud-sdk-for-java',
+    'support-java',
     'frequently-asked-questions',
     {
       type: 'link',

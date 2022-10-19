@@ -1,0 +1,726 @@
+---
+id: sdk-connectivity-destination-service
+title: Use Destinations To Connect To Other Systems and Services
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Destinations
+description: This article describes how the SAP Cloud SDK for Java can be used to establish connections to other systems and services like SAP S/4HANA or SAP Business Technology Platform services.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - destination
+  - java
+  - connectivity
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+The SAP Cloud SDK offers some basic functionality that helps with connecting to other systems and services like SAP S/4HANA Cloud.
+The SAP Cloud SDK introduces the general concept of a `Destination` which holds basic information about how to connect to such a system.
+That could for instance be a `url`, a username, and password for basic authentication or some custom headers.
+
+This concept is integrated with the [Destination Service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html) that is available on the SAP Business Technology Platform.
+If the application has a service binding to this service in place the SAP Cloud SDK will provide access to these destinations.
+
+## Accessing Destinations
+
+In general destinations are accessed through the `DestinationAccessor`:
+
+```java
+DestinationAccessor.getDestination("my-destination");
+```
+
+This will look up the destination in the destination service if the application is running on SAP Business Technology Platform.
+Other sources like the environment variables are also considered.
+
+:::tip Authentication Flows
+Authentication flows like **OAuth 2.0 Client Credentials** and others are usually performed by the Destination Service.
+They are executed when querying the destination information and the resulting authorization information will be included in the response.
+
+See the note on [supported authentication flows](#supported-authentication-flows).
+:::
+
+:::caution Destinations are cached for 5 minutes
+
+Mind that Destinations are cached for 5 minutes.
+If you are debugging you Destination configuration either wait for 5 minutes before the next retrieval or restart you application.
+We plan to make this cache configurable.
+
+To minimize the runtime overhead of finding destinations, the SAP Cloud SDK uses caching to internally maintain a list of already retrieved destinations.
+Therefore, subsequent calls to `DestinationAccessor.getDestination("my-destination");` will be served from that cache instead of performing the look up over and over again.
+Cache entries will automatically be invalidated 5 minutes after their initial creation.
+
+:::
+
+## Supported Authentication Flows
+
+The SAP Cloud SDK does not implement most of the authentication flows itself.
+Instead, it relies on the Destination Service to perform the flows and complements it with additional steps, if necessary.
+
+The SAP Cloud SDK recognizes the following authentication types of the SAP BTP Destination Service:
+
+| Authentication Type                                                                                                                                                             | Parameter Name                                         |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :----------------------------------------------------- |
+| [`NoAuthentication`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/4e13a04147314e8e9e54321f25d93fdc.html)                                            | `AuthenticationType.NO_AUTHENTICATION`                 |
+| [`BasicAuthentication`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/4e13a04147314e8e9e54321f25d93fdc.html)                                         | `AuthenticationType.BASIC_AUTHENTICATION`              |
+| [`PrincipalPropogation`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/73194cc419894433994c5f0444b4c6a1.html)                                        | `AuthenticationType.PRINCIPAL_PROPAGATION`             |
+| [`ClientCertificateAuthentication`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/4e13a04147314e8e9e54321f25d93fdc.html)                             | `AuthenticationType.CLIENT_CERTIFICATE_AUTHENTICATION` |
+| [`AppToAppSSO`](https://help.sap.com/viewer/b865ed651e414196b39f8922db2122c7/Cloud/en-US/e022a5eebaec4dbbabef7f5d60e13dd4.html?q=AppToAppSSO)                                   | `AuthenticationType.APP_TO_APP_SSO`                    |
+| [`OAuth2ClientCredentials`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/4e1d742a3d45472d83b411e141729795.html)                                     | `AuthenticationType.OAUTH2_CLIENT_CREDENTIALS`         |
+| [`OAuth2SAMLBearerAssertion`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/c69ea6aacd714ad2ae8ceb5fc3ceea56.html)                                   | `AuthenticationType.OAUTH2_SAML_BEARER_ASSERTION`      |
+| [`OAuth2UserTokenExchange`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e3c333f9de6245fca326993f2397c13a.html)                                     | `AuthenticationType.OAUTH2_USER_TOKEN_EXCHANGE`        |
+| [`OAuth2JWTBearer`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/283cd2d1c72147a18c69daf681650f07.html)                                             | `AuthenticationType.OAUTH2_JWT_BEARER`                 |
+| [`SAPAssertionSSO`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/ceb8c4fa61e6443190185696c6d0342d.html)                                             | `AuthenticationType.SAP_ASSERTION_SSO`                 |
+| [`InternalSystemAuthentication`](https://help.sap.com/viewer/2d168c76daa1406b8567eee447eb1b2f/Cloud/en-US/a9c2c896be574077b56a7b2e2790e86c.html?q=InternalSystemAuthentication) | `AuthenticationType.INTERNAL_SYSTEM_AUTHENTICATION`    |
+| [`OAuth2Password`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/452357cdd82a4c0ba6095b36c0057526.html)                                              | `AuthenticationType.OAUTH2_PASSWORD`                   |
+| [`SAMLAssertion`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/d81e1683bd434823abf3ceefc4ff157f.html)                                               | `AuthenticationType.SAML_ASSERTION`                    |
+
+:::tip Other Destination Sources
+In some situations you may want to obtain a destination **not** from the Destination Service, but e.g. from the environment variables.
+
+In that case, only `NoAuthentication` and `BasicAuthentication` are supported by default.
+Additionally, `OAuth2ClientCredentials` as well as `OAuth2UserTokenExchange` are available through a dedicated API.
+
+For more details visit the sections on how to [Configure HTTP Destinations for Local Deployment](#configure-http-destinations-for-local-development-environment) and [Skip Destination Creation Step for Certain Authentication Types on Cloud Foundry](#skip-destination-creation-step-for-certain-authentication-types-on-cloud-foundry).
+:::
+
+### Integrated Multi-Tenancy
+
+By default, the `DestinationAccessor` is tenant aware.
+If a tenant is available, it will be used to access the destination service on behalf of that tenant.
+If no destination is found in the tenant-specific destination service, the SAP Cloud SDK will try to get it using the service binding of the application.
+
+This default retrieval strategy can be overridden by passing options to the destination loader as follows:
+
+```java
+DestinationAccessor.getLoader().tryGetDestination(destinationName, options);
+```
+
+See the section on [destination options](#building-destination-options) below.
+
+### Using the SAMLAssertion Authentication Type
+
+Using the [`SAMLAssertion`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/d81e1683bd434823abf3ceefc4ff157f.html) authentication types requires a different caching strategy for `HttpClient`s.
+This is because upon authentication at the target system, a session cookie is returned, which is stored within the used `HttpClient` instance.
+For subsequent calls, the service then expects authenticated clients to include their session cookie.
+
+By default, the SAP Cloud SDK uses the `RequestScopedHttpClientCache` to store `HttpClient` instances for the duration of a specific (incoming) request.
+Using this default strategy results into deleting the `HttpClient` (together with the session cookie) that was used to authorize at the target system, once the initial request has been handled.
+To avoid authorizing over and over again, the SAP Cloud SDK offers the `TimeScopedHttpClientCache`, which keeps existing `HttpClient`s for a certain period of time.
+These instances are then automatically reused for consecutive (incoming) requests, so that the session is retained.
+
+Switching the cache can be done as follows:
+
+```java
+// run this code once in a setup step, afterwards HttpClient instances are kept for 5 minutes
+HttpClientAccessor.setHttpClientCache(new TimeScopedHttpClientCache(5, TimeUnit.MINUTES));
+```
+
+:::note Hint
+
+The cached `HttpClient` instances are also isolated based on the tenant and principal.
+
+:::
+
+## Supported Proxy Types
+
+| Proxy Type                                                                                                                    | Parameter Name           |
+| :---------------------------------------------------------------------------------------------------------------------------- | :----------------------- |
+| [`Internet`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/42a0e6b966924f2e902090bdf435e1b2.html)  | `ProxyType.INTERNET`     |
+| [`OnPremise`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/42a0e6b966924f2e902090bdf435e1b2.html) | `ProxyType.ON_PREMISE`   |
+| [`PrivateLink`](https://help.sap.com/viewer/product/PRIVATE_LINK/CLOUD/en-US)\*                                               | `ProxyType.PRIVATE_LINK` |
+
+\* Further reading: [SAP BTP Private Link Announcement Blog Post](https://blogs.sap.com/2021/10/28/btp-private-linky-swear-with-azure-propagate-your-sap-principels/)
+
+## Decorating Destinations
+
+Depending on the use case, one needs to wrap the accessed destination before issuing a request to a system.
+This is to make sure all required destination properties are correctly set before invoking the actual request.
+
+### HTTP Destinations
+
+In case of HTTP connections one needs to wrap the retrieved destination as `HttpDestination` using `asHttp()`:
+
+```java
+DestinationAccessor.getDestination("my-destination").asHttp();
+```
+
+This method ensures that the required destination properties are all set to make the HTTP connection.
+With the resulting destination instance depending on the use case one can run HTTP queries for OData or REST.
+
+### BAPI Destinations
+
+Similarly, for BAPI endpoints you need to use `asRfc()`:
+
+```java
+DestinationAccessor.getDestination("my-destination").asRfc();
+```
+
+### Connect To SAP S/4HANA On-Premise
+
+If your destination is exposing an SAP S/4HANA On-premise service via a **[Cloud Connector](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e6c7616abb5710148cfcf3e75d96d596.html)** you need to decorate the destination with `DefaultErpHttpDestination`:
+
+```java
+final HttpDestination httpDestination =
+destination.asHttp().decorate(DefaultErpHttpDestination::new);
+```
+
+- This ensures the mapping of all SAP S/4HANA properties like `sap-client` and `sap-locale` as HTTP request headers.
+- In case **Principal Propagation** is specified as an authentication type for the destination the SAP Cloud SDK will automatically apply it.
+
+## Registering Destinations at Runtime
+
+The SAP Cloud SDK offers convenient ways to create a destination at runtime and register it so that it will be available via `DestinationAccessor.getDestination()`.
+This is especially useful when working in a local environment.
+Destinations configured in the destination service are not available in a local setting and have to be mocked.
+
+### Mocking Destinations for Testing
+
+The SAP Cloud SDK offers a `MockUtil` class that is capable of injecting destinations into the `DestinationAccessor`:
+
+```java
+final MockUtil mockUtil = new MockUtil();
+
+MockDestination destination = MockDestination
+            .builder("my-destination", URI.create("http://localhost:8080"))
+            .build();
+
+mockUtil.mockDestination(destination);
+
+// This will now return the mocked destination
+DestinationAccessor.getDestination("my-destination").asHttp();
+```
+
+This helps with keeping production and test code nicely separated.
+There are more overloads of the mocking on the [`MockUtil` class](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/testutil/MockUtil.html) that you can use.
+Refer to [these tutorial steps](https://developers.sap.com/tutorials/s4sdk-odata-service-cloud-foundry.html#b77d53b0-2d8b-449c-9a9a-9df80ee09a4e) on how to mock destinations for local development and testing.
+
+### Using Custom Destination Loaders
+
+The above is useful for testing but not suited for productive code.
+If you want to register custom destinations in your productive code you can use the following API:
+
+```java
+customHttpDestination = DefaultHttpDestination.builder("http://url")
+        .name("custom-destination")
+        .build();
+
+customLoader = new DefaultDestinationLoader()
+        .registerDestination(customHttpDestination);
+
+DestinationAccessor.appendDestinationLoader(loader);
+
+// This will now return the custom destination
+DestinationAccessor.getDestination("custom-destination").asHttp();
+```
+
+By default, the `DestinationAccessor` is using a `DestinationLoaderChain` that comprises multiple loaders.
+These are e.g. a loader to get destinations from the destination service and a loader that reads destinations from environment variables.
+
+The above `appendDestinationLoader()` will add the provided loader at the end of such a chain.
+That means the new loader can operate as a fallback.
+Use `prependDestinationLoader()` to add it at the beginning if you would like it to take precedence.
+Lastly use `setLoader()` to replace all existing loaders.
+
+## Provide Headers for Destinations
+
+### How It Works
+
+You can add headers that are sent for any request over destinations.
+You can implement custom logic that defines which headers are sent under which circumstances.
+
+:::note Example Use-case
+Let's imagine, you want to send an API token via a request header with any calls made over any destination in your whole application.
+:::
+
+The SAP Cloud SDK offers the interface `DestinationHeaderProvider` which defines the method `List<Header> getHeaders(DestinationRequestContext)`.
+At runtime, while preparing an outbound request, the SAP Cloud SDK will use all implementations of that interface which have been registered via the Java ServiceLoader mechanism (see below).
+For each registered implementation it invokes the method `getHeaders(DestinationRequestContext)` and appends the returned headers to the currently prepared request.
+
+You can also add headers to a specific destination using properties so they will be always included when calling the target system.
+See the [relevant](#add-headers-via-destination-properties) section below.
+
+### Implement Own Header Provider
+
+#### Implement the Interface `DestinationHeaderProvider`
+
+To implement your custom destination header provider, you need to implement the interface `DestinationHeaderProvider`.
+The method `getHeaders` provides access to the request specific context.
+The method argument of type `DestinationRequestContext` lets you access the general properties over which the currently prepared request will be issued.
+Depending on your logic to determine headers, you can read the following data types:
+
+- `DestinationProperties getDestination()` (e.g. the general destination name).
+- `URI getRequestUri()` (e.g. the request specific query parameters)
+
+Here is one simple example implementation which returns the same header for each request:
+
+```java
+@Nonnull
+@Override
+public List<Header> getHeaders( @Nonnull final DestinationRequestContext requestContext )
+{
+  final Header header = new Header("API-Token", obtainApiToken());
+
+  return Collections.singletonList(header);
+}
+```
+
+#### Make Interface Implementation Accessible
+
+The SAP Cloud SDK uses the [Service Loader](https://docs.oracle.com/javase/7/docs/api/java/util/ServiceLoader.html) mechanism of Java to look up the `DestinationHeaderProvider` implementations at runtime.
+To let your custom implementation be found, you need to provide a configuration file as resource in the folder `META-INF/services`.
+Name this resource file as the interface `com.sap.cloud.sdk.cloudplatform.connectivity.DestinationHeaderProvider` and mention the fully-qualified class name of your custom implementation.
+You can refer to several implementations by putting their fully qualified class names on separate lines.
+
+Place the new folder + file in your resources folder.
+In a Maven project the resource folder is typically `src/main/resources/`.
+For example, if your custom implementation is named `ApiTokenHeaderProvider` in the package `com.example`, the configuration should be as follows:
+
+- File path & name:
+  ```
+  src/main/resources/META-INF/services/com.sap.cloud.sdk.cloudplatform.connectivity.DestinationHeaderProvider
+  ```
+- File content:
+  ```
+  com.example.ApiTokenHeaderProvider
+  ```
+
+### Add Headers via Destination Properties
+
+Here is one example implementation which adds the ("key1", "value1") header to every call to the destination:
+
+```java
+destination =
+            DefaultHttpDestination
+                .builder(server.baseUrl())
+                .property("URL.headers.key1", "value1")
+                .build();
+```
+
+To include headers into every call to a target system you can define them as properties on the destination.
+It can be a destination object that you defined in the Cloud Foundry Cockpit, or one you built in code via a destination builder.
+For that, call the `.property()` method on the destination.
+It expects a key-value pair with a key formatted as `URL.headers.<key>` and an arbitrary value string.
+
+## Provide Query Parameters for Destinations
+
+### How It Works
+
+You can add query parameters to a specific destination using properties.
+They will always be included in the query string when calling the target system.
+
+### Add Query Parameters via Destination Properties
+
+Here is one simple example implementation which adds "key1=value1" to the query string when calling the destination:
+
+```java
+destination =
+            DefaultHttpDestination
+                .builder(server.baseUrl())
+                .property("URL.queries.key1", "value1")
+                .build();
+```
+
+To include query parameters in the query string when calling to a target system you can define them as properties on the destination.
+For that, call the `.property()` method on the destination.
+It expects a key-value pair with a key formatted as `URL.headers.<key>` and an arbitrary value string.
+
+## Retrieving Destinations
+
+### Get All Destinations From the Destination Service on Cloud Foundry
+
+To fetch all destinations from the Destination Service, you need to make a call to `tryGetAllDestinations`.
+The method queries the [Destination Service API](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview) and retrieves all the destinations available at the service instance and sub-account level.
+In case there is a destination available on both the levels with the same name, then this method prioritizes the destination at the service instance level.
+
+Below is the sample call to `tryGetAllDestinations`:
+
+```java
+Try<Iterable<ScpCfDestination>> destinations = destinationLoader.tryGetAllDestinations(options);
+```
+
+In the above call `destinationLoader` needs to be an instance of `ScpCfDestinationLoader`.
+
+#### Configuring Timeout Durations When Querying the Destination Service on Cloud Foundry
+
+By default, the [`TimeLimiter` resilience pattern](/cloud-sdk/docs/java/features/resilience#resilience-capabilities) aborts requests to the Destination Service on Cloud Foundry after 6 seconds.
+If your app requires more time when fetching destinations, you may create your own `ScpCfDestinationLoader` instance by:
+
+```java
+// Allow requests to take up to 10 seconds instead of just 6
+DestinationLoader destinationLoader = new ScpCfDestinationLoader(Duration.ofSecond(10));
+```
+
+This operation overrides the default timeout duration so that you are free to choose whatever value fits your needs.
+
+:::note Hint
+
+You may register your `destinationLoader` within the `DestinationAccessor` by:
+
+```java
+DestinationAccessor.setLoader(destinationLoader);
+```
+
+That way, all future requests to the Destination Service will use the increased timeout duration.
+
+:::
+
+#### Building Destination Options
+
+You need to build a `DestinationOptions` object and pass it as a parameter.
+It defines how Destinations Service is queried.
+In a simple application without provider/subscriber setup, your initial configuration is as simple as:
+
+```java
+DestinationOptions options = DestinationOptions.builder().build();
+```
+
+##### Retrieval Strategy Options
+
+For a provider/subscriber setup, a [retrieval strategy](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/connectivity/ScpCfDestinationRetrievalStrategy.html) must be chosen according to your particular use case from:
+
+- `CURRENT_TENANT` (default, same behavior as the deprecated `ALWAYS_SUBSCRIBER`)
+- `ALWAYS_PROVIDER`
+- `ONLY_SUBSCRIBER`
+- `CURRENT_TENANT_THEN_PROVIDER`
+
+Here is an example for `CURRENT_TENANT_THEN_PROVIDER` option:
+
+```java
+DestinationOptions options =
+    DestinationOptions
+        .builder()
+        .augmentBuilder(
+            ScpCfDestinationOptionsAugmenter
+                .augmenter()
+                .retrievalStrategy(ScpCfDestinationRetrievalStrategy.CURRENT_TENANT_THEN_PROVIDER))
+        .build();
+```
+
+##### Token Exchange Options
+
+Besides the retrieval strategy, the SAP Cloud SDK also offers a [token exchange strategy](https://help.sap.com/doc/69f4a2d15d9b404fac06e968f0633d98/1.0/en-US/com/sap/cloud/sdk/cloudplatform/connectivity/ScpCfDestinationTokenExchangeStrategy.html) that lets you change the behavior when authentication requires a user token exchange.
+There are three different options available:
+
+- `LOOKUP_THEN_EXCHANGE` (default)
+- `LOOKUP_ONLY`
+- `EXCHANGE_ONLY`
+
+By default, the SAP Cloud SDK first looks up the destination on the destination service and evaluates the authentication type.
+If the authentication type requires a user token exchange the SAP Cloud SDK immediately performs that exchange.
+
+If you know that the destination you are about to retrieve requires a user token exchange you can improve performance by skipping the initial "look up" request like so:
+
+```java
+DestinationOptions options =
+    DestinationOptions
+        .builder()
+        .augmentBuilder(
+            ScpCfDestinationOptionsAugmenter
+                .augmenter()
+                .tokenExchangeStrategy(ScpCfDestinationTokenExchangeStrategy.EXCHANGE_ONLY))
+        .build();
+
+Try<Destination> destination = DestinationAccessor.getLoader().tryGetDestination("MyDestination", options);
+```
+
+## Configure HTTP Destinations for Local Development Environment
+
+When testing your app on you local development machine instead of SAP BTP, you require some configuration steps to make the destination retrieval work.
+
+:::note Relevant only for HTTP destinations
+
+Check our [BAPI and RFC documentation](../bapi-and-rfc/overview.mdx) if you want to configure an RFC destination for local development.
+
+:::
+
+To better understand the configuration steps, we will shortly outline how destination retrieval works when your app runs on SAP BTP.
+
+### Background: Destination Retrieval on SAP Business Technology Platform
+
+By default, the SAP Cloud SDK uses a set of destination loaders in the following order when searching for a destination via the `DestinationAccessor` API
+
+1. Environment variable
+1. SAP BTP Destination service
+
+Example API call looks like this:
+
+```java
+
+DestinationAccessor.tryGetDestination("MyDestination");
+
+```
+
+<details>
+    <summary>Details and example values of a destination retrieval</summary>
+
+1. Lookup in the environment variable
+
+   The first destination loader attempts to find the requested destination in the environment variable `destinations`.
+   This works the same in the local development environment.
+   For example:
+
+```json
+[
+  {
+    "type": "HTTP",
+    "name": "MyDestination",
+    "proxyType": "Internet",
+    "description": "This destination rocks!",
+    "authentication": "BasicAuthentication",
+    "url": "https://URL",
+    "user": "USER",
+    "password": "PASSWORD"
+  }
+]
+```
+
+You can add as many destinations as you need this way.
+
+:::tip Authorization Token Forwarding
+By adding `"forwardAuthToken": "true"` to your destination, you will forward the value of the `Authorization` header from the current request directly to the target system.
+:::
+
+1. Lookup via SAP BTP Destination service
+
+   If the previous lookup was not successful, the next destination loader examines the environment variable `VCAP_SERVICES` to see if the SAP BTP Destination service is bound.
+   The SAP Cloud SDK tries to fetch the destination from the SAP BTP Destination service using the given destination name.
+
+**_Reaching On Premise Systems via the SAP BTP Connectivity Service_**
+In case the destination is of proxy type `OnPremise`, the SAP Cloud SDK performs an additional query to the SAP BTP Connectivity service.
+Further proxy information and an authorization token are obtained.
+
+</details>
+
+### Automatically Inject Service bindings via Cloud Application Programming Development Kit
+
+If you already have a SAP BTP account with all the service binding and want to leverage them in you local environment - try [CAP Development Kit](https://cap.cloud.sap/docs/advanced/hybrid-testing#run-with-service-bindings).
+The SAP Cloud SDK will do the rest of the destination retrieval job for you as described above.
+You will need `Node.js` to [install CAP Development Kit](https://cap.cloud.sap/docs/advanced/hybrid-testing#run-cap-java-apps-with-service-bindings) by running:
+
+```bash
+
+npm i -g @sap/cds-dk
+
+```
+
+Now, you can start any Java app with service binding injected into your local environment by using `cds bind` command.
+The command will create a `VCAP_SERVICES` variable containing service keys from a Cloud Foundry space or Kubernetes cluster without storing credentials on a disk.
+Start your Java application similarly to the code snippet below:
+
+```bash
+
+cds bind --exec mvn spring-boot:run
+
+```
+
+For more details look at the [official CAP documentation](https://cap.cloud.sap/docs/advanced/hybrid-testing#run-with-service-bindings)
+
+### Configure Destinations Manually
+
+#### Destinations With Proxy Type `Internet`
+
+Create the destination configuration and pass it via the environment variable `destinations`.
+Check the example below:
+
+```json
+[
+  {
+    "type": "HTTP",
+    "name": "MyDestination",
+    "proxyType": "Internet",
+    "description": "This destination rocks!",
+    "authentication": "BasicAuthentication",
+    "url": "https://URL",
+    "user": "USER",
+    "password": "PASSWORD"
+  }
+]
+```
+
+You can add as many destinations as you need by adding them to the `JSON` array.
+
+:::tip Authorization Token Forwarding
+
+By adding `"forwardAuthToken": "true"` to your destination, you will forward the value of the `Authorization` header from the current request directly to the target system.
+
+:::
+
+#### Destinations With Proxy Type `OnPremise`
+
+For this destination types we need to access the **Destination** and **Connectivity** services on SAP BTP.
+To achieve that you have to bind them and inject via [CAP Development Kit](#automatically-inject-service-bindings-via-cap-development-kit).
+Or manually provide your [`VCAP_SERVIES`](#create-and-provide-vcap_services-variable) variable.
+
+:::tip When your Client and On-Premise Service are in the Same Network
+If your local development environment and an On-Premise service are in the same network, you can use a simple HTTP destination by providing it via `destinations` environment variable instead of relying on the SAP BTP Connectivity service.
+:::
+
+#### Create and Provide `VCAP_SERVICES` Variable
+
+How to create the `VCAP_SERVICES` representation depends on whether the Cloud Application Programming (CAP) Model is used.
+
+<Tabs groupId="isCapUsed" defaultValue="true" values={[ { label: 'CAP is used', value: 'true', }, { label: 'CAP is not used', value: 'false', }]}>
+
+<TabItem value="false">
+
+Create the `VCAP_SERVIES` environment variable on the shell or operating system level.
+Copy the value of that environment variable from your app which is deployed to SCP.
+
+</TabItem>
+
+<TabItem value ="true">
+
+Create the file `default-env.json` in your project's root and supply the `VCAP_SERVICES` value you copied beforehand so that the file looks similar to the following shortened example:
+
+```json
+{
+  "VCAP_SERVICES": {
+    "connectivity": [
+      {
+        "label": "connectivity",
+        "plan": "lite",
+        "name": "my-connectivity",
+        "instance_name": "my-connectivity",
+        "credentials": {
+          ...
+        }
+      }
+    ],
+    "xsuaa": [
+      {
+        "label": "xsuaa",
+        "plan": "space",
+        "name": "my-xsuaa",
+        "instance_name": "my-xsuaa",
+        "credentials": {
+          ...
+        }
+      }
+    ],
+    "destination": [
+      {
+        "label": "destination",
+        "plan": "lite",
+        "name": "my-destination",
+        "instance_name": "my-destination",
+        "credentials": {
+          ...
+        }
+      }
+    ]
+  }
+}
+
+
+```
+
+Furthermore, add the dependency `com.sap.cds:cds-integration-cloud-sdk` to your POM file:
+
+```xml
+<dependency>
+  <groupId>com.sap.cds</groupId>
+  <artifactId>cds-integration-cloud-sdk</artifactId>
+</dependency>
+```
+
+</TabItem>
+
+</Tabs>
+
+#### Reach On-Premise Service from the SAP Business Application Studio
+
+If you are developing an application in the **Business Application Studio (BAS)**, and want to reach On-Premise systems, perform the following steps:
+
+1. Make sure your BAS instance is part of the same CF space as your Cloud Connector.
+1. Add properties `WebIDEEnabled` and `HTML5.DynamicDestination` to your On-Premise destination with the value `true`.
+1. In BAS, configure your `destinations` environment variable as follows:
+
+```json
+[
+  {
+    "type": "HTTP",
+    "name": "<DESTINATION-NAME>",
+    "url": "http://<DESTINATION-NAME>.dest",
+    "ProxyHost": "localhost",
+    "ProxyPort": 8887
+  }
+]
+```
+
+Please refer to [the BAS connectivity guide](/docs/js/guides/bas-external-system) created for the SAP Cloud SDK for JavaScript to get more information and a detailed description of the technical background.
+The information there also applies to the SAP Cloud SDK for Java.
+
+#### Skip Destination Creation Step for Certain Authentication Types on Cloud Foundry
+
+For certain authentication types i.e. `NoAuthentication` and `OAuth2ClientCredentials` there is an API that eliminates the need to manually create a destination in the CF account for connecting to services.
+
+Example:
+
+```java
+final Map<String, String> mapping =
+      ScpCfServiceDestinationLoader.buildClientCredentialsMapping(
+        "credentials.endpoints.service_rest_url",
+        "credentials.uaa.clientid",
+        "credentials.uaa.clientsecret",
+        "credentials.endpoints.token_url");
+```
+
+The `ScpCfServiceDestinationLoader.buildClientCredentialsMapping` method creates a mapping for loading a destination and provides JSON paths for all required destination properties.
+
+```java
+final HttpDestination destination =
+      ScpCfServiceDestinationLoader.getDestinationForService(
+        "label",
+        "serviceBindingName",
+        AuthenticationType.OAUTH2_CLIENT_CREDENTIALS,
+        mapping);
+```
+
+For certain services (only SAP BTP Workflow service for now), we provide further convenience that skips the need to provide the `mapping` explicitly.
+Example:
+
+```java
+final HttpDestination destination =
+      ScpCfServiceDestinationLoader.getDestinationForService(
+        ScpCfServiceDestinationLoader.CfServices.WORKFLOW,
+        "my-workflow");
+```
+
+#### Enable Access to SAP Business Technology Platform Connectivity Service
+
+The SAP BTP connectivity service builds the connection between SAP BTP and the On-premise network.
+That is why it has strong built-in restrictions to allow it only to be called from within SCP.
+If you call the connectivity service from your local machine, you will encounter a connection timeout.
+We'll therefore apply port forwarding via SSH to simulate that your localhost plays the cloud app.
+
+- Deploy your app to the SAP BTP once.
+- Enable SSH access to your app container with the `cf` CLI:
+
+```bash
+cf enable-ssh app-name
+cf restart app-name
+```
+
+- Inspect the value of the entry `connectivity` of your `VCAP_SERVICES` and take note of the values of the fields
+  - `credentials.onpremise_proxy_port`
+  - `credentials.onpremise_proxy_host`
+
+:::note
+We'll refer to these values as _proxy-port_ and _proxy-host_ hereafter.
+:::
+
+- Create an SSH session to your app container with the following command and let the session opened:
+
+```bash
+cf ssh app-name -L proxy-port:proxy-host:proxy-port
+```
+
+- Replace the value of the field `VCAP_SERVICES.connectivity.credentials.onpremise_proxy_host` in your `default-env.json`
+  with `localhost`.
+
+:::success Ready
+Now your local setup is ready to consume an On-premise HTTP destination.
+:::
