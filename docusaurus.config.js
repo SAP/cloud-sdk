@@ -145,6 +145,10 @@ module.exports = {
               href: 'https://github.com/SAP/cloud-sdk-js'
             },
             {
+              label: 'Sample repository',
+              href: 'https://github.com/SAP-samples/cloud-sdk-js'
+            },
+            {
               label: 'Support',
               to: 'docs/js/support-js'
             }
