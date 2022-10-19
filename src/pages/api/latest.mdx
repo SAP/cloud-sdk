@@ -9,6 +9,9 @@ keywords:
   - sap cloud sdk
 ---
 
+import BrowserOnly from '@docusaurus/BrowserOnly';
 import jsSdkVersions from '../../../static/api/versions';
-// prettier-ignore
-window.location.href = `/cloud-sdk/api/${jsSdkVersions[0]}/`
+
+<BrowserOnly>
+  {() => (window.location.href = `/cloud-sdk/api/${jsSdkVersions[0]}/`)}
+</BrowserOnly>
