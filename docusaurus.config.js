@@ -83,7 +83,7 @@ module.exports = {
         },
         {
           label: '🚀 JavaScript',
-          to: 'docs/js/overview-cloud-sdk-for-javascript',
+          to: 'docs/js/overview',
           position: 'left',
           docsPluginId: 'docs-js',
           activeBasePath: 'docs/js',
@@ -150,7 +150,7 @@ module.exports = {
             },
             {
               label: 'Support',
-              to: 'docs/js/support-js'
+              to: 'docs/js/support'
             }
           ]
         },
@@ -272,7 +272,7 @@ module.exports = {
       {
         redirects: [
           {
-            to: '/docs/js/overview-cloud-sdk-for-javascript',
+            to: '/docs/js/overview',
             from: '/docs/js/frequently-asked-questions',
           },
           {
@@ -280,12 +280,12 @@ module.exports = {
             from: ['/docs/community', '/docs/related-projects']
           },
           {
-            to: 'docs/js/support',
-            from: 'docs/js/support-js'
+            to: '/docs/js/support',
+            from: '/docs/js/support-js'
           },
           {
-            to: 'docs/js/release-notes',
-            from: 'docs/js/release-notes-sap-cloud-sdk-for-javascript-and-typescript'
+            to: '/docs/js/release-notes',
+            from: '/docs/js/release-notes-sap-cloud-sdk-for-javascript-and-typescript'
           },
           {
             to: '/docs/js/overview',

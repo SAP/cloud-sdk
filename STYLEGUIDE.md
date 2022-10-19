@@ -63,6 +63,8 @@
     - [Use Numbered List for Steps To Be Performed in Order](#use-numbered-list-for-steps-to-be-performed-in-order)
     - [Use Description List With Headings for Describing Terms](#use-description-list-with-headings-for-describing-terms)
       - [Exception: Capital Letter](#exception-capital-letter)
+- [SEO](#search-engine-optimization)
+  - [Slugs](#Slugs)
 
 # Formatting
 
@@ -575,3 +577,7 @@ If the case is an important part of the information conveyed by the list - such 
 ```
 - `minTimeout`: initial waiting time for the first retry.
 ```
+
+# Search Engine Optimization
+
+## Slugs

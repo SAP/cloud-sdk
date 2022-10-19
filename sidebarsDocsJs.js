@@ -1,6 +1,6 @@
 module.exports = {
   docsJsSidebar: [
-    'overview-cloud-sdk-for-javascript',
+    'overview',
     'getting-started',
     {
       type: 'category',
@@ -13,15 +13,15 @@ module.exports = {
             'features/odata/overview',
             'features/odata/generate-odata-client',
             'features/odata/execute-odata-request',
-            'features/odata/use-odata-v2-type-safe-client-for-javascript-typescript',
-            'features/odata/use-odata-v4-type-safe-client-for-javascript-typescript'
+            'features/odata/odata-v2-client',
+            'features/odata/odata-v4-client'
           ]
         },
         {
           type: 'category',
           label: 'Connectivity',
           items: [
-            'features/connectivity/destination',
+            'features/connectivity/destinations',
             'features/connectivity/destination-cache-isolation',
             'features/connectivity/proxy',
             'features/connectivity/generic-http-client',
@@ -51,15 +51,15 @@ module.exports = {
       type: 'category',
       label: 'Guides',
       items: [
-        'guides/migrate-sdk-application-from-btp-cf-to-kubernetes',
-        'guides/migrate-to-open-source-version-of-cloud-sdk-for-javascript-typescript',
+        'guides/migrate-cf-to-kubernetes',
+        'guides/migrate-to-open-source-cloud-sdk',
         'guides/upgrade-to-version-2',
-        'guides/bas-external-system',
+        'guides/connect-external-system-to-bas',
         'guides/sdk-in-browser',
         'guides/trust-and-key-stores',
-        'guides/how-to-use-the-approuter',
-        'guides/how-to-add-resilience',
-        'guides/how-to-retrieve-jwt',
+        'guides/approuter-with-cloud-sdk',
+        'guides/resilience-with-cloud-sdk',
+        'guides/retrieve-jwt',
         'guides/debug-remote-app'
       ]
     },
@@ -96,9 +96,9 @@ module.exports = {
     {
       type: 'category',
       label: 'Video Tutorials',
-      items: ['video/demo-of-cloud-sdk-for-javascript-with-calm-and-cap']
+      items: ['video/cloud-sdk-with-calm-and-cap']
     },
-    'release-notes-sap-cloud-sdk-for-javascript-and-typescript',
-    'support-js'
+    'release-notes',
+    'support'
   ]
 };
