@@ -266,22 +266,56 @@ module.exports = {
     [
       '@docusaurus/plugin-client-redirects',
       {
-        createRedirects(existingPath) {
-          if (
-            existingPath.includes('/community') ||
-            existingPath.includes('/related-projects')
-          ) {
-            return existingPath.replace('/docs/overview', '/docs');
+        redirects: [
+          {
+            to: '/docs/js/overview-cloud-sdk-for-javascript',
+            from: '/docs/js/frequently-asked-questions',
+          },
+          {
+            to: '/docs/overview/overview-cloud-sdk',
+            from: ['/docs/community', '/docs/related-projects']
+          },
+          {
+            to: 'docs/js/support',
+            from: 'docs/js/support-js'
+          },
+          {
+            to: 'docs/js/release-notes',
+            from: 'docs/js/release-notes-sap-cloud-sdk-for-javascript-and-typescript'
+          },
+          {
+            to: '/docs/js/overview',
+            from: '/docs/js/overview-cloud-sdk-for-javascript'
+          },
+          {
+            to: '/docs/js/video/cloud-sdk-with-calm-and-cap',
+            from: '/docs/js/video/demo-of-cloud-sdk-for-javascript-with-calm-and-cap'
+          },
+          {
+            to: '/docs/js/guides/migrate-to-open-source-cloud-sdk',
+            from: '/docs/js/guides/migrate-to-open-source-version-of-cloud-sdk-for-javascript-typescript'
+          },
+          {
+            to: '/docs/js/guides/migrate-cf-to-kubernetes',
+            from: '/docs/js/guides/migrate-sdk-application-from-btp-cf-to-kubernetes'
+          },
+          {
+            to: '/docs/js/guides/connect-external-system-to-bas',
+            from: '/docs/js/guides/bas-external-system'
+          },
+          {
+            to: '/docs/js/guides/approuter-with-cloud-sdk',
+            from: '/docs/js/guides/how-to-use-the-approuter'
+          },
+          {
+            to: '/docs/js/guides/resilience-with-cloud-sdk',
+            from: '/docs/js/guides/how-to-add-resilience'
+          },
+          {
+            to: '/docs/js/guides/retrieve-jwt',
+            from: '/docs/js/guides/how-to-retrieve-jwt'
           }
-
-          if (existingPath.includes('/js/frequently-asked-questions')) {
-            return existingPath.replace(
-              'frequently-asked-questions',
-              'overview-cloud-sdk-for-javascript'
-            );
-          }
-          return undefined;
-        }
+        ],
       }
     ],
     function nodeWebpackPolyfillPlugin(context, options) {
