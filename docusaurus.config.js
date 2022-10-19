@@ -318,6 +318,18 @@ module.exports = {
           {
             to: '/docs/js/guides/retrieve-jwt',
             from: '/docs/js/guides/how-to-retrieve-jwt'
+          },
+          {
+            to: '/docs/js/features/connectivity/destinations',
+            from: '/docs/js/features/connectivity/destination'
+          },
+          {
+            to: '/docs/js/features/odata/odata-v2-client',
+            from: '/docs/js/features/odata/use-odata-v2-type-safe-client-for-javascript-typescript'
+          },
+          {
+            to: '/docs/js/features/odata/odata-v4-client',
+            from: '/docs/js/features/odata/use-odata-v4-type-safe-client-for-javascript-typescript'
           }
         ],
       }
