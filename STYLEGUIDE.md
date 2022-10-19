@@ -1,3 +1,4 @@
+<!-- Disable vale off -->
 ## Table of Contents
 
 - [Formatting](#formatting)
@@ -578,6 +579,96 @@ If the case is an important part of the information conveyed by the list - such 
 - `minTimeout`: initial waiting time for the first retry.
 ```
 
+<!-- vale off -->
 # Search Engine Optimization
 
 ## Slugs
+
+The slug is the the end part of a URL after the backslash:
+
+```
+my-website.com/this-is-my-slug
+```
+
+Writing a good slug positively affects our SEO.
+
+It is created either from the `id` property which we have to set in every file, or from the file name, if the id is missing.
+Therefore we should always set the `id` property and consider the following:
+
+
+### Include Keywords
+
+A keyword is the search term we want a page to rank for most.
+
+For example, the following would be a slug for the debug page:
+❌
+
+```
+id: find-problems-in-the-sap-cloud-sdk
+```
+
+✅
+
+```
+id: debugging
+```
+
+### Function Words
+
+Function words are he are words like “a”, “the” and “and”.
+In some cases, you might need those in it to clarify what your page is about, but usually, you can leave them out.
+
+For example, the following would be a slug for a migration page:
+
+❌
+
+```
+id: migrating-from-sap-btp-cloud-foundry-to-a-kubernetes-environment-with-the-sap-cloud-sdk
+```
+
+✅
+
+```
+id: migrate-from-cf-to-kubernetes
+```
+
+
+### Focus
+
+The URL of our page is sometimes shown in Google search results and influences whether our audience decides to click on our page.
+Therefore don’t just filter out unnecessary function words, but really all the words that you don’t need. 
+
+For example, the following would be a slug for a troubleshooting guide page:
+
+❌
+
+```
+id: how-to-improve-error-messages-in-the-cloud-sdk
+```
+
+✅
+
+```
+id: improve-logging
+```
+
+### Lowercase
+
+Only use lowercase letters only in our slugs, otherwise we could create duplicate content by mixing uppercase and lowercase letters.
+
+
+For example, the following would be a slug for our an FAQ page:
+❌
+
+```
+id: Frequently-Asked-Questions
+```
+
+✅
+
+```
+id: frequently-asked-questions
+```
+
+<!-- vale on -->
+<!-- Disable vale on -->
