@@ -273,7 +273,7 @@ module.exports = {
         redirects: [
           {
             to: '/docs/js/overview',
-            from: '/docs/js/frequently-asked-questions',
+            from: '/docs/js/frequently-asked-questions'
           },
           {
             to: '/docs/overview/overview-cloud-sdk',
@@ -331,7 +331,7 @@ module.exports = {
             to: '/docs/js/features/odata/odata-v4-client',
             from: '/docs/js/features/odata/use-odata-v4-type-safe-client-for-javascript-typescript'
           }
-        ],
+        ]
       }
     ],
     function nodeWebpackPolyfillPlugin(context, options) {

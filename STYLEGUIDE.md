@@ -1,4 +1,5 @@
 <!-- Disable vale off -->
+
 ## Table of Contents
 
 - [Formatting](#formatting)
@@ -580,6 +581,7 @@ If the case is an important part of the information conveyed by the list - such 
 ```
 
 <!-- vale off -->
+
 # Search Engine Optimization
 
 ## Slugs
@@ -594,7 +596,6 @@ Writing a good slug positively affects our SEO.
 
 It is created either from the `id` property which we have to set in every file, or from the file name, if the id is missing.
 Therefore we should always set the `id` property and consider the following:
-
 
 ### Include Keywords
 
@@ -632,11 +633,10 @@ id: migrating-from-sap-btp-cloud-foundry-to-a-kubernetes-environment-with-the-sa
 id: migrate-from-cf-to-kubernetes
 ```
 
-
 ### Focus
 
 The URL of our page is sometimes shown in Google search results and influences whether our audience decides to click on our page.
-Therefore don’t just filter out unnecessary function words, but really all the words that you don’t need. 
+Therefore don’t just filter out unnecessary function words, but really all the words that you don’t need.
 
 For example, the following would be a slug for a troubleshooting guide page:
 
@@ -655,7 +655,6 @@ id: improve-logging
 ### Lowercase
 
 Only use lowercase letters only in our slugs, otherwise we could create duplicate content by mixing uppercase and lowercase letters.
-
 
 For example, the following would be a slug for our an FAQ page:
 ❌
