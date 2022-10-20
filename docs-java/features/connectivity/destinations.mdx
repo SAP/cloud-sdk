@@ -100,30 +100,6 @@ DestinationAccessor.getLoader().tryGetDestination(destinationName, options);
 
 See the section on [destination options](#building-destination-options) below.
 
-### Using the SAMLAssertion Authentication Type
-
-Using the [`SAMLAssertion`](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/d81e1683bd434823abf3ceefc4ff157f.html) authentication types requires a different caching strategy for `HttpClient`s.
-This is because upon authentication at the target system, a session cookie is returned, which is stored within the used `HttpClient` instance.
-For subsequent calls, the service then expects authenticated clients to include their session cookie.
-
-By default, the SAP Cloud SDK uses the `RequestScopedHttpClientCache` to store `HttpClient` instances for the duration of a specific (incoming) request.
-Using this default strategy results into deleting the `HttpClient` (together with the session cookie) that was used to authorize at the target system, once the initial request has been handled.
-To avoid authorizing over and over again, the SAP Cloud SDK offers the `TimeScopedHttpClientCache`, which keeps existing `HttpClient`s for a certain period of time.
-These instances are then automatically reused for consecutive (incoming) requests, so that the session is retained.
-
-Switching the cache can be done as follows:
-
-```java
-// run this code once in a setup step, afterwards HttpClient instances are kept for 5 minutes
-HttpClientAccessor.setHttpClientCache(new TimeScopedHttpClientCache(5, TimeUnit.MINUTES));
-```
-
-:::note Hint
-
-The cached `HttpClient` instances are also isolated based on the tenant and principal.
-
-:::
-
 ## Supported Proxy Types
 
 | Proxy Type                                                                                                                    | Parameter Name           |
@@ -176,31 +152,7 @@ The SAP Cloud SDK offers convenient ways to create a destination at runtime and 
 This is especially useful when working in a local environment.
 Destinations configured in the destination service are not available in a local setting and have to be mocked.
 
-### Mocking Destinations for Testing
-
-The SAP Cloud SDK offers a `MockUtil` class that is capable of injecting destinations into the `DestinationAccessor`:
-
-```java
-final MockUtil mockUtil = new MockUtil();
-
-MockDestination destination = MockDestination
-            .builder("my-destination", URI.create("http://localhost:8080"))
-            .build();
-
-mockUtil.mockDestination(destination);
-
-// This will now return the mocked destination
-DestinationAccessor.getDestination("my-destination").asHttp();
-```
-
-This helps with keeping production and test code nicely separated.
-There are more overloads of the mocking on the [`MockUtil` class](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/testutil/MockUtil.html) that you can use.
-Refer to [these tutorial steps](https://developers.sap.com/tutorials/s4sdk-odata-service-cloud-foundry.html#b77d53b0-2d8b-449c-9a9a-9df80ee09a4e) on how to mock destinations for local development and testing.
-
-### Using Custom Destination Loaders
-
-The above is useful for testing but not suited for productive code.
-If you want to register custom destinations in your productive code you can use the following API:
+You can create a destination manually and prepare a loader for it as follows:
 
 ```java
 customHttpDestination = DefaultHttpDestination.builder("http://url")
@@ -222,7 +174,9 @@ These are e.g. a loader to get destinations from the destination service and a l
 The above `appendDestinationLoader()` will add the provided loader at the end of such a chain.
 That means the new loader can operate as a fallback.
 Use `prependDestinationLoader()` to add it at the beginning if you would like it to take precedence.
+
 Lastly use `setLoader()` to replace all existing loaders.
+This is useful if you want to supply a single destination to a piece of test code.
 
 ## Provide Headers for Destinations
 
@@ -381,7 +335,7 @@ DestinationOptions options = DestinationOptions.builder().build();
 
 For a provider/subscriber setup, a [retrieval strategy](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/connectivity/ScpCfDestinationRetrievalStrategy.html) must be chosen according to your particular use case from:
 
-- `CURRENT_TENANT` (default, same behavior as the deprecated `ALWAYS_SUBSCRIBER`)
+- `CURRENT_TENANT` (default)
 - `ALWAYS_PROVIDER`
 - `ONLY_SUBSCRIBER`
 - `CURRENT_TENANT_THEN_PROVIDER`
