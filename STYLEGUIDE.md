@@ -617,7 +617,7 @@ id: debugging
 ### Function Words
 
 Function words are he are words like “a”, “the” and “and”.
-In some cases, you might need those in it to clarify what your page is about, but usually, you can leave them out.
+Avoid function words in slugs and only include them if they are needed to clarify the slug.
 
 For example, the following would be a slug for a migration page:
 
@@ -636,7 +636,7 @@ id: migrate-from-cf-to-kubernetes
 ### Focus
 
 The URL of our page is sometimes shown in Google search results and influences whether our audience decides to click on our page.
-Therefore don’t just filter out unnecessary function words, but really all the words that you don’t need.
+Therefore remove not only function words but also other unnecessary words.
 
 For example, the following would be a slug for a troubleshooting guide page:
 
@@ -654,7 +654,7 @@ id: improve-logging
 
 ### Lowercase
 
-Only use lowercase letters only in our slugs, otherwise we could create duplicate content by mixing uppercase and lowercase letters.
+Use lowercase letters in slugs.
 
 For example, the following would be a slug for our an FAQ page:
 ❌
