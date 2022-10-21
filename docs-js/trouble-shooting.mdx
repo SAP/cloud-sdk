@@ -84,13 +84,14 @@ To do that, copy the `VCAP_SERVICES` environment of the application to the local
 
 ### Get Destination Error
 
-You retrieved an error in the process of getting the destination.
+You retrieved an error in the process of getting the destination or saw alarming logs while retrieving the destination.
 This can have multiple reasons:
 
 - The destination name is not correct or the destination is not present in your SAP BTP account.
 - The destination has errors in the `authToken` object.
   Adjust the configuration according to the error message until the destination service can receive a token.
 - The destination service is not bound to your application.
+- For onPremise destinations the connectivity service must be bound to your application.
 - The destination service is missing as a [dependency of your application](./tutorials/multi-tenant-application).
   This is only relevant in multi-tenant applications if you make the call via a subscriber account.
 
