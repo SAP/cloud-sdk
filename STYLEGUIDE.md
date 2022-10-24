@@ -77,10 +77,14 @@ Use code font to mark up code, such as:
 - HTTP status codes/verbs/content-types
 - env variables
 - Command line utility names (`cf`)
-- Console output
+- Console output (excluding [error messages](#use-quotation-marks-for-inline-error-messages-in-text))
 - Query parameter names and values
 
 ✅ instance of the `BusinessPartner` entity class
+
+✅ The function returns a `boolean` or `string`.
+
+✅ The `data` property contains the content of the response to your `GET` request.
 
 #### Use Code Format for Method Names
 
@@ -220,6 +224,7 @@ When discussing a file type generically, use the formal file type name in ordina
 ### Exception: Use Extension in Code Format To Mention File Ending
 
 Use only when you need to specifically mention a file ending.
+If the ending is case insensitive, you should write it in lowercase.
 
 ✅ base64 ASCII (e.g. `.pem`) and binary (e.g. `.der`).
 
