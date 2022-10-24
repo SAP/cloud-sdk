@@ -4,14 +4,14 @@ Therefore, the requests within one changeset should not depend on each other.
 If the execution of any request within a changeset fails, the whole changeset will be reflected as an error in the response.
 The changeset will not be applied, much like a database transaction.
 
-Unlike retrieve requests, you can not pass change requests to the `batch` function directly.
-You have to combine them in a `changeset`, which in turn can be passed to the `batch` function.
+Unlike retrieve requests, you can not pass change requests to the `batch()` function directly.
+You have to combine them in a changeset, which in turn can be passed to the `batch()` function.
 Once a batch request is executed, it returns a list of [`BatchResponse`s](#responses).
 
 If a changeset was executed successfully, its corresponding response is of type `WriteResponses` and contains a collection of all raw responses to the requests in the changeset.
 If the execution fails, the response is an `ErrorResponse`.
 
 In the example below, we create a list of [`UpdateRequestBuilder`s](#update-request-builder) from a list of addresses.
-We combine these change requests into one `changeset` and pass it to the `batch` request, which we execute against a destination.
+We combine these change requests into one changeset and pass it to the batch request, which we execute against a destination.
 
-Once we execute the `batch` request, we get a list of `BatchResponse`s, which in this example contains one response only, i.e. the one for the changeset.
+Once we execute the batch request, we get a list of `BatchResponse`s, which in this example contains one response only, i.e. the one for the changeset.
