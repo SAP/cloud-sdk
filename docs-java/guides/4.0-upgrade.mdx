@@ -25,7 +25,7 @@ There is a good chance that just bumping the version to `4.0.0` is already enoug
 In particular, updating may be straightforward if you are not using any deprecated API or spawn new threads.
 
 :::note Release Blog Post
-For more information also check out our [version 4 release blog post](https://blogs.sap.com/2022/03/01/sap-cloud-sdk-for-java-4.0-building-the-next-major-version/).
+For more information also check out our [version 4 release blog post](https://blogs.sap.com/2022/10/20/version-4-of-the-sap-cloud-sdk-for-java-is-here/).
 :::
 
 ## Before You Update
@@ -213,11 +213,26 @@ All deprecated API is removed With version 4 (exception being audit logging).
             <td>-</td>
             <td>Removed without replacement</td>
         </tr>
+        <tr>
+            <td>MockUtil.mockDestination</td>
+            <td>DestinationAccessor.appendDestinationLoader</td>
+            <td>Use `new DefaultDestinationLoader().registerDestination(...)`</td>
+        </tr>
+        <tr>
+            <td>MockUtil.mockTenant</td>
+            <td>TenantAccessor.executeWithTenant</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>MockUtil.mockPrincipal</td>
+            <td>TenantAccessor.executeWithPrincipal</td>
+            <td></td>
+        </tr>
     </tbody>
 </table>
 
 Note on the `MockUtil` class:
-Most API allows for easy mocking already.
+Most productive API allows for easy mocking already.
 Please reach out to us directly if you use this class and are not sure how to replace it.
 
 </details>
