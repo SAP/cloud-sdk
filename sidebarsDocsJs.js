@@ -22,9 +22,9 @@ module.exports = {
           label: 'Connectivity',
           items: [
             'features/connectivity/destinations',
-            'features/connectivity/destination-cache-isolation',
-            'features/connectivity/proxy',
-            'features/connectivity/generic-http-client',
+            'features/connectivity/destination-cache',
+            'features/connectivity/proxies',
+            'features/connectivity/http-client',
             'features/connectivity/on-premise'
           ]
         },
@@ -51,16 +51,15 @@ module.exports = {
       type: 'category',
       label: 'Guides',
       items: [
-        'guides/migrate-cf-to-kubernetes',
-        'guides/migrate-to-open-source-cloud-sdk',
+        'guides/kubernetes',
         'guides/upgrade-to-version-2',
-        'guides/connect-external-system-to-bas',
-        'guides/sdk-in-browser',
-        'guides/trust-and-key-stores',
-        'guides/approuter-with-cloud-sdk',
-        'guides/resilience-with-cloud-sdk',
+        'guides/bas',
+        'guides/browser',
+        'guides/trust-and-keystores',
+        'guides/approuter',
+        'guides/resilience',
         'guides/retrieve-jwt',
-        'guides/debug-remote-app'
+        'guides/remote-debugging'
       ]
     },
     {
@@ -81,8 +80,8 @@ module.exports = {
           type: 'category',
           label: 'Address Manager',
           items: [
-            'tutorials/address-manager/read-addresses',
-            'tutorials/address-manager/change-addresses'
+            'tutorials/address-manager/read',
+            'tutorials/address-manager/change'
           ]
         },
         'tutorials/multi-tenant-application'
@@ -96,7 +95,7 @@ module.exports = {
     {
       type: 'category',
       label: 'Video Tutorials',
-      items: ['video/cloud-sdk-with-calm-and-cap']
+      items: ['video/calm']
     },
     'release-notes',
     'support'
