@@ -272,64 +272,92 @@ module.exports = {
       {
         redirects: [
           {
-            to: '/docs/js/overview',
-            from: '/docs/js/frequently-asked-questions'
+            from: ['/docs/js/frequently-asked-questions','/docs/js/guides/migrate-to-open-source-version-of-cloud-sdk-for-javascript-typescript'],
+            to: '/docs/js/overview'
           },
           {
-            to: '/docs/overview/overview-cloud-sdk',
-            from: ['/docs/community', '/docs/related-projects']
+            from: ['/docs/community', '/docs/related-projects'],
+            to: '/docs/overview/overview-cloud-sdk'
           },
           {
-            to: '/docs/js/support',
-            from: '/docs/js/support-js'
+            from: '/docs/js/support-js',
+            to: '/docs/js/support'
           },
           {
-            to: '/docs/js/release-notes',
-            from: '/docs/js/release-notes-sap-cloud-sdk-for-javascript-and-typescript'
+            from: '/docs/js/release-notes-sap-cloud-sdk-for-javascript-and-typescript',
+            to: '/docs/js/release-notes'
           },
           {
-            to: '/docs/js/overview',
-            from: '/docs/js/overview-cloud-sdk-for-javascript'
+            from: '/docs/js/overview-cloud-sdk-for-javascript',
+            to: '/docs/js/overview'
           },
           {
-            to: '/docs/js/video/cloud-sdk-with-calm-and-cap',
-            from: '/docs/js/video/demo-of-cloud-sdk-for-javascript-with-calm-and-cap'
+            from: '/docs/js/video/demo-of-cloud-sdk-for-javascript-with-calm-and-cap',
+            to: '/docs/js/video/calm'
           },
           {
-            to: '/docs/js/guides/migrate-to-open-source-cloud-sdk',
-            from: '/docs/js/guides/migrate-to-open-source-version-of-cloud-sdk-for-javascript-typescript'
+            from: '/docs/js/guides/migrate-sdk-application-from-btp-cf-to-kubernetes',
+            to: '/docs/js/guides/kubernetes'
           },
           {
-            to: '/docs/js/guides/migrate-cf-to-kubernetes',
-            from: '/docs/js/guides/migrate-sdk-application-from-btp-cf-to-kubernetes'
+            from: '/docs/js/guides/bas-external-system',
+            to: '/docs/js/guides/bas'
           },
           {
-            to: '/docs/js/guides/connect-external-system-to-bas',
-            from: '/docs/js/guides/bas-external-system'
+            from: '/docs/js/guides/how-to-use-the-approuter',
+            to: '/docs/js/guides/approuter'
           },
           {
-            to: '/docs/js/guides/approuter-with-cloud-sdk',
-            from: '/docs/js/guides/how-to-use-the-approuter'
+            from: '/docs/js/guides/how-to-add-resilience',
+            to: '/docs/js/guides/resilience'
           },
           {
-            to: '/docs/js/guides/resilience-with-cloud-sdk',
-            from: '/docs/js/guides/how-to-add-resilience'
+            from: '/docs/js/guides/how-to-retrieve-jwt',
+            to: '/docs/js/guides/retrieve-jwt'
           },
           {
-            to: '/docs/js/guides/retrieve-jwt',
-            from: '/docs/js/guides/how-to-retrieve-jwt'
+            from: '/docs/js/features/connectivity/destination',
+            to: '/docs/js/features/connectivity/destinations'
           },
           {
-            to: '/docs/js/features/connectivity/destinations',
-            from: '/docs/js/features/connectivity/destination'
+            from: '/docs/js/features/odata/use-odata-v2-type-safe-client-for-javascript-typescript',
+            to: '/docs/js/features/odata/odata-v2-client'
           },
           {
-            to: '/docs/js/features/odata/odata-v2-client',
-            from: '/docs/js/features/odata/use-odata-v2-type-safe-client-for-javascript-typescript'
+            from: '/docs/js/features/odata/use-odata-v4-type-safe-client-for-javascript-typescript',
+            to: '/docs/js/features/odata/odata-v4-client'
           },
           {
-            to: '/docs/js/features/odata/odata-v4-client',
-            from: '/docs/js/features/odata/use-odata-v4-type-safe-client-for-javascript-typescript'
+            from: '/docs/js/features/connectivity/destination-cache-isolation',
+            to: '/docs/js/features/connectivity/destination-cache'
+          },
+          {
+            from: '/docs/js/guides/sdk-in-browser',
+            to: '/docs/js/guides/browser'
+          },
+          {
+            from: '/docs/js/guides/trust-and-key-stores',
+            to: '/docs/js/guides/trust-and-keystores'
+          },
+          {
+            from: '/docs/js/features/connectivity/generic-http-client',
+            to: '/docs/js/features/connectivity/http-client'
+          },
+          {
+            from: '/docs/js/guides/debug-remote-app',
+            to: '/docs/js/guides/remote-debugging'
+          },
+          {
+            from: '/docs/js/features/connectivity/proxy',
+            to: '/docs/js/features/connectivity/proxies'
+          },
+          {
+            from: '/docs/js/tutorials/address-manager/read-addresses',
+            to: '/docs/js/tutorials/address-manager/read'
+          },
+          {
+            from: '/docs/js/tutorials/address-manager/change-addresses',
+            to: '/docs/js/tutorials/address-manager/change'
           }
         ]
       }

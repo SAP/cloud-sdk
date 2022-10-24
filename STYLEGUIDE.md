@@ -597,11 +597,28 @@ Writing a good slug positively affects our SEO.
 It is created either from the `id` property which we have to set in every file, or from the file name, if the id is missing.
 Therefore we should always set the `id` property and consider the following:
 
+### Do not include base path in the slug
+Since our path is already `cloud-sdk/docs/js/*`, you should not include the words:
+`sap`, `cloud`, `sdk`, `js`
+
+❌
+
+```
+id: release-notes-sap-cloud-sdk-for-javascript-and-typescript'
+```
+
+✅
+
+```
+id: release-notes
+```
+
 ### Include Keywords
 
 A keyword is the search term we want a page to rank for most.
 
 For example, the following would be a slug for the debug page:
+
 ❌
 
 ```
@@ -616,7 +633,7 @@ id: debugging
 
 ### Function Words
 
-Function words are he are words like “a”, “the” and “and”.
+Function words are words like “a”, “the”, and “and”.
 Avoid function words in slugs and only include them if they are needed to clarify the slug.
 
 For example, the following would be a slug for a migration page:
@@ -657,6 +674,7 @@ id: improve-logging
 Use lowercase letters in slugs.
 
 For example, the following would be a slug for our an FAQ page:
+
 ❌
 
 ```
