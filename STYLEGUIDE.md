@@ -598,6 +598,7 @@ It is created either from the `id` property which we have to set in every file, 
 Therefore we should always set the `id` property and consider the following:
 
 ### Do not include base path in the slug
+
 Since our path is already `cloud-sdk/docs/js/*`, you should not include the words:
 `sap`, `cloud`, `sdk`, `js`
 

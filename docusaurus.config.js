@@ -272,7 +272,10 @@ module.exports = {
       {
         redirects: [
           {
-            from: ['/docs/js/frequently-asked-questions','/docs/js/guides/migrate-to-open-source-version-of-cloud-sdk-for-javascript-typescript'],
+            from: [
+              '/docs/js/frequently-asked-questions',
+              '/docs/js/guides/migrate-to-open-source-version-of-cloud-sdk-for-javascript-typescript'
+            ],
             to: '/docs/js/overview'
           },
           {
