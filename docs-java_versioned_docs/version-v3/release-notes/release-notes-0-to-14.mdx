@@ -12,7 +12,8 @@
 
 - _OData VDM client_: Add preview support for OData v4 services.
   - The new OData client implementation is capable of the basic Create, Read, Update, Delete (CRUD) operations on OData v4 services.
-  - Include an updated, dedicated generator that is capable of creating virtual data models through a command line interface or Maven plugin. Reference the artifact id `odata-v4-generator` in your `.pom` file.
+  - Include an updated, dedicated generator that is capable of creating virtual data models through a command line interface or Maven plugin. 
+    Reference the artifact id `odata-v4-generator` in your `.pom` file.
   - Advanced features like functions, actions or batch requests are not yet supported.
   - The implementation is initially in beta and thus does not guarantee a stable API.
 
@@ -28,7 +29,8 @@
 
 ### Compatibility Notes
 
-- Updating [`WorkItems`](https://help.sap.com/doc/e03ee6cbe2ea468f88e1970b61d55b62/1.0/en-US/com/sap/cloud/sdk/s4hana/datamodel/odata/namespaces/commercialproject/WorkItem.html) in the service [Commercial Project - Read](https://api.sap.com/api/_CPD_SC_EXTERNAL_SERVICES_SRV/resource) is no longer allowed as of SAP S/4HANA Cloud release 2002. The method `updateWorkItem()` was removed from [`CommercialProjectService`](https://help.sap.com/doc/e03ee6cbe2ea468f88e1970b61d55b62/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/CommercialProjectService.html).
+- Updating [`WorkItems`](https://help.sap.com/doc/e03ee6cbe2ea468f88e1970b61d55b62/1.0/en-US/com/sap/cloud/sdk/s4hana/datamodel/odata/namespaces/commercialproject/WorkItem.html) in the service [Commercial Project - Read](https://api.sap.com/api/_CPD_SC_EXTERNAL_SERVICES_SRV/resource) is no longer allowed as of SAP S/4HANA Cloud release 2002. 
+  The method `updateWorkItem()` was removed from [`CommercialProjectService`](https://help.sap.com/doc/e03ee6cbe2ea468f88e1970b61d55b62/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/CommercialProjectService.html).
 
 ### New Functionality
 
@@ -49,7 +51,7 @@
 ### New Functionality
 
 - _SCP Blockchain Module_: Allow the usage of custom HTTP clients by adding support for a custom HTTP request factory for the rest template in [`MultichainRequest`](https://help.sap.com/doc/3ef4616701f642658f0a7be6b2aaf587/1.0/en-US/index.html?com/sap/cloud/sdk/services/blockchain/multichain/service/MultichainRequest.html).
-- When creating a [`MultichainService`](https://help.sap.com/doc/3ef4616701f642658f0a7be6b2aaf587/1.0/en-US/index.html?com/sap/cloud/sdk/services/blockchain/multichain/service/MultichainService.html) instance using a SAP Cloud Platform destination, the destination's HTTP client will now be used as a pre-configured `HttpClient` instance with authentication, HTTP connection pooling, etc. for each [`MultichainRequest`](https://help.sap.com/doc/3ef4616701f642658f0a7be6b2aaf587/1.0/en-US/index.html?com/sap/cloud/sdk/services/blockchain/multichain/service/MultichainRequest.html).
+- When creating a [`MultichainService`](https://help.sap.com/doc/3ef4616701f642658f0a7be6b2aaf587/1.0/en-US/index.html?com/sap/cloud/sdk/services/blockchain/multichain/service/MultichainService.html) instance using a SAP Cloud Platform destination, the destination's HTTP client will now be used as a pre-configured `HttpClient` instance with authentication, HTTP connection pooling, etc for each [`MultichainRequest`](https://help.sap.com/doc/3ef4616701f642658f0a7be6b2aaf587/1.0/en-US/index.html?com/sap/cloud/sdk/services/blockchain/multichain/service/MultichainRequest.html).
 
 ### Improvements
 
@@ -67,7 +69,7 @@
 
 - _OData Generator_: Fix an issue where if only some of the declared EntitySets contained related service operations annotations in the `.edmx` file, the ones without such annotations got no operations resolved at all.
 - Fix an issue with [`BapiRequest`](https://help.sap.com/doc/3ef4616701f642658f0a7be6b2aaf587/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/connectivity/rfc/BapiRequest.html) where a `NoSuchElementException` was thrown in case a [`Destination`](https://help.sap.com/doc/3ef4616701f642658f0a7be6b2aaf587/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/connectivity/Destination.html) without a name was used.
-- Fix an issue concerning the encoding of special characters such as `#`, `&`, etc. in OData filter expressions.
+- Fix an issue concerning the encoding of special characters such as `#`, `&`, etc in OData filter expressions.
 
 ## 3.11.0
 
@@ -77,7 +79,9 @@
 
 ### Compatibility Notes
 
-- The existence of a principal as retrieved by the [`PrincipalAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html) is no longer an indicator for a JWT to be present. Due to the introduction of [`BasicAuthenticationAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html) a principal can also originate from the Basic Authentication header on the current request. As before verifying authentication and authorizations needs to be done explicitly by the application using the SAP Cloud SDK.
+- The existence of a principal as retrieved by the [`PrincipalAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html) is no longer an indicator for a JWT to be present.
+  Due to the introduction of [`BasicAuthenticationAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html) a principal can also originate from the Basic Authentication header on the current request. 
+  As before verifying authentication and authorizations needs to be done explicitly by the application using the SAP Cloud SDK.
 
 - The behavior for principal propagation when accessing On-Premise systems has changed as explained below in the Improvements section.
 
@@ -103,7 +107,9 @@
     BasicAuthenticationAccessor.setBasicAuthenticationFacade(new CustomBasicAuthenticationFacade());
     ```
 
-- Enable the [`PrincipalAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html) to also read the current principal from the newly introduced [`BasicAuthenticationAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html), in addition to the already existing way to read it from the current JWT. This functionality applies to Cloud Foundry. A valid JWT takes precedence over a Basic Authentication header.
+- Enable the [`PrincipalAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html) to also read the current principal from the newly introduced [`BasicAuthenticationAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html), in addition to the already existing way to read it from the current JWT. 
+  This functionality applies to Cloud Foundry. 
+  A valid JWT takes precedence over a Basic Authentication header.
 
   The order of resolution is
 
@@ -456,7 +462,8 @@
 
 ### Known Issues
 
-When defining destinations via the environment variable destinations, version 3.0.0 does not use basic authentication even if credentials are given. Either update to version 3.1.0 or manually add the following properties to the JSON defining a destination: "authentication": "BasicAuthentication", "authType": "BasicAuthentication".
+When defining destinations via the environment variable destinations, version `3.0.0` does not use basic authentication even if credentials are given. 
+Either update to version `3.1.0` or manually add the following properties to the JSON defining a destination: `"authentication": "BasicAuthentication"`, `"authType": "BasicAuthentication"`.
 
 ### Compatibility Notes
 
@@ -506,7 +513,7 @@ When defining destinations via the environment variable destinations, version 3.
 
 - s4hana / connectivity
 
-  ```
+  ```java
   com.sap.cloud.sdk.s4hana.connectivity.AbstractQuerySerializer -> com.sap.cloud.sdk.s4hana.connectivity.AbstractRequestSerializer
   com.sap.cloud.sdk.s4hana.connectivity.QueryExecutor -> com.sap.cloud.sdk.s4hana.connectivity.RequestExecutor
   com.sap.cloud.sdk.s4hana.connectivity.QueryResult -> com.sap.cloud.sdk.s4hana.connectivity.RequestResult
@@ -522,13 +529,13 @@ When defining destinations via the environment variable destinations, version 3.
 
 - s4hana / soap
 
-  ```
+  ```java
   com.sap.cloud.sdk.s4hana.connectivity.soap.SoapQuery -> com.sap.cloud.sdk.s4hana.connectivity.soap.SoapRequest
   ```
 
 - s4hana / rfc
 
-  ```
+  ```java
   com.sap.cloud.sdk.s4hana.connectivity.rfc.BapiQuery-> com.sap.cloud.sdk.s4hana.connectivity.rfc.BapiRequest
   com.sap.cloud.sdk.s4hana.connectivity.rfc.RemoteFunctionQueryErrorHandler-> com.sap.cloud.sdk.s4hana.connectivity.rfc.RemoteFunctionRequestErrorHandler
   com.sap.cloud.sdk.s4hana.connectivity.rfc.RemoteFunctionQueryExecutor -> com.sap.cloud.sdk.s4hana.connectivity.rfc.RemoteFunctionRequestExecutor
@@ -544,14 +551,14 @@ When defining destinations via the environment variable destinations, version 3.
 
 - quality
 
-  ```
+  ```java
   com.sap.cloud.s4hana.quality.FileWritingQueryListenerUtil -> com.sap.cloud.s4hana.quality.FileWritingRequestListenerUtil
   com.sap.cloud.s4hana.quality.FileWritingRemoteFunctionQueryListener -> com.sap.cloud.s4hana.quality.FileWritingRemoteFunctionRequestListener
   ```
 
 - cloudplatform / servlet
 
-  ```
+  ```java
   com.sap.cloud.sdk.cloudplatform.servlet.response.QueryExecutionErrorResponse -> com.sap.cloud.sdk.cloudplatform.servlet.response.RequestExecutionErrorResponse
   ```
 
@@ -580,7 +587,7 @@ When defining destinations via the environment variable destinations, version 3.
 - Add a new module security-servlet containing servlet-based security filters.
   Note that this may require that you add the following dependency to your project if you rely on these web filters:
 
-  ```
+  ```xml
   <dependency>
       <groupId>com.sap.cloud.s4hana.cloudplatform</groupId>
       <artifactId>security-servlet</artifactId>
@@ -589,8 +596,10 @@ When defining destinations via the environment variable destinations, version 3.
 
 - Remove CloudLoggerFactory along with pipeline rule
 
-- MockUtil no longer mocks platform-specific classes, but only interface. Mock the facade manually, if you have to rely on the specific class.
-- MockUtil no longer offers methods for mocking destinations or servers with the default destination name "MyDestination". The destination name now is a mandatory parameter.
+- MockUtil no longer mocks platform-specific classes, but only interface.
+  Mock the facade manually, if you have to rely on the specific class.
+- MockUtil no longer offers methods for mocking destinations or servers with the default destination name "MyDestination".
+  The destination name now is a mandatory parameter.
 
 - The following maven dependencies have been updated:
 
@@ -782,7 +791,8 @@ When defining destinations via the environment variable destinations, version 3.
 
 ### Improvements
 
-- Decouple the implementation of resilient behavior from a concrete framework with the generic functional-style adapters in com.sap.cloud.sdk.cloudplatform.resilience. Provide default implementation of resilience using resilience4j as underlying library.
+- Decouple the implementation of resilient behavior from a concrete framework with the generic functional-style adapters in `com.sap.cloud.sdk.cloudplatform.resilience`. 
+  Provide default implementation of resilience using resilience4j as underlying library.
   - Provide ResilienceDecorator as the entry point for wrapping any code (callable or supplier) with resilient behavior.
   - Provide ResilienceConfiguration
 - Allow using any JSR-107 (JCache) compliant library for caching as part of resilience.

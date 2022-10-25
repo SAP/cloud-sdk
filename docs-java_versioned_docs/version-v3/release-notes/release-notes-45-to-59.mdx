@@ -39,7 +39,8 @@
 ### Fixed issues
 
 - We fixed a race-condition issue when serializing OData V2 VDM entity objects concurrently in multiple threads.
-  This addresses errors reported as _"Could not serialize property 'FooBar'. Returning null instead."_
+  This addresses errors reported as _"Could not serialize property 'FooBar'.
+  Returning null instead."_
 
 ## 3.58.0 - November 18, 2021
 
@@ -228,7 +229,10 @@ Support for `oneOf`, `anyOf` might be added in the future but the timeline for t
 
 ### Known Issues
 
-- We are aware of the vulnerability [CVE-2021-37137](https://www.whitesourcesoftware.com/vulnerability-database/CVE-2021-37137) that affects [Netty](https://netty.io/news/2021/08/16/4-1-67-Final.html) in version `4.1.67.Final`. Unfortunately, we are not yet able to resolve that vulnerability due to [an issue](https://github.com/netty/netty/issues/11691) with the `4.1.68.Final` release of Netty, which prevents projects from compiling. We will update the related dependencies once the build issue has been resolved. The vulnerability affects only deprecated modules that are not recommended to use which significantly mitigates the risks for the SAP Cloud SDK's customers.
+- We are aware of the vulnerability [CVE-2021-37137](https://www.whitesourcesoftware.com/vulnerability-database/CVE-2021-37137) that affects [Netty](https://netty.io/news/2021/08/16/4-1-67-Final.html) in version `4.1.67.Final`. 
+  Unfortunately, we are not yet able to resolve that vulnerability due to [an issue](https://github.com/netty/netty/issues/11691) with the `4.1.68.Final` release of Netty, which prevents projects from compiling.
+  We will update the related dependencies once the build issue has been resolved. 
+  The vulnerability affects only deprecated modules that are not recommended to use which significantly mitigates the risks for the SAP Cloud SDK's customers.
 
 ### New Functionality
 
@@ -237,7 +241,8 @@ Support for `oneOf`, `anyOf` might be added in the future but the timeline for t
   - In case no JWT is provided the SAP Cloud SDK defaults to the zone ID of the provider tenant
   - Destination & Connectivity service can be accessed on behalf of the IAS tenant via zone ID
   - **Not supported:** JWTs issued by IAS can not yet be used for _Principal Propagation_ and _User Token Exchange_
-  - Under the hood, the SAP Cloud SDK now uses zone IDs to pass tenant information to both IAS and XSUAA. See the note under "Improvements"
+  - Under the hood, the SAP Cloud SDK now uses zone IDs to pass tenant information to both IAS and XSUAA.
+    See the note under "Improvements"
 
 ### Improvements
 
@@ -286,7 +291,8 @@ Support for `oneOf`, `anyOf` might be added in the future but the timeline for t
   - `Entity.FIELD_NAME.eqNull()` - _OData V2 VDM_
   - `Entity.FIELD_NAME.neNull()` - _OData V2 VDM_
 
-- We now support function import calls in OData V2 using the HTTP GET method inside batch requests. Within the batch request, the function import call can be added to the `addReadOperations()` method.
+- We now support function import calls in OData V2 using the HTTP GET method inside batch requests.
+  Within the batch request, the function import call can be added to the `addReadOperations()` method.
   You can execute a batch request containing a function import call as follows:
 
 ```java
@@ -331,7 +337,8 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
   Here's an example of the `property` method call: `.property("URL.headers.foo1", "bar1")`. Find more details on setting properties [here](https://sap.github.io/cloud-sdk/docs/java/features/connectivity/sdk-connectivity-destination-service#provide-headers-for-destinations).
 - You can now add query parameters to a destination using properties.
   They will always be included in the query string when calling the target system.
-  The query values should be provided without encoding. They will be encoded in the query string by the SAP Cloud SDK.
+  The query values should be provided without encoding. 
+  They will be encoded in the query string by the SAP Cloud SDK.
   Example of adding a query parameter using `property` method: `.property("URL.queries.airport", "Köln Bonn")`.
   The rendered query string will look like: `airport=K%C3%B6ln%20Bonn`.
   Find more details on adding query parameters [here](https://sap.github.io/cloud-sdk/docs/java/features/connectivity/sdk-connectivity-destination-service#add-query-parameters-via-destination-properties).
@@ -373,10 +380,13 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
 
 ### New Functionality
 
-- We enabled support for certificate-based authentication for services on Cloud Foundry which allows services to use Mutual Transport Layer Security or mTLS instead of providing client credentials. In the future, this will become the default authentication method on the SAP BTP Cloud Foundry.
-
+- We enabled support for certificate-based authentication for services on Cloud Foundry which allows services to use Mutual Transport Layer Security or mTLS instead of providing client credentials. 
+  In the future, this will become the default authentication method on the SAP BTP Cloud Foundry.
   - If the service binding has a property `credentials: { credential-type: x509 }` then this is an indicator for the new authentication method.
-  - Please note: you might see `WARN` messages in the logs. These are produced by the Java Security Library that we use as a dependency. We verified the logic with the library publisher and it's safe to use. The false log message is soon to be removed.
+  - Please note: you might see `WARN` messages in the logs. 
+    These are produced by the Java Security Library that we use as a dependency.
+    We verified the logic with the library publisher and it's safe to use. 
+    The false log message is soon to be removed.
 
 - We enabled the use of a certificate-based authentication without password protection for the Destination Service on the SAP BTP Cloud Foundry.
 
@@ -418,7 +428,8 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
   - `SAP__Message` class was updated in a breaking manner.
     Its `numericSeverity` property was changed from `Short` to `Integer`.
     This affects multiple OData V4 services.
-    _Note_: This change is likely to be reverted in the future. We'll separately communicate about this in the release notes.
+    _Note_: This change is likely to be reverted in the future.
+    We'll separately communicate about this in the release notes.
 
 ### New Functionality
 
@@ -439,7 +450,8 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
   - (OData V2) _Bills of Material_ - `API_BILL_OF_MATERIAL_SRV_0002`
   - (OData V2) _Service Order_ - `API_SERVICE_ORDER_SRV`
   - (OData V4) _Supplier Item_ - `SUPPLIERITEM_0001`
-    We are working with the SAP S/4HANA team to make sure the changes are intended and plan to add these services in the following releases. We'll communicate it explicitly in the release notes.
+    We are working with the SAP S/4HANA team to make sure the changes are intended and plan to add these services in the following releases.
+    We'll communicate it explicitly in the release notes.
     Let us know via [support](https://sap.github.io/cloud-sdk/docs/overview/get-support) if you have any deadlines related to the consumption of those services.
 
 ### Improvements
@@ -653,7 +665,8 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
 ### Fixed issues
 
 - We fixed an issue in the Javadoc generation for the OData V4 type-safe client (VDM), which caused the content of the `Core.Description` annotation to be ignored.
-- We improved an exception message in both the OData V2 and V4 generator where an empty class name was subject to generation. This happens, for instance, if an entity type is named `Type`.
+- We improved an exception message in both the OData V2 and V4 generator where an empty class name was subject to generation. 
+  This happens, for instance, if an entity type is named `Type`.
 
 ## 3.46.0 - June 3, 2021
 
@@ -695,7 +708,8 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
   The creation of the new operation types is enabled in the OData V4 generator as well.
   Check out the full [documentation of the feature](https://sap.github.io/cloud-sdk/docs/java/features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java#odata-functions-and-actions) for more information.
 
-- We updated the [OData type-safe client also known as the VDM](https://sap.github.io/cloud-sdk/docs/java/features/odata/overview/) to the newest release FPS2 of SAP S/4HANA On-Premise 2020. This also includes completely new services added (available as usual in packages `com.sap.cloud.sdk.s4hana.onpremise.v2020.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.onpremise.v2020.datamodel.odatav4.services`), new operations in previously existing services, and new entity types.
+- We updated the [OData type-safe client also known as the VDM](https://sap.github.io/cloud-sdk/docs/java/features/odata/overview/) to the newest release FPS2 of SAP S/4HANA On-Premise 2020. 
+  This also includes completely new services added (available as usual in packages `com.sap.cloud.sdk.s4hana.onpremise.v2020.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.onpremise.v2020.datamodel.odatav4.services`), new operations in previously existing services, and new entity types.
 
 ### Improvements
 
