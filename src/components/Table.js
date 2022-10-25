@@ -5,7 +5,7 @@ import gfm from 'remark-gfm';
 import emoji from 'remark-emoji';
 
 /**
- * Generates a table from columns layour and data. Binding happens via accesors defined in the columns layout.
+ * Generates a table from columns layout and data. Binding happens via accesors defined in the columns layout.
  */
 export default function Table({ columns, data }) {
   // Use the state and functions returned from useTable to build UI
