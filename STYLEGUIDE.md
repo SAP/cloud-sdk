@@ -5,6 +5,7 @@
     - [Use Code Font](#use-code-font)
       - [Use Code Format for Method Names](#use-code-format-for-method-names)
       - [Use `Function` vs `Method` Accordingly](#use-function-vs-method-accordingly)
+      - [Include a Descriptive Noun Before or After Code](#include-a-descriptive-noun-before-or-after-code)
     - [Exceptions](#exceptions)
   - [Placeholders](#placeholders)
     - [Use Code Format in Italics in Inline Text](#use-code-format-in-italics-in-inline-text)
@@ -85,6 +86,19 @@ Use code font to mark up code, such as:
 ✅ The function returns a `boolean` or `string`.
 
 ✅ The `data` property contains the content of the response to your `GET` request.
+
+#### Include a Descriptive Noun Before or After Code
+
+Don't use code as English verbs or nouns.
+Don't pluralize code, instead pluralize the following noun.
+
+❌ Return a list of `WriteResponse`s
+
+✅ Return a list of objects with type `WriteResponse`
+
+❌ Call `generate()` to get a `NewClass`
+
+✅ Call the `generate()` function to get a `NewClass` instance
 
 #### Use Code Format for Method Names
 
