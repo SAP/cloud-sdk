@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunksap_cloud_sdk_documentation=self.webpackChunksap_cloud_sdk_documentation||[]).push([[9529],{89568:s=>{s.exports="/cloud-sdk/api/latest"}}]);
