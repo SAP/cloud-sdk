@@ -1,4 +1,5 @@
 <!-- vale off -->
+
 ## 3.14.0
 
 - Release date: February 27, 2020
@@ -13,7 +14,7 @@
 
 - _OData VDM client_: Add preview support for OData v4 services.
   - The new OData client implementation is capable of the basic Create, Read, Update, Delete (CRUD) operations on OData v4 services.
-  - Include an updated, dedicated generator that is capable of creating virtual data models through a command line interface or Maven plugin. 
+  - Include an updated, dedicated generator that is capable of creating virtual data models through a command line interface or Maven plugin.
     Reference the artifact id `odata-v4-generator` in your `.pom` file.
   - Advanced features like functions, actions or batch requests are not yet supported.
   - The implementation is initially in beta and thus does not guarantee a stable API.
@@ -30,13 +31,13 @@
 
 ### Compatibility Notes
 
-- Updating [`WorkItems`](https://help.sap.com/doc/e03ee6cbe2ea468f88e1970b61d55b62/1.0/en-US/com/sap/cloud/sdk/s4hana/datamodel/odata/namespaces/commercialproject/WorkItem.html) in the service [Commercial Project - Read](https://api.sap.com/api/_CPD_SC_EXTERNAL_SERVICES_SRV/resource) is no longer allowed as of SAP S/4HANA Cloud release 2002. 
+- Updating [`WorkItems`](https://help.sap.com/doc/e03ee6cbe2ea468f88e1970b61d55b62/1.0/en-US/com/sap/cloud/sdk/s4hana/datamodel/odata/namespaces/commercialproject/WorkItem.html) in the service [Commercial Project - Read](https://api.sap.com/api/_CPD_SC_EXTERNAL_SERVICES_SRV/resource) is no longer allowed as of SAP S/4HANA Cloud release 2002.
   The method `updateWorkItem()` was removed from [`CommercialProjectService`](https://help.sap.com/doc/e03ee6cbe2ea468f88e1970b61d55b62/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/CommercialProjectService.html).
 
 ### New Functionality
 
-- _OData client_: Update the OData VDM to the [newest release 2002 of SAP S/4HANA Cloud](https://news.sap.com/2020/01/sap-s4hana-cloud-2002-release/). 
-  This includes completely new services (available as usual in package [com.sap.cloud.sdk.s4hana.datamodel.odata.services](https://help.sap.com/doc/e03ee6cbe2ea468f88e1970b61d55b62/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/package-summary.html)), new operations in previously existing services, and new entity types. 
+- _OData client_: Update the OData VDM to the [newest release 2002 of SAP S/4HANA Cloud](https://news.sap.com/2020/01/sap-s4hana-cloud-2002-release/).
+  This includes completely new services (available as usual in package [com.sap.cloud.sdk.s4hana.datamodel.odata.services](https://help.sap.com/doc/e03ee6cbe2ea468f88e1970b61d55b62/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/package-summary.html)), new operations in previously existing services, and new entity types.
   The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
 
 ### Improvements
@@ -56,7 +57,6 @@
 
 ### Improvements
 
-
 - Update dependencies:
   - Jackson from version `2.10.1` to `2.10.2`
   - Commons Codec from version `1.13` to `1.14`
@@ -64,7 +64,6 @@
   - Apache CXF from version `3.3.4` to `3.3.5`
   - JUnit Pioneer from version `0.4.2` to `0.5.1`
   - Spring from version `5.2.2.RELEASE` to `5.2.3.RELEASE`
-
 
 ### Fixed Issues
 
@@ -81,7 +80,7 @@
 ### Compatibility Notes
 
 - The existence of a principal as retrieved by the [`PrincipalAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html) is no longer an indicator for a JWT to be present.
-  Due to the introduction of [`BasicAuthenticationAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html) a principal can also originate from the Basic Authentication header on the current request. 
+  Due to the introduction of [`BasicAuthenticationAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html) a principal can also originate from the Basic Authentication header on the current request.
   As before verifying authentication and authorizations needs to be done explicitly by the application using the SAP Cloud SDK.
 
 - The behavior for principal propagation when accessing On-Premise systems has changed as explained below in the Improvements section.
@@ -108,8 +107,8 @@
     BasicAuthenticationAccessor.setBasicAuthenticationFacade(new CustomBasicAuthenticationFacade());
     ```
 
-- Enable the [`PrincipalAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html) to also read the current principal from the newly introduced [`BasicAuthenticationAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html), in addition to the already existing way to read it from the current JWT. 
-  This functionality applies to Cloud Foundry. 
+- Enable the [`PrincipalAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html) to also read the current principal from the newly introduced [`BasicAuthenticationAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html), in addition to the already existing way to read it from the current JWT.
+  This functionality applies to Cloud Foundry.
   A valid JWT takes precedence over a Basic Authentication header.
 
   The order of resolution is
@@ -138,7 +137,6 @@
 
 - Support reading the principal from an OAuth SAML Bearer token on Cloud Foundry.
 
-
 - Update dependencies:
   - Apache TomEE libraries from version `7.0.5` to `7.0.6`
   - [SAP Cloud Application Programming Model](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/00823f91779d4d42aa29a498e0535cdf.html) from version `1.36.1` to `1.36.2`
@@ -150,7 +148,6 @@
   - JUnit from version `4.12` to `4.13`
   - Jetty from version `9.4.19.v20190610` to `9.4.25.v20191220`
   - [SAP Cloud Platform Neo Environment SDK for Java EE 7 Web Profile TomEE 7](https://tools.hana.ondemand.com/#cloud) from version `1.44.12` to `1.65.15`
-
 
 ### Fixed Issues
 
@@ -173,7 +170,6 @@
 
 ### Improvements
 
-
 - Update dependencies:
   - [SAP Cloud Application Programming Model](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/00823f91779d4d42aa29a498e0535cdf.html) from version 1.35.2 to 1.36.1
   - Spring from version 5.1.2-RELEASE to 5.2.1-RELEASE
@@ -187,7 +183,6 @@
   - Add builder methods in [`ScpCfHttpDestination`](https://help.sap.com/doc/0786ec6134c04c9bbafec959b6b737de/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/connectivity/ScpCfHttpDestination.Builder.html) for the properties `header`, `user`, `password`.
   - Add builder methods in [`ScpNeoHttpDestination`](https://help.sap.com/doc/0786ec6134c04c9bbafec959b6b737de/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/connectivity/ScpNeoHttpDestination.Builder.html) for the properties `user`, `password`, `trustAllCertificates`, `header`, `authenticationHeaders`, `basicCredentials`, `authenticationType`, `proxyType`, `proxyConfiguration`.
   - Add builder methods in [`DefaultHttpDestination`](https://help.sap.com/doc/0786ec6134c04c9bbafec959b6b737de/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.Builder.html) and [`DefaultErpHttpDestination`](https://help.sap.com/doc/0786ec6134c04c9bbafec959b6b737de/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/connectivity/DefaultErpHttpDestination.Builder.html) for the properties `basicCredentials`, `proxyType`.
-
 
 ### Fixed Issues
 
@@ -222,7 +217,6 @@
   - AssertJ Guava from version 3.2.1 to 3.3.0
   - JUnit Pioneer from version 0.3.0 to 0.3.3
 
-
 ### Fixed Issues
 
 - Fix an issue that caused the OData VDM generator to wrongly identify available operations on a service entity.
@@ -246,7 +240,7 @@
 
 ### New Functionality
 
-- _OData client_: Update the OData VDM to the [newest release 1911 of SAP S/4HANA Cloud](https://news.sap.com/2019/11/sap-s4hana-cloud-1911-intelligent-enterprise-experience-economy/). 
+- _OData client_: Update the OData VDM to the [newest release 1911 of SAP S/4HANA Cloud](https://news.sap.com/2019/11/sap-s4hana-cloud-1911-intelligent-enterprise-experience-economy/).
   The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
 
 ### Fixed Issues
@@ -261,9 +255,9 @@
 
 ### Known Issues
 
-- The SAP Cloud SDK version `3.7.0` references Jackson `2.10.0`, which has two known security vulnerabilities, which were not yet fixed in time for version `3.7.0` of the SAP Cloud SDK. 
-  Note that the SAP Cloud SDK does not use the vulnerable functionality and is thus not vulnerable itself. 
-  If you use Jackson yourself, you should consider the relevant recommendations [CVE-2019-17267](https://nvd.nist.gov/vuln/detail/CVE-2019-17267) and [CVE-2019-17531](https://nvd.nist.gov/vuln/detail/CVE-2019-17531). 
+- The SAP Cloud SDK version `3.7.0` references Jackson `2.10.0`, which has two known security vulnerabilities, which were not yet fixed in time for version `3.7.0` of the SAP Cloud SDK.
+  Note that the SAP Cloud SDK does not use the vulnerable functionality and is thus not vulnerable itself.
+  If you use Jackson yourself, you should consider the relevant recommendations [CVE-2019-17267](https://nvd.nist.gov/vuln/detail/CVE-2019-17267) and [CVE-2019-17531](https://nvd.nist.gov/vuln/detail/CVE-2019-17531).
   For more details, also consider [this article with more background](https://medium.com/@cowtowncoder/on-jackson-cves-dont-panic-here-is-what-you-need-to-know-54cd0d6e8062).
 
 ### Compatibility Notes
@@ -301,7 +295,7 @@
 
 ### Known Issues
 
-- The SAP Cloud SDK version 3.6.0 references Jackson 2.10.0 which has two known security vulnerabilities, which were not yet fixed in time for version 3.6.0 of the SAP Cloud SDK. 
+- The SAP Cloud SDK version 3.6.0 references Jackson 2.10.0 which has two known security vulnerabilities, which were not yet fixed in time for version 3.6.0 of the SAP Cloud SDK.
   For your reference, this concerned the following recommendations:
   - [CVE-2019-17267](https://nvd.nist.gov/vuln/detail/CVE-2019-17267)
   - [CVE-2019-17531](https://nvd.nist.gov/vuln/detail/CVE-2019-17531)
@@ -330,7 +324,6 @@
   - Http Core from version 4.4.11 to 4.4.12.
   - Http Components Client from version 4.5.9 to 4.5.10.
   - Resilience4J from version 0.17.0 to 1.1.0.
-
 
 ### Fixed Issues
 
@@ -408,6 +401,7 @@
 - _OData VDM Generator_: add deprecation information contained in the provided Swagger file of a service to generated service classes.
 
 - Update dependencies:
+
   - Java libraries of [SAP Cloud Application Programming Model](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/00823f91779d4d42aa29a498e0535cdf.html) (`com.sap.cloud.servicesdk.*`) from version 1.32.0 to 1.32.5
   - Caffeine from 2.7.0 to 2.8.0
   - Commons Codec from 1.12.0 to 1.13.0
@@ -439,11 +433,11 @@
 
 ### New Functionality
 
-- OData VDM: Update the OData virtual data model to the [newest release 1908 of SAP S/4HANA Cloud](https://news.sap.com/2019/08/sap-s4hana-cloud-1908-new-release/). 
-  This includes completely new services (available as usual as from package [`com.sap.cloud.sdk.s4hana.datamodel.odata.services`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/package-summary.html)), new operations in previously existing services, and new entity types. 
+- OData VDM: Update the OData virtual data model to the [newest release 1908 of SAP S/4HANA Cloud](https://news.sap.com/2019/08/sap-s4hana-cloud-1908-new-release/).
+  This includes completely new services (available as usual as from package [`com.sap.cloud.sdk.s4hana.datamodel.odata.services`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/package-summary.html)), new operations in previously existing services, and new entity types.
   The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
-- Message VDM: Update the message virtual data model for the [newest release 1908 of SAP S/4HANA Cloud](https://news.sap.com/2019/08/sap-s4hana-cloud-1908-new-release/). 
-  This includes 21 new message types to reflect the new event types added in SAP S/4HANA Cloud (available as usual from package [`com.sap.cloud.sdk.s4hana.datamodel.messaging.api.message`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/messaging/api/message/package-summary.html)). 
+- Message VDM: Update the message virtual data model for the [newest release 1908 of SAP S/4HANA Cloud](https://news.sap.com/2019/08/sap-s4hana-cloud-1908-new-release/).
+  This includes 21 new message types to reflect the new event types added in SAP S/4HANA Cloud (available as usual from package [`com.sap.cloud.sdk.s4hana.datamodel.messaging.api.message`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/messaging/api/message/package-summary.html)).
   The SAP Cloud SDK supports all event types listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/package/SAPS4HANACloudBusinessEvents?section=Artifacts).
 
 ### Improvements
@@ -463,7 +457,7 @@
 
 ### Known Issues
 
-When defining destinations via the environment variable destinations, version `3.0.0` does not use basic authentication even if credentials are given. 
+When defining destinations via the environment variable destinations, version `3.0.0` does not use basic authentication even if credentials are given.
 Either update to version `3.1.0` or manually add the following properties to the JSON defining a destination: `"authentication": "BasicAuthentication"`, `"authType": "BasicAuthentication"`.
 
 ### Compatibility Notes
@@ -604,7 +598,6 @@ Either update to version `3.1.0` or manually add the following properties to the
 
 - The following maven dependencies have been updated:
 
-
 | Library                                           | Version used in SDK 2.X | Version used in SDK 3.X |
 | ------------------------------------------------- | ----------------------- | ----------------------- |
 | bcpkix-jdk15on                                    | 1.6                     | 1.62                    |
@@ -648,17 +641,15 @@ Either update to version `3.1.0` or manually add the following properties to the
 | io.github.resilience4j:resilience4j-cache         | 0.14.0                  | 0.16.0                  |
 | io.github.resilience4j:resilience4j-timelimiter   | 0.14.0                  | 0.16.0                  |
 
-
-- The dependency `org.checkerframework:checker-qual` has been excluded entirely. 
+- The dependency `org.checkerframework:checker-qual` has been excluded entirely.
   That is, it is neither a direct dependency of the SAP Cloud SDK anymore, nor is it a transitive dependency of both Caffeine and Guava.
 
-- Renamed/Moved Modules. 
+- Renamed/Moved Modules.
   Our goals with the renaming were the following:
   - Use the prefix `com.sap.cloud.sdk` instead of `com.sap.cloud.s4hana`.
   - Make all artifact ids unique, so that tools `gradle` can easily consume our modules.
   - The term `s4hana` in the group id is only used if the contained module is in some way specific for SAP S/4HANA.
   - Remove all obsolete modules.
-
 
 | v2.19.2                                                         | v3.0.0                                                             |
 | --------------------------------------------------------------- | ------------------------------------------------------------------ |
@@ -775,7 +766,6 @@ Either update to version `3.1.0` or manually add the following properties to the
 | com.sap.cloud.s4hana:testutil-resources                         | com.sap.cloud.sdk.testutil:testutil-resources                      |
 | com.sap.cloud.s4hana:userprofile                                |                                                                    |
 
-
 ### New Functionality
 
 - Provide builders to construct destinations explicitly by providing values for properties in code, for example, DefaultHttpDestination.builder or ScpCfHttpDestination.builder.
@@ -785,14 +775,14 @@ Either update to version `3.1.0` or manually add the following properties to the
   - Use the `augmentBuilder` method to set configuration parameters that are specific to a loader (platform or environment) using an appropriate class implementing DestinationOptionsAugmenter.
 - Execute code (given as Callable or Executable) by overriding (that is, "on-behalf of") the Tenant, Principal, or AuthToken of the context in TenantAccessor, PrincipalAccessor, and AuthTokenAccessor.
   - At the example of TenantAccessor.executeWithTenant, the given callable/executable will be executed in a context where the given tenant is set as the current tenant.
-  - In addition to overriding, provide the option to set a fallback for a single execution (for example, with TenantAccessor.executeWithFallbackTenant) or globally (for example, with TenantAccessor.setFallbackTenant). 
+  - In addition to overriding, provide the option to set a fallback for a single execution (for example, with TenantAccessor.executeWithFallbackTenant) or globally (for example, with TenantAccessor.setFallbackTenant).
     Whenever, for example, a tenant is requested but not available, the SAP Cloud SDK will retrieve a fallback tenant from the given supplier.
 - Offer access to the current request, if available, via the new RequestAccessor and allow overriding the request and providing a fallback request when executing code.
 - Make XsuaaService public for communicating with a given XSUAA service on SAP Cloud Platform, Cloud Foundry.
 
 ### Improvements
 
-- Decouple the implementation of resilient behavior from a concrete framework with the generic functional-style adapters in `com.sap.cloud.sdk.cloudplatform.resilience`. 
+- Decouple the implementation of resilient behavior from a concrete framework with the generic functional-style adapters in `com.sap.cloud.sdk.cloudplatform.resilience`.
   Provide default implementation of resilience using resilience4j as underlying library.
   - Provide ResilienceDecorator as the entry point for wrapping any code (callable or supplier) with resilient behavior.
   - Provide ResilienceConfiguration

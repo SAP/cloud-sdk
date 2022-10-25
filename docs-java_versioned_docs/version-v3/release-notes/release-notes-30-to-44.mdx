@@ -1,4 +1,5 @@
 <!-- vale off -->
+
 ## 3.44.1 - May 6, 2021
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.44.1) | [Javadoc](https://help.sap.com/doc/55bb1642ea614bf582d514ed34401136/1.0/en-US/index.html)
@@ -15,7 +16,6 @@
 
 ### Improvements
 
-
 - Dependency Updates:
   - Minor version updates:
     - Update Reactor from `3.4.4` to `3.4.5`
@@ -23,7 +23,6 @@
     - Update PMD from `6.32.0` to `6.33.0`
     - Update JPaaS Security Utils for Neo from `1.4.89` to `1.4.90`
     - Update Jackson from `2.12.2` to `2.12.3`
-
 
 ### Fixed issues
 
@@ -57,7 +56,6 @@
 
 ### Improvements
 
-
 - Dependency Updates:
   - Minor version updates:
     - Update Netty from `4.1.60.Final` to `4.1.63.Final`
@@ -70,14 +68,13 @@
     - Update Apache CXF from `3.3.8` to `3.3.10`
     - Update Mockito from `3.8.0` to `3.9.0`
 
-
 ## 3.42.0 - April 8, 2021
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.42.0) | [Javadoc](https://help.sap.com/doc/7d0d6f45c6b64bd3a930121641c0d65b/1.0/en-US/index.html)
 
 ### New Functionality
 
-- We improved OData v4 update requests that use the PATCH HTTP method. 
+- We improved OData v4 update requests that use the PATCH HTTP method.
   Now they allow adding complex properties without the need to use setters for each value inside the complex property.
   You can use the builder pattern or the constructor to propagate the property values.
 
@@ -100,10 +97,10 @@
   Transitive changes inside a complex property will automatically be detected.
 
 - The OData v2 generator is able to maintain argument order in function imports and get-by-key fluent helpers over successive generations, even when the originating specification changes parameter order.
-  This is now a default behavior. 
+  This is now a default behavior.
   It can be disabled by adding the flag to the plugin configuration: `<keepExistingSignatures>false</keepExistingSignatures>`
-- We updated the OData v2 type-safe client (VDM) for the services that couldn't be generated because of the parameters re-ordering issue mentioned above. 
-  Now you can use them as any other service. 
+- We updated the OData v2 type-safe client (VDM) for the services that couldn't be generated because of the parameters re-ordering issue mentioned above.
+  Now you can use them as any other service.
   Find the list below:
   - Purchase Requisition - API_PURCHASEREQ_PROCESS_SRV
   - Production Order Confirmation - API_PROD_ORDER_CONFIRMATION_2_SRV
@@ -130,7 +127,6 @@ The collection of released SAP S/4HANA Cloud client libraries from the SAP Cloud
       - Update Guava from `30.1-jre` to `30.1.1-jre`
       - Update Togglz from `2.8.0` to `2.9.6`
 
-
 ## 3.41.0 - March 25, 2021
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.41.0) | [Javadoc](https://help.sap.com/doc/4d51cd942a184d88bd51f4385e14d7c8/1.0/en-US/index.html)
@@ -145,7 +141,7 @@ The collection of released SAP S/4HANA Cloud client libraries from the SAP Cloud
   This vendor extension will be used by the generator to derive the Java service class name.
 - Enable OData requests to skip the CSRF token retrieval if the server does not require it.
   Use the method `withoutCsrfToken()` to disable the CSRF token retrieval.
-- We provided experimental support for OData v2 read requests as items in a Batch request. 
+- We provided experimental support for OData v2 read requests as items in a Batch request.
   The API is unified and similar to the OData v4 Batch request:
 
   ```java
@@ -164,7 +160,6 @@ The collection of released SAP S/4HANA Cloud client libraries from the SAP Cloud
   ```
 
 ### Improvements
-
 
 - Dependency Updates:
   - SAP dependency updates:
@@ -185,7 +180,6 @@ The collection of released SAP S/4HANA Cloud client libraries from the SAP Cloud
       - Update Jackson from version `2.12.1` to `2.12.2`
 - The OData type-safe client (VDM) for OData V4 services of newest release [2102 of SAP S/4HANA Cloud](https://news.sap.com/2021/02/sap-s4hana-cloud-2102-empowering-businesses-seize-opportunities/) and FPS1 of SAP S/4HANA On-Premise 2020 now also supports static fields for accessible properties on `VdmComplex` types.
 
-
 ### Fixed issues
 
 - We fixed an issue with OData V2 read requests where an error message was incorrectly written to the log when using filters.
@@ -203,7 +197,7 @@ The collection of released SAP S/4HANA Cloud client libraries from the SAP Cloud
 
 ### Known issues
 
-- Update requests via **PATCH** in OData V4 will not contain any changes to complex properties of an entity. 
+- Update requests via **PATCH** in OData V4 will not contain any changes to complex properties of an entity.
   This is a feature gap we plan to solve in the upcoming release.
 
 ### Compatibility Notes
@@ -245,7 +239,6 @@ The collection of released SAP S/4HANA Cloud client libraries from the SAP Cloud
 
 ### Improvements
 
-
 - Dependency Updates:
   - SAP dependency updates:
     - Update SCP Neo Java Tomcat API from `3.121.8.1` to `3.123.6.2`
@@ -259,7 +252,6 @@ The collection of released SAP S/4HANA Cloud client libraries from the SAP Cloud
       - Update Spring Boot from `2.4.1` to `2.4.2`
       - Update AQMP Client from `5.10.0` to `5.11.0`
       - Update Protobuf java from `3.14.0` to `3.15.1`
-
 
 ## 3.39.0 - February 25, 2021
 
@@ -349,7 +341,6 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
   - Update JUnit from `4.13.1` to `4.13.2`
   - Update Caffeine from `2.8.8` to `2.9.0`
 
-
 ### Fixed issues
 
 - We fixed an issue where selecting complex properties in the OData V4 VDM would lead to an incorrect HTTP query.
@@ -367,7 +358,7 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
 - The method `ResilienceDecorator#invalidateCache` is deprecated but still functional.
   Please use `ResilienceDecorator#clearCache` for tenant aware cache invalidation or `ResilienceDecorator#clearAllCacheEntries` to clear all entries for all tenants and principals.
 - As part of the update of the OData VDM to SAP S/4HANA Cloud 2102 a few operations were removed.
-  The operations were never supported by the SAP S/4HANA system (like CRUD support for some entities), so no existing functionality is affected. 
+  The operations were never supported by the SAP S/4HANA system (like CRUD support for some entities), so no existing functionality is affected.
   The following services are affected:
 
   - _Nota Fiscal – Create, Update_ - `API_LOGBR_NOTAFISCAL_SRV`
@@ -453,8 +444,8 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
        .end();
   ```
 
-- We updated the [OData type-safe client also known as a VDM](features/odata/overview.mdx) to the [newest release 2102 of SAP S/4HANA Cloud](https://news.sap.com/2021/02/sap-s4hana-cloud-2102-empowering-businesses-seize-opportunities/). 
-  This includes completely new services (available as usual in packages `com.sap.cloud.sdk.s4hana.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types. 
+- We updated the [OData type-safe client also known as a VDM](features/odata/overview.mdx) to the [newest release 2102 of SAP S/4HANA Cloud](https://news.sap.com/2021/02/sap-s4hana-cloud-2102-empowering-businesses-seize-opportunities/).
+  This includes completely new services (available as usual in packages `com.sap.cloud.sdk.s4hana.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types.
   The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud) with the exception of the following services:
   - (OData V2) _Purchase Requisition_ - `API_PURCHASEREQ_PROCESS_SRV`
   - (OData V2) _Production Order Confirmation_ - `API_PROD_ORDER_CONFIRMATION_2_SRV`
@@ -465,7 +456,6 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
 ### Improvements
 
 - `ResilienceDecorator.clearCache(ResilienceConfiguration)` does now also respect parameters defined in the `ResilienceConfiguration.CacheConfiguration` when selecting cache entries to clear.
-
 
 - Dependency Updates:
   - SAP dependency updates:
@@ -483,7 +473,6 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
       - Update Lombok from `1.18.16` to `1.18.18`
       - Update Jetty from `9.4.35.v20201120` to `9.4.36.v20210114`
 
-
 ### Fixed Issues
 
 - We fixed an issue with OData V4 update requests where the serialization of primitives with types like Integer, Boolean, and Double leads to null values.
@@ -495,12 +484,12 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
 
 ### Compatibility Notes
 
-- We deprecated the constructor `UncheckedFilterExpression(FilterExpression)`. 
-  It can still be used for OData V2 type-safe client (VDM) read requests that are executed with the deprecated `execute(...)` method. 
-  However, we strongly encourage you to migrate to `executeRequest(...)`. 
+- We deprecated the constructor `UncheckedFilterExpression(FilterExpression)`.
+  It can still be used for OData V2 type-safe client (VDM) read requests that are executed with the deprecated `execute(...)` method.
+  However, we strongly encourage you to migrate to `executeRequest(...)`.
   Unchecked filter expressions can be instantiated with recommended constructor `UncheckedFilterExpression(ValueBoolean)`.
 - We deprecated the class `com.sap.cloud.sdk.s4hana.connectivity.RequestBody` as it has no usage.
-- For SAP BTP Cloud Foundry, instances of `DestinationHeaderProvider` will be called for every HTTP request as of now. 
+- For SAP BTP Cloud Foundry, instances of `DestinationHeaderProvider` will be called for every HTTP request as of now.
   Earlier versions invoked the API only once during destination construction.
 
 ### New Functionality
@@ -559,7 +548,6 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
       - Update Joda time library from `2.10.8` to `2.10.9`
       - Update Apache Olingo OData V4 from `4.7.1` to `4.8.0`
 
-
 ## 3.36.0 - January 14, 2021
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.36.0) | [Javadoc](https://help.sap.com/doc/aa4a7715649349a285a13c8bc1d585d8/1.0/en-US/index.html)
@@ -573,12 +561,11 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
   - Spring Security OAuth
   - Hibernate Validator
 
-
 ### New Functionality
 
 - We introduced support for the String-based filter functions `endsWith`, `startsWith` and `substringOf` in the OData V2 type-safe client (VDM).
-- Check out our new [Feature Matrix](./overview-cloud-sdk-for-java#feature-matrix). 
-  We're actively extending it. 
+- Check out our new [Feature Matrix](./overview-cloud-sdk-for-java#feature-matrix).
+  We're actively extending it.
   Let's us know what you'd like to see there by creating a [GitHub issue](https://github.com/SAP/cloud-sdk/issues/new?assignees=&labels=feedback&template=feedback.md&title=).
 
 ### Improvements
@@ -604,7 +591,6 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
       - Update Netty BOM from `4.1.49.Final` to `4.1.56.Final`
       - Update Java JWT from `3.11.0` to `3.12.0`
 
-
 ### Fixed issues
 
 - We fixed incorrect serialization of `date` values for OData V2 requests using the `PATCH` request method.
@@ -623,16 +609,15 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
 ### Known issues
 
 - OData Batch response API is known to not conveniently throw or wrap an exception for failing HTTP response code health checks.
-  This affects the type-safe batch request builders for both v2 and v4 protocol. 
+  This affects the type-safe batch request builders for both v2 and v4 protocol.
   We're working to fix this in the next release.
 
 ### Compatibility Notes
 
-- We removed a dependency reference for `JUnit Pioneer`. 
+- We removed a dependency reference for `JUnit Pioneer`.
   The last used version was `1.0.0`
 
 ### Improvements
-
 
 - Dependency Updates:
   - SAP dependency updates:
@@ -646,7 +631,6 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
       - Update Spring Security from `5.4.1` to `5.4.2`
       - Update Jetty from `9.4.34.v20201102` to `9.4.35.v20201120`
 
-
 ### Fixed issues
 
 - We fixed an issue where OData errors originating in OData batch change sets requests could not be parsed correctly.
@@ -658,7 +642,7 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
 ### Compatibility Notes
 
 - To use the experimental version of OpenAPI type-safe client generator you longer need to add the `org.springframework:spring-context` dependency in a project.
-- Requests to fetch `CSRF` token that are done for OData v2 function imports now contain all explicitly specified HTTP headers. 
+- Requests to fetch `CSRF` token that are done for OData v2 function imports now contain all explicitly specified HTTP headers.
   Before they contained only implicitly set HTTP headers and neglect headers provided via `.withHeaders()` method of `RequestBuilder` class.
 
 ### New Functionality
@@ -669,8 +653,8 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
 
 ### Improvements
 
-- Add support for alternative OData v4 metadata field notations `@type`, `@context`, and other introduced with OData Version `4.0.1`. 
-  The SAP Cloud SDK is now able to parse this notation. 
+- Add support for alternative OData v4 metadata field notations `@type`, `@context`, and other introduced with OData Version `4.0.1`.
+  The SAP Cloud SDK is now able to parse this notation.
   However, outgoing requests will always use the notation that is compatible with Version `4.0.0` of the standard for now to ensure server compatibility.
 - The Workflow API client library in module `scp-workflow-cf` was enhanced with the latest Workflow API features.
 - The CSRF token retrieval of OData v2 type-safe function imports has been improved:
@@ -678,16 +662,14 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
   - Function imports using the HTTP method GET no longer issue the unnecessary CSRF token request
   - Function imports using the HTTP method POST can be processed even if the CSRF token retrieval fails (for example, if the server does not support CSRF tokens)
 
-
 - Dependency Updates:
   - SAP dependency updates:
     - Downgrade SAP security related libraries from `2.7.8` to `2.7.6`
 
-
 ### Fixed issues
 
-- `ClassCastException` fix an issue with accessing navigational properties directly in OData V4 requests. 
-  Read and count operations performed on nested collections directly via, for example, `service.naviagteTo(Entity.COLLECTION_PROPERTY).getAll()` would cause a `ClassCastException` when parsing the result. 
+- `ClassCastException` fix an issue with accessing navigational properties directly in OData V4 requests.
+  Read and count operations performed on nested collections directly via, for example, `service.naviagteTo(Entity.COLLECTION_PROPERTY).getAll()` would cause a `ClassCastException` when parsing the result.
   This is now done correctly.
 - Fix an issue where dependency conflicts between the SAP Cloud SDK and the SAP Java Buildpack lead to runtime issues on the SCP Cloud Foundry.
 - Fix an issue where operations with empty payload in OData Batch request changesets on SAP S/4HANA OData services failed with _Bad Request_ responses.
@@ -700,13 +682,13 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
 
 - The Maven artifact `rest-core moved` from the group id `com.sap.cloud.sdk.services` to `com.sap.cloud.sdk.datamodel`.
 - We introduced new implementations of `ThreadContextListener` and `ThreadContextDecorator`. We adapted the internal priority of listeners and decorators accordingly.
-- Archetypes generated by the SAP Cloud SDK for Java were migrated to the [general purpose pipeline of project "Piper"](https://sap.github.io/jenkins-library/stages/introduction/). 
-  Before they were using the [SAP Cloud SDK for Continuous Delivery pipeline](https://github.com/SAP/cloud-s4-sdk-pipeline) that is now deprecated. 
+- Archetypes generated by the SAP Cloud SDK for Java were migrated to the [general purpose pipeline of project "Piper"](https://sap.github.io/jenkins-library/stages/introduction/).
+  Before they were using the [SAP Cloud SDK for Continuous Delivery pipeline](https://github.com/SAP/cloud-s4-sdk-pipeline) that is now deprecated.
   For existing projects we also recommend [migrating](https://github.com/SAP/cloud-s4-sdk-pipeline/blob/master/gpp-guide.md) to this pipeline.
 
 ### New Functionality
 
-- We released experimental type-safe client generator for `OpenAPI 3.0` specification and `maven` [plugin](https://sap.github.io/cloud-sdk/docs/java/features/rest/generate-rest-client) to run it. 
+- We released experimental type-safe client generator for `OpenAPI 3.0` specification and `maven` [plugin](https://sap.github.io/cloud-sdk/docs/java/features/rest/generate-rest-client) to run it.
   We do not yet recommend using it in production.
 
 ---
@@ -736,13 +718,12 @@ Iterable<List<EntityT>> lazyPages = request.iteratingPages().execute( destinatio
 :::note
 
 - For OData v2 the execute method is called `executeRequest`
-- The default behavior for OData v2 and v4 is now to return accumulated results from all pages. 
+- The default behavior for OData v2 and v4 is now to return accumulated results from all pages.
   Before only the first page of results was returned.
 
 :::
 
 ### Improvements
-
 
 - Dependency Updates:
   - SAP dependency updates:
@@ -761,7 +742,6 @@ Iterable<List<EntityT>> lazyPages = request.iteratingPages().execute( destinatio
       - Update Vavr from `0.10.2` to `0.10.3`
       - Update hibernate-core from `5.4.3` to `5.4.24` to overcome security vulnerability [CVE-2020-25638](https://access.redhat.com/security/cve/cve-2020-25638)
 
-
 ### Fixed Issues
 
 - RFC calls executed via the resilience decorator now use subscriber tenant instead of provider tenant which is correct behavior for multi-tenant applications.
@@ -773,15 +753,15 @@ Iterable<List<EntityT>> lazyPages = request.iteratingPages().execute( destinatio
 
 ### Compatibility Notes
 
-- The client library for SAP S/4HANA Enterprise Messaging is deprecated. 
+- The client library for SAP S/4HANA Enterprise Messaging is deprecated.
   This affects all classes in the following modules: [`s4hana-api-messaging`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-messaging), [`messaging-core`](https://search.maven.org/artifact/com.sap.cloud.sdk.datamodel/messaging-core), [`messaging-jms`](https://search.maven.org/artifact/com.sap.cloud.sdk.datamodel/messaging-jms)
 
 - _Blockchain Business Services Visibility_: The members of the class [`MerkleProof`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/index.html?com/sap/cloud/sdk/services/blockchainbusinessservices/blockchainvisibility/MerkleProof.html) are now immutable, forbidding any external modification of a proof
 
 ### New Functionality
 
-- Destinations can be conveniently added into the [`DestinationAccessor`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/connectivity/DestinationAccessor.html) logic at runtime. 
-  It exposes two new methods [`appendDestinationLoader()`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationAccessor.html#appendDestinationLoader-com.sap.cloud.sdk.cloudplatform.connectivity.DestinationLoader-) and [`prependDestinationLoader()`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationAccessor.html#prependDestinationLoader-com.sap.cloud.sdk.cloudplatform.connectivity.DestinationLoader-) which add destination loaders with high or low priority to the accessor logic. 
+- Destinations can be conveniently added into the [`DestinationAccessor`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/connectivity/DestinationAccessor.html) logic at runtime.
+  It exposes two new methods [`appendDestinationLoader()`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationAccessor.html#appendDestinationLoader-com.sap.cloud.sdk.cloudplatform.connectivity.DestinationLoader-) and [`prependDestinationLoader()`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationAccessor.html#prependDestinationLoader-com.sap.cloud.sdk.cloudplatform.connectivity.DestinationLoader-) which add destination loaders with high or low priority to the accessor logic.
   Leverage a new default implementation for the [`DestinationLoader`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/connectivity/DestinationLoader.html) interface to load destinations created at runtime:
 
   ```java
@@ -794,7 +774,7 @@ Iterable<List<EntityT>> lazyPages = request.iteratingPages().execute( destinatio
 ### Improvements
 
 - The SCP Workflow API client library in module [`scp-workflow-cf`](https://search.maven.org/artifact/com.sap.cloud.sdk.services/scp-workflow-cf) is now generally available and released for productive usage.
-- All OData V2 and V4 request builder classes now expose an experimental method [`toRequest()`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/com/sap/cloud/sdk/datamodel/odatav4/core/RequestBuilder.html#toRequest--) that returns a low-level, generic request object. 
+- All OData V2 and V4 request builder classes now expose an experimental method [`toRequest()`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/com/sap/cloud/sdk/datamodel/odatav4/core/RequestBuilder.html#toRequest--) that returns a low-level, generic request object.
   It provides more convenience for debugging and flexibility to work around a non-standard service behavior.
 - The method [`withHeader()`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/com/sap/cloud/sdk/datamodel/odatav4/core/RequestBuilder.html#withHeader-java.lang.String-java.lang.String-) of OData V4 request builders is no longer experimental.
 
@@ -803,7 +783,6 @@ Iterable<List<EntityT>> lazyPages = request.iteratingPages().execute( destinatio
   - Declare all subclasses as stable API
   - Merge `ODataResponseErrorException` into [`ODataServiceErrorException`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odata/client/exception/ODataServiceErrorException.html)
   - Rename `ODataServiceErrorRoot` to [`ODataServiceError`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odata/client/exception/ODataServiceError.html)
-
 
 - Dependency Updates:
   - API of Java EE 7 Web Profile TomEE 7 from `1.85.7.2` to `1.86.9`
@@ -824,7 +803,6 @@ Iterable<List<EntityT>> lazyPages = request.iteratingPages().execute( destinatio
   - Okio from `2.7.0` to `2.9.0`
   - OkHttp from `4.5.0` to `4.9.0`
 
-
 ### Fixed Issues
 
 - _Blockchain Business Services Visibility_: Fixed an issue where validating a structurally invalid proof could result in a stack overflow.
@@ -837,28 +815,28 @@ Iterable<List<EntityT>> lazyPages = request.iteratingPages().execute( destinatio
 
 ### Compatibility Notes
 
-- OData requests do no longer send the query parameter `$format=json` by default. 
+- OData requests do no longer send the query parameter `$format=json` by default.
   Instead the `Accept` header is set to `application/json` by default.
 
 The following changes apply to experimental functionality of the SAP Cloud SDK:
 
-- The SCP service `Hyperledger Fabric on SAP Cloud Platform` is deprecated, the corresponding Maven dependency `com.sap.cloud.sdk.services:scp-blockchain` gets deprecated too. 
+- The SCP service `Hyperledger Fabric on SAP Cloud Platform` is deprecated, the corresponding Maven dependency `com.sap.cloud.sdk.services:scp-blockchain` gets deprecated too.
   Use the dependency [`com.sap.cloud.sdk.serices:blockchain-client-fabric`](https://mvnrepository.com/artifact/com.sap.cloud.sdk.services/blockchain-client-fabric) instead.
-- The method `setResponseFormat()` in the class [`ODataRequestGeneric`](https://help.sap.com/doc/f08906c8d31640d583a106325f6a8184/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odata/client/request/ODataRequestGeneric.html) is no longer available. 
+- The method `setResponseFormat()` in the class [`ODataRequestGeneric`](https://help.sap.com/doc/f08906c8d31640d583a106325f6a8184/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odata/client/request/ODataRequestGeneric.html) is no longer available.
   You can still configure the `Accept` header via the method [`addHeaderIfAbsent()`](https://help.sap.com/doc/f08906c8d31640d583a106325f6a8184/1.0/en-US/com/sap/cloud/sdk/datamodel/odata/client/request/ODataRequestGeneric.html#addHeaderIfAbsent-java.lang.String-java.lang.String-).
   Example: `request.addHeaderIfAbsent(HttpHeaders.ACCEPT, "application/xml")`.
 - The enum `com.sap.cloud.sdk.datamodel.odata.client.request.ODataFormat` is no longer public.
 
 ### New Functionality
 
-- Update the OData client library to the [newest release 2011 of SAP S/4HANA Cloud](https://news.sap.com/2020/10/sap-s4hana-cloud-release-2011-customer-driven-innovation/). 
-  This includes completely new services (available as usual in packages [com.sap.cloud.sdk.s4hana.datamodel.odata.services](https://help.sap.com/doc/f08906c8d31640d583a106325f6a8184/1.0/en-US/com/sap/cloud/sdk/s4hana/datamodel/odata/services/package-summary.html) and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types. 
+- Update the OData client library to the [newest release 2011 of SAP S/4HANA Cloud](https://news.sap.com/2020/10/sap-s4hana-cloud-release-2011-customer-driven-innovation/).
+  This includes completely new services (available as usual in packages [com.sap.cloud.sdk.s4hana.datamodel.odata.services](https://help.sap.com/doc/f08906c8d31640d583a106325f6a8184/1.0/en-US/com/sap/cloud/sdk/s4hana/datamodel/odata/services/package-summary.html) and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types.
   The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
 - Released new pregenerated type-safe client libraries for the OData v4 services in the [latest RTC release 2020 of SAP S/4HANA On-premise](https://blogs.sap.com/2020/10/07/sap-s-4hana-2020-release/)
-- The untyped, generic OData client and OData V4 client now support `Edm.Binary` as value type for Entity properties. 
-  In Java, this type is conveniently represented as `byte[]`. 
-  The OData V4 generator will now generate affected services without raising a warning. 
-  Generated entities that have binary properties now have static accessors to the respective fields, similar to the other entity properties. 
+- The untyped, generic OData client and OData V4 client now support `Edm.Binary` as value type for Entity properties.
+  In Java, this type is conveniently represented as `byte[]`.
+  The OData V4 generator will now generate affected services without raising a warning.
+  Generated entities that have binary properties now have static accessors to the respective fields, similar to the other entity properties.
   OData filter expressions for binary properties can be created.
 - Add generated service `DocumentComplianceElectronicDocumentFileService` for API [`ELECTRONICDOCFILE_0001`](https://api.sap.com/api/ELECTRONICDOCFILE_0001)
 
@@ -876,7 +854,6 @@ The following changes apply to experimental functionality of the SAP Cloud SDK:
   - Mockito from `3.5.13` to `3.5.15`
   - Fabric SDK for Java from `2.2.1` to `2.2.2`
   - Netty from `4.1.52.Final` to `4.1.53.Final`
-
 
 ## 3.31.0 - October 22, 2020
 
@@ -911,7 +888,6 @@ The following changes apply to experimental functionality of the SAP Cloud SDK:
   - JUnit from version `4.13` to `4.13.1`
   - Tomcat from `9.0.37` to `9.0.39`, fixing the vulnerability [CVE-2020-13943](https://nvd.nist.gov/vuln/detail/CVE-2020-13943)
 
-
 ### Fixed Issues
 
 - Fix an issue where responses of OData batch requests could not be evaluated if the batch request contained semantically identical request objects (e.g. creating two similar entities).
@@ -942,15 +918,15 @@ To unify OData V2 client to OData V4 client APIs, the API of custom header confi
         .executeRequest(httpDestination);
 ```
 
-The deprecated code is still usable. 
+The deprecated code is still usable.
 No breaking changes in code or behavior are introduced.
 
-The internal fluent helper class `FluentHelperCustomHttpHeader` is changed to a deprecated interface. 
-The related methods `getHeadersForRequestAndImplicitRequests` and `getHeadersForRequestOnly` are deprecated. 
-The former modifier will be used by default in the future. 
+The internal fluent helper class `FluentHelperCustomHttpHeader` is changed to a deprecated interface.
+The related methods `getHeadersForRequestAndImplicitRequests` and `getHeadersForRequestOnly` are deprecated.
+The former modifier will be used by default in the future.
 Please use the existing `withHeader` and `withHeaders` methods without the stating a deprecated modifier.
 
-The internal protected methods `getHeadersForRequestOnly` and `getHeadersForRequestAndImplicitRequests` from abstract base class `FluentHelperBasic` are deprecated. 
+The internal protected methods `getHeadersForRequestOnly` and `getHeadersForRequestAndImplicitRequests` from abstract base class `FluentHelperBasic` are deprecated.
 Please use protected `getHeaders()` instead.
 
 The internal interface `CsrfTokenRetriever` defines another `retrieveCsrfToken` method with additional `headers` parameter to be passed in the HTTP request.
@@ -959,10 +935,8 @@ The internal interface `CsrfTokenRetriever` defines another `retrieveCsrfToken` 
 
 Blockchain Business Services update:
 
-
-- It is now possible to send, receive, and validate notarizations. 
+- It is now possible to send, receive, and validate notarizations.
   Sending a document will automatically also send its notarizations if the visibility configuration is set to include notarizations.
-
 
 ### Improvements
 
