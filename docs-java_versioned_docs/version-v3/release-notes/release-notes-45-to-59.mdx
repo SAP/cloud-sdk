@@ -11,7 +11,7 @@
 ### New Functionality
 
 - Add the remaining changes since `3.58.0` to our update of the OData typed client (VDM) with the [newest release 2111 of SAP S/4HANA Cloud](https://news.sap.com/2021/10/sap-s4hana-cloud-2111-innovating-business-futures/).
-  Now the SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/products/SAPS4HANACloud/overview).
+  Now the SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/products/SAPS4HANACloud/overview).
 
 - Update of the OData VDM to the [newest release 2021 of SAP S/4HANA On-Premise](https://help.sap.com/viewer/product/SAP_S4HANA_ON-PREMISE/2021/en-US).
   The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA On-Premise](https://api.sap.com/products/SAPS4HANA/overview)
@@ -51,7 +51,8 @@
   - The `paths` part of the specification
   - As an additional property or nested inside a property under a `Schema` listed in the specification.
 
-Please, remove these properties from your specification and generation will succeed. It will allow you to use the remaining endpoints via the type-safe client by the SDK.
+Please, remove these properties from your specification and generation will succeed. 
+It will allow you to use the remaining endpoints via the type-safe client by the SAP Cloud SDK.
 Support for `oneOf`, `anyOf` might be added in the future but the timeline for that is unknown.
 
 ### New Functionality
@@ -233,14 +234,14 @@ Support for `oneOf`, `anyOf` might be added in the future but the timeline for t
 
 - Applications that use an **IAS** binding instead of XSUAA are now supported out of the box.
   - Incoming JWTs issued by IAS are validated and decoded
-  - In case no JWT is provided the SDK defaults to the zone ID of the provider tenant
+  - In case no JWT is provided the SAP Cloud SDK defaults to the zone ID of the provider tenant
   - Destination & Connectivity service can be accessed on behalf of the IAS tenant via zone ID
   - **Not supported:** JWTs issued by IAS can not yet be used for _Principal Propagation_ and _User Token Exchange_
-  - Under the hood, the SDK now uses zone IDs to pass tenant information to both IAS and XSUAA. See the note under "Improvements"
+  - Under the hood, the SAP Cloud SDK now uses zone IDs to pass tenant information to both IAS and XSUAA. See the note under "Improvements"
 
 ### Improvements
 
-- Internally the SDK now passes the tenant information via zone ID (instead of subdomain) to the OAuth2 services XSUAA and IAS
+- Internally the SAP Cloud SDK now passes the tenant information via zone ID (instead of subdomain) to the OAuth2 services XSUAA and IAS
 - Resolving the provider tenant no longer requires an internal HTTP request.
   Instead, the `VCAP_SERVICES` environment variable will be parsed at runtime for the necessary information.
 
@@ -330,7 +331,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
   Here's an example of the `property` method call: `.property("URL.headers.foo1", "bar1")`. Find more details on setting properties [here](https://sap.github.io/cloud-sdk/docs/java/features/connectivity/sdk-connectivity-destination-service#provide-headers-for-destinations).
 - You can now add query parameters to a destination using properties.
   They will always be included in the query string when calling the target system.
-  The query values should be provided without encoding. They will be encoded in the query string by the SDK.
+  The query values should be provided without encoding. They will be encoded in the query string by the SAP Cloud SDK.
   Example of adding a query parameter using `property` method: `.property("URL.queries.airport", "Köln Bonn")`.
   The rendered query string will look like: `airport=K%C3%B6ln%20Bonn`.
   Find more details on adding query parameters [here](https://sap.github.io/cloud-sdk/docs/java/features/connectivity/sdk-connectivity-destination-service#add-query-parameters-via-destination-properties).
@@ -412,7 +413,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
 
 - While updating the OData client libraries (VDM) to match the latest SAP S/4HANA Cloud 2108 release we identified the following breaking changes:
   - Affected service ID: `HANDLINGUNIT_0001`. In the OData V4 service _Handling Unit Item_ the `Create` operation was removed.
-    No existing functionality is affected because this operation has never been supported by S/4HANA.
+    No existing functionality is affected because this operation has never been supported by SAP S/4HANA.
   - `SAP__Message` class was updated in a breaking manner.
     Its `numericSeverity` property was changed from `Short` to `Integer`.
     This affects multiple OData V4 services.
@@ -427,7 +428,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
   - PrincipalAccessor
 
 - We updated the pregenerated OData V2 and V4 type-safe clients libraries for the [latest 2108 release of SAP S/4HANA Cloud](https://news.sap.com/2021/08/sap-s4hana-cloud-2108-engineering-innovations/).
-  After updating your dependencies you'll find the latest version of S/4HANA Cloud services, operations, and entities in
+  After updating your dependencies you'll find the latest version of SAP S/4HANA Cloud services, operations, and entities in
 - `com.sap.cloud.sdk.s4hana.datamodel.odata.services`
 - `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`
   Find details of OData services supported by the SAP Cloud SDK in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/products/SAPS4HANACloud/overview).
@@ -437,7 +438,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
   - (OData V2) _Bills of Material_ - `API_BILL_OF_MATERIAL_SRV_0002`
   - (OData V2) _Service Order_ - `API_SERVICE_ORDER_SRV`
   - (OData V4) _Supplier Item_ - `SUPPLIERITEM_0001`
-    We are working with the S/4HANA team to make sure the changes are intended and plan to add these services in the following releases. We'll communicate it explicitly in the release notes.
+    We are working with the SAP S/4HANA team to make sure the changes are intended and plan to add these services in the following releases. We'll communicate it explicitly in the release notes.
     Let us know via [support](https://sap.github.io/cloud-sdk/docs/overview/get-support) if you have any deadlines related to the consumption of those services.
 
 ### Improvements
@@ -469,7 +470,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
 
 ### Compatibility Notes
 
-- Mitigate [CVE-2021-35515](https://nvd.nist.gov/vuln/detail/CVE-2021-35515) by update to secure version of `org.apache.commons:commons-compress` in SDK module `blockchain-client-fabric`.
+- Mitigate [CVE-2021-35515](https://nvd.nist.gov/vuln/detail/CVE-2021-35515) by update to secure version of `org.apache.commons:commons-compress` in the SAP Cloud SDK module `blockchain-client-fabric`.
 
 ### New Functionality
 
@@ -661,7 +662,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
 
 - We updated the (OData V2) Trial Balance - Read (`C_TRIALBALANCE_CDS`) VDM to the [newest release 2105 of SAP S/4HANA Cloud](https://news.sap.com/2021/05/sap-s4hana-cloud-release-2105/)
 
-  **Caution:** The service introduced some intended **breaking changes** with the latest update which are now, in consequence, also present in the type-safe client (VDM) by the SDK.
+  **Caution:** The service introduced some intended **breaking changes** with the latest update which are now, in consequence, also present in the type-safe client (VDM) by the SAP Cloud SDK.
 
 ### New Functionality
 

@@ -105,7 +105,7 @@
   - Process Order Confirmation - API_PROC_ORDER_CONFIRMATION_2_SRV
   - Attachments - API_CV_ATTACHMENT_SRV
 
-The collection of released S/4HANA Cloud client libraries from the SAP Cloud SDK is now consistent with the set of OData services that you can find in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/package/SAPS4HANACloud?section=Artifacts).
+The collection of released SAP S/4HANA Cloud client libraries from the SAP Cloud SDK is now consistent with the set of OData services that you can find in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/package/SAPS4HANACloud?section=Artifacts).
 
 ### Improvements
 
@@ -280,7 +280,7 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
 
 - The type-safe client (VDM) classes for `TimeDependentStockLevelService` have been removed as the SAP S/4HANA On-Premise OData service does not exist in releases 2020 FPS0 or FPS1.
 
-- With SAP S/4 OnPremise release 2020 FPS1, in the type-safe client (VDM) class for `VehicleManagementSystemForVehicleService` the `getVMSVehicleIncomingInvoiceByKey` method now takes only two parameters ( `vMSVehicleUUID` and `vMSVehicleActionDateTime`) as input as opposed to three before ( `vMSVehicleUUID`,`vMSVehicleActionDateTime` and `vMSVehicleActionDocType` ).
+- With SAP S/4HANA On-Premise release 2020 FPS1, in the type-safe client (VDM) class for `VehicleManagementSystemForVehicleService` the `getVMSVehicleIncomingInvoiceByKey` method now takes only two parameters ( `vMSVehicleUUID` and `vMSVehicleActionDateTime`) as input as opposed to three before ( `vMSVehicleUUID`,`vMSVehicleActionDateTime` and `vMSVehicleActionDocType` ).
 
 ### New Functionality
 
@@ -358,7 +358,9 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
   The new argument allows accessing the request specific `URI` as well as the original `DestinationProperties`.
 - The method `ResilienceDecorator#invalidateCache` is deprecated but still functional.
   Please use `ResilienceDecorator#clearCache` for tenant aware cache invalidation or `ResilienceDecorator#clearAllCacheEntries` to clear all entries for all tenants and principals.
-- As part of the update of the OData VDM to SAP S/4HANA Cloud 2102 a few operations were removed. The operations were never supported by the S/4 system (like CRUD support for some entities), so no existing functionality is affected. The following services are affected:
+- As part of the update of the OData VDM to SAP S/4HANA Cloud 2102 a few operations were removed.
+  The operations were never supported by the SAP S/4HANA system (like CRUD support for some entities), so no existing functionality is affected. 
+  The following services are affected:
   - _Nota Fiscal – Create, Update_ - `API_LOGBR_NOTAFISCAL_SRV`
   - _Purchase Contracts_ - `API_PURCHASECONTRACT_PROCESS_SRV`
   - _Outbound Delivery (A2X)_ - `API_OUTBOUND_DELIVERY_SRV_0002`
@@ -646,7 +648,9 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
 
 ### Improvements
 
-- Add support for alternative OData v4 metadata field notations `@type`, `@context`, and other introduced with OData Version `4.0.1`. The SDK is now able to parse this notation. However, outgoing requests will always use the notation that is compatible with Version `4.0.0` of the standard for now to ensure server compatibility.
+- Add support for alternative OData v4 metadata field notations `@type`, `@context`, and other introduced with OData Version `4.0.1`. 
+  The SAP Cloud SDK is now able to parse this notation. 
+  However, outgoing requests will always use the notation that is compatible with Version `4.0.0` of the standard for now to ensure server compatibility.
 - The Workflow API client library in module `scp-workflow-cf` was enhanced with the latest Workflow API features.
 - The CSRF token retrieval of OData v2 type-safe function imports has been improved:
 
@@ -662,7 +666,7 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
 ### Fixed issues
 
 - `ClassCastException` fix an issue with accessing navigational properties directly in OData V4 requests. Read and count operations performed on nested collections directly via e.g. `service.naviagteTo(Entity.COLLECTION_PROPERTY).getAll()` would cause a `ClassCastException` when parsing the result. This is now done correctly.
-- Fix an issue where dependency conflicts between the SDK and the SAP Java Buildback lead to runtime issues on the SCP Cloud Foundry.
+- Fix an issue where dependency conflicts between the SAP Cloud SDK and the SAP Java Buildpack lead to runtime issues on the SCP Cloud Foundry.
 - Fix an issue where operations with empty payload in OData Batch request changesets on SAP S/4HANA OData services failed with _Bad Request_ responses.
 
 ## 3.34.0 - December 3, 2020
@@ -673,7 +677,9 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
 
 - The Maven artifact `rest-core moved` from the group id `com.sap.cloud.sdk.services` to `com.sap.cloud.sdk.datamodel`.
 - We introduced new implementations of `ThreadContextListener` and `ThreadContextDecorator`. We adapted the internal priority of listeners and decorators accordingly.
-- Archetypes generated by the SAP Cloud SDK for Java were migrated to the [general purpose pipeline of project "Piper"](https://sap.github.io/jenkins-library/stages/introduction/). Before they were using the [SAP Cloud SDK for Continuous Delivery pipeline](https://github.com/SAP/cloud-s4-sdk-pipeline) that is now deprecated. For existing projects we also recommend [migrating](https://github.com/SAP/cloud-s4-sdk-pipeline/blob/master/gpp-guide.md) migrating to this pipeline.
+- Archetypes generated by the SAP Cloud SDK for Java were migrated to the [general purpose pipeline of project "Piper"](https://sap.github.io/jenkins-library/stages/introduction/). 
+  Before they were using the [SAP Cloud SDK for Continuous Delivery pipeline](https://github.com/SAP/cloud-s4-sdk-pipeline) that is now deprecated. 
+  For existing projects we also recommend [migrating](https://github.com/SAP/cloud-s4-sdk-pipeline/blob/master/gpp-guide.md) to this pipeline.
 
 ### New Functionality
 
@@ -734,7 +740,7 @@ Iterable<List<EntityT>> lazyPages = request.iteratingPages().execute( destinatio
 ### Fixed Issues
 
 - RFC calls executed via the resilience decorator now use subscriber tenant instead of provider tenant which is correct behavior for multi-tenant applications.
-- non-Latin characters in the quNonery and path part of OData URLs are now correctly encoded.
+- non-Latin characters in the query and path part of OData URLs are now correctly encoded.
 
 ## 3.33.0 - November 20, 2020
 
@@ -898,11 +904,14 @@ To unify OData V2 client to OData V4 client APIs, the API of custom header confi
         .executeRequest(httpDestination);
 ```
 
-The deprecated code ist still usable. No breaking changes in code or behavior are introduced.
+The deprecated code is still usable. No breaking changes in code or behavior are introduced.
 
-The internal fluent helper class `FluentHelperCustomHttpHeader` is changed to a deprecated interface. The related methods `getHeadersForRequestAndImplicitRequests` and `getHeadersForRequestOnly` are deprecated. The former modifier will be used by default in the future. Please use the existing `withHeader` and `withHeaders` methods without the stating a deprecated modifier.
+The internal fluent helper class `FluentHelperCustomHttpHeader` is changed to a deprecated interface. 
+The related methods `getHeadersForRequestAndImplicitRequests` and `getHeadersForRequestOnly` are deprecated. 
+The former modifier will be used by default in the future. Please use the existing `withHeader` and `withHeaders` methods without the stating a deprecated modifier.
 
-The internal protected methods `getHeadersForRequestOnly` and `getHeadersForRequestAndImplicitRequests` from abstract base class `FluentHelperBasic` are deprecated. Please use protected `getHeaders()` instead.
+The internal protected methods `getHeadersForRequestOnly` and `getHeadersForRequestAndImplicitRequests` from abstract base class `FluentHelperBasic` are deprecated. 
+Please use protected `getHeaders()` instead.
 
 The internal interface `CsrfTokenRetriever` defines another `retrieveCsrfToken` method with additional `headers` parameter to be passed in the HTTP request.
 
@@ -910,7 +919,8 @@ The internal interface `CsrfTokenRetriever` defines another `retrieveCsrfToken` 
 
 Blockchain Business Services update:
 
-- It is now possible to send, receive, and validate notarizations. Sending a document will automatically also send its notarizations if the visibility configuration is set to include notarizations.
+- It is now possible to send, receive, and validate notarizations. 
+  Sending a document will automatically also send its notarizations if the visibility configuration is set to include notarizations.
 
 ### Improvements
 

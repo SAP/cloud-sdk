@@ -254,7 +254,10 @@
 
 ### Known Issues
 
-- SDK version 3.7.0 references Jackson 2.10.0 which has two known security vulnerabilities, which were not yet fixed in time for version 3.7.0 of the SDK. Note that the SDK does not use the vulnerable functionality and is thus not vulnerable itself. If you use Jackson yourself, you should consider the relevant recommendations [CVE-2019-17267](https://nvd.nist.gov/vuln/detail/CVE-2019-17267) and [CVE-2019-17531](https://nvd.nist.gov/vuln/detail/CVE-2019-17531). For more details, also consider [this article with more background](https://medium.com/@cowtowncoder/on-jackson-cves-dont-panic-here-is-what-you-need-to-know-54cd0d6e8062).
+- The SAP Cloud SDK version `3.7.0` references Jackson `2.10.0`, which has two known security vulnerabilities, which were not yet fixed in time for version `3.7.0` of the SAP Cloud SDK. 
+  Note that the SAP Cloud SDK does not use the vulnerable functionality and is thus not vulnerable itself. 
+  If you use Jackson yourself, you should consider the relevant recommendations [CVE-2019-17267](https://nvd.nist.gov/vuln/detail/CVE-2019-17267) and [CVE-2019-17531](https://nvd.nist.gov/vuln/detail/CVE-2019-17531). 
+  For more details, also consider [this article with more background](https://medium.com/@cowtowncoder/on-jackson-cves-dont-panic-here-is-what-you-need-to-know-54cd0d6e8062).
 
 ### Compatibility Notes
 
@@ -291,7 +294,8 @@
 
 ### Known Issues
 
-- SDK version 3.6.0 references Jackson 2.10.0 which has two known security vulnerabilities, which were not yet fixed in time for version 3.6.0 of the SDK. For your reference, this concerned the following recommendations:
+- The SAP Cloud SDK version 3.6.0 references Jackson 2.10.0 which has two known security vulnerabilities, which were not yet fixed in time for version 3.6.0 of the SAP Cloud SDK. 
+  For your reference, this concerned the following recommendations:
   - [CVE-2019-17267](https://nvd.nist.gov/vuln/detail/CVE-2019-17267)
   - [CVE-2019-17531](https://nvd.nist.gov/vuln/detail/CVE-2019-17531)
 
@@ -335,12 +339,12 @@
 
 ### Compatibility Notes
 
-- Previous versions of the SDK only recognized an access token in the authorization header if "`Bearer`" was spelled in title case. Now, corresponding methods do a case insensitive check for "`bearer`". That means, "bearer" and "Bearer" are now equally supported as correct authorization header.
+- Previous versions of the SAP Cloud SDK only recognized an access token in the authorization header if "`Bearer`" was spelled in title case. Now, corresponding methods do a case insensitive check for "`bearer`". That means, "bearer" and "Bearer" are now equally supported as correct authorization header.
 - _OData VDM generator_: The generator now identifies which CRUD operations an entity set supports by first consulting the [annotations based on the OData specification](https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.html). Only when these annotations are not declared, the custom SAP specifications are considered.
 
 ### Improvements
 
-- No longer require a binding to an XSUAA service instance when consuming the destination or connectivity service via the SDK.
+- No longer require a binding to an XSUAA service instance when consuming the destination or connectivity service via the SAP Cloud SDK.
 - Automatically read the principal ID from the `user_name` claim of the current JWT in [`ScpCfPrincipalFacade`](https://help.sap.com/doc/2656a317c96d481b9216b8882f1eadad/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/principal/ScpCfPrincipalFacade.html) when the JWT has the `user_token` grant type.
 - Update dependencies on Jackson from `2.9.9`/`2.9.9.2` to `2.9.10`.
 - Verify that the Maven `artifactId` does not contain an underscore character when creating a project using the `scp-cf-spring` and `scp-cf-tomee` archetypes. This is necessary as the artifact ID will also be used as Cloud Foundry application name and the deployment to Cloud Foundry will fail if the application name contains an underscore.
@@ -422,7 +426,8 @@
 
 ### Compatibility Notes
 
-- As part of the update of the OData VDM to SAP S/4HANA Cloud 1908, the `OutboundDeliveryService` has been removed from the SAP API Business Hub and, as a consequence, from the SDK. Use [`OutboundDeliveryV2Service`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/OutboundDeliveryV2Service.html) instead.
+- As part of the update of the OData VDM to SAP S/4HANA Cloud 1908, the `OutboundDeliveryService` has been removed from the SAP API Business Hub and, as a consequence, from the SAP Cloud SDK.
+  Use [`OutboundDeliveryV2Service`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/OutboundDeliveryV2Service.html) instead.
 - The destination expected as the second parameter of the [`attachToService()`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/com/sap/cloud/sdk/datamodel/odata/helper/VdmEntity.html#attachToService-java.lang.String-com.sap.cloud.sdk.cloudplatform.connectivity.HttpDestinationProperties-) method of [`VdmEntity`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odata/helper/VdmEntity.html) is now mandatory (`@Nonnull`), rather than nullable because attaching to a service does not work without a destination to designate the target system.
 
 ### New Functionality
@@ -632,7 +637,8 @@ When defining destinations via the environment variable destinations, version 3.
 | io.github.resilience4j:resilience4j-cache         | 0.14.0                  | 0.16.0                  |
 | io.github.resilience4j:resilience4j-timelimiter   | 0.14.0                  | 0.16.0                  |
 
-- The dependency `org.checkerframework:checker-qual` has been excluded entirely. That is, it is neither a direct dependency of the SDK anymore, nor is it a transitive dependency of both Caffeine and Guava.
+- The dependency `org.checkerframework:checker-qual` has been excluded entirely. 
+  That is, it is neither a direct dependency of the SAP Cloud SDK anymore, nor is it a transitive dependency of both Caffeine and Guava.
 
 - Renamed/Moved Modules. Our goals with the renaming were the following:
   - Use the prefix `com.sap.cloud.sdk` instead of `com.sap.cloud.s4hana`.
@@ -764,7 +770,8 @@ When defining destinations via the environment variable destinations, version 3.
   - Use the augmentBuilder method to set configuration parameters that are specific to a loader (platform or environment) using an appropriate class implementing DestinationOptionsAugmenter.
 - Execute code (given as Callable or Executable) by overriding (that is, "on-behalf of") the Tenant, Principal, or AuthToken of the context in TenantAccessor, PrincipalAccessor, and AuthTokenAccessor.
   - At the example of TenantAccessor.executeWithTenant, the given callable/executable will be executed in a context where the given tenant is set as the current tenant.
-  - In addition to overriding, provide the option to set a fallback for a single execution (for example, with TenantAccessor.executeWithFallbackTenant) or globally (for example, with TenantAccessor.setFallbackTenant). Whenever, for example, a tenant is requested but not available, the SDK will retrieve a fallback tenant from the given supplier.
+  - In addition to overriding, provide the option to set a fallback for a single execution (for example, with TenantAccessor.executeWithFallbackTenant) or globally (for example, with TenantAccessor.setFallbackTenant). 
+    Whenever, for example, a tenant is requested but not available, the SAP Cloud SDK will retrieve a fallback tenant from the given supplier.
 - Offer access to the current request, if available, via the new RequestAccessor and allow overriding the request and providing a fallback request when executing code.
 - Make XsuaaService public for communicating with a given XSUAA service on SAP Cloud Platform, Cloud Foundry.
 
