@@ -18,6 +18,8 @@ keywords:
 
 import MvnBadge from '@site/src/sap/sdk-java/MvnBadge';
 import JavaFeatureTable from '@site/src/components/JavaFeatureTable';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import ThemedImage from '@theme/ThemedImage';
 
 <!-- vale on -->
 
@@ -25,12 +27,105 @@ import JavaFeatureTable from '@site/src/components/JavaFeatureTable';
 
 ## Quick Start
 
-For a quick start check [getting started](getting-started) section.
+For a quick start check out the [getting started](getting-started) section.
 
 ## Why the SAP Cloud SDK for Java?
 
-The SAP Cloud SDK for Java allows you to develop, extend, and communicate with SAP solutions SAP S/4HANA, SAP SuccessFactors, and many others.
+The SAP Cloud SDK for Java makes it easy to build highly connected, resilient, multi tenant SaaS applications on the SAP Business Technology Platform (SAP BTP).
+It enables you to perform outbound requests using various protocols while only writing the business logic.
 
-## Feature Matrix
+For example, with the SAP Cloud SDK for Java you can connect to an SAP S/4HANA (Cloud) system via OData with only a few lines of code:
 
-<JavaFeatureTable />
+```java
+HttpDestination destination = DestinationAccessor.getDestination("my-s4-system").asHttp();
+
+List<MeasuringPoint> result =  new DefaultMeasuringPointService()
+          .getAllMeasuringPoint()
+          .select(MEASURING_POINT, CREATION_DATE, FUNCTIONAL_LOCATION)
+          .top(5)
+          .execute(destination);
+```
+
+This example uses the pre-generated OData client together with the destination API to interact with the [Measuring Point Service](https://api.sap.com/api/MEASURINGPOINT_0001/overview) of SAP S/4HANA Cloud.
+
+## Main Features of the SAP Cloud SDK for Java
+
+The SAP Cloud SDK for Java brings a wide variety of features to power your business application.
+
+At its core, the SAP Cloud SDK for Java integrates the SAP BTP Destination and Connectivity services with powerful clients (e.g. OData) in a multi tenant and resilient manner.
+This integration reduces the code for typical outbound requests down to just a few statements.
+
+The image below shows a typical architecture of an application built with the SAP Cloud SDK:
+
+<!-- vale off -->
+
+<ThemedImage
+  alt="General architecture"
+  sources={{
+    light: useBaseUrl('img/general-architecture_light.svg'),
+    dark: useBaseUrl('img/general-architecture_dark.svg')
+  }}
+  className="center"
+  width="80%"
+/>
+
+<!-- vale on -->
+
+### Connectivity
+
+The SAP Cloud SDK for Java provides an API that abstracts the details of establishing connections to other systems: The [Destination API](features/connectivity/sdk-connectivity-destination-service).
+
+You can [access destinations defined in the SAP BTP Cockpit](features/connectivity/sdk-connectivity-destination-service#accessing-destinations) directly in your code.
+Or you can define your own destinations, for example to [connect to SAP BTP services](features/connectivity/sdk-connectivity-destination-service#skip-destination-creation-step-for-certain-authentication-types-on-cloud-foundry).
+
+You can then use these destinations for performing REST (OpenAPI or OData), RFC or SOAP requests.
+Or you can [get a ready-made Http Client](features/connectivity/sdk-connectivity-http-client#general-usage) for a destination to execute your own requests.
+
+### OData and OpenAPI
+
+TBD
+
+### Resilience
+
+TBD
+
+### Multi Tenancy
+
+TBD
+
+## Further Information
+
+### Supported Platforms and Environments
+
+TBD
+
+CF, K8S, KYMA, BAS, (NEO)
+
+The SAP Cloud SDK abstracts away from details of the underlying platform the application is running upon.
+This enables applications to adopt platform changes or fully switch to a different platform without any code changes.
+
+
+### Supported Java Versions
+
+The SAP Cloud SDK for Java runs with Java 8 or higher.
+For Spring based applications the latest Java version is supported.
+
+For apps build on TomEE / Tomcat Java 11 is supported.
+Higher versions bring incompatible changes with the transition from the `javax.servlet` to the `jakarta.servlet` package for servlets which is currently not supported by the SAP Cloud SDK.
+
+### Availability and Licensing
+
+All libraries are available on [Maven Central](https://central.sonatype.dev/search?namespace=com.sap.cloud.sdk) under the [SAP Developer license](https://tools.eu1.hana.ondemand.com/developer-license-3_1.txt).
+The license of clients generated with any of the SAP Cloud SDK code generators depends on the used service spec license.
+
+### Release Schedule
+
+We usually release minor versions bi-weekly.
+
+We intend to release a new major version of the SAP Cloud SDK for JavaScript every twelve months.
+For details, check the [release policy](release-policy).
+
+### Support
+
+The SAP Cloud SDK is actively supported via various internal and external channels which you can find [here](support-java).
+
