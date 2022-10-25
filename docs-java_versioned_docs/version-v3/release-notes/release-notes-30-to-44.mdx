@@ -361,7 +361,9 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
 - As part of the update of the OData VDM to SAP S/4HANA Cloud 2102 a few operations were removed.
   The operations were never supported by the SAP S/4HANA system (like CRUD support for some entities), so no existing functionality is affected. 
   The following services are affected:
+  <!-- value off -->
   - _Nota Fiscal – Create, Update_ - `API_LOGBR_NOTAFISCAL_SRV`
+  <!-- value on -->
   - _Purchase Contracts_ - `API_PURCHASECONTRACT_PROCESS_SRV`
   - _Outbound Delivery (A2X)_ - `API_OUTBOUND_DELIVERY_SRV_0002`
 
@@ -553,10 +555,12 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
 ### Compatibility Notes
 
 - We removed the following dependencies from the SAP Cloud SDK Bill-of-Material (BOM):
+<!-- value off -->
   - Netty
   - Protobuf
   - Spring Security OAuth
   - Hibernate Validator
+<!-- value on -->
 
 ### New Functionality
 
@@ -609,7 +613,8 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
 
 ### Compatibility Notes
 
-- We removed a dependency reference for JUnit Pioneer. The last used version was `1.0.0`
+- We removed a dependency reference for `JUnit Pioneer`. 
+  The last used version was `1.0.0`
 
 ### Improvements
 
@@ -812,8 +817,10 @@ Iterable<List<EntityT>> lazyPages = request.iteratingPages().execute( destinatio
 
 The following changes apply to experimental functionality of the SAP Cloud SDK:
 
-- The SCP service "Hyperledger Fabric on SAP Cloud Platform" is deprecated, the corresponding Maven dependency `com.sap.cloud.sdk.services:scp-blockchain` gets deprecated too. Use the dependency [`com.sap.cloud.sdk.serices:blockchain-client-fabric`](https://mvnrepository.com/artifact/com.sap.cloud.sdk.services/blockchain-client-fabric) instead.
-- The method `setResponseFormat()` in the class [`ODataRequestGeneric`](https://help.sap.com/doc/f08906c8d31640d583a106325f6a8184/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odata/client/request/ODataRequestGeneric.html) is no longer available. You can still configure the `Accept` header via the method [`addHeaderIfAbsent()`](https://help.sap.com/doc/f08906c8d31640d583a106325f6a8184/1.0/en-US/com/sap/cloud/sdk/datamodel/odata/client/request/ODataRequestGeneric.html#addHeaderIfAbsent-java.lang.String-java.lang.String-).
+- The SCP service `Hyperledger Fabric on SAP Cloud Platform` is deprecated, the corresponding Maven dependency `com.sap.cloud.sdk.services:scp-blockchain` gets deprecated too. 
+  Use the dependency [`com.sap.cloud.sdk.serices:blockchain-client-fabric`](https://mvnrepository.com/artifact/com.sap.cloud.sdk.services/blockchain-client-fabric) instead.
+- The method `setResponseFormat()` in the class [`ODataRequestGeneric`](https://help.sap.com/doc/f08906c8d31640d583a106325f6a8184/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odata/client/request/ODataRequestGeneric.html) is no longer available. 
+  You can still configure the `Accept` header via the method [`addHeaderIfAbsent()`](https://help.sap.com/doc/f08906c8d31640d583a106325f6a8184/1.0/en-US/com/sap/cloud/sdk/datamodel/odata/client/request/ODataRequestGeneric.html#addHeaderIfAbsent-java.lang.String-java.lang.String-).
   Example: `request.addHeaderIfAbsent(HttpHeaders.ACCEPT, "application/xml")`.
 - The enum `com.sap.cloud.sdk.datamodel.odata.client.request.ODataFormat` is no longer public.
 
@@ -860,6 +867,7 @@ The following changes apply to experimental functionality of the SAP Cloud SDK:
 ### Improvements
 
 - The Workflow API client library in module `scp-workflow-cf` got enhanced to reflect the latest Workflow API features.
+<!-- vale off -->
 - Update Dependencies
   - Spring dependency for the SAP Cloud Platform multitenancy implementation module to version `4.3.29.RELEASE` to overcome the security vulnerability [CVE-2020-5421](https://nvd.nist.gov/vuln/detail/CVE-2020-5421).
   - Apache HttpComponents from version `4.5.12` to `4.5.13`
@@ -873,6 +881,7 @@ The following changes apply to experimental functionality of the SAP Cloud SDK:
   - `io.projectreactor:reactor-core` from `3.3.9.RELEASE` to `3.3.10.RELEASE`
   - JUnit from version `4.13` to `4.13.1`
   - Tomcat from `9.0.37` to `9.0.39`, fixing the vulnerability [CVE-2020-13943](https://nvd.nist.gov/vuln/detail/CVE-2020-13943)
+<!-- vale on -->
 
 ### Fixed Issues
 
@@ -908,7 +917,8 @@ The deprecated code is still usable. No breaking changes in code or behavior are
 
 The internal fluent helper class `FluentHelperCustomHttpHeader` is changed to a deprecated interface. 
 The related methods `getHeadersForRequestAndImplicitRequests` and `getHeadersForRequestOnly` are deprecated. 
-The former modifier will be used by default in the future. Please use the existing `withHeader` and `withHeaders` methods without the stating a deprecated modifier.
+The former modifier will be used by default in the future. 
+Please use the existing `withHeader` and `withHeaders` methods without the stating a deprecated modifier.
 
 The internal protected methods `getHeadersForRequestOnly` and `getHeadersForRequestAndImplicitRequests` from abstract base class `FluentHelperBasic` are deprecated. 
 Please use protected `getHeaders()` instead.
@@ -919,13 +929,16 @@ The internal interface `CsrfTokenRetriever` defines another `retrieveCsrfToken` 
 
 Blockchain Business Services update:
 
+<!-- vale off -->
 - It is now possible to send, receive, and validate notarizations. 
   Sending a document will automatically also send its notarizations if the visibility configuration is set to include notarizations.
+<!-- vale on -->
 
 ### Improvements
 
 - In case a `DefaultErpHttpDestination` decorates an On-Premise `HttpDestination` and the destination configuration
   lacks a `sap-client` property, an information message is logged to raise awareness for potential authentication issues.
+<!-- vale off -->
 - Dependency Updates:
   - Update Spring Boot from `2.3.3.RELEASE` to `2.3.4.RELEASE`
   - Update JUnit Jupiter from `5.6.2` to `5.7.0`
@@ -935,3 +948,4 @@ Blockchain Business Services update:
 - Maven Plugin Updates in Archetypes:
   - Update Maven Surefire Plugin from `3.0.0-M4` to `3.0.0-M5`
   - Update Maven Jacoco Plugin from `0.8.5` to `0.8.6`
+<!-- vale on -->

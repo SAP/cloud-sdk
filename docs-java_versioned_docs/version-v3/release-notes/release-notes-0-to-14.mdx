@@ -594,6 +594,7 @@ When defining destinations via the environment variable destinations, version 3.
 
 - The following maven dependencies have been updated:
 
+<!-- vale off -->
 | Library                                           | Version used in SDK 2.X | Version used in SDK 3.X |
 | ------------------------------------------------- | ----------------------- | ----------------------- |
 | bcpkix-jdk15on                                    | 1.6                     | 1.62                    |
@@ -636,16 +637,19 @@ When defining destinations via the environment variable destinations, version 3.
 | io.github.resilience4j:resilience4j-bulkhead      | 0.14.0                  | 0.16.0                  |
 | io.github.resilience4j:resilience4j-cache         | 0.14.0                  | 0.16.0                  |
 | io.github.resilience4j:resilience4j-timelimiter   | 0.14.0                  | 0.16.0                  |
+<!-- vale on -->
 
 - The dependency `org.checkerframework:checker-qual` has been excluded entirely. 
   That is, it is neither a direct dependency of the SAP Cloud SDK anymore, nor is it a transitive dependency of both Caffeine and Guava.
 
-- Renamed/Moved Modules. Our goals with the renaming were the following:
+- Renamed/Moved Modules. 
+  Our goals with the renaming were the following:
   - Use the prefix `com.sap.cloud.sdk` instead of `com.sap.cloud.s4hana`.
-  - Make all artifact ids unique, so that tools gradle can easily consume our modules.
+  - Make all artifact ids unique, so that tools `gradle` can easily consume our modules.
   - The term `s4hana` in the group id is only used if the contained module is in some way specific for SAP S/4HANA.
   - Remove all obsolete modules.
 
+<!-- vale off -->
 | v2.19.2                                                         | v3.0.0                                                             |
 | --------------------------------------------------------------- | ------------------------------------------------------------------ |
 | com.sap.cloud.s4hana.archetypes:archetypes-parent               | com.sap.cloud.sdk.archetypes:archetypes-parent                     |
@@ -760,6 +764,7 @@ When defining destinations via the environment variable destinations, version 3.
 |                                                                 | com.sap.cloud.sdk.testutil:testutil-parent                         |
 | com.sap.cloud.s4hana:testutil-resources                         | com.sap.cloud.sdk.testutil:testutil-resources                      |
 | com.sap.cloud.s4hana:userprofile                                |                                                                    |
+<!-- vale on -->
 
 ### New Functionality
 
