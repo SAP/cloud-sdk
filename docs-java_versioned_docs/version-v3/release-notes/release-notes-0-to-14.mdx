@@ -511,6 +511,7 @@ Either update to version `3.1.0` or manually add the following properties to the
 
 - Classes referred to with "query" are renamed to "request", in case their main purpose is to read result data.
 
+<!-- vale off -->
 - s4hana / connectivity
 
   ```java
@@ -561,6 +562,7 @@ Either update to version `3.1.0` or manually add the following properties to the
   ```java
   com.sap.cloud.sdk.cloudplatform.servlet.response.QueryExecutionErrorResponse -> com.sap.cloud.sdk.cloudplatform.servlet.response.RequestExecutionErrorResponse
   ```
+<!-- vale on -->
 
 - RequestContext is now ThreadContext
   - New concept of ThreadContextDecorator to allow decorating the callable which is wrapped in a ThreadContext.
@@ -578,7 +580,7 @@ Either update to version `3.1.0` or manually add the following properties to the
   - AccessDeniedException also now uses "principal" instead of "user" (note, however, that the AccessDeniedResponse still exposes "user" to remain compatible on REST API level).
 - LocalScopePrefixProvider now uses Try instead of throwing exceptions that were previously not declared on the API.
 - Remove ErpEdition (also removed in the mocking of ErpSystem)
-- Accessors now use vavr in more places (offering methods returning Try).
+- Accessors now use `vavr` in more places (offering methods returning Try).
 - TenantAccessor, PrincipalAccessor, AuthTokenAccessor, and RequestAccessor now support on-behalf execution, with-fallback execution, and a global fallback.
 - SapPassportBuilder now uses the following defaults:
   - "SAP_CLOUD_SDK_APPLICATION" instead of "S4SDK_APPLICATION"
@@ -781,7 +783,7 @@ Either update to version `3.1.0` or manually add the following properties to the
 - Give more control when loading a destination by providing DestinationOptions.
   - Different destination loaders such as ScpCfDestinationLoader or ScpNeoDestinationLoader will consider different options that give fine-granular control over the behavior when loading the destination (for example, if provider or subscriber destinations shall take precedence).
   - Construct a DestinationOptions instance via the builder method.
-  - Use the augmentBuilder method to set configuration parameters that are specific to a loader (platform or environment) using an appropriate class implementing DestinationOptionsAugmenter.
+  - Use the `augmentBuilder` method to set configuration parameters that are specific to a loader (platform or environment) using an appropriate class implementing DestinationOptionsAugmenter.
 - Execute code (given as Callable or Executable) by overriding (that is, "on-behalf of") the Tenant, Principal, or AuthToken of the context in TenantAccessor, PrincipalAccessor, and AuthTokenAccessor.
   - At the example of TenantAccessor.executeWithTenant, the given callable/executable will be executed in a context where the given tenant is set as the current tenant.
   - In addition to overriding, provide the option to set a fallback for a single execution (for example, with TenantAccessor.executeWithFallbackTenant) or globally (for example, with TenantAccessor.setFallbackTenant). 
