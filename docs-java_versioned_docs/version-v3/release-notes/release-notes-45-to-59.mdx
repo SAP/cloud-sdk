@@ -14,7 +14,7 @@
   Now the SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/products/SAPS4HANACloud/overview).
 
 - Update of the OData VDM to the [newest release 2021 of SAP S/4HANA On-Premise](https://help.sap.com/viewer/product/SAP_S4HANA_ON-PREMISE/2021/en-US).
-  The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA On-Premise](https://api.sap.com/products/SAPS4HANA/overview)
+  The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA On-Premise](https://api.sap.com/products/SAPS4HANA/overview)
   This includes completely new services, new operations in previously existing services, and new entity types in the following new Maven artifacts:
 
   - [`s4hana-api-odata-v4-onpremise`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata-v4-onpremise) manages classes in package `com.sap.cloud.sdk.s4hana.onpremise.datamodel.odatav4.services`
@@ -56,7 +56,9 @@ Support for `oneOf`, `anyOf` might be added in the future but the timeline for t
 
 ### New Functionality
 
-- Update the OData VDM to the [newest release 2111 of SAP S/4HANA Cloud](https://news.sap.com/2021/10/sap-s4hana-cloud-2111-innovating-business-futures/). This includes completely new services (available as usual in packages `com.sap.cloud.sdk.s4hana.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types. The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/products/SAPS4HANACloud/overview) with the exception of the following services:
+- Update the OData VDM to the [newest release 2111 of SAP S/4HANA Cloud](https://news.sap.com/2021/10/sap-s4hana-cloud-2111-innovating-business-futures/). 
+  This includes completely new services (available as usual in packages `com.sap.cloud.sdk.s4hana.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types. 
+  The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/products/SAPS4HANACloud/overview) with the exception of the following services:
   - (OData V2) _Maintenance Item_ - `API_MAINTENANCEITEM`
   - (OData V2) _Enterprise Project V2_ - `API_ENTERPRISE_PROJECT_SRV_0002`
   - (OData V2) _Service Order Template_ - `OP_API_SERVICE_ORDER_TEMPLATE_SRV_0001`
@@ -164,7 +166,7 @@ Support for `oneOf`, `anyOf` might be added in the future but the timeline for t
 - We fixed an issue where the `appendDestinationLoader` and `prependDestinationLoader` on the `DestinationLoader` were not behaving as expected on a given `DestinationLoaderChain`.The `DestinationLoaderChain`s are now correctly added to an existing `DestinationLoaderChain`.
 - We fixed an issue with the OData V4 generator not considering actions and functions when one of their arguments references a complex- or entity-type that is not transitively exposed through entity sets.
 
-- We fixed the issue where `HttpClient`s were not cached correctly on BTP Neo.
+- We fixed the issue where `HttpClient`s were not cached correctly on SAP BTP Neo.
   With this fix the caching should now behave as expected, minimizing the number of concurrent `HttpClient` instances in use.
 
 ## 3.55.1 - October 7, 2021
@@ -271,7 +273,7 @@ Support for `oneOf`, `anyOf` might be added in the future but the timeline for t
 ### Compatibility Notes
 
 - The Java HTML parser [`jsoup`](https://jsoup.org/) is no longer part of our implicit dependency management.
-  If your application relies on the version provided by Cloud SDK, please consider declaring the dependency version yourself.
+  If your application relies on the version provided by the SAP Cloud SDK, please consider declaring the dependency version yourself.
   The latest version can be found in [Maven Central](https://search.maven.org/artifact/org.jsoup/jsoup).
 
 ### New Functionality
@@ -366,16 +368,16 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
 ### Known Issues
 
 - The Java HTML parser [`jsoup`](https://jsoup.org/) is used in a version which contains the vulnerability [CVE-2021-37714](https://cve.report/CVE-2021-37714).
-  We plan to remove this dependency in future versions of the Cloud SDK.
+  We plan to remove this dependency in future versions of the SAP Cloud SDK.
 
 ### New Functionality
 
-- We enabled support for certificate-based authentication for services on Cloud Foundry which allows services to use Mutual Transport Layer Security or mTLS instead of providing client credentials. In the future, this will become the default authentication method on the BTP Cloud Foundry.
+- We enabled support for certificate-based authentication for services on Cloud Foundry which allows services to use Mutual Transport Layer Security or mTLS instead of providing client credentials. In the future, this will become the default authentication method on the SAP BTP Cloud Foundry.
 
   - If the service binding has a property `credentials: { credential-type: x509 }` then this is an indicator for the new authentication method.
   - Please note: you might see `WARN` messages in the logs. These are produced by the Java Security Library that we use as a dependency. We verified the logic with the library publisher and it's safe to use. The false log message is soon to be removed.
 
-- We enabled the use of a certificate-based authentication without password protection for the Destination Service on the BTP Cloud Foundry.
+- We enabled the use of a certificate-based authentication without password protection for the Destination Service on the SAP BTP Cloud Foundry.
 
 - We updated the remaining OData VDM services to the [newest release 2108 of SAP S/4HANA Cloud](https://news.sap.com/2021/08/sap-s4hana-cloud-2108-engineering-innovations/). Operations and datatypes of the following services may have faced backward-incompatible changes, that can be explored in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/products/SAPS4HANACloud/overview):
   - (OData V2) _Maintenance Item_ - `API_MAINTENANCEITEM`
@@ -440,7 +442,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
 
 ### Improvements
 
-- The Workflow API client library in module `scp-workflow-cf` was updated to support the latest version of the [Workflow Service on the BTP Cloud Foundry](https://api.sap.com/api/SAP_CP_Workflow_CF/overview).
+- The Workflow API client library in module `scp-workflow-cf` was updated to support the latest version of the [Workflow Service on the SAP BTP Cloud Foundry](https://api.sap.com/api/SAP_CP_Workflow_CF/overview).
 <!-- vale off -->
 - Dependency Updates:
   - Update Neo JavaEE 7 SDK from `1.100.7` to `1.101.4`
@@ -462,7 +464,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
   Maven `3.8.1` changed the default behaviour to no longer follow non-encrypted repository URLs.
   The SAP Cloud SDK uses Maven libraries in the version `3.6.0`, mainly since we release Maven plugins.
   An update to the latest Maven version is planned to mitigate this issue.
-  Internal analysis revealed that there is no direct harm for BTP applications using the SAP Cloud SDK for Java.
+  Internal analysis revealed that there is no direct harm for SAP BTP applications using the SAP Cloud SDK for Java.
   To minimize the attack vector, we recommend to developers to use Maven `3.8.1` or later on their development machines.
 
 ### Compatibility Notes
@@ -497,7 +499,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
 ### Known issues
 
 - The module `com.sap.cloud.sdk.frameworks:cxf` uses the Apache CXF dependencies of version `3.3.10` which is affected by vulnerabilities [CVE-2021-30468](https://nvd.nist.gov/vuln/detail/CVE-2021-30468).
-  Currently, this module is not consumed in other Cloud SDK modules.
+  Currently, this module is not consumed in other SAP Cloud SDK modules.
   Use of the SAP Cloud SDK doesn't compromise your application runtime unless you consume this module in your code directly.
 
 ### New Functionality
@@ -543,7 +545,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
 - The module `usage-analytics` uses the dependency `org.jdom:jdom:2.0.6` which is affected by the vulnerability [CVE-2021-33813](https://nvd.nist.gov/vuln/detail/CVE-2021-33813).
   There was no fixed dependency version available at the release date.
   We'll update this dependency once a secure version is available.
-  The dependency is used in a Maven plugin and hence there is no harm during the runtime of any BTP application.
+  The dependency is used in a Maven plugin and hence there is no harm during the runtime of any SAP BTP application.
 
 ### Compatibility Notes
 
@@ -570,7 +572,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
 
 ### New Functionality
 
-- We added the `ScpCfDestinationTokenExchangeStrategy`, which can be used to change the user token exchange behavior when retrieving destinations on BTP Cloud Foundry.
+- We added the `ScpCfDestinationTokenExchangeStrategy`, which can be used to change the user token exchange behavior when retrieving destinations on SAP BTP Cloud Foundry.
 
   By default, the `ScpCfDestinationLoader` always performs an initial "look up" request against the destination service.
   This is needed to get the authentication type configured in the destination, which might then require a user token exchange to authenticate at the target system.
@@ -691,7 +693,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
   The creation of the new operation types is enabled in the OData V4 generator as well.
   Check out the full [documentation of the feature](https://sap.github.io/cloud-sdk/docs/java/features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java#odata-functions-and-actions) for more information.
 
-- We updated the [OData type-safe client also known as the VDM](https://sap.github.io/cloud-sdk/docs/java/features/odata/overview/) to the newest release FPS2 of SAP S/4HANA on-premise 2020. This also includes completely new services added (available as usual in packages `com.sap.cloud.sdk.s4hana.onpremise.v2020.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.onpremise.v2020.datamodel.odatav4.services`), new operations in previously existing services, and new entity types.
+- We updated the [OData type-safe client also known as the VDM](https://sap.github.io/cloud-sdk/docs/java/features/odata/overview/) to the newest release FPS2 of SAP S/4HANA On-Premise 2020. This also includes completely new services added (available as usual in packages `com.sap.cloud.sdk.s4hana.onpremise.v2020.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.onpremise.v2020.datamodel.odatav4.services`), new operations in previously existing services, and new entity types.
 
 ### Improvements
 

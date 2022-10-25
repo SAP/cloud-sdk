@@ -9,7 +9,7 @@
 
 ### New Functionality
 
-- We enhanced the [BTP Workflow API](https://api.sap.com/api/SAP_CP_Workflow_CF/overview) client library to reflect the latest state of this BTP service.
+- We enhanced the [SAP BTP Workflow API](https://api.sap.com/api/SAP_CP_Workflow_CF/overview) client library to reflect the latest state of this SAP BTP service.
 - We introduced a new CLI wrapper for the OpenAPI generator that can be used without having to set up a Maven project.
 
 ### Improvements
@@ -176,7 +176,7 @@ The collection of released S/4HANA Cloud client libraries from the SAP Cloud SDK
       - Update Apache Commons Lang from version `3.11` to `3.12.0`
       - Update JSON from version `20201115` to `20210307`
       - Update Jackson from version `2.12.1` to `2.12.2`
-- The OData type-safe client (VDM) for OData V4 services of newest release [2102 of SAP S/4HANA Cloud](https://news.sap.com/2021/02/sap-s4hana-cloud-2102-empowering-businesses-seize-opportunities/) and FPS1 of SAP S/4HANA on-premise 2020 now also supports static fields for accessible properties on `VdmComplex` types.
+- The OData type-safe client (VDM) for OData V4 services of newest release [2102 of SAP S/4HANA Cloud](https://news.sap.com/2021/02/sap-s4hana-cloud-2102-empowering-businesses-seize-opportunities/) and FPS1 of SAP S/4HANA On-Premise 2020 now also supports static fields for accessible properties on `VdmComplex` types.
 <!-- vale on -->
 
 ### Fixed issues
@@ -278,13 +278,13 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
   - `StructuredPropertySingleQuery` has been renamed to `NavigationPropertySingleQuery`
   - `StructuredPropertySingle` has been replaced by either the `NavigationProperty<Single/Collection>Query` or the newly introduced `ComplexPropertyQuery`
 
-- The type-safe client (VDM) classes for `TimeDependentStockLevelService` have been removed as the SAP S/4HANA on-premise OData service does not exist in releases 2020 FPS0 or FPS1.
+- The type-safe client (VDM) classes for `TimeDependentStockLevelService` have been removed as the SAP S/4HANA On-Premise OData service does not exist in releases 2020 FPS0 or FPS1.
 
 - With SAP S/4 OnPremise release 2020 FPS1, in the type-safe client (VDM) class for `VehicleManagementSystemForVehicleService` the `getVMSVehicleIncomingInvoiceByKey` method now takes only two parameters ( `vMSVehicleUUID` and `vMSVehicleActionDateTime`) as input as opposed to three before ( `vMSVehicleUUID`,`vMSVehicleActionDateTime` and `vMSVehicleActionDocType` ).
 
 ### New Functionality
 
-- The [type-safe OData client](features/odata/overview.mdx#type-safe-odata-client) (VDM) is updated to the latest release (FPS1) of SAP S/4HANA on-premise 2020.
+- The [type-safe OData client](features/odata/overview.mdx#type-safe-odata-client) (VDM) is updated to the latest release (FPS1) of SAP S/4HANA On-Premise 2020.
   This also includes completely new services added to the pre-existing `com.sap.cloud.sdk.s4hana.onpremise.v2020.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.onpremise.v2020.datamodel.odatav4.services` packages.
 
 - In the OData v2 and v4 type-safe client (VDM) generators we now support generating service methods for multiple entity sets belonging to the same entity type.
@@ -441,7 +441,9 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
        .end();
   ```
 
-- We updated the [OData type-safe client also known as a VDM](features/odata/overview.mdx) to the [newest release 2102 of SAP S/4HANA Cloud](https://news.sap.com/2021/02/sap-s4hana-cloud-2102-empowering-businesses-seize-opportunities/). This includes completely new services (available as usual in packages `com.sap.cloud.sdk.s4hana.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types. The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud) with the exception of the following services:
+- We updated the [OData type-safe client also known as a VDM](features/odata/overview.mdx) to the [newest release 2102 of SAP S/4HANA Cloud](https://news.sap.com/2021/02/sap-s4hana-cloud-2102-empowering-businesses-seize-opportunities/). 
+  This includes completely new services (available as usual in packages `com.sap.cloud.sdk.s4hana.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types. 
+  The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud) with the exception of the following services:
   - (OData V2) _Purchase Requisition_ - `API_PURCHASEREQ_PROCESS_SRV`
   - (OData V2) _Production Order Confirmation_ - `API_PROD_ORDER_CONFIRMATION_2_SRV`
   - (OData V2) _Process Order Confirmation_ - `API_PROC_ORDER_CONFIRMATION_2_SRV`
@@ -483,7 +485,7 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
 
 - We deprecated the constructor `UncheckedFilterExpression(FilterExpression)`. It can still be used for OData V2 type-safe client (VDM) read requests that are executed with the deprecated `execute(...)` method. However, we strongly encourage you to migrate to `executeRequest(...)`. Unchecked filter expressions can be instantiated with recommended constructor `UncheckedFilterExpression(ValueBoolean)`.
 - We deprecated the class `com.sap.cloud.sdk.s4hana.connectivity.RequestBody` as it has no usage.
-- For BTP Cloud Foundry, instances of `DestinationHeaderProvider` will be called for every HTTP request as of now. Earlier versions invoked the API only once during destination construction.
+- For SAP BTP Cloud Foundry, instances of `DestinationHeaderProvider` will be called for every HTTP request as of now. Earlier versions invoked the API only once during destination construction.
 
 ### New Functionality
 
@@ -671,7 +673,7 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
 
 - The Maven artifact `rest-core moved` from the group id `com.sap.cloud.sdk.services` to `com.sap.cloud.sdk.datamodel`.
 - We introduced new implementations of `ThreadContextListener` and `ThreadContextDecorator`. We adapted the internal priority of listeners and decorators accordingly.
-- Archetypes generated by the Cloud SDK for Java were migrated to the [general purpose pipeline of project "Piper"](https://sap.github.io/jenkins-library/stages/introduction/). Before they were using the [SAP Cloud SDK for Continuous Delivery pipeline](https://github.com/SAP/cloud-s4-sdk-pipeline) that is now deprecated. For existing projects we also recommend [migrating](https://github.com/SAP/cloud-s4-sdk-pipeline/blob/master/gpp-guide.md) migrating to this pipeline.
+- Archetypes generated by the SAP Cloud SDK for Java were migrated to the [general purpose pipeline of project "Piper"](https://sap.github.io/jenkins-library/stages/introduction/). Before they were using the [SAP Cloud SDK for Continuous Delivery pipeline](https://github.com/SAP/cloud-s4-sdk-pipeline) that is now deprecated. For existing projects we also recommend [migrating](https://github.com/SAP/cloud-s4-sdk-pipeline/blob/master/gpp-guide.md) migrating to this pipeline.
 
 ### New Functionality
 
@@ -811,7 +813,9 @@ The following changes apply to experimental functionality of the SAP Cloud SDK:
 
 ### New Functionality
 
-- Update the OData client library to the [newest release 2011 of SAP S/4HANA Cloud](https://news.sap.com/2020/10/sap-s4hana-cloud-release-2011-customer-driven-innovation/). This includes completely new services (available as usual in packages [com.sap.cloud.sdk.s4hana.datamodel.odata.services](https://help.sap.com/doc/f08906c8d31640d583a106325f6a8184/1.0/en-US/com/sap/cloud/sdk/s4hana/datamodel/odata/services/package-summary.html) and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types. The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
+- Update the OData client library to the [newest release 2011 of SAP S/4HANA Cloud](https://news.sap.com/2020/10/sap-s4hana-cloud-release-2011-customer-driven-innovation/). 
+  This includes completely new services (available as usual in packages [com.sap.cloud.sdk.s4hana.datamodel.odata.services](https://help.sap.com/doc/f08906c8d31640d583a106325f6a8184/1.0/en-US/com/sap/cloud/sdk/s4hana/datamodel/odata/services/package-summary.html) and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types. 
+  The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
 - Released new pregenerated type-safe client libraries for the OData v4 services in the [latest RTC release 2020 of SAP S/4HANA On-premise](https://blogs.sap.com/2020/10/07/sap-s-4hana-2020-release/)
 - The untyped, generic OData client and OData V4 client now support `Edm.Binary` as value type for Entity properties. In Java, this type is conveniently represented as `byte[]`. The OData V4 generator will now generate affected services without raising a warning. Generated entities that have binary properties now have static accessors to the respective fields, similar to the other entity properties. OData filter expressions for binary properties can be created.
 - Add generated service `DocumentComplianceElectronicDocumentFileService` for API [`ELECTRONICDOCFILE_0001`](https://api.sap.com/api/ELECTRONICDOCFILE_0001)
@@ -910,7 +914,7 @@ Blockchain Business Services update:
 
 ### Improvements
 
-- In case a `DefaultErpHttpDestination` decorates an on-premise `HttpDestination` and the destination configuration
+- In case a `DefaultErpHttpDestination` decorates an On-Premise `HttpDestination` and the destination configuration
   lacks a `sap-client` property, an information message is logged to raise awareness for potential authentication issues.
 - Dependency Updates:
   - Update Spring Boot from `2.3.3.RELEASE` to `2.3.4.RELEASE`

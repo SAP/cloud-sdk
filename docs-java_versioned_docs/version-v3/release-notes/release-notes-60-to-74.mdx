@@ -12,7 +12,9 @@
 
 ### New Functionality
 
-- Update the OData VDM to the [newest release 2208 of SAP S/4HANA Cloud](https://blogs.sap.com/2022/08/01/highlights-of-the-sap-s-4hana-cloud-2208-release/). This includes completely new services (available as usual in packages `com.sap.cloud.sdk.s4hana.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types. The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/products/SAPS4HANACloud/overview).
+- Update the OData VDM to the [newest release 2208 of SAP S/4HANA Cloud](https://blogs.sap.com/2022/08/01/highlights-of-the-sap-s-4hana-cloud-2208-release/). 
+  This includes completely new services (available as usual in packages `com.sap.cloud.sdk.s4hana.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types. 
+  The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/products/SAPS4HANACloud/overview).
 
 ## 3.73.0 - July 28, 2022
 
@@ -20,7 +22,7 @@
 
 ### Compatibility Notes
 
-- Following modules have been deprecated and will be **removed** with the upcoming release of Cloud SDK version 4:
+- Following modules have been deprecated and will be **removed** with the upcoming release of the SAP Cloud SDK version 4:
   - API Metering (`com.sap.cloud.sdk.cloudplatform:metering`)
   - API Metering SAP CP Neo (`com.sap.cloud.sdk.cloudplatform:metering-scp-neo`)
 
@@ -99,7 +101,7 @@
 ### New Functionality
 
 - Update of the OData VDM to the [newest release 2021 FPS2 of SAP S/4HANA On-Premise](https://help.sap.com/viewer/product/SAP_S4HANA_ON-PREMISE/2021/en-US).
-  The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA On-Premise](https://api.sap.com/products/SAPS4HANA/overview)
+  The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA On-Premise](https://api.sap.com/products/SAPS4HANA/overview)
   This includes completely new services, new operations in previously existing services, and new entity types in the existing Maven artifacts:
 
   - [`s4hana-api-odata-v4-onpremise`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata-v4-onpremise) manages classes in package `com.sap.cloud.sdk.s4hana.onpremise.datamodel.odatav4.services`
@@ -204,7 +206,7 @@
 
 - To fix the high vulnerability [CVE-2022-22968](https://nvd.nist.gov/vuln/detail/CVE-2022-22968) in Spring, we had to update [Spring BOM](https://search.maven.org/search?q=g:org.springframework%2BAND%2Ba:spring-framework-bom) to `5.3.19` and to maintain compatibility had to also update [XSUAA Client Library](https://github.com/SAP/cloud-security-xsuaa-integration) to `2.11.16`.
   Please note that if you are using SAP JAVA buildpack for your deployments use a static buildpack version `sap_java_buildpack_1_52` to avoid dependency conflicts and class loading issues.
-- SAP Buisiness Rules OpenAPI client library received breaking change to the field `List<TextPredefinedResults> predefinedResults` which is renamed to `List<TextPredefined> predefined` after updating to the latest version of the SAP Business Rules service
+- SAP Business Rules OpenAPI client library received breaking change to the field `List<TextPredefinedResults> predefinedResults` which is renamed to `List<TextPredefined> predefined` after updating to the latest version of the SAP Business Rules service
 - Deprecate non-productive `com.sap.cloud.sdk.s4hana.datamodel.odata.adapter.ODataCalendarAdapter` and child classes `ODataDateTimeAdapter`, `ODataDateTimeOffsetAdapter`, and `ODataTimeAdapter`.
   It is planned to remove those classes with [SAP Cloud SDK v4](https://sap.github.io/cloud-sdk/docs/java/release-policy).
 - Switch from using `com.google.code.findbugs:annotations` to `com.github.spotbugs:spotbugs-annotations` in modules `cloudplatform-core-dwc-cf` and `recast-ai`.
@@ -271,7 +273,7 @@
   Please note that if you are using SAP JAVA buildpack for your deployments use a static buildpack version `sap_java_buildpack_1_49` to avoid dependency conflicts and class loading issues.
 - The module `auditlog-scp-cf` is considered **deprecated**.
   The audit logging API used to implement the integration is outdated and no longer adheres to product guidelines.
-  In the future, Cloud SDK may provide an update leveraging the recommended API. Until then the users have an option to continue using the deprecated logic at their own risk, or directly consume the recommended audit logging API - without the Cloud SDK convenience layer.
+  In the future, the SAP Cloud SDK may provide an update leveraging the recommended API. Until then the users have an option to continue using the deprecated logic at their own risk, or directly consume the recommended audit logging API - without the SAP Cloud SDK convenience layer.
   Please, [create an issue](https://github.com/SAP/cloud-sdk/issues/new?assignees=&labels=feedback&template=feedback.md&title=) if you are interested in the consumption of `auditlog-scp-cf` via the SAP Cloud SDK.
   This deprecated module will be kept in the upcoming SAP Cloud SDK v4.
   The module targeting Neo in not deprecated and integration can be consumed as before.
@@ -353,7 +355,7 @@
 ### Fixed Issues
 
 - Fix an issue with destinations that have key-stores referencing more than one alias.
-- Fix an issue with certificate-based authentication for BTP services, e.g. _Destination Service_.
+- Fix an issue with certificate-based authentication for SAP BTP services, e.g. _Destination Service_.
 
 ## 3.65.0 - March 10, 2022
 
@@ -380,7 +382,7 @@
 ### New Functionality
 
 - Update of the OData VDM to the [newest release 2021 FPS1 of SAP S/4HANA On-Premise](https://help.sap.com/viewer/product/SAP_S4HANA_ON-PREMISE/2021/en-US).
-  The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA On-Premise](https://api.sap.com/products/SAPS4HANA/overview)
+  The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA On-Premise](https://api.sap.com/products/SAPS4HANA/overview)
   This includes completely new services, new operations in previously existing services, and new entity types in the existing Maven artifacts:
   - [`s4hana-api-odata-v4-onpremise`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata-v4-onpremise) manages classes in package `com.sap.cloud.sdk.s4hana.onpremise.datamodel.odatav4.services`
   - [`s4hana-api-odata-onpremise`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata-onpremise) manages classes in package `com.sap.cloud.sdk.s4hana.onpremise.datamodel.odata.services`
@@ -407,7 +409,7 @@
 
 ### New Functionality
 
-- Extend the implementation for using the BTP Destination & Connectivity services to now also support the `x509` authentication type.
+- Extend the implementation for using the SAP BTP Destination & Connectivity services to now also support the `x509` authentication type.
 
 ### Improvements
 
@@ -452,7 +454,7 @@
 - `com.sap.cloud.sdk.s4hana.datamodel.odata.services`
 - `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`
   You will also find new operations in previously existing services, and new entity types.
-  The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/products/SAPS4HANACloud/overview).
+  The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/products/SAPS4HANACloud/overview).
 - Add a new method (`excludingFields(...)`) to exclude specific fields from OData V2 and V4 `PUT` requests (i.e. `replacingEntity()`).
   This method can be used to exclude read-only fields, as well as dependent properties that are not tied to key properties from your `PUT` request payload.
 
@@ -536,7 +538,7 @@
   This proxy type is used when your destination represents a tunnel created via [Private Link Service](https://help.sap.com/viewer/product/PRIVATE_LINK/CLOUD/en-US).
 - The SAP Cloud SDK now provides a new accessor for _HTTP headers_ of the _incoming request_.
   The new `RequestHeaderAccessor` located in the `cloudplatform-core` module can be used to conveniently access HTTP headers of the currently processed incoming request.
-  Furthermore, it can be used to also propagate specific headers to nested `ThreadContext`s, much like the other _accessors_ of the Cloud SDK.
+  Furthermore, it can be used to also propagate specific headers to nested `ThreadContext`s, much like the other _accessors_ of the SAP Cloud SDK.
   By default, all present headers are automatically "inherited" when creating a new `ThreadContext` so that even asynchronous operations are able to access the initial headers.
 
 ### Fixed Issues

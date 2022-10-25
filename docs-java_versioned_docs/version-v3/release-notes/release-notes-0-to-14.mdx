@@ -32,7 +32,9 @@
 
 ### New Functionality
 
-- _OData client_: Update the OData VDM to the [newest release 2002 of SAP S/4HANA Cloud](https://news.sap.com/2020/01/sap-s4hana-cloud-2002-release/). This includes completely new services (available as usual in package [com.sap.cloud.sdk.s4hana.datamodel.odata.services](https://help.sap.com/doc/e03ee6cbe2ea468f88e1970b61d55b62/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/package-summary.html)), new operations in previously existing services, and new entity types. The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
+- _OData client_: Update the OData VDM to the [newest release 2002 of SAP S/4HANA Cloud](https://news.sap.com/2020/01/sap-s4hana-cloud-2002-release/). 
+  This includes completely new services (available as usual in package [com.sap.cloud.sdk.s4hana.datamodel.odata.services](https://help.sap.com/doc/e03ee6cbe2ea468f88e1970b61d55b62/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/package-summary.html)), new operations in previously existing services, and new entity types. 
+  The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
 
 ### Improvements
 
@@ -77,7 +79,7 @@
 
 - The existence of a principal as retrieved by the [`PrincipalAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html) is no longer an indicator for a JWT to be present. Due to the introduction of [`BasicAuthenticationAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html) a principal can also originate from the Basic Authentication header on the current request. As before verifying authentication and authorizations needs to be done explicitly by the application using the SAP Cloud SDK.
 
-- The behavior for principal propagation when accessing on-premise systems has changed as explained below in the Improvements section.
+- The behavior for principal propagation when accessing On-Premise systems has changed as explained below in the Improvements section.
 
 ### New Functionality
 
@@ -114,9 +116,9 @@
 
 ### Improvements
 
-- The connectivity to on-premise systems from SCP Cloud Foundry is updated, so that the [authentication](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/39f538ad62e144c58c056ebc34bb6890.html) now follows the [recommended](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/39f538ad62e144c58c056ebc34bb6890.html) protocol for principal propagation.
+- The connectivity to On-Premise systems from SCP Cloud Foundry is updated, so that the [authentication](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/39f538ad62e144c58c056ebc34bb6890.html) now follows the [recommended](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/39f538ad62e144c58c056ebc34bb6890.html) protocol for principal propagation.
 
-  - Instead of populating two headers `SAP-Connectivity-Authentication` and `Proxy-Authorization` for on-premise requests, the SAP Cloud SDK now takes the recommended approach of just using `Proxy-Authorization` with a dynamically resolved _User Exchange Access Token_.
+  - Instead of populating two headers `SAP-Connectivity-Authentication` and `Proxy-Authorization` for On-Premise requests, the SAP Cloud SDK now takes the recommended approach of just using `Proxy-Authorization` with a dynamically resolved _User Exchange Access Token_.
   - Introduce `PrincipalPropagationStrategy` for configuring that the previous behavior should be used.
 
   If for compatibility reasons the previous approach should be used, you can adjust strategy with the following code snippet:
@@ -237,7 +239,8 @@
 
 ### New Functionality
 
-- _OData client_: Update the OData VDM to the [newest release 1911 of SAP S/4HANA Cloud](https://news.sap.com/2019/11/sap-s4hana-cloud-1911-intelligent-enterprise-experience-economy/). The SDK supports all O Data services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
+- _OData client_: Update the OData VDM to the [newest release 1911 of SAP S/4HANA Cloud](https://news.sap.com/2019/11/sap-s4hana-cloud-1911-intelligent-enterprise-experience-economy/). 
+  The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
 
 ### Fixed Issues
 
@@ -424,8 +427,12 @@
 
 ### New Functionality
 
-- OData VDM: Update the OData virtual data model to the [newest release 1908 of SAP S/4HANA Cloud](https://news.sap.com/2019/08/sap-s4hana-cloud-1908-new-release/). This includes completely new services (available as usual as from package [`com.sap.cloud.sdk.s4hana.datamodel.odata.services`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/package-summary.html)), new operations in previously existing services, and new entity types. The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
-- Message VDM: Update the message virtual data model for the [newest release 1908 of SAP S/4HANA Cloud](https://news.sap.com/2019/08/sap-s4hana-cloud-1908-new-release/). This includes 21 new message types to reflect the new event types added in SAP S/4HANA Cloud (available as usual from package [`com.sap.cloud.sdk.s4hana.datamodel.messaging.api.message`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/messaging/api/message/package-summary.html)). The SDK supports all event types listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/package/SAPS4HANACloudBusinessEvents?section=Artifacts).
+- OData VDM: Update the OData virtual data model to the [newest release 1908 of SAP S/4HANA Cloud](https://news.sap.com/2019/08/sap-s4hana-cloud-1908-new-release/). 
+  This includes completely new services (available as usual as from package [`com.sap.cloud.sdk.s4hana.datamodel.odata.services`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/package-summary.html)), new operations in previously existing services, and new entity types. 
+  The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
+- Message VDM: Update the message virtual data model for the [newest release 1908 of SAP S/4HANA Cloud](https://news.sap.com/2019/08/sap-s4hana-cloud-1908-new-release/). 
+  This includes 21 new message types to reflect the new event types added in SAP S/4HANA Cloud (available as usual from package [`com.sap.cloud.sdk.s4hana.datamodel.messaging.api.message`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/messaging/api/message/package-summary.html)). 
+  The SAP Cloud SDK supports all event types listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/package/SAPS4HANACloudBusinessEvents?section=Artifacts).
 
 ### Improvements
 
