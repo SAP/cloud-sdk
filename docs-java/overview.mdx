@@ -39,21 +39,14 @@ For example, with the SAP Cloud SDK for Java you can connect to an SAP S/4HANA (
 ```java
 HttpDestination destination = DestinationAccessor.getDestination("my-s4-system").asHttp();
 
-List<MeasuringPoint> result =  new DefaultMeasuringPointService()
-          .getAllMeasuringPoint()
-          .select(MEASURING_POINT, CREATION_DATE, FUNCTIONAL_LOCATION)
-          .top(5)
-          .execute(destination);
+List<BusinessPartner> businessPartners = new DefaultBusinessPartnerService()
+                .getAllBusinessPartner()
+                .top(5)
+                .executeRequest(destination);
 ```
 
-This example uses the pre-generated OData client together with the destination API to interact with the [Measuring Point Service](https://api.sap.com/api/MEASURINGPOINT_0001/overview) of SAP S/4HANA Cloud.
+This example uses the pre-generated OData client together with the destination API to interact with the [Business Partner Service](https://api.sap.com/api/API_BUSINESS_PARTNER/overview) of SAP S/4HANA Cloud.
 
-## Main Features of the SAP Cloud SDK for Java
-
-The SAP Cloud SDK for Java brings a wide variety of features to power your business application.
-
-At its core, the SAP Cloud SDK for Java integrates the SAP BTP Destination and Connectivity services with powerful clients (e.g. OData) in a multi tenant and resilient manner.
-This integration reduces the code for typical outbound requests down to just a few statements.
 
 The image below shows a typical architecture of an application built with the SAP Cloud SDK:
 
@@ -64,6 +57,29 @@ The image below shows a typical architecture of an application built with the SA
   sources={{
     light: useBaseUrl('img/general-architecture_light.svg'),
     dark: useBaseUrl('img/general-architecture_dark.svg')
+  }}
+  className="center"
+  width="80%"
+/>
+
+<!-- vale on -->
+
+## Main Features of the SAP Cloud SDK for Java
+
+The SAP Cloud SDK for Java brings a wide variety of features to power your business application.
+
+At its core, the SAP Cloud SDK for Java integrates the SAP BTP Destination and Connectivity services with powerful clients (e.g. OData) in a multi tenant and resilient manner.
+This integration reduces the code for typical outbound requests down to just a few statements.
+
+The image below visualises the main components of the SAP Cloud SDK for Java.
+
+<!-- vale off -->
+
+<ThemedImage
+  alt="Core packages"
+  sources={{
+    light: useBaseUrl('img/java-sdk-overview.png'),
+    dark: useBaseUrl('img/java-sdk-overview.png')
   }}
   className="center"
   width="80%"
