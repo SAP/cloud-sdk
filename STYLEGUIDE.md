@@ -3,9 +3,9 @@
 - [Formatting](#formatting)
   - [Inline Code](#inline-code)
     - [Use Code Font](#use-code-font)
+      - [Include a Descriptive Noun Before or After Code](#include-a-descriptive-noun-before-or-after-code)
       - [Use Code Format for Method Names](#use-code-format-for-method-names)
       - [Use `Function` vs `Method` Accordingly](#use-function-vs-method-accordingly)
-      - [Include a Descriptive Noun Before or After Code](#include-a-descriptive-noun-before-or-after-code)
     - [Exceptions](#exceptions)
   - [Placeholders](#placeholders)
     - [Use Code Format in Italics in Inline Text](#use-code-format-in-italics-in-inline-text)
@@ -20,6 +20,7 @@
     - [Use Code Font](#use-code-font)
     - [Include the Word File After the Filename](#include-the-word-file-after-the-filename)
     - [Prefer Hyphens, Not Underscores, To Separate Words in File Paths](#prefer-hyphens-not-underscores-to-separate-words-in-file-paths)
+    - [Use Linux File Paths and Separators by Default](#use-linux-file-paths-and-separators-by-default)
   - [File Type](#file-type)
     - [Use Formal File Type Name in Ordinary Font](#use-formal-file-type-name-in-ordinary-font)
     - [Exception: Use Extension in Code Format To Mention File Ending](#exception-use-extension-in-code-format-to-mention-file-ending)
@@ -224,6 +225,18 @@ For generic domain name in examples, use `example.com`.
 ### Prefer Hyphens, Not Underscores, To Separate Words in File Paths
 
 ✅ This creates a basic class inside the `src/business-partners` folder.
+
+### Use Linux File Paths and Separators by Default
+
+❌ The code is located in `YOUR_PROJECT\src\my_file.js`
+
+✅ The code is located in `YOUR_PROJECT/src/my_file.js`
+
+❌ Save the configuration in `C:\cloudsdk\config.json`
+
+✅ Save the configuration in `/cloudsdk/config.json`
+
+Exception: If you describe a Windows-specific situation, you should use the appropriate file paths.
 
 ## File Type
 
