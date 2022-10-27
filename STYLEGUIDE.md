@@ -228,13 +228,13 @@ For generic domain name in examples, use `example.com`.
 
 ### Use Linux File Paths and Separators by Default
 
-❌ The code is located in `YOUR_PROJECT\src\my_file.js`
+❌ The code is located in the `YOUR_PROJECT\src\my-file.js` file
 
-✅ The code is located in `YOUR_PROJECT/src/my_file.js`
+✅ The code is located in `YOUR_PROJECT/src/my-file.js` file
 
-❌ Save the configuration in `C:\cloudsdk\config.json`
+❌ Save the configuration in the `C:\cloudsdk\config.json` file
 
-✅ Save the configuration in `/cloudsdk/config.json`
+✅ Save the configuration in the `/cloudsdk/config.json` file
 
 Exception: If you describe a Windows-specific situation, you should use the appropriate file paths.
 
@@ -251,7 +251,7 @@ When discussing a file type generically, use the formal file type name in ordina
 ### Exception: Use Extension in Code Format To Mention File Ending
 
 Use only when you need to specifically mention a file ending.
-If the ending is case insensitive, you should write it in lowercase.
+If the ending is case-insensitive, you should write it in lowercase.
 
 ✅ base64 ASCII (e.g. `.pem`) and binary (e.g. `.der`).
 
