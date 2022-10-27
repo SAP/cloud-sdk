@@ -1,0 +1,792 @@
+<!-- vale off -->
+
+## 3.14.0
+
+- Release date: February 27, 2020
+- Javadoc: <https://help.sap.com/doc/65849d56440245959d8929e0db23d3c4/1.0/en-US/index.html>
+- Release blog: <https://blogs.sap.com/?p=1053508>
+
+### Compatibility Notes
+
+- Remove the public enum `com.sap.cloud.sdk.cloudplatform.connectivity.DestinationRetrievalStrategy` as it had no usage in the realm of the SAP Cloud SDK version 3.
+
+### New Functionality
+
+- _OData VDM client_: Add preview support for OData v4 services.
+  - The new OData client implementation is capable of the basic Create, Read, Update, Delete (CRUD) operations on OData v4 services.
+  - Include an updated, dedicated generator that is capable of creating virtual data models through a command line interface or Maven plugin.
+    Reference the artifact id `odata-v4-generator` in your `.pom` file.
+  - Advanced features like functions, actions or batch requests are not yet supported.
+  - The implementation is initially in beta and thus does not guarantee a stable API.
+
+### Improvements
+
+- Update [SAP Cloud Application Programming Model](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/00823f91779d4d42aa29a498e0535cdf.html) from version `1.36.2` to `1.37.1`
+
+## 3.13.0
+
+- Release date: February 13, 2020
+- Javadoc: <https://help.sap.com/doc/e03ee6cbe2ea468f88e1970b61d55b62/1.0/en-US/index.html>
+- Release blog: <https://blogs.sap.com/?p=1047125>
+
+### Compatibility Notes
+
+- Updating [`WorkItems`](https://help.sap.com/doc/e03ee6cbe2ea468f88e1970b61d55b62/1.0/en-US/com/sap/cloud/sdk/s4hana/datamodel/odata/namespaces/commercialproject/WorkItem.html) in the service [Commercial Project - Read](https://api.sap.com/api/_CPD_SC_EXTERNAL_SERVICES_SRV/resource) is no longer allowed as of SAP S/4HANA Cloud release 2002.
+  The method `updateWorkItem()` was removed from [`CommercialProjectService`](https://help.sap.com/doc/e03ee6cbe2ea468f88e1970b61d55b62/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/CommercialProjectService.html).
+
+### New Functionality
+
+- _OData client_: Update the OData VDM to the [newest release 2002 of SAP S/4HANA Cloud](https://news.sap.com/2020/01/sap-s4hana-cloud-2002-release/).
+  This includes completely new services (available as usual in package [com.sap.cloud.sdk.s4hana.datamodel.odata.services](https://help.sap.com/doc/e03ee6cbe2ea468f88e1970b61d55b62/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/package-summary.html)), new operations in previously existing services, and new entity types.
+  The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
+
+### Improvements
+
+- Update the Spring dependency for the SAP Cloud Platform multitenancy implementation module to version `4.3.26.RELEASE` to overcome the security vulnerability [CVE-2020-5397](https://bugs.chromium.org/p/chromium/issues/detail?id=775438).
+
+## 3.12.0
+
+- Release date: January 30, 2020
+- Javadoc: <https://help.sap.com/doc/3ef4616701f642658f0a7be6b2aaf587/1.0/en-US/index.html>
+- Release blog: <https://blogs.sap.com/?p=1039650>
+
+### New Functionality
+
+- _SCP Blockchain Module_: Allow the usage of custom HTTP clients by adding support for a custom HTTP request factory for the rest template in [`MultichainRequest`](https://help.sap.com/doc/3ef4616701f642658f0a7be6b2aaf587/1.0/en-US/index.html?com/sap/cloud/sdk/services/blockchain/multichain/service/MultichainRequest.html).
+- When creating a [`MultichainService`](https://help.sap.com/doc/3ef4616701f642658f0a7be6b2aaf587/1.0/en-US/index.html?com/sap/cloud/sdk/services/blockchain/multichain/service/MultichainService.html) instance using a SAP Cloud Platform destination, the destination's HTTP client will now be used as a pre-configured `HttpClient` instance with authentication, HTTP connection pooling, etc for each [`MultichainRequest`](https://help.sap.com/doc/3ef4616701f642658f0a7be6b2aaf587/1.0/en-US/index.html?com/sap/cloud/sdk/services/blockchain/multichain/service/MultichainRequest.html).
+
+### Improvements
+
+- Update dependencies:
+  - Jackson from version `2.10.1` to `2.10.2`
+  - Commons Codec from version `1.13` to `1.14`
+  - Apache HttpComponents Core from version `4.4.12` to `4.4.13`.
+  - Apache CXF from version `3.3.4` to `3.3.5`
+  - JUnit Pioneer from version `0.4.2` to `0.5.1`
+  - Spring from version `5.2.2.RELEASE` to `5.2.3.RELEASE`
+
+### Fixed Issues
+
+- _OData Generator_: Fix an issue where if only some of the declared EntitySets contained related service operations annotations in the `.edmx` file, the ones without such annotations got no operations resolved at all.
+- Fix an issue with [`BapiRequest`](https://help.sap.com/doc/3ef4616701f642658f0a7be6b2aaf587/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/connectivity/rfc/BapiRequest.html) where a `NoSuchElementException` was thrown in case a [`Destination`](https://help.sap.com/doc/3ef4616701f642658f0a7be6b2aaf587/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/connectivity/Destination.html) without a name was used.
+- Fix an issue concerning the encoding of special characters such as `#`, `&`, etc in OData filter expressions.
+
+## 3.11.0
+
+- Release date: January 16, 2020
+- Javadoc: <https://help.sap.com/http.svc/rc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html>
+- Release blog: <https://blogs.sap.com/?p=1031865>
+
+### Compatibility Notes
+
+- The existence of a principal as retrieved by the [`PrincipalAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html) is no longer an indicator for a JWT to be present.
+  Due to the introduction of [`BasicAuthenticationAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html) a principal can also originate from the Basic Authentication header on the current request.
+  As before verifying authentication and authorizations needs to be done explicitly by the application using the SAP Cloud SDK.
+
+- The behavior for principal propagation when accessing On-Premise systems has changed as explained below in the Improvements section.
+
+### New Functionality
+
+- Introduce a new [`BasicAuthenticationAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html) to read the username and password from the Basic Authentication header of the currently incoming request on Cloud Foundry.
+
+  - Use it like the other `*Accessor` classes:
+
+    ```
+    Try<BasicCredentials> basicCredentials = BasicAuthenticationAccessor.tryGetCurrentBasicCredentials();
+    ```
+
+  - To handle the `Try` gracefully you can write something like the following:
+
+    ```
+    BasicCredentials basicCredentials  = BasicAuthenticationAccessor.tryGetCurrentBasicCredentials().getOrElseGet(this::useFallbackCredentials);
+    ```
+
+  - To provide custom logic into the accessor the default logic can be overwritten by using the [`setBasicAuthenticationFacade()`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html#setBasicAuthenticationFacade-com.sap.cloud.sdk.cloudplatform.security.BasicAuthenticationFacade-) method:
+
+    ```
+    BasicAuthenticationAccessor.setBasicAuthenticationFacade(new CustomBasicAuthenticationFacade());
+    ```
+
+- Enable the [`PrincipalAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html) to also read the current principal from the newly introduced [`BasicAuthenticationAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html), in addition to the already existing way to read it from the current JWT.
+  This functionality applies to Cloud Foundry.
+  A valid JWT takes precedence over a Basic Authentication header.
+
+  The order of resolution is
+
+  1. If a principal is given in the current context (e.g. via [`PrincipalAccessor.executeWithPrincipal()`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html#executeWithPrincipal-com.sap.cloud.sdk.cloudplatform.security.principal.Principal-java.util.concurrent.Callable-)), this will we be used.
+  2. Otherwise, if a JWT is given in the current context (e.g. via an incoming request or manually set via the [`AuthTokenAccessor.executeWithAuthToken()`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/com/sap/cloud/sdk/cloudplatform/security/AuthTokenAccessor.html#executeWithAuthToken-com.sap.cloud.sdk.cloudplatform.security.AuthToken-java.util.concurrent.Callable-) methods) the principal is read from there.
+  3. Otherwise, If there is no JWT or the resolution fails the user retrieved via the [`BasicAuthenticationAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html) used (if existent).
+  4. If no principal could be found with the steps above the `Try` returned by [`PrincipalAccessor.tryGetCurrentPrincipal()`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html#tryGetCurrentPrincipal--) will contain an Exception.
+
+- Support self-signed certificates (file extensions `.cer`, `.crt`, and `.der`) as trust store locations for HTTPS destinations.
+
+### Improvements
+
+- The connectivity to On-Premise systems from SCP Cloud Foundry is updated, so that the [authentication](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/39f538ad62e144c58c056ebc34bb6890.html) now follows the [recommended](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/39f538ad62e144c58c056ebc34bb6890.html) protocol for principal propagation.
+
+  - Instead of populating two headers `SAP-Connectivity-Authentication` and `Proxy-Authorization` for On-Premise requests, the SAP Cloud SDK now takes the recommended approach of just using `Proxy-Authorization` with a dynamically resolved _User Exchange Access Token_.
+  - Introduce `PrincipalPropagationStrategy` for configuring that the previous behavior should be used.
+
+  If for compatibility reasons the previous approach should be used, you can adjust strategy with the following code snippet:
+
+  ```java
+  import com.sap.cloud.sdk.cloudplatform.connectivity.PrincipalPropagationStrategy;
+
+  PrincipalPropagationStrategy.setDefaultStrategy(PrincipalPropagationStrategy.COMPATIBILITY);
+  ```
+
+- Support reading the principal from an OAuth SAML Bearer token on Cloud Foundry.
+
+- Update dependencies:
+  - Apache TomEE libraries from version `7.0.5` to `7.0.6`
+  - [SAP Cloud Application Programming Model](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/00823f91779d4d42aa29a498e0535cdf.html) from version `1.36.1` to `1.36.2`
+  - AssertJ Vavr from version `0.1.0` to `0.2.0`
+  - Mockito from version `3.2.0` to `3.2.4`
+  - Spring from version `5.2.1.RELEASE` to `5.2.2.RELEASE`
+  - Guava from version `28.1-jre` to `28.2-jre`
+  - Java JWT from version `3.8.3` to `3.9.0`
+  - JUnit from version `4.12` to `4.13`
+  - Jetty from version `9.4.19.v20190610` to `9.4.25.v20191220`
+  - [SAP Cloud Platform Neo Environment SDK for Java EE 7 Web Profile TomEE 7](https://tools.hana.ondemand.com/#cloud) from version `1.44.12` to `1.65.15`
+
+### Fixed Issues
+
+- Fix an issue with the cache of [`ResilienceDecorator`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/resilience/ResilienceDecorator.html) invalidating itself upon calling, when using a JCache SPI different from JCache RI.
+- _OData VDM client_: Fix an issue concerning update requests with `PATCH` semantics where `null` values were being filtered out before the update. Explicitly set `null` values are being retained now.
+- Fix an issue with the deserialization of function import responses returning objects creatable by a single `String` parameter as reported [here](https://stackoverflow.com/questions/59402150).
+- Fix a regression in the OData VDM Generator where anotations within EDMX metadata files were interpreted in an unexpected way leading to missing operations in the generated classes as reported [here](https://stackoverflow.com/questions/59267237).
+
+## 3.10.0
+
+- Release date: December 19, 2019
+- Javadoc: <https://help.sap.com/http.svc/rc/0786ec6134c04c9bbafec959b6b737de/1.0/en-US/index.html>
+- Release blog: <https://blogs.sap.com/?p=1019658>
+
+### Compatibility Notes
+
+- The method `uri()` in builders of [`ScpCfHttpDestination`](https://help.sap.com/doc/0786ec6134c04c9bbafec959b6b737de/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/connectivity/ScpCfHttpDestination.html), [`DefaultHttpDestination`](https://help.sap.com/doc/0786ec6134c04c9bbafec959b6b737de/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.html) and [`DefaultErpHttpDestination`](https://help.sap.com/doc/0786ec6134c04c9bbafec959b6b737de/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/connectivity/DefaultErpHttpDestination.html) has been deprecated, as this parameter is already passed to create the builder instance.
+- The method `network()` in builders of [`DefaultHttpDestination`](https://help.sap.com/doc/0786ec6134c04c9bbafec959b6b737de/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.html) and [`DefaultErpHttpDestination`](https://help.sap.com/doc/0786ec6134c04c9bbafec959b6b737de/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/connectivity/DefaultErpHttpDestination.html) has been deprecated in favour of using `proxyType` instead.
+- The method `keyStorePassword()` in builders of [`DefaultHttpDestination`](https://help.sap.com/doc/0786ec6134c04c9bbafec959b6b737de/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.html) and [`DefaultErpHttpDestination`](https://help.sap.com/doc/0786ec6134c04c9bbafec959b6b737de/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/connectivity/DefaultErpHttpDestination.html) has been deprecated.
+
+### Improvements
+
+- Update dependencies:
+  - [SAP Cloud Application Programming Model](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/00823f91779d4d42aa29a498e0535cdf.html) from version 1.35.2 to 1.36.1
+  - Spring from version 5.1.2-RELEASE to 5.2.1-RELEASE
+  - Spring Security OAuth from version 2.3.6-RELEASE to 2.4.0-RELEASE
+  - Eclipse Link from version 2.7.4 to 2.7.5
+  - Resilience4J from version 1.1.0 to 1.2.0
+  - JUnit Pioneer from version 0.3.3 to 0.4.2
+  - Mockito from version 2.22.0 to 3.2.0
+  - Spring Boot from version 2.1.1-RELEASE to 2.2.1-RELEASE
+- Introduce more consistency in builders for destinations.
+  - Add builder methods in [`ScpCfHttpDestination`](https://help.sap.com/doc/0786ec6134c04c9bbafec959b6b737de/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/connectivity/ScpCfHttpDestination.Builder.html) for the properties `header`, `user`, `password`.
+  - Add builder methods in [`ScpNeoHttpDestination`](https://help.sap.com/doc/0786ec6134c04c9bbafec959b6b737de/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/connectivity/ScpNeoHttpDestination.Builder.html) for the properties `user`, `password`, `trustAllCertificates`, `header`, `authenticationHeaders`, `basicCredentials`, `authenticationType`, `proxyType`, `proxyConfiguration`.
+  - Add builder methods in [`DefaultHttpDestination`](https://help.sap.com/doc/0786ec6134c04c9bbafec959b6b737de/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.Builder.html) and [`DefaultErpHttpDestination`](https://help.sap.com/doc/0786ec6134c04c9bbafec959b6b737de/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/connectivity/DefaultErpHttpDestination.Builder.html) for the properties `basicCredentials`, `proxyType`.
+
+### Fixed Issues
+
+- Fix an issue concerning HTTP destinations on Cloud Foundry where the default JDK trust store was mistakenly taken into account even if an own trust store is defined.
+- Fix OData query formatting for filter expressions with temporal values. This affects queries comparing entity properties based on `Edm.Time`, `Edm.DateTime` or `Edm.DateTimeOffset`.
+
+## 3.9.0
+
+- Release date: December 5, 2019
+- Javadoc: <https://help.sap.com/doc/0fb0e3755a6346ecbe5d8f62d34121f0/1.0/en-US/index.html>
+- Release blog: <https://blogs.sap.com/?p=906845>
+
+### Compatibility Notes
+
+- _[`scp-blockchain`](https://search.maven.org/artifact/com.sap.cloud.sdk.services/scp-blockchain) module_: The return type of [`MultichainService.getDestination()`](https://help.sap.com/doc/0fb0e3755a6346ecbe5d8f62d34121f0/1.0/en-US/com/sap/cloud/sdk/services/blockchain/multichain/service/MultichainService.html#getDestination--) changes to [`MultichainBasicAuthDestination`](https://help.sap.com/doc/0fb0e3755a6346ecbe5d8f62d34121f0/1.0/en-US/index.html?com/sap/cloud/sdk/services/blockchain/multichain/model/MultichainBasicAuthDestination.html) to support Basic Authentication. If you use this method please adapt to the new return type.
+
+### Improvements
+
+- _SCP blockchain_: Add support for Basic Authentication to [`MultichainRequest`](https://help.sap.com/doc/0fb0e3755a6346ecbe5d8f62d34121f0/1.0/en-US/index.html?com/sap/cloud/sdk/services/blockchain/multichain/service/MultichainRequest.html), allowing the request to be used with AWS and Azure Multichain nodes.
+- _Resilience framework_: Use new name format for threads spawned by asynchronous calls: `cloudsdk-resilience-<number>`
+- Add new method [`DestinationProperties.getPropertyNames()`](https://help.sap.com/doc/0fb0e3755a6346ecbe5d8f62d34121f0/1.0/en-US/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationProperties.html#getPropertyNames--) to retrieve the set of properties of a destination. This allows you to enumerate the names of all properties retrieved from the destination service and their values.
+
+- Update dependencies:
+  - Jackson from version 2.10.0 to 2.10.1, fixing the vulnerabilities [CVE-2019-17267](https://nvd.nist.gov/vuln/detail/CVE-2019-17267) and [CVE-2019-17531](https://nvd.nist.gov/vuln/detail/CVE-2019-17531)
+  - [SAP Cloud Application Programming Model](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/00823f91779d4d42aa29a498e0535cdf.html) from version 1.33.0 to 1.35.2
+  - Joda Time from version 2.10.4 to 2.10.5
+  - Vavr from version 0.9.3 to 0.10.2
+  - Commons CSV from version 1.6 to 1.7
+  - Java JSON from version 20180813 to 20190722
+  - Apache CXF from version 3.3.2 to 3.3.4
+  - AssertJ Core from version 3.13.2 to 3.14.0
+  - AssertJ Guava from version 3.2.1 to 3.3.0
+  - JUnit Pioneer from version 0.3.0 to 0.3.3
+
+### Fixed Issues
+
+- Fix an issue that caused the OData VDM generator to wrongly identify available operations on a service entity.
+- Fix an issue where special characters (e.g. `/`) were incorrectly escaped in OData requests made when dynamically fetching a navigation property of an entity whose key contains such characters.
+
+## 3.8.0
+
+- Release date: November 21, 2019
+- Javadoc: <https://help.sap.com/http.svc/rc/76f123ce6fae40df911590552579e523/1.0/en-US/index.html>
+- Release blog: <https://blogs.sap.com/?p=899516>
+
+### Compatibility Notes
+
+- Create, update, and delete operations have been removed from some VDM services, as they are no longer available on the SAP API Business Hub.
+- The custom constructor parameters of [`Resilience4jDecorationStrategy`](https://help.sap.com/doc/76f123ce6fae40df911590552579e523/1.0/en-US/com/sap/cloud/sdk/frameworks/resilience4j/Resilience4jDecorationStrategy.html) have been changed to accept generic modular decorators for the following properties. The default behavior has not been changed. This should not affect existing code, but you may need to recompile your code.
+  - Time limiter
+  - Bulkhead
+  - Circuit breaker
+  - Retry
+  - Caching
+
+### New Functionality
+
+- _OData client_: Update the OData VDM to the [newest release 1911 of SAP S/4HANA Cloud](https://news.sap.com/2019/11/sap-s4hana-cloud-1911-intelligent-enterprise-experience-economy/).
+  The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
+
+### Fixed Issues
+
+- Fix an issue that caused unnecessary requests to the XSUAA service when accessing auth tokens in requests.
+
+## 3.7.0
+
+- Release date: November 7, 2019
+- Javadoc: <https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/index.html>
+- Release blog: <https://blogs.sap.com/2019/11/07/new-versions-of-sap-cloud-sdk-3.7.0-and-for-java-1.12.0-for-javascript/>
+
+### Known Issues
+
+- The SAP Cloud SDK version `3.7.0` references Jackson `2.10.0`, which has two known security vulnerabilities, which were not yet fixed in time for version `3.7.0` of the SAP Cloud SDK.
+  Note that the SAP Cloud SDK does not use the vulnerable functionality and is thus not vulnerable itself.
+  If you use Jackson yourself, you should consider the relevant recommendations [CVE-2019-17267](https://nvd.nist.gov/vuln/detail/CVE-2019-17267) and [CVE-2019-17531](https://nvd.nist.gov/vuln/detail/CVE-2019-17531).
+  For more details, also consider [this article with more background](https://medium.com/@cowtowncoder/on-jackson-cves-dont-panic-here-is-what-you-need-to-know-54cd0d6e8062).
+
+### Compatibility Notes
+
+- The resilience configuration API has been adjusted as follows:
+  - The parameter-less static factory method `RetryConfiguration.ofDefaults()` has been deprecated in favor of [`RetryConfiguration.of(maxAttempts)`](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.RetryConfiguration.html#of-int-) to avoid unexpected, implicit behavior.
+  - The deprecated methods `executeFutureSupplier` and `decorateFutureSupplier` have been removed from [`ResilienceDecorationStrategy`](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/resilience/ResilienceDecorationStrategy.html) and [`ResilienceDecorator`](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/resilience/ResilienceDecorator.html).
+- The default buffer sizes for circuit breakers in [`CircuitBreakerConfiguration`](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.CircuitBreakerConfiguration.html) have been changed as follows:
+  - From 100 to 10 for transitioning from _CLOSED_ to _OPEN_ state.
+  - From 10 to 5 for transitioning from _HALF-OPEN_ back to _CLOSED_ state.
+
+### New Functionality
+
+- Allow clearing the cache for future requests when using a [`ResilienceConfiguration`](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.html) with a [`CacheConfiguration`](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.CacheConfiguration.html) in place. Use [`ResilienceDecorator.invalidateCache(configuration)`](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceDecorator.html#invalidateCache-com.sap.cloud.sdk.cloudplatform.resilience.ResilienceConfiguration-) to clear the cache associated with a specific configuration.
+- _OData VDM generator_: allow to specify the copyright header for generated files by supplying the parameter `--copyright-header your-custom-header`. By default, no header is generated.
+
+### Improvements
+
+- Allow to explicitly specify buffer sizes for the [circuit breaker](https://resilience4j.readme.io/v0.17.0/docs/circuitbreaker) in `CircuitBreakerConfiguration`. Use [`CircuitBreakerConfiguration.closedBufferSize`](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.CircuitBreakerConfiguration.html#closedBufferSize-int-) and [`CircuitBreakerConfiguration.halfOpenBufferSize`](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.CircuitBreakerConfiguration.html#halfOpenBufferSize-int-) to provide custom values for the respective buffer size.
+- Allow to specify the cache expiration strategy for a [`CacheConfiguration`](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.CacheConfiguration.html) in [`ResilienceConfiguration`](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.html). Use [`withExpirationStrategy(strategy)`](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.CacheConfiguration.CacheConfigurationBuilder.html#withExpirationStrategy-com.sap.cloud.sdk.cloudplatform.resilience.CacheExpirationStrategy-) on the [builder for a CacheConfiguration](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.CacheConfiguration.CacheConfigurationBuilder.html) with the enum constants available from [`CacheExpirationStrategy`](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/resilience/CacheExpirationStrategy.html). [`WHEN_LAST_MODIFIED`](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/CacheExpirationStrategy.html#WHEN_LAST_MODIFIED) remains the default value for the expiration strategy.
+- Allow to initialize a resilience configuration with disabled individual properties by providing methods for instantiating a invidual configuration as disabled. Introduce the following factory methods in addition to the previously existing ones that instantiate an enabled configuration:
+  - [`CircuitBreakerConfiguration.disabled()`](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.CircuitBreakerConfiguration.html#disabled--)
+  - [`TimeLimiterConfiguration.disabled()`](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.TimeLimiterConfiguration.html#disabled--)
+  - [`BulkheadConfiguration.disabled()`](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.BulkheadConfiguration.html#disabled--)
+  - [`RetryConfiguration.disabled()`](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.RetryConfiguration.html#disabled--)
+  - [`CacheConfiguration.disabled()`](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.CacheConfiguration.html#disabled--)
+- Provide method [`ResilienceConfiguration.empty`](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.html#empty-java.lang.Class-) to initialize a new resilience configuration with all properties being disabled by default.
+- Provide method [`TimeLimiterConfiguration.of(duration)`](https://help.sap.com/doc/e1e40a06a99c4b858481f11dcf336749/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.TimeLimiterConfiguration.html#of-java.time.Duration-) as a convenience instead of `TimeLimiterConfiguration.of().timeoutDuration(duration)`.
+
+## 3.6.0
+
+- Release date: October 24, 2019
+- Javadoc: <https://help.sap.com/http.svc/rc/928ed32b5bb9437db72a90ee0c096f41/1.0/en-US/index.html>
+- Release blog: <https://blogs.sap.com/2019/10/24/new-versions-of-sap-cloud-sdk-3.6.0-for-java-and-1.11.3-for-javascript/>
+
+### Known Issues
+
+- The SAP Cloud SDK version 3.6.0 references Jackson 2.10.0 which has two known security vulnerabilities, which were not yet fixed in time for version 3.6.0 of the SAP Cloud SDK.
+  For your reference, this concerned the following recommendations:
+  - [CVE-2019-17267](https://nvd.nist.gov/vuln/detail/CVE-2019-17267)
+  - [CVE-2019-17531](https://nvd.nist.gov/vuln/detail/CVE-2019-17531)
+
+### Compatibility Notes
+
+- The overridable method `getJsonResponseObjectName()` of base class [`FluentHelperFunction`](https://help.sap.com/doc/928ed32b5bb9437db72a90ee0c096f41/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odata/helper/FluentHelperFunction.html) has been deprecated in favor of its successor [`refineJsonResponse`](https://help.sap.com/doc/928ed32b5bb9437db72a90ee0c096f41/1.0/en-US/com/sap/cloud/sdk/datamodel/odata/helper/FluentHelperFunction.html#refineJsonResponse-com.google.gson.JsonElement-). Both reside in `protected` scope and are therefore only used to customize the default behavior. The new method allows limitless modification of the response JSON element during the refinement step of the deserialization process for function import responses.
+
+### New Functionality
+
+- Offer retries as part of [`ResilienceConfiguration`](https://help.sap.com/doc/928ed32b5bb9437db72a90ee0c096f41/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.html) via a [`RetryConfiguration`](https://help.sap.com/doc/928ed32b5bb9437db72a90ee0c096f41/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.RetryConfiguration.html).
+  - Retries allow for re-attempting a request in case it fails a limited number of times.
+  - The feature offers to specify the maximum amount of attempts, a wait duration between attempts and a predicate that determines, whether or not a failure should be retried.
+
+### Improvements
+
+- _OData VDM generator_: Mark generated sources for compilation when using `odata-generator-maven-plugin`. For this feature just add the property `<compileScope>...</compileScope>` with the compilation phase to your configuration. Valid values are `COMPILE`, `TEST_COMPILE`, and `NONE`, representing the different compile phases or no automatic compilation at all. The default value (for backwards compatibility reasons) is `NONE`.
+
+- Update dependencies:
+  - Jackson from version 2.9.10 to 2.10.0.
+  - Lombok from version 1.18.8 to 1.18.10.
+  - Guava from version 28.0-jre to 28.1-jre.
+  - GSON from version 2.8.5 to 2.8.6.
+  - Java JWT from version 3.8.1 to 3.8.3.
+  - Commons-Text from version 1.7 to 1.8.
+  - Http Core from version 4.4.11 to 4.4.12.
+  - Http Components Client from version 4.5.9 to 4.5.10.
+  - Resilience4J from version 0.17.0 to 1.1.0.
+
+### Fixed Issues
+
+- _OData VDM_: Fix an issue where the response of function imports was not correctly handled. The response is now parsed according to OData specification. The deviating behavior of OData services in some SAP solution is still supported as in previous versions, via a (modifiable) refinement step.
+- _OData VDM generator_: Parse allowed requests in a more careful manner when handling an EDMX file. The generator will no longer throw an exception for missing XML attributes.
+- Fix an issue regarding timeouts in the execution of resilient requests. The issue prevented threads from being terminated when a timeout occurs.
+
+## 3.5.0
+
+- Release date: October 10, 2019
+- Javadoc: <https://help.sap.com/http.svc/rc/2656a317c96d481b9216b8882f1eadad/1.0/en-US/index.html>
+- Release blog: <https://blogs.sap.com/2019/08/10/new-versions-of-sap-cloud-sdk-3.5.0-for-java-1.11.2-for-javascript-and-v25-of-continuous-delivery-toolkit/>
+
+### Compatibility Notes
+
+- Previous versions of the SAP Cloud SDK only recognized an access token in the authorization header if "`Bearer`" was spelled in title case. Now, corresponding methods do a case insensitive check for "`bearer`". That means, "bearer" and "Bearer" are now equally supported as correct authorization header.
+- _OData VDM generator_: The generator now identifies which CRUD operations an entity set supports by first consulting the [annotations based on the OData specification](https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.html). Only when these annotations are not declared, the custom SAP specifications are considered.
+
+### Improvements
+
+- No longer require a binding to an XSUAA service instance when consuming the destination or connectivity service via the SAP Cloud SDK.
+- Automatically read the principal ID from the `user_name` claim of the current JWT in [`ScpCfPrincipalFacade`](https://help.sap.com/doc/2656a317c96d481b9216b8882f1eadad/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/principal/ScpCfPrincipalFacade.html) when the JWT has the `user_token` grant type.
+- Update dependencies on Jackson from `2.9.9`/`2.9.9.2` to `2.9.10`.
+- Verify that the Maven `artifactId` does not contain an underscore character when creating a project using the `scp-cf-spring` and `scp-cf-tomee` archetypes. This is necessary as the artifact ID will also be used as Cloud Foundry application name and the deployment to Cloud Foundry will fail if the application name contains an underscore.
+
+## 3.4.0
+
+- Release date: September 26, 2019
+- Javadoc: <https://help.sap.com/http.svc/rc/d17b8bdb22f84c7eb7924408abeea492/1.0/en-US/index.html>
+- Release blog: <https://blogs.sap.com/2019/09/26/new-versions-of-sap-cloud-sdk-3.4.0-for-java-1.10.0-for-javascript-and-v24-of-continuous-delivery-toolkit/>
+
+### Compatibility Notes
+
+- In preparation for an upcoming change to the way how the XSUAA service supplies verification keys to applications, the SAP Cloud SDK from version 3.4.0 onwards retrieves the key from the XSUAA service instead of relying on a verification key present in the XSUAA service binding credentials.
+- Remove dependency `rest-assured` from the [`sdk-bom`](https://search.maven.org/artifact/com.sap.cloud.sdk/sdk-bom/3.4.0/pom). Projects that depends on it must now declare a version explicitly. This also removes the need to explicitly declare a version of `hamcrest-core` and `hamcrest-library` since they were previously both introduced as transitive dependencies via `jUnit` and `rest-assured` but had conflicting versions.
+
+### Improvements
+
+- Validate user access tokens issued by XSUAA with the verification key retrieved from the XSUAA service, instead of relying on a verification key present in the XSUAA service binding credentials. The retrieved key is cached for 5 minutes (depending on feedback, the cache duration may change in the future).
+- Support `SystemUser` property in destinations with authentication type "OAuth2SAMLBearerAssertion". The system user will be used instead of the currently logged in principal to retrieve an access token to the destination. That is, no principal propagation takes place. As a consequence, no user JWT is required.
+
+## 3.3.1
+
+- Release date: September 12, 2019
+- Javadoc: <https://help.sap.com/http.svc/rc/6599292dcb7243bc95071d9d1757a30f/1.0/en-US/index.html>
+- Release blog: <https://blogs.sap.com/2019/09/12/new-versions-of-sap-cloud-sdk-3.3.1-for-java-and-1.9.0-for-javascript/>
+
+### Compatibility Notes
+
+- The OData VDM Generator now constructs the service URL based on the service name from the namespace provided in the metadata file. The previously used filename is only considered as the service name in case the namespace does not not provide the information.
+
+### Improvements
+
+- _OData VDM Generator_: use the service name from the namespace provided in the metadata file to construct the service name part of the OData request URL. Fall back to the filename of the metadata file as the service name only if the namespace information is not available.
+- Update dependency to Java libraries of [SAP Cloud Application Programming Model](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/00823f91779d4d42aa29a498e0535cdf.html) (`com.sap.cloud.servicesdk.*`) from version 1.32.5 to 1.33.0.
+- Remove `listeners-all` dependencies from projects generated via archetypes since the SAP Cloud SDK Pipeline will inject this dependency during a pipeline run.
+
+## 3.2.0
+
+- Release date: August 29, 2019
+- Javadoc: <https://help.sap.com/http.svc/rc/ef9bbec49d7d4c229d5e4e6295476572/1.0/en-US/index.html>
+- Release blog: <https://blogs.sap.com/2019/08/29/new-versions-of-sap-cloud-sdk-3.2.0-for-java-1.8.1-for-javascript-and-v23-of-continuous-delivery-toolkit/>
+
+### Compatibility Notes
+
+- The following methods in the resilience module have been deprecated in favor of the new methods introduced for asynchronous resilient execution: `decorateFutureSupplier` and `executeFutureSupplier` in [`ResilienceDecorator`](https://help.sap.com/doc/ef9bbec49d7d4c229d5e4e6295476572/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/resilience/ResilienceDecorator.html), `decorateFutureSupplier` and `executeFutureSupplier` in [`ResilienceDecorationStrategy`](https://help.sap.com/doc/ef9bbec49d7d4c229d5e4e6295476572/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/resilience/ResilienceDecorationStrategy.html).
+- _OData VDM_: we have added deprecation information to service classes that represent SAP S/4HANA Cloud APIs which are deprecated on the SAP API Business Hub, such as `ChangeMasterService`, `ProcessOrderConfirmationService`, and `ProductionOrderConfirmationService`. Take a look at the corresponding Javadoc and use the appropriate successor service listed therein.
+
+### New Functionality
+
+- Execute code asynchronously while making it resilient, using the new methods [`queueCallable`](https://help.sap.com/doc/ef9bbec49d7d4c229d5e4e6295476572/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceDecorator.html#queueCallable-java.util.concurrent.Callable-com.sap.cloud.sdk.cloudplatform.resilience.ResilienceConfiguration-) and [`queueSupplier`](https://help.sap.com/doc/ef9bbec49d7d4c229d5e4e6295476572/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceDecorator.html#queueSupplier-java.util.function.Supplier-com.sap.cloud.sdk.cloudplatform.resilience.ResilienceConfiguration-) of [`ResilienceDecorator`](https://help.sap.com/doc/ef9bbec49d7d4c229d5e4e6295476572/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/resilience/ResilienceDecorator.html) that return instances of `CompletableFuture`. Corresponding methods are also available from [`ResilienceDecorationStrategy`](https://help.sap.com/doc/ef9bbec49d7d4c229d5e4e6295476572/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/resilience/ResilienceDecorationStrategy.html).
+
+### Improvements
+
+- _OData VDM Generator_: add deprecation information contained in the provided Swagger file of a service to generated service classes.
+
+- Update dependencies:
+
+  - Java libraries of [SAP Cloud Application Programming Model](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/00823f91779d4d42aa29a498e0535cdf.html) (`com.sap.cloud.servicesdk.*`) from version 1.32.0 to 1.32.5
+  - Caffeine from 2.7.0 to 2.8.0
+  - Commons Codec from 1.12.0 to 1.13.0
+  - CXF from 3.2.6 to 3.3.2
+  - Resilience4J from 0.16.0 to 0.17.0
+  - JUnit from 5.5.0-M1 to 5.5.1
+  - AssertJ Core from 3.12.2 to 3.13.2
+  - Joda Time from 2.10.2 to 2.10.3
+
+- Reduce log verbosity of [`ThreadContextExecutor`](https://help.sap.com/doc/ef9bbec49d7d4c229d5e4e6295476572/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/thread/ThreadContextExecutor.html) and the accessor classes that use it (e.g. `execute...` methods in [`TenantAccessor`](https://help.sap.com/doc/ef9bbec49d7d4c229d5e4e6295476572/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/tenant/TenantAccessor.html)).
+
+### Fixed Issues
+
+- _OData VDM_: Fix an issue with function imports where special characters in query parameters, e.g. spaces, led to wrong URLs.
+- Fix an issue with [`XsuaaService`](https://help.sap.com/doc/ef9bbec49d7d4c229d5e4e6295476572/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/connectivity/XsuaaService.html) where it always forcibly used the provider tenant when calling `retrieveAccessToken...` methods. Now the methods retrieve access tokens for the tenant that called the method.
+- Fix an issue with error handling in functions of [`MultichainService`](https://help.sap.com/doc/ef9bbec49d7d4c229d5e4e6295476572/1.0/en-US/index.html?com/sap/cloud/sdk/services/blockchain/multichain/service/MultichainService.html) so that it appropriately throws instances of `MultichainException`.
+
+## 3.1.0
+
+- Release date: August 15, 2019
+- Javadoc: <https://help.sap.com/http.svc/rc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html>
+- Release blog: <https://blogs.sap.com/2019/08/15/new-versions-of-sap-cloud-sdk-3.1.0-for-java-and-1.8.0-for-javascript/>
+
+### Compatibility Notes
+
+- As part of the update of the OData VDM to SAP S/4HANA Cloud 1908, the `OutboundDeliveryService` has been removed from the SAP API Business Hub and, as a consequence, from the SAP Cloud SDK.
+  Use [`OutboundDeliveryV2Service`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/OutboundDeliveryV2Service.html) instead.
+- The destination expected as the second parameter of the [`attachToService()`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/com/sap/cloud/sdk/datamodel/odata/helper/VdmEntity.html#attachToService-java.lang.String-com.sap.cloud.sdk.cloudplatform.connectivity.HttpDestinationProperties-) method of [`VdmEntity`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odata/helper/VdmEntity.html) is now mandatory (`@Nonnull`), rather than nullable because attaching to a service does not work without a destination to designate the target system.
+
+### New Functionality
+
+- OData VDM: Update the OData virtual data model to the [newest release 1908 of SAP S/4HANA Cloud](https://news.sap.com/2019/08/sap-s4hana-cloud-1908-new-release/).
+  This includes completely new services (available as usual as from package [`com.sap.cloud.sdk.s4hana.datamodel.odata.services`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/package-summary.html)), new operations in previously existing services, and new entity types.
+  The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
+- Message VDM: Update the message virtual data model for the [newest release 1908 of SAP S/4HANA Cloud](https://news.sap.com/2019/08/sap-s4hana-cloud-1908-new-release/).
+  This includes 21 new message types to reflect the new event types added in SAP S/4HANA Cloud (available as usual from package [`com.sap.cloud.sdk.s4hana.datamodel.messaging.api.message`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/messaging/api/message/package-summary.html)).
+  The SAP Cloud SDK supports all event types listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/package/SAPS4HANACloudBusinessEvents?section=Artifacts).
+
+### Improvements
+
+- Update dependency to Jackson Databind to version `2.9.9.2` (from `2.9.9.1`) in order to fix reported security vulnerabilities.
+
+### Fixed Issues
+
+- Fix an issue where [`DefaultHttpDestination`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.html) failed to load the authentication type, so that authentication was not correctly applied when loading destinations from an environment variable or instantiating `DefaultHttpDestination` manually.
+- Fix issues with HTTP destinations in the SAP Cloud Platform Neo environment when using EJBs to run code on server startup.
+
+## 3.0.0
+
+- Release date: August 1, 2019
+- Javadoc: <https://help.sap.com/http.svc/rc/ae45330c443b42c5a54bde85dd70aec9/1.0/en-US/index.html>
+- Release blog: <https://blogs.sap.com/2019/08/01/new-versions-of-sap-cloud-sdk-3.0.0-for-java-and-1.7.0-for-javascript/>
+
+### Known Issues
+
+When defining destinations via the environment variable destinations, version `3.0.0` does not use basic authentication even if credentials are given.
+Either update to version `3.1.0` or manually add the following properties to the JSON defining a destination: `"authentication": "BasicAuthentication"`, `"authType": "BasicAuthentication"`.
+
+### Compatibility Notes
+
+- Update several implementations of destination classes to the new Destination API.
+  - Change the _Extension Factory_ destination loader class: Now `ScpXfDestinationLoader` extends from generic `ScpVcapDestinationLoader`.
+- Introduce separate enums by a platform for destination retrieval strategy.
+  - ScpCfDestinationRetrievalStrategy and ScpNeoDestinationRetrievalStrategy
+  - Removed the PLATFORM_DEFAULT value from all destination retrieval strategy enums.
+    - Use null values instead, or do not set the parameter at all.
+- Removed the destination retrieval strategy configuration from the DestinationAccessor. It is no longer a global configuration by destination name.
+
+  - Destination retrieval strategy configuration is now stored in instances of the new DestinationOptions class.
+  - To set the destination retrieval strategy, use the ScpCfDestinationOptionsHelper or ScpNeoDestinationOptionsHelper with the builder of DestinationOptions.
+  - e.g. on Cloud Foundry:
+
+    ```java
+    final DestinationOptions destinationOptions = DestinationOptions.builder()
+            .parameter("myParameter", myValue)
+            .augmentBuilder(ScpCfDestinationOptionsHelper.augmenter()
+                .retrievalStrategy(ScpCfDestinationRetrievalStrategy.SUBSCRIBER_THEN_PROVIDER))
+            .augmentBuilder((new MyDestinationOptionsAugmenter())
+                .myCustomParameter1(myCustomValue1)
+                // any number of custom parameters
+                .myCustomParameterN(myCustomValueN))
+            // other parameters/augmenters you need
+            .build();
+    ```
+
+- Use the new ResilienceDecorator class to wrap logic instead of extending the Command class.
+- Configure resilience using the new ResilienceConfiguration class. ResilienceDecorator requires at least a unique identifier configured.
+- Configure caching within the ResilienceConfiguration class by providing an instance of CacheConfiguration class.
+  - As a parameter, CacheConfiguration requires at least a value for a duration until the cache entry will be expired.
+  - Additional items can be attached as part of the dynamic cache key.
+    If these items are `Serializable` then the cache key itself automatically becomes serializable as well.
+    This fulfills a requirement for some caching configurations.
+  - The caching strategy only works, when a service provider for (JSR-107 / JCache) is registered at runtime.
+- Can provide fallback functions, which are executed when the wrapped code throws exceptions.
+- Ability to configure ResilienceDecorator with a custom function decoration strategy by implementing the ResilienceDecorationStrategy interface.
+- Removed the ODataRequestCommand since it's no longer needed by VDM fluent helpers.
+- Classes ODataServicesQueryCommand, SqlQueryCommand, BapiQueryCommand, RfcQueryCommand, HierarchyQueryCommand, and UserProfileQueryCommand have been removed.
+  The execute() method of queries can be easily wrapped using ResilienceDecorator instead.
+- Removed the asResilientCommand() methods from all VDM fluent helpers.
+  The execute() method of VDM fluent helpers can be easily wrapped using ResilienceDecorator instead.
+- Internal only: Removed the SigningServiceCommand class. Use instead the SigningServiceErpQuerySigner class.
+
+- Classes referred to with "query" are renamed to "request", in case their main purpose is to read result data.
+
+- `s4hana` / `connectivity`
+
+  ```java
+  com.sap.cloud.sdk.s4hana.connectivity.AbstractQuerySerializer -> com.sap.cloud.sdk.s4hana.connectivity.AbstractRequestSerializer
+  com.sap.cloud.sdk.s4hana.connectivity.QueryExecutor -> com.sap.cloud.sdk.s4hana.connectivity.RequestExecutor
+  com.sap.cloud.sdk.s4hana.connectivity.QueryResult -> com.sap.cloud.sdk.s4hana.connectivity.RequestResult
+  com.sap.cloud.sdk.s4hana.connectivity.QuerySerializer -> com.sap.cloud.sdk.s4hana.connectivity.RequestSerializer
+  com.sap.cloud.sdk.s4hana.connectivity.Query -> com.sap.cloud.sdk.s4hana.connectivity.Request
+  com.sap.cloud.sdk.s4hana.connectivity.QueryBody -> com.sap.cloud.sdk.s4hana.connectivity.RequestBody
+  com.sap.cloud.sdk.s4hana.connectivity.QueryExecutionMeasurements -> com.sap.cloud.sdk.s4hana.connectivity.RequestExecutionMeasurements
+  com.sap.cloud.sdk.s4hana.connectivity.SerializedQuery -> com.sap.cloud.sdk.s4hana.connectivity.SerializedRequest
+  com.sap.cloud.sdk.s4hana.connectivity.SerializedQueryResult -> com.sap.cloud.sdk.s4hana.connectivity.SerializedRequestResult
+  com.sap.cloud.sdk.s4hana.connectivity.exception.QueryExecutionException -> com.sap.cloud.sdk.s4hana.connectivity.exception.RequestExecutionException
+  com.sap.cloud.sdk.s4hana.connectivity.exception.QuerySerializationException -> com.sap.cloud.sdk.s4hana.connectivity.exception.RequestSerializationException
+  ```
+
+- `s4hana` / `soap`
+
+  ```java
+  com.sap.cloud.sdk.s4hana.connectivity.soap.SoapQuery -> com.sap.cloud.sdk.s4hana.connectivity.soap.SoapRequest
+  ```
+
+- `s4hana` / `rfc`
+
+  ```java
+  com.sap.cloud.sdk.s4hana.connectivity.rfc.BapiQuery-> com.sap.cloud.sdk.s4hana.connectivity.rfc.BapiRequest
+  com.sap.cloud.sdk.s4hana.connectivity.rfc.RemoteFunctionQueryErrorHandler-> com.sap.cloud.sdk.s4hana.connectivity.rfc.RemoteFunctionRequestErrorHandler
+  com.sap.cloud.sdk.s4hana.connectivity.rfc.RemoteFunctionQueryExecutor -> com.sap.cloud.sdk.s4hana.connectivity.rfc.RemoteFunctionRequestExecutor
+  com.sap.cloud.sdk.s4hana.connectivity.rfc.AbstractRemoteFunctionQuery -> com.sap.cloud.sdk.s4hana.connectivity.rfc.AbstractRemoteFunctionRequest
+  com.sap.cloud.sdk.s4hana.connectivity.rfc.AbstractRemoteFunctionQueryResult -> com.sap.cloud.sdk.s4hana.connectivity.rfc.AbstractRemoteFunctionRequestResult
+  com.sap.cloud.sdk.s4hana.connectivity.rfc.BapiQueryResult -> com.sap.cloud.sdk.s4hana.connectivity.rfc.BapiRequestResult
+  com.sap.cloud.sdk.s4hana.connectivity.rfc.RemoteFunctionQueryListener -> com.sap.cloud.sdk.s4hana.connectivity.rfc.RemoteFunctionRequestListener
+  com.sap.cloud.sdk.s4hana.connectivity.rfc.RfcQuery -> com.sap.cloud.sdk.s4hana.connectivity.rfc.RfmRequest
+  com.sap.cloud.sdk.s4hana.connectivity.rfc.RfcQueryResult -> com.sap.cloud.sdk.s4hana.connectivity.rfc.RfmRequestResult
+  com.sap.cloud.sdk.s4hana.connectivity.rfc.RfcTransactionFactory -> com.sap.cloud.sdk.s4hana.connectivity.rfc.RfmTransactionFactory
+  com.sap.cloud.sdk.s4hana.connectivity.rfc.SoapRemoteFunctionQuerySerializer -> com.sap.cloud.sdk.s4hana.connectivity.rfc.SoapRemoteFunctionRequestSerializer
+  ```
+
+- `quality`
+
+  ```java
+  com.sap.cloud.s4hana.quality.FileWritingQueryListenerUtil -> com.sap.cloud.s4hana.quality.FileWritingRequestListenerUtil
+  com.sap.cloud.s4hana.quality.FileWritingRemoteFunctionQueryListener -> com.sap.cloud.s4hana.quality.FileWritingRemoteFunctionRequestListener
+  ```
+
+- `cloudplatform` / `servlet`
+
+  ```java
+  com.sap.cloud.sdk.cloudplatform.servlet.response.QueryExecutionErrorResponse -> com.sap.cloud.sdk.cloudplatform.servlet.response.RequestExecutionErrorResponse
+  ```
+
+- RequestContext is now ThreadContext
+  - New concept of ThreadContextDecorator to allow decorating the callable which is wrapped in a ThreadContext.
+    The difference to ThreadContextListener is that the listener is responsible for setting ThreadContext properties, while the decorator allows decorating the callable that is wrapped in the ThreadContext.
+  - Now there is a RequestAccessor
+  - Rename RequestContextServletFilter to RequestAccessorFilter
+  - DestinationsRequestContextListener has been renamed to HttpClientsThreadContextListener to better reflect its purpose
+- Lenient behavior
+- USE_MOCKED_TENANT, USE_MOCKED_USER, and ALLOW_MOCKED_AUTH_HEADER are no longer available.
+- TenantNotAvailableException etc. were removed and replaced with Option.
+- Principal replaces User.
+  - No Locale as part of principal anymore (only available on Neo, cast to ScpNeoPrincipal if needed)
+  - No `hasAuthorizations` method, use authorizations with "contains" method of setting
+  - CacheKey and CacheManager have been adjusted accordingly to reflecting naming: the user is now principal
+  - AccessDeniedException also now uses "principal" instead of "user" (note, however, that the AccessDeniedResponse still exposes "user" to remain compatible on REST API level).
+- LocalScopePrefixProvider now uses Try instead of throwing exceptions that were previously not declared on the API.
+- Remove ErpEdition (also removed in the mocking of ErpSystem)
+- Accessors now use `vavr` in more places (offering methods returning Try).
+- TenantAccessor, PrincipalAccessor, AuthTokenAccessor, and RequestAccessor now support on-behalf execution, with-fallback execution, and a global fallback.
+- SapPassportBuilder now uses the following defaults:
+  - "SAP_CLOUD_SDK_APPLICATION" instead of "S4SDK_APPLICATION"
+  - "SAP_CLOUD_SDK_USER" instead of "S4SDK_USER"
+  - "SAP_CLOUD_SDK_REQUEST" instead of "S4SDK_REQUEST"
+- Add a new module security-servlet containing servlet-based security filters.
+  Note that this may require that you add the following dependency to your project if you rely on these web filters:
+
+  ```xml
+  <dependency>
+      <groupId>com.sap.cloud.s4hana.cloudplatform</groupId>
+      <artifactId>security-servlet</artifactId>
+  </dependency>
+  ```
+
+- Remove CloudLoggerFactory along with pipeline rule
+
+- MockUtil no longer mocks platform-specific classes, but only interface.
+  Mock the facade manually, if you have to rely on the specific class.
+- MockUtil no longer offers methods for mocking destinations or servers with the default destination name "MyDestination".
+  The destination name now is a mandatory parameter.
+
+- The following maven dependencies have been updated:
+
+| Library                                           | Version used in SDK 2.X | Version used in SDK 3.X |
+| ------------------------------------------------- | ----------------------- | ----------------------- |
+| bcpkix-jdk15on                                    | 1.6                     | 1.62                    |
+| bcprov-jdk15on                                    | 1.6                     | 1.62                    |
+| guava                                             | 27.0.1-jre              | 28.0-jre                |
+| plexus-utils                                      | 3.1.0                   | 3.2.0                   |
+| lombok                                            | 1.18.2                  | 1.18.8                  |
+| javax.ejb:javax.ejb-api                           | 3.2                     | 3.2.2                   |
+| javax.servlet:javax.servlet-api                   | 3.1.0                   | 4.0.1                   |
+| javax.ws.rs:javax.ws.rs-api                       | 2.0                     | 2.1.1                   |
+| org.eclipse.jetty:apache-jsp                      | 9.4.17.v20190418        | 9.4.17.v20190418        |
+| org.jboss.arquillian.config:arquillian-config-api | 1.4.0.Final             | 1.4.1.Final             |
+| byte-buddy                                        | not used                | 1.9.13                  |
+| commons-codec                                     | 1.11                    | 1.12                    |
+| commons-lang3                                     | 3.8.1                   | 3.9                     |
+| commons-text                                      | 1.4                     | 1.7                     |
+| httpclient                                        | 4.5.6                   | 4.5.9                   |
+| httpcore                                          | 4.4.10                  | 4.4.11                  |
+| assertj-core                                      | 3.12.0                  | 3.12.2                  |
+| hibernate-core                                    | 5.0.12.Final            | 5.4.3.Final             |
+| eclipselink                                       | 2.7.3-RC1               | 2.7.4                   |
+| java-jwt                                          | 3.4.0                   | 3.8.1                   |
+| javax.persistence                                 | 2.1.0                   | 2.2.1                   |
+| joda-time                                         | 2.10                    | 2.10.2                  |
+| jooq                                              | 3.6.2                   | 3.11.11                 |
+| jsoup                                             | 1.11.3                  | 1.12.1                  |
+| liquibase-core                                    | 3.6.2                   | 3.6.3                   |
+| spring-security-oauth                             | 2.3.4.RELEASE           | 2.3.6.RELEASE           |
+| tomcat-annotations-api                            | 8.5.40                  | 8.5.42                  |
+| tomcat-jdbc                                       | 8.5.40                  | 8.5.42                  |
+| io.rest-assured:json-path                         | 3.2.0                   | 4.0.0                   |
+| javax:javaee-api                                  | 7.0                     | 8.0.1                   |
+| javax.validation:validation-api                   | 1.1.0.Final             | 2.0.1.Final             |
+| org.assertj:assertj-guava                         | 3.2.0                   | 3.2.1                   |
+| org.hibernate.validator:hibernate-validator       | 6.0.13.Final            | 6.0.17.Final            |
+| lombok-maven-plugin                               | 1.18.2.0                | 1.18.6.0                |
+| javax.cache:cache-api                             | 1.0.0                   | 1.1.1                   |
+| vavr                                              | 0.9.2                   | 0.9.3                   |
+| wiremock                                          | 2.19.0                  | 2.20.0                  |
+| io.github.resilience4j:resilience4j-bulkhead      | 0.14.0                  | 0.16.0                  |
+| io.github.resilience4j:resilience4j-cache         | 0.14.0                  | 0.16.0                  |
+| io.github.resilience4j:resilience4j-timelimiter   | 0.14.0                  | 0.16.0                  |
+
+- The dependency `org.checkerframework:checker-qual` has been excluded entirely.
+  That is, it is neither a direct dependency of the SAP Cloud SDK anymore, nor is it a transitive dependency of both Caffeine and Guava.
+
+- Renamed/Moved Modules.
+  Our goals with the renaming were the following:
+  - Use the prefix `com.sap.cloud.sdk` instead of `com.sap.cloud.s4hana`.
+  - Make all artifact ids unique, so that tools `gradle` can easily consume our modules.
+  - The term `s4hana` in the group id is only used if the contained module is in some way specific for SAP S/4HANA.
+  - Remove all obsolete modules.
+
+| v2.19.2                                                         | v3.0.0                                                             |
+| --------------------------------------------------------------- | ------------------------------------------------------------------ |
+| com.sap.cloud.s4hana.archetypes:archetypes-parent               | com.sap.cloud.sdk.archetypes:archetypes-parent                     |
+| com.sap.cloud.s4hana.archetypes:scp-cf-spring                   | com.sap.cloud.sdk.archetypes:scp-cf-spring                         |
+| com.sap.cloud.s4hana.archetypes:scp-cf-tomcat                   |                                                                    |
+| com.sap.cloud.s4hana.archetypes:scp-cf-tomee                    | com.sap.cloud.sdk.archetypes:scp-cf-tomee                          |
+| com.sap.cloud.s4hana.archetypes:scp-neo-javaee7                 | com.sap.cloud.sdk.archetypes:scp-neo-javaee7                       |
+| com.sap.cloud.s4hana.cloudplatform:auditlog                     | com.sap.cloud.sdk.cloudplatform:auditlog                           |
+| com.sap.cloud.s4hana.cloudplatform:auditlog-scp-cf              | com.sap.cloud.sdk.cloudplatform:auditlog-scp-cf                    |
+| com.sap.cloud.s4hana.cloudplatform:auditlog-scp-neo             | com.sap.cloud.sdk.cloudplatform:auditlog-scp-neo                   |
+| com.sap.cloud.s4hana.cloudplatform:caching                      | com.sap.cloud.sdk.cloudplatform:caching                            |
+| com.sap.cloud.s4hana.cloudplatform:cloudplatform-parent         | com.sap.cloud.sdk.cloudplatform:cloudplatform-parent               |
+| com.sap.cloud.s4hana.cloudplatform:concurrency-scp-neo          | com.sap.cloud.sdk.cloudplatform:concurrency-scp-neo                |
+| com.sap.cloud.s4hana.cloudplatform:connectivity                 | com.sap.cloud.sdk.cloudplatform:cloudplatform-connectivity         |
+|                                                                 | com.sap.cloud.sdk.cloudplatform:cloudplatform-connectivity-scp     |
+| com.sap.cloud.s4hana.cloudplatform:connectivity-scp-cf          | com.sap.cloud.sdk.cloudplatform:cloudplatform-connectivity-scp-cf  |
+| com.sap.cloud.s4hana.cloudplatform:connectivity-scp-neo         | com.sap.cloud.sdk.cloudplatform:cloudplatform-connectivity-scp-neo |
+| com.sap.cloud.s4hana.cloudplatform:core                         | com.sap.cloud.sdk.cloudplatform:cloudplatform-core                 |
+| com.sap.cloud.s4hana.cloudplatform:core-scp-cf                  | com.sap.cloud.sdk.cloudplatform:cloudplatform-core-scp-cf          |
+| com.sap.cloud.s4hana.cloudplatform:core-scp-neo                 | com.sap.cloud.sdk.cloudplatform:cloudplatform-core-scp-neo         |
+| com.sap.cloud.s4hana.cloudplatform:metering                     | com.sap.cloud.sdk.cloudplatform:metering                           |
+| com.sap.cloud.s4hana.cloudplatform:metering-scp-neo             | com.sap.cloud.sdk.cloudplatform:metering-scp-neo                   |
+|                                                                 | com.sap.cloud.sdk.cloudplatform:resilience                         |
+| com.sap.cloud.s4hana.cloudplatform:sap-passport                 | com.sap.cloud.sdk.cloudplatform:sap-passport                       |
+| com.sap.cloud.s4hana.cloudplatform:scp-cf                       | com.sap.cloud.sdk.cloudplatform:scp-cf                             |
+| com.sap.cloud.s4hana.cloudplatform:scp-neo                      | com.sap.cloud.sdk.cloudplatform:scp-neo                            |
+| com.sap.cloud.s4hana.cloudplatform:security                     | com.sap.cloud.sdk.cloudplatform:security                           |
+| com.sap.cloud.s4hana.cloudplatform:security-scp-cf              | com.sap.cloud.sdk.cloudplatform:security-scp-cf                    |
+| com.sap.cloud.s4hana.cloudplatform:security-scp-neo             | com.sap.cloud.sdk.cloudplatform:security-scp-neo                   |
+|                                                                 | com.sap.cloud.sdk.cloudplatform:security-servlet                   |
+| com.sap.cloud.s4hana.cloudplatform:servlet                      | com.sap.cloud.sdk.cloudplatform:servlet                            |
+| com.sap.cloud.s4hana.cloudplatform:tenant                       | com.sap.cloud.sdk.cloudplatform:tenant                             |
+| com.sap.cloud.s4hana.cloudplatform:tenant-scp-cf                | com.sap.cloud.sdk.cloudplatform:tenant-scp-cf                      |
+| com.sap.cloud.s4hana.cloudplatform:tenant-scp-neo               | com.sap.cloud.sdk.cloudplatform:tenant-scp-neo                     |
+| com.sap.cloud.s4hana.datamodel:bapi-api                         |                                                                    |
+| com.sap.cloud.s4hana.datamodel:bapi-generator                   |                                                                    |
+| com.sap.cloud.s4hana.datamodel:bapi-parent                      |                                                                    |
+| com.sap.cloud.s4hana.datamodel:messaging-api                    | com.sap.cloud.sdk.s4hana:s4hana-api-messaging                      |
+|                                                                 | com.sap.cloud.sdk.datamodel:datamodel-parent                       |
+| com.sap.cloud.s4hana.datamodel:messaging-core                   | com.sap.cloud.sdk.datamodel:messaging-core                         |
+| com.sap.cloud.s4hana.datamodel:messaging-generator              | com.sap.cloud.sdk.datamodel:messaging-generator                    |
+| com.sap.cloud.s4hana.datamodel:messaging-jms                    | com.sap.cloud.sdk.datamodel:messaging-jms                          |
+| com.sap.cloud.s4hana.datamodel:messaging-parent                 | com.sap.cloud.sdk.datamodel:messaging-parent                       |
+| com.sap.cloud.s4hana.datamodel:odata-api                        | com.sap.cloud.sdk.s4hana:s4hana-api-odata                          |
+| com.sap.cloud.s4hana.datamodel:odata-core                       | com.sap.cloud.sdk.datamodel:odata-core                             |
+| com.sap.cloud.s4hana.datamodel:odata-generator                  | com.sap.cloud.sdk.datamodel:odata-generator                        |
+| com.sap.cloud.s4hana.datamodel:odata-generator-cli              | com.sap.cloud.sdk.datamodel:odata-generator-cli                    |
+| com.sap.cloud.s4hana.datamodel:odata-generator-maven-plugin     | com.sap.cloud.sdk.datamodel:odata-generator-maven-plugin           |
+| com.sap.cloud.s4hana.datamodel:odata-parent                     | com.sap.cloud.sdk.datamodel:odata-parent                           |
+| com.sap.cloud.s4hana.frameworks:cxf                             | com.sap.cloud.sdk.frameworks:cxf                                   |
+| com.sap.cloud.s4hana.frameworks:eclipselink                     | com.sap.cloud.sdk.frameworks:eclipselink                           |
+| com.sap.cloud.s4hana.frameworks:eclipselink-javaee              | com.sap.cloud.sdk.frameworks:eclipselink-javaee                    |
+| com.sap.cloud.s4hana.frameworks:frameworks-parent               | com.sap.cloud.sdk.frameworks:frameworks-parent                     |
+| com.sap.cloud.s4hana.frameworks:hystrix                         |                                                                    |
+| com.sap.cloud.s4hana.frameworks:hystrix-scp-neo                 |                                                                    |
+| com.sap.cloud.s4hana.frameworks:javaee                          | com.sap.cloud.sdk.frameworks:javaee                                |
+| com.sap.cloud.s4hana.frameworks:jaxrs                           | com.sap.cloud.sdk.frameworks:jaxrs                                 |
+| com.sap.cloud.s4hana.frameworks:jaxrs-gson                      | com.sap.cloud.sdk.frameworks:jaxrs-gson                            |
+| com.sap.cloud.s4hana.frameworks:liquibase                       | com.sap.cloud.sdk.frameworks:liquibase                             |
+| com.sap.cloud.s4hana.frameworks:liquibase-javaee                | com.sap.cloud.sdk.frameworks:liquibase-javaee                      |
+|                                                                 | com.sap.cloud.sdk.frameworks:resilience4j                          |
+| com.sap.cloud.s4hana.frameworks:spring-boot-multitenancy-scp-cf | com.sap.cloud.sdk.frameworks:spring-boot-multitenancy-scp-cf       |
+| com.sap.cloud.s4hana.frameworks:spring-web                      | com.sap.cloud.sdk.frameworks:spring-web                            |
+| com.sap.cloud.s4hana.frameworks:togglz                          | com.sap.cloud.sdk.frameworks:togglz                                |
+| com.sap.cloud.s4hana.plugins:plugins-parent                     | com.sap.cloud.sdk.plugins:plugins-parent                           |
+| com.sap.cloud.s4hana.plugins:s4sdk-maven-plugin                 | com.sap.cloud.sdk.plugins:scp-neo-maven-plugin                     |
+| com.sap.cloud.s4hana.plugins:scp-neo-maven-plugin               | com.sap.cloud.sdk.plugins:usage-analytics                          |
+| com.sap.cloud.s4hana.plugins:usage-analytics                    | com.sap.cloud.sdk.plugins:usage-analytics-maven-plugin             |
+| com.sap.cloud.s4hana.quality:common                             | com.sap.cloud.sdk.quality:common                                   |
+| com.sap.cloud.s4hana.quality:httpclient-listener                | com.sap.cloud.sdk.quality:httpclient-listener                      |
+| com.sap.cloud.s4hana.quality:listeners-all                      | com.sap.cloud.sdk.quality:listeners-all                            |
+| com.sap.cloud.s4hana.quality:odata-querylistener                | com.sap.cloud.sdk.quality:odata-querylistener                      |
+| com.sap.cloud.s4hana.quality:pmd-plugin                         | com.sap.cloud.sdk.quality:pmd-plugin                               |
+| com.sap.cloud.s4hana.quality:pmd-rules                          | com.sap.cloud.sdk.quality:pmd-rules                                |
+| com.sap.cloud.s4hana.quality:quality-parent                     | com.sap.cloud.sdk.quality:quality-parent                           |
+| com.sap.cloud.s4hana.quality:rfc-querylistener                  | com.sap.cloud.sdk.quality:rfc-querylistener                        |
+| com.sap.cloud.s4hana.services:blockchain                        | com.sap.cloud.sdk.services:blockchain                              |
+| com.sap.cloud.s4hana.services:recast-ai                         | com.sap.cloud.sdk.services:recast-ai                               |
+| com.sap.cloud.s4hana.services:scp-blockchain                    | com.sap.cloud.sdk.services:scp-blockchain                          |
+|                                                                 | com.sap.cloud.sdk.services:scp-business-logging-core               |
+| com.sap.cloud.s4hana.services:scp-kernel-services               | com.sap.cloud.sdk.services:scp-kernel-services                     |
+| com.sap.cloud.s4hana.services:scp-machine-learning              | com.sap.cloud.sdk.services:scp-machine-learning                    |
+| com.sap.cloud.s4hana.services:services-parent                   | com.sap.cloud.sdk.services:services-parent                         |
+| com.sap.cloud.s4hana.tests:end-to-end-tests                     | com.sap.cloud.sdk.tests:end-to-end-tests                           |
+| com.sap.cloud.s4hana.tests:integration-tests                    | com.sap.cloud.sdk.tests:integration-tests                          |
+| com.sap.cloud.s4hana.tests:odata-generator-tests                | com.sap.cloud.sdk.tests:odata-generator-tests                      |
+| com.sap.cloud.s4hana.tests:performance-tests                    | com.sap.cloud.sdk.tests:performance-tests                          |
+| com.sap.cloud.s4hana.tests:tests-parent                         | com.sap.cloud.sdk.tests:tests-parent                               |
+| com.sap.cloud.s4hana.tests:unit-tests                           | com.sap.cloud.sdk.tests:unit-tests                                 |
+| com.sap.cloud.s4hana:authorizations                             |                                                                    |
+| com.sap.cloud.s4hana:connectivity                               | com.sap.cloud.sdk.s4hana:s4hana-connectivity                       |
+| com.sap.cloud.s4hana:connectivity-abap                          |                                                                    |
+| com.sap.cloud.s4hana:core                                       | com.sap.cloud.sdk.s4hana:s4hana-core                               |
+| com.sap.cloud.s4hana:datamodel                                  |                                                                    |
+| com.sap.cloud.s4hana:fluent-result                              | com.sap.cloud.sdk.datamodel:fluent-result                          |
+| com.sap.cloud.s4hana:hierarchy                                  |                                                                    |
+| com.sap.cloud.s4hana:odata-service-discovery                    |                                                                    |
+| com.sap.cloud.s4hana:plainstring                                |                                                                    |
+| com.sap.cloud.s4hana:rfc                                        | com.sap.cloud.sdk.s4hana:rfc                                       |
+| com.sap.cloud.s4hana:rfc-json                                   |                                                                    |
+| com.sap.cloud.s4hana:s4hana-all                                 | com.sap.cloud.sdk.s4hana:s4hana-all                                |
+| com.sap.cloud.s4hana:s4hana-parent                              | com.sap.cloud.sdk.s4hana:s4hana-parent                             |
+|                                                                 | com.sap.cloud.sdk.s4hana:s4hana-api-parent                         |
+| com.sap.cloud.s4hana:sdk-bom                                    | com.sap.cloud.sdk:sdk-bom                                          |
+| com.sap.cloud.s4hana:sdk-modules-bom                            | com.sap.cloud.sdk:sdk-modules-bom                                  |
+| com.sap.cloud.s4hana:sdk-parent                                 | com.sap.cloud.sdk:sdk-parent                                       |
+| com.sap.cloud.s4hana:signing                                    |                                                                    |
+| com.sap.cloud.s4hana:soap                                       | com.sap.cloud.sdk.datamodel:soap                                   |
+| com.sap.cloud.s4hana:sql                                        |                                                                    |
+| com.sap.cloud.s4hana:tables                                     |                                                                    |
+| com.sap.cloud.s4hana:testutil                                   | com.sap.cloud.sdk.testutil:testutil-core                           |
+|                                                                 | com.sap.cloud.sdk.testutil:testutil-parent                         |
+| com.sap.cloud.s4hana:testutil-resources                         | com.sap.cloud.sdk.testutil:testutil-resources                      |
+| com.sap.cloud.s4hana:userprofile                                |                                                                    |
+
+### New Functionality
+
+- Provide builders to construct destinations explicitly by providing values for properties in code, for example, DefaultHttpDestination.builder or ScpCfHttpDestination.builder.
+- Give more control when loading a destination by providing DestinationOptions.
+  - Different destination loaders such as ScpCfDestinationLoader or ScpNeoDestinationLoader will consider different options that give fine-granular control over the behavior when loading the destination (for example, if provider or subscriber destinations shall take precedence).
+  - Construct a DestinationOptions instance via the builder method.
+  - Use the `augmentBuilder` method to set configuration parameters that are specific to a loader (platform or environment) using an appropriate class implementing DestinationOptionsAugmenter.
+- Execute code (given as Callable or Executable) by overriding (that is, "on-behalf of") the Tenant, Principal, or AuthToken of the context in TenantAccessor, PrincipalAccessor, and AuthTokenAccessor.
+  - At the example of TenantAccessor.executeWithTenant, the given callable/executable will be executed in a context where the given tenant is set as the current tenant.
+  - In addition to overriding, provide the option to set a fallback for a single execution (for example, with TenantAccessor.executeWithFallbackTenant) or globally (for example, with TenantAccessor.setFallbackTenant).
+    Whenever, for example, a tenant is requested but not available, the SAP Cloud SDK will retrieve a fallback tenant from the given supplier.
+- Offer access to the current request, if available, via the new RequestAccessor and allow overriding the request and providing a fallback request when executing code.
+- Make XsuaaService public for communicating with a given XSUAA service on SAP Cloud Platform, Cloud Foundry.
+
+### Improvements
+
+- Decouple the implementation of resilient behavior from a concrete framework with the generic functional-style adapters in `com.sap.cloud.sdk.cloudplatform.resilience`.
+  Provide default implementation of resilience using resilience4j as underlying library.
+  - Provide ResilienceDecorator as the entry point for wrapping any code (callable or supplier) with resilient behavior.
+  - Provide ResilienceConfiguration
+- Allow using any JSR-107 (JCache) compliant library for caching as part of resilience.
+- Allow nesting of ThreadContexts.
+- Improve log output on log level "debug" for DefaultMessageDelegator to improve error inspection in the messaging core module.
+<!-- vale on -->
