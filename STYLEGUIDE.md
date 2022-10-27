@@ -1,3 +1,7 @@
+# Style Guide
+
+This guide is based on [Google's style guide](https://developers.google.com/style).
+
 ## Table of Contents
 
 - [Formatting](#formatting)
@@ -161,7 +165,7 @@ applications:
 
 Use ordinary font for the name of a project or product.
 
-❌ You will need the --Cloud Foundry CLI--
+❌ You will need the **Cloud Foundry CLI**
 
 ❌ You will need the `Cloud Foundry CLI`
 

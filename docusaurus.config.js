@@ -145,6 +145,10 @@ module.exports = {
               href: 'https://github.com/SAP/cloud-sdk-js'
             },
             {
+              label: 'Sample repository',
+              href: 'https://github.com/SAP-samples/cloud-sdk-js'
+            },
+            {
               label: 'Support',
               to: 'docs/js/support-js'
             }
@@ -218,6 +222,13 @@ module.exports = {
   ],
   customFields: {},
   plugins: [
+    [
+      './src/plugins/plugin-latest-api-doc',
+      {
+        latestBaseUrl: '/cloud-sdk/api/latest',
+        versions: '../static/api/versions.json'
+      }
+    ],
     [
       '@docusaurus/plugin-content-docs',
       {
