@@ -92,6 +92,20 @@ java.util.ServiceConfigurationError: com.sap.cloud.security.client.HttpClientFac
 
 This issue is caused by a dependency scope conflict and can be solved by following [our guidance](./guides/manage-dependencies#avoiding-scope-conflicts).
 
+### I'm Observing a `More than 1 Custom HttpClientFactory service provider found. There should be only one` Exception
+
+After adding a `com.sap.cloud.security.client.HttpClientFactory`, there are now 2 HttpClientFactory.
+The existing HttpClientFactory can be removed before the application starts:
+
+Place this static code in the application's main Class.
+
+```java
+static {
+    com.sap.cloud.security.client.HttpClientFactory.services.clear();
+    com.sap.cloud.security.client.HttpClientFactory.services.add(0, new MyCustomHttpClientFactory());
+}
+```
+
 ## OData Related Questions
 
 ### What Versions of OData Protocol Do You Support?
