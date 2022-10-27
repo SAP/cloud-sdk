@@ -100,6 +100,6 @@ module.exports = {
     },
     'release-notes-sap-cloud-sdk-for-javascript-and-typescript',
     'support-js',
-    'trouble-shooting'
+    'troubleshooting-js'
   ]
 };
