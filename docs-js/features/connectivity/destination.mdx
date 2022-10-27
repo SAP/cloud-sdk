@@ -362,14 +362,14 @@ MyRequest.execute({ destinationName: 'myDestination', iss: yourIssuerValue });
 The value for `iss` is supposed to be the same as in a JWT issued from the XSUAA, e.g., `https://yourSubdomain.localhost:8080/uaa/oauth/token`.
 In principle, only the host of the URL is relevant, but since the same parsing and replacement methods are used for the JWT handling, the URL has to be provided in the format above.
 
-:::note
+:::danger
 
 If a JWT is used in the destination lookup, a validation of the provided token is performed.
 This validation ensures that the JWT has not been manipulated.
 If only the `iss` is provided, no such validation is performed.
 
 Note that the given subdomain value defines from which tenant destinations are fetched.
-So a wrong value may break the isolation for tenants.
+**A wrong value may break the isolation for tenants.**
 It is your responsibility as a developer to ensure that the provided value for the `iss` property is valid.
 
 :::
