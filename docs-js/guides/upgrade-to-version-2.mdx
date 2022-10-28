@@ -172,7 +172,7 @@ The API object getters (e.g. `businessPartnerApi`) are denoted using camel case,
 
 For the implementation of the [(de-)serializers](../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#customize-de-serialization), two changes are introduced in version 2.0:
 
-The static `.builder` method has been renamed to `.entityBuilder` and it is now an instance method on the entity API class:
+The static `builder()` method has been renamed to `entityBuilder()` and it is now an instance method on the entity API class:
 
 ```js
 //Version 1.X.Y
@@ -283,7 +283,7 @@ executeHttpRequest(
 The SAP Cloud SDK for JavaScript version 2 uses the `@sap/xssec` package.
 This may break token validation with an error like this:
 
-> `Error: Jwt token with audience: ['aud1', 'aud2'] is not issued for these clientIds: ['client1', 'client2'].`
+> Error: JWT token with audience: ['aud1', 'aud2'] is not issued for these clientIds: ['client1', 'client2'].
 
 This likely means that you need to set ˋiasToXsuaaTokenExchangeˋ to `false` to disable the IAS token to XSUAA token exchange.
 
