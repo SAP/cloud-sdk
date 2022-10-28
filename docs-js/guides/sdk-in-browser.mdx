@@ -154,7 +154,7 @@ An error message during the compilation from TS to JS provides a hint on how to 
   };
   ```
 
-- In the `angular.json` file, adjust the `build` target to use the custom builder
+- In the `angular.json` file, adjust the `build` target to use the custom builder and set `path` to the custom config `node-webpack.config.js` defined above
 
   ```json
   "build": {
@@ -164,7 +164,7 @@ An error message during the compilation from TS to JS provides a hint on how to 
         "path": "./node-webpack.config.js"
       }
     }
-    ...
+    // ...
   }
   ```
 
@@ -208,7 +208,13 @@ An error message during the compilation from TS to JS provides a hint on how to 
 
 ### React
 
-- Add the corresponding library of the core node.js modules in `devDependencies` in your `package.json` file
+- Add the corresponding library of the core node.js modules in `devDependencies` in your `package.json` file.
+  Add the `react-app-rewired` dependency and adjust the existing calls to `react-scripts` in npm scripts for `start`, `build` and `test`
+
+  ```json
+  "start": "react-app-rewired start"
+  ```
+
 - In the `config-overrides.js` file, list the core node modules
 
   ```js
