@@ -5,8 +5,8 @@ If the execution of any request within a changeset fails, the whole changeset wi
 The changeset will not be applied, much like a database transaction.
 
 Unlike retrieve requests, you can not pass change requests to the `batch()` function directly.
-You have to combine them in a changeset, which in turn can be passed to the `batch()` function.
-Once a batch request is executed, it returns a list of [`BatchResponse`s](#responses).
+You have to wrap them with the `changeset()` function, which in turn can be passed to the `batch()` function.
+Once a batch request is executed, it returns a list of [`BatchResponse`](#responses) objects.
 
 If a changeset was executed successfully, its corresponding response is of type `WriteResponses` and contains a collection of all raw responses to the requests in the changeset.
 If the execution fails, the response is an `ErrorResponse`.
