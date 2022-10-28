@@ -1,4 +1,5 @@
 <!-- Disable vale off -->
+
 # Style Guide
 
 This guide is based on [Google's style guide](https://developers.google.com/style).
