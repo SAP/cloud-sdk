@@ -223,6 +223,13 @@ module.exports = {
   customFields: {},
   plugins: [
     [
+      './src/plugins/plugin-latest-api-doc',
+      {
+        latestBaseUrl: '/cloud-sdk/api/latest',
+        versions: '../static/api/versions.json'
+      }
+    ],
+    [
       '@docusaurus/plugin-content-docs',
       {
         id: 'docs-java',

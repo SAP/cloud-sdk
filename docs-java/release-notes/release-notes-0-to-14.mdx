@@ -1,0 +1,78 @@
+## 4.0.0 - October 12, 2022
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:4.0.0)
+
+### Improvements
+
+This is the first release of the SAP Cloud SDK version 4.
+As this is a new major version, this release contains a lot of (under the hood) improvements, refactoring, and other changes.
+Please refer to the [Upgrade Guide](../guides/4.0-upgrade.mdx) for details instructions on how to upgrade your SAP Cloud SDK dependencies to our new major version and for a detailed list of changes.
+
+### Compatibility Notes
+
+- We are aware of the vulnerability [CVE-2022-42003](https://nvd.nist.gov/vuln/detail/CVE-2022-42003), which affects a version of `jackson-databind` that is shipped as part of the `sdk-bom`.
+  After careful investigation we found that the described exploit **does not** affect the SAP Cloud SDK.
+  Nevertheless, customers should be aware of this vulnerability and check their code.
+
+  We will update the affected dependency as soon as a production ready fix is available.
+
+### Known Issues
+
+- We are aware of a version conflict of the `com.sap.cloud.environment.servicebinding:*` dependencies when the SAP Cloud SDK is used in combination with CAP ([`cds-integration-cloud-sdk`](https://search.maven.org/search?q=g:com.sap.cds%20AND%20a:cds-integration-cloud-sdk)).
+  This conflict can be resolved by including following dependency in the `<dependencyManagement>` section of your project:
+
+  ```xml
+  <!-- Service Binding Library -->
+  <dependency>
+    <groupId>com.sap.cloud.environment.servicebinding</groupId>
+    <artifactId>java-modules-bom</artifactId>
+    <version>0.5.0</version>
+    <type>pom</type>
+    <scope>import</scope>
+  </dependency>
+  ```
+
+<details>
+
+{' '}
+
+<summary>
+  Resulting <code>pom.xml</code>
+</summary>
+
+```xml
+<dependencyManagement>
+    <dependencies>
+
+        <!-- CDS SERVICES -->
+        <dependency>
+            <groupId>com.sap.cds</groupId>
+            <artifactId>cds-services-bom</artifactId>
+            <version>${cds.services.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+
+        <!-- Cloud SDK -->
+        <dependency>
+            <groupId>com.sap.cloud.sdk</groupId>
+            <artifactId>sdk-modules-bom</artifactId>
+            <version>4.0.0</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+
+        <!-- Service Binding Library -->
+        <dependency>
+            <groupId>com.sap.cloud.environment.servicebinding</groupId>
+            <artifactId>java-modules-bom</artifactId>
+            <version>0.5.0</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+
+    </dependencies>
+</dependencyManagement>
+```
+
+</details>

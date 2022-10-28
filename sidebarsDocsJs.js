@@ -98,6 +98,7 @@ module.exports = {
       items: ['video/calm']
     },
     'release-notes',
-    'support'
+    'support',
+    'troubleshooting'
   ]
 };
