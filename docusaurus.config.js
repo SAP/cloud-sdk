@@ -324,11 +324,11 @@ module.exports = {
           },
           {
             from: '/docs/js/features/odata/use-odata-v2-type-safe-client-for-javascript-typescript',
-            to: '/docs/js/features/odata/odata-v2-client'
+            to: '/docs/js/features/odata/v2-client'
           },
           {
             from: '/docs/js/features/odata/use-odata-v4-type-safe-client-for-javascript-typescript',
-            to: '/docs/js/features/odata/odata-v4-client'
+            to: '/docs/js/features/odata/v4-client'
           },
           {
             from: '/docs/js/features/connectivity/destination-cache-isolation',
@@ -361,6 +361,22 @@ module.exports = {
           {
             from: '/docs/js/tutorials/address-manager/change-addresses',
             to: '/docs/js/tutorials/address-manager/change'
+          },
+          {
+            from: '/docs/js/features/odata/generate-odata-client',
+            to: '/docs/js/features/odata/generate-client'
+          },
+          {
+            from: '/docs/js/features/odata/execute-odata-request',
+            to: '/docs/js/features/odata/execute-request'
+          },
+          {
+            from: '/docs/js/features/openapi/execute-openapi-request',
+            to: '/docs/js/features/openapi/execute-request'
+          },
+          {
+            from: '/docs/js/features/openapi/generate-openapi-client',
+            to: '/docs/js/features/openapi/generate-client'
           }
         ]
       }

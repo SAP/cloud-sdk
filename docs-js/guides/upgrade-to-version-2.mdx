@@ -64,7 +64,7 @@ We assume that you have installed the generator as a local `devDependency` in yo
 
 - Find the installed generator in your `package.json`.
 - Update the version from 1.X.Y to 2.0.0 using steps as described [here](#update-generator).
-- Regenerate the client with the updated generator as described [here](../features/odata/generate-odata-client).
+- Regenerate the client with the updated generator as described [here](../features/odata/generate-odata-client.mdx).
 - Change the `builder()` call as described [here](#breaking-change-on-the-entitybuilder-api).
 - Find the invocations of the request builders.
   This RegExp `import.*from.*EntityName.*` helps to find the files where the client is used.
@@ -102,9 +102,9 @@ Details on the API contract are discussed in this [ADR](https://github.com/SAP/c
 
 In the past, one OData datatype was always transformed to the same data type in TypeScript.
 For example, time-related properties are transformed into `moment` instances.
-We introduced a new [(de-)serialization](../features/odata/odata-v2-client#customize-de-serialization) to make this more flexible.
+We introduced a new [(de-)serialization](../features/odata/v2-client#customize-de-serialization) to make this more flexible.
 
-If you would like to switch to the [Temporal](https://tc39.es/proposal-temporal/docs/) (de-)serialization for date/time objects, please follow the [documentation](../features/odata/odata-v2-client#using-de-serializers-for-temporal) and adjust your code base.
+If you would like to switch to the [Temporal](https://tc39.es/proposal-temporal/docs/) (de-)serialization for date/time objects, please follow the [documentation](../features/odata/v2-client#using-de-serializers-for-temporal) and adjust your code base.
 The default serialization for time-related properties will be changed from Moment.js to Temporal once it reaches Stage 4.
 Since Moment.js is a discontinued project with a large size we recommend sticking with the new standard.
 Note that in the 2.0 version, the default remains Moment.js.
@@ -170,7 +170,7 @@ The API object getters (e.g. `businessPartnerApi`) are denoted using camel case,
 
 ### Breaking Change on the `EntityBuilder` API
 
-For the implementation of the [(de-)serializers](../features/odata/odata-v2-client#customize-de-serialization), two changes are introduced in version 2.0:
+For the implementation of the [(de-)serializers](../features/odata/v2-client#customize-de-serialization), two changes are introduced in version 2.0:
 
 The static `.builder` method has been renamed to `.entityBuilder` and it is now an instance method on the entity API class:
 
@@ -197,7 +197,7 @@ myEntityApi
 
 ### Breaking Change on the `RequestBuilder` API
 
-To make the [middle ware concept](../features/odata/odata-v2-client#customize-de-serialization) possible, it was necessary to add more state to the `requestBuilder`.
+To make the [middle ware concept](../features/odata/v2-client#customize-de-serialization) possible, it was necessary to add more state to the `requestBuilder`.
 
 All the static properties used to build select or filters are also now part of an instance and are exposed via a `schema` property.
 The `requestBuilder` is also not a static method anymore but an instance method of an API object:

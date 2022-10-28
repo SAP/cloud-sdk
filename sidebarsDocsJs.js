@@ -11,10 +11,10 @@ module.exports = {
           label: 'OData',
           items: [
             'features/odata/overview',
-            'features/odata/generate-odata-client',
-            'features/odata/execute-odata-request',
-            'features/odata/odata-v2-client',
-            'features/odata/odata-v4-client'
+            'features/odata/generate-client',
+            'features/odata/execute-request',
+            'features/odata/v2-client',
+            'features/odata/v4-client'
           ]
         },
         {
@@ -33,8 +33,8 @@ module.exports = {
           label: 'OpenAPI',
           items: [
             'features/openapi/overview',
-            'features/openapi/generate-openapi-client',
-            'features/openapi/execute-openapi-request'
+            'features/openapi/generate-client',
+            'features/openapi/execute-request'
           ]
         },
         {
