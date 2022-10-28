@@ -384,6 +384,10 @@ module.exports = {
           {
             from: '/docs/js/features/openapi/generate-openapi-client',
             to: '/docs/js/features/openapi/generate-client'
+          },
+          {
+            from: '/docs/js/troubleshooting-js',
+            to: '/docs/js/troubleshooting'
           }
         ]
       }
