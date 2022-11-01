@@ -16,7 +16,7 @@ import LinkToLatestJsApiDocs from '@site/src/sap/sdk-js/LinkToLatestJsApiDocs';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-This guide explains how you can execute arbitrary HTTP requests using the SAP Cloud SDK.
+This guide explains how to execute arbitrary HTTP requests using the SAP Cloud SDK for JavaScript.
 The HTTP client provided by the SAP Cloud SDK provides some convenience features which are explained in detail in this guide.
 
 <!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
@@ -30,10 +30,10 @@ In case you want to use an OpenAPI client, please refer to the [Execute a Reques
 
 ## When to Use What?
 
-The SAP Cloud SDK for JavaScript provides clients for [OData](../odata/execute-odata-request.mdx) and [OpenAPI](../openapi/execute-openapi-request).
-If you use OData or OpenAPI, we recommend to use those clients if possible.
+The SAP Cloud SDK for JavaScript can generate clients for [OData](../odata/execute-odata-request.mdx) and [OpenAPI](../openapi/execute-openapi-request).
+Use generated clients for OData or OpenAPI services, if possible.
 
-They provide convenience features such as:
+Generated clients provide convenience features such as:
 
 - Type-safe response objects
 - Convenient handling of filter, select and expand conditions
@@ -48,15 +48,11 @@ For example, the OData client does not support the `upsert` operation.
 
 :::
 
-In case the OData or OpenAPI client does not satisfy your requirements, or you don't interact with OData or OpenAPI services, the next thing you should look into is the HTTP client which is explained in this guide.
-
-The HTTP client is based on the open-source [axios HTTP client](https://axios-http.com) but provides convenience features which are specific to working on SAP Business Technology Platform, such as:
+The generic HTTP client is based on the open-source [axios HTTP client](https://axios-http.com), but provides convenience features which are specific to working on SAP Business Technology Platform, such as:
 
 - [Destination lookup](../connectivity/destination.mdx)
 - Connections to [SAP S/4HANA On-premise](../connectivity/on-premise.mdx) via the connectivity service
 - [Web proxies](../connectivity/proxy.mdx)
-
-If the provided HTTP client also does not work for your use case, we recommend using the [axios client](https://axios-http.com/docs/example) directly.
 
 ## `executeHttpRequest`
 
@@ -87,12 +83,12 @@ const response = await executeHttpRequest(
 );
 ```
 
-`executeHttpRequest` takes the following parameters:
+The `executeHttpRequest()` function takes the following parameters:
 
-- `destination` is of type `DestinationOrFetchOptions`
+- The `destination` argument is of type `DestinationOrFetchOptions`
   - This can either be a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="destination object" /> which was already fetched or an <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions" name="object containing a destination name and an optional JWT" />
-- `requestConfig` is of type <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_http_client.HttpRequestConfig" name="HttpRequestConfig" /> or <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_http_client.HttpRequestConfigWithOrigin" name="HttpRequestConfigWithOrigin" />
-- `httpRequestOptions` is of type `HttpRequestOptions`
+- The `requestConfig` argument is of type <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_http_client.HttpRequestConfig" name="HttpRequestConfig" /> or <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_http_client.HttpRequestConfigWithOrigin" name="HttpRequestConfigWithOrigin" />
+- The `httpRequestOptions` argument is of type `HttpRequestOptions`
   - This parameter is optional
   - Can be used to disable [automatic CSRF token fetching](#csrf-token-fetching)
 
@@ -100,13 +96,13 @@ const response = await executeHttpRequest(
 
 :::caution
 
-Note that the `destination` and the `requestConfig` parameter have an overlap in the keys they accept.
+Note that the `destination` and `requestConfig` parameters have an overlap in the keys they accept.
 For example, both have a `url` and an `authorization` property.
 For keys that exist for both objects, the `requestConfig` takes precedence.
 
 :::
 
-The `executeHttpRequest` function returns a promise of <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_http_client.HttpResponse" name="HttpResponse" />.
+The `executeHttpRequest()` function returns a promise of type <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_http_client.HttpResponse" name="HttpResponse" />.
 
 ### CSRF Token Fetching
 
@@ -117,14 +113,15 @@ The HTTP client provided by SAP Cloud SDK allows to automatically retrieve a CSR
 
 :::info
 
-Fetching CSRF token is automatically enabled for all requests that typically might change data, such as `PUT`, `POST`, `DELETE` or `PATCH` requests, and is not available for `GET` requests.
+Fetching CSRF token is automatically enabled for all requests that typically might change data, such as `PUT`, `POST`, `DELETE`, or `PATCH` requests.
+It is not available for `GET` requests.
 
 :::
 
-Fetching the CSRF token can be enabled or disabled via the `httpRequestOptions.fetchCsrfToken` parameter of `executeHttpRequest`.
+Fetching the CSRF token can be enabled or disabled via the `httpRequestOptions.fetchCsrfToken` parameter of `executeHttpRequest()` function.
 See its <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_http_client.HttpRequestOptions" name="API documentation" /> for details.
 
-For example, to avoid CSRF token fetching when doing a `PUT`, `POST`, `DELETE` or `PATCH` request, disable it like in this example:
+For example, to avoid CSRF token fetching when doing a `PUT`, `POST`, `DELETE`, or `PATCH` request, disable it like in this example:
 
 ```ts
 const response = await executeHttpRequest(
@@ -188,9 +185,9 @@ const response = await executeHttpRequest(
 
 The HTTP request in this example will contain the parameter values `a/by` and `y1` because our parameter encoder function replaced the `x` with a `y`.
 
-## `executeHttpRequestWithOrigin`
+## `executeHttpRequestWithOrigin()`
 
-`executeHttpRequestWithOrigin` is a variation of `executeHttpRequest` which allows more fine-grained control over configuration precedence.
+The `executeHttpRequestWithOrigin()` function is a variation of `executeHttpRequest()` which allows more fine-grained control over configuration precedence.
 
 <!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
 
@@ -203,14 +200,14 @@ Instead it refers to the _origin_ or _source_ of HTTP client configuration.
 
 This function may be helpful in situations where you want to define the priority of headers and parameters, for example if:
 
-- You want to enforce a hard-coded API key/JWT and ignore the ones from, e.g., the destination
+- You want to enforce a hard-coded API key or JWT and ignore the ones from the destination
 - You want a default query parameter, which can be overwritten by the destination properties
 
 Headers and query parameters with the same name are prioritized in the following order:
 
 1. `custom`
 2. Destination related headers/query parameters
-3. `requestConfig`.
+3. `requestConfig`
 
 In this example the HTTP request will contain the URL parameter `myParam` with the value `custom-param` and the HTTP header `apiKey` with the value `custom-header`:
 
