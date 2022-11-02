@@ -102,7 +102,7 @@ Details on the API contract are discussed in this [ADR](https://github.com/SAP/c
 
 In the past, one OData datatype was always transformed to the same data type in TypeScript.
 For example, time-related properties are transformed into `moment` instances.
-We introduced a new [(de-)serialization](../features/odata/v2-client#customize-de-serialization) to make this more flexible.
+We introduced a new [(de-)serialization](../features/odata/odata-v2-client.mdx#customize-de-serialization) to make this more flexible.
 
 If you would like to switch to the [Temporal](https://tc39.es/proposal-temporal/docs/) (de-)serialization for date/time objects, please follow the [documentation](../features/odata/v2-client#using-de-serializers-for-temporal) and adjust your code base.
 The default serialization for time-related properties will be changed from Moment.js to Temporal once it reaches Stage 4.
@@ -170,7 +170,7 @@ The API object getters (e.g. `businessPartnerApi`) are denoted using camel case,
 
 ### Breaking Change on the `EntityBuilder` API
 
-For the implementation of the [(de-)serializers](../features/odata/v2-client#customize-de-serialization), two changes are introduced in version 2.0:
+For the implementation of the [(de-)serializers](../features/odata/odata-v2-client.mdx#customize-de-serialization), two changes are introduced in version 2.0:
 
 The static `builder()` method has been renamed to `entityBuilder()` and it is now an instance method on the entity API class:
 

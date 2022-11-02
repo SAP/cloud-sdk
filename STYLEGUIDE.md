@@ -1,5 +1,3 @@
-<!-- Disable vale off -->
-
 # Style Guide
 
 This guide is based on [Google's style guide](https://developers.google.com/style).
@@ -630,8 +628,9 @@ my-website.com/this-is-my-slug
 
 Writing a good slug positively affects our SEO.
 
-It is created either from the `id` property which we have to set in every file, or from the file name, if the id is missing.
-Therefore we should always set the `id` property and consider the following:
+By default, the slug is based on the filename of your MDX document.
+You should overwrite it by setting the `id` in the front matter to avoid unintended changes to the slug,
+which would occur if the filename is changed.
 
 ### Do not include base path in the slug
 
@@ -668,7 +667,7 @@ id: find-problems-in-the-sap-cloud-sdk
 id: debugging
 ```
 
-### Function Words
+### Use Function Words
 
 Function words are words like “a”, “the”, and “and”.
 Avoid function words in slugs and only include them if they are needed to clarify the slug.
@@ -687,7 +686,7 @@ id: migrating-from-sap-btp-cloud-foundry-to-a-kubernetes-environment-with-the-sa
 id: migrate-from-cf-to-kubernetes
 ```
 
-### Focus
+### Keep It Short
 
 The URL of our page is sometimes shown in Google search results and influences whether our audience decides to click on our page.
 Therefore remove not only function words but also other unnecessary words.
@@ -706,7 +705,7 @@ id: how-to-improve-error-messages-in-the-cloud-sdk
 id: improve-logging
 ```
 
-### Lowercase
+### Use Lowercase Letters
 
 Use lowercase letters in slugs.
 
@@ -724,5 +723,23 @@ id: Frequently-Asked-Questions
 id: frequently-asked-questions
 ```
 
+### Reference Files By Their Path, Not Their Slug
+
+If you reference files by their path, e.g., `../my-file.mdx`, changes to the `id`, and therefore the slug, will automitcally carry over.
+Otherwise you would have to adjust the reference in all files that reference a specific slug.
+
+Therefore you should always reference other files by their (relative) path.
+
+❌
+
+```
+... see our [JWT documentation](../retrieve-jwt)
+```
+
+✅
+
+```
+... see our [JWT documentation](../how-to-retrieve-jwt.mdx)
+```
+
 <!-- vale on -->
-<!-- Disable vale on -->
