@@ -41,6 +41,8 @@ This guide is based on [Google's style guide](https://developers.google.com/styl
     - [Do Not Use Formats X.Y or X.Y.Z](#do-not-use-formats-xy-or-xyz)
     <!-- vale on -->
     - [Avoid Using `Currently` and `New`](#avoid-using-currently-and-new)
+  - [Paragraphs](#paragraphs)
+    - [Use One Sentence per Line](#use-one-sentence-per-line)
 - [Language and Style](#language-and-style)
   - [Use Active Voice Over Passive](#use-active-voice-over-passive)
   - [Exceptions: Use Passive Voice](#exceptions-use-passive-voice)
@@ -368,11 +370,16 @@ Use paragraphs to structure your text into individual units.
 
 A line break inside a paragraph is not visible in the rendered text.
 Using newlines after each sentence make it easier to restructure text and to view diffs of prose.
-See also [AsciiDoc Recommended Practices](https://asciidoctor.org/docs/asciidoc-recommended-practices/#one-sentence-per-line) for a more elaborate reasoning of this practice.
+[AsciiDoc Recommended Practices](https://asciidoctor.org/docs/asciidoc-recommended-practices/#one-sentence-per-line) gives an elaborate reasoning of the advantages of this practice.
 
-❌ Don't put multiple sentences of prose into one line.
+```
+❌ The SAP Cloud SDK enables an exception logger once you create a logger instance somewhere in your project. The exception logger logs unhandled exceptions as if you would log the error manually.
+```
 
-✅ Follow the 'one sentence per line' paradigm.
+```
+✅ The SAP Cloud SDK enables an exception logger once you create a logger instance somewhere in your project.
+The exception logger logs unhandled exceptions as if you would log the error manually.
+```
 
 # Language and Style
 
