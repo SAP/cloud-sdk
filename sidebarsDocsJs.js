@@ -1,6 +1,6 @@
 module.exports = {
   docsJsSidebar: [
-    'overview-cloud-sdk-for-javascript',
+    'overview',
     'getting-started',
     {
       type: 'category',
@@ -11,20 +11,20 @@ module.exports = {
           label: 'OData',
           items: [
             'features/odata/overview',
-            'features/odata/generate-odata-client',
-            'features/odata/execute-odata-request',
-            'features/odata/use-odata-v2-type-safe-client-for-javascript-typescript',
-            'features/odata/use-odata-v4-type-safe-client-for-javascript-typescript'
+            'features/odata/generate-client',
+            'features/odata/execute-request',
+            'features/odata/v2-client',
+            'features/odata/v4-client'
           ]
         },
         {
           type: 'category',
           label: 'Connectivity',
           items: [
-            'features/connectivity/destination',
-            'features/connectivity/destination-cache-isolation',
-            'features/connectivity/proxy',
-            'features/connectivity/generic-http-client',
+            'features/connectivity/destinations',
+            'features/connectivity/destination-cache',
+            'features/connectivity/proxies',
+            'features/connectivity/http-client',
             'features/connectivity/on-premise'
           ]
         },
@@ -33,8 +33,8 @@ module.exports = {
           label: 'OpenAPI',
           items: [
             'features/openapi/overview',
-            'features/openapi/generate-openapi-client',
-            'features/openapi/execute-openapi-request'
+            'features/openapi/generate-client',
+            'features/openapi/execute-request'
           ]
         },
         {
@@ -51,16 +51,15 @@ module.exports = {
       type: 'category',
       label: 'Guides',
       items: [
-        'guides/migrate-sdk-application-from-btp-cf-to-kubernetes',
-        'guides/migrate-to-open-source-version-of-cloud-sdk-for-javascript-typescript',
+        'guides/kubernetes',
         'guides/upgrade-to-version-2',
-        'guides/bas-external-system',
-        'guides/sdk-in-browser',
-        'guides/trust-and-key-stores',
-        'guides/how-to-use-the-approuter',
-        'guides/how-to-add-resilience',
-        'guides/how-to-retrieve-jwt',
-        'guides/debug-remote-app'
+        'guides/bas',
+        'guides/browser',
+        'guides/trust-and-keystores',
+        'guides/approuter',
+        'guides/resilience',
+        'guides/retrieve-jwt',
+        'guides/remote-debugging'
       ]
     },
     {
@@ -81,8 +80,8 @@ module.exports = {
           type: 'category',
           label: 'Address Manager',
           items: [
-            'tutorials/address-manager/read-addresses',
-            'tutorials/address-manager/change-addresses'
+            'tutorials/address-manager/read',
+            'tutorials/address-manager/change'
           ]
         },
         'tutorials/multi-tenant-application'
@@ -96,10 +95,10 @@ module.exports = {
     {
       type: 'category',
       label: 'Video Tutorials',
-      items: ['video/demo-of-cloud-sdk-for-javascript-with-calm-and-cap']
+      items: ['video/calm']
     },
-    'release-notes-sap-cloud-sdk-for-javascript-and-typescript',
-    'support-js',
-    'troubleshooting-js'
+    'release-notes',
+    'support',
+    'troubleshooting'
   ]
 };
