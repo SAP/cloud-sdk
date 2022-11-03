@@ -1,5 +1,5 @@
 ---
-id: troubleshooting-js
+id: troubleshooting
 title: Troubleshooting
 hide_title: false
 hide_table_of_contents: false
@@ -21,7 +21,7 @@ import ThemedImage from '@theme/ThemedImage';
 
 ## Connectivity Issue
 
-You are experiencing connectivity issues using the SAP Cloud SDK and the [error logs](features/error-handling) are not conclusive?
+You are experiencing connectivity issues using the SAP Cloud SDK and the [error logs](features/error-handling.mdx) are not conclusive?
 In such a case please follow the flowchart.
 For each squared box, a dedicated section gives instructions below.
 The circle indicate start and end points.
@@ -77,7 +77,7 @@ async function minimalTest() {
 
 Replace _`YOUR_SERVICE_URL`_ with the URL of your service, e.g., `/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner?%24top=1`.
 Use the same service you also plan to call in production to observe authorization issues in the test case as well.
-Include all `getDestination()` options you are using in your real example, like `useCache` or [JWT](./guides/how-to-retrieve-jwt).
+Include all `getDestination()` options you are using in your real example, like `useCache` or [JWT](./guides/how-to-retrieve-jwt.mdx).
 Also adjust the example to your needs by adding additional log statements.
 
 You can execute the minimal example locally to have a quicker turnaround time.
@@ -94,7 +94,7 @@ This can have multiple reasons:
   Adjust the configuration according to the error message until the destination service can receive a token.
 - The destination service is not bound to your application.
 - For `OnPremise` destinations the connectivity service must be bound to your application.
-- The destination service is missing as a [dependency of your application](./tutorials/multi-tenant-application).
+- The destination service is missing as a [dependency of your application](./tutorials/multi-tenant-application.mdx).
   This is only relevant in multi-tenant applications if you make the call via a subscriber account.
 
 If you are stuck in retrieving the destination, and you think the issue is caused by the SAP Cloud SDK, please [open an issue](https://github.com/SAP/cloud-sdk-js/issues/new/choose).
@@ -135,7 +135,7 @@ This means your request got stuck somewhere before.
 
 - Investigate the logs of the Cloud Connector and check the [documentation](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/9b6510edf4d844a28f022b3db41f3202.html) to fix problems.
 - The connectivity service is not bound to your application.
-- The connectivity service is missing as [dependency of your application](./tutorials/multi-tenant-application).
+- The connectivity service is missing as [dependency of your application](./tutorials/multi-tenant-application.mdx).
   This is only relevant in multi-tenant applications if you make the call via a subscriber account.
 
 If you keep experiencing problems, please reach out to the SAP BTP or Cloud Connector support.
@@ -157,7 +157,7 @@ In addition, there are On-premise specific problems:
 
 The minimal example is working, but your real code is not.
 This means the framework you are using is calling the SAP Cloud SDK in a different way than you are.
-At this point, [debug the application](./guides/debug-remote-app).
+At this point, [debug the application](./guides/debug-remote-app.mdx).
 Try to reach the point where the `executeHttpRequest()` function of the SAP Cloud SDK is called and compare the argument to the one of the minimal example.
 
 If you found the difference, try to align it or open an issue with the framework.
