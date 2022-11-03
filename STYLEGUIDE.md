@@ -41,6 +41,8 @@ This guide is based on [Google's style guide](https://developers.google.com/styl
     - [Do Not Use Formats X.Y or X.Y.Z](#do-not-use-formats-xy-or-xyz)
     <!-- vale on -->
     - [Avoid Using `Currently` and `New`](#avoid-using-currently-and-new)
+  - [Paragraphs](#paragraphs)
+    - [Use One Sentence per Line](#use-one-sentence-per-line)
 - [Language and Style](#language-and-style)
   - [Use Active Voice Over Passive](#use-active-voice-over-passive)
   - [Exceptions: Use Passive Voice](#exceptions-use-passive-voice)
@@ -355,9 +357,29 @@ Unless a text relates to a specific version, do not use formats x.y or x.y.z
 
 ### Avoid Using `Currently` and `New`
 
-❌ In the new version we allow to specify the origin of the header
+❌ In the new version we allow to specify the origin of the header.
 
-✅ In version 2, you can specify the origin of the header
+✅ In version 2, you can specify the origin of the header.
+
+## Paragraphs
+
+In markdown, an empty line denotes the start of a new paragraph.
+Use paragraphs to structure your text into individual units.
+
+### Use One Sentence per Line
+
+A line break inside a paragraph is not visible in the rendered text.
+Using newlines after each sentence make it easier to restructure text and to view diffs of prose.
+[AsciiDoc Recommended Practices](https://asciidoctor.org/docs/asciidoc-recommended-practices/#one-sentence-per-line) gives an elaborate reasoning of the advantages of this practice.
+
+```
+❌ The SAP Cloud SDK enables an exception logger once you create a logger instance somewhere in your project. The exception logger logs unhandled exceptions as if you would log the error manually.
+```
+
+```
+✅ The SAP Cloud SDK enables an exception logger once you create a logger instance somewhere in your project.
+The exception logger logs unhandled exceptions as if you would log the error manually.
+```
 
 # Language and Style
 
