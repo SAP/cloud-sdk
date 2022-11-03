@@ -1,8 +1,13 @@
+# Style Guide
+
+This guide is based on [Google's style guide](https://developers.google.com/style).
+
 ## Table of Contents
 
 - [Formatting](#formatting)
   - [Inline Code](#inline-code)
     - [Use Code Font](#use-code-font)
+      - [Include a Descriptive Noun Before or After Code](#include-a-descriptive-noun-before-or-after-code)
       - [Use Code Format for Method Names](#use-code-format-for-method-names)
       - [Use `Function` vs `Method` Accordingly](#use-function-vs-method-accordingly)
     - [Exceptions](#exceptions)
@@ -19,6 +24,7 @@
     - [Use Code Font](#use-code-font)
     - [Include the Word File After the Filename](#include-the-word-file-after-the-filename)
     - [Prefer Hyphens, Not Underscores, To Separate Words in File Paths](#prefer-hyphens-not-underscores-to-separate-words-in-file-paths)
+    - [Use Linux File Paths and Separators by Default](#use-linux-file-paths-and-separators-by-default)
   - [File Type](#file-type)
     - [Use Formal File Type Name in Ordinary Font](#use-formal-file-type-name-in-ordinary-font)
     - [Exception: Use Extension in Code Format To Mention File Ending](#exception-use-extension-in-code-format-to-mention-file-ending)
@@ -63,6 +69,8 @@
     - [Use Numbered List for Steps To Be Performed in Order](#use-numbered-list-for-steps-to-be-performed-in-order)
     - [Use Description List With Headings for Describing Terms](#use-description-list-with-headings-for-describing-terms)
       - [Exception: Capital Letter](#exception-capital-letter)
+- [SEO](#search-engine-optimization)
+  - [Slugs](#Slugs)
 
 # Formatting
 
@@ -77,10 +85,27 @@ Use code font to mark up code, such as:
 - HTTP status codes/verbs/content-types
 - env variables
 - Command line utility names (`cf`)
-- Console output
+- Console output (excluding [error messages](#use-quotation-marks-for-inline-error-messages-in-text))
 - Query parameter names and values
 
 ✅ instance of the `BusinessPartner` entity class
+
+✅ The function returns a `boolean` or `string`.
+
+✅ The `data` property contains the content of the response to your `GET` request.
+
+#### Include a Descriptive Noun Before or After Code
+
+Don't use code as English verbs or nouns.
+Don't pluralize code, instead pluralize the following noun.
+
+❌ Return a list of `WriteResponse`s
+
+✅ Return a list of objects with type `WriteResponse`
+
+❌ Call `generate()` to get a `NewClass`
+
+✅ Call the `generate()` function to get a `NewClass` instance
 
 #### Use Code Format for Method Names
 
@@ -161,7 +186,7 @@ applications:
 
 Use ordinary font for the name of a project or product.
 
-❌ You will need the --Cloud Foundry CLI--
+❌ You will need the **Cloud Foundry CLI**
 
 ❌ You will need the `Cloud Foundry CLI`
 
@@ -207,6 +232,18 @@ For generic domain name in examples, use `example.com`.
 
 ✅ This creates a basic class inside the `src/business-partners` folder.
 
+### Use Linux File Paths and Separators by Default
+
+❌ The code is located in the `YOUR_PROJECT\src\my-file.js` file
+
+✅ The code is located in `YOUR_PROJECT/src/my-file.js` file
+
+❌ Save the configuration in the `C:\cloudsdk\config.json` file
+
+✅ Save the configuration in the `/cloudsdk/config.json` file
+
+Exception: If you describe a Windows-specific situation, you should use the appropriate file paths.
+
 ## File Type
 
 ### Use Formal File Type Name in Ordinary Font
@@ -220,6 +257,7 @@ When discussing a file type generically, use the formal file type name in ordina
 ### Exception: Use Extension in Code Format To Mention File Ending
 
 Use only when you need to specifically mention a file ending.
+If the ending is case-insensitive, you should write it in lowercase.
 
 ✅ base64 ASCII (e.g. `.pem`) and binary (e.g. `.der`).
 
@@ -590,3 +628,133 @@ If the case is an important part of the information conveyed by the list - such 
 ```
 - `minTimeout`: initial waiting time for the first retry.
 ```
+
+<!-- vale off -->
+
+# Search Engine Optimization
+
+## Slugs
+
+The slug is the the end part of a URL after the backslash:
+
+```
+my-website.com/this-is-my-slug
+```
+
+Writing a good slug positively affects our SEO.
+
+By default, the slug is based on the filename of your MDX document.
+You should overwrite it by setting the `id` in the front matter to avoid unintended changes to the slug,
+which would occur if the filename is changed.
+
+### Do not include base path in the slug
+
+Since our path is already `cloud-sdk/docs/js/*`, you should not include the words:
+`sap`, `cloud`, `sdk`, `js`
+
+❌
+
+```
+id: release-notes-sap-cloud-sdk-for-javascript-and-typescript'
+```
+
+✅
+
+```
+id: release-notes
+```
+
+### Include Keywords
+
+A keyword is the search term we want a page to rank for most.
+
+For example, the following would be a slug for the debug page:
+
+❌
+
+```
+id: find-problems-in-the-sap-cloud-sdk
+```
+
+✅
+
+```
+id: debugging
+```
+
+### Use Function Words
+
+Function words are words like “a”, “the”, and “and”.
+Avoid function words in slugs and only include them if they are needed to clarify the slug.
+
+For example, the following would be a slug for a migration page:
+
+❌
+
+```
+id: migrating-from-sap-btp-cloud-foundry-to-a-kubernetes-environment-with-the-sap-cloud-sdk
+```
+
+✅
+
+```
+id: migrate-from-cf-to-kubernetes
+```
+
+### Keep It Short
+
+The URL of our page is sometimes shown in Google search results and influences whether our audience decides to click on our page.
+Therefore remove not only function words but also other unnecessary words.
+
+For example, the following would be a slug for a troubleshooting guide page:
+
+❌
+
+```
+id: how-to-improve-error-messages-in-the-cloud-sdk
+```
+
+✅
+
+```
+id: improve-logging
+```
+
+### Use Lowercase Letters
+
+Use lowercase letters in slugs.
+
+For example, the following would be a slug for our an FAQ page:
+
+❌
+
+```
+id: Frequently-Asked-Questions
+```
+
+✅
+
+```
+id: frequently-asked-questions
+```
+
+### Reference Files By Their Path, Not Their Slug
+
+If you reference files by their path, e.g., `../my-file.mdx`, changes to the `id`, and therefore the slug, will automitcally carry over.
+Otherwise you would have to adjust the reference in all files that reference a specific slug.
+
+Therefore you should always reference other files by their (relative) path.
+
+❌
+
+```
+... see our [JWT documentation](../retrieve-jwt)
+```
+
+✅
+
+```
+... see our [JWT documentation](../how-to-retrieve-jwt.mdx)
+```
+
+<!-- vale on -->

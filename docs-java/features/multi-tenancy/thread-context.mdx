@@ -51,10 +51,153 @@ Additionally, if the `Authorization` header contains a `JWT` from the [`AppRoute
 - Pull the _Tenant_ and _Principal_ information from it
 
 :::tip Integration with CAP
-In case you are using CAP (with the `cds-integration-cloud-sdk` dependency) the Tenant,Principal information and Headers will **instead** be derived from the [CAP Request Context](https://cap.cloud.sap/docs/java/request-contexts).
+In case you are using CAP (with the `cds-integration-cloud-sdk` dependency) the Tenant, Principal, and Headers will **instead** be derived from the [CAP Request Context](https://cap.cloud.sap/docs/java/request-contexts).
 That also means that the `ThreadContext` will not be used when accessing this information.
-Please note that the `RequestScopedHttpClientCache` which is the default being used by the SAP Cloud SDK cannot work with this approach.
 :::
+
+## Running Asynchronous Operations
+
+As the name suggests, the `ThreadContext` is bound to a thread, more specifically to the one it was created in.
+In consequence, other threads, i.e. asynchronous operations, cannot access the stored information if it hasn't been explicitly propagated.
+
+The SAP Cloud SDK offers a dedicated API to execute asynchronous operations while preserving the `ThreadContext`.
+
+Given any operation:
+
+```java
+Callable myTask = () -> doStuff();
+// or
+Runnable myTask = () -> doStuff();
+```
+
+The operation can be executed asynchronously via:
+
+```java
+Future runningTask = ThreadContextExecutors.submit(myTask);
+```
+
+Operations that are submitted this way will be executed by a single instance of `ThreadContextExecutorService`.
+By default, this instance is based on a `CachedThreadPool`, which manages the concurrency internally.
+
+:::tip Spring Integration
+You can also use this functionality with Springs `@Async` annotation.
+Refer to the [dedicated section below](#spring-integration).
+:::
+
+### Spring Integration
+
+You can conveniently integrate this functionality to work with Springs `@Async` annotation.
+
+Below configuration will ensure all methods annotated with `@Async` will have the `ThreadContext` available:
+
+```java
+@EnableAsync
+@Configuration
+public class AsynchronousConfiguration implements AsyncConfigurer {
+
+  @Override
+  public Executor getAsyncExecutor() {
+    return ThreadContextExecutors.getExecutor();
+  }
+}
+
+```
+
+You can read more about the `@Async` functionality [here](https://www.baeldung.com/spring-async).
+
+### Passing on Other ThreadLocals
+
+Other libraries and frameworks may also rely on `ThreadLocal` variables to hold contextual data.
+For example, the CAP `RequestContext` is also bound to the current Thread.
+
+To not lose this state when creating a new Thread they can be passed on by implementing a `ThreadContextDecorator`.
+A typical implementation for this purpose should look like this:
+
+```java
+@Override
+public <T> Callable<T> decorateCallable( @Nonnull final Callable<T> callable ) {
+  Object valueToPass = YourThreadLocal.get();
+
+  return () -> {
+    Object initial = YourThreadLocal.get();
+    YourThreadLocal.set(valueToPass);
+    try {
+      return callable.call();
+    }
+    finally {
+      YourThreadLocal.set(initial);
+    }
+  };
+}
+```
+
+Such a custom `ThreadContextDecorator` can be registered via `DefaultThreadContextDecoratorChain.registerDefaultDecorator`.
+
+:::tip
+The SAP Cloud SDK already comes with a default decorator that passes on the `SecurityContext` of `com.sap.cloud.security:java-api`.
+If the [CAP integration](../../guides/cap-sdk-integration.mdx) is used, also the `RequestContext` is passed on (requires CDS version `1.28` or higher).
+:::
+
+### Configuring the Executor
+
+The `ThreadContextExecutors` class leverages a single `ThreadContextExecutorService` instance that can be configured.
+
+You can create a custom `ThreadContextExecutorService`, for example to use a different thread pool, via:
+
+```java
+ThreadContextExecutorService executor = DefaultThreadContextExecutorService
+            .of(Executors.newFixedThreadPool(3));
+
+// use it directly:
+executor.submit(myTask);
+
+// or set it to be used by the static ThreadContextExecutors API:
+ThreadContextExecutors.setExecutor(executor);
+ThreadContextExecutors.submit(myTask);
+```
+
+### Modifying the ThreadContext
+
+:::danger Caution
+
+Modifying the `ThreadContext` as depicted below is currently supported only when using the default `Facade` (e.g. `DefaultTenantFacade`) implementations.
+This is an issue especially when using the CAP integration dependency `cds-integration-cloud-sdk`.
+To still manipulate the request context, please refer to [the CAP documentation](https://cap.cloud.sap/docs/java/request-contexts#defining-requestcontext).
+
+:::
+
+You may want to run an asynchronous operation in a completely new or custom context.
+By default, the executor will transfer any existing context to the new thread.
+
+To run something in a completely new, empty context, use:
+
+```java
+ThreadContextExecutors.submit(myTask, new DefaultThreadContext());
+```
+
+By contrast, to pass on the current context, but modifying the tenant (and only the tenant), use:
+
+```java
+Tenant myTenant = new DefaultTenant("foo");
+Callable myTaskWithTenant = () -> TenantAccessor.executeWithTenant(myTask, myTenant);
+
+ThreadContextExecutors.submit(myTaskWithTenant);
+```
+
+To avoid multiple wrappings, in particular when changing multiple values, you can also build a custom executor:
+
+```java
+Tenant myTenant = new DefaultTenant("foo");
+Principal myPrincipal = new DefaultPrincipal("bar", Collections.emptySet(), Collections.emptyMap());
+
+ThreadContextExecutor customExecutor = ThreadContextExecutor.fromNewContext()
+            .withListeners(
+                new TenantThreadContextListener(myTenant),
+                new PrincipalThreadContextListener(myPrincipal)
+            );
+
+ThreadContextExecutors.submit(myTask, customExecutor);
+```
 
 ## How Can the Thread Context Be Used?
 
@@ -82,9 +225,11 @@ TenantAccessor.executeWithTenant(customTenant, () -> doStuff());
 ```
 
 :::caution CAP Integration
-The above does not apply for any accessors like `TenantAccessor`, `PrincipalAccessor`, `RequestHeaderAccessor` when using the CAP framework (with the `cds-integration-cloud-sdk` dependency).
-When using CAP the Tenant,Principal information and Headers are derived from the `RequestContext`.
+
+The above does not apply for accessors like `TenantAccessor`, `PrincipalAccessor`, `RequestHeaderAccessor` when using the CAP framework (with the `cds-integration-cloud-sdk` dependency).
+When using CAP the Tenant, Principal, and Headers are derived from the `RequestContext`.
 Please refer to [this section](https://cap.cloud.sap/docs/java/request-contexts#defining-requestcontext) on how to override existing values in the CAP context.
+
 :::
 
 :::caution
@@ -100,16 +245,15 @@ If you want to start a fresh context based on a given `AuthToken`, for example a
 Tenant retrieveProviderTenant()
 {
     // retrieves an access token from the provider context
-    AuthToken providerXsuaaAccessToken = AuthTokenAccessor.getXsuaaServiceToken();
-    return new ThreadContextExecutor()
-        // don't reuse the original context
-        .withoutParentThreadContext()
+    AuthToken providerXsuaaAccessToken = new ScpCfAuthTokenFacade().tryGetXsuaaServiceToken().get();
+    ThreadContextExecutor
+        // create a new, empty context
+        .fromNewContext()
         // add the provider token into the new context
         .withListeners(new AuthTokenThreadContextListener(providerXsuaaAccessToken))
         // return the actual provider tenant
         .execute(TenantAccessor::getCurrentTenant);
 }
-
 ```
 
 :::
@@ -127,7 +271,21 @@ A common way to represent HTTP headers is to use `Map<String, String>` for `1:1`
 To make the transition from either of those representations to the SAP Cloud SDK's `RequestHeaderContainer` as easy as possible, the `DefaultRequestHeaderContainer` offers corresponding factory methods:
 
 - `fromSingleValueMap(Map<String, String>)` and
-- `fromMultiValueMap(Map<String, Collection<String>>)`
+- `fromMultiValueMap(Map<String, ? extends Iterable<String>>)`
+
+The latter one also enables convenient interoperability with the [Spring Headers](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/http/HttpHeaders.html):
+
+```java
+@RequestMapping( method = RequestMethod.GET )
+public ResponseEntity<ExampleResponse> getExample( @RequestHeader final HttpHeaders headers)
+{
+  final RequestHeaderContainer container = DefaultRequestHeaderContainer.fromMultiValueMap(headers);
+
+  RequestHeaderAccessor.executeWithHeaderContainer(container, () -> {
+      Tenant tenant = TenantAccessor.getCurrentTenant();
+  });
+}
+```
 
 Besides these two factory methods, the `DefaultRequestHeaderContainer` also offers the possibility to create an instance of `RequestHeaderContainer.Builder` through the static `builder()` method.
 An example for how the returned `Builder` can be used is shown in the chapter below.
@@ -141,7 +299,7 @@ Therefore, updating an already existing instance is impossible.
 
 **However**, in cases where you would like to, for example, just add a new custom header to the set of existing headers, the `RequestHeaderContainer` offers the `toBuilder` method.
 As the name suggests, this method can be used to retrieve an instance of `RequestHeaderContainer.Builder`.
-In contrast to the `RequestHeaderContainer`, the `Builder` can be **changed** as much as needed.
+In contrast to the `RequestHeaderContainer`, the `Builder` can be **mutated** as much as needed.
 Additionally, the `toBuilder` method will make sure that the returned `Builder` instance is already pre-filled with all HTTP headers that are also present in the instance of `RequestHeaderContainer`.
 
 To make things less theoretical, let's examine an example.
@@ -194,56 +352,3 @@ RequestHeaderAccessor.executeWithHeaderContainer(updatedHeaders, () -> yourBusin
 ```
 
 </details>
-
-### Running Asynchronous Operations
-
-As the name suggests the `ThreadContext` is bound to a thread, more specifically to the one it was created.
-If asynchronous operations need to access the information, it has to be propagated to the new threads.
-
-The following code achieves this:
-
-```java
-ThreadContextExecutor executor = new ThreadContextExecutor();
-Callable operationWithContext = () -> executor.execute(() -> operation());
-
-invokeAsynchronously(operationWithContext);
-```
-
-Take note that the `ThreadContextExecutor` is created _before_ performing the asynchronous operation.
-This is important because only at that time the context is available and will be propagated.
-
-A similar approach can be applied with the `RequestHeader`, `Tenant`, `Principal` and `AuthToken` accessors.
-This code runs an asynchronous operation with a dedicated tenant:
-
-```java
-Callable operationWithTenant = TenantAccessor.executeWithTenant(customTenant, () -> operation());
-
-invokeAsynchronously(operationWithContext);
-```
-
-:::caution CAP Integration
-In case you are using CAP the CAP Request Context needs to be passed on instead of the `ThreadContext`.
-Please refer to [this guide](../../guides/cap-sdk-integration.mdx) on how to achieve this.
-:::
-
-:::danger Thread Lifecycle
-
-Be cautious with long-running, asynchronous operations.
-A propagated thread context will only persist as long as the thread lives that it was created on.
-When the parent thread dies the context will cease to exist and no longer be available in any of the threads.
-
-<details>
-<summary> Workaround </summary>
-You can work around this limitation with the following approach:
-
-```java
-RequestHeaderContainer requestHeaders = RequestHeaderAccessor.tryGetHeaderContainer().getOrElse(RequestHeaderContainer.EMPTY);
-ThreadContextExecutor executor = new ThreadContextExecutor().withThreadContext(new DefaultThreadContext())
-        .withListeners(new RequestHeaderThreadContextListener(requestHeaders));
-
-Callable operationWithContext = () -> executor.execute(() -> operation());
-invokeAsynchronously(operationWithContext);
-```
-
-</details>
-:::

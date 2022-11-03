@@ -31,7 +31,7 @@ export default function Home() {
   return (
     <Layout
       title={`${siteConfig.title}`}
-      description="SAP Cloud SDK is a one stop shop for developing and extending SAP applications in a Cloud"
+      description="SAP Cloud SDK is a one-stop shop for developing and extending SAP applications in the cloud."
     >
       <HomepageHeader />
       <main>
