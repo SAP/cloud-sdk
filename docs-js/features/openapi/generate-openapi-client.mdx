@@ -78,6 +78,7 @@ Run `openapi-generator --help` for additional options.
 | `--tsConfig`                                   | Replace the default `tsconfig.json` by passing a path to a custom configuration. By default, a `tsconfig.json` is only generated, when transpilation is enabled (`--transpile`). If a directory is passed, a `tsconfig.json` file is read from this directory.                                                                                                    |
 | `--verbose`                                    | Turn on verbose logging.                                                                                                                                                                                                                                                                                                                                          |
 | `-c`, `--config`                               | Set the path to the file containing the options for generation. If other flags are used, they overwrite the options set in the configuration file. If a directory is passed, a `config.json` file is read from this directory.                                                                                                                                    |
+| `--prettierConfig`                                     |     default prettier config     |  Configuration file for the prettier if you want to change the default value                                                                                                                           |
 
 ## Configuration File Schema
 
@@ -237,3 +238,10 @@ npm install -D @sap-cloud-sdk/openapi
 ```
 
 If you installed the generator as a `devDependency`, transpilation will work without additional steps.
+
+## Prettier
+
+Since version 2.11.0 the SAP Cloud SDK runs prettier on the generated sources using a default prettier config.
+If you are not happy with the configuration you can provide a custom configuration using the `prettierConfig` command line argument.
+Note that this formatting is done in memory before the files are emitted by the generator so no expensive additional I/O is required.
+Alternatively, you can execute a totally custom formatting step after the generation is finished.
