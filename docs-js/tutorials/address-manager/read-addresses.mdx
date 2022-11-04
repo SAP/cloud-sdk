@@ -1,5 +1,5 @@
 ---
-id: read-addresses
+id: read
 title: Building an Address Manager with the SAP Cloud SDK - Part 1
 sidebar_label: Read Address Data
 description: Build an Address Manager with the SAP Cloud SDK - Part 1
@@ -73,7 +73,7 @@ For simplicity, the `url` is passed directly to the `execute()` method.
 
 :::caution
 
-In real applications, you would use a real SAP S/4HANA system and the [destination service](../../features/connectivity/destination) to avoid leaking private or secret information through hard-coding system properties.
+In real applications, you would use a real SAP S/4HANA system and the [destination service](../../features/connectivity/destination.mdx) to avoid leaking private or secret information through hard-coding system properties.
 
 :::
 
@@ -148,16 +148,16 @@ businessPartnerApi
 }
 ```
 
-As for `select`, you can use the properties of the `BusinessPartner` entity directly for filtering.
-Each property offers a set of functions for constructing filters.
-Every property has the `equals` and `notEquals` function.
-Depending on the type of property, there can be additional functions like `greaterThan` or `greaterOrEqual`.
+As for the `select()` method, you can use the properties of the `BusinessPartner` entity directly for filtering.
+Each property offers a set of methods for constructing filters.
+Every property has a `equals()` and `notEquals()` method.
+Depending on the type of property, there can be additional methods like `greaterThan()` or `greaterOrEqual()`.
 
 Since the type of the property is known, the typed client will prevent you from passing values of the wrong type.
 For example, `businessPartnerApi.schema.FIRST_NAME.equals(1)` would not compile when using TypeScript.
 In JavaScript, the code would only fail at run-time, but your editor may raise a warning for the type mismatch.
 
-For more complicated filter conditions have a look at the [filter documentation](../../features/odata/use-odata-v2-type-safe-client-for-javascript-typescript#filter).
+For more complicated filter conditions have a look at the [filter documentation](../../features/odata/odata-v2-client.mdx#filter).
 
 ## Get Addresses of Business Partner
 
@@ -180,8 +180,8 @@ getBusinessPartnerById(id: string): Promise<BusinessPartner> {
 ```
 
 As before, you call `businessPartnerApi.requestBuilder()` to select the type of request you want to build.
-Since you only want to get a single business partner, you use the `getByKey` function and then call `execute` to execute the request.
-Again, you use the local mock server from the previous section for the `getAll` request.
+Since you only want to get a single business partner, you use the `getByKey()` function and then call `execute()` to execute the request.
+Again, you use the local mock server from the previous section for the `getAll()` request.
 
 As a next step, you need to expose the service via the controller.
 Open the `business-partner.controller.ts` and add the following method:
@@ -193,7 +193,7 @@ getBusinessPartnerById(@Param('id') id: string): Promise<BusinessPartner> {
 }
 ```
 
-The method takes the ID from the URL and passes it to `getBusinessPartnerById` in the service class.
+The method takes the ID from the URL and passes it to `getBusinessPartnerById()` in the service class.
 If a business partner with the provided ID exists in the target system, it will be sent to the client.
 Otherwise, an error message is sent.
 
@@ -252,9 +252,9 @@ return businessPartnerApi
   .execute({ url: 'http://localhost:3000' });
 ```
 
-Properties like `POSTAL_CODE`, `CITY_NAME`, and so on are part of the address API and related schema.
+Properties like `POSTAL_CODE` and `CITY_NAME` are part of the address API and related schema.
 The `businessPartnerAddressApi` is also part of the business partner service.
-If you call the URL `http://localhost:8080/business-partner/<yourId>`, the service returns a single business partner with the selected address information:
+If you call the URL `http://localhost:8080/business-partner/YOUR_ID`, the service returns a single business partner with the selected address information:
 
 ```json
 {
