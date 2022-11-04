@@ -27,6 +27,14 @@ module.exports = {
   projectName: 'cloud-sdk',
   trailingSlash: false,
   themeConfig: {
+    announcementBar: {
+      id: 'feedback_survey',
+      content:
+        'How do you like the SAP Cloud SDK? Share your <a href="https://sapinsights.eu.qualtrics.com/jfe/form/SV_0P69X6kJ0Pdxqbc" style="color: var(--ifm-link-color);text-decoration: var(--ifm-link-decoration);transition: color var(--ifm-transition-fast) var(--ifm-transition-timing-default)">feedback</a>.',
+      backgroundColor: 'var(--ifm-color-secondary)',
+      // textColor: '#091E42',
+      isCloseable: false
+    },
     prism: {
       additionalLanguages: ['powershell', 'java', 'groovy'],
       theme: require('prism-react-renderer/themes/github'),
@@ -75,7 +83,7 @@ module.exports = {
         },
         {
           label: '🚀 JavaScript',
-          to: 'docs/js/overview-cloud-sdk-for-javascript',
+          to: 'docs/js/overview',
           position: 'left',
           docsPluginId: 'docs-js',
           activeBasePath: 'docs/js',
@@ -93,35 +101,56 @@ module.exports = {
           type: 'docsVersionDropdown',
           position: 'right',
           docsPluginId: 'docs-js'
-        }
-        /*{
+        },
+        {
           type: 'docsVersionDropdown',
           position: 'right',
           docsPluginId: 'docs-java'
-        }*/
+        }
       ]
     },
     footer: {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'SAP Cloud SDK for Java',
           items: [
             {
-              label: 'SAP Cloud SDK overview',
-              to: 'docs/overview/overview-cloud-sdk'
-            },
-            {
-              label: 'SAP Cloud SDK for Java',
-              to: 'docs/java/getting-started'
-            },
-            {
-              label: 'SAP Cloud SDK for JS',
-              to: 'docs/js/getting-started'
-            },
-            {
-              label: 'SAP Cloud SDK Tutorials',
+              label: 'Tutorials',
               href: 'https://developers.sap.com/tutorial-navigator.html?tag=products:technology-platform/sap-cloud-sdk/sap-cloud-sdk'
+            },
+            {
+              label: 'Maven',
+              href: 'https://search.maven.org/search?q=g:com.sap.cloud.sdk*'
+            },
+            {
+              label: 'Support',
+              to: 'docs/java/support-java'
+            }
+          ]
+        },
+        {
+          title: 'SAP Cloud SDK for JavaScript',
+          items: [
+            {
+              label: 'Tutorials',
+              to: 'docs/js/tutorials/getting-started/introduction'
+            },
+            {
+              label: 'npm',
+              href: 'https://www.npmjs.com/search?q=%40sap-cloud-sdk'
+            },
+            {
+              label: 'GitHub',
+              href: 'https://github.com/SAP/cloud-sdk-js'
+            },
+            {
+              label: 'Sample repository',
+              href: 'https://github.com/SAP-samples/cloud-sdk-js'
+            },
+            {
+              label: 'Support',
+              to: 'docs/js/support'
             }
           ]
         },
@@ -133,29 +162,20 @@ module.exports = {
               href: 'https://stackoverflow.com/questions/tagged/sap-cloud-sdk'
             },
             {
-              label: 'SAP Developers Portal',
-              href: 'https://developers.sap.com/topics/cloud-sdk.html'
-            },
-            {
               label: 'SAP Cloud SDK Community Page',
               href: 'https://community.sap.com/topics/cloud-sdk'
             },
             {
-              label: 'SAP Cloud SDK on SAP Help',
-              href: 'https://help.sap.com/viewer/product/SAP_CLOUD_SDK/1.0/en-US?task=discover_task'
-            }
-          ]
-        },
-        {
-          title: 'Package Repositories',
-          items: [
-            {
-              label: 'SAP Cloud SDK for JavaScript',
-              href: 'https://www.npmjs.com/search?q=%40sap-cloud-sdk'
+              label: 'SAP Cloud SDK on SAP Answers',
+              href: 'https://answers.sap.com/tags/73555000100800000895'
             },
             {
-              label: 'SAP Cloud SDK for Java',
-              href: 'https://search.maven.org/search?q=g:com.sap.cloud.sdk*'
+              label: 'SAP Cloud SDK on SAP Help',
+              href: 'https://help.sap.com/viewer/product/SAP_CLOUD_SDK/1.0/en-US?task=discover_task'
+            },
+            {
+              label: 'Feedback',
+              href: 'https://sapinsights.eu.qualtrics.com/jfe/form/SV_0P69X6kJ0Pdxqbc'
             }
           ]
         }
@@ -202,6 +222,13 @@ module.exports = {
   ],
   customFields: {},
   plugins: [
+    [
+      './src/plugins/plugin-latest-api-doc',
+      {
+        latestBaseUrl: '/cloud-sdk/api/latest',
+        versions: '../static/api/versions.json'
+      }
+    ],
     [
       '@docusaurus/plugin-content-docs',
       {
@@ -250,22 +277,119 @@ module.exports = {
     [
       '@docusaurus/plugin-client-redirects',
       {
-        createRedirects(existingPath) {
-          if (
-            existingPath.includes('/community') ||
-            existingPath.includes('/related-projects')
-          ) {
-            return existingPath.replace('/docs/overview', '/docs');
+        redirects: [
+          {
+            from: [
+              '/docs/js/frequently-asked-questions',
+              '/docs/js/guides/migrate-to-open-source-version-of-cloud-sdk-for-javascript-typescript'
+            ],
+            to: '/docs/js/overview'
+          },
+          {
+            from: ['/docs/community', '/docs/related-projects'],
+            to: '/docs/overview/overview-cloud-sdk'
+          },
+          {
+            from: '/docs/js/support-js',
+            to: '/docs/js/support'
+          },
+          {
+            from: '/docs/js/release-notes-sap-cloud-sdk-for-javascript-and-typescript',
+            to: '/docs/js/release-notes'
+          },
+          {
+            from: '/docs/js/overview-cloud-sdk-for-javascript',
+            to: '/docs/js/overview'
+          },
+          {
+            from: '/docs/js/video/demo-of-cloud-sdk-for-javascript-with-calm-and-cap',
+            to: '/docs/js/video/calm'
+          },
+          {
+            from: '/docs/js/guides/migrate-sdk-application-from-btp-cf-to-kubernetes',
+            to: '/docs/js/guides/kubernetes'
+          },
+          {
+            from: '/docs/js/guides/bas-external-system',
+            to: '/docs/js/guides/bas'
+          },
+          {
+            from: '/docs/js/guides/how-to-use-the-approuter',
+            to: '/docs/js/guides/approuter'
+          },
+          {
+            from: '/docs/js/guides/how-to-add-resilience',
+            to: '/docs/js/guides/resilience'
+          },
+          {
+            from: '/docs/js/guides/how-to-retrieve-jwt',
+            to: '/docs/js/guides/retrieve-jwt'
+          },
+          {
+            from: '/docs/js/features/connectivity/destination',
+            to: '/docs/js/features/connectivity/destinations'
+          },
+          {
+            from: '/docs/js/features/odata/use-odata-v2-type-safe-client-for-javascript-typescript',
+            to: '/docs/js/features/odata/v2-client'
+          },
+          {
+            from: '/docs/js/features/odata/use-odata-v4-type-safe-client-for-javascript-typescript',
+            to: '/docs/js/features/odata/v4-client'
+          },
+          {
+            from: '/docs/js/features/connectivity/destination-cache-isolation',
+            to: '/docs/js/features/connectivity/destination-cache'
+          },
+          {
+            from: '/docs/js/guides/sdk-in-browser',
+            to: '/docs/js/guides/browser'
+          },
+          {
+            from: '/docs/js/guides/trust-and-key-stores',
+            to: '/docs/js/guides/trust-and-keystores'
+          },
+          {
+            from: '/docs/js/features/connectivity/generic-http-client',
+            to: '/docs/js/features/connectivity/http-client'
+          },
+          {
+            from: '/docs/js/guides/debug-remote-app',
+            to: '/docs/js/guides/remote-debugging'
+          },
+          {
+            from: '/docs/js/features/connectivity/proxy',
+            to: '/docs/js/features/connectivity/proxies'
+          },
+          {
+            from: '/docs/js/tutorials/address-manager/read-addresses',
+            to: '/docs/js/tutorials/address-manager/read'
+          },
+          {
+            from: '/docs/js/tutorials/address-manager/change-addresses',
+            to: '/docs/js/tutorials/address-manager/change'
+          },
+          {
+            from: '/docs/js/features/odata/generate-odata-client',
+            to: '/docs/js/features/odata/generate-client'
+          },
+          {
+            from: '/docs/js/features/odata/execute-odata-request',
+            to: '/docs/js/features/odata/execute-request'
+          },
+          {
+            from: '/docs/js/features/openapi/execute-openapi-request',
+            to: '/docs/js/features/openapi/execute-request'
+          },
+          {
+            from: '/docs/js/features/openapi/generate-openapi-client',
+            to: '/docs/js/features/openapi/generate-client'
+          },
+          {
+            from: '/docs/js/troubleshooting-js',
+            to: '/docs/js/troubleshooting'
           }
-
-          if (existingPath.includes('/js/frequently-asked-questions')) {
-            return existingPath.replace(
-              'frequently-asked-questions',
-              'overview-cloud-sdk-for-javascript'
-            );
-          }
-          return undefined;
-        }
+        ]
       }
     ],
     function nodeWebpackPolyfillPlugin(context, options) {

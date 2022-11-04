@@ -17,7 +17,7 @@ keywords:
 In this article, we will talk about resilience and how to add resilience when using the SAP Cloud SDK.
 In contrast to Java, for JavaScript, there is no standard framework to handle resilience.
 Hence, we have not included resilience features within the SAP Cloud SDK, but leave it up to you which framework you want to use.
-We have prepared examples on the resilience topic in our [samples repository](https://github.com/SAP-samples/cloud-sdk-js/samples/resilience-examples) which illustrate the concepts and pick some widely used `npm` packages.
+We have prepared examples on the resilience topic in our [samples repository](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/resilience-examples) which illustrate the concepts and pick some widely used `npm` packages.
 
 There is one exception to this approach.
 We introduced a circuit-breaker for all calls going to SAP BTP services like XSUAA and the destination service.
@@ -92,7 +92,7 @@ Typical parameters to configure a circuit-breaker are:
 - Fallback: Some alternative actions you want to perform when the breaker is open.
 - Options to calculate the failure rate.
 
-You can find an example using the [opossum](https://nodeshift.dev/opossum/) circuit-breaker [here](https://github.com/SAP-samples/cloud-sdk-js/samples/resilience-examples).
+You can find an example using the [opossum](https://nodeshift.dev/opossum/) circuit-breaker [here](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/resilience-examples).
 
 ## Retries
 
@@ -118,7 +118,7 @@ Typical options for a retry library are:
   Also, adding some random time deviation is distributing the load of parallel retries.
 - Bail: An option to stop the retry for certain failure cases is useful in many cases.
 
-You can find an example using the [async-retry](https://www.npmjs.com/package/async-retry) library [here](https://github.com/SAP-samples/cloud-sdk-js/samples/resilience-examples).
+You can find an example using the [async-retry](https://www.npmjs.com/package/async-retry) library [here](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/resilience-examples).
 
 :::caution
 If you use retries together with a circuit-breaker, choose the options for the two accordingly.

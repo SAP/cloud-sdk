@@ -162,6 +162,14 @@ TenantAccessor.executeWithTenant(tenantB, () -> cachedOperation());
 TenantAccessor.executeWithTenant(tenantB, () -> cachedOperation());
 ```
 
+:::danger Caution
+
+The `executeWith...()` methods depicted above are currently supported only when using the default `Facade` (e.g. `DefaultTenantFacade`) implementations.
+This is an issue especially when using the CAP integration dependency `cds-integration-cloud-sdk`.
+To still switch the isolation context, please refer to [the CAP documentation](https://cap.cloud.sap/docs/java/request-contexts#defining-requestcontext).
+
+:::
+
 You can configure this isolation via the isolation mode of the resilience configuration.
 Set the isolation mode to `NO_ISOLATION` to disable tenant aware caching.
 See the section on isolation levels under [Resilience](https://sap.github.io/cloud-sdk/docs/java/features/resilience/resilience#multi-tenancy) for more details.
