@@ -245,14 +245,14 @@ Currently, the following services are supported out of the box:
 - `service-manager`
 - `xsuaa`
 
-If you need the destination for another custom service, create a function with <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_connectivity.ServiceBindingTransformFunction" name="ServiceBindingTransformFunction type" /> to transform the <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.ServiceBinding" name="ServiceBinding interface" /> into the <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="Destination interface" />.
+If you need the destination for another custom service, create a function with <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_connectivity.ServiceBindingTransformFunction" name="ServiceBindingTransformFunction type" /> to transform the <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Service" name="Service interface" /> into the <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="Destination interface" />.
 Pass the function with the `serviceBindingTransformFn` property in the `DestinationFetchOptions` argument.
 
 For example:
 
 ```ts
-const serviceBindingTransformFn = async (serviceBinding: ServiceBinding) => ({
-  url: serviceBinding.credentials.sys
+const serviceBindingTransformFn = async (service: Service) => ({
+  url: service.credentials.sys
 });
 
 MyRequest.execute({
@@ -421,7 +421,7 @@ In the section above, we listed already a few of the options but this section gi
 
 - `destinationName`: The name of the destination to be fetched.
   This is the only mandatory property, all the other parameters are optional.
-- `serviceBindingTransformFn`: A custom transformation function to control how a `Destination` is built from the given `ServiceBinding`.
+- `serviceBindingTransformFn`: A custom transformation function to control how a `Destination` is built from the given `Service`.
 - `jwt`: The JSON Web Token.
   Crucial in multi-tenant scenarios or for user-dependent authentication flows.
 - `iss`: Issuer URL which can be used to obtain destination for a subscriber tenant if no JWT is present.
