@@ -104,7 +104,7 @@ Legend: ✅ - supported, ❗- partially supported, ❌ - not supported
 - ✅ Multitenancy
 - ✅ Resilience & Caching
 - ✅ Connect to and consume services from SAP S/4HANA Cloud
-- ✅ Connect to and consume services from SAP S/4HANA On-Premise
+- ❌ Connect to and consume services from SAP S/4HANA On-Premise
 - ✅ Seamless use of typed clients provided by the SAP Cloud SDK
 
 ## Getting Started with the SAP Cloud SDK on Kyma
@@ -262,6 +262,9 @@ In case you are facing authorization issues when pushing to your repository refe
                   cpu: '1000m'
               # Volume mounts needed for injecting SAP BTP service credentials
               volumeMounts:
+              env:
+              - name: SERVICE_BINDING_ROOT
+                value: "/etc/secrets/sapbtp"
           imagePullSecrets:
             # In case your repository requires a login, reference your secret here
             - name: <your-secret-for-docker-login>
@@ -431,7 +434,7 @@ spec:
 
       ```yml title="volumeMounts:"
       - name: my-destination-service-binding-volume
-        mountPath: '/etc/secrets/sapcp/destination/my-destination-service-binding'
+        mountPath: '/etc/secrets/sapbtp/my-destination-service-binding'
         readOnly: true
       ```
 
@@ -478,29 +481,6 @@ spec:
 2. Repeat the same steps 2-5 from the previous section but make use of `my-xsuaa-secret` for the steps.
 
 </details>
-
-#### Known XSUAA Service Incompatibility
-
-We have observed that the property `plan` is missing in the XSUAA secret created in the previous section.
-This property, however, is required by the SAP Cloud SDK and it's absence causes runtime errors in the application while trying to read this service binding.
-
-To fix this issue you need to edit the secret so that it contains the `plan` property.
-The easiest way, when you are already using the CLI, is by using the `kubectl edit` command:
-
-```bash
-kubectl edit secrets my-xsuaa-secret
-```
-
-In there, you can now add a `plan` property with one of the following base64 encoded values:
-
-| plan          | base64 encoded value |
-| ------------- | -------------------- |
-| `application` | `YXBwbGljYXRpb24K`   |
-| `broker`      | `YnJva2VyCg==`       |
-| `space`       | `c3BhY2UK`           |
-| `apiaccess`   | `YXBpYWNjZXNzCg==`   |
-
-The resulting service binding can now be consumed with the SAP Cloud SDK.
 
 ### Expose your Application to the Internet
 

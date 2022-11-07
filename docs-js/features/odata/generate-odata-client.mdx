@@ -105,6 +105,7 @@ Run `generate-odata-client --help` for additional options.
 | `--generateJs`                                         |             `true`              |  Generates transpiled `.js`, `.js.map`, `.d.ts` and `.d.ts.map` files. When set to false, the generator will only generate `.ts` files.                                                                |
 | `--processesJsGeneration`                              |              `16`               |  Number of processes used for transpilation of JavaScript files.                                                                                                                                       |
 | `--generateCSN`                                        |             `false`             |  A CSN file will be generated for each service definition in the output directory.                                                                                                                     |
+| `--prettierConfig` available since `2.11.0`            |     default prettier config     |  Configuration file for the prettier if you want to change the default value                                                                                                                           |
 
 ## Generate a Client Programmatically
 
@@ -191,3 +192,10 @@ npm install -D @sap-cloud-sdk/odata-v4
 respectively.
 
 If you installed the generator as a `devDependency`, transpilation will work without additional steps.
+
+## Prettier
+
+Since version 2.11.0, the SAP Cloud SDK runs prettier on the generated sources using a default prettier config.
+If you are not happy with the configuration you can provide a custom configuration using the `prettierConfig` command line argument.
+Note that this formatting is done in-memory before the generator emits the files, so no expensive additional I/O is required.
+Alternatively, you can execute a custom formatting step after the generation is finished.
