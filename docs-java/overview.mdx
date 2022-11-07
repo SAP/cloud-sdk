@@ -98,7 +98,7 @@ Or you can [get a ready-made Http Client](features/connectivity/sdk-connectivity
 
 ### OData and OpenAPI
 
-The SAP Cloud SDK for Java also provides an easy and convenient type safe way to consume OData and OpenAPI services.
+The SAP Cloud SDK for Java also provides an easy and convenient type safe way to consume OData and OpenAPI services in your applications.
 
 You can either generate a typed API client for [OData](https://sap.github.io/cloud-sdk/docs/js/features/odata/generate-client) or [OpenAPI](https://sap.github.io/cloud-sdk/docs/js/features/openapi/generate-client) by using our generators or
 use a pre-generated client available for certain OData services like [SAP S/4HANA Cloud](https://api.sap.com/package/SAPS4HANACloud?section=Artifacts) and [SAP S/4HANA On-premise 2020](https://api.sap.com/package/S4HANAOPAPI?section=Artifacts)
@@ -122,7 +122,19 @@ You can also find detailed steps and a usage example of the SAP Cloud SDK when y
 
 ### Resilience
 
-TBD
+To ensure that applications can handle and recover from potential failures, the SAP Cloud SDK for Java provides abstractions for frequently used resilience patterns like `Timeout`, `Rate limiter`, `Retry`, `Circuit breaker` and `Bulk Head`.
+You can use `ResilienceConfiguration` to define which patterns you need and then use the `ResilienceDecorator` to apply the defined configuration to your desired operations.
+
+For example, to configure a timeout of 100 ms for an operation:
+
+```java
+TimeLimiterConfiguration timeLimiterConfig =
+        TimeLimiterConfiguration.of().timeoutDuration(Duration.ofMillis(100));
+ResilienceConfiguration resilienceConfiguration =
+        ResilienceConfiguration.of("initial-config").timeLimiterConfiguration(timeLimiterConfig);
+ResilienceDecorator.executeSupplier(() -> operation(), configuration);
+```
+You can find more details in our dedicated guide on [Resilience](https://sap.github.io/cloud-sdk/docs/java/features/resilience)
 
 ### Multi Tenancy
 
