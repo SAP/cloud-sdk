@@ -3,9 +3,9 @@ OData supports operations, called actions and functions.
 Actions may have side-effects, functions may not have side-effects.
 
 Actions and functions work quite similar but have differences in some details.
-In the following, we'll refer to *operations* when something applies both to *functions* and *actions*.
+In the following, we'll refer to _operations_ when something applies both to _functions_ and _actions_.
 
-Operations can be *bound* or *unbound*.
+Operations can be _bound_ or _unbound_.
 Bound means that the operation is tied to an entity.
 This is similar to how a method is tied to a class instance in object oriented languages, while functions or "static" methods are not tied to an instance.
 
@@ -21,29 +21,35 @@ The following code snippet shows the syntax for using them:
 
 ```ts
 const {
-	fooApi,
-    actionImports: {
-        unboundActionWithArguments,
-        unboundActionWithoutArguments
-    },
-    functionImports: {
-        unboundFunctionWithArguments,
-        unboundFunctionWithoutArguments }
+  fooApi,
+  actionImports: { unboundActionWithArguments, unboundActionWithoutArguments },
+  functionImports: {
+    unboundFunctionWithArguments,
+    unboundFunctionWithoutArguments
+  }
 } = catalogService();
 
 unboundActionWithoutArguments({}).execute(destination);
-unboundActionWithArguments({ argument1: "foo", argument2: "bar" }).execute(destination);
+unboundActionWithArguments({ argument1: 'foo', argument2: 'bar' }).execute(
+  destination
+);
 
 unboundFunctionWithoutArguments({}).execute(destination);
-unboundFunctionWithArguments({ argument1: "foo", argument2: "bar" }).execute(destination);
+unboundFunctionWithArguments({ argument1: 'foo', argument2: 'bar' }).execute(
+  destination
+);
 
-const entity = fooApi.requestBuilder().getByKey(42).execute(destination)
+const entity = fooApi.requestBuilder().getByKey(42).execute(destination);
 
 entity.boundActionWithoutArguments({}).execute(destination);
-entity.boundActionWithArguments({ argument1: "foo", argument2: "bar" }).execute(destination);
+entity
+  .boundActionWithArguments({ argument1: 'foo', argument2: 'bar' })
+  .execute(destination);
 
 entity.boundFunctionWithoutArguments({}).execute(destination);
-entity.boundFunctionWithArguments({ argument1: "foo", argument2: "bar" }).execute(destination);
+entity
+  .boundFunctionWithArguments({ argument1: 'foo', argument2: 'bar' })
+  .execute(destination);
 ```
 
 ### Response Transformation
