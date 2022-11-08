@@ -1,19 +1,52 @@
-The function import request builder helps build a request for service operations including their parameters.
-Not all services expose function imports.
-We will use the [Warehouse Outbound Delivery Order service](https://api.sap.com/api/API_WHSE_OUTB_DLV_ORDER/resource) as an example.
+OData supports operations, called actions and functions.
+
+Actions may have side-effects, functions may not have side-effects.
+
+Actions and functions work quite similar but have differences in some details.
+In the following, we'll refer to *operations* when something applies both to *functions* and *actions*.
+
+Operations can be *bound* or *unbound*.
+Bound means that the operation is tied to an entity.
+This is similar to how a method is tied to a class instance in object oriented languages, while functions or "static" methods are not tied to an instance.
+
 To learn how to generate an API client from the service definition, look at [this article](features/odata/generate-odata-client.mdx).
 
-The example below creates a function import request builder for the service operation `PostGoodsIssue` and then executes it against your destination.
+### Using Operations
+
+Bound operations are generated into their respective entity class.
+
+Unbound operations are generated into `actionImports` and `functionImports` respectively.
+
+The following code snippet shows the syntax for using them:
 
 ```ts
 const {
-  functionImports: { postGoodsIssue }
-} = warehouseOutboundDeliveryOrderService();
+	fooApi,
+    actionImports: {
+        unboundActionWithArguments,
+        unboundActionWithoutArguments
+    },
+    functionImports: {
+        unboundFunctionWithArguments,
+        unboundFunctionWithoutArguments }
+} = catalogService();
 
-postGoodsIssue({ outboundDeliveryOrder: 'order' }).execute(destination);
+unboundActionWithoutArguments({}).execute(destination);
+unboundActionWithArguments({ argument1: "foo", argument2: "bar" }).execute(destination);
+
+unboundFunctionWithoutArguments({}).execute(destination);
+unboundFunctionWithArguments({ argument1: "foo", argument2: "bar" }).execute(destination);
+
+const entity = fooApi.requestBuilder().getByKey(42).execute(destination)
+
+entity.boundActionWithoutArguments({}).execute(destination);
+entity.boundActionWithArguments({ argument1: "foo", argument2: "bar" }).execute(destination);
+
+entity.boundFunctionWithoutArguments({}).execute(destination);
+entity.boundFunctionWithArguments({ argument1: "foo", argument2: "bar" }).execute(destination);
 ```
 
-The service operation is defined in the service metadata.
+### Response Transformation
 
 If the response structure does not match the transformation type, the promise from `execute(destination)` will be resolved into `undefined`.
 
