@@ -89,11 +89,13 @@ The image below visualises the main components of the SAP Cloud SDK for Java.
 ### Connectivity
 
 The SAP Cloud SDK for Java provides an API that abstracts the details of establishing connections to other systems: The [Destination API](features/connectivity/sdk-connectivity-destination-service).
+This API makes it easy to connect to cloud and On-Premise systems with various authentication methods. 
+Under the hood the SAP Cloud SDK handles all the necessary authorization and token flows that are necessary for the specific destination.
 
 You can [access destinations defined in the SAP BTP Cockpit](features/connectivity/sdk-connectivity-destination-service#accessing-destinations) directly in your code.
 Or you can define your own destinations, for example to [connect to SAP BTP services](features/connectivity/sdk-connectivity-destination-service#skip-destination-creation-step-for-certain-authentication-types-on-cloud-foundry).
 
-You can then use these destinations for performing REST (OpenAPI or OData), RFC or SOAP requests.
+You can then use these destinations to perform REST (OpenAPI or OData), RFC or SOAP requests.
 Or you can [get a ready-made Http Client](features/connectivity/sdk-connectivity-http-client#general-usage) for a destination to execute your own requests.
 
 ### OData and OpenAPI
@@ -114,11 +116,11 @@ The SAP Cloud SDK for Java also provides an easy and convenient type safe way to
 
 <!-- vale on -->
 
-You can either generate a typed API client for [OData](https://sap.github.io/cloud-sdk/docs/js/features/odata/generate-client) or [OpenAPI](https://sap.github.io/cloud-sdk/docs/js/features/openapi/generate-client) by using our generators or
-use a pre-generated client available for certain OData services like [SAP S/4HANA Cloud](https://api.sap.com/package/SAPS4HANACloud?section=Artifacts) and [SAP S/4HANA On-premise 2020](https://api.sap.com/package/S4HANAOPAPI?section=Artifacts)
-and few OpenAPI services like [SAP Workflow Service](https://sap.github.io/cloud-sdk/docs/java/features/rest/clients/scp-workflow-rest-api) and [SAP Business Rules Service](https://sap.github.io/cloud-sdk/docs/java/features/rest/clients/btp-business-rules-rest-api).
+You can use a pre-generated OData client that contains all services of [SAP S/4HANA Cloud](https://api.sap.com/package/SAPS4HANACloud?section=Artifacts) and [SAP S/4HANA On-premise](https://api.sap.com/package/S4HANAOPAPI?section=Artifacts).
+For select OpenAPI services like [SAP Workflow Service](https://sap.github.io/cloud-sdk/docs/java/features/rest/clients/scp-workflow-rest-api) and [SAP Business Rules Service](https://sap.github.io/cloud-sdk/docs/java/features/rest/clients/btp-business-rules-rest-api) a client is also already available with the SAP Cloud SDK.
 
-You can also find detailed steps and a usage example of the SAP Cloud SDK when you search for services in [SAP API Business Hub](https://api.sap.com/).
+Or you can generate your own API client for [OData](https://sap.github.io/cloud-sdk/docs/js/features/odata/generate-client) or [OpenAPI](https://sap.github.io/cloud-sdk/docs/js/features/openapi/generate-client) using the respective generators provided by the SAP Cloud SDK. 
+You can also find detailed steps and a usage examples on the [SAP API Business Hub](https://api.sap.com/).
 
 <!-- vale off -->
 
@@ -136,8 +138,9 @@ You can also find detailed steps and a usage example of the SAP Cloud SDK when y
 
 ### Resilience
 
-To ensure that applications can handle and recover from potential failures, the SAP Cloud SDK for Java provides abstractions for frequently used resilience patterns like `Timeout`, `Rate limiter`, `Retry`, `Circuit breaker` and `Bulk Head`.
-You can use `ResilienceConfiguration` to define which patterns you need and then use the `ResilienceDecorator` to apply the defined configuration to your desired operations.
+To ensure that applications can handle and recover from potential failures, the SAP Cloud SDK for Java provides abstractions for frequently used resilience patterns.
+These patterns include caching, timeouts, retires, rate limiters, circuit breakers and bulkheads.
+You can build a `ResilienceConfiguration` to define which patterns you need and then use the `ResilienceDecorator` to apply them to your operations.
 
 For example, to configure a timeout of 100 ms for an operation:
 
@@ -145,19 +148,24 @@ For example, to configure a timeout of 100 ms for an operation:
 TimeLimiterConfiguration timeLimiterConfig =
         TimeLimiterConfiguration.of().timeoutDuration(Duration.ofMillis(100));
 ResilienceConfiguration resilienceConfiguration =
-        ResilienceConfiguration.of("initial-config").timeLimiterConfiguration(timeLimiterConfig);
+        ResilienceConfiguration.empty("my-resilience-config")
+          .timeLimiterConfiguration(timeLimiterConfig);
+
 ResilienceDecorator.executeSupplier(() -> operation(), configuration);
 ```
 
-You can find more details in our dedicated guide on [Resilience](https://sap.github.io/cloud-sdk/docs/java/features/resilience)
+You can find more details in our dedicated guide on [Resilience](https://sap.github.io/cloud-sdk/docs/java/features/resilience).
 
 ### Multitenancy
 
 Multitenancy enables a single instance of an application to serve multiple technically separated user groups.
+To achieve this the SAP Cloud SDK for Java applies all its features in a tenant and user aware manner by default.
+For example, fetching a destination with the SAP Cloud SDK will fetch and cache it for the *current tenant*.
 
-The SAP Cloud SDK for Java provides tenant and principal isolation to any piece of code you write involving features like resilience patterns,caching etc to ensure that code you write is executed in a tenant aware manner.
+You can access the current tenant or user and other information via the dedicated accessors, for example `TenantAccessor` and `PrincipalAccessor`.
+This enables you to run any code in a tenant aware manner.
 
-This is achieved using the concept of `Thread Context` and you can read more about this on our dedicated guide on [Multitenancy](https://sap.github.io/cloud-sdk/docs/java/features/multi-tenancy/multi-tenancy-thread-context).
+This is achieved using the concept of `ThreadContext` and you can read more about this on the dedicated guide on [Multitenancy](https://sap.github.io/cloud-sdk/docs/java/features/multi-tenancy/multi-tenancy-thread-context).
 
 ## Further Information
 
@@ -171,7 +179,7 @@ Currently supported environments are :
 1. [SAP BTP Cloud Foundry](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/9c7092c7b7ae4d49bc8ae35fdd0e0b18.html)
 2. [K8S](https://kubernetes.io/) , [K8S with SAP Gardener](https://gardener.cloud/)
 3. [SAP BTP Kyma](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/468c2f3c3ca24c2c8497ef9f83154c44.html)
-4. Deploy with Confidence (For Internal customers only)
+4. Deploy with Confidence (For SAP internal customers only)
 5. [SAP BTP Neo](https://help.sap.com/viewer/ea72206b834e4ace9cd834feed6c0e09/Cloud/en-US) (Not recommended for new projects)
 
 ### Supported Java Versions
