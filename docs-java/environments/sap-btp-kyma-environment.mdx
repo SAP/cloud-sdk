@@ -568,14 +568,15 @@ But, this would mean that access to your application would not be authenticated 
 
 ### Prerequisites
 
-On Kyma you need to use the [Transparent Proxy](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/e661713ef7d14373b57e3e26b0b03b86.html) to connect to On-Premise systems with the SAP Cloud SDK for Java.
+This guide assumes you have both the **Transparent Proxy** and **Connectivity Proxy** installed in your cluster.
+Please refer to [this](https://github.com/SAP-samples/kyma-runtime-extension-samples/tree/main/connectivity-proxy) and [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/23fc1100c60b45c58f09694b7f9c7700.html) documentation on how to install it if you haven't already.
 
-:::caution Installing the Transparent Proxy
-This guide assumes you have both the Transparent Proxy and Connectivity Proxy installed in your cluster.
-Please refer to [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/1c18e0ca10884dad994fc3d7e1d046d7.html) and [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/23fc1100c60b45c58f09694b7f9c7700.html) documentation on how to install it if you haven't already.
+:::note Kyma Compatibility
+When using the Connecitivty Proxy provided by Kyma the [Transparent Proxy](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/e661713ef7d14373b57e3e26b0b03b86.html) is required to connect to On-Premise systems with the SAP Cloud SDK for Java.
+In case you operate the Connectivity Proxy yourself in "untrusted mode" you can also refer to [this guide](./sap-btp-kubernetes-environment-with-sap-gardener) for using the Connectivity Proxy without Transparent Proxy.
 :::
 
-### Create a Kubernetes Resource
+### Background Information
 
 When using the Transparent Proxy your app performs requests against the Transparent Proxy without explicit authentication, relying on the secure network communication provided by Kyma via Istio.
 The Transparent Proxy will obtain the relevant destination from the destination service and use it to forward the request via the Connectivity Proxy to the On-Premise system.
@@ -585,6 +586,8 @@ Consequently, your app itself does not interact with destination or connectivity
 This approach is conceptually different from what you may be used to from a CloufdFoundry environment.
 The official [documentation of the Transparent Proxy](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/e661713ef7d14373b57e3e26b0b03b86.html) gives more information on the architecture.
 :::
+
+### Create a Kubernetes Resource
 
 Create the following YAML file:
 

@@ -445,19 +445,20 @@ We generally recommend to go with approach (1) unless the given limitations appl
 
 ### 1. Using Transparent and Connectivity Proxies
 
-When using the Transparent Proxy your app performs requests against the Transparent Proxy without explicit authentication, assuming the network in your cluster can be trusted.
+#### Prerequisites
 
+This guide assumes you have both the **Transparent Proxy** and **Connectivity Proxy** installed in your cluster.
+Please refer to [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/1c18e0ca10884dad994fc3d7e1d046d7.html) and [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/23fc1100c60b45c58f09694b7f9c7700.html) documentation on how to install it if you haven't already.
+
+#### Background Information
+
+When using the Transparent Proxy your app performs requests against the Transparent Proxy without explicit authentication, assuming the network in your cluster can be trusted.
 The Transparent Proxy will obtain the relevant destination from the destination service and use it to forward the request via the Connectivity Proxy to the On-Premise system.
 Consequently, your app itself does not interact with destination or connectivity service at all and thus does not require bindings to these two services.
 
 :::tip
 This approach is conceptually different from what you may be used to from a CloufdFoundry environment.
 The official [documentation of the Transparent Proxy](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/e661713ef7d14373b57e3e26b0b03b86.html) gives more information on the architecture.
-:::
-
-:::caution Installing the Transparent Proxy
-This guide assumes you have both the Transparent Proxy and Connectivity Proxy installed in your cluster.
-Please refer to [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/1c18e0ca10884dad994fc3d7e1d046d7.html) and [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/23fc1100c60b45c58f09694b7f9c7700.html) documentation on how to install it if you haven't already.
 :::
 
 #### Create a Kubernetes Resource
@@ -505,15 +506,14 @@ Repeat this process for all _destination names_ you want to use in your applicat
 
 ### 2. Using the Connectivity Proxy
 
-When using the Connectivity Proxy exclusively, without Transparent Proxy, you need to pass dedicated configuration to your deployment.
+#### Prerequisites
 
-:::caution Installing the Connectivity Proxy
-This guide assumes you have the Connectivity Proxy installed in the _"untrusted"_ mode in your cluster.
-Please note that the untrusted mode requires a service binding or service key for an XSUAA service instance.
-You will need this binding/key in the steps below.
+This guide assumes you have the Connectivity Proxy installed in the [**untrusted mode**](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/148bbad274e545efa10de8a356dd474d.html) in your cluster.
+In case you used the Helm chart to install the proxy, the untrusted mode is enabled if the property `config.servers.proxy.http.enableProxyAuthorization` is set to `true`.
+Please refer to [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/23fc1100c60b45c58f09694b7f9c7700.html) documentation on how to install the Connectivity Proxy if you haven't already.
 
-Please refer to [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/23fc1100c60b45c58f09694b7f9c7700.html) documentation on how to install it if you haven't already.
-:::
+The untrusted mode requires a service binding or service key for an XSUAA service instance.
+Make sure you have this binding/key at hand as you will need it in the steps below.
 
 ### Create a Kubernetes Secret
 
