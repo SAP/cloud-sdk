@@ -392,6 +392,7 @@ module.exports = {
         ]
       }
     ],
+    require.resolve('@docusaurus/plugin-ideal-image'),
     function nodeWebpackPolyfillPlugin(context, options) {
       return {
         name: 'nodeWebpackPlyfill',
