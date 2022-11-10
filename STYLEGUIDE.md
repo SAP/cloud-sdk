@@ -474,20 +474,20 @@ Use 'please' only when what you're asking for:
 
 ### Words To Avoid
 
-- currently - For features, as this is implied
-- soon, new, future - Avoid in timeless documentation because such words can become outdated
-- so on - Instead use etc.
-- first-class - Socially-charged terms for technical concepts where appropriate
-- just - Filler word
-- per - Avoid per in contexts other than rate units.
+- **currently**: For features, as this is implied
+- **soon, new, future**: Avoid in timeless documentation because such words can become outdated
+- **so on**: Instead use etc.
+- **first-class**: Socially-charged terms for technical concepts where appropriate
+- **just**: Filler word
+- **per**: Avoid per in contexts other than rate units.
 
   ❌ Per the specification
 
-- utilize - Don't use utilize when you mean 'use'.
+- **utilize**: Don't use utilize when you mean 'use'.
 
   ❌ we utilize the passport library.
 
-- typically - Use to describe what is usual or expected under normal circumstances.
+- **typically**: Use to describe what is usual or expected under normal circumstances.
   Don't use as the first word in a sentence, as doing so can leave the meaning open to misinterpretation.
 
 ### Usage Guidance for Commonly Used Terms
