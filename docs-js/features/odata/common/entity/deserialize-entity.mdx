@@ -4,18 +4,24 @@ Fields unknown according to the specification are added as custom fields, withou
 Note that this function is not part of a specific service and has to be imported from the SAP Cloud SDK core package.
 
 ```ts
-import { deserializeEntity } from '@sap-cloud-sdk/odata-v2';
+import {
+  defaultDeSerializers,
+  entityDeserializer
+} from '@sap-cloud-sdk/odata-v2';
+import { businessPartnerService } from './generated/business-partner-service';
 
-const businessPartner = deserializeEntity(
-  {
-    FirstName: 'Peter',
-    LastName: 'Pan',
-    to_BusinessPartnerAddress: [
-      {
-        Country: 'Neverland'
-      }
-    ]
-  },
-  BusinessPartner
-);
+const { businessPartnerApi } = businessPartnerService();
+const originalEntity = {
+  FirstName: 'Peter',
+  LastName: 'Pan',
+  to_BusinessPartnerAddress: [
+    {
+      Country: 'Neverland'
+    }
+  ]
+};
+
+const deserializedEntity = entityDeserializer(
+  defaultDeSerializers
+).deserializeEntity(originalEntity, businessPartnerApi);
 ```
