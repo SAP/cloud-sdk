@@ -6,6 +6,7 @@ import SelectContent from './select.mdx';
 import SubqueriesInExpandContent from './subqueries-in-expand.mdx';
 import FunctionImportKnownIssuesContent from './function-import-known-issues.mdx';
 import ChangeSetExampleContent from './changeset-example.mdx';
+import RequestBuilderContent from './request-builder.mdx';
 
 export function ExpandSelect() {
   return <ExpandSelectContent />;
@@ -33,4 +34,8 @@ export function FunctionImportKnownIssues() {
 
 export function ChangeSetExample() {
   return <ChangeSetExampleContent />;
+}
+
+export function RequestBuilder() {
+  return <RequestBuilderContent />;
 }
