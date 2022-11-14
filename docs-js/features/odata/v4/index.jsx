@@ -5,9 +5,8 @@ import FilterParentChildContent from './filter-parent-child.mdx';
 import SelectContent from './select.mdx';
 import SubqueriesInExpandContent from './subqueries-in-expand.mdx';
 import FunctionImportKnownIssuesContent from './function-import-known-issues.mdx';
-import ActionImportContent from './action-import.mdx';
-import ActionImportKnownIssuesContent from './action-import-known-issues.mdx';
 import ChangeSetExampleContent from './changeset-example.mdx';
+import RequestBuilderContent from './request-builder.mdx';
 
 export function ExpandSelect() {
   return <ExpandSelectContent />;
@@ -33,14 +32,10 @@ export function FunctionImportKnownIssues() {
   return <FunctionImportKnownIssuesContent />;
 }
 
-export function ActionImport() {
-  return <ActionImportContent />;
-}
-
-export function ActionImportKnownIssues() {
-  return <ActionImportKnownIssuesContent />;
-}
-
 export function ChangeSetExample() {
   return <ChangeSetExampleContent />;
+}
+
+export function RequestBuilder() {
+  return <RequestBuilderContent />;
 }
