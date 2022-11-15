@@ -59,7 +59,8 @@ module.exports = {
         'guides/approuter',
         'guides/resilience',
         'guides/retrieve-jwt',
-        'guides/remote-debugging'
+        'guides/remote-debugging',
+        'guides/api-business-hub-download-specification'
       ]
     },
     {
