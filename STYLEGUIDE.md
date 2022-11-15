@@ -156,6 +156,9 @@ It should have a descriptive name as a default value.
 
 ### Use Code Format in Italics in Inline Text
 
+Verify that this is rendered correctly.
+This does not apply if the placeholder is part of a longer string in code format (see next rule).
+
 ❌ where `<YOUR-APPLICATION-NAME>` is replaced by the name you specified.
 
 ✅ Replace _`YOUR_APPLICATION_NAME`_ with the application name.
@@ -317,9 +320,9 @@ Do not use italics or quotes.
 
 ### Follow the Capitalization as It Appears on the Page
 
-❌ press the `Get new access token` button to retrieve a token
+❌ press the **Get new access token** button to retrieve a token
 
-✅ Click `Get New Access Token` to retrieve a token
+✅ Click **Get New Access Token** to retrieve a token
 
 <!-- vale off -->
 

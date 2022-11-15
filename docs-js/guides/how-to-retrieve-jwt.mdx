@@ -100,22 +100,22 @@ For a faster feedback cycle, it is convenient to test things locally without dep
 In some cases, applications rely on a JWT to set scopes or propagate a user to external systems.
 In such a case, you can obtain the JWT using Postman:
 
-- create a new request
-- go to the "Authorization tab of the request
-- select "OAuth 2.0" as a type
-- fill the following values in the user interface:
+- Create a new request
+- Go to the **Authorization** tab of the request
+- Select **OAuth 2.0** as a type
+- Fill the following values in the user interface:
   - `Callback URL`: Path to the application protected by the XSUAA
   - `Auth URL`: Path to the authentication endpoint using your subdomain and the values for the callback URL e.g. `https://<subdomain>.authentication.sap.hana.ondemand.com/oauth/authorize?redirect_uri=<callbackUrl>`
   - `Token URL`: Path to the token endpoint using your subdomain, e.g., `https://<subdomain>.authentication.sap.hana.ondemand.com/oauth/token`
   - `Client ID` and `Client secret` for the XSUAA service (either VCAP variables or service keys)
-  - uncheck the `Authorize using browser checkbox`
-- press the `Get new access token` button to retrieve a token
+  - Uncheck **Authorize using browser**
+- Press **Get new access token** to retrieve a token
 - Postman will open a window showing the IdP login form
-- enter username and password
+- Enter username and password
 - Postman shows the retrieved token that you can copy
 
 Cookies will remember the entered username and password.
-This makes re-fetching a new token super quick when your old token expires.
+This makes re-fetching a token faster when your old token expires.
 Remove the cookies in case you want to start fresh.
 
 ![](../img/postman-oauth-token.png)
@@ -126,10 +126,10 @@ In some situations, it is necessary to retrieve a JWT programmatically.
 We have implemented the OAuth 2.0 flow for our internal E2E tests and the implementation involves many steps.
 We will give a high-level overview.
 
-- retrieve a `code` from the XSUAA
-- initial GET request on XSUAA: `https://<xsuaaUrl>/oauth/authorize?client_id=<clientId>&redirect_uri=<redirectUri>&response_type=code`
+- Retrieve a `code` from the XSUAA
+- Initial GET request on XSUAA: `https://<xsuaaUrl>/oauth/authorize?client_id=<clientId>&redirect_uri=<redirectUri>&response_type=code`
 - This will provide cookies for all upcoming XSUAA requests.
-- retrieve a SAML request from the XSUAA: `https://<xsuaaUrl>/saml/login/alias/<subdomain>.<host>`
+- Retrieve a SAML request from the XSUAA: `https://<xsuaaUrl>/saml/login/alias/<subdomain>.<host>`
 - Transform the SAML request into a SAML response via the IdP.
   This involves multiple redirected requests with a lot of cookies and request parameters passed around.
   In the browser redirects with the `set-cookie` and `location` headers work well.

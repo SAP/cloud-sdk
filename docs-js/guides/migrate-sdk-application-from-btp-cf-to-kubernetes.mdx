@@ -13,9 +13,9 @@ keywords:
   - kubernetes
 ---
 
-# How to Migrate a CloudFoundry Application to a Kubernetes Cluster
+# How to Migrate a Cloud Foundry Application to a Kubernetes Cluster
 
-In this how-to, we will show step-by-step what is necessary to migrate an application from CloudFoundry to Kubernetes.
+In this how-to, we will show step-by-step what is necessary to migrate an application from Cloud Foundry to Kubernetes.
 
 1. We decide what kind of environment we are creating.
    Is it a proof-of-concept (PoC), staging, or productive environment?
@@ -35,7 +35,7 @@ Select the type of environment you're planning to build and click on it to jump 
 
 ## Simple PoC Environments
 
-For a simple PoC, we can create and bind services in CloudFoundry, or preferably even use already existing service bindings.
+For a simple PoC, we can create and bind services in Cloud Foundry, or preferably even use already existing service bindings.
 
 ### Prerequisites
 
@@ -89,7 +89,7 @@ For a staging environment where you want to try out different services or experi
 
 ### Configure the Service Manager
 
-First, create a service manager instance in CloudFoundry with the `subaccount-admin` plan.
+First, create a service manager instance in Cloud Foundry with the `subaccount-admin` plan.
 
 To be able to create a service manager, you will need sufficient privileges in the SAP BTP Cloud Foundry.
 Follow the steps below to get them:
@@ -511,7 +511,7 @@ spec:
       targetPort: 3000
 ```
 
-Next, check your shoot-cluster YAML for the currently configured DNS.
+Next, check your shoot-cluster YAML for the configured DNS.
 The shoot-cluster YAML should be located in your Gardener project's dashboard, under the YAML tab.
 It should be a field that looks like this:
 
@@ -623,12 +623,14 @@ Accessing any path should open an authentication window.
 ## On-Premise Connectivity
 
 :::danger
+
 On-Premise connectivity in Kubernetes is currently not available for external SAP customers.
 This might be changed in the near future.
 We'll be updating our documentation accordingly.
+
 :::
 
-To connect to On-Premise systems inside a Kubernetes cluster, you need to use the `Connectivity Proxy`.
+To connect to on-premise systems inside a Kubernetes cluster, you need to use the `Connectivity Proxy`.
 The following guide will show you what has to be done to create and use it.
 
 1. You need to create a route for the `Connectivity Proxy` to use.
@@ -774,8 +776,8 @@ config:
         enableProxyAuthorization: false
 ```
 
-7. For your application to reach On-Premise destinations, it needs to provide the proxy settings and the token URL.
-   Currently, you have to add them manually to the `secret` containing the service binding.
+7. For your application to reach on-premise destinations, it needs to provide the proxy settings and the token URL.
+   You have to add them manually to the `secret` containing the service binding.
 
 To do this, use the following code snippet:
 
@@ -809,7 +811,7 @@ Below is an example using the SAP BTP Operator, to create an XSUAA with a very g
 For your application, it is recommended to point directly at your specific URI.
 
 If you are not using the SAP BTP Operator, you still have to provide the same parameters but in a different format.
-In CloudFoundry, for instance, you have to provide these parameters in `JSON` format.
+In Cloud Foundry, for instance, you have to provide these parameters in JSON format.
 
 ```yaml
 apiVersion: services.cloud.sap.com/v1alpha1
@@ -969,7 +971,7 @@ spec:
                   number: 8080
 ```
 
-5. Be aware that just like in SAP BTP CloudFoundry, you have to collect the principal's `JWT` from the authentication header after executing one of the requests with our typed client libraries.
+5. Be aware that just like in SAP BTP Cloud Foundry, you have to collect the principal's `JWT` from the authentication header after executing one of the requests with our typed client libraries.
    Here is an example utilizing our `retrieveJwt` function:
 
 <!-- vale Vale.Spelling = NO -->
