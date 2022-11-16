@@ -18,7 +18,7 @@ keywords:
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
 To learn how to generate an OData client, follow this [tutorial](../../tutorials/getting-started/introduction.mdx).
-For this article, we assume you have generated a client for the [Business Partner service from SAP S/4HANA Cloud](https://api.sap.com/api/API_BUSINESS_PARTNER/overview).
+This article assumes you have generated a client for the [Business Partner service from SAP S/4HANA Cloud](https://api.sap.com/api/API_BUSINESS_PARTNER/overview).
 
 ## Making a First API Call
 
@@ -40,11 +40,11 @@ What happens in the background for this call:
 - Handling of CSRF token
 - Serializing and deserializing the request
 
-In this document, we focus on the **proxy** part and explain how proxies are handled by the SAP Cloud SDK.
+This document focuses on the **proxy** part and explains how proxies are handled by the SAP Cloud SDK.
 
 ## What Kind of Proxies are There?
 
-Before we get into the details, it is important to have an overview of the different proxy types.
+It is important to have an overview of the different proxy types.
 There are three possible types of proxies:
 
 1. A local proxy running on the cloud platform that connects to SAP S/4HANA On-premise systems.
@@ -138,14 +138,13 @@ This is possible using the `NO_PROXY` environment variable.
 The `NO_PROXY` variable contains a list of comma-separated URLs for which no proxy is used.
 Wild cards like `*` are supported in the list.
 
-If `PrivateLink` is selected we use the same flow as we do for proxy type `Internet`.
+If you select `PrivateLink`, the flow is the same as for proxy type `Internet`.
 
 ## A Word on the Used Libraries and Implementation Details
 
 The SAP Cloud SDK uses axios to execute `http` requests.
 In principle axios should support web proxies based on the environment variables.
-However, we found that the request URL using a proxy was not correctly constructed and for the connectivity proxy, an entry point was necessary anyhow.
-
+However, the request URL using a proxy was not correctly constructed and an entry point for the connectivity proxy was anyhow necessary.
 Hence, the SAP Cloud SDK switches off the built-in proxy handling by axios completely by using the following axios request configuration.
 
 ```json
