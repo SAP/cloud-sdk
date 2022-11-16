@@ -1,10 +1,10 @@
 ---
 id: upgrade-to-version-2
-title: How to upgrade to version 2.0 of the SAP Cloud SDK for JavaScript
+title: How to upgrade to version 2 of the SAP Cloud SDK for JavaScript
 hide_title: false
 hide_table_of_contents: false
-sidebar_label: Upgrade to version 2.0
-description: This document will guide you through the upgrade process from version 1.X.Y to 2.0.
+sidebar_label: Upgrade to version 2
+description: This document will guide you through the upgrade process from version 1 to 2.
 ---
 
 ## Overview
@@ -45,7 +45,7 @@ We will publish updated clients containing version 2.0 of the SAP Cloud SDK afte
 Once these clients are available, follow the following steps:
 
 - Find the used clients in your `package.json`.
-- Change the used version of the client from 1.X.Y to 2.0.0.
+- Change the used version of the client to `^2.0.0`.
 - Update entity imports using the steps described [here](#update-entity-imports).
 - Change the `builder()` call as described [here](#breaking-change-on-the-entitybuilder-api).
 - Find the invocations of the request builders.
@@ -63,7 +63,7 @@ If you are unsure if you have generated clients use this RegExp `class.*RequestB
 We assume that you have installed the generator as a local `devDependency` in your project:
 
 - Find the installed generator in your `package.json`.
-- Update the version from 1.X.Y to 2.0.0 using steps as described [here](#update-generator).
+- Update the version to `^2.0.0` using steps as described [here](#update-generator).
 - Regenerate the client with the updated generator as described [here](../features/odata/generate-odata-client.mdx).
 - Change the `builder()` call as described [here](#breaking-change-on-the-entitybuilder-api).
 - Find the invocations of the request builders.
@@ -119,7 +119,7 @@ Please create a [support issue](https://github.com/SAP/cloud-sdk-js/issues/new/c
 
 ### Update Entity Imports
 
-In version 1.X.Y of the SAP Cloud SDK, each entity (e.g. `BusinessPartner`) was imported directly:
+In version 1 of the SAP Cloud SDK, each entity (e.g. `BusinessPartner`) was imported directly:
 
 ```ts
 import {
@@ -131,7 +131,7 @@ import {
 This has been changed in version 2.0.
 
 - Each entity now has its API class (e.g. `MyEntityApi`).
-- A new service function (e.g. `myEntityService`) provides getters for instances of all the entities' API classes, which can be consumed via [JavaScript Object Destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment).
+- A new service function (e.g. `myEntityService()`) provides getters for instances of all the entities' API classes, which can be consumed via [JavaScript Object Destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment).
 
 To access an entity, you need to import the service and destructure the API class objects.
 To do so, first update the imports following the steps:
@@ -151,6 +151,7 @@ const { businessPartnerApi, businessPartnerAddressApi } =
 ```
 
 :::danger
+
 You should use the object destructuring like the example above instead of calling the service multiple times for every API object, to avoid initializing multiple service instances.
 Here is a **BAD** example, that you should **NOT** follow:
 
@@ -165,7 +166,9 @@ const businessPartnerAddressApi =
 :::
 
 :::note
+
 The API object getters (e.g. `businessPartnerApi`) are denoted using camel case, whereas the corresponding classes (e.g. `BusinessPartnerApi`) follow pascal case.
+
 :::
 
 ### Breaking Change on the `EntityBuilder` API
@@ -175,7 +178,8 @@ For the implementation of the [(de-)serializers](../features/odata/odata-v2-clie
 The static `builder()` method has been renamed to `entityBuilder()` and it is now an instance method on the entity API class:
 
 ```js
-//Version 1.X.Y
+// Version 1
+
 MyEntity.builder()
   .getAll()
   .firstName('Peter')
@@ -183,7 +187,8 @@ MyEntity.builder()
   .toMyRelatedEntity([MyRelatedEntity.builder().country('Neverland').build()])
   .build();
 
-//Version 2.0.0
+// Version 2
+
 const { myEntityApi, myRelatedEntityAPI } = myEntityService();
 myEntityApi
   .entityBuilder()
@@ -197,19 +202,21 @@ myEntityApi
 
 ### Breaking Change on the `RequestBuilder` API
 
-To make the [middle ware concept](../features/odata/v2-client#customize-de-serialization) possible, it was necessary to add more state to the `requestBuilder`.
+To make the [middleware concept](../features/odata/v2-client#customize-de-serialization) possible, it was necessary to add more state to the request builder.
 
 All the static properties used to build select or filters are also now part of an instance and are exposed via a `schema` property.
-The `requestBuilder` is also not a static method anymore but an instance method of an API object:
+The `requestBuilder()` method is also not a static method anymore but an instance method of an API object:
 
 ```js
-//Version 1.X.Y
+// Version 1
+
 MyEntity.requestBuilder()
   .getAll()
   .select(MyEntity.FIRST_NAME, MyEntity.LAST_NAME)
   .execute(destination);
 
-//Version 2.0.0
+// Version 2
+
 const { myEntityApi } = myEntityService();
 myEntityApi
   .requestBuilder()
@@ -222,7 +229,7 @@ myEntityApi
 
 The breaking change which will affect most users is the change in the execute methods.
 In the past, there was a separate `DestinationNameAndJwt` object and a `DestinationOptions` to define how a destination was fetched from the service.
-In version 2.0, there are two changes:
+In version 2, there are two changes:
 
 - There is a single object `DestinationFetchOptions` containing all information.
 - The property `userJwt` was renamed to just `jwt`.
@@ -230,7 +237,8 @@ In version 2.0, there are two changes:
 A typical API adjustment would look like this:
 
 ```js
-//Version 1.X.Y
+// Version 1
+
 MyEntity.requestBuilder()
   .getAll()
   .execute(
@@ -238,7 +246,8 @@ MyEntity.requestBuilder()
     { useCache: true }
   );
 
-//Version 2.0.0
+// Version 2
+
 const { myEntityApi } = myEntityService();
 myEntityApi.requestBuilder().getAll().execute({
   destinationName: 'myDestination',
@@ -253,7 +262,8 @@ But the same changes apply to all places the two objects (`DestinationNameAndJwt
 Prominent examples are the `executeHttpRequest()`, `executeRaw()` or `getDestination()` methods:
 
 ```js
-//Version 1.X.Y
+//Version 1
+
 getDestination('myDestination', { userJwt: 'yourJwt', useCache: true });
 
 executeHttpRequest(
@@ -261,7 +271,8 @@ executeHttpRequest(
   { method: 'get' }
 );
 
-//Version 2.0.0
+//Version 2
+
 getDestination({
   destinationName: 'myDestination',
   jwt: 'yourJwt',
@@ -338,13 +349,13 @@ In most situations, it should be natural in which module the original object is 
 You can search for the method in two places:
 
 - You can do a code search on GitHub e.g. `https://github.com/SAP/cloud-sdk-js/search?q=function+getDestination` to quickly find the package.
-- You can search in the [API specification](https://sap.github.io/cloud-sdk/api/) and select version 2.0.
+- You can search in the [API specification](https://sap.github.io/cloud-sdk/api/) and select version 2.
 
-Note that for the `executeHttpRequest`, the new API offers all the destination retrieval options.
+Note that for version 2 the `executeHttpRequest()` function offers all the destination retrieval options.
 
-### How to Install 2.0 Dependencies
+### How to Install Version 2 Dependencies
 
-This section lists the commands for removing old dependencies and installing new dependencies in the correct version.
+This section lists the commands for removing old dependencies and installing dependencies in the correct version.
 
 To remove the `@sap-cloud-sdk/core` package from `node_modules` and `package.json`, run the below command in your project's terminal:
 
@@ -352,7 +363,7 @@ To remove the `@sap-cloud-sdk/core` package from `node_modules` and `package.jso
 npm uninstall --save @sap-cloud-sdk/core
 ```
 
-Once you have found the new packages to replace `@sap-cloud-sdk/core`, install them using the relevant commands below:
+Once you have found the packages to replace `@sap-cloud-sdk/core`, install them using the relevant commands below:
 
 ```bash
 npm install @sap-cloud-sdk/http-client

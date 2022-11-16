@@ -42,14 +42,10 @@ All requests against the `businessPartnerApi` will now use the custom (de-)seria
 
 #### Using (De-)Serializers for Temporal
 
-The SAP Cloud SDK currently uses Moment.js to handle dates and time.
-Moment.js makes up a major portion of the SAP Cloud SDK's dependencies and it is not actively developed anymore.
-We didn't want to replace Moment.js with another library, but rather use the capabilities of the JavaScript language.
 [Temporal](https://tc39.es/proposal-temporal/docs/) is a stage 3 proposal for a date/time API in ECMAScript.
 At the time, there is polyfill available, but it is not recommended for productive use.
-Once it is recommended for productive use, the SAP Cloud SDK will adapt it as a default.
-However, for non-productive use cases, you can exchange the default date/time handling with Temporal-based (de-)serializers as of today.
-For this we provide the Temporal-based (de-)serializers as a separate npm package, `@sap-cloud-sdk/temporal-de-serializers`.
+Once it is recommended for productive use, the SAP Cloud SDK will adapt it as the default over Moment.js.
+Temporal-based (de-)serializers for the SAP Cloud SDK are available as a separate npm package, `@sap-cloud-sdk/temporal-de-serializers`.
 
 Adapt your code to use this package, for example:
 
