@@ -20,7 +20,7 @@ import ThemedImage from '@theme/ThemedImage';
 
 SAP S/4HANA On-Premise systems are located within a company's internal network.
 They are not exposed to the internet.
-The SAP Cloud SDK provides helpful features that allow you to connect to on-premise systems.
+The SAP Cloud SDK provides helpful features to allow connecting to on-premise systems.
 
 Since this isolation contradicts modern requirements of data availability, SAP has introduced the [Cloud Connector](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e6c7616abb5710148cfcf3e75d96d596.html?q=cloud%20connector).
 The Cloud Connector works like a reverse proxy, opening a connection between some allowlisted service endpoints of the on-premise system and the connected Cloud Foundry account.
@@ -61,7 +61,7 @@ The proxy is only reachable from the Cloud Foundry space, so you cannot use that
 For quick local test purposes, a deployment to Cloud Foundry is tedious and the following workarounds are possible:
 
 - [SAP Business Application Studio](../../guides/bas-external-system.mdx) has some built-in functionality to connect to Cloud Foundry.
-- If you are in a VPN from where the on-premise system is reachable, use a [environment destination](./destination.mdx) to access the system directly.
+- If you are in a VPN from where the on-premise system is reachable, use an [environment destination](./destination.mdx) to access the system directly.
 - You can also use an existing application with a bound connectivity service as an ssh tunnel:
   - Enable ssh for the application as described [here](https://docs.cloudfoundry.org/devguide/deploy-apps/ssh-apps.html)
   - Open an ssh tunnel with forwarding via the ` cf ssh MY-APP -L LOCAL-HOST:LOCAL-PORT:REMOTE-HOST:REMOTE-HOST-PORT` command.
