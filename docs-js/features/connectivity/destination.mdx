@@ -63,7 +63,7 @@ All statements apply equally to OData- and OpenAPI-based services.
 
 ## Creating Destinations Manually
 
-::: caution
+:::caution
 
 This option is **not recommended** for productive use as you would lose the benefits of separating destinations from applications.
 
@@ -95,7 +95,7 @@ The search stops once a matching destination is found, even if other locations m
 
 ### Local Environment Variable
 
-::: caution
+:::caution
 
 This option should **only be used for testing purposes in a local environment** outside the SAP BTP where no destination services are available.
 Use [Register Destination](#register-destination) to cache destinations in production.
@@ -131,7 +131,7 @@ At runtime, the SAP Cloud SDK will check the environment variable for a destinat
 The SAP Cloud SDK also offers a `mockTestDestination()` method, which reads in a `systems.json` and `credentials.json` to create destinations.
 The advantage of files is that they can be excluded from the repository since they contain sensitive information.
 
-::: caution
+:::caution
 
 Note that this approach is **not suitable for multi-tenant scenarios**, because only the destination service can return destinations for different tenants.
 
@@ -162,7 +162,7 @@ MyRequest.execute({ destinationName: 'MY-DESTINATION' });
 Functions such as `execute()` and `executeHttpRequest()` call the `getDestination()` function internally for the destination lookup.
 During the lookup, if a registered destination is found, the lookup is stopped, and the call to the destination service is avoided.
 
-::: caution
+:::caution
 
 You can register a full destination object, including authentication, but it is **not recommended** to store authentication information in the registered destination.
 Instead, you should enable token forwarding on the destination.
@@ -469,7 +469,7 @@ If you want to make HTTPS requests against systems that use certificates from ot
 
 For additional information on trust configuration have a look at [the more detailed guide](../../guides/trust-and-key-stores.mdx).
 
-::: danger
+:::danger
 
 Please use the `TrustAll` with **great caution** since it opens the gate to man-in-the-middle attacks.
 
