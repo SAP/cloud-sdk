@@ -26,7 +26,7 @@ The idea behind this tutorial is to explain the main concepts of multi-tenant ap
 The code in the example is not a copy-paste solution for productive use but a didactic sample.
 You need to adjust things like application names or routes for your use case.
 
-The term `multi-tenant application` is more or less a synonym for a software as a service (SaaS) offering.
+The term "multi-tenant application" is more or less a synonym for a software as a service (SaaS) offering.
 The idea behind this architecture is that the consumers share the application resources, so they are used more effectively.
 On SAP BTP, organizations are modeled by subaccounts, and multi-tenant applications are subscribed per subaccount.
 These organizations are potentially different companies or strongly separated parts of one company.
@@ -34,11 +34,11 @@ In any case, each organization has its subaccount on SAP BTP and subscribes to a
 
 Some vocabulary is necessary to understand the next chapters of this tutorial:
 
-- `provider account` - The SAP BTP account which hosts the actual application.
+- **provider account**: The SAP BTP account which hosts the actual application.
   This account is under the control of the application developer.
-- `subscriber accounts` - The accounts using the application.
+- **subscriber accounts**: The accounts using the application.
   These accounts are controlled by the consumer.
-- `tenant-aware service` - a service which separates the data of different `subscriber accounts` rigorously.
+- **tenant-aware service**: A service which separates the data of different `subscriber accounts` rigorously.
   If you build a multi-tenant application, all services handling account specific data need to be tenant-aware services.
 
 :::note
@@ -464,7 +464,7 @@ If you do not do that, you retrieve a `403` error from the XSUAA when you reques
 
 ### Creating a Subscription
 
-After you have created an instance of the `SaaS provisioning service` in the provider account, you can create a subscription via the user interface.
+After you have created an instance of the SaaS provisioning service in the provider account, you can create a subscription via the user interface.
 A subscription is a route to the provider application, including the unique subdomain of the subscriber account.
 The `TENANT_HOST_PATTERN` in the `manifest.yml` of the approuter defines how to extract the subscriber account from the URL.
 A route like:
@@ -474,7 +474,7 @@ GET https://route-prefix-YOUR_SUBDOMAIN.cfapps.YOUR_REGION.hana.ondemand.com/ser
 ```
 
 would mean that the subscriber account is _`YOUR_SUBDOMAIN`_.
-To automate the onboarding of new accounts, the script in `subscription-endpoint.ts` does the following:
+To automate the onboarding of accounts, the script in `subscription-endpoint.ts` does the following:
 
 - It creates a route
 - Binds the created route to the approuter.
@@ -515,7 +515,7 @@ You are on tenant: a89ea924-d9c2-4gaf-84fb-3ffcff7891011. The destination descri
 ```
 
 The approuter has extracted the subscriber subdomain from the URL and issued a token for this account.
-As an application developer, you can use the token to determine the account which currently calls your code.
+As an application developer, you can use the token to determine the account which calls your code.
 
 ### Removing a Subscription
 
