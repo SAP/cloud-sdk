@@ -32,7 +32,7 @@ Being able to test changes locally reduces the overhead of deploying remotely an
 <!-- vale off -->
 
 <ThemedImage
-  alt="Connecting to On-premise systems"
+  alt="Connecting to on-premise systems"
   sources={{
     light: useBaseUrl('img/bas_light.svg'),
     dark: useBaseUrl('img/bas_dark.svg')
@@ -47,8 +47,8 @@ Being able to test changes locally reduces the overhead of deploying remotely an
 
 ### Technical Background
 
-Companies do not expose their SAP S/4HANA On-premise systems to the internet.
-They are only reachable via a CC attached to an SAP BTP account.
+Companies do not expose their SAP S/4HANA On-Premise systems to the internet.
+They are only reachable via a Cloud Connector attached to an SAP BTP account.
 In principle, you cannot reach these systems outside the SAP BTP account.
 
 However, due to the subscription between the BAS and the SAP BTP account, there is a connection from the local application to the SAP S/4HANA system.
@@ -67,7 +67,7 @@ Via the subscription, the BAS can access all destination in the subscribed accou
 
 ### Prerequisite 2: Cloud Connector and Destination Setup
 
-You have set up a working Cloud Connector and configured a destination pointing to an On-premise system.
+You have set up a working Cloud Connector and configured a destination pointing to an on-premise system.
 Per default, destinations are not usable by a subscribed BAS.
 You need to set two properties `WebIDEEnabled` and `HTML5.DynamicDestination` to enable that feature for a specific destination.
 Go to the destination configuration on SAP BTP and add the properties:
@@ -206,16 +206,16 @@ For the simple case you would add `mockTestDestination(<destinationName>)` to yo
 }
 ```
 
-### Supported Authentication Types for On-premise Systems
+### Supported Authentication Types for On-Premise Systems
 
 The supported authentication types are either `BasicAuthorization` or `PrincipalPropagation`.
-In case you use principal propagation, the BAS will fill the `SAP-Connectivity-Authentication` header as discussed in the [On-premise connectivity guide.](../features/connectivity/on-premise.mdx)
+In case you use principal propagation, the BAS will fill the `SAP-Connectivity-Authentication` header as discussed in the [on-premise connectivity guide.](../features/connectivity/on-premise.mdx)
 The user logged into the BAS will be propagated.
-In case your BAS user is **not** a valid user of the On-premise system you can use a destination using basic authorization.
+In case your BAS user is **not** a valid user of the on-premise system you can use a destination using basic authorization.
 
 ### Supported Authentication Types for Cloud Systems
 
-For calls to Cloud Systems, i.e. systems that are reachable via Internet, the local BAS proxy is not needed.
+For calls to cloud systems, i.e. systems that are reachable over the internet, the local BAS proxy is not needed.
 However, the web proxy will be used for all requests.
 In general, this does not cause problems because the proxy is totally transparent.
 

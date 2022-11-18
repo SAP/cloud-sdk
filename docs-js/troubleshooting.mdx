@@ -19,6 +19,22 @@ keywords:
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import ThemedImage from '@theme/ThemedImage';
 
+## Cannot find module '@sap-cloud-sdk/http-client'
+
+The [SAP Cloud Application Programming Mode (CAP)](https://cap.cloud.sap/docs/) uses the SAP Cloud SDK to execute HTTP requests towards [external services](https://cap.cloud.sap/docs/guides/using-services?q=http-client).
+Since not all CAP users call external services, the dependency was excluded since version 6.0.0 of CAP.
+If you are a CAP user and experience errors like:
+
+```
+cannot find module '@sap-cloud-sdk/http-client'
+```
+
+please install the missing dependency via:
+
+```
+npm install @sap-cloud-sdk/http-client
+```
+
 ## Connectivity Issue
 
 You are experiencing connectivity issues using the SAP Cloud SDK and the [error logs](features/error-handling.mdx) are not conclusive?
@@ -115,7 +131,7 @@ The error logs of the target system may provide additional information on the er
 
 ### Activate Backend Logs
 
-You have a problem connecting to an On-premise system via a Cloud Connector and connectivity service.
+You have a problem connecting to an on-premise system via a Cloud Connector and connectivity service.
 Often there is an issue in the Cloud Connector setup.
 To see if a request reaches the backend system, activate the HTTP logs.
 
@@ -145,7 +161,7 @@ If you keep experiencing problems, please reach out to the SAP BTP or Cloud Conn
 Your request reaches the backend, but is rejected there.
 Usually the content of the [HTTP logs](#activate-backend-logs) should give you a hint what to do.
 In the end requests get rejected for the same reasons as in the [cloud case](#fix-cloud-issues).
-In addition, there are On-premise specific problems:
+In addition, there are on-premise specific problems:
 
 - The default client is not the client with your user and configuration.
   Set the `sap-client` explicitly on the destination.

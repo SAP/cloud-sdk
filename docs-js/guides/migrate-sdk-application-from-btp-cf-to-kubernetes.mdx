@@ -13,9 +13,9 @@ keywords:
   - kubernetes
 ---
 
-# How to Migrate a CloudFoundry Application to a Kubernetes Cluster
+# How to Migrate a Cloud Foundry Application to a Kubernetes Cluster
 
-In this how-to, we will show step-by-step what is necessary to migrate an application from CloudFoundry to Kubernetes.
+In this how-to, we will show step-by-step what is necessary to migrate an application from Cloud Foundry to Kubernetes.
 
 1. We decide what kind of environment we are creating.
    Is it a proof-of-concept (PoC), staging, or productive environment?
@@ -35,7 +35,7 @@ Select the type of environment you're planning to build and click on it to jump 
 
 ## Simple PoC Environments
 
-For a simple PoC, we can create and bind services in CloudFoundry, or preferably even use already existing service bindings.
+For a simple PoC, we can create and bind services in Cloud Foundry, or preferably even use already existing service bindings.
 
 ### Prerequisites
 
@@ -57,20 +57,20 @@ metadata:
   name: destination-service
 type: Opaque
 stringData:
-  clientid: <client-id>
-  clientsecret: <client-secret>
-  url: <url>
-  identityzone: <identityzone>
-  tenantid: <tenantid>
-  tenantmode: <tenantmode>
-  verificationkey: <verificationkey>
-  xsappname: <xsappname>
-  uaadomain: <uaadomain>
-  instanceid: <instanceid>
-  uri: <uri>
+  clientid: YOUR_CLIENT_ID
+  clientsecret: YOUR_CLIENT_SECRET
+  url: YOUR_URL
+  identityzone: YOUR_IDENTITY_ZONE
+  tenantid: YOUR_TENANT_ID
+  tenantmode: YOUR_TENANT_MODE
+  verificationkey: YOUR_VERIFICATION_KEY
+  xsappname: YOUR_XS_APP_NAME
+  uaadomain: YOUR_UAA_DOMAIN
+  instanceid: YOUR_INSTANCE_ID
+  uri: YOUR_URI
 ```
 
-Once you are done, run `kubectl apply -f <your-binding>.yml` to create the secret in your cluster.
+Once you are done, run `kubectl apply -f YOUR_BINDING.yml` to create the secret in your cluster.
 
 Now let's take a look at how we adapt our application to deploy it to Kubernetes and how it can consume services from inside of a Kubernetes cluster.
 For this jump over to the [Deploy to Kubernetes](#deploy-to-kubernetes) section.
@@ -89,7 +89,7 @@ For a staging environment where you want to try out different services or experi
 
 ### Configure the Service Manager
 
-First, create a service manager instance in CloudFoundry with the `subaccount-admin` plan.
+First, create a service manager instance in Cloud Foundry with the `subaccount-admin` plan.
 
 To be able to create a service manager, you will need sufficient privileges in the SAP BTP Cloud Foundry.
 Follow the steps below to get them:
@@ -100,8 +100,8 @@ Assign the `Subaccount Service Administrator` role collection to your email addr
 Next, you need to login to the service manager control, also called `smctl`, and register your cluster
 
 ```
-smctl login -a https://service-manager.<cf-api-end-point> --param subdomain=<your-cf-subdomain>
-smctl register-platform <name-you-want-to-give-the-cluster> kubernetes > service-manager-credentials.txt
+smctl login -a https://service-manager.YOUR_CF_API_ENDPOINT --param subdomain=YOUR_CF_SUBDOMAIN
+smctl register-platform YOUR_CLUSTER_NAME kubernetes > service-manager-credentials.txt
 ```
 
 The `service-manager-credentials.txt` contains sensitive data, keep it in a safe place.
@@ -124,9 +124,9 @@ kubectl create namespace service-broker-proxy
 helm install service-broker-proxy peripli/service-broker-proxy-k8s \
   --namespace service-broker-proxy \
   --set image.tag=v0.3.2 \
-  --set config.sm.url=<service-manager-url> \
-  --set sm.user=<service-manager-user> \
-  --set sm.password=<service-manager-password>
+  --set config.sm.url=YOUR_SERVICE_MANAGER_URL \
+  --set sm.user=YOUR_SERVICE_MANAGER_USER \
+  --set sm.password=YOUR_SERVICE_MANAGER_PASSWORD
 ```
 
 After installing the proxy you have to wait a few seconds until it is fully operational.
@@ -217,25 +217,25 @@ After you deployed the self-signed certificate issuer, we can start steps to dep
 
 ```JSON
  {
-     "clientid": "<clientid>",
-     "clientsecret": "<clientsecret>",
-     "url": "<url>",
-     "xsappname": "<xsappname>",
-     "sm_url": "<sm_url>"
+     "clientid": "YOUR_CLIENT_ID",
+     "clientsecret": "YOUR_CLIENT_SECRET",
+     "url": "YOUR_URL",
+     "xsappname": "YOUR_XS_APP_NAME",
+     "sm_url": "YOUR_SERVICE_MANAGER_URL"
  }
 ```
 
-Once you have the data from the service manager's binding, provide it to `helm` and deploy the service operator.
+Once you have the data from the service manager's binding, provide it to the helm CLI and deploy the service operator.
 Helm is a package manager for Kubernetes.
 
 ```bash
-helm upgrade --install sapbtp-operator https://github.com/SAP/sap-btp-service-operator/releases/download/<release>/sapbtp-operator-<release>.tgz \
+helm upgrade --install sapbtp-operator https://github.com/SAP/sap-btp-service-operator/releases/download/YOUR_RELEASE/sapbtp-operator-YOUR_RELEASE.tgz \
     --create-namespace \
     --namespace=sapbtp-operator \
-    --set manager.secret.clientid=<clientid> \
-    --set manager.secret.clientsecret=<clientsecret> \
-    --set manager.secret.url=<sm_url> \
-    --set manager.secret.tokenurl=<url>
+    --set manager.secret.clientid=YOUR_CLIENT_ID \
+    --set manager.secret.clientsecret=YOUR_CLIENT_SECRET \
+    --set manager.secret.url=YOUR_SERVICE_MANAGER_URL \
+    --set manager.secret.tokenurl=YOUR_URL
 ```
 
 ### Create and Bind Services
@@ -397,9 +397,9 @@ You can do this either by writing a `secret.yml` or directly in the CLI (though 
 
 ```bash
 kubectl create secret docker-registry regcred \
-  --docker-username=<name \
-  --docker-password=<password> \
-  --docker-email=<email>
+  --docker-username=YOUR_DOCKER_USERNAME \
+  --docker-password=YOUR_DOCKER_PASSWORD \
+  --docker-email=YOUR_DOCKER_EMAIL
 ```
 
 Finally, notice how we mount every service which we also had in the `manifest.yml`, in this case, a **Destination** service and an **XSUAA** service.
@@ -409,9 +409,9 @@ The structure for `volumes` is:
 
 ```yaml
 volumes:
-  - name: <some-volume-name>
+  - name: YOUR_VOLUME_NAME
     secret:
-      secretName: <name-of-service-binding>
+      secretName: YOUR_SERVICE_BINDING
 ```
 
 Here we make a secret, in this case, a service binding, available as a volume.
@@ -420,8 +420,8 @@ For this, we follow a path convention provided by the [xsenv](https://www.npmjs.
 
 ```yaml
 volumeMounts:
-  - name: <volume-name>
-    mountPath: '/etc/secrets/sapcp/<service>/<service-name>'
+  - name: YOUR_VOLUMNE_NAME
+    mountPath: '/etc/secrets/sapcp/YOUR_SERVICE/YOUR_SERVICE_NAME'
     readOnly: true
 ```
 
@@ -435,7 +435,7 @@ To access your application you have two options, either you expose it to the int
 
 ### Local Connection
 
-Run `kubectl port-forward deployment <your-deployment> :3000` on your local machine to enable port forwarding.
+Run `kubectl port-forward deployment YOUR_DEPLOYMENT :3000` on your local machine to enable port forwarding.
 We use port 3000 because our application is listening on it.
 Kubernetes will find any available port on your local machine and forward port 3000 of your deployment to it.
 Then you'll be able to make a call to your application via a provided link.
@@ -447,7 +447,7 @@ It will use your cluster's IP address and port your application listens on.
 Exposing an application this way is good only for testing.
 **Don't use it in production.**
 
-`kubectl expose deployment <deployment-name> --type="LoadBalancer"`
+`kubectl expose deployment YOUR_DEPLOYMENT --type="LoadBalancer"`
 
 If you want to expose your cluster under Domain name with TLS and/or basic authentication check out the [Configure TLS and obtain a Domain in SAP Gardener](#configure-tls-and-obtain-a-domain-in-sap-gardener) part for an `SAP Gardener` setup or the official Kubernetes [documentation](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/) for a general setup.
 
@@ -471,18 +471,18 @@ For Step (2) we need a technical user that is entitled to manage the cluster dep
 You can now use the service account in your automation to connect to the cluster:
 
 ```bash
-kubectl config set-cluster gardener --server=<your-cluster-api-endpoint>
+kubectl config set-cluster gardener --server=YOUR_CLUSTER_API_ENDPOINT
 kubectl config set-context gardener --cluster=gardener
 kubectl config use-context gardener
 kubectl config view
-kubectl --token=${{ secrets.KUBERNETES_SERVICE_TOKEN }} --certificate-authority <path/to/ca.cert> cluster-info
+kubectl --token=${{ secrets.KUBERNETES_SERVICE_TOKEN }} --certificate-authority YOUR_CA_CERT_PATH cluster-info
 ```
 
 After completing the previous steps, run the command below.
 It shutdowns all the Pods to restart them.
 
 ```bash
-kubectl --token=${{ secrets.KUBERNETES_SERVICE_TOKEN }} --certificate-authority <path/to/ca.cert> rollout restart deployment/<your-deployment-name>
+kubectl --token=${{ secrets.KUBERNETES_SERVICE_TOKEN }} --certificate-authority YOUR_CA_CERT_PATH rollout restart deployment/YOUR_DEPLOYMENT
 ```
 
 If your deployment is configured with `ImagePullStrategy: Always` this will pull the updated image and use it.
@@ -511,7 +511,7 @@ spec:
       targetPort: 3000
 ```
 
-Next, check your shoot-cluster YAML for the currently configured DNS.
+Next, check your shoot-cluster YAML for the configured DNS.
 The shoot-cluster YAML should be located in your Gardener project's dashboard, under the YAML tab.
 It should be a field that looks like this:
 
@@ -521,7 +521,7 @@ spec:
     domain: cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
 ```
 
-Since you have the NGINX Ingress enabled, all your domains have to follow the pattern `*.ingress.<your-dns>`, for example
+Since you have the NGINX Ingress enabled, all your domains have to follow the pattern `*.ingress.YOUR_DNS`, for example
 
 ```yaml
 e2e.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
@@ -580,7 +580,7 @@ htpasswd -c auth username
 2. Create a secret out of this file
 
 ```bash
-kubectl create secret generic <secret-name> --from-file=auth
+kubectl create secret generic YOUR_SECRET --from-file=auth
 ```
 
 3. Add annotations to your `Ingress`.
@@ -623,12 +623,14 @@ Accessing any path should open an authentication window.
 ## On-Premise Connectivity
 
 :::danger
+
 On-Premise connectivity in Kubernetes is currently not available for external SAP customers.
 This might be changed in the near future.
 We'll be updating our documentation accordingly.
+
 :::
 
-To connect to On-Premise systems inside a Kubernetes cluster, you need to use the `Connectivity Proxy`.
+To connect to on-premise systems inside a Kubernetes cluster, you need to use the `Connectivity Proxy`.
 The following guide will show you what has to be done to create and use it.
 
 1. You need to create a route for the `Connectivity Proxy` to use.
@@ -655,7 +657,7 @@ spec:
 To access the information inside a secret, use the following code snippet:
 
 ```bash
-kubectl get secret <secret-name> -o go-template='
+kubectl get secret YOUR_SECRET -o go-template='
 {{range $k,$v := .data}}{{printf "%s: " $k}}{{if not $v}}{{$v}}{{else}}{{$v | base64decode}}{{end}}{{"\n"}}{{end}}'
 ```
 
@@ -678,9 +680,9 @@ metadata:
 type: Opaque
 stringData:
   connectivity_key: '{
-    "clientid": "<client-id>",
-    "clientsecret": "<clientsecret>",
-    "xsappname": "<xsappname>",
+    "clientid": "YOUR_CLIENT_ID",
+    "clientsecret": "YOUR_CLIENT_SECRET",
+    "xsappname": "YOUR_XS_APP_NAME",
     "connectivity_service": {
         "CAs_path":"/api/v1/CAs",
         "CAs_signing_path":"/api/v1/CAs/signing",
@@ -688,18 +690,20 @@ stringData:
         "tunnel_path":"/api/v1/tunnel",
         "url":"https://connectivity.cf.sap.hana.ondemand.com"
     },
-    "subaccount_id": "<subaccount_id",
-    "subaccount_subdomain": "<subaccount_subdomain>",
-    "token_service_domain": "<token_service_domain">",
-    "token_service_url": "<token_service_url>",
+    "subaccount_id": "YOUR_SUBACCOUNT_ID",
+    "subaccount_subdomain": "YOUR_SUBACCOUNT_SUBDOMAIN",
+    "token_service_domain": "YOUR_TOKEN_SERVICE_DOMAIN",
+    "token_service_url": "YOUR_TOKEN_SERVICE_URL",
     "token_service_url_pattern": "https://{tenant}.authentication.sap.hana.ondemand.com/oauth/token",
     "token_service_url_pattern_tenant_key": "subaccount_subdomain"
 }'
 ```
 
 :::info
+
 Note that we used the `stringData` field type instead of the default `data` field type to benefit from automatic base64 encoding, instead of doing it ourselves.
 This is a requirement of the connectivity proxy since it can't consume the data of the secret in YAML format _yet_.
+
 :::
 
 4. Now we need to download the CA certificate of the connectivity service and create a secret containing:
@@ -718,7 +722,7 @@ curl https://connectivity.cf.sap.hana.ondemand.com/api/v1/CAs/signing -o connect
 Now you can create the secret with this command:
 
 ```bash
-kubectl create secret generic connectivity-tls --from-file=ca.crt=<your-connectivity-ca.crt> --from-file=tls.key=<your-private.key> --from-file=tls.crt=<your-public.crt> --namespace default
+kubectl create secret generic connectivity-tls --from-file=ca.crt=YOUR_CONNECTIVITY_CA_KEY.crt --from-file=tls.key=YOUR_PRIVATE_KEY.key --from-file=tls.crt=YOUR_PUBLIC_KEY.crt --namespace default
 ```
 
 5. Create a secret that contains credentials to access the docker image which the `Connectivity Proxy` is using.
@@ -728,9 +732,9 @@ The image is located here: `deploy-releases.docker.repositories.sap.ondemand.com
 To create the registry secret, use the following command:
 
 ```bash
-kubectl create secret docker-registry <your-registry-secret> \
-  --docker-username=<your-username> \
-  --docker-password=<your-password> \
+kubectl create secret docker-registry YOUR_REGISTRY_SECRET \
+  --docker-username=YOUR_DOCKER_USERNAME \
+  --docker-password=YOUR_DOCKER_PASSWORD \
   --docker-server=deploy-releases.docker.repositories.sap.ondemand.com
 ```
 
@@ -754,8 +758,8 @@ config:
     connectivityService:
       serviceCredentialsKey: 'connectivity_key'
   tenantMode: dedicated
-  subaccountId: '<subaccount-id>'
-  subaccountSubdomain: '<subaccount-domain>'
+  subaccountId: 'YOUR_SUBACCOUNT_ID'
+  subaccountSubdomain: 'YOUR_SUBACCOUNT_SUBDOMAIN'
   servers:
     businessDataTunnel:
       externalHost: 'connectivitytunnel.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com'
@@ -772,17 +776,17 @@ config:
         enableProxyAuthorization: false
 ```
 
-7. For your application to reach On-Premise destinations, it needs to provide the proxy settings and the token URL.
-   Currently, you have to add them manually to the `secret` containing the service binding.
+7. For your application to reach on-premise destinations, it needs to provide the proxy settings and the token URL.
+   You have to add them manually to the `secret` containing the service binding.
 
 To do this, use the following code snippet:
 
 ```bash
-kubectl edit secret <binding-name>
+kubectl edit secret YOUR_BINDING
 ```
 
 Now you have to add the fields `onpremise_proxy_host` and `onpremise_proxy_port` and `url`.
-The host has the pattern `connectivity-proxy.<namespace>` which is in our case `connectivity-proxy.default`.
+The host has the pattern `connectivity-proxy.YOUR_NAMESPACE` which is in our case `connectivity-proxy.default`.
 The default port is `20003`.
 The `url` field should contain the same value as `token_service_url`.
 Be aware that the values have to be encoded in base64, for example:
@@ -807,7 +811,7 @@ Below is an example using the SAP BTP Operator, to create an XSUAA with a very g
 For your application, it is recommended to point directly at your specific URI.
 
 If you are not using the SAP BTP Operator, you still have to provide the same parameters but in a different format.
-In CloudFoundry, for instance, you have to provide these parameters in `JSON` format.
+In Cloud Foundry, for instance, you have to provide these parameters in JSON format.
 
 ```yaml
 apiVersion: services.cloud.sap.com/v1alpha1
@@ -967,7 +971,7 @@ spec:
                   number: 8080
 ```
 
-5. Be aware that just like in SAP BTP CloudFoundry, you have to collect the principal's `JWT` from the authentication header after executing one of the requests with our typed client libraries.
+5. Be aware that just like in SAP BTP Cloud Foundry, you have to collect the principal's `JWT` from the authentication header after executing one of the requests with our typed client libraries.
    Here is an example utilizing our `retrieveJwt` function:
 
 <!-- vale Vale.Spelling = NO -->

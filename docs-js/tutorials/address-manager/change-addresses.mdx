@@ -48,13 +48,13 @@ Add a service implementation in the `business-partner.service.ts`:
   }
 ```
 
-You use the `entityBuilder` to create a new address object from the input.
+Use the entity builder to create a new address object from the input.
 The business partner ID is added to the address object.
 This is mandatory to define for which business partner the address is created.
-Then you use the `requestBuilder` to build a `create` request and `execute` it against the mock server.
+Use the request builder to build a create request and execute it against the mock server.
 
 You need to adjust the `business-partner.controller.ts` to expose the new service.
-Since you want to create data, a POST request is needed:
+Since you want to create data, a `POST` request is needed:
 
 ```ts
   @Post("/:businessPartnerId/address")
@@ -71,7 +71,7 @@ The ID of the business partner is taken from the URL of the request and the new 
 
 ### Test Create Service
 
-To test the new service, you need an HTTP client like [postman](https://learning.postman.com/docs/getting-started/installation-and-updates/) to create a POST request.
+To test the new service, you need an HTTP client like [postman](https://learning.postman.com/docs/getting-started/installation-and-updates/) to create a `POST` request.
 Create a new request with the following parameters:
 
 ```
@@ -136,7 +136,7 @@ The new address is given in the payload.
 
 ### Test Update Service
 
-The update request is triggered by the PUT method.
+The update request is triggered by the `PUT` method.
 Execute the update request in your HTTP client (e.g. [postman](https://learning.postman.com/docs/getting-started/installation-and-updates/)):
 
 ```
@@ -182,7 +182,7 @@ The delete endpoint is exposed in the `business-partner.controller.ts` via the f
   }
 ```
 
-You use the HTTP method DELETE to trigger a deletion and the status 204 indicates a successful deletion.
+You use the HTTP method `DELETE` to trigger a deletion and the status 204 indicates a successful deletion.
 
 ### Test Delete Service
 

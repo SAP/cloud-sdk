@@ -58,12 +58,12 @@ const responseOpenApi = await MyApi.myFunction().execute(myDestination);
 `myDestination` is an SAP Cloud SDK representation of a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="destination" />.
 The given request is executed against `myDestination`.
 
-For the rest of the document, we will discuss the different options on destination lookup.
+For the rest of the document, you will learn about the different options on destination lookup.
 All statements apply equally to OData- and OpenAPI-based services.
 
 ## Creating Destinations Manually
 
-::: caution
+:::caution
 
 This option is **not recommended** for productive use as you would lose the benefits of separating destinations from applications.
 
@@ -95,7 +95,7 @@ The search stops once a matching destination is found, even if other locations m
 
 ### Local Environment Variable
 
-::: caution
+:::caution
 
 This option should **only be used for testing purposes in a local environment** outside the SAP BTP where no destination services are available.
 Use [Register Destination](#register-destination) to cache destinations in production.
@@ -131,7 +131,7 @@ At runtime, the SAP Cloud SDK will check the environment variable for a destinat
 The SAP Cloud SDK also offers a `mockTestDestination()` method, which reads in a `systems.json` and `credentials.json` to create destinations.
 The advantage of files is that they can be excluded from the repository since they contain sensitive information.
 
-::: caution
+:::caution
 
 Note that this approach is **not suitable for multi-tenant scenarios**, because only the destination service can return destinations for different tenants.
 
@@ -162,9 +162,9 @@ MyRequest.execute({ destinationName: 'MY-DESTINATION' });
 Functions such as `execute()` and `executeHttpRequest()` call the `getDestination()` function internally for the destination lookup.
 During the lookup, if a registered destination is found, the lookup is stopped, and the call to the destination service is avoided.
 
-::: caution
+:::caution
 
-You can register a full destination object, including authentication, but we **do not recommend** storing authentication information in the registered destination.
+You can register a full destination object, including authentication, but it is **not recommended** to store authentication information in the registered destination.
 Instead, you should enable token forwarding on the destination.
 
 :::
@@ -190,7 +190,7 @@ This only works if your target system accepts unchanged JWTs.
 Use the destination service if a transformation is needed, e.g., `OAuth` to `SamlBearer`.
 
 Note that the `registerDestination()` function is tenant-aware.
-We have a separate [guide](./destination-cache-isolation.mdx) on the cache options used by the `registerDestination()` function.
+The [destination cache guide](./destination-cache-isolation.mdx) describes the cache options used by the `registerDestination()` function.
 
 ### Service Binding Environment Variables
 
@@ -235,7 +235,7 @@ WorkflowDefinitionsApi.queryDefinitions().execute({
 });
 ```
 
-Currently, the following services are supported out of the box:
+The following services are supported out of the box:
 
 - `business-logging`
 - `s4-hana-cloud`
@@ -394,7 +394,7 @@ It is your responsibility as a developer to ensure that the provided value for t
 
 ### Getting All Destinations
 
-Currently, we only support getting all destinations from the destination service.
+The SAP Cloud SDK supports getting all destinations only from the destination service.
 This is possible through the `getAllDestinationsFromDestinationService()` function.
 Based on the provided JWT, you will either receive all subscriber or provider destinations.
 
@@ -417,7 +417,7 @@ If you need the token, call the specific destination with `getDestination({desti
 
 The `execute()`, `getDestination()`, and `executeHttpRequest()` functions perform a destination lookup by name as discussed above.
 You can pass options to adjust how the destination is fetched.
-In the section above, we listed already a few of the options but this section gives a comprehensive overview:
+A few of the options were already listed above, but this section gives a comprehensive overview:
 
 - `destinationName`: The name of the destination to be fetched.
   This is the only mandatory property, all the other parameters are optional.
@@ -469,7 +469,7 @@ If you want to make HTTPS requests against systems that use certificates from ot
 
 For additional information on trust configuration have a look at [the more detailed guide](../../guides/trust-and-key-stores.mdx).
 
-::: danger
+:::danger
 
 Please use the `TrustAll` with **great caution** since it opens the gate to man-in-the-middle attacks.
 
