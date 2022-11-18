@@ -11,7 +11,7 @@ keywords:
   - email
   - e-mail
   - BTP
-  - On-premise
+  - on-premise
   - JavaScript
   - TypeScript
 ---
@@ -71,7 +71,7 @@ You can read more about the abstraction of the `destination` in the documentatio
 
 ### Send Multiple E-Mails
 
-The code snippets below shows how to send 2 e-mails with the `mailConfig` that we created in the previous example.
+The code snippets below shows how to send two e-mails with the `mailConfig` that you created in the previous example.
 The e-mails are sent in parallel by default.
 
 ```ts
@@ -127,12 +127,11 @@ sendMail({ destinationName: 'my-mail-destination' }, [mailConfig], {
 ```
 
 Using socks proxy is not supported for the time being.
-For On-Premise connectivity via the connectivity service on the SAP BTP, please check the next section.
+For on-premise connectivity via the connectivity service on the SAP BTP, please check the next section.
 
 :::caution
 
 The SAP Cloud SDK will pass the proxy option directly to the `nodemailer`, but the proxy feature is not end-to-end tested.
-We assume the `nodemailer` lib handles it properly.
 
 :::
 
@@ -150,12 +149,12 @@ Please make sure the mail destination is configured correctly as discussed in th
 
 ### `SOCKS5` Proxy Implementation
 
-Using a `SOCKS5` proxy for accessing On-Premise systems from applications on SAP BTP requires the `SOCKS5` authentication flow as explained [here](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/cd1583775afa43f0bb9ec69d9dbcc880.html?locale=en-US).
+Using a `SOCKS5` proxy for accessing on-premise systems from applications on SAP BTP requires the `SOCKS5` authentication flow as explained [here](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/cd1583775afa43f0bb9ec69d9dbcc880.html?locale=en-US).
 The SAP Cloud SDK handles the `SOCKS5` proxy implementation automatically when detecting an `On-Premise` mail destination.
 
 :::tip
 
-For some On-Premise e-mail server, including our test server, the parallelization of sending email might be a challenge.
+For some on-premise e-mail server, including our test server, the parallelization of sending email might be a challenge.
 You can disable the parallelization by passing `parallel: false` as mentioned before.
 
 :::

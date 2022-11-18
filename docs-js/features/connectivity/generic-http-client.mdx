@@ -52,7 +52,7 @@ For example, the OData client does not support the `upsert` operation.
 The generic HTTP client is based on the open-source [axios HTTP client](https://axios-http.com), but provides convenience features which are specific to working on SAP Business Technology Platform, such as:
 
 - [Destination lookup](../connectivity/destination.mdx)
-- Connections to [SAP S/4HANA On-premise](../connectivity/on-premise.mdx) via the connectivity service
+- Connections to [SAP S/4HANA On-Premise](../connectivity/on-premise.mdx) via the connectivity service
 - [Web proxies](../connectivity/proxy.mdx)
 
 ## `executeHttpRequest`
@@ -150,9 +150,9 @@ Custom parameters can be useful when you need control exactly how values are tra
 
 If you need to customize parameter encoding, you can provide your own function to do the transformation.
 This feature is meant for cases where backends have special requirements for the encoding that don't work with the default URL-encoding done by the HTTP client.
-We recommend to only use this if it is required as it adds additional complexity to your application code.
+You should usually avoid this as it adds additional complexity to the application code.
 
-In this example we do a simple string replace:
+The example below shows how to do a string replace:
 
 ```ts
 const myCustomParameterEncodingFunction: ParameterEncoder = function (
@@ -160,9 +160,9 @@ const myCustomParameterEncodingFunction: ParameterEncoder = function (
 ): Record<string, any> {
   const encodedParams: Record<string, any> = {};
 
-  for (const k in params) {
+  for (const key in params) {
     // Customize your required encoding logic here
-    encodedParams[k] = params[k].toString().replace('x', 'y');
+    encodedParams[key] = params[key].toString().replace('x', 'y');
   }
 
   return encodedParams;
