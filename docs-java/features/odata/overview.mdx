@@ -21,18 +21,11 @@ keywords:
 [OData](https://www.odata.org/) is an open standard for building and consuming RESTful APIs.
 It defines a query language to send and retrieve data via HTTP and to perform operations on data.
 
-There are two widely used versions of the protocol: [**OData v2**](https://www.odata.org/documentation/odata-version-2-0/) and more extended and functional [**OData v4**](https://www.odata.org/documentation/).
-
-## What OData Versions do You Support?
-
-| OData protocol version                                          | SAP Cloud SDK V3 |
-| --------------------------------------------------------------- | ---------------- |
-| [OData v2](use-typed-odata-v2-client-in-sap-cloud-sdk-for-java) | &#10003;         |
-| [OData v4](use-typed-odata-v4-client-in-sap-cloud-sdk-for-java) | &#10003;         |
+There are two widely used versions of the protocol: [**OData v2**](https://www.odata.org/documentation/odata-version-2-0/) and more extended and functional [**OData v4**](https://www.odata.org/documentation/). The SAP Cloud SDK for Java supports both of these protocol versions.
 
 :::tip generate a client library yourself
 
-You can always [generate a type-safe OData client library](generate-client.mdx) based on API specifications available on the [SAP API Business Hub](https://api.sap.com/) or found elsewhere.
+You can always [generate a type-safe OData client library](vdm-generator) based on API specifications available on the [SAP API Business Hub](https://api.sap.com/) or found elsewhere.
 
 :::
 
@@ -50,13 +43,13 @@ The SAP Cloud SDK simplifies the consumption of OData services by offering:
 
 ### Generic OData Client
 
-We expose an [advanced generic OData client](./generic-odata-client.mdx) that can be leveraged when the capabilities or flexibility of a type-safe client are not enough.
+We expose an [advanced generic OData client](./generic-client.mdx) that can be leveraged when the capabilities or flexibility of a type-safe client are not enough.
 Be careful and know what you're doing.
 
 ### Code Generator
 
 If you need a client for an OData service where we do not ship a pregenerated client.
-Use our [code generator](generate-typed-odata-v2-and-v4-client-for-java) to convert its service definition into the type-safe Java client library.
+Use our [code generator](vdm-generator) to convert its service definition into the type-safe Java client library.
 You can do it for any service either developed by yourself, provided by SAP, or other third parties.
 The [SAP API Business Hub](https://api.sap.com/) is where you'll find the specification for most of the SAP-published services.
 
@@ -69,7 +62,7 @@ The [SAP API Business Hub](https://api.sap.com/) is where you'll find the specif
 
 We simplify development process on the SAP BTP by providing convenient abstractions over:
 
-- [Destinations](../connectivity/sdk-connectivity-destination-service)
+- [Destinations](../connectivity/destination-service)
 - Authentication
 - [Multi-tenancy](../multi-tenancy/thread-context.mdx)
 - and some other related concepts.
