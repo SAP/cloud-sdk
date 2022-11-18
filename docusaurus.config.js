@@ -395,15 +395,15 @@ module.exports = {
           },
           {
             from: '/docs/java/environments/sap-btp-cloud-foundry-environment',
-            to: '/docs/java/environments/cloudfoundry'
+            to: '/docs/java/environments/cloud-foundry'
           },
           {
             from: '/docs/java/environments/sap-btp-kubernetes-environment-with-sap-gardener',
-            to: '/docs/java/environments/kubernetes-sap-gardener'
+            to: '/docs/java/environments/kubernetes-gardener'
           },
           {
             from: '/docs/java/environments/sap-btp-kyma-environment',
-            to: '/docs/java/environments/kubernetes-sap-kyma'
+            to: '/docs/java/environments/kubernetes-kyma'
           },
           {
             from: '/docs/java/features/odata/use-typed-odata-v2-client-in-sap-cloud-sdk-for-java',

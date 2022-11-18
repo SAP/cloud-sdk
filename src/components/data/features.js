@@ -197,7 +197,7 @@ export const features = [
     category: 'Environment',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/environments/cloudfoundry)`,
+      docsLink: `[docs](${baseUrl}/java/environments/cloud-foundry)`,
       note: ''
     },
     js: {
@@ -211,7 +211,7 @@ export const features = [
     category: 'Environment',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/environments/kubernetes-sap-gardener)`,
+      docsLink: `[docs](${baseUrl}/java/environments/kubernetes-gardener)`,
       note: ''
     },
     js: {
@@ -225,7 +225,7 @@ export const features = [
     category: 'Environment',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/environments/kubernetes-sap-kyma)`,
+      docsLink: `[docs](${baseUrl}/java/environments/kubernetes-kyma)`,
       note: `[Kyma Open Source project](https://kyma-project.io/)`
     },
     js: {

@@ -64,9 +64,9 @@ module.exports = {
       label: 'Environments',
       items: [
         'environments/overview',
-        'environments/cloudfoundry',
-        'environments/kubernetes-sap-gardener',
-        'environments/kubernetes-sap-kyma'
+        'environments/cloud-foundry',
+        'environments/kubernetes-gardener',
+        'environments/kubernetes-kyma'
       ]
     },
     {
