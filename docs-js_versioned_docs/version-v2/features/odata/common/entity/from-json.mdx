@@ -1,0 +1,37 @@
+Sometimes, it makes sense for you to store your data as a JSON object, that is based on the entity type.
+For example, when using the property names of the entity class as properties of your object.
+If you are looking for a way to create an entity from a JSON response, that you got from an OData service, you are probably looking for [entity deserialization](#deserialize-an-odata-json-response-to-an-entity).
+
+This would be the JSON representation of a business partner in the SAP Cloud SDK:
+
+```json
+{
+  "firstName": "Peter",
+  "lastName": "Pan",
+  "toBusinessPartnerAddress": [
+    {
+      "country": "Neverland"
+    }
+  ]
+}
+```
+
+You can use this data to build an entity using the `fromJson()` method.
+The example below shows how you would create an instance of the business partner class using the `fromJson()` method.
+
+```ts
+import { businessPartnerService } from './generated/business-partner-service';
+
+const { businessPartnerApi } = businessPartnerService();
+const businessPartner = businessPartnerApi.entityBuilder().fromJson({
+  firstName: 'Peter',
+  lastName: 'Pan',
+  toBusinessPartnerAddress: [
+    {
+      country: 'Neverland'
+    }
+  ]
+});
+```
+
+If there are unknown fields present in the JSON object, they will be treated as custom fields.

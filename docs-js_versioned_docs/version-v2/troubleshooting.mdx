@@ -1,0 +1,179 @@
+---
+id: troubleshooting
+title: Troubleshooting
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Troubleshooting
+description: Troubleshooting guide for the SAP Cloud SDK for JavaScript
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+  - troubleshooting
+  - connectivity
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import ThemedImage from '@theme/ThemedImage';
+
+## Cannot find module '@sap-cloud-sdk/http-client'
+
+The [SAP Cloud Application Programming Mode (CAP)](https://cap.cloud.sap/docs/) uses the SAP Cloud SDK to execute HTTP requests towards [external services](https://cap.cloud.sap/docs/guides/using-services?q=http-client).
+Since not all CAP users call external services, the dependency was excluded since version 6.0.0 of CAP.
+If you are a CAP user and experience errors like:
+
+```
+cannot find module '@sap-cloud-sdk/http-client'
+```
+
+please install the missing dependency via:
+
+```
+npm install @sap-cloud-sdk/http-client
+```
+
+## Connectivity Issue
+
+You are experiencing connectivity issues using the SAP Cloud SDK and the [error logs](features/error-handling.mdx) are not conclusive?
+In such a case please follow the flowchart.
+For each squared box, a dedicated section gives instructions below.
+The circle indicate start and end points.
+A `get help` circle means opening an issue on the respective component or repository.
+
+<ThemedImage
+  alt="Troubleshooting connectivity"
+  sources={{
+    light: useBaseUrl('img/trouble_shooting_light.svg'),
+    dark: useBaseUrl('img/trouble_shooting_dark.svg')
+  }}
+  className="center"
+  width="100%"
+/>
+
+### Use Minimal Example
+
+Often the issue is related to a framework that uses the SAP Cloud SDK and not the code itself.
+Therefore, add the minimal example to the code to ensure the error is related to the SAP Cloud SDK.
+
+<!-- vale off -->
+
+```ts
+import { executeHttpRequest } from '@sap-cloud-sdk/http-client';
+import { getDestination } from '@sap-cloud-sdk/connectivity';
+
+async function minimalTest() {
+  const destination = await getDestination({
+    destinationName: YOUR_DESTINATION_NAME
+  });
+  if (destination) {
+    destination.authTokens?.forEach(authToken => {
+      if (authToken.error) {
+        throw new Error(`Error in authToken ${authToken.error}`);
+      }
+    });
+  } else {
+    throw new Error('Destination is undefined.');
+  }
+  console.log('Destination Retrieved.');
+  const response = await executeHttpRequest(destination, {
+    method: 'get',
+    url: YOUR_SERVICE_URL
+  });
+  if (!response.data) {
+    throw new Error('No data returned');
+  }
+  console.log('Data Retrieved.');
+}
+```
+
+<!-- vale on -->
+
+Replace _`YOUR_SERVICE_URL`_ with the URL of your service, e.g., `/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner?%24top=1`.
+Use the same service you also plan to call in production to observe authorization issues in the test case as well.
+Include all `getDestination()` options you are using in your real example, like `useCache` or [JWT](./guides/how-to-retrieve-jwt.mdx).
+Also adjust the example to your needs by adding additional log statements.
+
+You can execute the minimal example locally to have a quicker turnaround time.
+This is possible when you connect to a cloud system.
+To do that, copy the `VCAP_SERVICES` environment of the application to the local process.
+
+### Get Destination Error
+
+You retrieved an error in the process of getting the destination or saw alarming logs while retrieving the destination.
+This can have multiple reasons:
+
+- The destination name is not correct or the destination is not present in your SAP BTP account.
+- The destination has errors in the `authToken` object.
+  Adjust the configuration according to the error message until the destination service can receive a token.
+- The destination service is not bound to your application.
+- For `OnPremise` destinations the connectivity service must be bound to your application.
+- The destination service is missing as a [dependency of your application](./tutorials/multi-tenant-application.mdx).
+  This is only relevant in multi-tenant applications if you make the call via a subscriber account.
+
+If you are stuck in retrieving the destination, and you think the issue is caused by the SAP Cloud SDK, please [open an issue](https://github.com/SAP/cloud-sdk-js/issues/new/choose).
+Please provide the information from you minimal example in the ticket.
+
+### Fix Cloud Issues
+
+You retrieved the destination but got an error when calling the cloud target system.
+This can have multiple reasons:
+
+- The destination contains wrong user credentials or the user does not exist in the target system.
+- The user is locked in the target system.
+- The permissions of the user are insufficient.
+- The scopes of the JWT in the `authTokens` are insufficient.
+
+If your request reaches the target system and gets rejected there, the problem most likely does not lie with the SAP Cloud SDK.
+The error logs of the target system may provide additional information on the error.
+
+### Activate Backend Logs
+
+You have a problem connecting to an on-premise system via a Cloud Connector and connectivity service.
+Often there is an issue in the Cloud Connector setup.
+To see if a request reaches the backend system, activate the HTTP logs.
+
+1. Go to transaction **SMICM**.
+1. Navigate to **GOTO->Trace Level** and set the trace level to 3 and activate HTTP logs.
+   1. You may want to reset the log file to have no old logs **GOTO->Trace File**.
+1. Trigger your request.
+1. Remember to switch back the trace level after you send the request.
+1. Go to transaction **ST11** and investigate the file `dev_icm`
+
+If you see entries related to your request, your connection is working.
+
+### Fix Connection Issues
+
+You have not found entries in the HTTP logs.
+This means your request got stuck somewhere before.
+
+- Investigate the logs of the Cloud Connector and check the [documentation](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/9b6510edf4d844a28f022b3db41f3202.html) to fix problems.
+- The connectivity service is not bound to your application.
+- The connectivity service is missing as [dependency of your application](./tutorials/multi-tenant-application.mdx).
+  This is only relevant in multi-tenant applications if you make the call via a subscriber account.
+
+If you keep experiencing problems, please reach out to the SAP BTP or Cloud Connector support.
+
+### Fix On-Premise Issues
+
+Your request reaches the backend, but is rejected there.
+Usually the content of the [HTTP logs](#activate-backend-logs) should give you a hint what to do.
+In the end requests get rejected for the same reasons as in the [cloud case](#fix-cloud-issues).
+In addition, there are on-premise specific problems:
+
+- The default client is not the client with your user and configuration.
+  Set the `sap-client` explicitly on the destination.
+- The principal propagation is more difficult to configure.
+  If a destination with basic authentication works you know for sure you have a problem with user propagation.
+- The [user mapping](https://help.sap.com/docs/SAP_NETWEAVER_AS_ABAP_FOR_SOH_740/d528eef3dca14679bcb47b069aa17a9d/c830fd902dc8473b9e59db1576cc784b.html?version=7.40.16&locale=en-US) is not correctly configured for principal propagation.
+
+### Find Difference
+
+The minimal example is working, but your real code is not.
+This means the framework you are using is calling the SAP Cloud SDK in a different way than you are.
+At this point, [debug the application](./guides/debug-remote-app.mdx).
+Try to reach the point where the `executeHttpRequest()` function of the SAP Cloud SDK is called and compare the argument to the one of the minimal example.
+
+If you found the difference, try to align it or open an issue with the framework.
