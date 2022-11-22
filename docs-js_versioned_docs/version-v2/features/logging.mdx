@@ -1,0 +1,150 @@
+---
+id: logging
+title: Logging
+sidebar_label: Logging
+description: How the SAP Cloud SDK logs errors and exceptions
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - JavaScript
+  - TypeScript
+  - error
+  - exception
+  - logging
+---
+
+## Creating a Logger
+
+The SAP Cloud SDK provides an easy way to create a logger:
+
+<!-- vale off -->
+
+```ts
+import { createLogger } from '@sap-cloud-sdk/util';
+
+const myLogger = createLogger('my-message-context');
+```
+
+<!-- vale on -->
+
+The string argument in the `createLogger` is the identifier for the logger and you should use a separate message context for each logical part of your application.
+Since it is used to group messages or set the log level per context.
+
+## Use a Logger
+
+The logger provides the usual log methods:
+
+```ts
+myLogger.debug('Here is some debug.');
+myLogger.info('Here is some info.');
+myLogger.warn('Here is a warning.');
+myLogger.error('Here is a error.');
+```
+
+The default value for the log level is `info`.
+In the example above the first line would not appear in the logs.
+You can set the log level either on creation:
+
+```ts
+const myLogger = createLogger({
+  messageContext: 'my-message-context',
+  level: 'info'
+});
+```
+
+or later in you application via the `setLogLevel()` method:
+
+```ts
+setLogLevel('error', 'my-message-context');
+```
+
+## Logging Exceptions
+
+In the example above a string was passed to the logging method:
+
+```ts
+myLogger.info('Here is some info.');
+```
+
+and in the logs, you would find a related entry:
+
+```
+TimeStamp [INFO] my-message-context The message you provided.
+```
+
+However, you can also pass an error object also known as an exception to the log statement.
+In this case, the log statement will contain only the message of the exception for all log functions except for `error`.
+If `myLogger.error(err)` is called with an error object it will also log the stack trace:
+
+```ts
+myLogger.error(new Error('Log this message and stack.')
+```
+
+## Exception Logger
+
+The SAP Cloud SDK enables an exception logger once you create a logger instance somewhere in your project.
+The exception logger logs unhandled exceptions as if you would log the error manually.
+In other words, the exception logger does the following for you:
+
+```ts
+try {
+  someMethodThrowing();
+} catch (err) {
+  logger.error(err);
+  throw err;
+}
+```
+
+You can disable this functionality with the `disableExceptionLogger()` method.
+
+## What Happens Under the Hood
+
+The SAP Cloud SDK logger instances are based on [winston](https://github.com/winstonjs/winston).
+A `logger` instance is created from a central container that knows all existing loggers.
+Via the `container` the SAP Cloud SDK provides methods per message context:
+
+```ts
+getLogger('my-message-context'); // get logger if present
+setLogLevel('error', 'my-message-context'); // set log level
+setLogFormat(logFormat.kibana, 'my-message-context'); // set log format
+```
+
+or global methods for all loggers:
+
+```ts
+setGlobalLogLevel('warn'); // set the global log level to warn
+setGlobalLogFormat(logFormat.kibana); // set the global log format to kibana
+setGlobalTransports(new winston.transports.File(options)); // set the global transport to file
+muteLoggers(); // mute all loggers completely
+unmuteLogger(); // unmute all loggers
+```
+
+The SAP Cloud SDK sets the log level **during the creation of a logger** based on the following order:
+
+1. **log level for a specific message context or logger**: `setLogLevel('info', messageContextOrLogger)`
+2. **`level` field in the `createLogger()` function**: `createLogger({..., level: "info"})`
+3. **global log level**: `setGlobalLogLevel('info')`
+4. **default log level**: `info`
+
+:::note
+Please notice that `setGlobalLogLevel` will not only affect the creation of the next logger, but also the log level of all existing loggers.
+:::
+
+The SAP Cloud SDK sets the log format based on the following order of priority:
+
+1. **log format for a specific message context or logger**: `setLogFormat(logFormat.local, messageContextOrLogger)`
+2. **`format` field in the `createLogger()` function**: `createLogger({..., format: logFormat.local})`
+3. **global log format**: `setGlobalLogFormat(logFormat.local)`
+4. **default log format**: set `NODE_ENV=production` to get `kibana`, otherwise `local`
+
+:::note
+Please notice that the `setGlobalLogFormat()` method will not only affect the creation of the next logger, but also the log format of all existing loggers.
+:::
+
+:::tip
+`nodejs_buildpack` sets `NODE_ENV=production` by default.
+Therefore, Node.js applications deployed on Cloud Foundry using `nodejs_buildpack` has `kibana` as the default log format.
+:::
+
+In case you see a need for higher flexibility of the logging instance feel free to create an issue in our [repository](https://github.com/SAP/cloud-sdk-js) or make a contribution.

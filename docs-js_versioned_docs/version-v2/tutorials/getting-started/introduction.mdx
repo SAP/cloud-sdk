@@ -1,0 +1,70 @@
+---
+id: introduction
+title: Create Your First Application with the SAP Cloud SDK for JavaScript
+sidebar_label: Introduction
+description: Create your first NestJS-based application on Cloud Foundry environment using the SAP Cloud SDK for JavaScript.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+  - tutorial
+---
+
+## About This Tutorial
+
+This tutorial is divided into multiple sections:
+
+- [Setup](./1-set-up-dev-environment.mdx) tells you about tools you need, setting up a NestJS application, and its project structure.
+- [Execute an OData Request](./2-execute-odata-request.mdx) will give you a deeper insight into using an OData client to execute requests against an SAP S/4HANA service.
+- [Deploy Application to Cloud Foundry](./3-deploy-app-to-cf.mdx) informs you about managing destinations in Cloud Foundry in SAP BTP.
+
+## About the Application
+
+In this tutorial, you will build your application from scratch, using the SAP Cloud SDK for JavaScript and NestJS.
+[NestJS](https://docs.nestjs.com/) is a framework for building server-side Node.js applications.
+
+The application will use the [business partner client library](https://api.sap.com/api/API_BUSINESS_PARTNER/cloud-sdk/JavaScript) and connect to an SAP S/4HANA Cloud system.
+It will fetch a list of business partners and provide the result to a service endpoint that users can consume.
+You will leverage several of the SAP Cloud SDK features such as:
+
+- [request builders](../../features/odata/odata-v2-client.mdx#getall-request-builder) to build OData requests for available request types.
+- [destination lookup](../../features/connectivity/destination.mdx#creating-destinations-manually) for destinations created manually or referenced by name.
+- [execute](../../features/odata/execute-odata-request.mdx#general-request-structure) method to construct request URL and headers, execute the request, and return a typed response
+
+## Prerequisites
+
+This tutorial assumes you have a basic knowledge of the following:
+
+- [**TypeScript**](https://www.typescriptlang.org/): programming concepts like functions, arrays, etc.
+- [**Cloud Foundry**](https://docs.cloudfoundry.org/concepts/overview.html): spaces, cf CLI.
+- [**SAP Business Technology Platform**](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/daca64dacc6148fcb5c70ed86082ef91.html): concepts such as destinations, UAA services.
+
+For deploying your application to Cloud Foundry in SAP Business Technology Platform, you will need an account.
+You can get a trial account [here](https://www.sap.com/products/business-technology-platform/trial.html) or use an existing account if you already have one.
+
+You also need to have access to an SAP S/4HANA Cloud system with a technical user.
+If no SAP S/4HANA Cloud system is available, you can set up a mock server or use a sandbox API as described below.
+
+You can set up a local mock server by following the instructions [here](https://sap.github.io/cloud-s4-sdk-book/pages/mock-odata.html).
+This server hosts an OData v2 mock service that mimics the business partner API.
+It does not support all the features of the actual OData services, but it suffices to try it out locally.
+Once it is up and running you should see the list of services at http://localhost:3000.
+
+Alternatively, many APIs can also be tested using the sandbox of the SAP API Business Hub.
+To use the sandbox, you need an _API key_.
+Go to [SAP API Business Hub](https://api.sap.com) and click _Login_ in the top right corner.
+If you do not have an account, you will need to register first.
+When you are logged in, click on _Hi name_ in the top right corner and then click on _Settings_ in the dropdown menu.
+On the settings page, click _Show API Key_.
+
+## Learning Outcomes
+
+After reading the tutorial, you will learn how to do the following tasks:
+
+- Consume an SAP S/4HANA service in your application.
+- Use the SAP Cloud SDK to perform `GET` requests against an SAP S/4HANA Cloud system.
+- Create and configure a destination and use it in your application.
+- Deploy your application to a Cloud Foundry space.

@@ -1,0 +1,160 @@
+---
+id: mail-client
+title: Send e-mails
+sidebar_label: Send e-mails
+description: How to send emails from application deployed on the SAP BTP
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - mail
+  - email
+  - e-mail
+  - BTP
+  - on-premise
+  - JavaScript
+  - TypeScript
+---
+
+This documentation describes how you can send e-mails from applications deployed on the SAP BTP to your e-mail servers.
+When defining e-mail servers by using the `destination` service on the SAP BTP, both `Internet` and `On-Prem` destinations are supported.
+
+## Installation
+
+Run this command in your root directory of your project to install the `mail-client` dependency and add it to your `dependency` list:
+
+```
+npm install @sap-cloud-sdk/mail-client
+```
+
+## Examples
+
+In this section you find minimal examples illustrating how to send e-mails using the SAP Cloud SDK.
+
+### Send an E-Mail
+
+First, create a `mailConfig` that contains all the essential information of an e-mail:
+
+<!-- vale off -->
+
+```ts
+import { sendMail, MailConfig } from '@sap-cloud-sdk/mail-client';
+
+const mailConfig: MailConfig = {
+  from: 'from@example.com',
+  to: 'to@example.com',
+  subject: 'e-mail subject',
+  text: 'e-mail text'
+};
+```
+
+<!-- vale on -->
+
+You send the e-mail by calling `sendMail` with your `mailConfig` as argument:
+
+```ts
+sendMail({ destinationName: 'my-mail-destination' }, [mailConfig]);
+```
+
+The first parameter is either a [destination](https://sap.github.io/cloud-sdk/api/2.9.0/interfaces/sap_cloud_sdk_connectivity.Destination) object or [DestinationFetchOptions](https://sap.github.io/cloud-sdk/api/2.9.0/interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions).
+For productive environment, you should use the `destination service` on the SAP BTP and reference the destination by name just like the example above.
+`{ destinationName: 'my-mail-destination' }` is the minimal object that is typed as `DestinationFetchOptions`.
+For test environment, instead of using the `DestinationFetchOptions`, you can also pass a complete `destination` object.
+
+:::caution Caution
+
+As the destination object might contain credentials, using it in production should be avoided.
+
+:::
+
+You can read more about the abstraction of the `destination` in the documentation [here](https://sap.github.io/cloud-sdk/docs/js/features/connectivity/destination).
+
+### Send Multiple E-Mails
+
+The code snippets below shows how to send two e-mails with the `mailConfig` that you created in the previous example.
+The e-mails are sent in parallel by default.
+
+```ts
+sendMail({ destinationName: 'my-mail-destination' }, [mailConfig, mailConfig]);
+```
+
+#### Send E-Mails in Sequential
+
+Sometimes you prefer sending e-mail in sequential instead of in parallel due to e.g., the rate limit of your e-mail server.
+To send e-mails in sequential, set the `parallel` option to `false`:
+
+```ts
+sendMail({ destinationName: 'my-mail-destination' }, [mailConfig, mailConfig], {
+  sdkOptions: {
+    parallel: false
+  }
+});
+```
+
+:::tip
+
+As the parallelization is the default behaviour, you don't have to set `parallel: true` explicitly.
+
+:::
+
+### Configure `nodemailer`
+
+The SAP Cloud SDK uses the node package `nodemailer` under the wood.
+`nodemailer` supports creating a `transport` based on options listed in their [documentation](https://nodemailer.com/smtp/).
+The SAP Cloud SDK exposes these options (as `SmtpTransportOptions`) and will transfer them based on user input.
+For example, you can provide the `tls` option like below to circumvent issues with self-signed certificates:
+
+```ts
+sendMail({ destinationName: 'my-mail-destination' }, [mailConfig], {
+  tls: {
+    rejectUnauthorized: false
+  }
+});
+```
+
+The SAP Cloud SDK API documentation of the complete `SmtpTransportOptions` can be found in the API doc [here](https://sap.github.io/cloud-sdk/api/2.9.0/interfaces/mailclient_src.SmtpTransportOptions).
+
+#### Proxy
+
+`nodemailer` also supports defining proxy option as mentioned [here](https://nodemailer.com/smtp/proxies/).
+Similar to other `nodemailer` options, the `proxy` key is also part of the `SmtpTransportOptions`.
+You can find a minimal example below for defining an HTTP proxy:
+
+```ts
+sendMail({ destinationName: 'my-mail-destination' }, [mailConfig], {
+  proxy: 'http://my-proxy-host:1234'
+});
+```
+
+Using socks proxy is not supported for the time being.
+For on-premise connectivity via the connectivity service on the SAP BTP, please check the next section.
+
+:::caution
+
+The SAP Cloud SDK will pass the proxy option directly to the `nodemailer`, but the proxy feature is not end-to-end tested.
+
+:::
+
+## On-Premise Destination
+
+The SAP Cloud SDK supports using `On-Premise` destination as well.
+From the SAP Cloud SDK API perspective, the code looks similar, no matter you use `On-Premise` destinations or `Internet` destinations.
+The only difference is that you have to reference the name of the On-Premise destination, which is obvious.
+
+### What's the Difference
+
+First, for applications deployed on the SAP BTP, you need a `connectivity` service for connecting to an `On-Premise` destination.
+Second, a `Cloud Connector` is used as a proxy for accessing the `On-Premise` system.
+Please make sure the mail destination is configured correctly as discussed in the [documentation](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/8d1f989deca1455dabc3d81b433fbdaf.html).
+
+### `SOCKS5` Proxy Implementation
+
+Using a `SOCKS5` proxy for accessing on-premise systems from applications on SAP BTP requires the `SOCKS5` authentication flow as explained [here](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/cd1583775afa43f0bb9ec69d9dbcc880.html?locale=en-US).
+The SAP Cloud SDK handles the `SOCKS5` proxy implementation automatically when detecting an `On-Premise` mail destination.
+
+:::tip
+
+For some on-premise e-mail server, including our test server, the parallelization of sending email might be a challenge.
+You can disable the parallelization by passing `parallel: false` as mentioned before.
+
+:::

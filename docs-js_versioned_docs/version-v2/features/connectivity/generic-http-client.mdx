@@ -1,0 +1,232 @@
+---
+id: http-client
+title: Perform HTTP Requests
+sidebar_label: Perform HTTP Requests
+description: How to use the generic http client for untyped requests
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - odata
+  - HTTP
+  - JavaScript
+  - TypeScript
+---
+
+import LinkToLatestJsApiDocs from '@site/src/sap/sdk-js/LinkToLatestJsApiDocs';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+This guide explains how to execute arbitrary HTTP requests using the SAP Cloud SDK for JavaScript.
+The HTTP client provided by the SAP Cloud SDK provides some convenience features which are explained in detail in this guide.
+
+<!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
+
+:::tip
+
+If you want to use an OData API, please refer to the [Executing a request using a generated OData client](../odata/execute-odata-request.mdx) page.
+In case you want to use an OpenAPI client, please refer to the [Execute a Request Using a Generated OpenAPI Client](../openapi/execute-openapi-request.mdx) page.
+
+:::
+
+## When to Use What?
+
+The SAP Cloud SDK for JavaScript can generate clients for [OData](../odata/execute-odata-request.mdx) and [OpenAPI](../openapi/execute-openapi-request.mdx).
+Use generated clients for OData or OpenAPI services, if possible.
+
+Generated clients provide convenience features such as:
+
+- Type-safe response objects
+- Convenient handling of filter, select and expand conditions
+- Built-in `ETag` versions handling
+
+<!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
+
+:::note
+
+Be sure to check if the clients for OData or OpenAPI support your use case.
+For example, the OData client does not support the `upsert` operation.
+
+:::
+
+The generic HTTP client is based on the open-source [axios HTTP client](https://axios-http.com), but provides convenience features which are specific to working on SAP Business Technology Platform, such as:
+
+- [Destination lookup](../connectivity/destination.mdx)
+- Connections to [SAP S/4HANA On-Premise](../connectivity/on-premise.mdx) via the connectivity service
+- [Web proxies](../connectivity/proxy.mdx)
+
+## `executeHttpRequest`
+
+The most basic way to use the SAP Cloud SDK HTTP client is the function <LinkToLatestJsApiDocs slug="functions/sap_cloud_sdk_http_client.executeHttpRequest" name="executeHttpRequest" />.
+
+```ts
+executeHttpRequest(destination, requestConfig, httpRequestOptions): Promise<HttpResponse>;
+```
+
+<!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
+
+:::tip
+
+This guide provides code snippets, fully executable example code can be found in the [SAP-samples/cloud-sdk-js repository on GitHub](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/http-client-examples).
+
+:::
+
+In the most simple form, this can be invoked like this:
+
+```ts
+const response = await executeHttpRequest(
+  {
+    url: 'https://example.com'
+  },
+  {
+    method: 'get'
+  }
+);
+```
+
+The `executeHttpRequest()` function takes the following parameters:
+
+- The `destination` argument is of type `DestinationOrFetchOptions`
+  - This can either be a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="destination object" /> which was already fetched or an <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions" name="object containing a destination name and an optional JWT" />
+- The `requestConfig` argument is of type <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_http_client.HttpRequestConfig" name="HttpRequestConfig" /> or <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_http_client.HttpRequestConfigWithOrigin" name="HttpRequestConfigWithOrigin" />
+- The `httpRequestOptions` argument is of type `HttpRequestOptions`
+  - This parameter is optional
+  - Can be used to disable [automatic CSRF token fetching](#csrf-token-fetching)
+
+<!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
+
+:::caution
+
+Note that the `destination` and `requestConfig` parameters have an overlap in the keys they accept.
+For example, both have a `url` and an `authorization` property.
+For keys that exist for both objects, the `requestConfig` takes precedence.
+
+:::
+
+The `executeHttpRequest()` function returns a promise of type <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_http_client.HttpResponse" name="HttpResponse" />.
+
+### CSRF Token Fetching
+
+[Cross-Site Request Forgery (CSRF)](https://en.wikipedia.org/wiki/Cross-site_request_forgery) is a common type of attack on web applications.
+The HTTP client provided by SAP Cloud SDK allows to automatically retrieve a CSRF token for HTTP APIs which support this.
+
+<!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
+
+:::info
+
+Fetching CSRF token is automatically enabled for all requests that typically might change data, such as `PUT`, `POST`, `DELETE`, or `PATCH` requests.
+It is not available for `GET` requests.
+
+:::
+
+Fetching the CSRF token can be enabled or disabled via the `httpRequestOptions.fetchCsrfToken` parameter of `executeHttpRequest()` function.
+See its <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_http_client.HttpRequestOptions" name="API documentation" /> for details.
+
+For example, to avoid CSRF token fetching when doing a `PUT`, `POST`, `DELETE`, or `PATCH` request, disable it like in this example:
+
+```ts
+const response = await executeHttpRequest(
+  {
+    url: `https://example.com`
+  },
+  {
+    method: 'post'
+  },
+  {
+    fetchCsrfToken: false
+  }
+);
+```
+
+### Parameter Encoding
+
+[URL encoding](https://en.wikipedia.org/wiki/Percent-encoding) allows using characters as part of the URL which normally would cause issues such as spaces.
+For example, the space character is replaced with `%20`.
+
+The HTTP client automatically takes care of encoding parameters except for _custom parameters_.
+Custom parameters can be useful when you need control exactly how values are transmitted to the backend system.
+
+#### Customized Parameter Encoding
+
+If you need to customize parameter encoding, you can provide your own function to do the transformation.
+This feature is meant for cases where backends have special requirements for the encoding that don't work with the default URL-encoding done by the HTTP client.
+You should usually avoid this as it adds additional complexity to the application code.
+
+The example below shows how to do a string replace:
+
+```ts
+const myCustomParameterEncodingFunction: ParameterEncoder = function (
+  params: Record<string, any>
+): Record<string, any> {
+  const encodedParams: Record<string, any> = {};
+
+  for (const key in params) {
+    // Customize your required encoding logic here
+    encodedParams[key] = params[key].toString().replace('x', 'y');
+  }
+
+  return encodedParams;
+};
+
+const response = await executeHttpRequest(
+  {
+    url: 'https://example.com'
+  },
+  {
+    method: 'get',
+    params: {
+      param1: 'a/bx',
+      param2: 'x1'
+    },
+    // Pass your custom encoding function
+    parameterEncoder: myCustomParameterEncodingFunction
+  }
+);
+```
+
+The HTTP request in this example will contain the parameter values `a/by` and `y1` because our parameter encoder function replaced the `x` with a `y`.
+
+## `executeHttpRequestWithOrigin()`
+
+The `executeHttpRequestWithOrigin()` function is a variation of `executeHttpRequest()` which allows more fine-grained control over configuration precedence.
+
+<!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
+
+:::caution
+
+The term "origin" as it is used in the context of this guide does **not** refer to [a URL as in the "same-origin policy"](https://developer.mozilla.org/en-US/docs/Glossary/Origin).
+Instead it refers to the _origin_ or _source_ of HTTP client configuration.
+
+:::
+
+This function may be helpful in situations where you want to define the priority of headers and parameters, for example if:
+
+- You want to enforce a hard-coded API key or JWT and ignore the ones from the destination
+- You want a default query parameter, which can be overwritten by the destination properties
+
+Headers and query parameters with the same name are prioritized in the following order:
+
+1. `custom`
+2. Destination related headers/query parameters
+3. `requestConfig`
+
+In this example the HTTP request will contain the URL parameter `myParam` with the value `custom-param` and the HTTP header `apiKey` with the value `custom-header`:
+
+```ts
+const response = await executeHttpRequestWithOrigin(
+  {
+    url: 'https://example.com'
+  },
+  {
+    method: 'get',
+    headers: {
+      custom: { apiKey: 'custom-header' },
+      requestConfig: { apiKey: 'default-header' }
+    },
+    params: {
+      custom: { myParam: 'custom-param' },
+      requestConfig: { myParam: 'default-param' }
+    }
+  }
+);
+```
