@@ -63,7 +63,15 @@ The most basic way to use the SAP Cloud SDK HTTP client is the function <LinkToL
 executeHttpRequest(destination, requestConfig, httpRequestOptions): Promise<HttpResponse>;
 ```
 
-<!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
+It takes the following parameters:
+
+- The `destination` argument is of type `DestinationOrFetchOptions`
+  - This can either be a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="destination object" /> which was already fetched or an <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions" name="object containing a destination name and an optional JWT" />
+- The `requestConfig` argument is of type <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_http_client.HttpRequestConfig" name="HttpRequestConfig" /> or <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_http_client.HttpRequestConfigWithOrigin" name="HttpRequestConfigWithOrigin" />.
+  - The `method` and `url` properties are mandatory.
+- The `httpRequestOptions` argument is of type `HttpRequestOptions`
+  - This parameter is optional
+  - Can be used to disable [automatic CSRF token fetching](#csrf-token-fetching)
 
 :::tip
 
@@ -71,7 +79,7 @@ This guide provides code snippets, fully executable example code can be found in
 
 :::
 
-In the most simple form, this can be invoked like this:
+In the most simple form, the function can be invoked like this:
 
 ```ts
 const response = await executeHttpRequest(
@@ -85,15 +93,7 @@ const response = await executeHttpRequest(
 );
 ```
 
-The `executeHttpRequest()` function takes the following parameters:
-
-- The `destination` argument is of type `DestinationOrFetchOptions`
-  - This can either be a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="destination object" /> which was already fetched or an <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions" name="object containing a destination name and an optional JWT" />
-- The `requestConfig` argument is of type <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_http_client.HttpRequestConfig" name="HttpRequestConfig" /> or <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_http_client.HttpRequestConfigWithOrigin" name="HttpRequestConfigWithOrigin" />.
-  The `method` and `url` properties are manadatory.
-- The `httpRequestOptions` argument is of type `HttpRequestOptions`
-  - This parameter is optional
-  - Can be used to disable [automatic CSRF token fetching](#csrf-token-fetching)
+Note that the `url` property in the destination object refers to the base URL of the target system, whereas the `url` property in the request config is the relative service URL used for the request.
 
 <!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
 
