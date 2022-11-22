@@ -52,7 +52,6 @@ module.exports = {
       label: 'Guides',
       items: [
         'guides/kubernetes',
-        'guides/upgrade-to-version-2',
         'guides/bas',
         'guides/browser',
         'guides/trust-and-keystores',
