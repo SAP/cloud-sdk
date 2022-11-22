@@ -296,7 +296,6 @@ The destination service returns a destination with all relevant authentication i
 - `OAuth2Password`
 - `ClientCertificateAuthentication`
 - `OAuth2JWTBearer`
-- `OAuth2RefreshToken`
 
 The SAP Cloud SDK automatically parses the response of the destination service and uses the provided authentication information for the request to the target system.
 For a simple service, this would be the end of the story.
@@ -427,10 +426,6 @@ A few of the options were already listed above, but this section gives a compreh
   Crucial in multi-tenant scenarios or for user-dependent authentication flows.
 - `iss`: Issuer URL which can be used to obtain destination for a subscriber tenant if no JWT is present.
   Read the detailed documentation above before using this option.
-- `refreshToken`: A refresh token.
-  Is used to fetch a new access token without performing the original authentication flow.
-  It has a longer validity compared to access tokens.
-  This field is mandatory for destinations with authentication type `OAuth2RefreshToken`.
 - `selectionStrategy`: Specifies the order in which accounts are searched for a destination.
   Default is `subscriberFirst`.
   Alternative values are `alwaysProvider` and `alwaysSubscriber`.

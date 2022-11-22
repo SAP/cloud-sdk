@@ -1,0 +1,273 @@
+---
+id: v4-client
+title: Use the OData v4 Type-safe Client API
+sidebar_label: OData v4 Client API
+description: Use the SAP Cloud SDK for JavaScript to build and run OData v4 requests in a type-safe way.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - odata
+  - JavaScript
+  - TypeScript
+  - consume
+---
+
+import { SkipCsrf } from '../common';
+import {
+  CustomFields,
+  CustomDeSerializers,
+  DeserializeEntity,
+  Entity,
+  EntityBuilder,
+  FromJson
+} from './common/entity';
+import {
+  Count,
+  Create,
+  DeepCreate,
+  CreateAsChildOf,
+  Delete,
+  Update,
+  GetAll,
+  GetByKey,
+  Replace,
+  IgnoreOrOverwriteVersion,
+  SetRequiredFields,
+  SetIgnoredFields
+} from './common/operations';
+import {
+  Top,
+  Skip,
+  OrderBy,
+  Filter,
+  FilterOneToOne,
+  FilterFunctions
+} from './common/query-parameter';
+import {
+  EtagFunctionImport,
+  EntityReturnType
+} from './common/function-imports';
+import {
+  BatchIntro,
+  RetrieveRequests,
+  CombiningRequests,
+  Serialization,
+  ChangeSet,
+  Responses,
+  ConfigureSerialization
+} from './common/batch';
+import { Csrf, SkipCsrfExample, ETag } from './common';
+import {
+  ExpandSelect,
+  FilterOneToMany,
+  FilterParentChild,
+  SubqueriesInExpand,
+  Select,
+  FunctionImportKnownIssues,
+  ActionImport,
+  ActionImportKnownIssues,
+  ChangeSetExample,
+  RequestBuilder
+} from './v4';
+
+This guide explains how to use features of the [OData v4 protocol](https://www.odata.org/documentation/) supported by the SAP Cloud SDK.
+We will use [People service from OData v4 tutorial](https://www.odata.org/getting-started/advanced-tutorial/) and [Business Partner Service](https://api.sap.com/api/API_BUSINESS_PARTNER/resource) from the SAP S/4HANA ERP suit.
+
+:::note
+
+For more details on **how to execute requests** using a OData type-safe client by the SAP Cloud SDK, refer to [this guide](./execute-odata-request.mdx).
+
+:::
+
+## Entities
+
+<Entity />
+
+### Custom Fields
+
+<CustomFields />
+
+### Build an Entity From Scratch
+
+<EntityBuilder />
+
+### Build an Entity From a JSON Representation
+
+<FromJson />
+
+### Deserialize an OData JSON Response to an Entity
+
+<DeserializeEntity />
+
+### Customize (De-)Serialization
+
+<CustomDeSerializers />
+
+## GetAll Request Builder
+
+<GetAll />
+
+### Select
+
+<Select />
+
+### Filter
+
+<Filter />
+
+#### Filter on One-to-One Navigation Properties
+
+<FilterOneToOne />
+
+#### Filter on One-to-Many Navigation Properties
+
+<FilterOneToMany />
+
+#### More Filter Expressions
+
+More advanced filter expressions can be found [here](#available-filter-expressions).
+
+### Expand
+
+#### Expand and Select <a name="expand-and-select"/>
+
+<ExpandSelect />
+
+#### Sub-Queries in Expand
+
+<SubqueriesInExpand />
+
+#### Filter Parent vs Filter Children <a name="filterParentChildren"/>
+
+<FilterParentChild />
+
+### Skip
+
+<Skip />
+
+### Top
+
+<Top />
+
+### OrderBy
+
+<OrderBy />
+
+### Count
+
+<Count />
+
+:::note Using count within a filter is not supported
+
+Note that the SAP Cloud SDK does not support the usage of count within a filter condition as described in the [OData v4 specification](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_AddressingtheCountofaCollection).
+
+:::
+
+## `GetByKey` Request Builder
+
+<GetByKey />
+
+## Create Request Builder
+
+<Create />
+
+### Deep Create
+
+<DeepCreate />
+
+### Create as Child Of
+
+<CreateAsChildOf />
+
+## Update Request Builder
+
+<Update />
+
+### Replace the Entity With `PUT`
+
+<Replace />
+
+### Set Required Fields
+
+<SetRequiredFields />
+
+### Set Ignored Fields
+
+<SetIgnoredFields />
+
+## Delete Request Builder
+
+<Delete />
+
+## Handling of ETags
+
+<ETag />
+
+### Ignore or Overwrite the Version Identifier
+
+<IgnoreOrOverwriteVersion />
+
+## Handling of Cross-Site Request Forgery Tokens
+
+<Csrf />
+
+## Skip CSRF Token Handling
+
+<SkipCsrf />
+<SkipCsrfExample />
+
+## Available Filter Expressions
+
+### Filter Functions
+
+<FilterFunctions />
+
+## Operations (Functions and Actions)
+
+<RequestBuilder />
+
+### Setting ETag
+
+<EtagFunctionImport />
+
+<EntityReturnType />
+
+### Known Issues
+
+<FunctionImportKnownIssues />
+
+## Batch Requests
+
+<BatchIntro />
+
+### Retrieve Request
+
+A retrieve request represents an HTTP `GET` request.
+In terms of the SAP Cloud SDK this includes all requests built by [`GetAllRequestBuilder`](#getall-request-builder), [`GetByKeyRequestBuilder`](#getbykey-request-builder) and [`FunctionImportRequestBuilder`](#function-imports).
+
+<RetrieveRequests />
+
+### Changeset
+
+A changeset is a collection of HTTP `POST`, `PUT`, `PATCH` and `DELETE` operations.
+Such operations are built by the [`CreateRequestBuilder`s](#create-request-builder), [`UpdateRequestBuilder`s](#update-request-builder), [`DeleteRequestBuilder`s](#delete-request-builder) or [`ActionImportRequestBuilder`](#action-imports).
+
+<ChangeSet />
+<ChangeSetExample />
+
+### Responses
+
+<Responses />
+
+### Combining Requests
+
+<CombiningRequests />
+
+### Serialization
+
+<Serialization />
+
+### Configure Subrequest Serialization
+
+<ConfigureSerialization />

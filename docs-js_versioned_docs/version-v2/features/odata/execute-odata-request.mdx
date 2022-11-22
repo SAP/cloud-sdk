@@ -1,0 +1,348 @@
+---
+id: execute-request
+title: Executing a Request Using a Generated OData v2/v4 Client
+sidebar_label: Execute an OData request
+description: Use the SAP Cloud SDK for JavaScript to build and run OData requests in a type-safe way.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - odata
+  - JavaScript
+  - TypeScript
+  - consume
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import LinkToLatestJsApiDocs from '@site/src/sap/sdk-js/LinkToLatestJsApiDocs';
+import {
+  CustomRequestConfig,
+  CustomRequestConfigNote,
+  ExecuteRawOverview,
+  ExecuteRawUseCases
+} from '../common';
+
+Once you have generated a typed OData client using the SAP Cloud SDK generator, you can use this OData client to execute HTTP requests for your service.
+The client provides request builders for the different types of requests and abstractions of the entity sets of the given service, which we refer to as _entities_.
+
+## General Request Structure
+
+On an abstract level, creating a request using the fluent API always follows the same simple structure:
+
+```ts
+import { myEntityService } from './outputDir/my-service';
+
+const { myEntityApi } = myEntityService();
+return myEntityApi.requestBuilder()
+  .<requestType>(...)
+  .<additionalRequestConfiguration>(...)
+  .execute(destination);
+```
+
+If you are using an OData client, that you generated on your own, import the service function, e.g. `myEntityService`, from the generated service directory (`my-service`) within the specified output directory (`outputDir`).
+The name of the service directory corresponds to the `directoryName` specified in the service mapping file (`serviceMapping.json` by default) in your input directory.
+
+Destructure the service to get the API of the entity you want to make requests for - `myEntityApi` in the example above.
+
+Every entity API has a `requestBuilder` function, that allows to chain all types of request builders that are available for this entity, e.g. `myEntityApi.requestBuilder().getAll()` for the `getAll` request type.
+
+See the list below for details on all available request types (denoted by `requestType` in the example above):
+
+<Tabs
+  groupId="odataVersion"
+  defaultValue="v2"
+  values={[
+    { label: 'OData v2', value: 'v2' },
+    { label: 'OData v4', value: 'v4' }
+  ]}
+>
+  <TabItem value="v2">
+    <li>
+      <a href="./v2-client#getall-request-builder">
+        <code>getAll</code>
+      </a>{' '}
+      Build requests to get a list of entities (OData v2)
+    </li>
+    <li>
+      <a href="./v2-client#getbykey-request-builder">
+        <code>getByKey</code>
+      </a>{' '}
+      Build requests to get an entity based on a key (OData v2)
+    </li>
+    <li>
+      <a href="./v2-client#create-request-builder">
+        <code>create</code>
+      </a>{' '}
+      Build requests to create entities (OData v2)
+    </li>
+    <li>
+      <a href="./v2-client#update-request-builder">
+        <code>update</code>
+      </a>{' '}
+      Build requests to update entities (OData v2)
+    </li>
+    <li>
+      <a href="./v2-client#delete-request-builder">
+        <code>delete</code>
+      </a>{' '}
+      Build requests to delete entities (OData v2)
+    </li>
+  </TabItem>
+  <TabItem value="v4">
+    <li>
+      <a href="./v4-client#getall-request-builder">
+        <code>getAll</code>
+      </a>{' '}
+      Build requests to get a list of entities (OData v4)
+    </li>
+    <li>
+      <a href="./v4-client#getbykey-request-builder">
+        <code>getByKey</code>
+      </a>{' '}
+      Build requests to get an entity based on a key (OData v4)
+    </li>
+    <li>
+      <a href="./v4-client#create-request-builder">
+        <code>create</code>
+      </a>{' '}
+      Build requests to create entities (OData v4)
+    </li>
+    <li>
+      <a href="./v4-client#update-request-builder">
+        <code>update</code>
+      </a>{' '}
+      Build requests to update entities (OData v4)
+    </li>
+    <li>
+      <a href="./v4-client#delete-request-builder">
+        <code>delete</code>
+      </a>{' '}
+      Build requests to delete entities (OData v4)
+    </li>
+  </TabItem>
+</Tabs>
+
+:::note
+
+Some entities do not support all the request types, which in turn won't be available through the API.
+
+:::
+
+The request can further be configured by chaining additional configuration functions (denoted by `additionalRequestConfiguration` in the example above).
+All requests can be configured by setting [custom request headers](#setting-custom-request-headers), [custom query parameters](#setting-custom-query-parameters) and a [custom service path](#setting-a-custom-service-path).
+
+Each request type has additional request specific configuration options, e.g. creating an entity `asChildOf` another entity for `create` requests, ETag handling for `update` and `delete` requests, as well as set operations for `getAll` requests and selecting properties for `getAll` and `getByKey` requests.
+
+The last step when making a request using the SAP Cloud SDK is the request execution.
+Once the request is configured use the `execute` function and pass a [destination](../connectivity/destination.mdx) to it.
+This will automatically construct your request URL and headers, execute the request, and return a typed response if applicable.
+
+### Conversion of OData Types
+
+OData uses the Entity Data Model (EDM) to represent values such as strings, numbers, dates, and times.
+Calling the `execute` function by default automatically converts OData Entity Data Model (EDM) values to their respective types in JavaScript and TypeScript.
+
+By default, the SAP Cloud SDK converts EDM types into TypeScript types as described by the following tables.
+This can be changed by providing custom serializers and deserializers as described [here for OData v2](./odata-v2-client.mdx#customize-de-serialization) and [here for OData v4](./odata-v4-client.mdx#customize-de-serialization).
+
+For definition of the EDM data types in OData, see [the v2 spec](https://www.odata.org/documentation/odata-version-2-0/json-format/) or the [v4 spec](http://docs.oasis-open.org/odata/odata/v4.0/os/part3-csdl/odata-v4.0-os-part3-csdl.html#_The_edm:Documentation_Element) of OData.
+
+The following table describes how types are mapped by default:
+
+| EDM Type             | TypeScript Type                                                                         | Notes                                                 |
+| -------------------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| `Edm.String`         | `string`                                                                                |                                                       |
+| `Edm.Boolean`        | `boolean`                                                                               |                                                       |
+| `Edm.Guid`           | `string`                                                                                |                                                       |
+| `Edm.Decimal`        | `BigNumber`                                                                             |                                                       |
+| `Edm.Int16`          | `number`                                                                                |                                                       |
+| `Edm.Int32`          | `number`                                                                                |                                                       |
+| `Edm.Int64`          | `BigNumber`                                                                             |                                                       |
+| `Edm.Single`         | `number`                                                                                |                                                       |
+| `Edm.Double`         | `number`                                                                                |                                                       |
+| `Edm.Float`          | `number`                                                                                | Not an actual edm type, implemented for compatibility |
+| `Edm.Byte`           | `number`                                                                                |                                                       |
+| `Edm.SByte`          | `number`                                                                                |                                                       |
+| `Edm.DateTimeOffset` | `moment.Moment`                                                                         |                                                       |
+| `Edm.Binary`         | `string`                                                                                |                                                       |
+| `Edm.DateTime`       | `moment.Moment`                                                                         | OData v2 only, precision limited to milliseconds      |
+| `Edm.Time`           | <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_odata_common.Time" name="Time" /> | OData v2 only, does not consider time zones           |
+| `Edm.Date`           | `moment.Moment`                                                                         | OData v4 only                                         |
+| `Edm.Duration`       | `moment.Duration`                                                                       | OData v4 only                                         |
+| `Edm.TimeOfDay`      | <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_odata_common.Time" name="Time" /> | OData v4 only, does not consider time-zones           |
+| Any other type       | `any`                                                                                   |                                                       |
+
+If you require the raw OData response, you can look into [getting the raw response and the original request](#getting-the-raw-response-and-the-original-request).
+
+### Setting Custom Request Headers
+
+The SAP Cloud SDK automatically sets some necessary request headers on every request.
+You can specify additional custom headers using the `addCustomHeaders` function:
+
+```ts
+const { myEntityApi } = myEntityService();
+myEntityApi.requestBuilder().getAll().addCustomHeaders({
+  apikey: 'my-api-key'
+});
+```
+
+The keys and values of the passed object correspond with the header names and values.
+Custom headers take priority over automatically generated headers.
+Automatically generated headers are sent with lowercase header names, and custom headers keep the case they were set in.
+In the example above we pass an `apikey`, which is necessary if you want to make use of the SAP API Business Hub sandbox.
+
+:::caution
+
+Setting an `authorization` or `apikey` header (regardless of lowercase or uppercase spelling) will skip any automatic authorization header building that the SAP Cloud SDK would normally do.
+
+:::
+
+### Setting Custom Query Parameters
+
+The SAP Cloud SDK adds necessary query parameters for a request based on your configuration.
+You can add custom parameters by using the `withCustomQueryParameters` function.
+Custom query parameters take precedence over those created by the SAP Cloud SDK.
+
+In the example below an additional query parameter `language=en` will be added to the request URL:
+
+```ts
+const { myEntityApi } = myEntityService();
+myEntityApi.requestBuilder().getAll().withCustomQueryParameters({
+  language: 'en'
+});
+```
+
+:::note
+
+If you want to set a query parameter in quotes (e.g. `language='en'`) you will have to provide the parameter with quotes, e.g. `{ language: "'en'" }`.
+
+:::
+
+### Setting a Custom Service Path
+
+If a service specification contains a specification for the `servicePath`, the SAP Cloud SDK generator generates an OData client with a default service path according to the specification (typically `'/sap/opus/data/sap/'` for SAP S/4HANA services).
+When there is no such path defined in the specification, it can be manually set in the `service-mapping.json`.
+It can also be adjusted per request by using the `withCustomServicePath` function:
+
+```ts
+const { myEntityApi } = myEntityService();
+myEntityApi
+  .requestBuilder()
+  .getAll()
+  .withCustomServicePath('my/custom/service/path');
+```
+
+This will add the custom service path to your request.
+Executing the example request above against a destination with URL `https://my.s4-system.com` would result in a request against something like this: `https://my.s4-system.com/my/custom/service/path/MyEntity`.
+
+### Setting a Custom Request Configuration
+
+<CustomRequestConfig />
+
+```ts
+const { myEntityApi } = myEntityService();
+myEntityApi
+  .requestBuilder()
+  .getAll()
+  .addCustomRequestConfiguration({ responseType: 'arraybuffer' });
+```
+
+<CustomRequestConfigNote />
+
+### Appending Paths to the Request URL Built by the Request Builders
+
+Usually, our request builders construct the request URL for you automatically.
+However, for certain OData features like `navigation properties`, we do not yet provide a type-safe API that constructs the request path in a fully automated manner.
+For that reason, we added a non-typed API to our request builders providing the capability to append additional path segments to the request URL.
+You have to use the `executeRaw(destination)` method to get results because we can't deserialize a response in a type-safe way.
+
+The example below shows how to query a navigation property from a given entity.
+
+```ts
+const { myEntityApi } = myEntityService();
+myEntityApi
+  .requestBuilder()
+  .getByKey('123')
+  .appendPath(
+    '/to_SingleValueNavigationProperty1',
+    '/to_SingleValueNavigationProperty2'
+  )
+  .executeRaw(destination);
+```
+
+It will build the request URL like below:
+`https://my.s4-system.com/service-path/MyEntity(key='123')/to_SingleValueNavigationProperty1/to_SingleValueNavigationProperty2`
+where:
+
+- `/to_SingleValueNavigationProperty1/to_SingleValueNavigationProperty2` is the additional path that you provide from the parameters.
+- `https://my.s4-system.com/service-path/MyEntity(key='123')` is the path of the original request URL built by the SAP Cloud SDK.
+
+### Setting a Custom Timeout
+
+You can specify a timeout for the request via the `timeout()` method on the request builder:
+
+```ts
+const { myEntityApi } = myEntityService();
+const httpResponse: HttpResponse = myEntityApi
+  .requestBuilder()
+  .getAll()
+  .timeout(1000)
+  .execute(destination);
+```
+
+The value is in milliseconds and the default value is 10000 (10 seconds)
+This timeout applies to the request sent to the target system given in the destination.
+If a `CSRF` token is fetched from the target system the timeout applies also to this call.
+Note that there is also a second timeout option on the destination fetch options.
+This relates to the calls made to SAP BTP services like `destination-service` or XSUAA.
+
+### Getting the Raw Response and the Original Request
+
+<ExecuteRawOverview />
+
+Example:
+
+```ts
+const { myEntityApi } = myEntityService();
+const httpResponse: HttpResponse = myEntityApi
+  .requestBuilder()
+  .getAll()
+  .executeRaw(destination);
+```
+
+<ExecuteRawUseCases />
+
+<!-- The following ul/li tags + style are necessary to make the bullet points from execute raw look like one list including the following point. -->
+
+<!-- prettier-ignore -->
+<ul style={{ 'margin-top': '-16px' }}>
+  <li>
+    In rare cases, when the response data cannot be deserialized.
+    This can happen when function imports use an entity type as a return type, and this entity type is shared by multiple `EntitySet`s.
+    Without further information, it is unclear which <code>Entity</code> should be deserialized.
+    For those cases, you have to use <code>executeRaw</code> and use the <code>deserialize</code> function on the response data.
+  </li>
+</ul>
+
+### Troubleshooting
+
+#### Deserialize Nested Navigation Properties
+
+When deserializing an OData response that contains nested navigation properties, a user reported an [issue](https://github.com/SAP/cloud-sdk-js/issues/2606) about some missing navigation properties.
+This might happen if you don't use the object destructuring for getting multiple APIs.
+What you should do:
+
+```ts
+const { businessPartnerApi, businessPartnerAddressApi } =
+  businessPartnerService();
+```
+
+What you should avoid:
+
+```ts
+const businessPartnerApi = businessPartnerService().businessPartnerApi;
+const businessPartnerAddressApi =
+  businessPartnerService().businessPartnerAddressApi;
+```

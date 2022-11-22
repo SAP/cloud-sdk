@@ -1,0 +1,35 @@
+In the real world, OData service implementations can differ from their original service specifications.
+This can happen due to incorrect specifications or customizations of the service.
+The SAP Cloud SDK supports custom fields on your entities, that are not covered by the specification the according service is based on.
+
+You can set custom fields on an entity through the `setCustomFields()` and `setCustomField()` methods.
+Setting custom fields with existing keys overrides the existing fields.
+Non-existent fields are added without removing other fields.
+
+```ts
+// add custom fields to the existing fields
+businessPartner.setCustomFields({
+  myCustomField: 'this is custom'
+});
+
+// add specific custom field
+businessPartner.setCustomField('myCustomField', 'this is custom');
+```
+
+You can also access existing fields using the `getCustomField()` and `getCustomFields()` methods.
+
+```ts
+// get all custom fields
+const customFields = businessPartner.getCustomFields(); // { myCustomField: 'this is custom' }
+
+// get specific custom field
+const customFields: = businessPartner.getCustomField(); // 'this is custom'
+```
+
+:::note Custom fields are not serialized or deserialized
+
+As custom fields are not defined through the service specification, the type of their values is unknown.
+Therefore, custom fields are never automatically serialized or deserialized.
+If you are using custom fields, you might have to take care of serialization on your own.
+
+:::

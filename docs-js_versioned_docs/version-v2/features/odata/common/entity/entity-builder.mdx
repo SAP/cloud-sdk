@@ -1,0 +1,52 @@
+The API class provides an entity builder with the `entityBuilder()` method.
+You can set the properties using a fluent API.
+The `build()` method will return the new entity.
+
+```ts
+import { businessPartnerService } from './generated/business-partner-service';
+
+const { businessPartnerApi, businessPartnerAddressApi } =
+  businessPartnerService();
+
+businessPartnerApi.entityBuilder().firstName('Peter').lastName('Pan').build();
+```
+
+You can create navigation properties that link to other entities using their respective builders.
+Navigation properties with a one-to-many relation require an array of entities as a parameter.
+This also applies if the array only contains one entity.
+
+The relation to the business partner address is a one-to-many relation here.
+
+```ts
+import { businessPartnerService } from './generated/business-partner-service';
+
+const { businessPartnerApi, businessPartnerAddressApi } =
+  businessPartnerService();
+
+businessPartnerApi
+  .entityBuilder()
+  .firstName('Peter')
+  .lastName('Pan')
+  .toBusinessPartnerAddress([
+    businessPartnerAddressApi.entityBuilder().country('Neverland').build()
+  ])
+  .build();
+```
+
+You can also add fields that are unknown according to the specification, if you add them as custom fields.
+To achieve this, pass an object to the `withCustomFields()` method.
+The keys of the object represent the names of the custom fields and the values their respective values.
+
+```ts
+import { businessPartnerService } from './generated/business-partner-service';
+
+const { businessPartnerApi } = businessPartnerService();
+
+businessPartnerApi
+  .entityBuilder()
+  .firstName('Peter')
+  .withCustomFields({
+    myCustomField: 'this is custom'
+  })
+  .build();
+```
