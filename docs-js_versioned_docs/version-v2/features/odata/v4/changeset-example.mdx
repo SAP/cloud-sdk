@@ -1,0 +1,26 @@
+The example below is based on the [Materials Service](https://api.sap.com/api/MaterialsService/overview).
+Since the action `active` changes data, it is included with other changing requests like `update` in a changeset:
+
+```ts
+const {
+  materialsActiveApi,
+  actionImports: { activate }
+} = materialsService();
+
+async function batchExample(id: string) {
+  const actionImportRequestBuilder = activate({});
+  const updateRequestBuilder = materialsActiveApi
+    .requestBuilder()
+    .update(materialsActiveApi.entityBuilder().fromJson({ id }));
+
+  // Execute batch request with one changeset
+  const batchResponses = await batch(
+    changeset(actionImportRequestBuilder, updateRequestBuilder)
+  ).execute(destination);
+
+  // Get response for the changeset request
+  const changesetResponse = batchResponses[0];
+
+  // ...
+}
+```

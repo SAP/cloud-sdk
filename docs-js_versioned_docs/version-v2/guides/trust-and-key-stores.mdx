@@ -1,0 +1,143 @@
+---
+id: trust-and-keystores
+title: How the SAP Cloud SDK handles Trust and Keystores
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Trust and Keystores
+description: This article describes how to configure trust and keystores in the SAP Business Technology Platform and how the SAP Cloud SDK handles them.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - destination
+  - connectivity
+  - JavaScript
+  - TypeScript
+  - Keystore
+  - Truststore
+---
+
+## Overview
+
+The essence of web applications is communication between two parties.
+These two parties could be a server and a client, two servers, or any other combination.
+In the communication you want to ensure that:
+
+1. You are talking to the party you expect to talk to.
+2. The content of your conversation is securely encrypted and therefore private.
+
+To ensure this the secure socket layer (SSL), later called transport layer security (TLS), was developed.
+If you want to add this security layer to your request you use `HTTPS` instead of `HTTP`.
+
+The method to achieve both points above (trust and privacy) are private and public keys.
+Such keys offer the following properties:
+
+- You can encrypt something with one key, but you can decrypt it only with the counterpart.
+- You can distribute one key but you can not derive the counterpart from the distributed one.
+
+The process of encrypting something with the private key is sometimes called `signing` because everybody can check the signature with the public key.
+The format of the private and public keys are certificates that provide additional information like:
+
+- the used encryption algorithm
+- the issuer of the key pair
+- the validity of the key
+- the domain the key was issued for
+- etc.
+
+### Formats and Naming
+
+We already introduced terms like certificates for the public and private keys.
+However, we would like to introduce a few more terms:
+
+- `Keystore`: A keystore is an object containing keys.
+  Usually, these are private and public key pairs as introduced above, but they may contain a certificate instead.
+  You need a password to open a keystore.
+  Typical formats are `.jks`, `.p12`, `.pfcks`, and `.pkcS7`
+- `Truststore`: A truststore contains public keys like certificates.
+  Some formats allow you to protect the trust store with a password.
+  Typical formats are `.jks`, `.crt`, `.pem`, `.pub`, and `.der`.
+
+For X.509 certificate there are two encodings: base64 ASCII (e.g. `.pem`) and binary (e.g. `.der`).
+The content of a PEM file looks like this:
+
+```
+-----BEGIN CERTIFICATE-----
+MIIFZjCCA06gAwIBAgIQGHcPvmUGa79M6pM42bGFYjANBgkqhkiG9wA
+….
+LvHPhNDM3rMsLu06agF4JTbO8ANYtWQTx0PVrZKJu+8fcIaUp7MVBIVZ
+-----END CERTIFICATE-----
+```
+
+### Classic TLS / One-Way SSL
+
+The typical situation is that a client requests something from a public server and wants to be sure that the server is not somebody else.
+The server does not care about the identity of the client.
+The identity is verified in the following way:
+
+- Server presents the public key (certificate) and some signed content to the client.
+- Client checks that the domain in the certificate matches the requested resource.
+- Client checks that the certificate issuer is on the list of trusted [certificate authorities (CA)](https://en.wikipedia.org/wiki/Certificate_authority).
+- Client checks that the content was signed with the public key.
+
+If all checks have passed, the server is trustworthy.
+Creating a secure connection is possible using private and public keys.
+For an encrypted connection, you need to interchange a secret.
+An initial secret can be encrypted using the public certificate and sent back to the server.
+This is the starting point for a private connection between client and server.
+
+### Mutual TLS (mTLS) / Two-Way SSL
+
+Sometimes you would also like to verify the identity of the client.
+You can do this via a username and password or some authentication token.
+However, you can also use a private and public key pair to do that.
+
+You would store the public part of your client certificate on the server.
+When sending a request you then access your keystore and sign your request with the private part.
+This is called `client certificate authentication` or two-way SSL because the identity of the server and client is verified using private and public keys.
+
+## Truststore Configuration
+
+In most cases, your server will use a certificate from trusted CAs and one-way SSL just works without additional actions.
+Sometimes this is impossible and locally created key pairs also call `self-signed certificates` are used.
+Per default, browsers and node clients do not trust such a certificate.
+You will encounter errors like:
+
+```
+Error: self-signed certificate in certificate chain.
+```
+
+In such a case you need to add the self-signed certificate to the `ca` property of the [node http client](https://nodejs.org/api/tls.html#tlscreatesecurecontextoptions).
+The SAP Cloud SDK does this for you if you maintain the truststore configuration via the destination service.
+You have to do the following steps:
+
+- Upload your certificate [to destinations sections of the subaccount](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/df1bb55a526942b9bee78fea2ebb3162.html).
+- Maintain the `TrustStoreLocation` property on the destination and [select the uploaded certificate](https://help.sap.com/docs/CP_CONNECTIVITY/b865ed651e414196b39f8922db2122c7/3f1247537c1a4f069235ee63633659c5.html).
+  The password value is only relevant for the java keys store format (JKS).
+
+Note that you can also upload certificates in the destination service instance.
+The SAP Cloud SDK searches the subaccount first and only if no certificate with the given name is found proceeds to the instance certificates.
+
+:::caution
+The SAP Cloud SDK for JavaScript supports only `.pem` as certificate format.
+:::
+
+:::caution
+The SAP Cloud SDK also considers the `TrustAll` property on the destination.
+This leads to `rejectUnauthorized: false` in the node client and should be used with great caution.
+If you trust everybody, you are vulnerable to man-in-the-middle attacks.
+Avoid this option if possible.
+:::
+
+## Keystore Configuration
+
+As discussed above you can also use a certificate to authenticate the client.
+This is the mentioned two-way SSL scenario and is called `clientCertificateAuthentication` in the destination service.
+The SAP Cloud SDK supports this authentication flow.
+You have to do the following steps:
+
+- Upload the keystore in the destinations section of the subaccount.
+- Configure the destination to use [ClientCertificateAuthentication](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/4e13a04147314e8e9e54321f25d93fdc.html) and provide the keystore information like keystore name and password.
+
+:::caution
+The SAP Cloud SDK for JavaScript only supports formats `.p12` and `.pfx` for the keystore.
+:::

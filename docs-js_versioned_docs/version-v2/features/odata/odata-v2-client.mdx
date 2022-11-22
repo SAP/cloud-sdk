@@ -1,0 +1,238 @@
+---
+id: v2-client
+title: Use the OData v2 Type-safe Client API
+sidebar_label: OData v2 Client API
+description: Use the SAP Cloud SDK for JavaScript to build and run OData v2 requests in a type-safe way.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - odata
+  - JavaScript
+  - TypeScript
+  - consume
+---
+
+import { SkipCsrf } from '../common';
+import { Select, ChangeSetExample, RequestBuilder } from './v2';
+import { Csrf, SkipCsrfExample, ETag } from './common';
+import {
+  CustomFields,
+  CustomDeSerializers,
+  DeserializeEntity,
+  Entity,
+  EntityBuilder,
+  FromJson
+} from './common/entity';
+import {
+  Count,
+  Create,
+  DeepCreate,
+  CreateAsChildOf,
+  Delete,
+  Update,
+  GetAll,
+  GetByKey,
+  Replace,
+  IgnoreOrOverwriteVersion,
+  SetRequiredFields,
+  SetIgnoredFields
+} from './common/operations';
+import {
+  Top,
+  Skip,
+  OrderBy,
+  Filter,
+  FilterOneToOne,
+  FilterFunctions
+} from './common/query-parameter';
+import {
+  EtagFunctionImport,
+  EntityReturnType
+} from './common/function-imports';
+import {
+  BatchIntro,
+  RetrieveRequests,
+  CombiningRequests,
+  Serialization,
+  ChangeSet,
+  Responses,
+  ConfigureSerialization
+} from './common/batch';
+
+This guide explains how to use features of the [OData v2 protocol](https://www.odata.org/documentation/odata-version-2-0/) supported by the SAP Cloud SDK.
+To demonstrate the features we will use the [Business Partner Service](https://api.sap.com/api/API_BUSINESS_PARTNER/resource) from the SAP S/4HANA ERP suit.
+
+:::note
+
+For more details on **how to execute requests** using a OData type-safe client by the SAP Cloud SDK, refer to [this guide](./execute-odata-request.mdx).
+
+:::
+
+## Entities
+
+<Entity />
+
+### Custom Fields
+
+<CustomFields />
+
+### Build an Entity From Scratch
+
+<EntityBuilder />
+
+### Build an Entity From a JSON Representation
+
+<FromJson />
+
+### Deserialize an OData JSON Response to an Entity
+
+<DeserializeEntity />
+
+### Customize (De-)Serialization
+
+<CustomDeSerializers />
+
+## `GetAll` Request Builder
+
+<GetAll />
+
+### Select
+
+<Select />
+
+### Filter
+
+<Filter />
+
+#### Filter on One-to-One Navigation Properties
+
+<FilterOneToOne />
+
+#### More Filter Expressions
+
+More advanced filter expressions can be found [here](#available-filter-expressions).
+
+### Skip
+
+<Skip />
+
+### Top
+
+<Top />
+
+### OrderBy
+
+<OrderBy />
+
+### Count
+
+<Count />
+
+## `GetByKey` Request Builder
+
+<GetByKey />
+
+## Create Request Builder
+
+<Create />
+
+### Deep Create
+
+<DeepCreate />
+
+### Create as Child Of
+
+<CreateAsChildOf />
+
+## Update Request Builder
+
+<Update />
+
+### Replace the Entity With `PUT`
+
+<Replace />
+
+### Set Required Fields
+
+<SetRequiredFields />
+
+### Set Ignored Fields
+
+<SetIgnoredFields />
+
+## Delete Request Builder
+
+<Delete />
+
+## Handling of ETags
+
+<ETag />
+
+### Ignore or Overwrite the Version Identifier
+
+<IgnoreOrOverwriteVersion />
+
+## Handling of Cross-Site Request Forgery Tokens
+
+<Csrf />
+
+## Skip `CSRF` Token Handling
+
+<SkipCsrf />
+<SkipCsrfExample />
+
+## Available Filter Expressions
+
+### Filter Functions
+
+<FilterFunctions />
+
+## Function Imports
+
+### Request Builder
+
+<RequestBuilder />
+
+<EntityReturnType />
+
+### Setting ETag
+
+<EtagFunctionImport />
+
+## Batch Requests
+
+<BatchIntro />
+
+### Retrieve Request
+
+A retrieve request represents an HTTP `GET` request.
+In terms of the SAP Cloud SDK this includes all requests built by [`GetAllRequestBuilder`](#getall-request-builder), [`GetByKeyRequestBuilder`](#getbykey-request-builder) and [`FunctionImportRequestBuilder`](#function-imports) using `GET` requests.
+A type error will appear if you include a function import changing data, if you use TypeScript.
+
+<RetrieveRequests />
+
+### Changeset
+
+A changeset is a collection of HTTP `POST`, `PUT`, `PATCH` and `DELETE` operations.
+Such operations are built by the [`CreateRequestBuilder`s](#create-request-builder), [`UpdateRequestBuilder`s](#update-request-builder), [`DeleteRequestBuilder`s](#delete-request-builder) or [`FunctionImportRequestBuilder`](#function-imports).
+A type error will appear if you include a function import reading data, if you use TypeScript.
+
+<ChangeSet />
+<ChangeSetExample />
+
+### Responses
+
+<Responses />
+
+### Combining Requests
+
+<CombiningRequests />
+
+### Serialization
+
+<Serialization />
+
+### Configure Subrequest Serialization
+
+<ConfigureSerialization />

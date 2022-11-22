@@ -1,0 +1,26 @@
+The update request builder allows you to change existing entities.
+By default, `PATCH` is used to only update changed fields.
+
+In the following example, we first get a business partner, change one of its values, and then send an update request.
+
+```ts
+const { businessPartnerApi } = businessPartnerService();
+
+// Get a business partner
+const businessPartner = await businessPartnerApi
+  .requestBuilder()
+  .getByKey('1')
+  .execute({ destinationName: 'myDestination' });
+
+// Change first name
+businessPartner.firstName = 'Steve';
+
+// Send a PATCH request with `{ "FirstName" : "Steve" }`
+businessPartnerApi.requestBuilder().update(businessPartner);
+```
+
+In the example above we changed the first name of the given business partner.
+The payload sent to the service with `PATCH` includes only the first name.
+
+Be aware that update requests will fail if their ETags don't match.
+Check out our [ETag](#handling-of-etags) section for more information.

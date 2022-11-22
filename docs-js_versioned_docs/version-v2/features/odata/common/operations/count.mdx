@@ -1,0 +1,31 @@
+The method `count()` allows you to get the number of elements in a collection.
+It is only available for `getAll()` requests and is added before the request execution:
+
+```ts
+const { businessPartnerApi } = businessPartnerService();
+businessPartnerApi.requestBuilder().getAll().count();
+```
+
+The return type of count requests is a `Promise<number>`.
+You can combine the `count()` with filter conditions.
+To get the number of business partners with first name `John` execute the following request:
+
+```ts
+const { businessPartnerApi } = businessPartnerService();
+businessPartnerApi
+  .requestBuilder()
+  .filter(businessPartnerApi.schema.FIRST_NAME.equals('John'))
+  .count()
+  .getAll();
+```
+
+As defined in the OData spec `count` is not affected by `top`, `skip`, and `orderBy`.
+:::note `top()` and `skip()` are ignored for count
+If you include these methods in a count request they will be ignored by the SAP Cloud SDK.
+These three requests will all return the same value.
+
+```ts
+businessPartnerApi.requestBuilder().getAll().top(5).count();
+businessPartnerApi.requestBuilder().getAll().skip(5).count();
+businessPartnerApi.requestBuilder().getAll().count();
+```

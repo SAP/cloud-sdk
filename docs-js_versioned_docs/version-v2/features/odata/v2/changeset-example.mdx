@@ -1,0 +1,26 @@
+The example below is based on the [Bills of Material service](https://api.sap.com/api/OP_API_BILL_OF_MATERIAL_SRV_0002/overview).
+Since the function `deleteBomHeaderWithEcn` changes data, it is included with other changing requests like `delete` in a changeset:
+
+```ts
+const {
+  materialBomApi,
+  functionImports: { deleteBomHeaderWithEcn }
+} = billOfMaterialV2Service();
+
+async function batchExample(billOfMaterial: string) {
+  const functionImportRequest = deleteBomHeaderWithEcn({ billOfMaterial });
+  const updateRequestBuilder = materialBomApi
+    .requestBuilder()
+    .update(materialBomApi.entityBuilder().fromJson({ billOfMaterial }));
+
+  // Execute batch request with one changeset
+  const batchResponses = await batch(
+    changeset(functionImportRequest, updateRequestBuilder)
+  ).execute(destination);
+
+  // Get response for the changeset request
+  const changesetResponse = batchResponses[0];
+
+  // ...
+}
+```

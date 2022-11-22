@@ -1,0 +1,30 @@
+You can combine requests within a `batch` request as you like.
+In the example below, you combine create requests, update requests, and get requests into one `batch` request.
+Remember, that change requests have to be wrapped in a `changeset`.
+Put the create requests into one changeset and combine the update and delete requests into another.
+The `GET` requests are added to the `batch` request directly without wrapping.
+
+Once the batch request is executed the response will be an array of sub-responses to the specific changeset and retrieve requests in the order that was given in the request.
+Note, that the sub-responses of a [changeset](#changeset) don't have to be in order.
+
+```ts
+async function executeComplexBatch(
+  createAddressRequests: CreateRequestBuilder<BusinessPartnerAddress>[],
+  updateAddressRequests: UpdateRequestBuilder<BusinessPartnerAddress>[],
+  deleteAddressRequests: DeleteRequestBuilder<BusinessPartnerAddress>[],
+  getAddressByIdRequests: GetByKeyRequestBuilder<BusinessPartnerAddress>[]
+) {
+  // Execute batch request
+  const [
+    createAddressesResponse,
+    updateAndDeleteAddressesResponse,
+    ...getAddressesByIdResponses
+  ] = await batch(
+    changeset(...createAddressRequests),
+    changeset(...updateAddressRequests, ...deleteAddressRequests),
+    ...getAddressByIdRequests
+  ).execute(destination);
+
+  // Do something with responses
+}
+```
