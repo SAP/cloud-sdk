@@ -79,7 +79,8 @@ const response = await executeHttpRequest(
     url: 'https://example.com'
   },
   {
-    method: 'get'
+    method: 'get',
+    url: '/path/to/service'
   }
 );
 ```
@@ -88,7 +89,8 @@ The `executeHttpRequest()` function takes the following parameters:
 
 - The `destination` argument is of type `DestinationOrFetchOptions`
   - This can either be a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="destination object" /> which was already fetched or an <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions" name="object containing a destination name and an optional JWT" />
-- The `requestConfig` argument is of type <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_http_client.HttpRequestConfig" name="HttpRequestConfig" /> or <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_http_client.HttpRequestConfigWithOrigin" name="HttpRequestConfigWithOrigin" />
+- The `requestConfig` argument is of type <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_http_client.HttpRequestConfig" name="HttpRequestConfig" /> or <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_http_client.HttpRequestConfigWithOrigin" name="HttpRequestConfigWithOrigin" />.
+  The `method` and `url` properties are manadatory.
 - The `httpRequestOptions` argument is of type `HttpRequestOptions`
   - This parameter is optional
   - Can be used to disable [automatic CSRF token fetching](#csrf-token-fetching)
@@ -130,7 +132,8 @@ const response = await executeHttpRequest(
     url: `https://example.com`
   },
   {
-    method: 'post'
+    method: 'post',
+    url: '/path/to/service'
   },
   {
     fetchCsrfToken: false
@@ -174,6 +177,7 @@ const response = await executeHttpRequest(
   },
   {
     method: 'get',
+    url: '/path/to/service'
     params: {
       param1: 'a/bx',
       param2: 'x1'
@@ -219,6 +223,7 @@ const response = await executeHttpRequestWithOrigin(
   },
   {
     method: 'get',
+    url: '/path/to/service'
     headers: {
       custom: { apiKey: 'custom-header' },
       requestConfig: { apiKey: 'default-header' }
