@@ -258,16 +258,6 @@ It can be a destination object that you defined in the Cloud Foundry Cockpit, or
 For that, call the `.property()` method on the destination.
 It expects a key-value pair with a key formatted as `URL.headers.<key>` and an arbitrary value string.
 
-Alternatively you can make use of a predefined `DestinationPropertyKey` available in the `DestinationProperty` class, for example:
-
-```java
-destination =
-            DefaultHttpDestination
-                .builder(server.baseUrl())
-                .property(DestinationProperty.URI, "value1")
-                .build();
-```
-
 ## Provide Query Parameters for Destinations
 
 ### How It Works
@@ -290,23 +280,6 @@ destination =
 To include query parameters in the query string when calling to a target system you can define them as properties on the destination.
 For that, call the `.property()` method on the destination.
 It expects a key-value pair with a key formatted as `URL.headers.<key>` and an arbitrary value string.
-
-Alternatively you can make use of a predefined `DestinationPropertyKey` available in the `DestinationProperty` class, for example:
-
-```java
-destination =
-            DefaultHttpDestination
-                .builder(server.baseUrl())
-                .property(DestinationProperty.URI, "value1")
-                .build();
-```
-
-These predefined keys can also be used when querying the values, for example:
-
-```java
-Option<String> uri =
-            destination.get(DestinationProperty.URI);
-```
 
 ## Retrieving Destinations
 
@@ -405,6 +378,20 @@ DestinationOptions options =
         .build();
 
 Try<Destination> destination = DestinationAccessor.getLoader().tryGetDestination("MyDestination", options);
+```
+
+## Accessing Destination Properties
+
+To access destination properties in a type-safe manner, you can make use of the predefined property keys in the `DestinationProperty` class,
+which is intended to be used similarly to an enum. Use of the `DestinationProperty` keys avoids the need to provide your own String identifiers
+and expected type-casting for retrieving destination properties.
+
+Here is an example of accessing the URI property of a destination:
+
+```java
+Destination destination;
+Option<String> uri =
+            destination.get(DestinationProperty.URI);
 ```
 
 ## Configure HTTP Destinations for Local Development Environment
