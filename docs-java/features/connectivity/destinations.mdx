@@ -319,7 +319,6 @@ That way, all future requests to the Destination Service will use the increased 
 
 :::
 
-
 #### Configuring Caching When Querying the Destination Service on Cloud Foundry
 
 The SAP Cloud SDK, by default, caches up to 1,000 destinations retrieved from the Destination Service on Cloud Foundry for a maximum of 5 minutes.
@@ -343,6 +342,7 @@ Depending on the use-case, the default cache configuration might be suboptimal.
 Therefore, the SAP Cloud SDK offers an API for adjusting the caching behavior at application runtime.
 
 The examaple below changes the cache to store more entries for a longer period of time.
+
 ```java
 ScpCfDestinationLoader.Cache.setSizeLimit(10_000L);
 ScpCfDestinationLoader.Cache.setExpiration(Duration.ofHours(2L), CacheExpirationStrategy.WHEN_CREATED);
