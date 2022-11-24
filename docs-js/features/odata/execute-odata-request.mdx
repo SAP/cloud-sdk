@@ -25,7 +25,7 @@ import {
 } from '../common';
 
 Once you have generated a typed OData client using the SAP Cloud SDK generator, you can use this OData client to execute HTTP requests for your service.
-The client provides request builders for the different types of requests and abstractions of the entity sets of the given service, which we refer to as _entities_.
+The client provides request builders for the different types of requests and abstractions of the entity sets of the given service.
 
 ## General Request Structure
 
@@ -191,7 +191,8 @@ myEntityApi.requestBuilder().getAll().addCustomHeaders({
 The keys and values of the passed object correspond with the header names and values.
 Custom headers take priority over automatically generated headers.
 Automatically generated headers are sent with lowercase header names, and custom headers keep the case they were set in.
-In the example above we pass an `apikey`, which is necessary if you want to make use of the SAP API Business Hub sandbox.
+SAP API Business Hub sandbox requires a custom header called `apikey`.
+The example above shows how to add this header.
 
 :::caution
 
@@ -253,10 +254,10 @@ myEntityApi
 
 ### Appending Paths to the Request URL Built by the Request Builders
 
-Usually, our request builders construct the request URL for you automatically.
-However, for certain OData features like `navigation properties`, we do not yet provide a type-safe API that constructs the request path in a fully automated manner.
-For that reason, we added a non-typed API to our request builders providing the capability to append additional path segments to the request URL.
-You have to use the `executeRaw(destination)` method to get results because we can't deserialize a response in a type-safe way.
+Usually, the request builders construct the request URL for you automatically.
+However, for certain OData features like navigation properties, the SAP Cloud SDK does not provide a type-safe API that constructs the request path in a fully automated manner.
+For that reason, there is a non-typed API to request builders providing the capability to append additional path segments to the request URL.
+You have to use the `executeRaw(destination)` method to get results because the SAP Cloud SDK can't deserialize these responses in a type-safe way.
 
 The example below shows how to query a navigation property from a given entity.
 
