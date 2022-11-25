@@ -1,3 +1,46 @@
+## 4.3.0 - December 1, 2022
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:4.3.0)
+
+### New Functionality
+
+- Introduce new APIs to configure the destination cache in the `ScpCfDestinationLoader`.
+
+  **We strongly recommend using the following APIs before loading any destination, for example, during application startup _only_**:
+
+  - `ScpCfDestinationLoader.Cache.setSizeLimit`: Set the number of cache entries that will be cached.
+  - `ScpCfDestinationLoader.Cache.disableSizeLimit`: Disable the cache size limit. The cache will store an infinite amount of entries - **use with caution**.
+  - `ScpCfDestinationLoader.Cache.setExpiration`: Set the expiration duration and strategy for cache entries.
+  - `ScpCfDestinationLoader.Cache.disableExpiration`: Disable the cache entry expiration. The cache will store entries until it is full, which will lead to the deletion of old entries. This might cause destinations to be cached forever - **use with caution**.
+  - `ScpCfDestinationLoader.Cache.disable`: Disable the entire cache. All destination will always be retrieved from the Destination Service. This will result in performance degradations - **use with caution**.
+
+- Add a list of default destination property keys (in the `DestinationProperty` class), which allow convenient and type-safe access to specific values of `DestinationProperties`.
+
+  Example:
+
+```java
+Destination destination = DestinationAccessor.getDestination("my-destination");
+AuthenticationType authType = destination.get(DestinationProperty.AUTH_TYPE)
+        .orElse(() -> destination.get(DestinationProperty.AUTH_TYPE_FALLBACK))
+        .getOrNull();
+```
+
+### Improvements
+
+<!-- vale off -->
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [SAP Cloud Security Library](https://github.com/SAP/cloud-security-xsuaa-integration) from `2.13.2` to `2.13.4`
+    - Update [SAP Java Buildpack](https://central.sonatype.dev/artifact/com.sap.cloud.sjb.cf/cf-tomcat-bom/1.63.0/versions) from `1.60.0` to `1.63.0`
+  - Other dependency updates: - Update [Spring Core and Web](<https://search.maven.org/search?q=g:org.springframework%20AND%20(a:spring-core%20OR%20a:spring-web)>) from `5.3.23` to `5.3.24`
+  <!-- vale on -->
+
+### Fixed Issues
+
+- Fix GSON deserialization issue during destination lookup for JRE16 and later.
+- Fix an issue in our `resilience4j` cache implementation, where a race condition might lead to multiple executions of the wrapped `Callable`.
+
 ## 4.2.0 - November 17, 2022
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:4.2.0)
