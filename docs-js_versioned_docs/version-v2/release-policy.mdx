@@ -1,0 +1,109 @@
+---
+id: release-policy
+title: Minor and Major Release Policy for the SAP Cloud SDK for JavaScript
+sidebar_label: Release Policy
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+  - upgrade
+  - strategy
+  - major
+  - release
+  - support
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+:::info relevance
+
+This release policy only applies to the SAP Cloud SDK for JavaScript.
+It's not relevant for the SAP Cloud SDK for Java!
+
+:::
+
+## Planned Major Release Schedule
+
+The SAP Cloud SDK for JavaScript follows [semantic versioning](https://semver.org/).
+
+| Version | Status      | Release Date  | Link to Announcement             |
+| :------ | ----------- | :------------ | :------------------------------- |
+| 1.x     | Deprecated  | March 2019    | N/A                              |
+| 2.x     | Released GA | February 2022 | [Version 2.x](release-notes.mdx) |
+| 3.x     | Planned     | Q1/Q2 2023    | TBD                              |
+
+## Minor and Major Release Policy
+
+### Timelines
+
+- We release a new **minor version** every 2 weeks, assuming new functionality or fixes are available.
+- We release a new **major version** every 6 to 12 months.
+- A few months before the major release, we announce the expected changes and planned release date.
+
+### Upgrading to a New Minor Version
+
+- Upgrade to a new **minor release version** should not involve any effort because we do not introduce breaking changes.
+
+:::info TypeScript version bumps
+We regularly upgrade TypeScript to the latest stable version.
+In rare cases this can lead to compilation errors for projects using TypeScript.
+The solution is usually upgrading TypeScript to the latest stable version.
+
+:::
+
+### Upgrading to a New Major Version
+
+- We provide a step-by-step upgrade guide for each major version.
+- Following the upgrade steps should take less than a day of development effort regardless of the project size.
+
+### Documentation
+
+- The documentation is always up to date with the **latest major release**.
+- We will use tabs to demonstrate a difference between the versions where required.
+
+<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
+
+<TabItem value="major">
+
+```
+
+Major version documentation
+
+```
+
+</TabItem>
+
+<TabItem value="deprecated">
+
+```
+
+Deprecated version documentation
+
+```
+
+</TabItem>
+
+</Tabs>
+
+- We will maintain documentation for the two most recent versions.
+- With every new major version release the oldest documented version is removed from the documentation portal.
+
+:::tip
+
+We will always provide a branch with the latest snapshot of the documentation before the major version release.
+You can use that branch to host documentation for the earlier version locally.
+
+:::
+
+### Fixes and Maintenance
+
+- We provide new features and fixes only for the **latest major release** of the SAP Cloud SDK for JavaScript.
+
+### Support and Feedback
+
+We are happy to hear from you and usually respond within one day.
+Check our [support channels](support.mdx) and chose the one that works best for you.

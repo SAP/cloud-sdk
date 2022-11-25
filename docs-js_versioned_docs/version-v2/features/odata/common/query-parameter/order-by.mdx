@@ -1,0 +1,10 @@
+`orderBy` allows you to request resources in either ascending order using `asc` or descending order using `desc`.
+If `asc` or `desc` is not specified, then the resources will be ordered in ascending order by default.
+
+```ts
+const { businessPartnerApi } = businessPartnerService();
+businessPartnerApi
+  .requestBuilder()
+  .getAll()
+  .orderBy(asc(businessPartnerApi.schema.FIRST_NAME));
+```

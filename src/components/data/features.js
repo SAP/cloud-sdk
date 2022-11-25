@@ -29,7 +29,7 @@ export const features = [
     category: 'Legacy',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/bapi-and-rfc/bapi-and-rfc-overview/)`,
+      docsLink: `[docs](${baseUrl}/java/features/bapi-and-rfc/overview/)`,
       note: ''
     },
     js: {
@@ -43,7 +43,7 @@ export const features = [
     category: 'Legacy',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/bapi-and-rfc/bapi-and-rfc-overview/)`,
+      docsLink: `[docs](${baseUrl}/java/features/bapi-and-rfc/overview/)`,
       note: ''
     },
     js: {
@@ -57,7 +57,7 @@ export const features = [
     category: 'OData',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/odata/use-typed-odata-v2-client-in-sap-cloud-sdk-for-java)`,
+      docsLink: `[docs](${baseUrl}/java/features/odata/v2-vdm-client)`,
       note: ''
     },
     js: {
@@ -71,7 +71,7 @@ export const features = [
     category: 'OData',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java)`,
+      docsLink: `[docs](${baseUrl}/java/features/odata/v4-vdm-client)`,
       note: ''
     },
     js: {
@@ -99,7 +99,7 @@ export const features = [
     category: 'OData',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/odata/generate-typed-odata-v2-and-v4-client-for-java)`,
+      docsLink: `[docs](${baseUrl}/java/features/odata/vdm-generator)`,
       note: ''
     },
     js: {
@@ -197,7 +197,7 @@ export const features = [
     category: 'Environment',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/environments/sap-btp-cloud-foundry-environment)`,
+      docsLink: `[docs](${baseUrl}/java/environments/cloud-foundry)`,
       note: ''
     },
     js: {
@@ -211,7 +211,7 @@ export const features = [
     category: 'Environment',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/environments/sap-btp-kubernetes-environment-with-sap-gardener)`,
+      docsLink: `[docs](${baseUrl}/java/environments/kubernetes-gardener)`,
       note: ''
     },
     js: {
@@ -225,7 +225,7 @@ export const features = [
     category: 'Environment',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/environments/sap-btp-kyma-environment)`,
+      docsLink: `[docs](${baseUrl}/java/environments/kubernetes-kyma)`,
       note: `[Kyma Open Source project](https://kyma-project.io/)`
     },
     js: {
@@ -253,7 +253,7 @@ export const features = [
     category: 'Environment',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/guides/tutorial-overview-sdk-java/#groups-for-neo)`,
+      docsLink: ``,
       note: `Not recommended for new projects`
     },
     js: {
@@ -277,20 +277,6 @@ export const features = [
     }
   },
   {
-    name: 'Kubernetes Service Binding',
-    category: 'Environment',
-    java: {
-      status: YES,
-      docsLink: `[docs](${baseUrl}/java/environments/sap-btp-kubernetes-environment-with-sap-gardener)`,
-      note: ``
-    },
-    js: {
-      status: YES,
-      docsLink: `[docs](${baseUrl}/js/guides/migrate-sdk-application-from-btp-cf-to-kubernetes)`,
-      note: `Bindings are handled via configuration`
-    }
-  },
-  {
     name: '[BTP CF Connectivity Service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/313b215066a8400db461b311e01bd99b.html)',
     category: 'Connectivity',
     java: {
@@ -309,7 +295,7 @@ export const features = [
     category: 'Connectivity',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/connectivity/sdk-connectivity-destination-service)`,
+      docsLink: `[docs](${baseUrl}/java/features/connectivity/destination-service)`,
       note: ''
     },
     js: {
@@ -323,7 +309,7 @@ export const features = [
     category: 'Connectivity',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/connectivity/sdk-connectivity-destination-service)`,
+      docsLink: `[docs](${baseUrl}/java/features/connectivity/destination-service)`,
       note: ''
     },
     js: {
@@ -365,7 +351,7 @@ export const features = [
     category: 'Connectivity',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/multi-tenancy/multi-tenancy-thread-context)`,
+      docsLink: `[docs](${baseUrl}/java/features/multi-tenancy/thread-context)`,
       note: ''
     },
     js: {
@@ -379,7 +365,7 @@ export const features = [
     category: 'Connectivity',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/connectivity/sdk-connectivity-destination-service)`,
+      docsLink: `[docs](${baseUrl}/java/features/connectivity/destination-service)`,
       note: ''
     },
     js: {
@@ -393,7 +379,7 @@ export const features = [
     category: 'Connectivity',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/connectivity/sdk-connectivity-http-client)`,
+      docsLink: `[docs](${baseUrl}/java/features/connectivity/http-client)`,
       note: ''
     },
     js: {
@@ -421,7 +407,7 @@ export const features = [
     category: 'Connectivity',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/connectivity/sdk-connectivity-destination-service#connect-to-sap-s4hana-on-premise)`,
+      docsLink: `[docs](${baseUrl}/java/features/connectivity/-destination-service#connect-to-sap-s4hana-on-premise)`,
       note: ''
     },
     js: {

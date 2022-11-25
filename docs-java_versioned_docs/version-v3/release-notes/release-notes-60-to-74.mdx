@@ -200,7 +200,7 @@
   Please note that if you are using SAP JAVA buildpack for your deployments use a static buildpack version `sap_java_buildpack_1_52` to avoid dependency conflicts and class loading issues.
 - SAP Business Rules OpenAPI client library received breaking change to the field `List<TextPredefinedResults> predefinedResults` which is renamed to `List<TextPredefined> predefined` after updating to the latest version of the SAP Business Rules service
 - Deprecate non-productive `com.sap.cloud.sdk.s4hana.datamodel.odata.adapter.ODataCalendarAdapter` and child classes `ODataDateTimeAdapter`, `ODataDateTimeOffsetAdapter`, and `ODataTimeAdapter`.
-  It is planned to remove those classes with [SAP Cloud SDK v4](https://sap.github.io/cloud-sdk/docs/java/release-policy).
+  It is planned to remove those classes with [SAP Cloud SDK v4](https://sap.github.io/cloud-sdk/docs/java/v3/release-policy).
 - Switch from using `com.google.code.findbugs:annotations` to `com.github.spotbugs:spotbugs-annotations` in modules `cloudplatform-core-dwc-cf` and `recast-ai`.
   No code changes are required if you are consuming these modules.
   However, if you are planning on consuming these dependencies, remember to declare them directly in your POM as these are declared as [optional dependencies](https://maven.apache.org/guides/introduction/introduction-to-optional-and-excludes-dependencies.html).
@@ -469,7 +469,7 @@
 
 ### New Functionality
 
-- The experimental [Generic OData Client](https://sap.github.io/cloud-sdk/docs/java/features/odata/generic-untyped-odata-client) allows for customization of the number deserialization strategy from JSON to Java:
+- The experimental [Generic OData Client](https://sap.github.io/cloud-sdk/docs/java/v3/features/odata/generic-untyped-odata-client) allows for customization of the number deserialization strategy from JSON to Java:
 
   ```java
   ODataRequestResultGeneric result;
@@ -532,7 +532,7 @@
 - Fix an issue where service bindings were not loaded from the file system in case the working directory of the Java process was not the root directory.
 - Fix an issue where custom service-path information is not propagated from OData V2 service classes to batch classes.
   Previously this led to a runtime exception: `ODataRequestException: Batch request contains requests to different service paths [...]`.
-  To enable the fix, please use the latest [OData V2 VDM](https://sap.github.io/cloud-sdk/docs/java/features/odata/use-typed-odata-v2-client-in-sap-cloud-sdk-for-java) and/or [re-generate your own OData V2 classes](https://sap.github.io/cloud-sdk/docs/java/features/odata/generate-typed-odata-v2-and-v4-client-for-java).
+  To enable the fix, please use the latest [OData V2 VDM](https://sap.github.io/cloud-sdk/docs/java/v3/features/odata/use-typed-odata-v2-client-in-sap-cloud-sdk-for-java) and/or [re-generate your own OData V2 classes](https://sap.github.io/cloud-sdk/docs/java/v3/features/odata/generate-typed-odata-v2-and-v4-client-for-java).
 - Fix [CVE-2021-33813](https://nvd.nist.gov/vuln/detail/CVE-2021-33813) by upgrading `jdom2` to version `2.0.6.1`
 
 ### Improvements

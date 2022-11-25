@@ -1,0 +1,21 @@
+If you want to send properties in the payload of the update request, that you did not change, use the `setRequiredFields` method to add them.
+
+In the following example, the `PATCH` request will contain the `FIRST_NAME` property of the business partner, even if it didn't change.
+
+```ts
+const { businessPartnerApi } = businessPartnerService();
+// Get a business partner
+const businessPartner = await businessPartnerApi
+  .requestBuilder()
+  .getByKey('1')
+  .execute({ destinationName: 'myDestination' });
+
+// Change last name
+businessPartnerResponse.lastName = 'Smith';
+
+// Send a PATCH request with `{ "LastName" : "Smith", "FirstName": "Steve" }`  and include the first name although it was not changed
+businessPartnerApi
+  .requestBuilder()
+  .update(businessPartner)
+  .setRequiredFields(businessPartnerApi.schema.FIRST_NAME);
+```

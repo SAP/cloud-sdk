@@ -156,6 +156,9 @@ It should have a descriptive name as a default value.
 
 ### Use Code Format in Italics in Inline Text
 
+Verify that this is rendered correctly.
+This does not apply if the placeholder is part of a longer string in code format (see next rule).
+
 ❌ where `<YOUR-APPLICATION-NAME>` is replaced by the name you specified.
 
 ✅ Replace _`YOUR_APPLICATION_NAME`_ with the application name.
@@ -317,9 +320,9 @@ Do not use italics or quotes.
 
 ### Follow the Capitalization as It Appears on the Page
 
-❌ press the `Get new access token` button to retrieve a token
+❌ press the **Get new access token** button to retrieve a token
 
-✅ Click `Get New Access Token` to retrieve a token
+✅ Click **Get New Access Token** to retrieve a token
 
 <!-- vale off -->
 
@@ -474,20 +477,20 @@ Use 'please' only when what you're asking for:
 
 ### Words To Avoid
 
-- currently - For features, as this is implied
-- soon, new, future - Avoid in timeless documentation because such words can become outdated
-- so on - Instead use etc.
-- first-class - Socially-charged terms for technical concepts where appropriate
-- just - Filler word
-- per - Avoid per in contexts other than rate units.
+- **currently**: For features, as this is implied
+- **soon, new, future**: Avoid in timeless documentation because such words can become outdated
+- **so on**: Instead use etc.
+- **first-class**: Socially-charged terms for technical concepts where appropriate
+- **just**: Filler word
+- **per**: Avoid per in contexts other than rate units.
 
   ❌ Per the specification
 
-- utilize - Don't use utilize when you mean 'use'.
+- **utilize**: Don't use utilize when you mean 'use'.
 
   ❌ we utilize the passport library.
 
-- typically - Use to describe what is usual or expected under normal circumstances.
+- **typically**: Use to describe what is usual or expected under normal circumstances.
   Don't use as the first word in a sentence, as doing so can leave the meaning open to misinterpretation.
 
 ### Usage Guidance for Commonly Used Terms
