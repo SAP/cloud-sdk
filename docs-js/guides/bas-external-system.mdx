@@ -235,7 +235,7 @@ Hence, you can use the same approach locally and in production.
 ### Prerequisite: Service Setup
 
 On Cloud Foundry, the access to services is granted via the `VCAP_SERVICE` variables.
-We assume that you have configured your application so that it can access the destination service.
+Make sure to configure your application so that it can access the destination service.
 If not, follow the [steps in the Cloud Foundry tutorial](https://developers.sap.com/group.s4sdk-js-cloud-foundry.html).
 
 ### Implementation
@@ -251,10 +251,11 @@ Note that there are certain limitations to this approach.
 Within the BAS you will not have a JWT issued for your user.
 This means that flows like `OAuth2SAMLBearerAssertion` and `OAuth2UserTokenExchange` can only work if you provide such a JWT.
 This is possible in principle, but difficult within the local development environment.
-We recommend creating dedicated development destinations with authentications flows like:
+
+Create dedicated development destinations which use the following authentications flows:
 
 - `OAuth2ClientCredentials`
 - `BasicAuthentication`
-- `ClientCertificateAuthentication` (here we wait for a fix on the [http-proxy-agent](https://github.com/TooTallNate/node-https-proxy-agent/pull/111) or you have to disable the proxy
+- `ClientCertificateAuthentication` (you will have to disable the proxy until the [http-proxy-agent](https://github.com/TooTallNate/node-https-proxy-agent/pull/111) provides a fix)
 
-Note that for the connection to the cloud system the destinations do not need the two properties `WebIDEEnabled` and `HTML5.DynamicDestination`, because the BAS connectivity proxy is not needed.
+Note that for the connection to the cloud system, the destinations do not need the two properties `WebIDEEnabled` and `HTML5.DynamicDestination`, because the BAS connectivity proxy is not needed.
