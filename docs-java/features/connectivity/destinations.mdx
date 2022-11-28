@@ -323,21 +323,6 @@ That way, all future requests to the Destination Service will use the increased 
 
 The SAP Cloud SDK, by default, caches up to 1,000 destinations retrieved from the Destination Service on Cloud Foundry for a maximum of 5 minutes.
 
-:::note Shared Cache Size
-
-The cache size is shared between all tenants and principals.
-That means that one tenant (with a lot of principals) might take up the entire cache.
-
-<details>
-  <summary>Example</summary>
-
-If a thousand principals of the same tenant all query a single destination, the cache will be entirely filled up with destinations belonging to the same tenant.
-As a consequence, existing cache entries - also those of different tenants - must be removed (_evicted_) from the cache to make space for the new entries.
-
-</details>
-
-:::
-
 This behavior has two implications:
 
 1. Application performance can be (drastically) improved by serving already known destinations from the cache instead of querying the Destination Service over and over again.
@@ -362,6 +347,21 @@ ScpCfDestinationLoader.Cache.disableExpiration(); // cache entries never expire
 
 ScpCfDestinationLoader.Cache.disable(); // don't cache destinations
 ```
+
+:::note Shared Cache Size
+
+The size limit is applied across all tenants and principals.
+That means that one tenant (with a lot of principals) might fill up the entire cache.
+
+<details>
+  <summary>Example</summary>
+
+If a thousand principals of the same tenant all query a single destination, the cache will be entirely filled up with destinations belonging to the same tenant.
+As a consequence, existing cache entries - also those of different tenants - must be removed (_evicted_) from the cache to make space for the new entries.
+
+</details>
+
+:::
 
 :::note Hint
 
