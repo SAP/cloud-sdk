@@ -47,8 +47,7 @@ This guide is based on [Google's style guide](https://developers.google.com/styl
   - [Use Active Voice Over Passive](#use-active-voice-over-passive)
   - [Exceptions: Use Passive Voice](#exceptions-use-passive-voice)
   - [First Person](#first-person)
-    - [Avoid Using `We`](#avoid-using-we)
-    - [Avoid Using `Our`](#avoid-using-our)
+    - [Avoid Using `We`, `Our`, and `Us`](#avoid-using-we-our-and-us)
     - [Exception: The Questions in FAQs](#exception-the-questions-in-faqs)
   - [Second Person](#second-person)
     - [Use the Imperative Form in Instructions](#use-the-imperative-form-in-instructions)
@@ -406,17 +405,15 @@ In certain cases, it's okay to use passive voice:
 
 In general, use second person rather than first person — you instead of we.
 
-### Avoid Using `We`
+### Avoid Using `We`, `Our`, and `Us`
 
 ❌ We do not guarantee any API compatibility for future updates
 
 ✅ The SAP Cloud SDK does not guarantee any API compatibility for future updates
 
-### Avoid Using `Our`
+❌ We need to add resilience to our application to protect us.
 
-❌ Check out our ETag section for more information.
-
-✅ Check out the ETag section for more information.
+✅ You need to add resilience to your application to protect yourself.
 
 ### Exception: The Questions in FAQs
 
