@@ -15,12 +15,12 @@ keywords:
 
 # How to Migrate a Cloud Foundry Application to a Kubernetes Cluster
 
-In this how-to, we will show step-by-step what is necessary to migrate an application from Cloud Foundry to Kubernetes.
+This how-to shows step-by-step what is necessary to migrate an application from Cloud Foundry to Kubernetes.
 
-1. We decide what kind of environment we are creating.
+1. Decide what kind of environment you are creating.
    Is it a proof-of-concept (PoC), staging, or productive environment?
-2. We prepare and set up our cluster with the sufficient services and service bindings to satisfy the environment's requirements.
-3. We adapt our application to deploy to Kubernetes and make sure it can consume bound services from within our Kubernetes cluster.
+2. Prepare and set up your cluster with the sufficient services and service bindings to satisfy the environment's requirements.
+3. Adapt your application to deploy to Kubernetes and make sure it can consume bound services from within your Kubernetes cluster.
 
 Select the type of environment you're planning to build and click on it to jump to a corresponding section:
 
@@ -28,14 +28,14 @@ Select the type of environment you're planning to build and click on it to jump 
   - If you want to create a PoC, this kind of environment will be sufficient for you.
     It's not recommended for productive use or long-running PoCs.
 - [Staging Environments](#staging-environments)
-  - For staging environments, we will take a look at a way to create and bind services manually.
+  - For staging environments, you can create and bind services manually.
     This is primarily meant to try out different service setups.
 - [Production Environments](#production-environments)
-  - For production environments, we will take a look at a way to create and bind services with reproducibility, longevity, and developer simplicity in mind.
+  - For production environments, you can create and bind services with reproducibility, longevity, and developer simplicity in mind.
 
 ## Simple PoC Environments
 
-For a simple PoC, we can create and bind services in Cloud Foundry, or preferably even use already existing service bindings.
+For a simple PoC, you can create and bind services in Cloud Foundry, or preferably even use already existing service bindings.
 
 ### Prerequisites
 
@@ -72,7 +72,7 @@ stringData:
 
 Once you are done, run `kubectl apply -f YOUR_BINDING.yml` to create the secret in your cluster.
 
-Now let's take a look at how we adapt our application to deploy it to Kubernetes and how it can consume services from inside of a Kubernetes cluster.
+Now let's take a look at how you can adapt your application to deploy it to Kubernetes and how it can consume services from inside of a Kubernetes cluster.
 For this jump over to the [Deploy to Kubernetes](#deploy-to-kubernetes) section.
 
 ## Staging Environments
@@ -109,11 +109,11 @@ You will need the `username` and `password` later on.
 
 ### Service Broker Registration
 
-To make the services available in the Kubernetes cluster, we need to register a service broker into the Service Catalog of our Kubernetes cluster.
+To make the services available in the Kubernetes cluster, you need to register a service broker into the Service Catalog of your Kubernetes cluster.
 In SAP BTP Cloud Foundry the role of a service broker is fulfilled by the `Service Manager`.
 Register it using the Service Catalog CLI, `svcat`.
+To access the `Service Manager` on SAP BTP CF, you need to install the `service-broker-proxy` in your Kubernetes (K8s) cluster.
 
-To access the `Service Manager` on SAP BTP CF, we need to install the `service-broker-proxy` in our Kubernetes (K8s) cluster.
 Here's how you do it:
 
 ```bash
@@ -134,7 +134,7 @@ Once the proxy is up, try running `svcat marketplace`, all the services availabl
 
 ### Create and Bind Services
 
-Now we can create service instances with the service catalog.
+Now you can create service instances with the service catalog.
 Let's create a destination service instance first.
 
 ```bash
@@ -142,23 +142,23 @@ svcat provision destination-service --class destination --plan lite
 ```
 
 :::info
-Notice how `destination-service` is just the name we give to this particular service instance, it could be anything.
+Notice how `destination-service` is just the name you give to this particular service instance, it could be anything.
 :::
 
-Now we could also create an XSUAA service instance.
+Now you could also create an XSUAA service instance.
 
 ```bash
 svcat provision xsuaa-service --class xsuaa --plan broker
 ```
 
-Finally, we just need to bind the services to make them available to our application.
+Finally, you need to bind the services to make them available to your application.
 
 ```bash
 svcat bind destination-service
 svcat bind xsuaa-service
 ```
 
-Now let's take a look at how we adapt our application to deploy it to Kubernetes and make it consume services from inside of a Kubernetes cluster.
+Now let's take a look at how to adapt your application to deploy it to Kubernetes and make it consume services from inside of a Kubernetes cluster.
 For this jump over to the [Deploy to Kubernetes](#deploy-to-kubernetes) section.
 
 ## Production Environments
@@ -173,7 +173,7 @@ It makes services management a lot easier, scalable, and protected from errors i
 - [`helm`](https://helm.sh/docs/intro/install/)
 - [`kubectl`](https://kubernetes.io/docs/tasks/tools/)
 - [`docker`](https://docs.docker.com/get-docker/)
-- Kubernetes Cluster with a LoadBalancer enabled, we recommend using [Gardener](https://dashboard.garden.canary.k8s.ondemand.com/)
+- Kubernetes Cluster with a load balancer enabled, we recommend using [Gardener](https://dashboard.garden.canary.k8s.ondemand.com/)
 
 ### Configure Operator
 
@@ -209,10 +209,10 @@ spec:
   selfSigned: {}
 ```
 
-After you deployed the self-signed certificate issuer, we can start steps to deploy a service operator instance.
+After you deployed the self-signed certificate issuer, you can start steps to deploy a service operator instance.
 
-- First, we create a service manager instance in SAP BTP CF with the `service-operator-access` plan.
-- After creating an instance we also need to bind it.
+- First, you create a service manager instance in SAP BTP CF with the `service-operator-access` plan.
+- After creating an instance you also need to bind it.
   The binding `JSON` should look similar to this:
 
 ```JSON
@@ -269,13 +269,13 @@ spec:
 
 :::info
 Notice that the `metadata -> name` property can be anything you want.
-In our case, it's `operator-destination-service`.
+In this case, it's `operator-destination-service`.
 Make sure it matches exactly to the `spec -> serviceInstanceName` field in the binding.
 :::
 
 Follow this pattern for all services your application needs to create and bind.
 
-Now let's take a look at how we adapt our application to deploy it to Kubernetes and make it consume services from inside of a Kubernetes cluster.
+Now let's take a look at how to adapt your application to deploy it to Kubernetes and make it consume services from inside of a Kubernetes cluster.
 For this jump over to the [Deploy to Kubernetes](#deploy-to-kubernetes) section.
 
 ## Deploy to Kubernetes
