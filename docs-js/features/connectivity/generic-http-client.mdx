@@ -68,32 +68,28 @@ It takes the following parameters:
 - The `destination` argument is of type `DestinationOrFetchOptions`
   - This can either be a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="destination object" /> which was already fetched or an <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions" name="object containing a destination name and an optional JWT" />
 - The `requestConfig` argument is of type <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_http_client.HttpRequestConfig" name="HttpRequestConfig" /> or <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_http_client.HttpRequestConfigWithOrigin" name="HttpRequestConfigWithOrigin" />.
-  - The `method` and `url` properties are mandatory.
+  - This parameter is optional
 - The `httpRequestOptions` argument is of type `HttpRequestOptions`
   - This parameter is optional
   - Can be used to disable [automatic CSRF token fetching](#csrf-token-fetching)
 
 :::tip
 
-This guide provides code snippets, fully executable example code can be found in the [SAP-samples/cloud-sdk-js repository on GitHub](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/http-client-examples).
+This guide provides code snippets.
+Fully executable example code can be found in the [SAP-samples/cloud-sdk-js repository on GitHub](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/http-client-examples).
 
 :::
 
 In the most simple form, the function can be invoked like this:
 
 ```ts
-const response = await executeHttpRequest(
-  {
-    url: 'https://example.com'
-  },
-  {
-    method: 'get',
-    url: '/path/to/service'
-  }
-);
+const response = await executeHttpRequest({
+  url: 'https://example.com'
+});
 ```
 
-Note that the `url` property in the destination object refers to the base URL of the target system, whereas the `url` property in the request config is the relative service URL used for the request.
+If the `requestConfig` value is not provided, the SDK treats it as a `GET` request.
+To perform a different operation, set the `method` property in `requestConfig` to the required value, e.g., `POST`.
 
 <!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
 
@@ -132,8 +128,7 @@ const response = await executeHttpRequest(
     url: `https://example.com`
   },
   {
-    method: 'post',
-    url: '/path/to/service'
+    method: 'post'
   },
   {
     fetchCsrfToken: false
@@ -177,7 +172,6 @@ const response = await executeHttpRequest(
   },
   {
     method: 'get',
-    url: '/path/to/service'
     params: {
       param1: 'a/bx',
       param2: 'x1'
@@ -223,7 +217,6 @@ const response = await executeHttpRequestWithOrigin(
   },
   {
     method: 'get',
-    url: '/path/to/service'
     headers: {
       custom: { apiKey: 'custom-header' },
       requestConfig: { apiKey: 'default-header' }
