@@ -1,5 +1,5 @@
 ---
-id: sdk-connectivity-destination-service
+id: destination-service
 title: Use Destinations To Connect To Other Systems and Services
 hide_title: false
 hide_table_of_contents: false
@@ -378,6 +378,20 @@ DestinationOptions options =
         .build();
 
 Try<Destination> destination = DestinationAccessor.getLoader().tryGetDestination("MyDestination", options);
+```
+
+## Accessing Destination Properties
+
+To access destination properties in a type-safe manner, you can make use of the predefined property keys in the `DestinationProperty` class,
+which is intended to be used similarly to an enum. Use of the `DestinationProperty` keys avoids the need to provide your own String identifiers
+and expected type-casting for retrieving destination properties.
+
+Here is an example of accessing the URI property of a destination:
+
+```java
+Destination destination;
+Option<String> uri =
+            destination.get(DestinationProperty.URI);
 ```
 
 ## Configure HTTP Destinations for Local Development Environment

@@ -1,0 +1,512 @@
+---
+id: upgrade-to-version-2
+title: How to upgrade to version 2 of the SAP Cloud SDK for JavaScript
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Upgrade to version 2
+description: This document will guide you through the upgrade process from version 1 to 2.
+---
+
+## Overview
+
+This document will guide you through the steps necessary to upgrade to version 2.0 of the SAP Cloud SDK.
+Depending on your project, some steps might not be applicable.
+The To-Do list is:
+
+- [Upgrade ECMAScript runtime to "es2019" or higher](#update-ecmascript-runtime)
+- [Update Public API Clients](#update-public-api-clients)
+- [Update Generated API Clients](#update-generated-api-clients)
+- [Replace Core Imports](#replace-core-imports)
+- [Adjust Serializing and Deserializing of Entities](#adjust-serializing-and-deserializing-of-entities)
+- [Get Support if you face a problem in the upgrade process](#get-support)
+
+We have provided prerequisites at the beginning of each section.
+If it does not apply to your project, please proceed to the next one.
+
+### Update EcmaScript Runtime
+
+We changed the compilation target of our source code from `es5` to `es2019`.
+Depending on your configuration this may lead to compilation errors (TypeScript) or runtime errors in (JavaScript).
+If you run node version 12 or greater, no changes are necessary.
+If you run an older node version, please update to a newer version.
+You can find a list of breaking changes in the news section of the [node.js website](https://nodejs.org/en/blog/) (e.g. ["The Difference Between Node.js 10 and 12"](https://nodejs.org/en/blog/uncategorized/10-lts-to-12-lts/))
+
+:::tip
+
+We recommend switching to Node 14 or above when using the SAP Cloud SDK for JavaScript 2.0.
+
+:::
+
+### Update Public API Clients
+
+**Prerequisite**: Your project uses published API clients like `https://www.npmjs.com/package/@sap/cloud-sdk-vdm-business-partner-service` (this applies to all direct dependencies in your `package.json` that start with `@sap/cloud-sdk-vdm-`).
+
+We will publish updated clients containing version 2.0 of the SAP Cloud SDK after the beta phase.
+Once these clients are available, follow the following steps:
+
+- Find the used clients in your `package.json`.
+- Change the used version of the client to `^2.0.0`.
+- Update entity imports using the steps described [here](#update-entity-imports).
+- Change the `builder()` call as described [here](#breaking-change-on-the-entitybuilder-api).
+- Find the invocations of the request builders.
+  This RegExp `import.*from.*@sap\/cloud\-sdk\-vdm\-.*` helps to find the files where the client is used.
+- Change the `requestBuilder()` call as described [here](#breaking-change-on-the-requestbuilder-api).
+- Change the `execute()` call as described [here](#breaking-change-on-the-execute-api).
+
+If you want to check a client before we publish it, follow the step below to generate it locally.
+
+### Update Generated API Clients
+
+**Prerequisite**: Your project uses generated API clients.
+If you are unsure if you have generated clients use this RegExp `class.*RequestBuilder.*extends RequestBuilder` to scan your project for `RequestBuilder`s of a generated client.
+
+We assume that you have installed the generator as a local `devDependency` in your project:
+
+- Find the installed generator in your `package.json`.
+- Update the version to `^2.0.0` using steps as described [here](#update-generator).
+- Regenerate the client with the updated generator as described [here](../features/odata/generate-odata-client.mdx).
+- Change the `builder()` call as described [here](#breaking-change-on-the-entitybuilder-api).
+- Find the invocations of the request builders.
+  This RegExp `import.*from.*EntityName.*` helps to find the files where the client is used.
+  Replace `EntityName` with the name of your entities.
+- Change the `requestBuilder()` call as described [here](#breaking-change-on-the-requestbuilder-api).
+- Change the `execute()` call as described [here](#breaking-change-on-the-execute-api).
+
+### Replace Core Imports
+
+**Prerequisite**: Your project used imports from `@sap-cloud-sdk/core`. Check your `package.json` and search globally for any import statements from this package.
+
+We split the big module `@sap-cloud-sdk/core` into multiple smaller modules.
+These imports need to be adjusted:
+
+- Find the imported method in your code.
+- Find the new package where the method is located as described [here](#how-to-find-the-new-packages).
+- Add the new package to the `package.json` and remove `@sap-cloud-sdk/core` as described [here](#how-to-install-20-dependencies).
+- Replace the old import with the package name.
+
+Note that we reduced the number of objects in the stable public API.
+There are three cases:
+
+- The object is part of the public API: `{ publicApiMethod } from '@sap-cloud-sdk/connectivity'`.
+- The object is moved to the internal API: `{ internalApiMethod } from '@sap-cloud-sdk/connectivity/internal'`.
+- The object is removed without replacement see: [deprecated object list](#deprecated-methods).
+
+Your IDE should warn you if a module has no exported member with the given name.
+The use of the internal API is considered a temporary quick fix.
+If you need functionality please [open an issue](https://github.com/SAP/cloud-sdk-js/issues/new/choose) and state your requirements.
+Details on the API contract are discussed in this [ADR](https://github.com/SAP/cloud-sdk-js/blob/2.0/knowledge-base/adr/0028-public-api-extraction.md)
+
+### Adjust Serializing and Deserializing of Entities
+
+**Prerequisite**: You consume non-primitive entity properties like dates, duration, and times.
+
+In the past, one OData datatype was always transformed to the same data type in TypeScript.
+For example, time-related properties are transformed into `moment` instances.
+We introduced a new [(de-)serialization](../features/odata/odata-v2-client.mdx#customize-de-serialization) to make this more flexible.
+
+If you would like to switch to the [Temporal](https://tc39.es/proposal-temporal/docs/) (de-)serialization for date/time objects, please follow the [documentation](../features/odata/v2-client#using-de-serializers-for-temporal) and adjust your code base.
+The default serialization for time-related properties will be changed from Moment.js to Temporal once it reaches Stage 4.
+Since Moment.js is a discontinued project with a large size we recommend sticking with the new standard.
+Note that in the 2.0 version, the default remains Moment.js.
+
+### Get Support
+
+**Prerequisite**: You tried to do the steps above but hit some impediments.
+
+Please create a [support issue](https://github.com/SAP/cloud-sdk-js/issues/new/choose) describing the problem you have.
+
+## Appendix
+
+### Update Entity Imports
+
+In version 1 of the SAP Cloud SDK, each entity (e.g. `BusinessPartner`) was imported directly:
+
+```ts
+import {
+  BusinessPartner,
+  BusinessPartnerAddress
+} from '@sap/cloud-sdk-vdm-business-partner-service';
+```
+
+This has been changed in version 2.0.
+
+- Each entity now has its API class (e.g. `MyEntityApi`).
+- A new service function (e.g. `myEntityService()`) provides getters for instances of all the entities' API classes, which can be consumed via [JavaScript Object Destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment).
+
+To access an entity, you need to import the service and destructure the API class objects.
+To do so, first update the imports following the steps:
+
+- Replace the entity imports with the service import.
+  Usually, the service name can be inferred from the npm package itself, i.e., everything after `@sap/cloud-sdk-vdm-` in camelCase. E.g.:
+
+```ts
+import { businessPartnerService } from '@sap/cloud-sdk-vdm-business-partner-service';
+```
+
+- Destructure this service to unpack the API objects you need.
+
+```ts
+const { businessPartnerApi, businessPartnerAddressApi } =
+  businessPartnerService();
+```
+
+:::danger
+
+You should use the object destructuring like the example above instead of calling the service multiple times for every API object, to avoid initializing multiple service instances.
+Here is a **BAD** example, that you should **NOT** follow:
+
+```ts
+// do NOT do this
+const businessPartnerApi = businessPartnerService().businessPartnerApi;
+// do NOT do this
+const businessPartnerAddressApi =
+  businessPartnerService().businessPartnerAddressApi;
+```
+
+:::
+
+:::note
+
+The API object getters (e.g. `businessPartnerApi`) are denoted using camel case, whereas the corresponding classes (e.g. `BusinessPartnerApi`) follow pascal case.
+
+:::
+
+### Breaking Change on the `EntityBuilder` API
+
+For the implementation of the [(de-)serializers](../features/odata/odata-v2-client.mdx#customize-de-serialization), two changes are introduced in version 2.0:
+
+The static `builder()` method has been renamed to `entityBuilder()` and it is now an instance method on the entity API class:
+
+```js
+// Version 1
+
+MyEntity.builder()
+  .getAll()
+  .firstName('Peter')
+  .lastName('Pan')
+  .toMyRelatedEntity([MyRelatedEntity.builder().country('Neverland').build()])
+  .build();
+
+// Version 2
+
+const { myEntityApi, myRelatedEntityAPI } = myEntityService();
+myEntityApi
+  .entityBuilder()
+  .firstName('Peter')
+  .lastName('Pan')
+  .toMyRelatedEntity([
+    myRelatedEntityAPI.entityBuilder().country('Neverland').build()
+  ])
+  .build();
+```
+
+### Breaking Change on the `RequestBuilder` API
+
+To make the [middleware concept](../features/odata/v2-client#customize-de-serialization) possible, it was necessary to add more state to the request builder.
+
+All the static properties used to build select or filters are also now part of an instance and are exposed via a `schema` property.
+The `requestBuilder()` method is also not a static method anymore but an instance method of an API object:
+
+```js
+// Version 1
+
+MyEntity.requestBuilder()
+  .getAll()
+  .select(MyEntity.FIRST_NAME, MyEntity.LAST_NAME)
+  .execute(destination);
+
+// Version 2
+
+const { myEntityApi } = myEntityService();
+myEntityApi
+  .requestBuilder()
+  .getAll()
+  .select(myEntityApi.schema.FIRST_NAME, myEntityApi.schema.LAST_NAME)
+  .execute(destination);
+```
+
+### Breaking Change on the Execute API
+
+The breaking change which will affect most users is the change in the execute methods.
+In the past, there was a separate `DestinationNameAndJwt` object and a `DestinationOptions` to define how a destination was fetched from the service.
+In version 2, there are two changes:
+
+- There is a single object `DestinationFetchOptions` containing all information.
+- The property `userJwt` was renamed to just `jwt`.
+
+A typical API adjustment would look like this:
+
+```js
+// Version 1
+
+MyEntity.requestBuilder()
+  .getAll()
+  .execute(
+    { destinationName: 'myDestination', userJwt: 'yourJwt' },
+    { useCache: true }
+  );
+
+// Version 2
+
+const { myEntityApi } = myEntityService();
+myEntityApi.requestBuilder().getAll().execute({
+  destinationName: 'myDestination',
+  jwt: 'yourJwt',
+  useCache: true
+});
+```
+
+Note that all options besides the `destinationName` are optional.
+We have picked the `execute()` method of the request builders to illustrate the change.
+But the same changes apply to all places the two objects (`DestinationNameAndJwt` and `DestinationOptions`) were used.
+Prominent examples are the `executeHttpRequest()`, `executeRaw()` or `getDestination()` methods:
+
+```js
+//Version 1
+
+getDestination('myDestination', { userJwt: 'yourJwt', useCache: true });
+
+executeHttpRequest(
+  { destinationName: 'myDestination', userJwt: 'yourJwt' },
+  { method: 'get' }
+);
+
+//Version 2
+
+getDestination({
+  destinationName: 'myDestination',
+  jwt: 'yourJwt',
+  useCache: true
+});
+
+executeHttpRequest(
+  {
+    destinationName: 'myDestination',
+    jwt: 'yourJwt',
+    selectionStrategy: alwaysProvider
+  },
+  { method: 'get' }
+);
+```
+
+### Token Validation May Fail
+
+The SAP Cloud SDK for JavaScript version 2 uses the `@sap/xssec` package.
+This may break token validation with an error like this:
+
+> Error: JWT token with audience: ['aud1', 'aud2'] is not issued for these clientIds: ['client1', 'client2'].
+
+This likely means that you need to set ˋiasToXsuaaTokenExchangeˋ to `false` to disable the IAS token to XSUAA token exchange.
+
+```js
+getDestination({
+  destinationName: 'myDestination',
+  jwt: 'yourJwt',
+  iasToXsuaaTokenExchange: false,
+  useCache: true
+});
+executeHttpRequest(
+  {
+    destinationName: 'myDestination',
+    jwt: 'yourJwt',
+    iasToXsuaaTokenExchange: false,
+    selectionStrategy: alwaysProvider
+  },
+  { method: 'get' }
+);
+```
+
+If no token is provided (e.g. background processes), you can set `iss` to the issuer of the JWT (e.g. `https://<your-subdomain>.localhost:8080/uaa/oauth/token`).
+This will fetch the destination service token for the given tenant without validation.
+This can lead to mistakes regarding the isolation of user data, so this option should be used only if necessary.
+
+```js
+getDestination({
+  destinationName: 'myDestination',
+  iss: 'https://<your-subdomain>.localhost:8080/uaa/oauth/token'
+});
+executeHttpRequest(
+  {
+    destinationName: 'myDestination',
+    iss: 'https://<your-subdomain>.localhost:8080/uaa/oauth/token'
+  },
+  { method: 'get' }
+);
+```
+
+### How to Find the New Packages
+
+We have split the `@sap-cloud-sdk/core` package into the following smaller packages:
+
+- `@sap-cloud-sdk/connectivity` contains all Cloud Foundry connectivity service related methods like `getDestination()`.
+- `@sap-cloud-sdk/http-client` contains the http client with built-in connectivity with `executeHttpRequest()`.
+- `@sap-cloud-sdk/odata-common` contains the OData functionality shared between versions 2 and 4. This module is a technical module with no public API.
+- `@sap-cloud-sdk/odata-v2` contains the OData functionality specific to OData version 2.
+- `@sap-cloud-sdk/odata-v4` contains the OData functionality specific to OData version 4.
+- `@sap-cloud-sdk/openapi` contains methods for OpenAPI clients.
+
+In most situations, it should be natural in which module the original object is located.
+You can search for the method in two places:
+
+- You can do a code search on GitHub e.g. `https://github.com/SAP/cloud-sdk-js/search?q=function+getDestination` to quickly find the package.
+- You can search in the [API specification](https://sap.github.io/cloud-sdk/api/) and select version 2.
+
+Note that for version 2 the `executeHttpRequest()` function offers all the destination retrieval options.
+
+### How to Install Version 2 Dependencies
+
+This section lists the commands for removing old dependencies and installing dependencies in the correct version.
+
+To remove the `@sap-cloud-sdk/core` package from `node_modules` and `package.json`, run the below command in your project's terminal:
+
+```bash
+npm uninstall --save @sap-cloud-sdk/core
+```
+
+Once you have found the packages to replace `@sap-cloud-sdk/core`, install them using the relevant commands below:
+
+```bash
+npm install @sap-cloud-sdk/http-client
+```
+
+```bash
+npm install @sap-cloud-sdk/connectivity
+```
+
+```bash
+npm install @sap-cloud-sdk/odata-v2
+```
+
+```bash
+npm install @sap-cloud-sdk/odata-v4
+```
+
+#### Update Generators
+
+You can install the generator packages as a `devDependency`:
+
+```
+npm install -D @sap-cloud-sdk/generator
+npm install -D @sap-cloud-sdk/openapi-generator
+```
+
+For details on generation have a look at the [OData](../features/odata/generate-odata-client.mdx) or [OpenAPI](../features/openapi/generate-openapi-client.mdx) generation instructions.
+
+### Deprecated Methods
+
+The table below gives a list of the removed methods for which a replacement is provided.
+
+<!-- vale off -->
+
+| deprecated method                     | replacement                                                                       | source file                             |
+| ------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------- |
+| \_fieldName                           | field (this a property of the Filter class)                                       | filter.ts                               |
+| addAuthorizationHeader                | buildAuthorizationHeaders                                                         | authorization-header.ts                 |
+| AnyField                              | EdmTypeField                                                                      | any-field.ts                            |
+| AnyFieldBase                          | EdmTypeField                                                                      | any-field.ts                            |
+| applyPrefixOnJsConfictFunctionImports | applyPrefixOnJsConflictFunctionImports                                            | name-formatting-strategies.ts           |
+| applyPrefixOnJsConfictParam           | applyPrefixOnJsConflictParam                                                      | name-formatting-strategies.ts           |
+| applySuffixOnConflictDash             | UniqueNameGenerator                                                               | name-formatting-strategies.ts           |
+| applySuffixOnConflictUnderscore       | UniqueNameGenerator                                                               | name-formatting-strategies.ts           |
+| BigNumberField                        | OrderableEdmTypeField                                                             | big-number-field.ts                     |
+| BigNumberFieldBase                    | OrderableEdmTypeField                                                             | big-number-field.ts                     |
+| BinaryField                           | EdmTypeField                                                                      | binary-field.ts                         |
+| BinaryFieldBase                       | EdmTypeField                                                                      | binary-field.ts                         |
+| BooleanField                          | EdmTypeField                                                                      | boolean-field.ts                        |
+| BooleanFieldBase                      | EdmTypeField                                                                      | boolean-field.ts                        |
+| buildAndAddAuthorizationHeader        | buildAuthorizationHeaders                                                         | authorization-header.ts                 |
+| clientCredentialsGrant                | @sap/xssec                                                                        | xsuaa-service.ts                        |
+| CompleteDecodedJWT                    | Jwt                                                                               | jwt.ts                                  |
+| ComplexTypeAnyPropertyField           | EdmTypeField                                                                      | any-field.ts                            |
+| ComplexTypeBigNumberPropertyField     | OrderableEdmTypeField                                                             | big-number-field.ts                     |
+| ComplexTypeBinaryPropertyField        | EdmTypeField                                                                      | binary-field.ts                         |
+| ComplexTypeBooleanPropertyField       | EdmTypeField                                                                      | boolean-field.ts                        |
+| ComplexTypeDatePropertyField          | OrderableEdmTypeField                                                             | date-field.ts                           |
+| ComplexTypeDurationPropertyField      | OrderableEdmTypeField                                                             | duration-field.ts                       |
+| ComplexTypeEnumPropertyField          | EnumField                                                                         | enum-field.ts                           |
+| ComplexTypeNumberPropertyField        | OrderableEdmTypeField                                                             | number-field.ts                         |
+| ComplexTypeStringPropertyField        | EdmTypeField                                                                      | string-field.ts                         |
+| ComplexTypeTimePropertyField          | OrderableEdmTypeField                                                             | time-field.ts                           |
+| constructor                           | Use other constructors instead.                                                   | complex-type-field.ts                   |
+| constructor                           | Use superclass instead.                                                           | odata-batch-request-config.ts           |
+| DateField                             | OrderableEdmTypeField                                                             | date-field.ts                           |
+| DateFieldBase                         | OrderableEdmTypeField                                                             | date-field.ts                           |
+| DecodedJWT                            | JWTPayload if you want to represent the decoded JWT payload or CompleteDecodedJWT | jwt.ts                                  |
+| DeepFieldType                         | FieldType                                                                         | field.ts                                |
+| DestinationCachingOptions             | CachingOptions                                                                    | destination-service-types.ts            |
+| DurationField                         | OrderableEdmTypeField                                                             | duration-field.ts                       |
+| DurtionFieldBase                      | OrderableEdmTypeField                                                             | duration-field.ts                       |
+| EnumFieldBase                         | EnumField                                                                         | enum-field.ts                           |
+| EnvironmentAccessor                   | Use directly exported functions instead                                           | environment-accessor.ts                 |
+| errorWithCause                        | ErrorWithCause                                                                    | error.ts                                |
+| extractDataFromOneToManyLink          | getLinkedCollectionResult                                                         | extract-data-from-one-to-many-link.ts   |
+| extractDataFromOneToManyLink          | getLinkedCollectionResult                                                         | extract-data-from-one-to-many-link.ts   |
+| filterNullishValues                   | pickNonNullish                                                                    | header-util.ts                          |
+| get batchId                           | boundary                                                                          | odata-batch-request-config.ts           |
+| get changeSetId                       | boundary                                                                          | batch-change-set.ts                     |
+| get changeSetId                       | boundary                                                                          | batch-change-set.ts                     |
+| get contentType                       | defaultHeaders                                                                    | odata-request-config.ts                 |
+| get selects                           | \_selects                                                                         | link.ts                                 |
+| getDestinationByName                  | getDestinationFromEnvByName                                                       | destination-from-env.ts                 |
+| getDestinationCacheKey                | getDestinationCacheKeyStrict                                                      | destination-cache.ts                    |
+| getDestinations                       | getDestinationsFromEnv                                                            | destination-from-env.ts                 |
+| getHeader                             | pickIgnoreCase                                                                    | header-util.ts                          |
+| getHeaders                            | pickIgnoreCase                                                                    | header-util.ts                          |
+| getHeaderValue                        | pickValueIgnoreCase                                                               | header-util.ts                          |
+| getQueryParametersForFilter           | ODataUri.getFilter                                                                | get-filter.ts                           |
+| getQueryParametersForOrderBy          | ODataUri.getOrderBy                                                               | get-orderby.ts                          |
+| getQueryParametersForSelection        | ODataUri.getSelect and ODataUri.getExpand                                         | get-selection.ts                        |
+| getResourcePathForKeys                | ODataUri.getResourcePathForKeys                                                   | get-resource-path.ts                    |
+| HttpMethod                            | Use method string directly, e. g. 'get' or 'GET'.                                 | http-client-types.ts                    |
+| HttpReponse                           | HttpResponse                                                                      | http-client-types.ts                    |
+| ignoredFields                         | setIgnoredFields                                                                  | update-request-builder-base.ts          |
+| initializeCustomFields                | setCustomFields                                                                   | entity.ts                               |
+| isMulti?                              | isCollection                                                                      | vdm-types.ts                            |
+| isMultiLink?                          | isCollection                                                                      | vdm-types.ts                            |
+| jwtBearerTokenGrant                   | @sap/xssec                                                                        | xsuaa-service.ts                        |
+| JWTHeader                             | JwtHeader                                                                         | jwt.ts                                  |
+| JWTPayload                            | JwtPayload                                                                        | jwt.ts                                  |
+| MapType                               | Record<string, T>                                                                 | types.ts                                |
+| mergeHeaders                          | mergeIgnoreCase                                                                   | header-util.ts                          |
+| NumberField                           | OrderableEdmTypeField                                                             | number-field.ts                         |
+| NumberFieldBase                       | OrderableEdmTypeField                                                             | number-field.ts                         |
+| ODataBatchChangeSet                   | BatchChangeSet                                                                    | batch-change-set.ts                     |
+| ODataBatchChangeSet                   | BatchChangeSet                                                                    | batch-change-set.ts                     |
+| ODataCreateRequestConfig              | Use superclass instead.                                                           | odata-create-request-config.ts          |
+| ODataDeleteRequestConfig              | Use superclass instead.                                                           | odata-delete-request-config.ts          |
+| ODataFunctionImportRequestConfig      | Use superclass instead.                                                           | odata-function-import-request-config.ts |
+| ODataGetAllRequestConfig              | Use superclass instead.                                                           | odata-get-all-request-config.ts         |
+| ODataGetByKeyRequestConfig            | Use superclass instead.                                                           | odata-get-by-key-request-config.ts      |
+| ODataUpdateRequestConfig              | Use superclass instead.                                                           | odata-update-request-config.ts          |
+| parseType                             | isEdmType and complexTypeName                                                     | edmx-to-vdm-util.ts                     |
+| protected getCurrentMapKeys           | asObject                                                                          | entity.ts                               |
+| refreshTokenGrant                     | jwtBearerTokenGrant                                                               | xsuaa-service.ts                        |
+| RegisteredJWTClaims                   | This interface will not be replaced. Use the higher level JWT types directly.     | jwt.ts                                  |
+| RegisteredJWTClaimsBasic              | This interface will not be replaced. Use the higher level JWT types directly.     | jwt.ts                                  |
+| RegisteredJWTClaimsTenant             | This interface will not be replaced. Use the higher level JWT types directly.     | tenant.ts                               |
+| RegisteredJWTClaimsUser               | This interface will not be replaced. Use the higher level JWT types directly.     | user.ts                                 |
+| replaceDuplicateKeys                  | mergeLeftIgnoreCase                                                               | header-util.ts                          |
+| requiredFields                        | setRequiredFields                                                                 | update-request-builder-base.ts          |
+| SelectableEdmTypeField                | SelectableT                                                                       | selectable.ts                           |
+| serializersCommom                     | serializersCommon                                                                 | payload-value-converter.ts              |
+| static clone                          | clone                                                                             | link.ts                                 |
+| static clone                          | clone                                                                             | one-to-one-link.ts                      |
+| StringField                           | EdmTypeField                                                                      | string-field.ts                         |
+| StringFieldBase                       | EdmTypeField                                                                      | string-field.ts                         |
+| TimeField                             | OrderableEdmTypeField                                                             | time-field.ts                           |
+| TimeFieldBase                         | OrderableEdmTypeField                                                             | time-field.ts                           |
+| toBatchChangeSet                      | serializeChangeSet                                                                | batch-request-serializer.ts             |
+| toBatchChangeSet                      | serializeChangeSet                                                                | batch-request-serializer.ts             |
+| toPascalCase                          | @sap-cloud-sdk/util                                                               | name-converter.ts                       |
+| toPropertyFormat                      | @sap-cloud-sdk/util                                                               | name-converter.ts                       |
+| toSanitizedHeaderObject               | toSanitizedObject                                                                 | header-util.ts                          |
+| toStaticPropertyFormat                | @sap-cloud-sdk/util                                                               | name-converter.ts                       |
+| toTitleFormat                         | @sap-cloud-sdk/util                                                               | name-converter.ts                       |
+| toTypeNameFormat                      | @sap-cloud-sdk/util                                                               | name-converter.ts                       |
+| userTokenGrant                        | jwtBearerTokenGrant                                                               | xsuaa-service.ts                        |
+| withCustomHeaders                     | addCustomHeaders                                                                  | request-builder-base.ts                 |
+| withCustomQueryParameters             | addCustomQueryParameters                                                          | request-builder-base.ts                 |
+| withCustomServicePath                 | setCustomServicePath                                                              | request-builder-base.ts                 |
+| withCustomVersionIdentifier           | setVersionIdentifier                                                              | update-request-builder-base.ts          |
+
+<!-- vale on -->

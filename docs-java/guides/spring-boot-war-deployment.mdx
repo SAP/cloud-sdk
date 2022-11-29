@@ -66,17 +66,61 @@ Add the Maven WAR plugin to the `pom.xml`:
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-war-plugin</artifactId>
     <!-- use latest version here -->
-    <version>3.3.1</version>
+    <version>3.3.2</version>
     <configuration>
-      <attachClasses>true</attachClasses>
+      <failOnMissingWebXml>false</failOnMissingWebXml>
     </configuration>
 </plugin>
 ```
 
-:::tip Use the latest plugin version
+### Adjust Dependency Scopes
 
-We recommend you use the [latest version](https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-war-plugin) of this Maven plugin.
+The WAR file will be deployed into an a Tomcat application container.
+Thus we no longer need to include the dependencies that are now provided by the container.
 
+Adjust your dependency management section to contain the following entries:
+
+```xml title="pom.xml"
+<dependencyManagement>
+	<dependencies>
+    <!-- Cloud SDK + SAP Java Buildpack BOMs -->
+    <dependency>
+    	<groupId>com.sap.cloud.sdk</groupId>
+    	<artifactId>sdk-sjb-bom</artifactId>
+    	<version>${cloudsdk.version}</version>
+    	<type>pom</type>
+    	<scope>import</scope>
+    </dependency>
+    <!-- Work around error in Buildpack BOM -->
+    <dependency>
+    	<groupId>org.codehaus.woodstox</groupId>
+    	<artifactId>stax2-api</artifactId>
+    	<scope>compile</scope>
+    </dependency>
+    <!-- Set Spring Boot Tomcat dependencies to provided -->
+    <dependency>
+    	<groupId>org.springframework.boot</groupId>
+    	<artifactId>spring-boot-starter-tomcat</artifactId>
+    	<scope>provided</scope>
+    </dependency>
+
+    <!-- Any further dependency management you might use
+        e.g. org.springframework.boot:spring-boot-dependencies -->
+  </dependencies>
+</dependencyManagement>
+```
+
+:::caution Ordering of dependencies
+Please note that the ordering of entries under the `<dependencyManagement>` matters.
+To ensure the correct scopes are set make sure the order is implemented as shown above.
+In particular the `sdk-sjb-bom` should be the first entry if possible.
+:::
+
+- If you are already using the `sdk-bom` simply replace it with the `sdk-sjb-bom`
+- The versions for `stax2-api` and `spring-boot-starter-tomcat` are not relevant, only the scopes matter
+
+:::tip Further Guidance
+You can find more guidance on how to manage dependencies around the SAP Java Buildpack in our [dedicated guide here](./manage-dependencies).
 :::
 
 ### Let Application Class Inherit from `SpringBootServletInitializer`
@@ -102,10 +146,11 @@ For that particular module, perform the following changes:
 - Change the `type` from `java` to `java.tomcat`.
 - Change the `build-result` so that the file extension is `war`.
 - If not present, add the property `USE_JCO` with the value `true` under `properties`.
+- If not present, add `buildpack: sap_java_buildpack` under `parameters`.
 
 In the following example we have commented the old values for your reference:
 
-```yaml
+```yaml showLineNumbers {4,9,15,17} title:"mta.yaml"
 modules:
   - name: example-project-srv
     #type: java
@@ -119,8 +164,10 @@ modules:
       builder: custom
       commands:
         - mvn clean package
-      #build-result: target/*-exec.[wj]ar
-      build-result: target/*-exec.war
+      # set the WAR file according to your artifact id
+      build-result: target/example-project.war # do not use the -exec.war variant
+    parameters:
+      buildpack: sap_java_buildpack
     provides:
       - name: srv-api
         properties:

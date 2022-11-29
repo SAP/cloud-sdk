@@ -192,10 +192,9 @@ When referring to the "API name", the transformed name is meant.
 
 This extension can be set on the following levels:
 
-- Operations - Operations that have the same API name are grouped into one API.
-- On the path definitions - All operations below paths with the same API name are grouped into one API.
-- Root of the specification - All operations in the specification belong to the specified API.
-  You can think of this as the custom default name for an API.
+- **Operations**: operations that have the same API name are grouped into one API
+- **On the path definitions**: all operations below paths with the same API name are grouped into one API
+- **Root of the specification**: all operations in the specification belong to the specified API
 
 This extension can be set on all these levels in the same document.
 In these cases the most specific use of the extension takes precedence.
@@ -214,7 +213,7 @@ The purpose of the `x-sap-cloud-sdk-operation-name` is to allow using duplicate 
 
 The SAP Cloud SDK OpenAPI client generator generates TypeScript code.
 By default, it creates only the TypeScript sources.
-This differs from the OData generator, which currently creates all sources needed for an npm package and includes transpilation.
+This differs from the OData generator, which creates all sources needed for an npm package and includes transpilation.
 
 If you want to use the generated client in your TypeScript code without sharing it, you can work with the default configuration.
 If you work with JavaScript you can enable and configure transpilation with the `--transpile` and `--tsConfig` flags.
@@ -244,6 +243,10 @@ If you installed the generator as a `devDependency`, transpilation will work wit
 ## Prettier
 
 Since version 2.11.0, the SAP Cloud SDK runs prettier on the generated sources using a default prettier config.
+The prettier formats only TypeScript files (`.ts` and `.d.ts`) to avoid broken source maps.
 If you are not happy with the configuration you can provide a custom configuration using the `prettierConfig` command line argument.
 Note that this formatting is done in-memory before the generator emits the files, so no expensive additional I/O is required.
 Alternatively, you can execute a custom formatting step after the generation is finished.
+
+Note that custom formatting steps could break source maps when you generate a JavaScript client (option `generateJs` enabled).
+We recommend excluding JavaScript clients from formatting because the generated `.js` and `.map.js` files are not meant for humans to read.

@@ -299,7 +299,7 @@ functionResult = batchResponse.getReadResult(singleValueReturnFunction);
 ```
 
 You can also add functions that return a collection inside batch requests and parse the results yourself in a similar manner.
-Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/features/odata/use-typed-odata-v2-client-in-sap-cloud-sdk-for-java#execute-batch-request) for more details.
+Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/v3/features/odata/use-typed-odata-v2-client-in-sap-cloud-sdk-for-java#execute-batch-request) for more details.
 
 - [**Beta**] Reading destinations from environment variables now allows you to configure authorization token forwarding to the target system.
   You can activate this feature in the following ways
@@ -324,14 +324,14 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
   **Note:** The settings above will override a token set with `AuthTokenAccessor.executeWith(...)`. Moreover, authentication tokens set via `AuthTokenAccessor.executeWith(...)` will **not** be forwarded to the target system.
 
 - You can now add `headers` to a `destination` using the `property` method so that they will always be included when calling the target system.
-  Here's an example of the `property` method call: `.property("URL.headers.foo1", "bar1")`. Find more details on setting properties [here](https://sap.github.io/cloud-sdk/docs/java/features/connectivity/sdk-connectivity-destination-service#provide-headers-for-destinations).
+  Here's an example of the `property` method call: `.property("URL.headers.foo1", "bar1")`. Find more details on setting properties [here](https://sap.github.io/cloud-sdk/docs/java/v3/features/connectivity/sdk-connectivity-destination-service#provide-headers-for-destinations).
 - You can now add query parameters to a destination using properties.
   They will always be included in the query string when calling the target system.
   The query values should be provided without encoding.
   They will be encoded in the query string by the SAP Cloud SDK.
   Example of adding a query parameter using `property` method: `.property("URL.queries.airport", "Köln Bonn")`.
   The rendered query string will look like: `airport=K%C3%B6ln%20Bonn`.
-  Find more details on adding query parameters [here](https://sap.github.io/cloud-sdk/docs/java/features/connectivity/sdk-connectivity-destination-service#add-query-parameters-via-destination-properties).
+  Find more details on adding query parameters [here](https://sap.github.io/cloud-sdk/docs/java/v3/features/connectivity/sdk-connectivity-destination-service#add-query-parameters-via-destination-properties).
 
 ### Improvements
 
@@ -504,7 +504,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
 
 - We added a new `SimpleNamingStrategy`, which, in contrast to our `S4HanaNamingStrategy`, does not apply any unnecessary modifications to the generated names.
 - We added the option to specify additional properties for the OpenAPI generator.
-  The Maven plugin and CLI now accept a list of additional properties as described [here](https://sap.github.io/cloud-sdk/docs/java/features/rest/generate-rest-client#available-parameters).
+  The Maven plugin and CLI now accept a list of additional properties as described [here](https://sap.github.io/cloud-sdk/docs/java/v3/features/rest/generate-rest-client#available-parameters).
 
 ### Improvements
 
@@ -684,9 +684,9 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
   ```
 
   The creation of the new operation types is enabled in the OData V4 generator as well.
-  Check out the full [documentation of the feature](https://sap.github.io/cloud-sdk/docs/java/features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java#odata-functions-and-actions) for more information.
+  Check out the full [documentation of the feature](https://sap.github.io/cloud-sdk/docs/java/v3/features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java#odata-functions-and-actions) for more information.
 
-- We updated the [OData type-safe client also known as the VDM](https://sap.github.io/cloud-sdk/docs/java/features/odata/overview/) to the newest release FPS2 of SAP S/4HANA On-Premise 2020.
+- We updated the [OData type-safe client also known as the VDM](https://sap.github.io/cloud-sdk/docs/java/v3/features/odata/overview/) to the newest release FPS2 of SAP S/4HANA On-Premise 2020.
   This also includes completely new services added (available as usual in packages `com.sap.cloud.sdk.s4hana.onpremise.v2020.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.onpremise.v2020.datamodel.odatav4.services`), new operations in previously existing services, and new entity types.
 
 ### Improvements
@@ -727,7 +727,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
     .executeRequest(destination);
   ```
 
-- For the [Generic OData Client](https://sap.github.io/cloud-sdk/docs/java/features/odata/generic-untyped-odata-client) filterable values and fields can now use the `in` operator in expressions.
+- For the [Generic OData Client](https://sap.github.io/cloud-sdk/docs/java/v3/features/odata/generic-untyped-odata-client) filterable values and fields can now use the `in` operator in expressions.
 
   ```java
   StructuredQuery query;
@@ -742,7 +742,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
   query.filter(ValueString.literal("Green").in( FieldReference.of("Colors").asCollection()) );
   ```
 
-- For the [OData V4 Typed Client](https://sap.github.io/cloud-sdk/docs/java/features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java) filterable fields can now use the `in` operator in expressions.
+- For the [OData V4 Typed Client](https://sap.github.io/cloud-sdk/docs/java/v3/features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java) filterable fields can now use the `in` operator in expressions.
 
   ```java
   GetAllRequestBuilder<Person> request;
@@ -784,7 +784,7 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
   List<WorkingsetRuleServiceDefinitionResult> deployedWorkingSets = deployService.readWorkingsetRuleServices();
   ```
 
-- We updated the [OData type-safe client also known as a VDM](https://sap.github.io/cloud-sdk/docs/java/features/odata/overview/) to the [newest release 2105 of SAP S/4HANA Cloud](https://news.sap.com/2021/05/sap-s4hana-cloud-release-2105/).
+- We updated the [OData type-safe client also known as a VDM](https://sap.github.io/cloud-sdk/docs/java/v3/features/odata/overview/) to the [newest release 2105 of SAP S/4HANA Cloud](https://news.sap.com/2021/05/sap-s4hana-cloud-release-2105/).
   This includes completely new services (available as usual in packages `com.sap.cloud.sdk.s4hana.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types.
   The following two services were however not updated:
   - (OData V2) Trial Balance - Read - `C_TRIALBALANCE_CDS`
@@ -793,8 +793,8 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/fe
 ### Improvements
 
 - Using a Swagger file to generate OData V4 entity classes will now mark entities accessible on service root path as `VdmEntitySet`.
-  This enables the experimental API to [query the OData service over navigation properties directly](https://sap.github.io/cloud-sdk/docs/java/features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java#navigation-properties).
-  This feature was originally enabled for entities generated by EDMX metadata files in version [`3.20.0`](https://sap.github.io/cloud-sdk/docs/java/release-notes-sap-cloud-sdk-for-java#3200).
+  This enables the experimental API to [query the OData service over navigation properties directly](https://sap.github.io/cloud-sdk/docs/java/v3/features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java#navigation-properties).
+  This feature was originally enabled for entities generated by EDMX metadata files in version [`3.20.0`](https://sap.github.io/cloud-sdk/docs/java/v3/release-notes-sap-cloud-sdk-for-java#3200).
 
 - Dependency Updates:
   - SAP dependency updates:
