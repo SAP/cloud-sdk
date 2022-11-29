@@ -51,7 +51,7 @@ This guide is based on [Google's style guide](https://developers.google.com/styl
     - [Exception: The Questions in FAQs](#exception-the-questions-in-faqs)
   - [Second Person](#second-person)
     - [Use the Imperative Form in Instructions](#use-the-imperative-form-in-instructions)
-    - [Avoid Using `Your`](#avoid-using-your)
+    - [Don't Overuse `Your`](#dont-overuse-your)
     - [Don't Use `We` or `Our` When Addressing the Reader (You)](#dont-use-we-or-our-when-addressing-the-reader-you)
   - [Politeness](#politeness)
     - [Don’t Use `Please` in Instructions](#dont-use-please-in-instructions)
@@ -436,7 +436,9 @@ When telling the reader to do something, use the imperative (implicit you).
 
 ✅ Create a simple application that uses the approuter
 
-### Avoid Using `Your`
+### Don't Overuse `Your`
+
+Often you can replace `your` with `the` or skip it.
 
 ❌ Deploy your application as usual by running the command:
 
