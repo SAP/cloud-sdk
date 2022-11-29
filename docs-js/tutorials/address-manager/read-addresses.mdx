@@ -31,7 +31,7 @@ You will learn:
 The tutorial is based on the initial NestJs application explained in the [first part of the getting started tutorials](../getting-started/1-set-up-dev-environment.mdx).
 In that tutorial you already created [a first OData request](../getting-started/2-execute-odata-request.mdx) to get a list of business partners.
 You will extend the functionality of the API in this tutorial and the [follow-up part](./change-addresses.mdx).
-Since the follow-up part is about changing data, we recommend using a [local mock system](https://sap.github.io/cloud-s4-sdk-book/pages/mock-odata.html).
+Since the follow-up part is about changing data, use a [local mock system](https://sap.github.io/cloud-s4-sdk-book/pages/mock-odata.html).
 Changing data is impossible on SAP API Business Hub and an actual SAP S/4HANA instance should not be polluted with test data.
 Note that both systems run locally but have different ports:
 
@@ -92,7 +92,7 @@ Open the URL `http://localhost:8080/business-partner` and you should see the dat
 
 The output from the previous sections shows all fields of the business partner entity.
 Like SQL, OData allows the selection of only specific properties of an entity.
-For our address manager, we only want to know the ID, first name, and last name of a business partner.
+For the address manager only the ID, first name, and last name of a business partner are needed.
 Add a `select` statement to the service implementation:
 
 ```ts
@@ -128,7 +128,7 @@ If you open the URL `http://localhost:8080/business-partner`, you should see onl
 ### Filter Business Partners by Type
 
 Business partners can either be natural persons or legal persons (e.g. organizations or companies).
-For the address manager, we only want the addresses of natural persons.
+For the address manager, only addresses of natural persons are relevant.
 Therefore, you need to filter our request.
 Modify your code like this:
 
@@ -166,7 +166,8 @@ In this part of the tutorial, you will create the services to read the addresses
 
 ### Get One Business Partner
 
-We are interested in the addresses related to one business partner and create a query for fetching one specific business partner.
+The address manager shows the addresses related to one business partner.
+Create a query for fetching one specific business partner.
 Each business partner has a unique ID, which you can use to do that.
 Include a second method in the existing `business-partner.service.ts`
 
@@ -226,7 +227,7 @@ return businessPartnerApi
 ```
 
 This implicitly expands the property and includes all properties like street, house number, and state of the address in the result.
-Also here we are interested only in some properties of the address.
+Also here only some properties of the address are relevant.
 A second select on the navigation property reduces the response to the desired fields:
 
 ```ts

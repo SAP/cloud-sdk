@@ -226,11 +226,17 @@ For generic domain name in examples, use `example.com`.
 
 ❌ Replace the default tsconfig.json
 
-✅ Replace the default `tsconfig.json`
+✅ Replace the default `tsconfig.json` file
 
 ### Include the Word File After the Filename
 
 ✅ Add your own `package.json` file.
+
+Unless the filename ends with a noun
+
+❌ Use a `Dockerfile` file
+
+✅ Use a `Dockerfile`
 
 ### Prefer Hyphens, Not Underscores, To Separate Words in File Paths
 
