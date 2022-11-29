@@ -52,14 +52,14 @@ module.exports = {
       label: 'Guides',
       items: [
         'guides/kubernetes',
-        'guides/upgrade-to-version-2',
         'guides/bas',
         'guides/browser',
         'guides/trust-and-keystores',
         'guides/approuter',
         'guides/resilience',
         'guides/retrieve-jwt',
-        'guides/remote-debugging'
+        'guides/remote-debugging',
+        'guides/api-business-hub-download-specification'
       ]
     },
     {
