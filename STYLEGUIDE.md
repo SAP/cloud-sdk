@@ -774,34 +774,3 @@ Therefore you should always reference other files by their (relative) path.
 ```
 
 <!-- vale on -->
-
-# Common Mistakes
-
-## Uncommon English Words
-
-The following are normal english words and should usually be written in ordinary font:
-
-- on-premise
-- ingress
-
-If you are unsure, check the [Merriam-Webster dictionary](https://www.merriam-webster.com/).
-
-## Non-Product Names
-
-The following are not product names:
-
-- application router
-- cloud connector
-- destination service
-
-These words should not be capitalized (unless they start a sentence).
-These words should usually be written in ordinary font.
-
-If you are unsure, check the [naming center](https://www.sapbrandtools.com/naming-center/), the products website or Wikipedia.
-
-## Over-Use of Code Font
-
-Code font should only be used for the [stated cases](#inline-code).
-These code fragments can't be pluralized.
-In almost all cases, code font marks something that a reader may want to highlight and copy.
-Consider if instead it makes more sense to use ordinary font or surround the text fragment with quotes.

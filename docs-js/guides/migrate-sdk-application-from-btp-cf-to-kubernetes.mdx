@@ -316,9 +316,9 @@ This information is important in the following steps.
 
 ### Dockerfile
 
-Kubernetes pods are running container images.
+Kubernetes Pods are running container images.
 You will a `Dockerfile` defining a container for your example application.
-Then it can be deployed to one or more Kubernetes pods.
+Then it can be deployed to one or more Kubernetes Pods.
 
 ```Dockerfile
 FROM node:12-alpine
@@ -463,8 +463,8 @@ If you want to expose your cluster under Domain name with TLS and/or basic authe
 You can create a simple CI/CD pipeline with GitHub Actions or change your existing pipeline.
 To automatically deploy your application into the Kubernetes cluster, two things are needed:
 
-1. Automatic build and deployment of the container image into the container repository
-2. Automatic re-start of the Kubernetes deployment
+1. Automatic build the container image and deploy into the container repository
+2. Automatic re-start of the Kubernetes Deployment
 
 Step (1) can be achieved by building and pushing the container image with a technical user.
 For Step (2) you need a technical user that is entitled to manage the cluster deployment.
@@ -492,16 +492,16 @@ It shutdowns all the Pods to restart them.
 kubectl --token=${{ secrets.KUBERNETES_SERVICE_TOKEN }} --certificate-authority YOUR_CA_CERT_PATH rollout restart deployment/YOUR_DEPLOYMENT
 ```
 
-If your deployment is configured with `ImagePullStrategy: Always`, it will pull the updated image and use it.
+If your Deployment is configured with `ImagePullStrategy: Always`, it will pull the updated image and use it.
 
 ## Configure TLS and Obtain a Domain in SAP Gardener
 
 **Prerequisite:** Enable the NGINX Ingress add-on for your SAP Gardener cluster.
 
-The fastest way to enable TLS and obtain a domain for your application is to create a service, which contains your deployment, and an ingress, which handles the routing.
+The fastest way to enable TLS and obtain a domain for your application is to create a Service, which contains your Deployment, and an Ingress, which handles the routing.
 In SAP Gardener you can already specify your desired domain and the TLS will be managed for you, more on that later.
 
-Create a service that contains your deployment and the port you want to expose as in example below:
+Create a Service that contains your Deployment and the port you want to expose as in example below:
 
 ```yaml
 apiVersion: v1
@@ -532,7 +532,7 @@ Since you have the NGINX Ingress enabled, all your domains have to follow the pa
 e2e.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
 ```
 
-This is how your ingress file should look like:
+This is how your Ingress configuration file should look like:
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -560,22 +560,22 @@ spec:
                   number: 8080
 ```
 
-Notice how your ingress uses the SAP Gardener annotations, which is important so that SAP Gardener manages TLS.
+Notice how your Ingress uses the SAP Gardener annotations, which is important so that SAP Gardener manages TLS.
 
 Next, you can see in the `spec.tls.hosts` part that it expose 2 domains.
 The first one is your default domain, it's limited to a maximum of 64 characters.
-Other domains can be any size, but should follow the ingress pattern.
+Other domains can be any size, but should follow the Ingress pattern.
 
 Notice the field `secretName: secret-tls` in this configuration.
 All TLS certificates will be saved by SAP Gardener.
-Finally look at how to serve your service at the root of your subdomain.
-This way the service is exposed to the internet.
+Finally look at how to serve the Service at the root of your subdomain.
+This way the Service is exposed to the internet.
 
 After a short delay, you should be able to access the mentioned domains via a valid TLS.
 
 ## Configure Basic Authentication
 
-In case your application doesn't have built-in authentication, you can add basic authentication in front of your ingress with the following steps:
+In case your application doesn't have built-in authentication, you can add basic authentication in front of the Ingress with the following steps:
 
 1. Create a `htpasswd` file
 
@@ -589,7 +589,7 @@ htpasswd -c auth username
 kubectl create secret generic YOUR_SECRET --from-file=auth
 ```
 
-3. Add annotations to your ingress.
+3. Add annotations to the Ingress.
    For your example, it should look like the following:
 
 ```yaml
@@ -808,7 +808,7 @@ You can use the Application Router also known as `approuter` to propagate a prin
 It works in a similar fashion to SAP BTP Cloud Foundry.
 
 1. You need an XSUAA instance that can redirect to a Kubernetes URI.
-   The parameter `redirect-uris` is important, however, if you use one parameter while creating a service, you have to use all.
+   The parameter `redirect-uris` is important, however, if you use one parameter while creating a Service, you have to use all.
 
 Below is an example using the SAP BTP Operator, to create an XSUAA with a very generic rule specifying the allowed URI with wildcards `https://*/**`.
 For your application, it is recommended to point directly at your specific URI.
@@ -857,10 +857,10 @@ spec:
 
 2. Package the application router as a docker image so that it can run in Kubernetes, refer to the [documentation](https://blogs.sap.com/2020/04/03/sap-application-router/) for configuration details.
 
-3. After creating a container image, create a deployment and a service to run and expose the application router.
-   Below are two examples for an application router, a pod, and a service.
+3. After creating a container image, create a Kubernetes Deployment and a Kubernetes Service to run and expose the application router.
+   Below are two examples for an application router, a Pod and a Service.
 
-First the deployment:
+First the Deployment:
 
 ```yaml
 apiVersion: apps/v1
@@ -908,10 +908,10 @@ spec:
 
 This example mounts the XSUAA service the same way as you do for apps using the SAP Cloud SDK.
 It references the application running in your cluster.
-Instead of an ingress endpoint, it directly points at the service.
+Instead of an Ingress endpoint, it directly points at the Service.
 This is possible because the application router runs in your cluster and can therefore use the Kubernetes native service discovery.
 
-And the service:
+The Service configuration:
 
 ```yaml
 apiVersion: v1
@@ -928,12 +928,12 @@ spec:
     app: approuter
 ```
 
-4. Finally, configure the ingress to create a session cookie that is consumed by the application router and point it at the `approuter` service.
+4. Finally, configure the Ingress to create a session cookie that is consumed by the application router and point it at the `approuter` Service.
    To secure your application, remove all previous routes that pointed at your application's endpoints and only expose them through the application router.
    This way only users authenticated by your Identity Provider can access these endpoints.
-   For that, specify the service names in your approuter destinations' configuration and remove the rules you previously created for these endpoints in the ingress.
+   For that, specify the Service names in your approuter destinations' configuration and remove the rules you previously created for these endpoints in the Ingress.
 
-   Depending on your ingress controller you have to use different annotations.
+   Depending on the Ingress controller you have to use different annotations.
    For the NGINX Ingress controller use the following annotations:
 
 ```yaml
@@ -942,7 +942,7 @@ nginx.ingress.kubernetes.io/proxy-read-timeout: '600'
 nginx.ingress.kubernetes.io/session-cookie-name: JSESSIONID
 ```
 
-A complete example of an ingress that only exposes the application router and is using the annotations is shown in the following example:
+An Ingress that only exposes the application router and is using the annotations is shown in the following example:
 
 ```yaml
 apiVersion: networking.k8s.io/v1
