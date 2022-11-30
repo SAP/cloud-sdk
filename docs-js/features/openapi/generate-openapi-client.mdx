@@ -55,8 +55,8 @@ All other files can be excluded from the generation - see the options below.
 
 :::note
 
-We recommend to install the generator as a local dependency, because global installations hide the used generator version and cause problems when transpiling to JavaScript.
-If you must use a globally installed generator, install the`@types/node` and `@sap-cloud-sdk/openapi` package in your project to make the transpilation work.
+The generator should be installed as a local dependency, because global installations hide the used generator version and cause problems when transpiling to JavaScript.
+If you must use a globally installed generator, install the `@types/node` and `@sap-cloud-sdk/openapi` package in your project to make the transpilation work.
 If you need to transpile sources without any local `node_modules`, you must manually execute the `tsc` on your own with a custom [path mapping](https://www.typescriptlang.org/docs/handbook/module-resolution.html#path-mapping).
 See [transpile](#Options) for more details in the options below.
 
@@ -112,7 +112,7 @@ Add the `@sap-cloud-sdk/openapi-generator` package to your project:
 npm i @sap-cloud-sdk/openapi-generator
 ```
 
-This package exports the `generate` function.
+This package exports the `generate()` function.
 It takes the same options as the command-line tool and generates the same files:
 
 ```ts
@@ -142,7 +142,7 @@ If no tags are specified, "default" is used.
 
 The API names are transformed by appending "Api" and transforming them to pascal case, e.g. 'my-tag' results in `MyTagApi`.
 In case the tag already ends with "api" (case independent), one "Api" will be removed, e.g. `myapi` results in `MyApi`.
-If your tags end with "api", but this is part of the word, e.g. "okapi", we recommend the OpenAPI vendor extensions and provide an explicit API name ending with "Api", e.g. "OkapiApi".
+If your tags end with "api", but this is part of the word, e.g. "okapi", you can use the OpenAPI vendor extensions and provide an explicit API name ending with "Api", e.g. "OkapiApi".
 Note, that operations are grouped into APIs based on their transformed names, not the original names.
 Therefore, tags like "my-tag" and "MyTag" are treated as the same API, "MyTagApi".
 
@@ -154,12 +154,12 @@ Every operation in the specification is reflected as a function of a generated A
 The function names are based on the `operationId` property in the specification of the operation.
 If no `operationId` is given, the name is derived from the method and the path pattern, examples:
 
-- `'resource'` with `post` would result in `createResource`
-- `'resource/{id}'` with `get` would result in `getResourceById`
+- `'resource'` with `POST` would result in `createResource`
+- `'resource/{id}'` with `GET` would result in `getResourceById`
 
 The function names are transformed to camel case, e.g. 'myFunction'.
 Duplicates within an API are handled by adding an index at the end of the name.
-In cases where we have duplicate names, but one of the names is in camel case, this name remains as is.
+In cases where there are duplicate names, but one of the names is in camel case, this name remains as is.
 Example:
 
 | Original `operationId`s | Generated function names |
@@ -171,7 +171,7 @@ Example:
 ### Configure Generated Client Structure and Naming
 
 In case you need more flexibility when generating clients, you can use the SAP Cloud SDK's vendor extensions for OpenAPI.
-We provide two extensions:
+The SAP Cloud SDK provides two extensions:
 
 - [`x-sap-cloud-sdk-api-name`](#x-sap-cloud-sdk-api-name) to configure the structure and naming of the generated APIs.
 - [`x-sap-cloud-sdk-operation-name`](#x-sap-cloud-sdk-operation-name) to configure the generated function names.
@@ -218,8 +218,8 @@ This differs from the OData generator, which creates all sources needed for an n
 If you want to use the generated client in your TypeScript code without sharing it, you can work with the default configuration.
 If you work with JavaScript you can enable and configure transpilation with the `--transpile` and `--tsConfig` flags.
 
-If you want to publish a generated client to an npm registry, in addition to transpiling you will need to have a `package.json` for your client.
-You can generate it with `--packageJson` or include your custom `package.json` with `--include`.
+If you want to publish a generated client to an npm registry, in addition to transpiling you will need to have a `package.json` file for your client.
+You can generate it with the `--packageJson` flag or include your custom `package.json` with the `--include` flag.
 Please make sure to check intellectual property regulations before publishing to a public registry.
 
 The generated clients depend on the `@sap-cloud-sdk/openapi` package.
@@ -249,4 +249,4 @@ Note that this formatting is done in-memory before the generator emits the files
 Alternatively, you can execute a custom formatting step after the generation is finished.
 
 Note that custom formatting steps could break source maps when you generate a JavaScript client (option `generateJs` enabled).
-We recommend excluding JavaScript clients from formatting because the generated `.js` and `.map.js` files are not meant for humans to read.
+JavaScript clients should be excluded from formatting because the generated `.js` and `.map.js` files are not meant for humans to read.

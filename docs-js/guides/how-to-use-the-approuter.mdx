@@ -19,18 +19,18 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 # Using the SAP Application Router with the SAP Cloud SDK
 
-In this guide, we will show you how to use the SAP Application Router together with the SAP Cloud SDK.
+This guide will show you how to use the SAP Application Router together with the SAP Cloud SDK.
 You will learn how to secure your application and configure multi-tenancy for principal propagation with an SAP Cloud SDK-based application example powered by [nestJS](https://nestjs.com/).
 
 ## SAP Application Router
 
-When we want to enable multi-tenancy for our application, we use the [SAP Application Router](https://www.npmjs.com/package/@sap/approuter).
+To enable multi-tenancy for your application, you should use the [SAP Application Router](https://www.npmjs.com/package/@sap/approuter).
 The application router’s primary purpose is to be the single entry point of a microservice-based application and act as the application’s reverse proxy.
 
 Its responsibilities consist of dispatching requests to backend microservices, authenticating users, and serving static content.
 The application router checks if a given request has a valid JSON Web Token (JWT) when accessing a target service.
 If the request contains a valid JWT, the application router forwards the request to the target service; if the request does not contain a valid JWT, the user must authenticate.
-As we can see in the diagram below, we use an Identity Provider (IdP) to authenticate, the request is redirected to an IdP where a user gets authenticated and then redirected back to the application router for passing further according to its desired destination.
+When using an Identity Provider (IdP) to authenticate, the request is redirected to the IdP where a user gets authenticated and then redirected back to the application router.
 
 <!-- vale off -->
 
@@ -48,11 +48,11 @@ As we can see in the diagram below, we use an Identity Provider (IdP) to authent
 
 ### Application Router Setup
 
-To deploy our application router in SAP BTP Cloud Foundry, we need to configure it first.
-Let's walk through the four files we need to use.
+To deploy your application router in SAP BTP Cloud Foundry, you need to configure it first.
+Let's walk through the four files you need to use.
 
 The `xs-security.json` file defines the security and deployment options for an application.
-With the below example, we enable the `shared` tenant-mode for our `xsuaa` instance, which we need for multi-tenancy.
+With the below example, you enable the `shared` tenant-mode for your `xsuaa` instance, which you need to enable multi-tenancy.
 
 ```json
 {
@@ -61,10 +61,10 @@ With the below example, we enable the `shared` tenant-mode for our `xsuaa` insta
 }
 ```
 
-In the `xs-app.json`, we specify to which backend service a request is forwarded to, and how this request has to be authenticated.
-We can optionally also specify a specific `identityProvider` that is used for the authentication.
+In the `xs-app.json`, you specify to which backend service a request is forwarded to, and how this request has to be authenticated.
+You can optionally specify a specific `identityProvider` that is used for the authentication.
 
-In the example below, we forward every request against the application router's `/` route to the backend destination's `/` route.
+In the example below, you forward every request against the application router's `/` route to the backend destination's `/` route.
 
 ```json
 {
@@ -79,7 +79,7 @@ In the example below, we forward every request against the application router's 
 }
 ```
 
-In the `package.json` we only have one dependency, the application router module.
+In the `package.json` there is only one dependency, the application router module.
 
 ```json
 {
@@ -93,11 +93,11 @@ In the `package.json` we only have one dependency, the application router module
 }
 ```
 
-The manifest contains our application router, as well as environment variables which our application router needs for multi-tenancy.
-As you see under `env`, we specify the `TENANT_HOST_PATTERN` and `destinations`.
-The `destinations` are the destinations we use in our `xs-app.json` where we forward requests to.
+The manifest contains your application router, as well as environment variables which your application router needs for multi-tenancy.
+Under `env`, you need to specify the `TENANT_HOST_PATTERN` and `destinations`.
+The `destinations` are the destinations you use in your `xs-app.json` where you forward requests to.
 The `TENANT_HOST_PATTERN` is a regular expression that describes how a tenant name should be retrieved from the host.
-We also have to bind the `xsuaa` which we configured with our `xs-security.json` to the application router.
+You also have to bind the `xsuaa` which you configured with your `xs-security.json` to the application router.
 
 ```yaml
 applications:
@@ -120,12 +120,12 @@ applications:
 
 ## Securing Your Application
 
-To secure our application endpoints, we utilize the [passport](http://www.passportjs.org/packages/passport-jwt) library.
-It lets us authenticate endpoints using a JSON web token.
+Utilize the [passport](http://www.passportjs.org/packages/passport-jwt) library to secure your application endpoints.
+It lets you authenticate endpoints using a JSON web token.
 
-Additionally, we use the `xsenv` library to retrieve our `xsuaa` credentials and the `xssec` library's `JWTStrategy` object for the middleware.
+Additionally, the `xsenv` library can retrieve your `xsuaa` credentials and the `xssec` library's `JWTStrategy` object for the middleware.
 
-Below is a simple example, where we get the `approuter-scaffold-xsuaa` which is bound to our application, use it in the `JWTStrategy`, and then forward the middleware to the passport.
+Below is a simple example, where you get the `approuter-scaffold-xsuaa` which is bound to your application, use it in the `JWTStrategy`, and then forward the middleware to the passport.
 
 <!-- vale off -->
 
@@ -154,9 +154,9 @@ bootstrap();
 
 ## Enabling Principal Propagation
 
-To enable principal propagation with this setup, we must forward the request to our endpoints.
+To enable principal propagation with this setup, you must forward the request to the endpoints.
 
-First, we forward the request in our `app.controller.ts` to our principal propagation endpoint.
+First, you forward the request in your `app.controller.ts` to the principal propagation endpoint.
 
 ```ts
 @Get('principal-business-partner')
@@ -169,9 +169,9 @@ First, we forward the request in our `app.controller.ts` to our principal propag
   }
 ```
 
-Then, we simply use the SAP Cloud SDK's `retrieveJwt` function to extract the JWT from our request, and forward it to the `execute` method.
+Then, you can use the SAP Cloud SDK's `retrieveJwt()` function to extract the JWT from your request, and forward it to the `execute()` method.
 
-Below is an example using the `BusinessPartnerService`, where we retrieve the top five business partners.
+Below is an example using the `BusinessPartnerService` showing how to retrieve the top five business partners.
 
 <!-- vale off -->
 

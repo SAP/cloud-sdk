@@ -15,14 +15,13 @@ keywords:
 
 # Introduction
 
-In this article, we will talk about resilience and how to add resilience when using the SAP Cloud SDK.
+In this article, you will learn about resilience and how to add resilience when using the SAP Cloud SDK.
 In contrast to Java, for JavaScript, there is no standard framework to handle resilience.
-Hence, we have not included resilience features within the SAP Cloud SDK, but leave it up to you which framework you want to use.
-We have prepared examples on the resilience topic in our [samples repository](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/resilience-examples) which illustrate the concepts and pick some widely used `npm` packages.
+The [samples repository](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/resilience-examples) gives you examples which illustrate the concepts and pick some widely used `npm` packages.
 
-There is one exception to this approach.
-We introduced a circuit-breaker for all calls going to SAP BTP services like XSUAA and the destination service.
-The circuit breaker is enabled by default to protect the services and you can disable it via the `enableCircuitBreaker` option on the `execute()` methods.
+There is one resilience concept that is applied by default in the SAP Cloud SDK for JavaScript.
+All calls going to SAP BTP services like XSUAA and the destination service have a circuit-breaker.
+If need be, you can disable it via the `enableCircuitBreaker` option on the `execute()` methods.
 
 ## Cache
 

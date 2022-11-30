@@ -140,14 +140,15 @@ You use [launch configurations](https://code.visualstudio.com/docs/editor/debugg
 Either extend your existing `.vscode/launch.json` or create a new one.
 
 ```JSON
-{"configurations": [
+{
+  "configurations": [
     {
       "type": "node",
       "request": "launch",
       "name": "Debug my application",
       "program": "${workspaceFolder}/dist/main.js",
       "envFile": "${workspaceFolder}/.env",
-      "preLaunchTask": "npm: build",
+      "preLaunchTask": "npm build",
       "outFiles": [
         "${workspaceFolder}/dist/**/*.js"
       ]
@@ -156,18 +157,17 @@ Either extend your existing `.vscode/launch.json` or create a new one.
 }
 ```
 
-In this example, we use a simple Nest.js application.
-The code will look almost identical for express or [CAP](https://community.sap.com/topics/cloud-application-programming) applications.
-The property `program` defines the script file executed when you run the configuration.
-In our case, the `main.js` script will start up the Nest server.
-The `preLaunchTask` executes the build before each run which compiles the TypeScript files to JavaScript.
+This example uses a Nest.js application.
+The code will look similar for express or [CAP](https://community.sap.com/topics/cloud-application-programming) applications.
+The `program` property defines the script file executed when you run the configuration.
+In this project, the `main.js` script will start up the Nest server.
+The `preLaunchTask` property build before each run which compiles the TypeScript files to JavaScript.
 The `outFiles` property defines where the compiled files will be located.
 
-We have to set the `destinations` environment variable, to provide our destination.
-This will interrupt the [destination lookup](../features/connectivity/destination.mdx) and lead to a destination with the HTTP_PROXY considered.
-The easiest way to do that is via a `.env` file which is read when starting the application.
-If you do not have a `.env` file, create one or adjust the existing one.
-Just add the following entry to the `.env` file:
+To provide the destination, set the `destinations` environment variable.
+This interrupts the [destination lookup](../features/connectivity/destination.mdx) and the destination will consider the `HTTP_PROXY` environment variable.
+If a `.env` file is present, it is loaded when starting the application.
+Create or adjust the file to include the following:
 
 ```
 destinations="[{
@@ -235,7 +235,7 @@ Hence, you can use the same approach locally and in production.
 ### Prerequisite: Service Setup
 
 On Cloud Foundry, the access to services is granted via the `VCAP_SERVICE` variables.
-We assume that you have configured your application so that it can access the destination service.
+Make sure to configure your application so that it can access the destination service.
 If not, follow the [steps in the Cloud Foundry tutorial](https://developers.sap.com/group.s4sdk-js-cloud-foundry.html).
 
 ### Implementation
@@ -251,10 +251,11 @@ Note that there are certain limitations to this approach.
 Within the BAS you will not have a JWT issued for your user.
 This means that flows like `OAuth2SAMLBearerAssertion` and `OAuth2UserTokenExchange` can only work if you provide such a JWT.
 This is possible in principle, but difficult within the local development environment.
-We recommend creating dedicated development destinations with authentications flows like:
+
+Create dedicated development destinations which use the following authentications flows:
 
 - `OAuth2ClientCredentials`
 - `BasicAuthentication`
-- `ClientCertificateAuthentication` (here we wait for a fix on the [http-proxy-agent](https://github.com/TooTallNate/node-https-proxy-agent/pull/111) or you have to disable the proxy
+- `ClientCertificateAuthentication` (you will have to disable the proxy until the [http-proxy-agent](https://github.com/TooTallNate/node-https-proxy-agent/pull/111) provides a fix)
 
-Note that for the connection to the cloud system the destinations do not need the two properties `WebIDEEnabled` and `HTML5.DynamicDestination`, because the BAS connectivity proxy is not needed.
+Note that for the connection to the cloud system, the destinations do not need the two properties `WebIDEEnabled` and `HTML5.DynamicDestination`, because the BAS connectivity proxy is not needed.
