@@ -285,18 +285,23 @@ In a productive environment, you will use a [Destination service](https://help.s
 
 To access the destination service, the SAP Cloud SDK will first fetch an access token from the XSUAA service.
 The token retrieved from the XSUAA service is used to make a call to the destination service and receive the destinations.
-The destination service returns a destination with all relevant authentication information depending on the used authentication flow:
+The destination service returns a destination with all relevant authentication information depending on the used authentication flow.
+Listed below are the SDK-supported authentication flows, categorized based on whether a user JWT (`jwt` property in [destination fetch options](#destination-fetch-options)) is required to retrieve a destination.
 
-- `PrincipalPropagation`
-- `NoAuthentication`
-- `BasicAuthentication`
-- `OAuth2SAMLBearerAssertion`
-- `OAuth2UserTokenExchange`
-- `OAuth2ClientCredentials`
-- `OAuth2Password`
-- `ClientCertificateAuthentication`
-- `OAuth2JWTBearer`
-- `OAuth2RefreshToken`
+- A user JWT is not required
+
+  - `NoAuthentication`
+  - `BasicAuthentication`
+  - `OAuth2ClientCredentials`
+  - `OAuth2Password`
+  - `ClientCertificateAuthentication`
+  - `OAuth2RefreshToken`
+
+- A user JWT is required
+  - `OAuth2UserTokenExchange`
+  - `OAuth2JWTBearer`
+  - `OAuth2SAMLBearerAssertion`
+  - `PrincipalPropagation`
 
 The SAP Cloud SDK automatically parses the response of the destination service and uses the provided authentication information for the request to the target system.
 For a simple service, this would be the end of the story.
@@ -425,8 +430,8 @@ A few of the options were already listed above, but this section gives a compreh
 - `serviceBindingTransformFn`: A custom transformation function to control how a `Destination` is built from the given `Service`.
 - `jwt`: The JSON Web Token.
   The property is mandatory in the following cases:
-  - User-dependent authentication flow is used, e.g., `OAuth2UserTokenExchange`, `OAuth2JWTBearer`, `OAuth2SAMLBearerAssertion`, and `SAMLAssertion`.
-  - Multi-tenant scenarios with destinations maintained in the subscriber account. This case is implied if the the  `selectionStrategy` is set to `alwaysSubscriber`.
+  - User-dependent authentication flow is used, e.g., `OAuth2UserTokenExchange`, `OAuth2JWTBearer`, `OAuth2SAMLBearerAssertion`, `SAMLAssertion` or `PrincipalPropagation`.
+  - Multi-tenant scenarios with destinations maintained in the subscriber account. This case is implied if the `selectionStrategy` is set to `alwaysSubscriber`.
 - `iss`: Issuer URL which can be used to obtain destination for a subscriber tenant if no JWT is present.
   Read the detailed documentation above before using this option.
 - `refreshToken`: A refresh token.
