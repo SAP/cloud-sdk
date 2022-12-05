@@ -100,12 +100,21 @@ public class AsynchronousConfiguration implements AsyncConfigurer {
 
 You can read more about the `@Async` functionality [here](https://www.baeldung.com/spring-async).
 
-:::tip
+:::tip Security Context
 The Spring `SecurityContext` can be propagated to `@Async` calls.
 Replace the above executor with this one:
 
 ```java
 new DelegatingSecurityContextExecutor(ThreadContextExecutors.getExecutor());
+```
+
+And add this dependency:
+
+```xml
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-core</artifactId>
+</dependency>
 ```
 
 :::
