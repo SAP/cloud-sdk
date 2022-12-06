@@ -4,12 +4,12 @@ To influence (de-)serialization you have to provide your custom (de-)serializers
 
 A (de-)serializer is an object of type `DeSerializer` that defines the following callback functions:
 
-- `deserialize`: Takes a value as given by the service and returns a deserialized value, i.e. its represenation in code.
-- `serialize`: Takes a deserialized value and transforms it to the format and type expected by the service.
-- `serializeToUri` (optional): For some EDM types the serialized format differs between values in a payload and URI.
+- `deserialize()`: Takes a value as given by the service and returns a deserialized value, i.e. its represenation in code.
+- `serialize()`: Takes a deserialized value and transforms it to the format and type expected by the service.
+- `serializeToUri()` (optional): For some EDM types the serialized format differs between values in a payload and URI.
   This function takes a deserialized value and transforms it to a string with the format expected by the service for URIs.
-  The second parameter of this callback function references the `serialize` function, which can optionally be used as a basis for URI serialization.
-  If this function is not specified, the URI serialization defaults to the `serialize` function.
+  The second parameter of this callback function references the `serialize()` function, which can optionally be used as a basis for URI serialization.
+  If this function is not specified, the URI serialization defaults to the `serialize()` function.
 
 The type `DeSerializer` has one generic parameter, that represents the deserialized type.
 
@@ -23,10 +23,11 @@ const doubleDeSerializer: DeSerializer<number> = {
 };
 ```
 
-The example above shows a simplified version of the SAP Cloud SDK default (de-)serializer for the EDM type `Edm.Double`.
-The `deserialize` function converts the raw value to a number.
-The `serialize` function converts the deserialized value to a string.
-The `serializeToUri` function makes use of the `serialize` function and appends a "D" at the end of the string.
+The example above shows a simplified version of the SAP Cloud SDK default (de-)serializer for the EDM type `Edm.Double`:
+
+- The `deserialize()` function converts the raw value to a number.
+- The `serialize()` function converts the deserialized value to a string.
+- The `serializeToUri()` function makes use of the `serialize()` function and appends a `D` at the end of the string.
 
 To specify custom (de-)serializers for a service, you have to pass an object to the service function, that maps from EDM type(s) to your custom (de-)serializer.
 All unspecified EDM types are still (de-)serialized using the SAP Cloud SDK defaults.
@@ -38,7 +39,7 @@ const customDeSerializers = { 'Edm.Double': doubleDeSerializer };
 const { businessPartnerApi } = businessPartnerService(customDeSerializers);
 ```
 
-All requests against the `businessPartnerApi` will now use the custom (de-)serializers for `"Edm.Double"` and the default (de-)serializers for all other EDM types.
+All requests against the `businessPartnerApi` will now use the custom (de-)serializers for `Edm.Double` and the default (de-)serializers for all other EDM types.
 
 #### Using (De-)Serializers for Temporal
 

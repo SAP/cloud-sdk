@@ -42,7 +42,7 @@ There are two options:
 The SAP Cloud SDK sets the isolation based on the provided JWT:
 
 - No JWT: Isolation is set to `Tenant` and value for the tenant is the provider account.
-- JWT without `user_id`: Isolation is set to `Tenant` and the value for the tenant is the `zid` of the JWT.
+- JWT without `user_id`: Isolation is set to `Tenant` and the value for the tenant is the `zid` property of the JWT.
 - JWT with `user_id`: Isolation is set to `TenantUser` and values are taken from `zid` and `user_id`.
 
 This is a safe choice which prevents privilege escalation due to caching.
@@ -78,7 +78,7 @@ An erroneous configuration can have severe consequences like privilege escalatio
 When the cache option is enabled, the SAP Cloud SDK stores the fetched destinations in an in-memory cache.
 However, in certain cases, a persistent or distributed cache may be more suitable according to your application architecture.
 
-To create your custom destination cache provider, implement the `DestinationCacheInterface` interface shown below and define the `get`, `set`, and `clear` methods.
+To create your custom destination cache provider, implement the `DestinationCacheInterface` interface shown below and define the `get()`, `set()`, and `clear()` methods.
 
 ```ts
 export interface DestinationCacheInterface {
