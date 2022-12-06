@@ -63,35 +63,34 @@ The most basic way to use the SAP Cloud SDK HTTP client is the function <LinkToL
 executeHttpRequest(destination, requestConfig, httpRequestOptions): Promise<HttpResponse>;
 ```
 
-<!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
-
-:::tip
-
-This guide provides code snippets, fully executable example code can be found in the [SAP-samples/cloud-sdk-js repository on GitHub](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/http-client-examples).
-
-:::
-
-In the most simple form, this can be invoked like this:
-
-```ts
-const response = await executeHttpRequest(
-  {
-    url: 'https://example.com'
-  },
-  {
-    method: 'get'
-  }
-);
-```
-
-The `executeHttpRequest()` function takes the following parameters:
+It takes the following parameters:
 
 - The `destination` argument is of type `DestinationOrFetchOptions`
   - This can either be a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="destination object" /> which was already fetched or an <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions" name="object containing a destination name and an optional JWT" />
-- The `requestConfig` argument is of type <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_http_client.HttpRequestConfig" name="HttpRequestConfig" /> or <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_http_client.HttpRequestConfigWithOrigin" name="HttpRequestConfigWithOrigin" />
+- The `requestConfig` argument is of type <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_http_client.HttpRequestConfig" name="HttpRequestConfig" />.
+  - This parameter is optional
+  - The default value is a `GET` request
 - The `httpRequestOptions` argument is of type `HttpRequestOptions`
   - This parameter is optional
-  - Can be used to disable [automatic CSRF token fetching](#csrf-token-fetching)
+  - The default value is a request with [automatic CSRF token fetching](#csrf-token-fetching)
+
+:::tip
+
+This guide provides code snippets.
+Fully executable example code can be found in the [SAP-samples/cloud-sdk-js repository on GitHub](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/http-client-examples).
+
+:::
+
+In the most simple form, the function can be invoked like this:
+
+```ts
+const response = await executeHttpRequest({
+  url: 'https://example.com'
+});
+```
+
+In the example above, since the `requestConfig` value is not provided, the SDK treats it as a `GET` request.
+To perform a different operation, set the `method` property in `requestConfig` to the required value, e.g., `POST`.
 
 <!-- Prettier doesn't change this, cf https://docusaurus.io/docs/markdown-features/admonitions#usage-with-prettier -->
 
@@ -184,7 +183,7 @@ const response = await executeHttpRequest(
 );
 ```
 
-The HTTP request in this example will contain the parameter values `a/by` and `y1` because our parameter encoder function replaced the `x` with a `y`.
+The HTTP request in this example will contain the parameter values `a/by` and `y1` because the parameter encoder function replaced the `x` with a `y`.
 
 ## `executeHttpRequestWithOrigin()`
 

@@ -88,7 +88,7 @@ Here you should let the SAP Cloud SDK handle everything.
 Hence, you will provide in the `.execute()` method only the destination name.
 This will trigger the destination lookup as described [here](destination.mdx).
 
-The result of the lookup is a destination object which contains a property called `Proxy Type`.
+The result of the lookup is a destination object which contains a property called `ProxyType`.
 This property can have three values: `Internet`, `OnPremise`, and `PrivateLink`:
 
 <img
@@ -107,7 +107,7 @@ However, if a proxy is needed to reach this destination it is configured in the 
 
 The SAP Cloud SDK considers the environment variables `HTTP_PROXY` and `HTTPS_PROXY`.
 The variable `HTTP_PROXY` is used for destinations using `http://` in their URL and `HTTPS_PROXY` for the ones using `https://`.
-`https` is the default protocol if the protocol is not set in the URL field of the destination.
+HTTPS is the default protocol if the protocol is not set in the URL field of the destination.
 
 The value of the two proxy variables is just a simple string following this pattern:
 
@@ -116,8 +116,8 @@ The value of the two proxy variables is just a simple string following this patt
 ```
 
 The user and password are optional and if they are left out no authentication header is added.
-The protocol is also optional and the default value is `http` since most proxies do not use an encryption layer for communication.
-The default for the port is `80` for `http` and `443` for `https`.
+The protocol is also optional and the default value is HTTP since most proxies do not use an encryption layer for communication.
+The default for the port is `80` for HTTP and `443` for HTTPS.
 Example of valid values would be:
 
 ```bash script
@@ -142,7 +142,7 @@ If you select `PrivateLink`, the flow is the same as for proxy type `Internet`.
 
 ## A Word on the Used Libraries and Implementation Details
 
-The SAP Cloud SDK uses axios to execute `http` requests.
+The SAP Cloud SDK uses axios to execute HTTP requests.
 In principle axios should support web proxies based on the environment variables.
 However, the request URL using a proxy was not correctly constructed and an entry point for the connectivity proxy was anyhow necessary.
 Hence, the SAP Cloud SDK switches off the built-in proxy handling by axios completely by using the following axios request configuration.

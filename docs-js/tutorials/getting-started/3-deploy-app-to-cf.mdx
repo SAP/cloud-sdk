@@ -208,7 +208,7 @@ services:
       - my-xsuaa
 ```
 
-Finally, you need to adapt the `getAllBusinessPartners` function in `business-partner.service.ts` to use the destination defined in the SAP BTP Cockpit.
+Finally, you need to adapt the `getAllBusinessPartners()` function in `business-partner.service.ts` to use the destination defined in the SAP BTP Cockpit.
 
 The function now looks like this:
 
@@ -221,7 +221,7 @@ async getAllBusinessPartners(): Promise<BusinessPartner[]> {
 }
 ```
 
-In the snippet, the parameter of `execute` is replaced with an object whose key `destinationName` refers to the name of the destination you defined earlier.
+In the snippet, the parameter of the `execute()` method is replaced with an object whose key `destinationName` refers to the name of the destination you defined earlier.
 If you followed this [step](./execute-an-odata-request#manage-destinations-centrally-optional) in the previous tutorial, your code will already refer to the correct `destinationName`.
 If you chose a different name than `MockServer`, make sure to use it here accordingly.
 

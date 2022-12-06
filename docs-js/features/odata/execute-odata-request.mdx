@@ -25,7 +25,7 @@ import {
 } from '../common';
 
 Once you have generated a typed OData client using the SAP Cloud SDK generator, you can use this OData client to execute HTTP requests for your service.
-The client provides request builders for the different types of requests and abstractions of the entity sets of the given service, which we refer to as _entities_.
+The client provides request builders for the different types of requests and abstractions of the entity sets of the given service.
 
 ## General Request Structure
 
@@ -46,7 +46,7 @@ The name of the service directory corresponds to the `directoryName` specified i
 
 Destructure the service to get the API of the entity you want to make requests for - `myEntityApi` in the example above.
 
-Every entity API has a `requestBuilder` function, that allows to chain all types of request builders that are available for this entity, e.g. `myEntityApi.requestBuilder().getAll()` for the `getAll` request type.
+Every entity API has a `requestBuilder()` method, that allows to chain all types of request builders that are available for this entity, e.g. `myEntityApi.requestBuilder().getAll()` for the `getAll` request type.
 
 See the list below for details on all available request types (denoted by `requestType` in the example above):
 
@@ -133,16 +133,16 @@ Some entities do not support all the request types, which in turn won't be avail
 The request can further be configured by chaining additional configuration functions (denoted by `additionalRequestConfiguration` in the example above).
 All requests can be configured by setting [custom request headers](#setting-custom-request-headers), [custom query parameters](#setting-custom-query-parameters) and a [custom service path](#setting-a-custom-service-path).
 
-Each request type has additional request specific configuration options, e.g. creating an entity `asChildOf` another entity for `create` requests, ETag handling for `update` and `delete` requests, as well as set operations for `getAll` requests and selecting properties for `getAll` and `getByKey` requests.
+Each request type has additional request specific configuration options, e.g. creating an entity `asChildOf` another entity for create requests, ETag handling for update and delete requests, as well as set operations for `getAll` requests and selecting properties for `getAll` and `getByKey` requests.
 
 The last step when making a request using the SAP Cloud SDK is the request execution.
-Once the request is configured use the `execute` function and pass a [destination](../connectivity/destination.mdx) to it.
+Once the request is configured use the `execute()` method and pass a [destination](../connectivity/destination.mdx) to it.
 This will automatically construct your request URL and headers, execute the request, and return a typed response if applicable.
 
 ### Conversion of OData Types
 
 OData uses the Entity Data Model (EDM) to represent values such as strings, numbers, dates, and times.
-Calling the `execute` function by default automatically converts OData Entity Data Model (EDM) values to their respective types in JavaScript and TypeScript.
+Calling the `execute()` method by default automatically converts OData Entity Data Model (EDM) values to their respective types in JavaScript and TypeScript.
 
 By default, the SAP Cloud SDK converts EDM types into TypeScript types as described by the following tables.
 This can be changed by providing custom serializers and deserializers as described [here for OData v2](./odata-v2-client.mdx#customize-de-serialization) and [here for OData v4](./odata-v4-client.mdx#customize-de-serialization).
@@ -179,7 +179,7 @@ If you require the raw OData response, you can look into [getting the raw respon
 ### Setting Custom Request Headers
 
 The SAP Cloud SDK automatically sets some necessary request headers on every request.
-You can specify additional custom headers using the `addCustomHeaders` function:
+You can specify additional custom headers using the `addCustomHeaders()` method:
 
 ```ts
 const { myEntityApi } = myEntityService();
@@ -191,7 +191,8 @@ myEntityApi.requestBuilder().getAll().addCustomHeaders({
 The keys and values of the passed object correspond with the header names and values.
 Custom headers take priority over automatically generated headers.
 Automatically generated headers are sent with lowercase header names, and custom headers keep the case they were set in.
-In the example above we pass an `apikey`, which is necessary if you want to make use of the SAP API Business Hub sandbox.
+SAP API Business Hub sandbox requires a custom header called `apikey`.
+The example above shows how to add this header.
 
 :::caution
 
@@ -202,7 +203,7 @@ Setting an `authorization` or `apikey` header (regardless of lowercase or upperc
 ### Setting Custom Query Parameters
 
 The SAP Cloud SDK adds necessary query parameters for a request based on your configuration.
-You can add custom parameters by using the `withCustomQueryParameters` function.
+You can add custom parameters by using the `withCustomQueryParameters()` method.
 Custom query parameters take precedence over those created by the SAP Cloud SDK.
 
 In the example below an additional query parameter `language=en` will be added to the request URL:
@@ -224,7 +225,7 @@ If you want to set a query parameter in quotes (e.g. `language='en'`) you will h
 
 If a service specification contains a specification for the `servicePath`, the SAP Cloud SDK generator generates an OData client with a default service path according to the specification (typically `'/sap/opus/data/sap/'` for SAP S/4HANA services).
 When there is no such path defined in the specification, it can be manually set in the `service-mapping.json`.
-It can also be adjusted per request by using the `withCustomServicePath` function:
+It can also be adjusted per request by using the `withCustomServicePath()` method:
 
 ```ts
 const { myEntityApi } = myEntityService();
@@ -253,10 +254,10 @@ myEntityApi
 
 ### Appending Paths to the Request URL Built by the Request Builders
 
-Usually, our request builders construct the request URL for you automatically.
-However, for certain OData features like `navigation properties`, we do not yet provide a type-safe API that constructs the request path in a fully automated manner.
-For that reason, we added a non-typed API to our request builders providing the capability to append additional path segments to the request URL.
-You have to use the `executeRaw(destination)` method to get results because we can't deserialize a response in a type-safe way.
+Usually, the request builders construct the request URL for you automatically.
+However, for certain OData features like navigation properties, the SAP Cloud SDK does not provide a type-safe API that constructs the request path in a fully automated manner.
+For that reason, there is a non-typed API to request builders providing the capability to append additional path segments to the request URL.
+You have to use the `executeRaw(destination)` method to get results because the SAP Cloud SDK can't deserialize these responses in a type-safe way.
 
 The example below shows how to query a navigation property from a given entity.
 
@@ -294,9 +295,9 @@ const httpResponse: HttpResponse = myEntityApi
 
 The value is in milliseconds and the default value is 10000 (10 seconds)
 This timeout applies to the request sent to the target system given in the destination.
-If a `CSRF` token is fetched from the target system the timeout applies also to this call.
+If a cross-site request forgery (CSRF) token is fetched from the target system the timeout applies also to this call.
 Note that there is also a second timeout option on the destination fetch options.
-This relates to the calls made to SAP BTP services like `destination-service` or XSUAA.
+This relates to the calls made to SAP BTP services like destination service or XSUAA.
 
 ### Getting the Raw Response and the Original Request
 
@@ -320,9 +321,9 @@ const httpResponse: HttpResponse = myEntityApi
 <ul style={{ 'margin-top': '-16px' }}>
   <li>
     In rare cases, when the response data cannot be deserialized.
-    This can happen when function imports use an entity type as a return type, and this entity type is shared by multiple `EntitySet`s.
+    This can happen when function imports use an entity type as a return type, and this entity type is shared by multiple `EntitySet` instances.
     Without further information, it is unclear which <code>Entity</code> should be deserialized.
-    For those cases, you have to use <code>executeRaw</code> and use the <code>deserialize</code> function on the response data.
+    For those cases, you have to use <code>executeRaw()</code> and use the <code>deserialize()</code> function on the response data.
   </li>
 </ul>
 

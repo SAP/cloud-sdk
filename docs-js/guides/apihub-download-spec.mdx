@@ -1,0 +1,39 @@
+---
+id: api-business-hub-download-specification
+title: Download Specification Files from SAP API Business Hub
+sidebar_label: Download specification files
+description: This guide demonstrates the steps to download OData and OpenAPI specification files (specs) from SAP API Business Hub.
+---
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+This guide demonstrates the steps to download OData and OpenAPI specification files (specs) from SAP API Business Hub.
+
+## When Do I Need A Specification File?
+
+To consume an OData or OpenAPI service, you need to generate a corresponding client.
+The documentation of the generator packages can be found below:
+
+- `@sap-cloud-sdk/generator` for generating an OData client (see [doc](../features/odata/generate-odata-client.mdx))
+- `@sap-cloud-sdk/openapi-generator` for generating an OpenAPI client (see [doc](../features/openapi/generate-openapi-client.mdx))
+
+## Steps To Download A Specification File
+
+1. Go to [SAP API Business Hub](https://api.sap.com).
+2. Click **login**, as this is necessary for downloading the specs.
+3. Search for the service you want to consume like "business partner". The search results should look like the screenshot below.
+4. Apply filters for targeting a specific service by clicking the **Show Filters** button. For example, to filter only S/4HANA Cloud services, in the `Product` list, select `SAP S/4HANA Cloud`.
+
+<img src={useBaseUrl('img/apihub-download-spec-1.png')} />
+
+5. Click the service name, when you find your service, so you can see a similar page like the screenshot below.
+6. Click **API Specification**
+
+   <img src={useBaseUrl('img/apihub-download-spec-2.png')} />
+
+7. Scroll down and download the EDMX file for an OData service. (For OpenAPI, choose YAML or JSON)
+   <img src={useBaseUrl('img/apihub-download-spec-3.png')} />
+
+:::tip Try out sandbox systems
+If you're unsure whether the chosen service is correct, click **Try Out** to test the sandbox system, which exposes a few endpoints.
+:::

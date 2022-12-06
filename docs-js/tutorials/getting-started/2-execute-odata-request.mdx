@@ -27,7 +27,7 @@ In this part of the tutorial, you will do the following:
 ## Add a Custom Route
 
 Initially, the app contains a basic controller with a single route that returns the string "Hello World!".
-We will add another route for `business-partner` that will list all available business partners.
+You will add another route for `business-partner` that will list all available business partners.
 
 Create a new controller by executing the command:
 
@@ -45,7 +45,7 @@ export class BusinessPartnerController {}
 ```
 
 The `@Controller(business-partner)` decorator marks the class `BusinessPartnerController` as a controller (i.e. a thing that handles requests).
-Next, we will add a method `getBusinessPartners` with a `@Get('')` decorator.
+Next, add a method `getBusinessPartners()` with a `@Get('')` decorator.
 This will tell Nest to create a handler for this endpoint for HTTP requests.
 
 ```ts
@@ -55,12 +55,12 @@ import { Controller, Get } from '@nestjs/common';
 export class BusinessPartnerController {
   @Get()
   getBusinessPartners() {
-    return 'We will implement this in a minute.';
+    return 'You will implement this in a minute.';
   }
 }
 ```
 
-Notice that we did not add any path information in the decorator.
+Notice that you did not add any path information in the decorator.
 Nest will map `GET /business-partner` requests to this handler.
 
 For the controller to work, you need to include it in the `controllers` array within the `@Module()` decorator in `app.module.ts`.
@@ -87,12 +87,12 @@ npm run start:dev
 ```
 
 If you've terminated your application, you can restart it by running the start command again.
-Now, calling http://localhost:8080/business-partner should return our placeholder string.
+Now, calling http://localhost:8080/business-partner should return the placeholder string.
 
 ## Generate Service Entities
 
 The SAP Cloud SDK for JavaScript requires client libraries to make calls to OData services.
-In this tutorial, we generate the client library for the business partner service using `@sap-cloud-sdk/generator`.
+In this tutorial, you generate the client library for the business partner service using `@sap-cloud-sdk/generator`.
 More details of the OData generator can be found in [Generate an OData client for JavaScript](../../features/odata/generate-odata-client.mdx).
 
 Steps:
@@ -133,7 +133,7 @@ Use `@sap-cloud-sdk/generator` to generate OData client libraries you need, as m
 
 ## Execute an OData Request
 
-Next, we will create a service that will be responsible for fetching the business partners.
+Next, you will create a service that will be responsible for fetching the business partners.
 To create a service class `business-partner.service.ts`, execute:
 
 ```shell
@@ -168,9 +168,9 @@ import {
 } from '../../services/business-partner-service';
 ```
 
-Create a function `getAllBusinessPartners`.
+Create a function `getAllBusinessPartners()`.
 Get the API for the entity you want to make a call to in your application.
-In this tutorial, we are using the `businessPartnerApi` of the business partner service.
+In this tutorial, you are using the `businessPartnerApi` of the business partner service.
 Unpack the API object from the service function using [JavaScript Object Destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment).
 
 Depending on the target system you are connecting to, the destination configuration can vary:
@@ -226,7 +226,7 @@ async getAllBusinessPartners(): Promise<BusinessPartner[]> {
 
 As network requests are asynchronous by nature, the return value of this function is a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) to a list of business partners `(Promise<BusinessPartner[]>)`.
 
-Now that we have a service class to retrieve business partners, let's use it in the `BusinessPartnerController`.
+Now that you have a service class to retrieve business partners, use it in the `BusinessPartnerController`.
 The `BusinessPartnerService` is injected through the class constructor:
 
 ```ts
@@ -252,8 +252,8 @@ export class BusinessPartnerController {
 }
 ```
 
-Nest will handle the `Promise` we return automatically.
-We add a `catch()` handler to specify how errors are handled (otherwise it would only show an internal server error when something goes wrong).
+Nest will handle the returned `Promise` automatically.
+Add a `catch()` handler to specify how errors are handled (otherwise it would only show an internal server error when something goes wrong).
 Reload the http://localhost:8080/business-partner URL to retrieve a list of business partners.
 
 Congratulations, you just made your first call with the SAP Cloud SDK!
@@ -290,14 +290,14 @@ destinations = [{ name: 'MockServer', url: 'http://localhost:3000' }];
 Please do not use this approach in production and also include the `.env` file in your `.gitignore` list, so that it is not checked in.
 :::
 
-Now that we have defined our destinations, we need to make sure that they are available in our process.
-For this, we use the `config` package provided by `nest.js`. You can install it with the following command:
+Now that you have defined the destinations, make sure that they are available in the process.
+For this, use the `config` package provided by `nest.js`. You can install it with the following command:
 
 ```shell
 npm install @nestjs/config
 ```
 
-To load the environment variables defined in the `.env` file, we need to add the `ConfigModule` provided by the `config` package to the application's `@Module` definition.
+To load the environment variables defined in the `.env` file, add the `ConfigModule` provided by the `config` package to the application's `@Module` definition.
 Open `app.module.ts` and update it with the following code:
 
 ```ts
@@ -310,10 +310,10 @@ import { ConfigModule } from '@nestjs/config';
 })
 ```
 
-`ConfigModule` is imported from the `config` package and in we add it to the module's `imports`.
+`ConfigModule` is imported from the `config` package and added to the module's `imports`.
 If no arguments are passed to the `forRoot()` method, the `.env` file has to be located in the project root.
 For details on the possible configuration see the [nest documentation](https://docs.nestjs.com/techniques/configuration).
-To reference a destination in the request execution, replace the URL with a destinationName - `MockServer` in our example:
+To reference a destination in the request execution, replace the URL with a destinationName - `MockServer` in this example:
 
 ```ts
 async getAllBusinessPartners(): Promise<BusinessPartner[]> {

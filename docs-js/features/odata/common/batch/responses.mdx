@@ -1,5 +1,5 @@
 Once a `batch` request is executed, it returns a list of `BatchResponse` objects.
-The responses correspond to the retrieve requests and changesets in the same order that they were passed to the `batch` function.
+The responses correspond to the retrieve requests and changesets in the same order that they were passed to the `batch()` function.
 Requests that were not successful are reflected as a list of `ErrorResponse` objects.
 Responses to successful requests are represented as `ReadResponse` instances for retrieve requests, and `WriteResponses` for changesets.
 
@@ -52,7 +52,7 @@ async function getAddressesByIds(
 ```
 
 Function imports using `GET` operation are part of the retrieve requests as well.
-As function imports are not entity based, you obtain the response using the `responseTransformer`, which is part of the `FunctionImportRequestBuilder`:
+As function imports are not entity based, you obtain the response using the `responseTransformer()` method, which is part of the `FunctionImportRequestBuilder`:
 
 ```ts
 const {

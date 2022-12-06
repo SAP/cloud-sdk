@@ -14,7 +14,7 @@ keywords:
 
 The SAP Cloud SDK for JavaScript can be used both as a backend and frontend library when used in a browser.
 Because of the specifics of a browser environment, some features might be unavailable.
-To help you get up and running faster in a browser, we'll outline the main steps and caveats of using SAP Cloud SDK on the frontend.
+To help you get up and running faster in a browser, this document outlines the main steps and caveats of using SAP Cloud SDK on the frontend.
 Both Angular and React applications are used to illustrate the usage.
 
 ## Prerequisite
@@ -105,6 +105,13 @@ const myDest: Destination = {
 ```
 
 The created request to `/REMOTE_SYSTEM_IDENTIFIER/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner` will be matched by the approuter and the destination with the given URL and credentials is used.
+
+The approuter establishes a session with the client (browser) using a session cookie.
+This session contains elements like the redirect URL, OAuth token, OAuth scopes, etc.
+OAuth token is a JSON Web Token (JWT) that is fetched from the UAA and forwarded to backend services in the Authorization header.
+**The client never gets this token.**
+
+For a detailed understanding of session handling in the application router, refer to the documentation [here](https://help.sap.com/docs/SAP_HANA_PLATFORM/4505d0bdaf4948449b7f7379d24d0f0d/96c7545f62504d55b669010d8fb9c41e.html?version=2.0.00).
 
 :::note
 This approach does not support principal propagation to on-premise systems.

@@ -79,16 +79,11 @@ Future runningTask = ThreadContextExecutors.submit(myTask);
 Operations that are submitted this way will be executed by a single instance of `ThreadContextExecutorService`.
 By default, this instance is based on a `CachedThreadPool`, which manages the concurrency internally.
 
-:::tip Spring Integration
-You can also use this functionality with Springs `@Async` annotation.
-Refer to the [dedicated section below](#spring-integration).
-:::
-
 ### Spring Integration
 
 You can conveniently integrate this functionality to work with Springs `@Async` annotation.
 
-Below configuration will ensure all methods annotated with `@Async` will have the `ThreadContext` available:
+The configuration below will ensure all methods annotated with `@Async` will have the `ThreadContext` available:
 
 ```java
 @EnableAsync
@@ -104,6 +99,25 @@ public class AsynchronousConfiguration implements AsyncConfigurer {
 ```
 
 You can read more about the `@Async` functionality [here](https://www.baeldung.com/spring-async).
+
+:::tip Security Context
+The Spring `SecurityContext` can be propagated to `@Async` calls.
+Replace the above executor with this one:
+
+```java
+new DelegatingSecurityContextExecutor(ThreadContextExecutors.getExecutor());
+```
+
+And add this dependency:
+
+```xml
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-core</artifactId>
+</dependency>
+```
+
+:::
 
 ### Passing on Other ThreadLocals
 

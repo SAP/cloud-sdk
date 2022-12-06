@@ -1,11 +1,11 @@
-In contrast to the OData v2 implementation, you have to `select` and `expand` separately.
+In contrast to the OData v2 implementation, you have to select and expand separately.
 In other words, selected properties are not expanded automatically as in v2.
 
 The reason for this difference originates in the way select and expand work in OData v4.
 In OData v4 you select within the expand-argument `$expand=Friends($select=FirstName)` whereas in OData v2 you select via a path `$select=Friends/FirstName&$expand=Friends`.
-That's why we mimic this behavior for `select` and `expand` operations in our API for OData v4 type-safe client.
+That's why the SAP Cloud SDK mimics this behavior for select and expand operations in its API for OData v4 type-safe clients.
 
-In the example above you select the `LAST_NAME` of the root entity and expand the navigation property `FRIENDS`.
+In the example above you select the `LAST_NAME` field of the root entity and expand the navigation property `FRIENDS`.
 In the expanded entity the selected fields are `FIRST_NAME` and `ADDRESS_INFO`.
 
 The generated URL for this request will be:
@@ -14,4 +14,4 @@ The generated URL for this request will be:
 /People?$select=LastName&$expand=Friends($select=FirstName,AddressInfo)
 ```
 
-If no `select` is given, all non-navigational properties are included in the response.
+If no select operation is given, all non-navigational properties are included in the response.
