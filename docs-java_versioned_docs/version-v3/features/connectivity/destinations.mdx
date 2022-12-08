@@ -42,15 +42,13 @@ They are executed when querying the destination information and the resulting au
 See the note on [supported authentication flows](#supported-authentication-flows).
 :::
 
-:::caution Destinations are cached for 5 minutes
-
-Mind that Destinations are cached for 5 minutes.
-If you are debugging you Destination configuration either wait for 5 minutes before the next retrieval or restart you application.
-We plan to make this cache configurable.
+:::tip Destinations are cached for 5 minutes
 
 To minimize the runtime overhead of finding destinations, the SAP Cloud SDK uses caching to internally maintain a list of already retrieved destinations.
 Therefore, subsequent calls to `DestinationAccessor.getDestination("my-destination");` will be served from that cache instead of performing the look up over and over again.
-Cache entries will automatically be invalidated 5 minutes after their initial creation.
+By default, cache entries will automatically be invalidated 5 minutes after their initial creation.
+The caching behavior can be customized.
+Please refer to [our section about configuring the cache configuration](#configuring-caching-when-querying-the-destination-service-on-cloud-foundry) for more details.
 
 :::
 
@@ -222,7 +220,9 @@ These are e.g. a loader to get destinations from the destination service and a l
 The above `appendDestinationLoader()` will add the provided loader at the end of such a chain.
 That means the new loader can operate as a fallback.
 Use `prependDestinationLoader()` to add it at the beginning if you would like it to take precedence.
+
 Lastly use `setLoader()` to replace all existing loaders.
+This is useful if you want to supply a single destination to a piece of test code.
 
 ## Provide Headers for Destinations
 
@@ -357,6 +357,7 @@ DestinationLoader destinationLoader = ScpCfDestinationLoader.builder()
 
 To disable the timeout entirely, use `TimeLimiterConfiguration.disabled()`.
 
+
 :::note Hint
 
 You may register your `destinationLoader` within the `DestinationAccessor` by:
@@ -366,6 +367,59 @@ DestinationAccessor.setLoader(destinationLoader);
 ```
 
 That way, all future requests to the Destination Service will use the increased timeout duration.
+
+:::
+
+#### Configuring Caching When Querying the Destination Service on Cloud Foundry
+
+The SAP Cloud SDK, by default, caches up to 1,000 destinations retrieved from the Destination Service on Cloud Foundry for a maximum of 5 minutes.
+
+This behavior has two implications:
+
+1. Application performance can be (drastically) improved by serving already known destinations from the cache instead of querying the Destination Service over and over again.
+2. Changes to destinations, for example, via the SAP BTP Cockpit, may take a while until they are reflected in the application.
+
+Depending on the use-case, the default cache configuration might be suboptimal.
+Therefore, the SAP Cloud SDK offers an API for adjusting the caching behavior at application runtime.
+
+The examaple below changes the cache to store more entries for a longer period of time.
+
+```java
+ScpCfDestinationLoader.Cache.setSizeLimit(10_000L);
+ScpCfDestinationLoader.Cache.setExpiration(Duration.ofHours(2L), CacheExpirationStrategy.WHEN_CREATED);
+```
+
+In rare circumstances, it might make sense to disable either specific aspects of the caching behavior, or even the entire cache.
+For those scenarios, following APIs are available:
+
+```java
+ScpCfDestinationLoader.Cache.disableSizeLimit(); // cache can store an infinite amount of entries
+ScpCfDestinationLoader.Cache.disableExpiration(); // cache entries never expire
+
+ScpCfDestinationLoader.Cache.disable(); // don't cache destinations
+```
+
+:::note Shared Cache Size
+
+The size limit is applied across all tenants and principals.
+That means that one tenant (with a lot of principals) might fill up the entire cache.
+
+<details>
+  <summary>Example</summary>
+
+If a thousand principals of the same tenant all query a single destination, the cache will be entirely filled up with destinations belonging to the same tenant.
+As a consequence, existing cache entries - also those of different tenants - must be removed (_evicted_) from the cache to make space for the new entries.
+
+</details>
+
+:::
+
+:::note Hint
+
+Changing the cache configuration at runtime will lead to a recreation of the underlying cache.
+Hereby, **all existing** cache entries will be lost.
+
+Therefore, we recommend adjusting the cache once at application startup.
 
 :::
 
