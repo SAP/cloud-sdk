@@ -350,10 +350,12 @@ If your app requires more time when fetching destinations, you may create your o
 
 ```java
 // Allow requests to take up to 10 seconds instead of just 6
-DestinationLoader destinationLoader = new ScpCfDestinationLoader(Duration.ofSecond(10));
+DestinationLoader destinationLoader = ScpCfDestinationLoader.builder()
+            .withTimeLimiterConfiguration(ResilienceConfiguration.TimeLimiterConfiguration.of(Duration.ofSeconds(10)))
+            .build();
 ```
 
-This operation overrides the default timeout duration so that you are free to choose whatever value fits your needs.
+To disable the timeout entirely, use `TimeLimiterConfiguration.disabled()`.
 
 :::note Hint
 
