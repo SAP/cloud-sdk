@@ -1,5 +1,53 @@
 <!-- vale off -->
 
+## 3.78.0 - December 15, 2022
+
+### newFunctionality
+
+- Introduce new APIs to configure the destination cache in the `ScpCfDestinationLoader`.
+
+  **We strongly recommend using the following APIs before loading any destination, for example, during application startup _only_**:
+
+  - `ScpCfDestinationLoader.Cache.setSizeLimit`: Set the number of cache entries that will be cached.
+  - `ScpCfDestinationLoader.Cache.disableSizeLimit`: Disable the cache size limit. The cache will store an infinite amount of entries - **use with caution**.
+  - `ScpCfDestinationLoader.Cache.setExpiration`: Set the expiration duration and strategy for cache entries.
+  - `ScpCfDestinationLoader.Cache.disableExpiration`: Disable the cache entry expiration. The cache will store entries until it is full, which will lead to the deletion of old entries. This might cause destinations to be cached forever - **use with caution**.
+  - `ScpCfDestinationLoader.Cache.disable`: Disable the entire cache. All destination will always be retrieved from the Destination Service. This will result in performance degradations - **use with caution**.
+
+- The destination loaders now allow for customizing the timeout that is applied to destination retrievals.
+  - By default, a 6-second timeout is applied when retrieving a destination.
+  - The timeout can be overridden by using the builder:
+    ```java
+    final Try<Destination> loadedDestination = ScpCfDestinationLoader.builder()
+            .withTimeLimiterConfiguration(ResilienceConfiguration.TimeLimiterConfiguration.of(Duration.ofSeconds(10)))
+            .build()
+            .tryGetDestination(destinationName, destinationOptions);
+    ```
+  - Alternatively, the timeout behaviour can be disabled via:
+    ```java
+    final Try<Destination> loadedDestination = ScpCfDestinationLoader.builder()
+            .withTimeLimiterConfiguration(ResilienceConfiguration.TimeLimiterConfiguration.disabled())
+            .build()
+            .tryGetDestination(destinationName, destinationOptions);
+    ```
+
+### improvements
+
+- Improvements to accessing destinations in a resilient manner:
+  - The default timeout of `6` seconds for fetching one or all destinations using `tryGetDestination( destinationName,options )` or `tryGetAllDestinations(options )` or `tryGetAllDestinations( )` is now applied individually for token retrieval and destination service calls.
+  - The experimental method `ScpCfDestinationLoader#tryGetDestination(String,String,String,ScpCfDestinationServiceResponseProvider)` now also performs requests in a resilient manner with automatic timeout configured for `6` seconds.
+  - The default timeout value can be overridden or disabled by constructing a `ScpCfDestinationLoader` with a custom time limiter configuration.
+    See the note on new functionality above.
+- Dependency Updates:
+  - Other dependency updates:
+    - Minor version updates:
+      - Update [Tomcat JDBC](https://search.maven.org/search?q=g:org.apache.tomcat%2BAND%2Ba:tomcat-jdbc) (`org.apache.tomcat:tomcat-jdbc`) and [Tomcat Annotations API](https://search.maven.org/search?q=g:org.apache.tomcat%2BAND%2Ba:tomcat-annotations-api) (`org.apache.tomcat:tomcat-annotations-api`) from `8.5.81` to `8.5.83`
+      - Update [okhttp](https://search.maven.org/search?q=g:com.squareup.okhttp3%2BAND%2Ba:okhttp) (`com.squareup.okhttp3:okhttp`) from `4.9.3` to `4.10.0`
+
+### fixedIssues
+
+- Retrieving any `OAuth2` destination using the `DestinationAccessor` in DwC has been improved to always return a destination with a valid, non-expired Auth token.
+
 ## 3.77.0 - November 17, 2022
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.77.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
