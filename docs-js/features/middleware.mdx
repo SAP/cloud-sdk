@@ -1,0 +1,98 @@
+---
+id: middleware
+title: Middleware
+sidebar_label: Middleware
+description: How the SAP Cloud SDK behaviour is adjusted using middlewares.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - JavaScript
+  - TypeScript
+  - resilience
+  - middleware
+---
+
+## Middleware Concept
+
+One main purpose of the SAP Cloud SDK is to execute asynchronous HTTP requests.
+This can either happen via a generated [OData](/odata/execute-odata-requet) or [OpenAPI](/openapi/execute-opemapi-request) client or the [http client](/connectivity/generic-http-client).
+In either way the final result after fetching destinations and doing various other things is an [axios](https://github.com/axios/axios) request.
+Sometimes you want to adjust the way the SAP Cloud SDK executes the axios request.
+
+The middleware adds a very flexible way to add custom functionality to the request execution.
+The API for the middleware looks like:
+
+```ts
+export interface MiddlewareIn {
+  fn: () => Promise<HttpResponse>;
+  context: HttpRequestContext;
+  skipNext: () => void;
+}
+
+export type MiddlewareOut = () => Promise<HttpResponse>;
+
+export type Middleware = (options: MiddlewareIn) => MiddlewareOut;
+```
+
+The middleware receives a `MiddlewareIn` option and returns a `MiddlewareOut`.
+Let's investigate the different properties:
+
+- The `fn` handed in is the original HTTP request from the SAP Cloud SDK.
+- The `context` provides information on the request like URL, headers and HTTP method.
+- The `skipNext` will exit all following middlewares
+- The `MiddlewareOut` is the new function including the additional logic.
+
+This seems abstract in the beginning, but the example in the next section will bring some concreteness to the abstract topic.
+
+## Example Middleware
+
+As a simple example assume you want to ensure that your response data does not contain only uppercase characters.
+A middleware doing that would look like:
+
+```ts
+const uppercaseMiddleware: Middleware = options => async () => {
+  const response = await options.fn();
+  return response.data.toUpperCase();
+};
+```
+
+and you would add it via the `middleware` property to your request:
+
+```ts
+const response = await executeHttpRequest(httpsDestination, {
+  middleware: [uppercaseMiddleware],
+  method: 'get'
+});
+```
+
+You can add multiple middlewares which are added one by one to the request.
+The execution order is from left to right in the array.
+Assume the response data of your request is `The answer to everything is:`.
+Depending on the order of the middlewares the result will be:
+
+```ts
+const addFortyTwoMiddleware: Middleware = options => async () => {
+  const response = await options.fn();
+  return response.data + 'Forty-Two';
+};
+
+let response = await executeHttpRequest(httpsDestination, {
+  middleware: [addFortyTwoMiddleware, uppercaseMiddleware],
+  method: 'get'
+});
+
+console.log(response.data); // 'THE ANSWER TO EVERYTHING IS: FORTY-TWO`
+
+response = await executeHttpRequest(httpsDestination, {
+  middleware: [uppercaseMiddleware, addFortyTwoMiddleware],
+  method: 'get'
+});
+
+console.log(response.data); // 'THE ANSWER TO EVERYTHING IS: Forty-Two.
+```
+
+In the context of resilience the order of middlewares becomes crucial.
+A timeout should be added first, then a circuit breaker followed by a retry.
+The SAP Cloud SDK provides default resilience middlewares so that you do not have to worry about the details in most cases.
+You find detailed information on the resilience topic in a [dedicated documentation](../guides/how-to-add-resilience).

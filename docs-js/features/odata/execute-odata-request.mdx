@@ -282,22 +282,19 @@ where:
 
 ### Setting a Custom Timeout
 
-You can specify a timeout for the request via the `timeout()` method on the request builder:
+You can specify middlewares for the request via the `middleware()` method on the request builder:
 
 ```ts
 const { myEntityApi } = myEntityService();
 const httpResponse: HttpResponse = myEntityApi
   .requestBuilder()
   .getAll()
-  .timeout(1000)
+  .middleware(myMiddlewares)
   .execute(destination);
 ```
 
-The value is in milliseconds and the default value is 10000 (10 seconds)
-This timeout applies to the request sent to the target system given in the destination.
-If a cross-site request forgery (CSRF) token is fetched from the target system the timeout applies also to this call.
-Note that there is also a second timeout option on the destination fetch options.
-This relates to the calls made to SAP BTP services like destination service or XSUAA.
+A typical use case for middlewares is to add [resilience](../guides/how-to-add-resilience) to your request.
+The concept is more general and can be used to add [arbitrary enhancements of the request](../middleware).
 
 ### Getting the Raw Response and the Original Request
 

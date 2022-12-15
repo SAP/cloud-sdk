@@ -104,25 +104,16 @@ MyEntity.requestBuilder()
 // TODO: There is an open PR for this
 -->
 
-### Setting a Custom Timeout
+### Setting Middlewares
 
-You can specify a timeout for the request via the `timeout()` method on the request builder:
-
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
+You can specify middlewares for the request via the `middlewares()` method on the request builder:
 
 ```ts
-MyApi.myFunction().timeout(1000).execute(destination);
+MyApi.myFunction().middleware(myMiddlewares).execute(destination);
 ```
 
-</TabItem>
-</Tabs>
-
-The value is in milliseconds and the default value is 10000 (10 seconds)
-This timeout applies to the request send to the target system given in the destination.
-If a CSRF token is fetched from the target system the timeout applies also to this call.
-Note that there is also a second timeout option on the destination fetch options.
-This relates to the calls made to SAP BTP services like destination-service or XSUAA.
+A typical use case for middlewares is to add [resilience](../guides/how-to-add-resilience) to your request.
+The concept is more general and can be used to add [arbitrary enhancements of the request](../middleware).
 
 ### Getting a Raw Response
 
