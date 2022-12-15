@@ -27,6 +27,10 @@ module.exports = {
   projectName: 'cloud-sdk',
   trailingSlash: false,
   themeConfig: {
+    colorMode: {
+      respectPrefersColorScheme: false,
+      disableSwitch: true
+    },
     announcementBar: {
       id: 'feedback_survey',
       content:
@@ -46,19 +50,6 @@ module.exports = {
       appId: 'E4A268JVO0',
       algoliaOptions: {} // Optional, if provided by Algolia
     },
-    // ***************************************************************
-    // Activate this announcement bar for global urgent notifications
-    // ***************************************************************
-    //
-    // announcementBar: {
-    //   id: 'survey', // Any value that will identify this message
-    //   content:
-    //      '&#11088;&#11088;&#11088; Please, help us improving SAP Cloud SDK by taking <a target="_blank" rel="noopener noreferrer" href="https://sapinsights.eu.qualtrics.com/jfe/form/SV_0pUmWpCadpoLhyZ">our survey</a> &#11088;&#11088;&#11088;',
-    //   backgroundColor: '#fff', // Defaults to `#fff`
-    //   textColor: '#000', // Defaults to `#000`,
-    //   isCloseable: false, // Defaults to `true`.
-
-    // },
     navbar: {
       title: 'SAP Cloud SDK',
       logo: {
