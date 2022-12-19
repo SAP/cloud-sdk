@@ -449,11 +449,9 @@ A few of the options were already listed above, but this section gives a compreh
   The default value is `false`.
 - `isolationStrategy`: Specifies how the destination cache is scoped.
   The value is automatically set but [under certain conditions](./destination-cache-isolation.mdx) you may want to optimize it.
-- `enableCircuitBreaker`: Switches on circuit breakers to protect the calls to the `XSUAA` and `destination-service`.
-  The default value is `true`.
-- `timeout`: Sets the timeout for the calls to SAP BTP services like `XSUAA` and `destination-service`.
-  The value is in milliseconds and the default value is `10000` (10 seconds).
-  There is another timeout option on the request level, setting the timeout for the calls to the destination target.
+- `retry`: Switches on three retries for the request to the destination service.
+  The retires apply only to the call doing the token exchange which may be flaky depending on the token endpoint.
+  The default value is `false`.
 
 ## Destination Properties
 
