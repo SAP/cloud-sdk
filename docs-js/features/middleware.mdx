@@ -15,9 +15,9 @@ keywords:
 
 ## Middleware Concept
 
-One main purpose of the SAP Cloud SDK is to execute asynchronous HTTP requests.
+The main purpose of the SAP Cloud SDK is to execute asynchronous HTTP requests.
 This can either happen via a generated [OData](./odata/execute-request#setting-middlewares) or [OpenAPI](./openapi/execute-request#setting-middlewares) client or the [http client](./connectivity/http-client#setting-middlewares).
-In either way the final result after fetching destinations and doing various other things is an [axios](https://github.com/axios/axios) request.
+Either way, the final result after fetching destinations and doing various other things is an [axios](https://github.com/axios/axios) request.
 Sometimes you want to adjust the way the SAP Cloud SDK executes the axios request.
 
 The middleware adds a very flexible way to add custom functionality to the request execution.
@@ -92,7 +92,7 @@ response = await executeHttpRequest(httpsDestination, {
 console.log(response.data); // 'THE ANSWER TO EVERYTHING IS: Forty-Two.
 ```
 
-In the context of resilience the order of middlewares becomes crucial.
+In the context of resilience, the order of middlewares becomes crucial.
 A timeout should be added first, then a circuit breaker followed by a retry.
 The SAP Cloud SDK provides default resilience middlewares so that you do not have to worry about the details in most cases.
-You find detailed information on the resilience topic in a [dedicated documentation](../guides/resilience).
+You can find detailed information on the resilience topic in a [dedicated documentation](../guides/resilience).
