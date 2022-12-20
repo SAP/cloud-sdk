@@ -16,13 +16,13 @@ keywords:
 # Introduction
 
 In this article, you will learn about resilience and how to add resilience when using the SAP Cloud SDK.
-Version 3.0 of the SDK introduced the concept of middlewares which is general and not resilience specific.
+Version 3.0 of the SAP Cloud SDK introduced the concept of middlewares which is general and not resilience specific.
 We provide default implementations for the standard resilience mechanisms like timeout, retry and circuit breaker.
 These implementations should work in most cases, but you can easily create you own implementation.
 
 The [samples repository](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/resilience-examples) provides examples which illustrate the usage of middlewares for resilience.
 Note that [middlewares](../features/middleware) and therefore resilience applies to the request against the target system and per default nothing is added.
-The SAP Cloud SDK applies resilience to the internal BTP service calls which are done under the hood.
+The SAP Cloud SDK applies resilience to the internal SAP BTP service calls which are done under the hood.
 This is done automatically, and you do not have to worry about resilience with respect to internal service calls.
 
 ## Resilience Middleware
@@ -31,7 +31,7 @@ The SAP Cloud SDK offers a `resilience()` function to build a resilience middlew
 If you do not specify any options the method will return a timeout and circuit breaker:
 
 ```ts
-import { resileince } from '@sap-cloud-sdk/resilience';
+import { resilience } from '@sap-cloud-sdk/resilience';
 
 const [timeout, circuitBreaker] = resilience();
 ```
@@ -123,7 +123,7 @@ Each target system and tenant is represented by a separate circuit breaker insta
 ### Retries
 
 Another approach to add resilience to your application is to retry failed requests.
-The SAP CLoud SDK offers a retry middleware based on the [async-retry](https://www.npmjs.com/package/async-retry) library.
+The SAP Cloud SDK offers a retry middleware based on the [async-retry](https://www.npmjs.com/package/async-retry) library.
 However, this middleware should be used with caution, because it is often mitigating a problem that should be solved properly.
 Also, if something fails consistently, it does not help to press the same button multiple times.
 You should consider some rules for adding retries:
