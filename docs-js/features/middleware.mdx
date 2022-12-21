@@ -13,7 +13,7 @@ keywords:
   - middleware
 ---
 
-## Middleware Concept
+## Concept
 
 The main purpose of the SAP Cloud SDK is to execute asynchronous HTTP requests.
 This can either happen via a generated [OData](./odata/execute-request#setting-middlewares) or [OpenAPI](./openapi/execute-request#setting-middlewares) client or the [http client](./connectivity/http-client#setting-middlewares).
@@ -21,7 +21,7 @@ Either way, the final result after fetching destinations and doing various other
 Sometimes you want to adjust the way the SAP Cloud SDK executes the axios request.
 
 The middleware adds a very flexible way to add custom functionality to the request execution.
-The API for the middleware looks like:
+The API for the middleware is as follows:
 
 ```ts
 export interface MiddlewareIn {
@@ -43,9 +43,9 @@ Let's investigate the different properties:
 - The `skipNext` will exit all following middlewares
 - The `MiddlewareOut` is the new function including the additional logic.
 
-This seems abstract in the beginning, but the example in the next section will bring some concreteness to the abstract topic.
+This may seem abstract now, but the example in the next section will bring some concreteness to the topic.
 
-## Example Middleware
+## Example
 
 As a simple example, assume you want to ensure that the response data contains only uppercase characters.
 A middleware doing that would look like:
