@@ -47,7 +47,7 @@ This seems abstract in the beginning, but the example in the next section will b
 
 ## Example Middleware
 
-As a simple example assume you want to ensure that your response data does contain only uppercase characters.
+As a simple example, assume you want to ensure that the response data contains only uppercase characters.
 A middleware doing that would look like:
 
 ```ts
@@ -57,7 +57,7 @@ const uppercaseMiddleware: Middleware = options => async () => {
 };
 ```
 
-and you would add it via the `middleware` property to your request:
+Add it to the request via the `middleware` property as shown below:
 
 ```ts
 const response = await executeHttpRequest(httpsDestination, {
@@ -66,10 +66,10 @@ const response = await executeHttpRequest(httpsDestination, {
 });
 ```
 
-You can add multiple middlewares which are added one by one to the request.
+You can add multiple middlewares that are added one by one to the request.
 The execution order is from left to right in the array.
 Assume the response data of your request is `The answer to everything is:`.
-Depending on the order of the middlewares the result will be:
+Depending on the order of the middlewares, the result will be:
 
 ```ts
 const addFortyTwoMiddleware: Middleware = options => async () => {
