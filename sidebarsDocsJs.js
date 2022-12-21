@@ -42,6 +42,7 @@ module.exports = {
           label: 'Mail Client',
           items: ['features/mail-client/mail-client']
         },
+        'features/middleware',
         'features/error-handling',
         'features/logging',
         'features/eslint-configuration'
