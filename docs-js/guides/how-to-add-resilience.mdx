@@ -39,13 +39,18 @@ const [timeout, circuitBreaker] = resilience();
 You can pass very basic options to adjust the creation of these middlewares:
 
 ```ts
-const [timeout, circuitBreaker, retry] = resilience({ retry: true });
-
 type ResilienceOptions = {
   timeout?: boolean | number; // default is true with 10 seconds timeout. A number indicates the timeout in milliseconds.
   circuitBreaker?: boolean; // default is true.
   retry?: boolean | number; // default is false. A number indicates the number of retries.
 };
+
+const [timeout, circuitBreaker, retry] = resilience({ retry: true });
+const [timeout5Seconds, retry5times] = resilience({
+  timeout: 5000,
+  curcuitBreaker: false,
+  retry: 5
+});
 ```
 
 You can find details on each option in the dedicated sections below.
@@ -61,7 +66,9 @@ const { myApi } = myService();
 myApi.getAll().middleware(resilience()).execute(myDestination);
 ```
 
+:::note
 Using the `resilience()` function is the recommended way to build resilience-related middleware, it ensures the correct order of middlewares.
+:::
 
 ### Timeout
 
@@ -79,11 +86,12 @@ myApi
   .execute(myDestination);
 ```
 
+:::note
 The timeout should be the first entry in your list of middlewares.
+:::
 
 ### Circuit Breaker
 
-The SAP Cloud SDK offers a circuit breaker middleware.
 The implementation uses the [opossum](https://nodeshift.dev/opossum/) circuit breaker.
 You can create a circuit breaker middleware in the following way:
 
@@ -93,13 +101,15 @@ import { circuitBreaker } from '@sap-cloud-sdk/resilience';
 myApi.getAll().middleware([circuitBreaker()]).execute(myDestination);
 ```
 
+:::note
 The circuit breaker middleware should be after the timeout in the list of middlewares.
+:::
 The circuit breaker uses meaningful default values suggested by `opossum`:
 
-- Rolling count timeout: 10 seconds.
-- Volume threshold: 10.
-- Error threshold percentage: 50%.
-- Reset timeout: 30 seconds.
+- Rolling count timeout: 10 seconds
+- Volume threshold: 10
+- Error threshold percentage: 50%
+- Reset timeout: 30 seconds
 
 These numbers mean the following:
 
@@ -112,7 +122,9 @@ These numbers mean the following:
   - If it is successful, the circuit breaker will open.
   - If it fails, the circuit breaker will close again.
 
-Note that requests with `HTTP` status 4XX do not count as failed, because they do not indicate an unhealthy system.
+:::note
+Requests with `HTTP` status `4XX` do not count as failed, because they do not indicate an unhealthy system.
+:::
 
 A circuit breaker needs to record all requests across users for a certain time window.
 This state is stored in central circuit breaker instances.
@@ -120,9 +132,7 @@ Each target system and tenant is represented by a separate circuit breaker insta
 
 ### Retries
 
-Another approach to add resilience to your application is to retry failed requests.
-The SAP Cloud SDK offers a retry middleware based on the [async-retry](https://www.npmjs.com/package/async-retry) library.
-However, this middleware should be used with caution, because it is often mitigating a problem that should be solved properly.
+The retry middleware should be used with caution, because it is often mitigating a problem that should be solved properly.
 Also, if something fails consistently, it does not help to press the same button multiple times.
 You should consider some rules for adding retries:
 
@@ -143,7 +153,7 @@ myApi
   .execute(myDestination);
 ```
 
-The retry middleware uses meaningful default values:
+The retry middleware uses the [async-retry](https://www.npmjs.com/package/async-retry) library and uses meaningful default values:
 
 - Number of retires: 3.
 - Exponential growth for waiting time using a base of 2.
@@ -151,8 +161,11 @@ The retry middleware uses meaningful default values:
 - Random factor on waiting time between 1 and 2.
 
 This means the maximum waiting times between the three retries are 2, 4, and 8 seconds.
+
+:::note
 The retry middleware should be the last entry in the list of resilience middlewares.
 This ensures the retry is executed in all failure cases.
+:::
 
 ## Remarks on Custom Implementations
 
