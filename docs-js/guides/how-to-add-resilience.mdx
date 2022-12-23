@@ -15,14 +15,14 @@ keywords:
 
 # Introduction
 
-In this article, you will learn about resilience and how to add resilience when using the SAP Cloud SDK.
-Version 3.0 of the SAP Cloud SDK introduced the concept of generic middlewares, which are not resilience specific.
-We provide default implementations for the standard resilience mechanisms like timeout, retry, and circuit breaker.
-These implementations should work in most cases, but you can easily create you own implementation.
+In this article, you will learn about the different resilience patterns and how to add them to your application using the SAP Cloud SDK.
+Version 3.0 of the SAP Cloud SDK introduced the concept of generic [middlewares](../features/middleware), which are not resilience specific.
+The SAP Cloud SDK provides default implementations for the standard resilience patterns like timeout, retry, and circuit breaker.
+These implementations should work in most cases, but you can easily create your own.
 
-The [samples repository](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/resilience-examples) provides examples which illustrate the usage of middlewares for resilience.
+The [samples repository](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/resilience-examples) provides examples that illustrate the usage of middlewares for resilience.
 Note that [middlewares](../features/middleware), and therefore resilience, applies to requests against the target system, and by default, nothing is added.
-The SAP Cloud SDK applies resilience to the internal SAP BTP service calls which are done under the hood.
+The SAP Cloud SDK automatically applies resilience to the internal SAP BTP service calls done under the hood.
 This is done automatically, and you do not have to worry about resilience with respect to internal service calls.
 
 ## Resilience Middleware
@@ -48,7 +48,7 @@ type ResilienceOptions = {
 };
 ```
 
-You find the details on each part in the dedicated sections below.
+You can find details on each option in the dedicated sections below.
 You apply the resilience by adding it to your request as discussed in the [middleware documentation](../features/middleware):
 
 ```ts
@@ -65,9 +65,9 @@ Using the `resilience()` function is the recommended way to build resilience-rel
 
 ### Timeout
 
-The timeout middleware is very simple and based on the `Promise.race()` method, therefore no additional library is used.
+The timeout middleware is based on the `Promise.race()` method and does not use an additional library.
 You can create a timeout middleware with the `timeout()` function.
-Per default, a timeout of 10 seconds is used, but you can change the values on demand:
+The default timeout is 10 seconds, but can be changed on demand.
 
 ```ts
 import { timeout } from '@sap-cloud-sdk/resilience';
@@ -104,10 +104,10 @@ The circuit breaker uses meaningful default values suggested by `opossum`:
 These numbers mean the following:
 
 - The circuit breaker records all requests for a duration of 10 seconds.
-- If in this time window 10 or more requests are recorded the error threshold is calculated.
-- If 50% or more of the requests in the time window fail, the circuit breaker opens.
-  From this point in time all requests to the target system are blocked directly and not executed anymore.
-- After a reset time of 30 seconds the circuit breaker will go to the half-open state.
+- If in this time window, 10 or more requests are recorded, the error threshold is calculated.
+- If 50% or more of the requests in this time window fail, the circuit breaker opens.
+  From this point in time, all requests to the target system are blocked directly and not executed anymore.
+- After a reset time of 30 seconds, the circuit breaker will go to the half-open state.
   This means the next request will go through as a test.
   - If it is successful, the circuit breaker will open.
   - If it fails, the circuit breaker will close again.
@@ -130,7 +130,7 @@ You should consider some rules for adding retries:
 - The error should happen randomly so a second call has a high likelihood of returning something.
 - The source of the error is out of your domain to fix.
 
-You create a retry middleware using the `retry()` function which will add three retries per default.
+You can create a retry middleware using the `retry()` function, which adds 3 retries by default.
 You can change the number in the following way:
 
 ```ts
@@ -146,7 +146,7 @@ myApi
 The retry middleware uses meaningful default values:
 
 - Number of retires: 3.
-- Exponential grow for waiting time using a base of 2.
+- Exponential growth for waiting time using a base of 2.
 - Initial waiting time of 1 second.
 - Random factor on waiting time between 1 and 2.
 
@@ -156,14 +156,14 @@ This ensures the retry is executed in all failure cases.
 
 ## Remarks on Custom Implementations
 
-One central idea to include resilience using a middleware concept is that you can implement your own logic in case the provided one does not fit your needs.
+One central idea to include resilience using a middleware concept is that you can implement your logic in case the provided one does not fit your needs.
 Note that the concept of resilience is not trivial, and you should develop and test your implementation thoroughly:
 
-- You should keep the order of your middlewares in mind.
+- You should keep the order of middlewares in mind.
   A retry should be at the end and a timeout or cache implementation at the very beginning.
 - You should filter certain errors from a retry and circuit breaker.
-  For example a 401 or 403 response will not magically work if you do a retry.
-- If your middleware adds shared state between requests, e.g. a circuit breaker, you must consider isolation between customers in a multi-tenant situation.
-- Align the parameters of your middlewares if necessary.
-  Assume your system needs protection from a circuit breaker, and you want to use a retry to execute the request after system recovery.
+  For example, a `401` or `403` response will not magically work if you do a retry.
+- If the middleware adds shared state between requests, e.g. a circuit breaker, you must consider isolation between customers in a multi-tenant situation.
+- Align the parameters of the middlewares if necessary.
+  Assume the system needs protection from a circuit breaker, and you want to use a retry to execute the request after system recovery.
   Then the circuit breaker reset time and retry waiting times should be aligned accordingly.
