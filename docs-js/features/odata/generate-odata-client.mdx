@@ -103,7 +103,7 @@ Run `generate-odata-client --help` for additional options.
 | `--generateNpmrc` _(deprecated)_                        |             `true`              |  Generate a `.npmrc` file specifying a registry for `@sap` scoped dependencies.                                                                                                                                                                               |
 | `--generateTypedocJson`                                 |             `true`              |  Generates a `typedoc.json` file for each package, used for the corresponding "doc" npm script.                                                                                                                                                               |
 | `--generatePackageJson` _(deprecated in `2.12.0`)_      |             `true`              |  Generate a `package.json` file, specifying dependencies and scripts for compiling and generating documentation.                                                                                                                                              |
-| `--packageJson` _(available since `2.12.0`)_            |             `true`              |  Generate a `package.json` file, specifying dependencies and scripts for compiling and generating documentation.                                                                                                                                              |
+| `--packageJson` _(available since `2.12.0`)_            |             `false`             |  Generate a `package.json` file, specifying dependencies and scripts for compiling and generating documentation.                                                                                                                                              |
 | `--versionInPackageJson`<br/>_(deprecated in `2.6.0`)_  |    Version of the generator     |  By default, when generating `package.json` file, the generator will set a version by using the generator version. It can also be set to a specific version.                                                                                                  |
 | `--include`<br/>_(available since `2.6.0`)_             |              `''`               |  Glob describing additional files to be added to the each generated service directory - relative to `inputDir`.                                                                                                                                               |
 | `--transpile`                                           |             `false`             |  Transpile the generated TypeScript code. When enabled, a default `tsconfig.json` will be generated and used. It emits `.js`, `.js.map`, `.d.ts` and `.d.ts.map` files. To configure transpilation set `--tsconfig`.                                          |
@@ -129,7 +129,7 @@ const outputDir = 'odata-client';
 // Create your project datastructure with all sourcefiles based on your options
 const generatorConfig = {
   overwrite: true,
-  generateJs: false,
+  transpile: false,
   useSwagger: false,
   readme: false,
   clearOutputDir: true,
@@ -157,17 +157,17 @@ generate({
 ## npm Packages Versus Local Clients
 
 The SAP Cloud SDK OData client generator generates TypeScript code.
-By default, the generator creates all sources needed for an npm package.
-It transpiles the generated sources to JavaScript and provides a `package.json` for the client.
-This differs from the OpenAPI generator and will likely change in a future major version upgrade.
+By default, it creates only the TypeScript sources.
 
-If you want to publish a generated client to an npm registry, you can work with the default configuration.
-Please make sure to check intellectual property regulations before publishing to a public registry.
+If you want to use the generated client in your TypeScript code without sharing it, you can work with the default configuration.
+If you work with JavaScript, you can enable and configure transpilation with the `--transpile` and `--tsConfig` flags.
 
-If you want to use the generated client in your code without sharing it, you can omit the generation of a `package.json` with the `generatePackageJson` flag.
-Additionally, if you work with TypeScript you can skip transpilation with the `--generateJs` flag.
+If you want to publish a generated client to an npm registry, in addition to transpiling, you will need a `package.json` file for the client.
+You can generate it with the `--packageJson` flag or include a custom `package.json` with the `--include` flag.
+Make sure to check intellectual property regulations before publishing to a public registry.
+
 The generated clients depend on the `@sap-cloud-sdk/odata-v2` or `@sap-cloud-sdk/odata-v4` packages, depending on the OData version of the service.
-You have to make sure, there is a local reference to these packages, by running:
+You have to make sure there is a local reference to these packages by running:
 
 ```sh
 npm install @sap-cloud-sdk/odata-v2
@@ -204,9 +204,9 @@ If you installed the generator as a `devDependency`, transpilation will work wit
 
 Since version 2.11.0, the SAP Cloud SDK runs prettier on the generated sources using a default prettier config.
 The prettier formats only TypeScript files (`.ts` and `.d.ts`) to avoid broken source maps.
-If you are not happy with the configuration you can provide a custom configuration using the `prettierConfig` command line argument.
+If you are not happy with the configuration, you can provide a custom configuration using the `prettierConfig` command line argument.
 Note that this formatting is done in-memory before the generator emits the files, so no expensive additional I/O is required.
 Alternatively, you can execute a custom formatting step after the generation is finished.
 
-Note that custom formatting steps could break source maps when you generate a JavaScript client (option `generateJs` enabled).
+Note that custom formatting steps could break source maps when you generate a JavaScript client (option `transpile` enabled).
 The generated `.js` and `.map.js` files are not meant for humans to read and should be excluded from formatting.
