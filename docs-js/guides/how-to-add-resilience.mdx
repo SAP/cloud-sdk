@@ -15,114 +15,168 @@ keywords:
 
 # Introduction
 
-In this article, you will learn about resilience and how to add resilience when using the SAP Cloud SDK.
-In contrast to Java, for JavaScript, there is no standard framework to handle resilience.
-The [samples repository](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/resilience-examples) gives you examples which illustrate the concepts and pick some widely used packages.
+In this article, you will learn about the different resilience patterns and how to add them to your application using the SAP Cloud SDK.
+Version 3.0 of the SAP Cloud SDK introduced the concept of generic [middlewares](../features/middleware), which are not resilience specific.
+The SAP Cloud SDK provides default implementations for the standard resilience patterns like timeout, retry, and circuit breaker.
+These implementations should work in most cases, but you can easily create your own.
 
-There is one resilience concept that is applied by default in the SAP Cloud SDK for JavaScript.
-All calls going to SAP BTP services like XSUAA and the destination service have a circuit-breaker.
-If need be, you can disable it via the `enableCircuitBreaker` option on the `execute()` methods.
+The [samples repository](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/resilience-examples) provides examples that illustrate the usage of middlewares for resilience.
+Note that [middlewares](../features/middleware), and therefore resilience, applies to requests against the target system, and by default, nothing is added.
+The SAP Cloud SDK automatically applies resilience to the internal SAP BTP service calls done under the hood.
+This is done automatically, and you do not have to worry about resilience with respect to internal service calls.
 
-## Cache
+## Resilience Middleware
 
-This is usually not a resilience topic, but could help to improve the stability of your application.
-The idea behind a cache is to reduce the load caused by expensive requests.
-Expensive means, for example, that you need to do a lot of computation (RAM, CPU, disk I/O) or many calls to external systems.
-Instead of doing the work every time, the method response is stored in the cache after the first execution and taken from there afterwards.
-Assume a load issue where requests time out, because too many requests are sent to the system.
-In such a case, a cache could reduce the number of calls and therefore improve resilience.
-
-The introduction of a cache is most effective in the following cases:
-
-- The execution of a method consumes a lot of resources
-- The method is a pure function, meaning the function arguments contain all the information and no hidden state affects the result of the function
-- The function is invoked multiple times for the same arguments or context
-- The system behind the cache has known downtime or limited availability mitigated by the cache
-
-Typically, a cache implementation has an interface like this:
+The SAP Cloud SDK offers a `resilience()` function to build a resilience middleware.
+If you do not specify any options the method will return a timeout and circuit breaker:
 
 ```ts
-interface Cache<T> {
-  get: (key: string) => T;
-  set: (key: string, value: T, expires: TimeStamp) => void;
-  clear: () => void;
-}
+import { resilience } from '@sap-cloud-sdk/resilience';
+
+const [timeout, circuitBreaker] = resilience();
 ```
 
-It provides methods to `get()`, `set()`, and `clear()` the cached entries.
-The `key` represents the arguments passed to your cached method.
-It is used to set and get a value from the cache.
+You can pass very basic options to adjust the creation of these middlewares:
 
-:::caution
-If your cached method relies on authentication/authorization like an HTTP call, be sure your cache preserves user isolation.
-This means that the cache key must include the user making the request.
-Also, ensure that it is impossible to manipulate the cache key generation to retrieve results related to other users.
-The same rules apply if you create a multi-tenant application with respect to tenant isolation.
+```ts
+type ResilienceOptions = {
+  timeout?: boolean | number; // default is true with 10 seconds timeout. A number indicates the timeout in milliseconds.
+  circuitBreaker?: boolean; // default is true.
+  retry?: boolean | number; // default is false. A number indicates the number of retries.
+};
+
+const [timeout, circuitBreaker, retry] = resilience({ retry: true });
+const [timeout5Seconds, retry5times] = resilience({
+  timeout: 5000,
+  curcuitBreaker: false,
+  retry: 5
+});
+```
+
+You can find details on each option in the dedicated sections below.
+You apply the resilience by adding it to your request as discussed in the [middleware documentation](../features/middleware):
+
+```ts
+import { executeHttpRequest } from '@sap-cloud-sdk/http-client';
+import { myService } from './generated-client';
+
+executeHttpRequest(myDestination, { middleware: resilience() });
+
+const { myApi } = myService();
+myApi.getAll().middleware(resilience()).execute(myDestination);
+```
+
+:::note
+Using the `resilience()` function is the recommended way to build resilience-related middleware, it ensures the correct order of middlewares.
 :::
 
-Note that the [opossum](https://nodeshift.dev/opossum/) circuit-breaker also provides a cache option.
+### Timeout
 
-## Circuit-Breaker
+The timeout middleware is based on the `Promise.race()` method and does not use an additional library.
+You can create a timeout middleware with the `timeout()` function.
+The default timeout is 10 seconds, but can be changed on demand.
 
-In electronics, a circuit breaker is a safety device that prevents your wires from melting in case of too much power consumption.
-In software development, the circuit-breaker does not protect actual wires from melting but resources from overloading while helping them recover.
-You should include a circuit-breaker if:
+```ts
+import { timeout } from '@sap-cloud-sdk/resilience';
 
-- The resource is essential in your infrastructure and should be protected.
-- The resource reacts poorly to heavy load.
-- Your application creates a high number of requests.
+// Three seconds timeout
+myApi
+  .getAll()
+  .middleware([timeout(3000)])
+  .execute(myDestination);
+```
 
-Circuit-breakers are typically used for HTTP requests and behave in the following way:
+:::note
+The timeout should be the first entry in your list of middlewares.
+:::
 
-- The circuit-breaker monitors the HTTP requests and tracks failing and successful requests.
-- The circuit-breaker calculates an average percentage of failing requests.
-- If this average is above some threshold, the breaker opens.
-- From this moment on, requests are immediately blocked and not executed.
-  This prevents the system from getting too many requests if it is in an unhealthy state.
-- After a reset time the breaker closes and requests can reach the target system again.
+### Circuit Breaker
 
-Many circuit breakers do not go into a completely closed state but go into a half-open state.
-In this state, every failing request will directly cause the breaker to open again.
-The reason for this is, that you do not overburden systems in the recovery phase.
+The implementation uses the [opossum](https://nodeshift.dev/opossum/) circuit breaker.
+You can create a circuit breaker middleware in the following way:
 
-Typical parameters to configure a circuit-breaker are:
+```ts
+import { circuitBreaker } from '@sap-cloud-sdk/resilience';
 
-- "failure threshold": Failure rate above which the circuit-breaker will open.
-- "reset timeout": The time after which the circuit-breaker will close.
-- Fallback: Some alternative actions you want to perform when the breaker is open.
-- Options to calculate the failure rate.
+myApi.getAll().middleware([circuitBreaker()]).execute(myDestination);
+```
 
-You can find an example using the [opossum](https://nodeshift.dev/opossum/) circuit-breaker [here](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/resilience-examples).
+:::note
+The circuit breaker middleware should be after the timeout in the list of middlewares.
+:::
+The circuit breaker uses meaningful default values suggested by `opossum`:
 
-## Retries
+- Rolling count timeout: 10 seconds
+- Volume threshold: 10
+- Error threshold percentage: 50%
+- Reset timeout: 30 seconds
 
-Another approach to add resilience to your application is to retry failed requests.
-For retries, there are libraries available like [async-retry](https://www.npmjs.com/package/async-retry) which make every asynchronous function perform some retries if they do not resolve.
-However, this pattern needs to be used with caution, because it is often mitigating a problem that should be solved properly.
+These numbers mean the following:
+
+- The circuit breaker records all requests for a duration of 10 seconds.
+- If in this time window, 10 or more requests are recorded, the error threshold is calculated.
+- If 50% or more of the requests in this time window fail, the circuit breaker opens.
+  From this point in time, all requests to the target system are blocked directly and not executed anymore.
+- After a reset time of 30 seconds, the circuit breaker will go to the half-open state.
+  This means the next request will go through as a test.
+  - If it is successful, the circuit breaker will open.
+  - If it fails, the circuit breaker will close again.
+
+:::note
+Requests with `HTTP` status `4XX` do not count as failed, because they do not indicate an unhealthy system.
+:::
+
+A circuit breaker needs to record all requests across users for a certain time window.
+This state is stored in central circuit breaker instances.
+Each target system and tenant is represented by a separate circuit breaker instance.
+
+### Retries
+
+The retry middleware should be used with caution, because it is often mitigating a problem that should be solved properly.
 Also, if something fails consistently, it does not help to press the same button multiple times.
-You should consider some rules for implementing retries:
+You should consider some rules for adding retries:
 
 - The error should be the exception, not the default.
-- The error should happen randomly so a second call has a high likelihood of giving something.
+- The error should happen randomly so a second call has a high likelihood of returning something.
 - The source of the error is out of your domain to fix.
-- Consistent errors should not trigger a retry.
-  For example, an HTTP request failing with 401 should not trigger a retry because the user is unauthorized.
-- The number of retries should be limited to a low digit number.
-  There should be some appropriate waiting time between retries.
 
-Typical options for a retry library are:
+You can create a retry middleware using the `retry()` function, which adds 3 retries by default.
+You can change the number in the following way:
 
-- Retries: How many attempts should be made.
-- "minimum timeout": Initial waiting time for the first retry.
-- "maximum timeout": What is the maximal time for all retries to execute.
-- Distribution: How the retries are distributed over time.
-  An exponential waiting time is a good option.
-  Also, adding some random time deviation is distributing the load of parallel retries.
-- Bail: An option to stop the retry for certain failure cases is useful in many cases.
+```ts
+import { retry } from '@sap-cloud-sdk/resilience';
 
-You can find an example using the [async-retry](https://www.npmjs.com/package/async-retry) library [here](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/resilience-examples).
+// Four retries
+myApi
+  .getAll()
+  .middleware([retry(4)])
+  .execute(myDestination);
+```
 
-:::caution
-If you use retries together with a circuit-breaker, choose the options for the two accordingly.
-The waiting time between requests of the retry should be large enough not to trigger the circuit-breaker to open.
+The retry middleware uses the [async-retry](https://www.npmjs.com/package/async-retry) library and uses meaningful default values:
+
+- Number of retires: 3.
+- Exponential growth for waiting time using a base of 2.
+- Initial waiting time of 1 second.
+- Random factor on waiting time between 1 and 2.
+
+This means the maximum waiting times between the three retries are 2, 4, and 8 seconds.
+
+:::note
+The retry middleware should be the last entry in the list of resilience middlewares.
+This ensures the retry is executed in all failure cases.
 :::
+
+## Remarks on Custom Implementations
+
+One central idea to include resilience using a middleware concept is that you can implement your logic in case the provided one does not fit your needs.
+Note that the concept of resilience is not trivial, and you should develop and test your implementation thoroughly:
+
+- You should keep the order of middlewares in mind.
+  A retry should be at the end and a timeout or cache implementation at the very beginning.
+- You should filter certain errors from a retry and circuit breaker.
+  For example, a `401` or `403` response will not magically work if you do a retry.
+- If the middleware adds shared state between requests, e.g. a circuit breaker, you must consider isolation between customers in a multi-tenant situation.
+- Align the parameters of the middlewares if necessary.
+  Assume the system needs protection from a circuit breaker, and you want to use a retry to execute the request after system recovery.
+  Then the circuit breaker reset time and retry waiting times should be aligned accordingly.
