@@ -1,0 +1,198 @@
+---
+id: approuter
+title: Using the SAP Application Router with the SAP Cloud SDK
+sidebar_label: Using the SAP Application Router
+description: This article describes how you can use the SAP Application Router with the SAP Cloud SDK
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - approuter
+  - multi-tenancy
+  - cloud-foundry
+  - JavaScript
+  - TypeScript
+---
+
+import ThemedImage from '@theme/ThemedImage';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+# Using the SAP Application Router with the SAP Cloud SDK
+
+In this guide, we will show you how to use the SAP Application Router together with the SAP Cloud SDK.
+You will learn how to secure your application and configure multi-tenancy for principal propagation with an SAP Cloud SDK-based application example powered by [nestJS](https://nestjs.com/).
+
+## SAP Application Router
+
+When we want to enable multi-tenancy for our application, we use the [SAP Application Router](https://www.npmjs.com/package/@sap/approuter).
+The application router's primary purpose is to be the single entry point of a microservice-based application and act as the application's reverse proxy.
+
+Its responsibilities consist of dispatching requests to backend microservices, authenticating users, and serving static content.
+The application router checks if a given request has a valid JSON Web Token (JWT) when accessing a target service.
+If the request contains a valid JWT, the application router forwards the request to the target service; if the request does not contain a valid JWT, the user must authenticate.
+As we can see in the diagram below, we use an Identity Provider (IdP) to authenticate, the request is redirected to an IdP where a user gets authenticated and then redirected back to the application router for passing further according to its desired destination.
+
+<!-- vale off -->
+
+<ThemedImage
+  alt="Application Router flow"
+  sources={{
+    light: useBaseUrl('img/approuter_light.svg'),
+    dark: useBaseUrl('img/approuter_dark.svg')
+  }}
+  className="center"
+  width="80%"
+/>
+
+<!-- vale on -->
+
+### Application Router Setup
+
+To deploy our application router in SAP BTP Cloud Foundry, we need to configure it first.
+Let's walk through the four files we need to use.
+
+The `xs-security.json` file defines the security and deployment options for an application.
+With the below example, we enable the `shared` tenant-mode for our `xsuaa` instance, which we need for multi-tenancy.
+
+```json
+{
+  "xsappname": "approuter-scaffold",
+  "tenant-mode": "shared"
+}
+```
+
+In the `xs-app.json`, we specify to which backend service a request is forwarded to, and how this request has to be authenticated.
+We can optionally also specify a specific `identityProvider` that is used for the authentication.
+
+In the example below, we forward every request against the application router's `/` route to the backend destination's `/` route.
+
+```json
+{
+  "welcomeFile": "index.html",
+  "routes": [
+    {
+      "source": "/",
+      "target": "/",
+      "destination": "approuter-scaffold"
+    }
+  ]
+}
+```
+
+In the `package.json` we only have one dependency, the application router module.
+
+```json
+{
+  "name": "approuter",
+  "dependencies": {
+    "@sap/approuter": "*"
+  },
+  "scripts": {
+    "start": "node node_modules/@sap/approuter/approuter.js"
+  }
+}
+```
+
+The manifest contains our application router, as well as environment variables which our application router needs for multi-tenancy.
+As you see under `env`, we specify the `TENANT_HOST_PATTERN` and `destinations`.
+The `destinations` are the destinations we use in our `xs-app.json` where we forward requests to.
+The `TENANT_HOST_PATTERN` is a regular expression that describes how a tenant name should be retrieved from the host.
+We also have to bind the `xsuaa` which we configured with our `xs-security.json` to the application router.
+
+```yaml
+applications:
+  - name: approuter-scaffold-approuter
+    routes:
+      - route: >-
+          approuter-scaffold-apps.cfapps.sap.hana.ondemand.com
+    path: .
+    memory: 128M
+    buildpacks:
+      - nodejs_buildpack
+    env:
+      TENANT_HOST_PATTERN: >-
+        "approuter-scaffold-(.*).cfapps.sap.hana.ondemand.com"
+      destinations: >-
+        [{"name":"approuter-scaffold","url":"approuter-scaffold.cfapps.sap.hana.ondemand.com","forwardAuthToken":true}]
+    services:
+      - approuter-scaffold-xsuaa
+```
+
+## Securing Your Application
+
+To secure our application endpoints, we utilize the [passport](http://www.passportjs.org/packages/passport-jwt) library.
+It lets us authenticate endpoints using a JSON web token.
+
+Additionally, we use the `xsenv` library to retrieve our `xsuaa` credentials and the `xssec` library's `JWTStrategy` object for the middleware.
+
+Below is a simple example, where we get the `approuter-scaffold-xsuaa` which is bound to our application, use it in the `JWTStrategy`, and then forward the middleware to the passport.
+
+<!-- vale off -->
+
+```ts
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { JWTStrategy } from '@sap/xssec';
+import { getServices } from '@sap/xsenv';
+import * as passport from 'passport';
+
+const xsuaa = getServices({
+  xsuaa: { name: 'approuter-scaffold-xsuaa' }
+}).xsuaa;
+passport.use(new JWTStrategy(xsuaa));
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.use(passport.initialize());
+  app.use(passport.authenticate('JWT', { session: false }));
+  await app.listen(process.env.PORT || 3000);
+}
+bootstrap();
+```
+
+<!-- vale on -->
+
+## Enabling Principal Propagation
+
+To enable principal propagation with this setup, we must forward the request to our endpoints.
+
+First, we forward the request in our `app.controller.ts` to our principal propagation endpoint.
+
+```ts
+@Get('principal-business-partner')
+  getPrincipalBusinessPartner(
+    @Req() request: Request,
+  ): Promise<BusinessPartner[]> {
+    return this.principalBusinessPartnerService.getFiveBusinessPartners(
+      request,
+    );
+  }
+```
+
+Then, we simply use the SAP Cloud SDK's `retrieveJwt` function to extract the JWT from our request, and forward it to the `execute` method.
+
+Below is an example using the `BusinessPartnerService`, where we retrieve the top five business partners.
+
+<!-- vale off -->
+
+```ts
+import { Injectable } from '@nestjs/common';
+import { retrieveJwt } from '@sap-cloud-sdk/connectivity';
+import { Request } from 'express';
+import { businessPartnerService } from './generated/business-partner-service';
+
+@Injectable()
+export class PrincipalBusinessPartnerService {
+  async getFiveBusinessPartners(request: Request): Promise<BusinessPartner[]> {
+    return BusinessPartner.requestBuilder()
+      .getAll()
+      .top(5)
+      .execute({
+        destinationName: 'MY-DESTINATION',
+        jwt: retrieveJwt(request)
+      });
+  }
+}
+```
+
+<!-- vale on -->

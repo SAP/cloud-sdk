@@ -32,7 +32,7 @@ Being able to test changes locally reduces the overhead of deploying remotely an
 <!-- vale off -->
 
 <ThemedImage
-  alt="Connecting to On-premise systems"
+  alt="Connecting to on-premise systems"
   sources={{
     light: useBaseUrl('img/bas_light.svg'),
     dark: useBaseUrl('img/bas_dark.svg')
@@ -47,8 +47,8 @@ Being able to test changes locally reduces the overhead of deploying remotely an
 
 ### Technical Background
 
-Companies do not expose their SAP S/4HANA On-premise systems to the internet.
-They are only reachable via a CC attached to an SAP BTP account.
+Companies do not expose their SAP S/4HANA On-Premise systems to the internet.
+They are only reachable via a Cloud Connector attached to an SAP BTP account.
 In principle, you cannot reach these systems outside the SAP BTP account.
 
 However, due to the subscription between the BAS and the SAP BTP account, there is a connection from the local application to the SAP S/4HANA system.
@@ -67,7 +67,7 @@ Via the subscription, the BAS can access all destination in the subscribed accou
 
 ### Prerequisite 2: Cloud Connector and Destination Setup
 
-You have set up a working Cloud Connector and configured a destination pointing to an On-premise system.
+You have set up a working Cloud Connector and configured a destination pointing to an on-premise system.
 Per default, destinations are not usable by a subscribed BAS.
 You need to set two properties `WebIDEEnabled` and `HTML5.DynamicDestination` to enable that feature for a specific destination.
 Go to the destination configuration on SAP BTP and add the properties:
@@ -140,14 +140,15 @@ You use [launch configurations](https://code.visualstudio.com/docs/editor/debugg
 Either extend your existing `.vscode/launch.json` or create a new one.
 
 ```JSON
-{"configurations": [
+{
+  "configurations": [
     {
       "type": "node",
       "request": "launch",
       "name": "Debug my application",
       "program": "${workspaceFolder}/dist/main.js",
       "envFile": "${workspaceFolder}/.env",
-      "preLaunchTask": "npm: build",
+      "preLaunchTask": "npm build",
       "outFiles": [
         "${workspaceFolder}/dist/**/*.js"
       ]
@@ -156,18 +157,17 @@ Either extend your existing `.vscode/launch.json` or create a new one.
 }
 ```
 
-In this example, we use a simple Nest.js application.
-The code will look almost identical for express or [CAP](https://community.sap.com/topics/cloud-application-programming) applications.
-The property `program` defines the script file executed when you run the configuration.
-In our case, the `main.js` script will start up the Nest server.
-The `preLaunchTask` executes the build before each run which compiles the TypeScript files to JavaScript.
+This example uses a Nest.js application.
+The code will look similar for express or [CAP](https://community.sap.com/topics/cloud-application-programming) applications.
+The `program` property defines the script file executed when you run the configuration.
+In this project, the `main.js` script will start up the Nest server.
+The `preLaunchTask` property build before each run which compiles the TypeScript files to JavaScript.
 The `outFiles` property defines where the compiled files will be located.
 
-We have to set the `destinations` environment variable, to provide our destination.
-This will interrupt the [destination lookup](../features/connectivity/destination.mdx) and lead to a destination with the HTTP_PROXY considered.
-The easiest way to do that is via a `.env` file which is read when starting the application.
-If you do not have a `.env` file, create one or adjust the existing one.
-Just add the following entry to the `.env` file:
+To provide the destination, set the `destinations` environment variable.
+This interrupts the [destination lookup](../features/connectivity/destination.mdx) and the destination will consider the `HTTP_PROXY` environment variable.
+If a `.env` file is present, it is loaded when starting the application.
+Create or adjust the file to include the following:
 
 ```
 destinations="[{
@@ -206,16 +206,16 @@ For the simple case you would add `mockTestDestination(<destinationName>)` to yo
 }
 ```
 
-### Supported Authentication Types for On-premise Systems
+### Supported Authentication Types for On-Premise Systems
 
 The supported authentication types are either `BasicAuthorization` or `PrincipalPropagation`.
-In case you use principal propagation, the BAS will fill the `SAP-Connectivity-Authentication` header as discussed in the [On-premise connectivity guide.](../features/connectivity/on-premise.mdx)
+In case you use principal propagation, the BAS will fill the `SAP-Connectivity-Authentication` header as discussed in the [on-premise connectivity guide.](../features/connectivity/on-premise.mdx)
 The user logged into the BAS will be propagated.
-In case your BAS user is **not** a valid user of the On-premise system you can use a destination using basic authorization.
+In case your BAS user is **not** a valid user of the on-premise system you can use a destination using basic authorization.
 
 ### Supported Authentication Types for Cloud Systems
 
-For calls to Cloud Systems, i.e. systems that are reachable via Internet, the local BAS proxy is not needed.
+For calls to cloud systems, i.e. systems that are reachable over the internet, the local BAS proxy is not needed.
 However, the web proxy will be used for all requests.
 In general, this does not cause problems because the proxy is totally transparent.
 
@@ -235,8 +235,8 @@ Hence, you can use the same approach locally and in production.
 ### Prerequisite: Service Setup
 
 On Cloud Foundry, the access to services is granted via the `VCAP_SERVICE` variables.
-We assume that you have configured your application so that it can access the destination service.
-If not, follow the [steps in the Cloud Foundry tutorial](https://developers.sap.com/group.s4sdk-js-cloud-foundry.html).
+Make sure to configure your application so that it can access the destination service.
+If not, follow the [steps in the Cloud Foundry tutorial](../tutorials/getting-started/introduction).
 
 ### Implementation
 
@@ -251,10 +251,11 @@ Note that there are certain limitations to this approach.
 Within the BAS you will not have a JWT issued for your user.
 This means that flows like `OAuth2SAMLBearerAssertion` and `OAuth2UserTokenExchange` can only work if you provide such a JWT.
 This is possible in principle, but difficult within the local development environment.
-We recommend creating dedicated development destinations with authentications flows like:
+
+Create dedicated development destinations which use the following authentications flows:
 
 - `OAuth2ClientCredentials`
 - `BasicAuthentication`
-- `ClientCertificateAuthentication` (here we wait for a fix on the [http-proxy-agent](https://github.com/TooTallNate/node-https-proxy-agent/pull/111) or you have to disable the proxy
+- `ClientCertificateAuthentication` (you will have to disable the proxy until the [http-proxy-agent](https://github.com/TooTallNate/node-https-proxy-agent/pull/111) provides a fix)
 
-Note that for the connection to the cloud system the destinations do not need the two properties `WebIDEEnabled` and `HTML5.DynamicDestination`, because the BAS connectivity proxy is not needed.
+Note that for the connection to the cloud system, the destinations do not need the two properties `WebIDEEnabled` and `HTML5.DynamicDestination`, because the BAS connectivity proxy is not needed.

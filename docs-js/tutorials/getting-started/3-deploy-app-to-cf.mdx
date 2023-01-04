@@ -66,7 +66,7 @@ cf api https://api.cf.<region>.hana.ondemand.com
 cf login
 ```
 
-`cf login` will prompt you for your _username_ and your _password_.
+The `cf login` command will prompt you for your _username_ and your _password_.
 Should you have more than one organization or space, you will also have to select those.
 
 Finally, if you have logged in successfully, it is time to build and deploy your application.
@@ -78,7 +78,7 @@ cf push
 ```
 
 Dependencies will be installed automatically when deploying to Cloud Foundry.
-The `cf` CLI will automatically pick up the `manifest.yml` of the project when deploying your application.
+The Cloud Foundry CLI will automatically pick up the `manifest.yml` of the project when deploying your application.
 
 When everything works as expected, you should get an output that looks something like this:
 
@@ -208,7 +208,7 @@ services:
       - my-xsuaa
 ```
 
-Finally, you need to adapt the `getAllBusinessPartners` function in `business-partner.service.ts` to use the destination defined in the SAP BTP Cockpit.
+Finally, you need to adapt the `getAllBusinessPartners()` function in `business-partner.service.ts` to use the destination defined in the SAP BTP Cockpit.
 
 The function now looks like this:
 
@@ -221,7 +221,7 @@ async getAllBusinessPartners(): Promise<BusinessPartner[]> {
 }
 ```
 
-In the snippet, the parameter of `execute` is replaced with an object whose key `destinationName` refers to the name of the destination you defined earlier.
+In the snippet, the parameter of the `execute()` method is replaced with an object whose key `destinationName` refers to the name of the destination you defined earlier.
 If you followed this [step](./execute-an-odata-request#manage-destinations-centrally-optional) in the previous tutorial, your code will already refer to the correct `destinationName`.
 If you chose a different name than `MockServer`, make sure to use it here accordingly.
 

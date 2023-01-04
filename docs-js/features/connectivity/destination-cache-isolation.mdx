@@ -25,7 +25,8 @@ The general destination lookup is described in [this guide](./destination.mdx).
 
 To reduce the number of calls to the destination service, you can enable the destination cache.
 All the discussed options apply to the `execute()` and `getDestination()` methods of the SAP Cloud SDK.
-The destination caching is disabled by default and you switch it on by the `useCache` flag:
+The destination caching is disabled by default.
+Setting the `useCache` flag to `true` enables it:
 
 ```ts
 .execute({ destinationName: 'myDestination', jwt: 'yourJWT', useCache: true })
@@ -41,7 +42,7 @@ There are two options:
 The SAP Cloud SDK sets the isolation based on the provided JWT:
 
 - No JWT: Isolation is set to `Tenant` and value for the tenant is the provider account.
-- JWT without `user_id`: Isolation is set to `Tenant` and the value for the tenant is the `zid` of the JWT.
+- JWT without `user_id`: Isolation is set to `Tenant` and the value for the tenant is the `zid` property of the JWT.
 - JWT with `user_id`: Isolation is set to `TenantUser` and values are taken from `zid` and `user_id`.
 
 This is a safe choice which prevents privilege escalation due to caching.
@@ -77,7 +78,7 @@ An erroneous configuration can have severe consequences like privilege escalatio
 When the cache option is enabled, the SAP Cloud SDK stores the fetched destinations in an in-memory cache.
 However, in certain cases, a persistent or distributed cache may be more suitable according to your application architecture.
 
-To create your custom destination cache provider, implement the `DestinationCacheInterface` interface shown below and define the `get`, `set`, and `clear` methods.
+To create your custom destination cache provider, implement the `DestinationCacheInterface` interface shown below and define the `get()`, `set()`, and `clear()` methods.
 
 ```ts
 export interface DestinationCacheInterface {
@@ -109,8 +110,8 @@ All subsequent calls to fetch destinations will use the custom cache.
 ## Register Destination Cache
 
 The `registerDestination()` function is like a manual cache for destinations.
-We explain the usage of this function in the guide on [destination lookup](./destination.mdx).
-The function behaves similarly to the destination service cache discussed above.
+This function behaves similarly to the destination service cache discussed above.
+The [destination lookup guide](./destination.mdx) explains the usage of this function in more detail.
 
 ```ts
 import { registerDestination } from '@sap-cloud-sdk/connectivity';

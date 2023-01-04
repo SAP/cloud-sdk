@@ -1,0 +1,94 @@
+---
+id: error-handling
+title: Error Handling
+sidebar_label: Error Handling
+description: How to work with errors thrown by the SAP Cloud SDK
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - JavaScript
+  - TypeScript
+  - error
+  - cause
+  - root cause
+---
+
+There are many reasons for errors to occur when developing software.
+The SAP Cloud SDK tries to provide as much information as possible and necessary to understand what caused an error.
+Generally speaking, there is no difference in handling errors when working with the SAP Cloud SDK.
+However, some errors are caused by underlying problems.
+In these cases, the SAP Cloud SDK throws an `ErrorWithCause`, that allows access to the immediate cause and root cause of this error.
+These can be accessed by the `cause` and `rootCause` properties on `ErrorWithCause`.
+
+In the example below, we try to create a business partner against https://example.com as a destination.
+As this is not an SAP S/4HANA system, this will fail and the error reveals the cause and root cause of the failure.
+
+```ts
+import { businessPartnerService } from './generated/business-partner-service';
+const { businessPartnerApi } = businessPartnerService();
+
+businessPartnerApi
+  .requestBuilder()
+  .create(BusinessPartner.builder().build())
+  .execute({ url: 'https://example.com' })
+  .catch(err => {
+    console.log('Error:', err.message);
+    console.log('Cause:', err.cause?.message);
+    console.log('Root cause:', err.rootCause?.message);
+  });
+```
+
+The example above will yield the following output:
+
+```
+Error: Create request failed!
+Cause: post request to https://example.com/sap/opu/odata/sap/API_BUSINESS_PARTNER failed!
+Root cause: Request failed with status code 404
+```
+
+The final error is an `ErrorWithCause` that was caused by another `ErrorWithCause`.
+The root cause is an `Error` and reveals that the requested URL does not exist.
+
+## Debug `AxiosError`
+
+A common error message is "Request failed with status code XXX", which is a typical error message of `AxiosError`.
+It might occur, when sending an HTTP request via `axios` client, and fails due to e.g., the following reasons:
+
+- authentication failed (401)
+- unauthorized request (403)
+
+However, instead of this general error message, the HTTP response body contains more meaningful details of the error.
+You can check the example below about how to print the response body, when the root cause is an `AxiosError`:
+
+```ts
+businessPartnerApi
+  .requestBuilder()
+  .getAll()
+  .top(1)
+  .addCustomHeaders({ APIKey: 'my-api-key' })
+  .execute({ url: 'https://sandbox.api.sap.com/s4hanacloud' })
+  .catch(err => {
+    console.log('Message:', err.rootCause?.message);
+    console.log('Response body:', err.rootCause?.response?.data);
+  });
+```
+
+The code snippets above will result in the following output, when the request is sent during a planned downtime.
+
+```
+Message: Request failed with status code 503
+Response body: {
+  code: 'SERVICE_UNAVAILABLE',
+  message: 'From XXX until XXX there is a planned downtime for the API sandbox system. During this period you cannot use the Try it Out feature on our API sandbox system to test an API service.'
+}
+```
+
+:::tip
+If you want to see the complete root cause of an error object, add the following log statement:
+
+```ts
+console.log('Complete root cause error object:', err.rootCause);
+```
+
+:::

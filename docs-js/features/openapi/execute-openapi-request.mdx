@@ -36,8 +36,8 @@ You invoke a function of an API, optionally configure your request and then exec
 const responseData = await MyApi.myFunction().execute(destination);
 ```
 
-In the example above we invoke the function `myFunction` of the API `MyApi` without further configuration and execute it against a destination named `destination`.
-The `execute` method returns the response data directly as a `Promise`, if available.
+In the example above you invoke the function `myFunction()` of the API `MyApi` without further configuration and execute it against a destination named `destination`.
+The `execute()` method returns the response data directly as a `Promise`, if available.
 Responses without response body, result in the return type `Promise<void>`.
 
 You can configure your request by [setting custom headers](#setting-custom-headers), [a custom request configuration](#setting-a-custom-request-configuration) or [disabling CSRF token fetching](#disabling-csrf-token-fetching).
@@ -72,7 +72,7 @@ If the request body is optional, you have to pass `undefined`, e.g. `MyApi.updat
 ### Setting Custom Headers
 
 The SAP Cloud SDK sets all mandatory headers by default.
-To set additional headers or change the default values used in the headers, use the `addCustomHeaders` method.
+To set additional headers or change the default values used in the headers, use the `addCustomHeaders()` method.
 You can pass an object, where the key is the name of the header and the value, well the value.
 
 ```ts
@@ -104,25 +104,16 @@ MyEntity.requestBuilder()
 // TODO: There is an open PR for this
 -->
 
-### Setting a Custom Timeout
+### Setting Middlewares
 
-You can specify a timeout for the request via the `timeout()` method on the request builder:
-
-<Tabs groupId="version" defaultValue="major" values={[ { label: 'SDK 2.x', value: 'major' }, { label: 'SDK 1.x', value: 'deprecated' } ]}>
-<TabItem value="major">
+You can specify middlewares for a request via the `middleware()` method on the request builder:
 
 ```ts
-MyApi.myFunction().timeout(1000).execute(destination);
+MyApi.myFunction().middleware(myMiddlewares).execute(destination);
 ```
 
-</TabItem>
-</Tabs>
-
-The value is in milliseconds and the default value is 10000 (10 seconds)
-This timeout applies to the request send to the target system given in the destination.
-If a `CSRF` token is fetched from the target system the timeout applies also to this call.
-Note that there is also a second timeout option on the destination fetch options.
-This relates to the calls made to SAP BTP services like destination-service or XSUAA.
+Middleware is a general concept used to add [arbitrary enhancements to the request](../middleware).
+A typical use case is to also add [resilience](../../guides/resilience) to requests.
 
 ### Getting a Raw Response
 
@@ -138,7 +129,7 @@ const httpResponse: HttpResponse = MyEntity.requestBuilder()
 
 <ExecuteRawUseCases />
 
-### Skip `CSRF` Token Handling
+### Skip CSRF Token Handling
 
 <SkipCsrf />
 

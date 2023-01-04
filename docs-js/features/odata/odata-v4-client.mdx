@@ -45,7 +45,6 @@ import {
   FilterFunctions
 } from './common/query-parameter';
 import {
-  RequestBuilder,
   EtagFunctionImport,
   EntityReturnType
 } from './common/function-imports';
@@ -68,11 +67,12 @@ import {
   FunctionImportKnownIssues,
   ActionImport,
   ActionImportKnownIssues,
-  ChangeSetExample
+  ChangeSetExample,
+  RequestBuilder
 } from './v4';
 
 This guide explains how to use features of the [OData v4 protocol](https://www.odata.org/documentation/) supported by the SAP Cloud SDK.
-We will use [People service from OData v4 tutorial](https://www.odata.org/getting-started/advanced-tutorial/) and [Business Partner Service](https://api.sap.com/api/API_BUSINESS_PARTNER/resource) from the SAP S/4HANA ERP suit.
+You will use the [People service from the OData v4 tutorial](https://www.odata.org/getting-started/advanced-tutorial/) and the [Business Partner Service](https://api.sap.com/api/API_BUSINESS_PARTNER/resource) from the SAP S/4HANA ERP suite.
 
 :::note
 
@@ -104,7 +104,7 @@ For more details on **how to execute requests** using a OData type-safe client b
 
 <CustomDeSerializers />
 
-## GetAll Request Builder
+## `GetAllRequestBuilder`
 
 <GetAll />
 
@@ -160,15 +160,15 @@ More advanced filter expressions can be found [here](#available-filter-expressio
 
 :::note Using count within a filter is not supported
 
-Note that we currently do not support the usage of count within a filter condition as described in the [OData v4 specification](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_AddressingtheCountofaCollection).
+Note that the SAP Cloud SDK does not support the usage of count within a filter condition as described in the [OData v4 specification](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_AddressingtheCountofaCollection).
 
 :::
 
-## `GetByKey` Request Builder
+## `GetByKeyRequestBuilder`
 
 <GetByKey />
 
-## Create Request Builder
+## `CreateRequestBuilder`
 
 <Create />
 
@@ -180,11 +180,11 @@ Note that we currently do not support the usage of count within a filter conditi
 
 <CreateAsChildOf />
 
-## Update Request Builder
+## `UpdateRequestBuilder`
 
 <Update />
 
-### Replace the Entity With PUT
+### Replace the Entity With `PUT`
 
 <Replace />
 
@@ -196,7 +196,7 @@ Note that we currently do not support the usage of count within a filter conditi
 
 <SetIgnoredFields />
 
-## Delete Request Builder
+## `DeleteRequestBuilder`
 
 <Delete />
 
@@ -223,9 +223,7 @@ Note that we currently do not support the usage of count within a filter conditi
 
 <FilterFunctions />
 
-## Function Imports
-
-### Request Builder
+## Operations (Functions and Actions)
 
 <RequestBuilder />
 
@@ -238,16 +236,6 @@ Note that we currently do not support the usage of count within a filter conditi
 ### Known Issues
 
 <FunctionImportKnownIssues />
-
-## Action Imports
-
-<ActionImport />
-
-<EntityReturnType />
-
-### Known Issues
-
-<ActionImportKnownIssues />
 
 ## Batch Requests
 

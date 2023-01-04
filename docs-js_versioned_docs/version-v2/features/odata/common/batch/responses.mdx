@@ -1,0 +1,124 @@
+Once a `batch` request is executed, it returns a list of `BatchResponse` objects.
+The responses correspond to the retrieve requests and changesets in the same order that they were passed to the `batch` function.
+Requests that were not successful are reflected as a list of `ErrorResponse` objects.
+Responses to successful requests are represented as `ReadResponse` instances for retrieve requests, and `WriteResponses` for changesets.
+
+To determine the type of a response, you can use the following type guards:
+
+- `isSuccess()`: to check that the response is either a `ReadResponse` or `WriteResponses` instance
+- `isError()`: to check that the response is an `ErrorResponse` instance
+- `isReadResponse()`: to check that the response is a `ReadResponse` instance
+- `isWriteResponses()`: to check that the response is a `WriteResponses` instance
+
+Then, depending on the corresponding request, you can parse the response or handle the error.
+
+### `ReadResponse`
+
+Successful retrieve requests have the type `ReadResponse`, which contains the HTTP code, the raw body, and the constructor of the entity that was parsed from the response.
+To work with an instance of the retrieved entity, you can use the `as()` method, which allows you to transform the raw data into an instance of an entity represented by the given entity API.
+Note, that the `as()` method transforms the raw data to an array of entities, even if the original request was a `GetByKeyRequestBuilder`.
+
+In the example below, you combine a list of `GetByKeyRequestBuilder` instances into one `batch` request and execute it against a destination.
+If one of the requests was unsuccessful, an error will be thrown.
+Otherwise, the responses are transformed into instances of `BusinessPartnerAddress`.
+
+```ts
+// Destructure business partner service
+const { batch, businessPartnerAddressApi } = businessPartnerService();
+
+async function getAddressesByIds(
+  ...retrieveRequests: GetByKeyRequestBuilder<BusinessPartnerAddress>[]
+): Promise<BusinessPartnerAddress[]> {
+  // Execute batch request combining multiple retrieve requests
+  const batchResponses = await batch(...retrieveRequests).execute(destination);
+
+  // Error handling
+  if (batchResponses.some(response => !response.isSuccess())) {
+    throw new Error('Some of the batch subrequests were not successful.');
+  }
+
+  return batchResponses.reduce(
+    (addresses: BusinessPartnerAddress[], response: BatchResponse) => {
+      if (response.isReadResponse()) {
+        // Transform response to an instance of BusinessPartnerAddress
+        const [address] = response.as(businessPartnerAddressApi);
+        addresses.push(address);
+      }
+      return addresses;
+    },
+    []
+  );
+}
+```
+
+Function imports using `GET` operation are part of the retrieve requests as well.
+As function imports are not entity based, you obtain the response using the `responseTransformer`, which is part of the `FunctionImportRequestBuilder`:
+
+```ts
+const {
+  functionImports: { getPdf }
+} = billingDocumentService();
+
+async function batchExample(billingDocument: string) {
+  const request = getPdf({ billingDocument });
+  const [response] = await batch(request).execute(destination);
+  if (response.isReadResponse()) {
+    const parsedResponse = request.responseTransformer(response.body);
+  }
+}
+```
+
+### `WriteResponses`
+
+Successful changeset requests can be cast to type `WriteResponses` which contains all subresponses for the changeset request.
+Those responses can be accessed with the `responses` property and have the type `WriteResponse`.
+Each `WriteResponse` instance contains the HTTP code and can contain the raw body and the constructor of the entity that was parsed from the response, depending on whether there was a body in the response.
+Create and delete requests typically do not have a response body.
+To work with an instance of an entity given in a `WriteResponse`, you can use the `as()` method, which allows you to transform the raw string body into an instance of the given constructor.
+Note that the response may not exist, so you should only call this method if you know that there is data.
+Typically the HTTP code is a good indicator for this - `201 No Content` probably won't have content.
+
+If you are working with TypeScript, you will have to tell the compiler that the `as!()` method can be used here by adding a `!`.
+Also note, that the response to a changeset can be an `ErrorResponse`.
+Therefore, it is crucial to check responses for success, before casting them to `WriteResponses`.
+
+In the example below, you combine a list of `UpdateRequestBuilder` instances into one changeset and pass it to the batch request.
+Once you execute the batch request, you get a list which contains one `BatchResponse` object only.
+
+If the request was unsuccessful, an error will be thrown.
+Otherwise, the subresponses are transformed into instances of `BusinessPartnerAddress`.
+
+```ts
+// Destructure business partner service
+const { batch, changeset } = businessPartnerService();
+
+async function updateAddresses(
+  ...updateRequests: UpdateRequestBuilder<BusinessPartnerAddress>
+): Promise<BusinessPartnerAddress[]> {
+  // Execute batch request with one changeset
+  const batchResponses = await batch(
+    // Combine update requests into one changeset
+    changeset(...updateRequests)
+  ).execute(destination);
+
+  // Get response for the changeset request
+  const changesetResponse = batchResponses[0];
+
+  if (changesetResponse.isWriteResponses()) {
+    return changesetResponse.responses.map(response =>
+      // Transform response to an instance of BusinessPartnerAddress
+      response.as!(BusinessPartnerAddress)
+    );
+  }
+
+  // Error handling
+  throw new Error('The changeset request was not successful.');
+}
+```
+
+As discussed for the [read response](#readresponse) you have to use the `responseTransformer()` method for write responses related to function or action imports.
+
+### `ErrorResponse`
+
+Unsuccessful retrieve requests and changesets are reflected as `ErrorResponse` instances in the response.
+Those responses have an `httpCode` (a number) and a `body` (a JSON object).

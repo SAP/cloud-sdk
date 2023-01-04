@@ -14,7 +14,7 @@ keywords:
 ---
 
 import { SkipCsrf } from '../common';
-import { Select, ChangeSetExample } from './v2';
+import { Select, ChangeSetExample, RequestBuilder } from './v2';
 import { Csrf, SkipCsrfExample, ETag } from './common';
 import {
   CustomFields,
@@ -47,7 +47,6 @@ import {
   FilterFunctions
 } from './common/query-parameter';
 import {
-  RequestBuilder,
   EtagFunctionImport,
   EntityReturnType
 } from './common/function-imports';
@@ -62,7 +61,7 @@ import {
 } from './common/batch';
 
 This guide explains how to use features of the [OData v2 protocol](https://www.odata.org/documentation/odata-version-2-0/) supported by the SAP Cloud SDK.
-To demonstrate the features we will use the [Business Partner Service](https://api.sap.com/api/API_BUSINESS_PARTNER/resource) from the SAP S/4HANA ERP suit.
+To demonstrate the features, this guide will use the [Business Partner Service](https://api.sap.com/api/API_BUSINESS_PARTNER/resource) from SAP S/4HANA.
 
 :::note
 
@@ -94,7 +93,7 @@ For more details on **how to execute requests** using a OData type-safe client b
 
 <CustomDeSerializers />
 
-## `GetAll` Request Builder
+## `GetAllRequestBuilder`
 
 <GetAll />
 
@@ -130,11 +129,11 @@ More advanced filter expressions can be found [here](#available-filter-expressio
 
 <Count />
 
-## `GetByKey` Request Builder
+## `GetByKeyRequestBuilder`
 
 <GetByKey />
 
-## Create Request Builder
+## `CreateRequestBuilder`
 
 <Create />
 
@@ -146,11 +145,11 @@ More advanced filter expressions can be found [here](#available-filter-expressio
 
 <CreateAsChildOf />
 
-## Update Request Builder
+## `UpdateRequestBuilder`
 
 <Update />
 
-### Replace the Entity With PUT
+### Replace the Entity With `PUT`
 
 <Replace />
 
@@ -162,7 +161,7 @@ More advanced filter expressions can be found [here](#available-filter-expressio
 
 <SetIgnoredFields />
 
-## Delete Request Builder
+## `DeleteRequestBuilder`
 
 <Delete />
 
@@ -208,16 +207,16 @@ More advanced filter expressions can be found [here](#available-filter-expressio
 ### Retrieve Request
 
 A retrieve request represents an HTTP `GET` request.
-In terms of the SAP Cloud SDK this includes all requests built by [`GetAllRequestBuilder`](#getall-request-builder), [`GetByKeyRequestBuilder`](#getbykey-request-builder) and [`FunctionImportRequestBuilder`](#function-imports) using GET requests.
-A type error will appear if you include a function import changing data, if you use TypeScript.
+In terms of the SAP Cloud SDK this includes all requests built by [`GetAllRequestBuilder`](#getall-request-builder), [`GetByKeyRequestBuilder`](#getbykey-request-builder), and [`FunctionImportRequestBuilder`](#function-imports) using `GET` requests.
+If you use TypeScript, a type error will appear when including a function import changing the data.
 
 <RetrieveRequests />
 
 ### Changeset
 
 A changeset is a collection of HTTP `POST`, `PUT`, `PATCH` and `DELETE` operations.
-Such operations are built by the [`CreateRequestBuilder`s](#create-request-builder), [`UpdateRequestBuilder`s](#update-request-builder), [`DeleteRequestBuilder`s](#delete-request-builder) or [`FunctionImportRequestBuilder`](#function-imports).
-A type error will appear if you include a function import reading data, if you use TypeScript.
+Such operations are built by the [`CreateRequestBuilder`](#create-request-builder), [`UpdateRequestBuilder`](#update-request-builder), [`DeleteRequestBuilder`](#delete-request-builder), or [`FunctionImportRequestBuilder`](#function-imports).
+If you use TypeScript, a type error will appear when including a function import reading the data.
 
 <ChangeSet />
 <ChangeSetExample />

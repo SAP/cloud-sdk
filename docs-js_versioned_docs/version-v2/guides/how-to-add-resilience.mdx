@@ -1,0 +1,129 @@
+---
+id: resilience
+title: How to Make Applications more Resilient?
+sidebar_label: How to Add Resilience
+description: This article describes how you can add a layer of resilience to applications
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - http
+  - resilience
+  - JavaScript
+  - TypeScript
+---
+
+# Introduction
+
+In this article, we will talk about resilience and how to add resilience when using the SAP Cloud SDK.
+In contrast to Java, for JavaScript, there is no standard framework to handle resilience.
+Hence, we have not included resilience features within the SAP Cloud SDK, but leave it up to you which framework you want to use.
+We have prepared examples on the resilience topic in our [samples repository](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/resilience-examples) which illustrate the concepts and pick some widely used `npm` packages.
+
+There is one exception to this approach.
+We introduced a circuit-breaker for all calls going to SAP BTP services like XSUAA and the destination service.
+The circuit breaker is enabled by default to protect the services and you can disable it via the `enableCircuitBreaker` option on the `execute()` methods.
+
+## Cache
+
+This is usually not a resilience topic, but could help to improve the stability of your application.
+The idea behind a cache is to reduce the load caused by expensive requests.
+Expensive means, for example, that you need to do a lot of computation (RAM, CPU, disk I/O) or many calls to external systems.
+Instead of doing the work every time, the method response is stored in the cache after the first execution and taken from there afterwards.
+Assume a load issue where requests time out, because too many requests are sent to the system.
+In such a case, a cache could reduce the number of calls and therefore improve resilience.
+
+The introduction of a cache is most effective in the following cases:
+
+- The execution of a method consumes a lot of resources
+- The method is a pure function, meaning the function arguments contain all the information and no hidden state affects the result of the function
+- The function is invoked multiple times for the same arguments or context
+- The system behind the cache has known downtime or limited availability mitigated by the cache
+
+Typically, a cache implementation has an interface like this:
+
+```ts
+interface Cache<T> {
+  get: (key: string) => T;
+  set: (key: string, value: T, expires: TimeStamp) => void;
+  clear: () => void;
+}
+```
+
+It provides methods to `get`, `set`, and `clear` the cached entries.
+The `key` represents the arguments passed to your cached method.
+It is used to set and get a value from the cache.
+
+:::caution
+If your cached method relies on authentication/authorization like an HTTP call, be sure your cache preserves user isolation.
+This means that the cache key must include the user making the request.
+Also, ensure that it is impossible to manipulate the cache key generation to retrieve results related to other users.
+The same rules apply if you create a multi-tenant application with respect to tenant isolation.
+:::
+
+Note that the [opossum](https://nodeshift.dev/opossum/) circuit-breaker also provides a cache option.
+
+## Circuit-Breaker
+
+In electronics, a circuit breaker is a safety device that prevents your wires from melting in case of too much power consumption.
+In software development, the circuit-breaker does not protect actual wires from melting but resources from overloading while helping them recover.
+You should include a circuit-breaker if:
+
+- The resource is essential in your infrastructure and should be protected.
+- The resource reacts poorly to heavy load.
+- Your application creates a high number of requests.
+
+Circuit-breakers are typically used for HTTP requests and behave in the following way:
+
+- The circuit-breaker monitors the HTTP requests and tracks failing and successful requests.
+- The circuit-breaker calculates an average percentage of failing requests.
+- If this average is above some threshold, the breaker opens.
+- From this moment on, requests are immediately blocked and not executed.
+  This prevents the system from getting too many requests if it is in an unhealthy state.
+- After a reset time the breaker closes and requests can reach the target system again.
+
+Many circuit breakers do not go into a completely closed state but go into a half-open state.
+In this state, every failing request will directly cause the breaker to open again.
+The reason for this is, that you do not overburden systems in the recovery phase.
+
+Typical parameters to configure a circuit-breaker are:
+
+- "failure threshold": Failure rate above which the circuit-breaker will open.
+- "reset timeout": The time after which the circuit-breaker will close.
+- Fallback: Some alternative actions you want to perform when the breaker is open.
+- Options to calculate the failure rate.
+
+You can find an example using the [opossum](https://nodeshift.dev/opossum/) circuit-breaker [here](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/resilience-examples).
+
+## Retries
+
+Another approach to add resilience to your application is to retry failed requests.
+For retries, there are libraries available like [async-retry](https://www.npmjs.com/package/async-retry) which make every asynchronous function perform some retries if they do not resolve.
+However, this pattern needs to be used with caution, because it is often mitigating a problem that should be solved properly.
+Also, if something fails consistently, it does not help to press the same button multiple times.
+You should consider some rules for implementing retries:
+
+- The error should be the exception, not the default.
+- The error should happen randomly so a second call has a high likelihood of giving something.
+- The source of the error is out of your domain to fix.
+- Consistent errors should not trigger a retry.
+  For example, an HTTP request failing with 401 should not trigger a retry because the user is unauthorized.
+- The number of retries should be limited to a low digit number.
+  There should be some appropriate waiting time between retries.
+
+Typical options for a retry library are:
+
+- Retries: How many attempts should be made.
+- "minimum timeout": Initial waiting time for the first retry.
+- "maximum timeout": What is the maximal time for all retries to execute.
+- Distribution: How the retries are distributed over time.
+  An exponential waiting time is a good option.
+  Also, adding some random time deviation is distributing the load of parallel retries.
+- Bail: An option to stop the retry for certain failure cases is useful in many cases.
+
+You can find an example using the [async-retry](https://www.npmjs.com/package/async-retry) library [here](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/resilience-examples).
+
+:::caution
+If you use retries together with a circuit-breaker, choose the options for the two accordingly.
+The waiting time between requests of the retry should be large enough not to trigger the circuit-breaker to open.
+:::

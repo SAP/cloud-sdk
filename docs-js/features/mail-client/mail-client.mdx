@@ -11,17 +11,17 @@ keywords:
   - email
   - e-mail
   - BTP
-  - On-premise
+  - on-premise
   - JavaScript
   - TypeScript
 ---
 
 This documentation describes how you can send e-mails from applications deployed on the SAP BTP to your e-mail servers.
-When defining e-mail servers by using the `destination` service on the SAP BTP, both `Internet` and `On-Prem` destinations are supported.
+When defining e-mail servers by using the destination service on the SAP BTP, both `Internet` and `OnPremise` destinations are supported.
 
 ## Installation
 
-Run this command in your root directory of your project to install the `mail-client` dependency and add it to your `dependency` list:
+Run this command in your root directory of your project to install the `mail-client` dependency and add it to your dependency list:
 
 ```
 npm install @sap-cloud-sdk/mail-client
@@ -33,7 +33,7 @@ In this section you find minimal examples illustrating how to send e-mails using
 
 ### Send an E-Mail
 
-First, create a `mailConfig` that contains all the essential information of an e-mail:
+First, create a `mailConfig` object that contains all the essential information of an e-mail:
 
 <!-- vale off -->
 
@@ -50,14 +50,14 @@ const mailConfig: MailConfig = {
 
 <!-- vale on -->
 
-You send the e-mail by calling `sendMail` with your `mailConfig` as argument:
+You send the e-mail by calling the `sendMail()` function with your `mailConfig` as argument:
 
 ```ts
 sendMail({ destinationName: 'my-mail-destination' }, [mailConfig]);
 ```
 
 The first parameter is either a [destination](https://sap.github.io/cloud-sdk/api/2.9.0/interfaces/sap_cloud_sdk_connectivity.Destination) object or [DestinationFetchOptions](https://sap.github.io/cloud-sdk/api/2.9.0/interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions).
-For productive environment, you should use the `destination service` on the SAP BTP and reference the destination by name just like the example above.
+For productive environment, you should use the destination service on the SAP BTP and reference the destination by name just like the example above.
 `{ destinationName: 'my-mail-destination' }` is the minimal object that is typed as `DestinationFetchOptions`.
 For test environment, instead of using the `DestinationFetchOptions`, you can also pass a complete `destination` object.
 
@@ -71,7 +71,7 @@ You can read more about the abstraction of the `destination` in the documentatio
 
 ### Send Multiple E-Mails
 
-The code snippets below shows how to send 2 e-mails with the `mailConfig` that we created in the previous example.
+The code snippets below shows how to send two e-mails with the `mailConfig` that you created in the previous example.
 The e-mails are sent in parallel by default.
 
 ```ts
@@ -97,12 +97,12 @@ As the parallelization is the default behaviour, you don't have to set `parallel
 
 :::
 
-### Configure `nodemailer`
+### Configure Nodemailer
 
-The SAP Cloud SDK uses the node package `nodemailer` under the wood.
-`nodemailer` supports creating a `transport` based on options listed in their [documentation](https://nodemailer.com/smtp/).
+The SAP Cloud SDK uses the node package Nodemailer under the hood.
+Nodemailer supports creating a transport based on options listed in their [documentation](https://nodemailer.com/smtp/).
 The SAP Cloud SDK exposes these options (as `SmtpTransportOptions`) and will transfer them based on user input.
-For example, you can provide the `tls` option like below to circumvent issues with self-signed certificates:
+For example, you can provide the TLS option like below to circumvent issues with self-signed certificates:
 
 ```ts
 sendMail({ destinationName: 'my-mail-destination' }, [mailConfig], {
@@ -116,8 +116,8 @@ The SAP Cloud SDK API documentation of the complete `SmtpTransportOptions` can b
 
 #### Proxy
 
-`nodemailer` also supports defining proxy option as mentioned [here](https://nodemailer.com/smtp/proxies/).
-Similar to other `nodemailer` options, the `proxy` key is also part of the `SmtpTransportOptions`.
+Nodemailer also supports defining proxy option as mentioned [here](https://nodemailer.com/smtp/proxies/).
+Similar to other Nodemailer options, the `proxy` key is also part of the `SmtpTransportOptions`.
 You can find a minimal example below for defining an HTTP proxy:
 
 ```ts
@@ -127,35 +127,34 @@ sendMail({ destinationName: 'my-mail-destination' }, [mailConfig], {
 ```
 
 Using socks proxy is not supported for the time being.
-For On-Premise connectivity via the connectivity service on the SAP BTP, please check the next section.
+For on-premise connectivity via the connectivity service on the SAP BTP, please check the next section.
 
 :::caution
 
-The SAP Cloud SDK will pass the proxy option directly to the `nodemailer`, but the proxy feature is not end-to-end tested.
-We assume the `nodemailer` lib handles it properly.
+The SAP Cloud SDK will pass the proxy option directly to the Nodemailer, but the proxy feature is not end-to-end tested.
 
 :::
 
 ## On-Premise Destination
 
-The SAP Cloud SDK supports using `On-Premise` destination as well.
-From the SAP Cloud SDK API perspective, the code looks similar, no matter you use `On-Premise` destinations or `Internet` destinations.
-The only difference is that you have to reference the name of the On-Premise destination, which is obvious.
+The SAP Cloud SDK supports using on-premise destinations as well.
+From the SAP Cloud SDK API perspective, the code looks similar, no matter you use `OnPremise` destinations or `Internet` destinations.
+The only difference is that you have to reference the name of the on-premise destination, which is obvious.
 
 ### What's the Difference
 
-First, for applications deployed on the SAP BTP, you need a `connectivity` service for connecting to an `On-Premise` destination.
-Second, a `Cloud Connector` is used as a proxy for accessing the `On-Premise` system.
+First, for applications deployed on the SAP BTP, you need a connectivity service for connecting to an on-premise destination.
+Second, a cloud connector is used as a proxy for accessing the on-premise system.
 Please make sure the mail destination is configured correctly as discussed in the [documentation](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/8d1f989deca1455dabc3d81b433fbdaf.html).
 
-### `SOCKS5` Proxy Implementation
+### SOCKS5 Proxy Implementation
 
-Using a `SOCKS5` proxy for accessing On-Premise systems from applications on SAP BTP requires the `SOCKS5` authentication flow as explained [here](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/cd1583775afa43f0bb9ec69d9dbcc880.html?locale=en-US).
-The SAP Cloud SDK handles the `SOCKS5` proxy implementation automatically when detecting an `On-Premise` mail destination.
+Using a SOCKS5 proxy for accessing on-premise systems from applications on SAP BTP requires the SOCKS5 authentication flow as explained [here](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/cd1583775afa43f0bb9ec69d9dbcc880.html?locale=en-US).
+The SAP Cloud SDK handles the SOCKS5 proxy implementation automatically when detecting an on-premise mail destination.
 
 :::tip
 
-For some On-Premise e-mail server, including our test server, the parallelization of sending email might be a challenge.
+For some on-premise e-mail servers, including the test server, the parallelization of sending e-mail might be a challenge.
 You can disable the parallelization by passing `parallel: false` as mentioned before.
 
 :::

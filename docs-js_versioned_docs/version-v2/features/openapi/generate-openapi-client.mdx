@@ -1,0 +1,252 @@
+---
+id: generate-client
+title: Use the OpenAPI Generator to Generate Typed Clients
+sidebar_label: Generate an OpenAPI Client
+description: How to generate a client from a service definition.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - OpenAPI
+  - rest
+  - connectivity
+  - JavaScript
+  - TypeScript
+---
+
+REST is a common pattern to define APIs of services.
+Many SAP systems like SAP S/4HANA, SAP Concur and SAP Business Technology Platform provide their services through REST APIs.
+A common way to specify these services are [OpenAPI specifications](https://swagger.io/specification/).
+
+With the SAP Cloud SDK, you can generate typed clients for those specifications.
+
+Check this [guide](../../guides/apihub-download-spec.mdx) for downloading a specification from SAP API Business Hub.
+
+## Installation
+
+Run the command below to install the OpenAPI generator as a `devDependency`:
+
+```sh
+npm install -D @sap-cloud-sdk/openapi-generator
+```
+
+## Generate a Client Using the Command Line Interface
+
+The SAP Cloud SDK generator is primarily intended to be used on the command line.
+You can generate an OpenAPI client by running:
+
+```sh
+npx openapi-generator --input <input> --outputDir <outputDirectory>
+```
+
+The `<input>` points to your specification file or a directory containing the specification(s) and `<outputDirectory>` to the target folder where the generated client(s) will be saved.
+
+By default, the generated clients will each contain:
+
+- API files as `.ts` files - one for each "API" in the service.
+  See [details](#how-the-api-code-is-generated).
+- A schema directory, containing schema files (`.ts`), one for each schema defined in the service specification.
+- All of the above as transpiled sources, including JavaScript sources (`.js`), type definition files (`.d.ts`) and sourcemap files (`.js.map` and `.d.ts.map`).
+- A `package.json`.
+- A `tsconfig.json`.
+
+The generation always includes the TypeScript sources.
+All other files can be excluded from the generation - see the options below.
+
+:::note
+
+We recommend to install the generator as a local dependency, because global installations hide the used generator version and cause problems when transpiling to JavaScript.
+If you must use a globally installed generator, install the`@types/node` and `@sap-cloud-sdk/openapi` package in your project to make the transpilation work.
+If you need to transpile sources without any local `node_modules`, you must manually execute the `tsc` on your own with a custom [path mapping](https://www.typescriptlang.org/docs/handbook/module-resolution.html#path-mapping).
+See [transpile](#Options) for more details in the options below.
+
+:::
+
+## Options
+
+Run `openapi-generator --help` for additional options.
+
+| Options <div style={{ width: "225px" }}></div> | Description                                                                                                                                                                                                                                                                                                                                                       |
+| :--------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `-i`,`--input` _(required)_                    | Specify the path to the directory or file containing the OpenAPI service definition(s) to generate clients for. Accepts Swagger and OpenAPI definitions as YAML and JSON files. Throws an error if the path does not exist.                                                                                                                                       |
+| `-o`,`--outputDir` _(required)_                | Specify the path to the directory to generate the client(s) in. Each client is generated into a subdirectory within the given output directory. Creates the directory if it does not exist. Customize subdirectory naming through `--optionsPerService`.                                                                                                          |
+| `-t`, `--transpile`,                           | Transpile the generated TypeScript code. When enabled a default `tsconfig.json` will be generated and used. It emits `.js`, `.js.map`, `.d.ts` and `.d.ts.map` files. To configure transpilation set `--tsconfig`.                                                                                                                                                |
+| `--clearOutputDir`                             | Remove all files in the output directory before generation. Be cautious when using this option, as it really removes EVERYTHING in the output directory.                                                                                                                                                                                                          |
+| `--include`                                    | Include files matching the given glob into the root of each generated client directory.                                                                                                                                                                                                                                                                           |
+| `--optionsPerService`                          | Set the path to a file containing the options per service. The configuration allows to set a `directoryName` and `packageName` for every service, identified by the path to the original file. It also makes sure that names do not change between generator runs. If a directory is passed, a `options-per-service.json` file is read/created in this directory. |
+| `--overwrite`                                  | Allow overwriting files, that already exist. This is useful, when running the generation regularly.                                                                                                                                                                                                                                                               |
+| `--packageJson`                                | When enabled, a `package.json`, that specifies dependencies and scripts for transpilation and documentation generation is generated.                                                                                                                                                                                                                              |
+| `--skipValidation`                             | By default, the generation fails, when there are duplicate or invalid names for operations and/or path parameters after transforming them to camel case. Set this to true to enable unique and valid name generation. The names will then be generated by appending numbers and prepending prefixes.                                                              |
+| `--tsConfig`                                   | Replace the default `tsconfig.json` by passing a path to a custom configuration. By default, a `tsconfig.json` is only generated, when transpilation is enabled (`--transpile`). If a directory is passed, a `tsconfig.json` file is read from this directory.                                                                                                    |
+| `--verbose`                                    | Turn on verbose logging.                                                                                                                                                                                                                                                                                                                                          |
+| `-c`, `--config`                               | Set the path to the file containing the options for generation. If other flags are used, they overwrite the options set in the configuration file. If a directory is passed, a `config.json` file is read from this directory.                                                                                                                                    |
+| `--prettierConfig` available since `2.11.0`    | default prettier config                                                                                                                                                                                                                                                                                                                                           |  Configuration file for the prettier if you want to change the default value |
+
+## Configuration File Schema
+
+```
+{
+  input: string;
+  outputDir: string;
+  transpile?: boolean;
+  include?: string;
+  clearOutputDir?: boolean;
+  skipValidation?: boolean;
+  tsConfig?: string;
+  packageJson?: boolean;
+  optionsPerService?: string;
+  packageVersion?: string;
+  readme?: boolean;
+  metadata?: boolean;
+  verbose?: boolean;
+  overwrite?: boolean;
+ }
+```
+
+## Generate a Client Programmatically
+
+The generator can also be executed programmatically in JavaScript or TypeScript code.
+Add the `@sap-cloud-sdk/openapi-generator` package to your project:
+
+```sh
+npm i @sap-cloud-sdk/openapi-generator
+```
+
+This package exports the `generate` function.
+It takes the same options as the command-line tool and generates the same files:
+
+```ts
+import { generate } from '@sap-cloud-sdk/openapi-generator'
+
+const generatorOptions = {
+  inputDir: 'directoryWithOpenApiFiles';
+  outputDir: 'myOutputDirectory';
+}
+
+await generate(generatorOptions);
+```
+
+## How the API Code is Generated
+
+By default, the generator produces one service directory for every OpenAPI specification.
+The directory name is based on the file name of the specification and is transformed to kebab case, e.g. `my-service`.
+
+### APIs
+
+All operations of the service are grouped into APIs based on their tags.
+A service can consist of multiple APIs.
+If multiple tags are specified for an operation, only the first one is considered.
+If no tags are specified, "default" is used.
+
+<!-- vale Vale.Spelling = NO -->
+
+The API names are transformed by appending "Api" and transforming them to pascal case, e.g. 'my-tag' results in `MyTagApi`.
+In case the tag already ends with "api" (case independent), one "Api" will be removed, e.g. `myapi` results in `MyApi`.
+If your tags end with "api", but this is part of the word, e.g. "okapi", we recommend the OpenAPI vendor extensions and provide an explicit API name ending with "Api", e.g. "OkapiApi".
+Note, that operations are grouped into APIs based on their transformed names, not the original names.
+Therefore, tags like "my-tag" and "MyTag" are treated as the same API, "MyTagApi".
+
+<!-- vale Vale.Spelling = YES -->
+
+### Operations
+
+Every operation in the specification is reflected as a function of a generated API.
+The function names are based on the `operationId` property in the specification of the operation.
+If no `operationId` is given, the name is derived from the method and the path pattern, examples:
+
+- `'resource'` with `post` would result in `createResource`
+- `'resource/{id}'` with `get` would result in `getResourceById`
+
+The function names are transformed to camel case, e.g. 'myFunction'.
+Duplicates within an API are handled by adding an index at the end of the name.
+In cases where we have duplicate names, but one of the names is in camel case, this name remains as is.
+Example:
+
+| Original `operationId`s | Generated function names |
+| :---------------------- | :----------------------- |
+| `my-function`           | `myFunction2`            |
+| `myFunction`            | `myFunction`             |
+| `other_function`        | `otherFunction`          |
+
+### Configure Generated Client Structure and Naming
+
+In case you need more flexibility when generating clients, you can use the SAP Cloud SDK's vendor extensions for OpenAPI.
+We provide two extensions:
+
+- [`x-sap-cloud-sdk-api-name`](#x-sap-cloud-sdk-api-name) to configure the structure and naming of the generated APIs.
+- [`x-sap-cloud-sdk-operation-name`](#x-sap-cloud-sdk-operation-name) to configure the generated function names.
+
+You can set those on different levels of the specification.
+They take precedence before the default behavior.
+
+#### `x-sap-cloud-sdk-api-name`
+
+<!-- vale Vale.Spelling = NO -->
+
+Use this extension to configure the structure of your generated APIs.
+Setting `x-sap-cloud-sdk-api-name` as a property determines which operations are grouped into one API.
+Note, that the name will be transformed to pascal case with an "Api" ending, same as in the default behavior, e.g. "MyApi".
+When referring to the "API name", the transformed name is meant.
+
+<!-- vale Vale.Spelling = YES -->
+
+This extension can be set on the following levels:
+
+- **Operations**: operations that have the same API name are grouped into one API
+- **On the path definitions**: all operations below paths with the same API name are grouped into one API
+- **Root of the specification**: all operations in the specification belong to the specified API
+
+This extension can be set on all these levels in the same document.
+In these cases the most specific use of the extension takes precedence.
+
+#### `x-sap-cloud-sdk-operation-name`
+
+Use this extension to overwrite the default names for the generated functions.
+As of the OpenAPI specification, this is the intent of the `operationId` field.
+However, the value of this property has to be unique throughout a specification file.
+Many OpenAPI validators fail if there are duplicate `operationId`s.
+With the approach of the SAP Cloud SDK OpenAPI generator this restriction might make the resulting clients more complicated than necessary.
+Given that you have multiple APIs, it can make sense to have the same function names in different APIs, e.g. `MyResource1Api.getAll()` and `MyResource2Api.getAll()`.
+The purpose of the `x-sap-cloud-sdk-operation-name` is to allow using duplicate names across APIs, while complying with the OpenAPI specification.
+
+## npm Packages vs. Local clients
+
+The SAP Cloud SDK OpenAPI client generator generates TypeScript code.
+By default, it creates only the TypeScript sources.
+This differs from the OData generator, which creates all sources needed for an npm package and includes transpilation.
+
+If you want to use the generated client in your TypeScript code without sharing it, you can work with the default configuration.
+If you work with JavaScript you can enable and configure transpilation with the `--transpile` and `--tsConfig` flags.
+
+If you want to publish a generated client to an npm registry, in addition to transpiling you will need to have a `package.json` for your client.
+You can generate it with `--packageJson` or include your custom `package.json` with `--include`.
+Please make sure to check intellectual property regulations before publishing to a public registry.
+
+The generated clients depend on the `@sap-cloud-sdk/openapi` package.
+You have to make sure, there is a local reference to this package, by running:
+
+```sh
+npm install @sap-cloud-sdk/openapi
+```
+
+## Transpilation
+
+If you installed the generator globally and want to transpile the generated code, you have to install the required dependency (or `devDependency`) for your client (`sap-cloud-sdk/openapi`) prior to generation.
+You do this by running:
+
+```sh
+npm install -D @sap-cloud-sdk/openapi
+```
+
+If you installed the generator as a `devDependency`, transpilation will work without additional steps.
+
+## Prettier
+
+Since version 2.11.0, the SAP Cloud SDK runs prettier on the generated sources using a default prettier config.
+The prettier formats only TypeScript files (`.ts` and `.d.ts`) to avoid broken source maps.
+If you are not happy with the configuration you can provide a custom configuration using the `prettierConfig` command line argument.
+Note that this formatting is done in-memory before the generator emits the files, so no expensive additional I/O is required.
+Alternatively, you can execute a custom formatting step after the generation is finished.
+
+Note that custom formatting steps could break source maps when you generate a JavaScript client (option `generateJs` enabled).
+We recommend excluding JavaScript clients from formatting because the generated `.js` and `.map.js` files are not meant for humans to read.

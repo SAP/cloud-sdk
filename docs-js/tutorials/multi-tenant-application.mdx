@@ -26,7 +26,7 @@ The idea behind this tutorial is to explain the main concepts of multi-tenant ap
 The code in the example is not a copy-paste solution for productive use but a didactic sample.
 You need to adjust things like application names or routes for your use case.
 
-The term `multi-tenant application` is more or less a synonym for a software as a service (SaaS) offering.
+The term "multi-tenant application" is more or less a synonym for a software as a service (SaaS) offering.
 The idea behind this architecture is that the consumers share the application resources, so they are used more effectively.
 On SAP BTP, organizations are modeled by subaccounts, and multi-tenant applications are subscribed per subaccount.
 These organizations are potentially different companies or strongly separated parts of one company.
@@ -34,11 +34,11 @@ In any case, each organization has its subaccount on SAP BTP and subscribes to a
 
 Some vocabulary is necessary to understand the next chapters of this tutorial:
 
-- `provider account` - The SAP BTP account which hosts the actual application.
+- **provider account**: The SAP BTP account which hosts the actual application.
   This account is under the control of the application developer.
-- `subscriber accounts` - The accounts using the application.
+- **subscriber accounts**: The accounts using the application.
   These accounts are controlled by the consumer.
-- `tenant-aware service` - a service which separates the data of different `subscriber accounts` rigorously.
+- **tenant-aware service**: A service which separates the data of different `subscriber accounts` rigorously.
   If you build a multi-tenant application, all services handling account specific data need to be tenant-aware services.
 
 :::note
@@ -81,7 +81,7 @@ You can find the application code in the [multi-tenant-app folder](https://githu
 The relevant application logic and configuration is located in the following three files:
 
 - In the `application.ts` file, the different endpoints are defined.
-  For now, only the `/service` endpoint is relevant, which represents our multi-tenant service.
+  For now, only the `/service` endpoint is relevant, which represents the multi-tenant service.
 - In the `manifest.yml` file, the route to the application is given and the used services are defined.
 - In the `service-endpoint.ts` a tenant-aware service (destination service) is called and tenant information is collected.
   The endpoint represents the service offering for the subscriber accounts.
@@ -206,7 +206,7 @@ Navigate to the `multi-tenant-app` folder and execute `cf push` to deploy the ap
 
 ### Call the Service
 
-In our example, the service is reachable via (for you the URL will be different depending on landscape):
+In this example, the service is reachable via (for you the URL will be different depending on landscape):
 
 ```
 GET https://multi-tenant-app.cfapps.YOUR_REGION.hana.ondemand.com/service
@@ -238,7 +238,7 @@ More information on the approuter topic can be found in [this guide](../guides/h
 :::
 
 In a productive case, the approuter may redirect requests to multiple applications.
-In our simple example, there is just one route.
+In this example, there is just one route.
 
 The approuter does not require code, only configuration.
 You can find all files in the [approuter folder](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/cf-multi-tenant-application/approuter).
@@ -313,12 +313,12 @@ When you follow this route, you will get redirected to the `welcomeFile` defined
 The `index.html` is located in the [application](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/cf-multi-tenant-application/multi-tenant-app).
 How did the routing work:
 
-- In our simple scenario, the `xs-app.json` file defines only one route consisting of a `source`, `target`, and `destination`.
+- In this scenario, the `xs-app.json` file defines only one route consisting of a `source`, `target`, and `destination`.
   The `source` is a regex and the target defines which capturing group is used in the destination.
-  In our example `https://route-prefix-YOUR_SUBDOMAIN.cfapps.YOUR_REGION.hana.ondemand.com/SOME_VALUE` will lead to `SOME_VALUE` as the capturing group and `SOME_VALUE` is attached to the destination.
+  In the example `https://route-prefix-YOUR_SUBDOMAIN.cfapps.YOUR_REGION.hana.ondemand.com/SOME_VALUE` will lead to `SOME_VALUE` as the capturing group and `SOME_VALUE` is attached to the destination.
   There are many more options to the routing config explained [here](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/c103fb414988447ead2023f768096dcc.html).
 - The `manifest.yml` defines the available destinations for the approuter.
-  The destination `multi-tenant-app` points to the URL of our application.
+  The destination `multi-tenant-app` points to the URL of your application.
   Therefore `https://route-prefix-YOUR_SUBDOMAIN.cfapps.YOUR_REGION.hana.ondemand.com/SOME_VALUE` goes to `https://multi-tenant-app.cfapps.YOUR_REGION.hana.ondemand.com/SOME_VALUE`
 
 ### Call the Service via the Approuter
@@ -408,7 +408,6 @@ export function dependencyRoute(req: Request, res: Response): void {
 ```ts
 import { Request, Response } from 'express';
 import { createLogger } from '@sap-cloud-sdk/util';
-import { executeHttpRequest } from '@sap-cloud-sdk/http-client';
 import {
   bindRoute,
   createRoute,
@@ -454,7 +453,7 @@ These two endpoints are the entry point for the SAP BTP platform to:
 - Create and delete a subscription to the application
 - Obtain the services used by the application
 
-In our example the application uses the destination service.
+In this example the application uses the destination service.
 The application has a binding to a service instance, so it is clear that the application may call the service.
 However, the subscriber account does not know anything about the internal details of the application.
 Therefore, the `/dependencies` endpoint provides the information that the destination service may be used also from the subscriber account.
@@ -464,7 +463,7 @@ If you do not do that, you retrieve a `403` error from the XSUAA when you reques
 
 ### Creating a Subscription
 
-After you have created an instance of the `SaaS provisioning service` in the provider account, you can create a subscription via the user interface.
+After you have created an instance of the SaaS provisioning service in the provider account, you can create a subscription via the user interface.
 A subscription is a route to the provider application, including the unique subdomain of the subscriber account.
 The `TENANT_HOST_PATTERN` in the `manifest.yml` of the approuter defines how to extract the subscriber account from the URL.
 A route like:
@@ -474,7 +473,7 @@ GET https://route-prefix-YOUR_SUBDOMAIN.cfapps.YOUR_REGION.hana.ondemand.com/ser
 ```
 
 would mean that the subscriber account is _`YOUR_SUBDOMAIN`_.
-To automate the onboarding of new accounts, the script in `subscription-endpoint.ts` does the following:
+To automate the onboarding of accounts, the script in `subscription-endpoint.ts` does the following:
 
 - It creates a route
 - Binds the created route to the approuter.
@@ -515,7 +514,7 @@ You are on tenant: a89ea924-d9c2-4gaf-84fb-3ffcff7891011. The destination descri
 ```
 
 The approuter has extracted the subscriber subdomain from the URL and issued a token for this account.
-As an application developer, you can use the token to determine the account which currently calls your code.
+As an application developer, you can use the token to determine the account which calls your code.
 
 ### Removing a Subscription
 

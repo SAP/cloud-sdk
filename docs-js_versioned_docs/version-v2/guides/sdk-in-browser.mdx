@@ -1,0 +1,282 @@
+---
+id: browser
+title: Use the SAP Cloud SDK in the Browser
+sidebar_label: Use the SAP Cloud SDK in the Browser
+description: You'll learn how to package SDK for a browser, what are the limitations, and how to use it with popular frontend frameworks.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+---
+
+The SAP Cloud SDK for JavaScript can be used both as a backend and frontend library when used in a browser.
+Because of the specifics of a browser environment, some features might be unavailable.
+To help you get up and running faster in a browser, we'll outline the main steps and caveats of using SAP Cloud SDK on the frontend.
+Both Angular and React applications are used to illustrate the usage.
+
+## Prerequisite
+
+A frontend application set up using either of the following:
+
+- [Angular application](https://angular.io/cli/new) via `ng new my-app`
+- [React application](https://reactjs.org/docs/create-a-new-react-app.html#create-react-app) via `npx create-react-app my-app`.
+  Rewire the create-react-app project using [react-app-rewired](https://github.com/timarney/react-app-rewired#how-to-rewire-your-create-react-app-project) or other alternatives.
+  This creates a `config-overrides.js` file in the root directory which can be used to override the settings for various webpack modules.
+
+## Include the SAP Cloud SDK
+
+The example below uses the business partner API.
+To learn how to generate an API client from a service definition, refer to [this article](features/odata/generate-odata-client.mdx).
+
+```ts
+//In the .html part of the component
+<button (click)="callApi()">Click me!</button>
+
+//In the .ts part of the component
+import { businessPartnerService } from './generated/business-partner-service';
+
+const { businessPartnerApi } = businessPartnerService();
+
+async function callApi(){
+  const result = await businessPartnerApi.requestBuilder().getAll().execute(myDest)
+  console.log(result)
+}
+```
+
+:::note
+For the destination lookup, the SAP Cloud SDK relies on Node.js functionality, e.g., `process.env`.
+However, the request building, execution, and result parsing do not require any Node.js modules and can be used on the frontend.
+Hence, create the destination variable `myDest` manually.
+:::
+
+Executing `npm run build` will result in compilation errors of the kind shown below:
+
+> Module not found: Error: Can't resolve 'https' in
+
+Check out the [workaround](#workaround) for resolving such errors.
+
+## Run Locally
+
+As discussed above, the `myDest` can not be fetched via the destination service.
+Create and pass the variable when running locally.
+
+```ts
+import { Destination } from '@sap-cloud-sdk/connectivity';
+
+const myDest: Destination = {
+  url: 'https://my123456.s4hana.ondemand.com',
+  username: 'myUser',
+  password: 'myPassowrd'
+};
+```
+
+Executing `npm run serve` compiles the project and hosts the application on a local server.
+
+:::info
+All modern browsers block requests triggered from a browser to a remote system to ensure [same origin policy](https://en.wikipedia.org/wiki/Same-origin_policy).
+One simple way to overcome this issue locally is to disable the web security of the browser temporarily (e.g. `--disable-web-security` for Chrome).
+Alternatively, create a second localhost proxy server that adds the `access-allow-origin-header` to the request.
+:::
+
+## Run on SAP BTP, Cloud Foundry Environment
+
+For productive usage, the methods mentioned above for running locally are not needed.
+Configure the `xs-app.json` file of the approuter with an entry as shown below:
+
+```json
+{
+  "source": "/REMOTE_SYSTEM_IDENTIFIER/(.*)",
+  "target": "/$1",
+  "destination": "DESTINATION_NAME_ON_CF"
+}
+```
+
+and then, in the application, define the destination as follows:
+
+```ts
+import { Destination } from '@sap-cloud-sdk/connectivity';
+
+const myDest: Destination = {
+  url: '/REMOTE_SYSTEM_IDENTIFIER'
+};
+```
+
+The created request to `/REMOTE_SYSTEM_IDENTIFIER/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner` will be matched by the approuter and the destination with the given URL and credentials is used.
+
+The approuter establishes a session with the client (browser) using a session cookie.
+This session contains elements like the redirect URL, OAuth token, OAuth scopes, etc.
+OAuth token is a JSON Web Token (JWT) that is fetched from the UAA and forwarded to backend services in the Authorization header.
+**The client never gets this token.**
+
+For a detailed understanding of session handling in the application router, refer to the documentation [here](https://help.sap.com/docs/SAP_HANA_PLATFORM/4505d0bdaf4948449b7f7379d24d0f0d/96c7545f62504d55b669010d8fb9c41e.html?version=2.0.00).
+
+:::note
+This approach does not support principal propagation to on-premise systems.
+For this, you need a JWT and need to include the proper header fields defining the user.
+See the documentation on [on-premise systems](../features/connectivity/on-premise) for details.
+:::
+
+:::info
+With webpack, it is possible to [load resources](https://webpack.js.org/plugins/normal-module-replacement-plugin/) for local or productive usage.
+Using such a switch, you can adjust the value of the destination for the two cases.
+:::
+
+## Workaround
+
+Webpack version 5 removed the automatic node.js polyfills and they need to be added manually.
+An error message during the compilation from TS to JS provides a hint on how to achieve that.
+
+### Angular
+
+- Add the corresponding library of the node.js core modules or the browserified version in `devDependencies` in your `package.json` file
+- Include `@angular-builders/custom-webpack` in `devDependencies`
+- Create a custom webpack configuration named `node-webpack.config.js` and list the node modules
+
+  ```js
+  module.exports = {
+    resolve: {
+      alias: {
+        process: 'process/browser',
+        https: 'agent-base',
+        http: 'agent-base'
+      },
+      fallback: {
+        url: false,
+        os: false,
+        assert: false,
+        constants: false,
+        zlib: false,
+        path: false,
+        http: false,
+        util: require.resolve('util/'),
+        process: require.resolve('process/browser'),
+        stream: require.resolve('stream-browserify'),
+        buffer: require.resolve('buffer'),
+        crypto: require.resolve('crypto-browserify'),
+        https: require.resolve('https-browserify')
+      }
+    },
+    plugins: [new ProvidePlugin({ process: 'process/browser' })]
+  };
+  ```
+
+- In the `angular.json` file, adjust the `build` target to use the custom builder and set `path` to the custom config `node-webpack.config.js` defined above
+
+  ```json
+  "build": {
+    "builder": "@angular-builders/custom-webpack:browser",
+    "options": {
+      "customWebpackConfig": {
+        "path": "./node-webpack.config.js"
+      }
+    }
+  ```
+
+- In the `angular.json` file, adjust the `serve` target to use the custom builder as well
+
+  ```json
+  "serve": {
+    "builder": "@angular-builders/custom-webpack:dev-server",
+  ```
+
+- In the `package.json` file, exclude the node modules that do not exist in the browser
+
+  ```json
+  "browser": {
+    "fs": false,
+    "net": false,
+    "tls": false
+  }
+  ```
+
+- Proxy any requests to your API server in development by adding a `proxy.config.json` file in `/src` folder
+  This avoids the CORS issues.
+
+  ```json
+  {
+    "/api/*": {
+      "target": "REMOTE_SYSTEM_IDENTIFIER",
+      "secure": true,
+      "logLevel": "debug",
+      "changeOrigin": true
+    }
+  }
+  ```
+
+  Since the base path has been set in the proxy config, change the value of the `url` property in `myDest` to `/`.
+  In the `angular.json` file, adjust the `serve` options to include `proxyConfig`.
+
+  ```json
+  "proxyConfig": "src/proxy.conf.json"
+  ```
+
+### React
+
+- Add the corresponding library of the core node.js modules in `devDependencies` in your `package.json` file.
+  Add the `react-app-rewired` dependency and adjust the existing calls to `react-scripts` in npm scripts for `start`, `build` and `test`
+
+  ```json
+  "start": "react-app-rewired start"
+  ```
+
+- In the `config-overrides.js` file, list the core node modules
+
+  ```js
+  module.exports = function override(config, env) {
+    config.ignoreWarnings = [/Failed to parse source map/];
+    config.resolve.alias = {
+      https: 'agent-base',
+      http: 'agent-base'
+    };
+    config.resolve.fallback = {
+      os: false,
+      url: false,
+      https: false,
+      http: false,
+      fs: false,
+      path: false,
+      assert: false,
+      zlib: false,
+      tls: false,
+      net: false,
+      constants: false,
+      util: require.resolve('util'),
+      process: require.resolve('process/browser'),
+      stream: require.resolve('stream-browserify'),
+      buffer: require.resolve('buffer'),
+      console: require.resolve('console-browserify'),
+      crypto: require.resolve('crypto-browserify'),
+      https: require.resolve('https-browserify')
+    };
+    config.plugins = [
+      ...config.plugins,
+      new ProvidePlugin({
+        Buffer: ['buffer', 'Buffer']
+      }),
+      new ProvidePlugin({
+        process: 'process/browser'
+      })
+    ];
+
+    return config;
+  };
+  ```
+
+- Proxy any requests to your API server in development by adding a proxy field to the `package.json` file.
+  This avoids the CORS issues.
+
+  ```json
+  "proxy": "REMOTE_SYSTEM_IDENTIFIER",
+  ```
+
+  Since the base path has been set in the proxy, change the value of the `url` property in `myDest` to `/`
+
+  :::caution
+  This proxy is only for development.
+  You need to ensure that API URLs point to the right target in production.
+  :::
+
+Now, the project should build and run locally.

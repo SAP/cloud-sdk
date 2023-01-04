@@ -47,12 +47,11 @@ This guide is based on [Google's style guide](https://developers.google.com/styl
   - [Use Active Voice Over Passive](#use-active-voice-over-passive)
   - [Exceptions: Use Passive Voice](#exceptions-use-passive-voice)
   - [First Person](#first-person)
-    - [Avoid Using `We`](#avoid-using-we)
-    - [Avoid Using `Our`](#avoid-using-our)
+    - [Avoid Using `We`, `Our`, and `Us`](#avoid-using-we-our-and-us)
     - [Exception: The Questions in FAQs](#exception-the-questions-in-faqs)
   - [Second Person](#second-person)
     - [Use the Imperative Form in Instructions](#use-the-imperative-form-in-instructions)
-    - [Avoid Using `Your`](#avoid-using-your)
+    - [Don't Overuse `Your`](#dont-overuse-your)
     - [Don't Use `We` or `Our` When Addressing the Reader (You)](#dont-use-we-or-our-when-addressing-the-reader-you)
   - [Politeness](#politeness)
     - [Don’t Use `Please` in Instructions](#dont-use-please-in-instructions)
@@ -73,6 +72,7 @@ This guide is based on [Google's style guide](https://developers.google.com/styl
       - [Exception: Capital Letter](#exception-capital-letter)
 - [SEO](#search-engine-optimization)
   - [Slugs](#Slugs)
+- [Common Mistakes](#common-mistakes)
 
 # Formatting
 
@@ -156,6 +156,9 @@ It should have a descriptive name as a default value.
 
 ### Use Code Format in Italics in Inline Text
 
+Verify that this is rendered correctly.
+This does not apply if the placeholder is part of a longer string in code format (see next rule).
+
 ❌ where `<YOUR-APPLICATION-NAME>` is replaced by the name you specified.
 
 ✅ Replace _`YOUR_APPLICATION_NAME`_ with the application name.
@@ -224,11 +227,17 @@ For generic domain name in examples, use `example.com`.
 
 ❌ Replace the default tsconfig.json
 
-✅ Replace the default `tsconfig.json`
+✅ Replace the default `tsconfig.json` file
 
 ### Include the Word File After the Filename
 
 ✅ Add your own `package.json` file.
+
+Unless the filename ends with a noun
+
+❌ Use a `Dockerfile` file
+
+✅ Use a `Dockerfile`
 
 ### Prefer Hyphens, Not Underscores, To Separate Words in File Paths
 
@@ -317,9 +326,9 @@ Do not use italics or quotes.
 
 ### Follow the Capitalization as It Appears on the Page
 
-❌ press the `Get new access token` button to retrieve a token
+❌ press the **Get new access token** button to retrieve a token
 
-✅ Click `Get New Access Token` to retrieve a token
+✅ Click **Get New Access Token** to retrieve a token
 
 <!-- vale off -->
 
@@ -403,17 +412,15 @@ In certain cases, it's okay to use passive voice:
 
 In general, use second person rather than first person — you instead of we.
 
-### Avoid Using `We`
+### Avoid Using `We`, `Our`, and `Us`
 
 ❌ We do not guarantee any API compatibility for future updates
 
 ✅ The SAP Cloud SDK does not guarantee any API compatibility for future updates
 
-### Avoid Using `Our`
+❌ We need to add resilience to our application to protect us.
 
-❌ Check out our ETag section for more information.
-
-✅ Check out the ETag section for more information.
+✅ You need to add resilience to your application to protect yourself.
 
 ### Exception: The Questions in FAQs
 
@@ -429,7 +436,9 @@ When telling the reader to do something, use the imperative (implicit you).
 
 ✅ Create a simple application that uses the approuter
 
-### Avoid Using `Your`
+### Don't Overuse `Your`
+
+Often you can replace `your` with `the` or skip it.
 
 ❌ Deploy your application as usual by running the command:
 
@@ -474,20 +483,20 @@ Use 'please' only when what you're asking for:
 
 ### Words To Avoid
 
-- currently - For features, as this is implied
-- soon, new, future - Avoid in timeless documentation because such words can become outdated
-- so on - Instead use etc.
-- first-class - Socially-charged terms for technical concepts where appropriate
-- just - Filler word
-- per - Avoid per in contexts other than rate units.
+- **currently**: For features, as this is implied
+- **soon, new, future**: Avoid in timeless documentation because such words can become outdated
+- **so on**: Instead use etc.
+- **first-class**: Socially-charged terms for technical concepts where appropriate
+- **just**: Filler word
+- **per**: Avoid per in contexts other than rate units.
 
   ❌ Per the specification
 
-- utilize - Don't use utilize when you mean 'use'.
+- **utilize**: Don't use utilize when you mean 'use'.
 
   ❌ we utilize the passport library.
 
-- typically - Use to describe what is usual or expected under normal circumstances.
+- **typically**: Use to describe what is usual or expected under normal circumstances.
   Don't use as the first word in a sentence, as doing so can leave the meaning open to misinterpretation.
 
 ### Usage Guidance for Commonly Used Terms

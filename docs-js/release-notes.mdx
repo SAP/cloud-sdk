@@ -17,23 +17,63 @@ import LicenseBadge from '@site/src/sap/sdk-js/LicenseBadge';
 
 <BuildBadge /> <LicenseBadge />
 
-<!-- Copy and fill
-## 1.xx.x [Core Modules] - Jan 1, 2022
+<!-- vale off -->
+<!-- This line is used for our release notes automation -->
 
-[GitHub](https://github.com/SAP/cloud-sdk-js/releases/tag/v1.52.0) | [npm](https://www.npmjs.com/search?q=%40sap-cloud-sdk)
+## 2.12.1 [Core Modules] - January 03, 2023
 
-### Known Issues
-
-### Compatibility Notes
-
-### New Functionality
+**API Reference:** [2.12.1](https://sap.github.io/cloud-sdk/api/2.12.1)
 
 ### Improvements
 
+- [connectivity] Update `jsonwebtoken` to 9.0.0 due to several security vulnerabilities:
+
+  - [CVE-2022-23529 (CVSS 9.8)](https://github.com/advisories/GHSA-27h2-hvpr-p74q)
+  - [CVE-2022-23539 (CVSS 8.1)](https://github.com/advisories/GHSA-8cf7-32gw-wr33)
+  - [CVE-2022-23540 (CVSS 9.8)](https://github.com/advisories/GHSA-qwph-4952-7xr6)
+  - [CVE-2022-23541 (CVSS 9.8)](https://github.com/advisories/GHSA-hjrf-2m68-5959)
+  - @sap-cloud-sdk/util@2.12.1 (466cbec36)
+
+## 2.12.0 [Core Modules] - December 07, 2022
+
+**API Reference:** [2.12.0](https://sap.github.io/cloud-sdk/api/2.12.0)
+
+### Compatibility Notes
+
+- [generator] Deprecate the `processesJsGeneration` option. (0f1056817)
+- [generator] Deprecate the `generatePackageJson` option. Use `packageJson` instead. (0f1056817)
+- [generator] Make options in `GeneratorOptions` optional, if they are not mandatory. (0f1056817)
+- [generator] Deprecate `generateCSN` option. (0f1056817)
+- [generator] Deprecate the `licenseInPackageJson` option. Use `include` instead. (0f1056817)
+- [generator] Deprecate the `forceOverwrite` option. Use `overwrite` instead. (0f1056817)
+
+### Improvements
+
+- [generator] Show warnings for deprecated options only if options where used.
+  - @sap-cloud-sdk/generator-common@2.12.0
+  - @sap-cloud-sdk/odata-common@2.12.0
+  - @sap-cloud-sdk/odata-v2@2.12.0
+  - @sap-cloud-sdk/odata-v4@2.12.0
+  - @sap-cloud-sdk/util@2.12.0 (0f1056817)
+
 ### Fixed Issues
--->
-<!-- vale off -->
-<!-- This line is used for our release notes automation -->
+
+- [generator] Allow OData service to contain an entity name 'Service'. (0f1056817)
+
+## 2.11.0 [Core Modules] - November 16, 2022
+
+**API Reference:** [2.11.0](https://sap.github.io/cloud-sdk/api/2.11.0)
+
+### New Functionalities
+
+- [odata-common] Add `getBatchReference()` and `setBatchId()` in request builders to use the batch ID as a reference to an entity in a batch request changeset.
+  Batch reference are available in `create`, `delete`, `getByKey`, `update` and `actions/functions` request builder. (79e0fe811)
+- [odata-v4, generator] Support parsing and generating OData bound functions and actions in OData v4 (8ea28151b)
+- [generator, openapi-generator, generator-common] Generated sources are formatted using prettier with default config. Use the CLI option `prettierConfigPath` to provide a custom config. (74e14427a)
+
+### Improvements
+
+- [odata-common] Change the place where batch ID is generated from on serialization to request creation. (79e0fe811)
 
 ## 2.10.0 [Core Modules] - November 02, 2022
 
@@ -81,7 +121,7 @@ import LicenseBadge from '@site/src/sap/sdk-js/LicenseBadge';
 ### New Functionalities
 
 - [mail-client] Support defining the strategy of sending emails. By default, the emails are sent "in parallel" and can be set to "in sequential". (15e9ef4b)
-- [odata-common, generator] Allow function imports using GET http method in batch requests. (15e9ef4b)
+- [odata-common, generator] Allow function imports using `GET` http method in batch requests. (15e9ef4b)
 
 ### Improvements
 
@@ -327,4 +367,4 @@ Check the [upgrade guide](https://sap.github.io/cloud-sdk/docs/js/guides/upgrade
   - `jwtBearerToken` uses `JWT` instead of userJwt now.
   - `fetchVerificationKeys` merged with `executeFetchVerificationKeys`, now only accepts URL as parameter
 - [http-client] changed the following implementations
-  - `executeHttpRequest` fetches CsrfToken for non-GET requests by default.
+  - `executeHttpRequest` fetches CsrfToken for non-`GET` requests by default.

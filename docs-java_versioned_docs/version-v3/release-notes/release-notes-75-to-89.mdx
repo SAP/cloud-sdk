@@ -1,12 +1,102 @@
 <!-- vale off -->
 
+## 3.78.0 - December 15, 2022
+
+### newFunctionality
+
+- Introduce new APIs to configure the destination cache in the `ScpCfDestinationLoader`.
+
+  **We strongly recommend using the following APIs before loading any destination, for example, during application startup _only_**:
+
+  - `ScpCfDestinationLoader.Cache.setSizeLimit`: Set the number of cache entries that will be cached.
+  - `ScpCfDestinationLoader.Cache.disableSizeLimit`: Disable the cache size limit. The cache will store an infinite amount of entries - **use with caution**.
+  - `ScpCfDestinationLoader.Cache.setExpiration`: Set the expiration duration and strategy for cache entries.
+  - `ScpCfDestinationLoader.Cache.disableExpiration`: Disable the cache entry expiration. The cache will store entries until it is full, which will lead to the deletion of old entries. This might cause destinations to be cached forever - **use with caution**.
+  - `ScpCfDestinationLoader.Cache.disable`: Disable the entire cache. All destination will always be retrieved from the Destination Service. This will result in performance degradations - **use with caution**.
+
+- The destination loaders now allow for customizing the timeout that is applied to destination retrievals.
+  - By default, a 6-second timeout is applied when retrieving a destination.
+  - The timeout can be overridden by using the builder:
+    ```java
+    final Try<Destination> loadedDestination = ScpCfDestinationLoader.builder()
+            .withTimeLimiterConfiguration(ResilienceConfiguration.TimeLimiterConfiguration.of(Duration.ofSeconds(10)))
+            .build()
+            .tryGetDestination(destinationName, destinationOptions);
+    ```
+  - Alternatively, the timeout behaviour can be disabled via:
+    ```java
+    final Try<Destination> loadedDestination = ScpCfDestinationLoader.builder()
+            .withTimeLimiterConfiguration(ResilienceConfiguration.TimeLimiterConfiguration.disabled())
+            .build()
+            .tryGetDestination(destinationName, destinationOptions);
+    ```
+
+### improvements
+
+- Improvements to accessing destinations in a resilient manner:
+  - The default timeout of `6` seconds for fetching one or all destinations using `tryGetDestination( destinationName,options )` or `tryGetAllDestinations(options )` or `tryGetAllDestinations( )` is now applied individually for token retrieval and destination service calls.
+  - The experimental method `ScpCfDestinationLoader#tryGetDestination(String,String,String,ScpCfDestinationServiceResponseProvider)` now also performs requests in a resilient manner with automatic timeout configured for `6` seconds.
+  - The default timeout value can be overridden or disabled by constructing a `ScpCfDestinationLoader` with a custom time limiter configuration.
+    See the note on new functionality above.
+- Dependency Updates:
+  - Other dependency updates:
+    - Minor version updates:
+      - Update [Tomcat JDBC](https://search.maven.org/search?q=g:org.apache.tomcat%2BAND%2Ba:tomcat-jdbc) (`org.apache.tomcat:tomcat-jdbc`) and [Tomcat Annotations API](https://search.maven.org/search?q=g:org.apache.tomcat%2BAND%2Ba:tomcat-annotations-api) (`org.apache.tomcat:tomcat-annotations-api`) from `8.5.81` to `8.5.83`
+      - Update [okhttp](https://search.maven.org/search?q=g:com.squareup.okhttp3%2BAND%2Ba:okhttp) (`com.squareup.okhttp3:okhttp`) from `4.9.3` to `4.10.0`
+
+### fixedIssues
+
+- Retrieving any `OAuth2` destination using the `DestinationAccessor` in DwC has been improved to always return a destination with a valid, non-expired Auth token.
+
+## 3.77.0 - November 17, 2022
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.77.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
+
+### Improvements
+
+- Dependency Updates:
+  - Other dependency updates:
+    - Minor version updates:
+      - Update Woodstox Core(`com.fasterxml.woodstox:woodstox-core`) from `6.3.0` to `6.4.0`
+      - Update Spring Security(`org.springframework.security:spring-security-bom`) from `5.7.3` to `5.7.5`
+
+## 3.76.0 - October 31, 2022
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.76.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
+
+### Improvements
+
+- The naming of the destination retrieval strategy (`SUBSCRIBER_THEN_PROVIDER`) both in the `ScpCfDestinationLoader` as well as in the `ScpNeoDestinationLoader` did not behave as the name implied, as it was taking the current tenant, which might, due to misconfiguration, also be the Provider Tenant for the first destination retrieval attempt.
+  This is now fixed by the following steps:
+  - Deprecation of the unclear `SUBSCRIBER_THEN_PROVIDER` strategy
+  - Adding a new strategy `CURRENT_TENANT_THEN_PROVIDER`, which will not perform a second retrieval attempt in case the current tenant is already the provider
+- The naming of the `ScpNeoDestinationRetrievalStrategy` (`ALWAYS_SUBSCRIBER`) in the `ScpNeoDestinationLoader` did not behave as the name implied, as it was taking the current tenant, which might, due to misconfiguration, also be the Provider Tenant.
+  This is now fixed by the following steps:
+  - Deprecation of the unclear `ALWAYS_SUBSCRIBER` strategy
+  - Alternative strategy keeping the same behavior: `CURRENT_TENANT`
+  - Adding a new strategy `ONLY_SUBSCRIBER` which actively enforces that the current tenant is not the provider tenant
+- Dependency Updates:
+  - Other dependency updates:
+    - Minor version updates:
+      - Update [Jackson BOM](https://search.maven.org/search?q=g:com.fasterxml.jackson%2BAND%2Ba:jackson-bom) (`com.fasterxml.jackson:jackson-bom`) from `2.13.3` to `2.13.4`
+      - Update [Jackson Databind](https://search.maven.org/search?q=g:com.fasterxml.jackson.core%2BAND%2Ba:jackson-databind) (`com.fasterxml.jackson.core:jackson-databind`) from `2.13.3` to `2.13.4.2`
+      - Update [Commons Text](https://search.maven.org/search?q=g:org.apache.commons%20AND%20a:commons-text) (`org.apache.commons:commons-text`) from `1.9.0` to `1.10.0`
+      - Update [Fabric SDK Java](https://search.maven.org/search?q=g:org.hyperledger.fabric-sdk-java%2BAND%2Ba:fabric-sdk-java) (`org.hyperledger.fabric-sdk-java:fabric-sdk-java`) from `2.2.10` to `2.2.18`
+      - Update [Snake YAML](https://search.maven.org/search?q=g:org.yaml%2BAND%2Ba:snakeyaml) (`org.yaml:snakeyaml`) from `1.31` to `1.33`
+      - Update [Protobuf Java](https://search.maven.org/search?q=g:com.google.protobuf%2BAND%2Ba:protobuf-java) (`com.google.protobuf:protobuf-java`) from `3.21.2` to `3.21.7`
+
+### Fixed Issues
+
+- Fix an issue with OData request payloads containing incomplete entity type indicators.
+- Fix an issue with JWT payload parsing from incoming requests: `aud` claim can be an atomic string or an array of strings.
+
 ## 3.75.0 - September 21, 2022
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:3.75.0) | [Javadoc](https://help.sap.com/doc/d36e6a93f11b48bd920453bed2149bd3/1.0/en-US/index.html)
 
 ### Compatibility Notes
 
-- The `RequestAccessor` API (along all the related classes - e.g. the `RequestThreadContextListener` and `RequestFacade`) has been deprecated.
+- The `RequestAccessor` API (along all the related classes - e.g. the `RequestThreadContextListener` and `RequestFacade`) is deprecated.
   For a replacement, please refer to the `RequestHeaderAccessor`.
 
 ### New Functionality

@@ -7,7 +7,7 @@
 ### Compatibility Notes
 
 - To leverage the new **OData v2 client**, you need to adjust existing code.
-  Refer to [documentation on how to switch](features/odata/type-safe-client-odata-v2.mdx#switch-to-improved-odata-v2-type-safe-client) for detailed instructions.
+  Refer to [documentation on how to switch](https://sap.github.io/cloud-sdk/docs/java/v3/features/odata/type-safe-client-odata-v2.mdx#switch-to-improved-odata-v2-type-safe-client) for detailed instructions.
 - We start deprecating APIs of the outdated **OData v2 client**. In this release we deprecated:
   - Methods: `execute`, `toQuery`, `withErrorHandler`, `cachingMetadata`, `withoutCachingMetadata`, `ignoringVersionIdentifier` and `ignoreVersionIdentifier`.
   - Error handler: `ODataVdmErrorResultHandler`.
@@ -18,10 +18,10 @@
 
 - The improved OData v2 type-safe client is now Generally Available.
   From now on we recommend it for OData API consumption.
-  Refer to the [documentation on how to switch](features/odata/type-safe-client-odata-v2.mdx#switch-to-improved-odata-v2-type-safe-client) for more details on the new OData 2 client.
+  Refer to the [documentation on how to switch](https://sap.github.io/cloud-sdk/docs/java/v3/features/odata/type-safe-client-odata-v2.mdx#switch-to-improved-odata-v2-type-safe-client) for more details on the new OData 2 client.
 
   - The methods `executeRequest` are no longer marked as Beta and ready for use in production code.
-  - The new methods `matchAnyVersionIdentifier()` and `disableVersionIdentifier()` allow for better control over [ETag handling](features/odata/type-safe-client-odata-v2.mdx#handling-of-etags).
+  - The new methods `matchAnyVersionIdentifier()` and `disableVersionIdentifier()` allow for better control over [ETag handling](https://sap.github.io/cloud-sdk/docs/java/v3/features/odata/type-safe-client-odata-v2.mdx#handling-of-etags).
 
 - The `DefaultHttpDestination` and `DefaulErptHttpDestination` can use a `java.security.KeyStore` and a key store password for HTTP communication.
   This is especially useful when utilizing mutual TLS (mTLS) for the communication with a remote system.
@@ -130,7 +130,7 @@ final DefaultHttpDestination defaultHttpDestination =
 - The implicit properties of `DefaultHttpClientFactory` can now be customized.
   - With `HttpClientAccessor.setHttpClientFactory( HttpClientFactory )` it is possible to change the logic that manages creation and configuration of `HttpClient` instances. These clients are used to handle the connection between platform services and integration endpoints internally. The `DefaultHttpClientFactory` class has been updated to allow for conveniently changing properties like time-out duration and maximum number of connections. Since the implementation can easily be extended, a custom logic would not need to start from scratch.
   - To change the properties, either create a new class that inherits from `DefaultHttpClientFactory` and override the accessor methods with scope protected. Or explore the flexible builder pattern for a similar result: `DefaultHttpClientFactory.builder()`.
-  - For more information, please find [the related documentation](https://sap.github.io/cloud-sdk/docs/java/features/connectivity/sdk-connectivity-http-client).
+  - For more information, please find [the related documentation](https://sap.github.io/cloud-sdk/docs/java/v3/features/connectivity/sdk-connectivity-http-client).
 
 ### Improvements
 

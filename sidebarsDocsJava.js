@@ -12,9 +12,9 @@ module.exports = {
           label: 'OData',
           items: [
             'features/odata/overview',
-            'features/odata/generate-typed-odata-v2-and-v4-client-for-java',
-            'features/odata/use-typed-odata-v2-client-in-sap-cloud-sdk-for-java',
-            'features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java',
+            'features/odata/vdm-generator',
+            'features/odata/v2-vdm-client',
+            'features/odata/v4-vdm-client',
             'features/odata/generic-untyped-odata-client'
           ]
         },
@@ -34,20 +34,20 @@ module.exports = {
             }
           ]
         },
-        'features/bapi-and-rfc/bapi-and-rfc-overview',
+        'features/bapi-and-rfc/overview',
         {
           type: 'category',
           label: 'Connectivity',
           items: [
-            'features/connectivity/sdk-connectivity-destination-service',
-            'features/connectivity/sdk-connectivity-http-client',
-            'features/connectivity/sdk-connectivity-mtls'
+            'features/connectivity/destination-service',
+            'features/connectivity/http-client',
+            'features/connectivity/mtls'
           ]
         },
         {
           type: 'category',
           label: 'Multitenancy',
-          items: ['features/multi-tenancy/multi-tenancy-thread-context']
+          items: ['features/multi-tenancy/thread-context']
         },
         {
           type: 'category',
@@ -63,10 +63,10 @@ module.exports = {
       type: 'category',
       label: 'Environments',
       items: [
-        'environments/sap-btp-environments-overview',
-        'environments/sap-btp-cloud-foundry-environment',
-        'environments/sap-btp-kubernetes-environment-with-sap-gardener',
-        'environments/sap-btp-kyma-environment'
+        'environments/overview',
+        'environments/cloud-foundry',
+        'environments/kubernetes-gardener',
+        'environments/kubernetes-kyma'
       ]
     },
     {
@@ -100,10 +100,10 @@ module.exports = {
         'video/video-tutorial-about-calling-odata-v4-services-via-type-safe-client'
       ]
     },
-    'sdk-java-troubleshooting-frequent-problems',
+    'troubleshooting-frequent-problems',
     'release-policy',
-    'release-notes-sap-cloud-sdk-for-java',
-    'support-java',
+    'release-notes',
+    'support',
     'frequently-asked-questions',
     {
       type: 'link',
