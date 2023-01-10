@@ -27,12 +27,16 @@ module.exports = {
   projectName: 'cloud-sdk',
   trailingSlash: false,
   themeConfig: {
+    colorMode: {
+      respectPrefersColorScheme: true,
+      disableSwitch: true
+    },
     announcementBar: {
       id: 'feedback_survey',
       content:
         'How do you like the SAP Cloud SDK? Share your <a href="https://sapinsights.eu.qualtrics.com/jfe/form/SV_0P69X6kJ0Pdxqbc" style="color: var(--ifm-link-color);text-decoration: var(--ifm-link-decoration);transition: color var(--ifm-transition-fast) var(--ifm-transition-timing-default)">feedback</a>.',
-      backgroundColor: 'var(--ifm-color-secondary)',
-      // textColor: '#091E42',
+      backgroundColor: 'var(--ifm-color-primary-contrast-background)',
+      textColor: 'var(--ifm-color-primary-contrast-foreground)',
       isCloseable: false
     },
     prism: {
@@ -46,19 +50,6 @@ module.exports = {
       appId: 'E4A268JVO0',
       algoliaOptions: {} // Optional, if provided by Algolia
     },
-    // ***************************************************************
-    // Activate this announcement bar for global urgent notifications
-    // ***************************************************************
-    //
-    // announcementBar: {
-    //   id: 'survey', // Any value that will identify this message
-    //   content:
-    //      '&#11088;&#11088;&#11088; Please, help us improving SAP Cloud SDK by taking <a target="_blank" rel="noopener noreferrer" href="https://sapinsights.eu.qualtrics.com/jfe/form/SV_0pUmWpCadpoLhyZ">our survey</a> &#11088;&#11088;&#11088;',
-    //   backgroundColor: '#fff', // Defaults to `#fff`
-    //   textColor: '#000', // Defaults to `#000`,
-    //   isCloseable: false, // Defaults to `true`.
-
-    // },
     navbar: {
       title: 'SAP Cloud SDK',
       logo: {
