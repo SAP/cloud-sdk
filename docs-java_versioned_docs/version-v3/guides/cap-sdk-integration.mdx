@@ -59,7 +59,7 @@ Here is the XML snippet:
 :::success Use the latest SAP Cloud SDK version
 
 We recommend using the **latest** SAP Cloud SDK version always.
-Check out the [release notes](../release-notes-sap-cloud-sdk-for-java) to see the release history.
+Check out the [release notes](../release-notes) to see the release history.
 
 :::
 
@@ -123,7 +123,7 @@ We'll add a respective integration dependency to the POM file under the `srv` di
 ```
 
 :::note Multitenancy Integration with CAP
-You can learn more about how the multitenancy of the SAP Cloud SDK integrates with CAP in [this article](../features/multi-tenancy/multi-tenancy-thread-context#how-is-a-thread-context-created).
+You can learn more about how the multitenancy of the SAP Cloud SDK integrates with CAP in [this article](../features/multi-tenancy/thread-context#how-is-a-thread-context-created).
 :::
 
 :::info
@@ -164,7 +164,7 @@ Callable<Object> task = () -> cdsContextRunner.run(() -> ... ));
 :::caution Caution
 The `executeWith` methods of _Accessor_ classes cannot be currently used to execute asynchronous operations in the CAP context.
 
-Please note that the `RequestScopedHttpClientCache` which is the default being used by the SAP Cloud SDK cannot work with CAP integration, please use [`TimeScopedHttpClientCache`](../features/connectivity/sdk-connectivity-http-client#caching-httpclient) instead for caching `HttpClient`s.
+Please note that the `RequestScopedHttpClientCache` which is the default being used by the SAP Cloud SDK cannot work with CAP integration, please use [`TimeScopedHttpClientCache`](../features/connectivity/http-client#caching-httpclient) instead for caching `HttpClient`s.
 :::
 
 :::info Info
@@ -173,7 +173,7 @@ In case you are using CAP/CDS versions earlier than `1.23.0`, additional steps a
 <details>
 <summary>Wrap asynchronous calls </summary>
 
-You need to additionally wrap your calls using the `ThreadContextExecutor` from the SAP Cloud SDK (refer to the [ThreadContext documentation](https://sap.github.io/cloud-sdk/docs/java/features/multi-tenancy/multi-tenancy-thread-context/#what-is-a-thread-context)) in conjunction with the `RequestContextRunner` from [CAP](https://cap.cloud.sap/docs/java/provisioning-api#threading-requestcontext).
+You need to additionally wrap your calls using the `ThreadContextExecutor` from the SAP Cloud SDK (refer to the [ThreadContext documentation](../features/multi-tenancy/thread-context/#what-is-a-thread-context)) in conjunction with the `RequestContextRunner` from [CAP](https://cap.cloud.sap/docs/java/provisioning-api#threading-requestcontext).
 
 Hence, the code snippet from above would look like:
 

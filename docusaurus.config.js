@@ -388,62 +388,6 @@ module.exports = {
             to: '/docs/js/troubleshooting'
           },
           {
-            from: '/docs/java/environments/sap-btp-environments-overview',
-            to: '/docs/java/environments/overview'
-          },
-          {
-            from: '/docs/java/environments/sap-btp-cloud-foundry-environment',
-            to: '/docs/java/environments/cloud-foundry'
-          },
-          {
-            from: '/docs/java/environments/sap-btp-kubernetes-environment-with-sap-gardener',
-            to: '/docs/java/environments/kubernetes-gardener'
-          },
-          {
-            from: '/docs/java/environments/sap-btp-kyma-environment',
-            to: '/docs/java/environments/kubernetes-kyma'
-          },
-          {
-            from: '/docs/java/features/odata/use-typed-odata-v2-client-in-sap-cloud-sdk-for-java',
-            to: '/docs/java/features/odata/v2-vdm-client'
-          },
-          {
-            from: '/docs/java/features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java',
-            to: '/docs/java/features/odata/v4-vdm-client'
-          },
-          {
-            from: '/docs/java/features/odata/generate-typed-odata-v2-and-v4-client-for-java',
-            to: '/docs/java/features/odata/vdm-generator'
-          },
-          {
-            from: '/docs/java/features/multi-tenancy/multi-tenancy-thread-context',
-            to: '/docs/java/features/multi-tenancy/thread-context'
-          },
-          {
-            from: '/docs/java/features/connectivity/sdk-connectivity-destination-service',
-            to: '/docs/java/features/connectivity/destination-service'
-          },
-          {
-            from: '/docs/java/features/connectivity/sdk-connectivity-http-client',
-            to: '/docs/java/features/connectivity/http-client'
-          },
-          {
-            from: '/docs/java/features/connectivity/sdk-connectivity-mtls',
-            to: '/docs/java/features/connectivity/mtls'
-          },
-          {
-            from: '/docs/java/features/bapi-and-rfc/bapi-and-rfc-overview',
-            to: '/docs/java/features/bapi-and-rfc/overview'
-          },
-          {
-            from: '/docs/java/sdk-java-troubleshooting-frequent-problems',
-            to: '/docs/java/troubleshooting-frequent-problems'
-          },
-          {
-            from: '/docs/java/release-notes-sap-cloud-sdk-for-java',
-            to: '/docs/java/release-notes'
-          },
-          {
             from: '/docs/java/support-java',
             to: '/docs/java/support'
           }

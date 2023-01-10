@@ -1,5 +1,5 @@
 ---
-id: sdk-java-troubleshooting-frequent-problems
+id: troubleshooting-frequent-problems
 title: Troubleshooting SDK Java
 sidebar_label: Troubleshooting
 description: This article is a collection of frequently occurring symptoms and a short guidance on how to address them.
@@ -38,7 +38,7 @@ Tenant or principal information is not available or an incorrect tenant is used.
   See [JWT validation fails](#json-web-token-validation-fails).
 
 - An operation is performed in an asynchronous manner without propagating the `ThreadContext`.
-  See [Running Asynchronous Operations](features/multi-tenancy/multi-tenancy-thread-context#running-asynchronous-operations).
+  See [Running Asynchronous Operations](features/multi-tenancy/thread-context#running-asynchronous-operations).
 
 - The SAP Cloud SDK components are not registered as listeners on incoming requests.
   See [Framework Support](getting-started#framework-integration).
@@ -46,7 +46,7 @@ Tenant or principal information is not available or an incorrect tenant is used.
 - There was no JWT in the authorization header.
 
 - A BAPI/RFC call was attempted while using resilience or multithreading capabilities of the SAP Cloud SDK.
-  See [Subscriber Tenant Is Not Found at Runtime](features/bapi-and-rfc/bapi-and-rfc-overview#subscriber-tenant-is-not-found-at-runtime)
+  See [Subscriber Tenant Is Not Found at Runtime](features/bapi-and-rfc/overview#subscriber-tenant-is-not-found-at-runtime)
 
 ## Provider Instead of Subscriber Account Used
 
@@ -79,7 +79,7 @@ The ERP system unexpectedly responds with _401: Unauthorized_ or _403: Forbidden
 **Possible causes:**
 
 - The SAP Client and Locale headers will be missing if the `Destination` is not an `ErpHttpDestination`.
-  See [Connecting to SAP S/4HANA](features/connectivity/sdk-connectivity-destination-service#connect-to-on-premise-s4hana-system).
+  See [Connecting to SAP S/4HANA](features/connectivity/destination-service#connect-to-on-premise-s4hana-system).
 
 ## Compilation Failures in the Generated OData Virtual Data Model Classes
 
@@ -90,7 +90,7 @@ Compilation fails due to missing _Getters_ and _Setters_ on entity objects.
 **Possible causes:**
 
 - Getters and Setters will be missing if [Lombok](https://projectlombok.org/) is not present in the dependency tree of your project.
-  See [Using the OData Generator](http://localhost:3000/cloud-sdk/docs/java/features/odata/generate-typed-odata-v2-and-v4-client-for-java#using-the-odata-generator).
+  See [Using the OData Generator](features/odata/vdm-generator#using-the-odata-generator).
 - Getters and Setters will be shown red if your IDE does not support Lombok. Hence, install the Lombok plugin for your IDE.
   - For IntelliJ, install [the Lombok plugin](https://plugins.jetbrains.com/plugin/6317-lombok).
   - For Eclipse, follow [this guide](https://projectlombok.org/setup/eclipse).
