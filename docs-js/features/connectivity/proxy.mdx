@@ -58,7 +58,7 @@ There are three possible types of proxies:
 ## Manual Configuration
 
 In the `execute()` you can either give an object containing the destination name or you can configure the full destination manually.
-If you provide the destination name the SAP Cloud SDK will try to look up as described [here](destinations).
+If you provide the destination name the SAP Cloud SDK will try to look up as described [here](./destination.mdx).
 
 In productive use, the manual configuration will not be useful, but for testing, it might be valuable.
 The destination object contains a field `proxyConfiguration` in which you can configure a proxy.
@@ -86,7 +86,7 @@ This is mandatory if principal propagation is used i.e. identity propagation fro
 For productive use, you do not want to include a specific proxy configuration in your code.
 Here you should let the SAP Cloud SDK handle everything.
 Hence, you will provide in the `.execute()` method only the destination name.
-This will trigger the destination lookup as described [here](destinations).
+This will trigger the destination lookup as described [here](./destination.mdx).
 
 The result of the lookup is a destination object which contains a property called `ProxyType`.
 This property can have three values: `Internet`, `OnPremise`, and `PrivateLink`:
