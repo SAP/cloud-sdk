@@ -16,14 +16,12 @@ export default function DropdownNavbarItemWrapper(props) {
     newProps = {
       ...props,
       items: sdkVersions
-        .filter(version => {
-          const majorVersion = version[0];
-          return majorVersion === currentSelectedVersion;
-        })
+        .filter(version => version === `v${currentSelectedVersion}`)
         .map(version => {
           return {
             label: version,
-            href: `https://sap.github.io/cloud-sdk/api/${version}/`
+            href: `/cloud-sdk/api/${version}/`,
+            target: '_blank'
           };
         })
     };
