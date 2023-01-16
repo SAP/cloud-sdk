@@ -4,18 +4,18 @@ Since the action `active` changes data, it is included with other changing reque
 ```ts
 const {
   materialsActiveApi,
-  actionImports: { activate }
+  operations: { activate }
 } = materialsService();
 
 async function batchExample(id: string) {
-  const actionImportRequestBuilder = activate({});
+  const actionRequestBuilder = activate({});
   const updateRequestBuilder = materialsActiveApi
     .requestBuilder()
     .update(materialsActiveApi.entityBuilder().fromJson({ id }));
 
   // Execute batch request with one changeset
   const batchResponses = await batch(
-    changeset(actionImportRequestBuilder, updateRequestBuilder)
+    changeset(actionRequestBuilder, updateRequestBuilder)
   ).execute(destination);
 
   // Get response for the changeset request

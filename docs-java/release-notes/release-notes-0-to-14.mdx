@@ -1,3 +1,79 @@
+## 4.5.0 - December 29, 2022
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:4.5.0)
+
+### New Functionality
+
+- Update the OData VDM to the [newest release 2208.3 of SAP S/4HANA Cloud](https://blogs.sap.com/2022/08/01/highlights-of-the-sap-s-4hana-cloud-2208-release/).
+  This includes completely new services (available as usual in packages `com.sap.cloud.sdk.s4hana.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types.
+  The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/products/SAPS4HANACloud/overview).
+  - **Breaking changes** in OData V4 are:
+    - `SAP__Messages` removed from:
+      - `CADOCUMENTMANAGE_0001`
+      - `API_JNTOPGAGRMT_0001`
+      - `API_JOINTVENTURE_0001`
+    - `Payment Data` removed from `CADOCUMENTMANAGE_0001`
+    - `SupplierCostBreakdownIsEnabled` and `SuplrCostBreakdownIsRelevant` from `CE_SOURCINGPROJECT_0001`
+
+## Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [SAP Java Buildpack](https://central.sonatype.dev/artifact/com.sap.cloud.sjb.cf/cf-tomcat-bom/1.63.0/versions) from `1.64.0` to `1.64.1`
+    - Update [SAP Service Binding Library](https://github.com/SAP/btp-environment-variable-access) from `0.5.1` to `0.5.2`
+  - Other dependency updates:
+    - Update [Spring Security](https://search.maven.org/search?q=g:org.springframework.security%2BAND%2Ba:spring-security-bom) (`org.springframework.security:spring-security-bom`) from `5.8.0` to `5.8.1`
+
+## 4.4.0 - December 15, 2022
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:4.4.0)
+
+### New Functionality
+
+- The destination loaders now allow for customizing the timeout that is applied to destination retrievals.
+  - By default, a 6-second timeout is applied when retrieving a destination.
+  - The timeout can be overridden by using the builder:
+    ```
+    final Try<Destination> loadedDestination = ScpCfDestinationLoader.builder()
+      .withTimeLimiterConfiguration(ResilienceConfiguration.TimeLimiterConfiguration.of(Duration.ofSeconds(10)))
+      .build()
+      .tryGetDestination(destinationName, destinationOptions);
+    ```
+  - Alternatively, the timeout behaviour can be disabled via:
+    ```
+    final Try<Destination> loadedDestination = ScpCfDestinationLoader.builder()
+      .withTimeLimiterConfiguration(ResilienceConfiguration.TimeLimiterConfiguration.disabled())
+      .build()
+      .tryGetDestination(destinationName, destinationOptions);
+    ```
+
+### Improvements
+
+<!-- vale off -->
+
+- Improvements to accessing destinations in a resilient manner:
+  - The default timeout of `6` seconds for fetching one or all destinations using `tryGetDestination(destinationName, options)` or `tryGetAllDestinations(options)` or `tryGetAllDestinations()` is now applied individually for token retrieval and destination service calls.
+  - The experimental method `ScpCfDestinationLoader#tryGetDestination(String,String,String,ScpCfDestinationServiceResponseProvider)` now also performs requests in a resilient manner with automatic timeout configured for `6` seconds.
+  - The default timeout value can be overridden or disabled by constructing a `ScpCfDestinationLoader` with a custom time-limiter configuration.
+    See the note on new functionality above.
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [Neo Java Web API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-java-web-api) from `4.41.1` to `4.42.3`
+    - Update [Neo JavaEE7 WP API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-javaee7-wp-api) from `1.137.8` to `1.138.5`
+  - Other dependency updates:
+    - Update [HttpCore](https://search.maven.org/search?q=g:org.apache.httpcomponents%2BAND%2Ba:httpcore) (`org.apache.httpcomponents:httpcore`) from `4.4.15` to `4.4.16`
+    - Update [HttpClient](https://search.maven.org/search?q=g:org.apache.httpcomponents%2BAND%2Ba:httpclient) (`org.apache.httpcomponents:httpclient`) from `4.5.13` to `4.5.14`
+    - Update [Jackson](https://search.maven.org/search?q=g:com.fasterxml.jackson.core) (`com.fasterxml.jackson.core:jackson-databind`) from `2.14.0` to `2.14.1`
+    - Update [Protobuf Java](https://search.maven.org/search?q=g:com.google.protobuf%2BAND%2Ba:protobuf-java) (`com.google.protobuf:protobuf-java`) from `3.21.9` to `3.21.10`
+    - Update [Fabric SDK Java](https://search.maven.org/search?q=g:org.hyperledger.fabric-sdk-java%2BAND%2Ba:fabric-sdk-java) (`org.hyperledger.fabric-sdk-java:fabric-sdk-java`) from `2.2.18` to `2.2.19`
+    - Update [Fabric Gateway Java](https://search.maven.org/search?q=g:org.hyperledger.fabric%2BAND%2Ba:fabric-gateway-java) (`org.hyperledger.fabric:fabric-gateway-java`) from `2.2.6` to `2.2.7`
+    - Update [Spring Security](https://search.maven.org/search?q=g:org.springframework.security%2BAND%2Ba:spring-security-bom) (`org.springframework.security:spring-security-bom`) from `5.7.5` to `5.8.0`
+    <!-- vale on -->
+
+### Fixed Issues
+
+- Fix an issue where properties of service bindings were lost while converting them into the `Map<String, JsonArray>` representation.
+
 ## 4.3.0 - December 1, 2022
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:4.3.0)
