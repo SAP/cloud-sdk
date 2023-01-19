@@ -376,28 +376,11 @@ Therefore, we recommend adjusting the cache once at application startup.
 
 :::
 
-:::info Improved automatic detection of necessity of user isolation in Destination Cache
-From version `4.6.0` of the SAP Cloud SDK, destination caching in BTP CF is improved by caching destinations based on users only for the authentication types that require user propagation. These are:
 
-- `OAuth2JWTBearer`
-- `OAuth2SAMLBearerAssertion`
-- `SAPAssertionSSO`
-- `OAuth2UserTokenExchange`
-- `SAMLAssertion`
+:::note Hint
 
-For better performance, while querying for these destinations, additionally also provide the `EXCHANGE_ONLY` token exchange strategy.Refer [here](#token-exchange-options) for more details.
+For better performance, while querying for destinations with user propagation, additionally also provide the `EXCHANGE_ONLY` token exchange strategy.Refer [here](#token-exchange-options) for more details.
 
-For the following authentication types:
-
-- `NoAuthentication`
-- `BasicAuthentication`
-- `ClientCertificateAuthentication`
-- `OAuth2ClientCredentials`
-- `OAuth2Password`
-
-destination caching is done per tenant.
-
-For these destinations,the improvement ensures that the cache is not filled up with multiple entries from the same tenant and different principals resulting in over 90% improvement in Cache hit ratio.
 :::
 
 #### Building Destination Options
