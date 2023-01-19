@@ -9,7 +9,7 @@ assignees: ''
 <!--
 Thank you for reporting an issue with the SAP Cloud SDK for Java. We prepared this issue template for you to help you with collecting and providing the necessary information.
 
-Before you begin make sure you have checked out our list of [Frequently Debugged Problems](https://sap.github.io/cloud-sdk/docs/java/sdk-java-troubleshooting-frequent-problems) as well as having searched our tag on [Stack Overflow](https://stackoverflow.com/questions/tagged/sap-cloud-sdk).
+Before you begin make sure you have checked out our list of [Frequently Debugged Problems](https://sap.github.io/cloud-sdk/docs/java/troubleshooting-frequent-problems) as well as having searched our tag on [Stack Overflow](https://stackoverflow.com/questions/tagged/sap-cloud-sdk).
 
 _Please_ take the time to fill out the information in this template. In _almost all cases it is vital_ to get a quick understanding of the problem and find out what is going wrong. It really enables us to come back to you with meaningful help as fast as possible.
 
@@ -86,7 +86,7 @@ If you cannot share your project for confidentiality reasons, please consider pr
 
 ### Checklist
 
-- [ ] Checked out the [documentation](https://sap.github.io/cloud-sdk/docs/java/sdk-java-troubleshooting-frequent-problems) and [Stack Overflow](https://stackoverflow.com/questions/tagged/sap-cloud-sdk)
+- [ ] Checked out the [documentation](https://sap.github.io/cloud-sdk/docs/java/troubleshooting-frequent-problems) and [Stack Overflow](https://stackoverflow.com/questions/tagged/sap-cloud-sdk)
 - [ ] Description provided with all relevant information
 - [ ] Attached debug logs
 - [ ] Attached dependency tree
