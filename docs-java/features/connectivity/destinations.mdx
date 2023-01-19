@@ -333,7 +333,7 @@ This behavior has two implications:
 Depending on the use-case, the default cache configuration might be suboptimal.
 Therefore, the SAP Cloud SDK offers an API for adjusting the caching behavior at application runtime.
 
-The examaple below changes the cache to store more entries for a longer period of time.
+The example below changes the cache to store more entries for a longer period of time.
 
 ```java
 ScpCfDestinationLoader.Cache.setSizeLimit(10_000L);
@@ -352,13 +352,15 @@ ScpCfDestinationLoader.Cache.disable(); // don't cache destinations
 
 :::note Shared Cache Size
 
-The size limit is applied across all tenants and principals.
-That means that one tenant (with a lot of principals) might fill up the entire cache.
+The size limit is applied across all tenants (and principals in certain cases).
+One tenant (with a lot of principals) might fill up the entire cache, if all destinations requested require user propagation.
+If the requested destination doesn't require user propagation, destinations are cached per tenant instead.
 
 <details>
   <summary>Example</summary>
 
-If a thousand principals of the same tenant all query a single destination, the cache will be entirely filled up with destinations belonging to the same tenant.
+If a thousand principals of the same tenant all query a single destination requiring user propagation, the cache will be entirely filled up with destinations belonging to the same tenant.
+
 As a consequence, existing cache entries - also those of different tenants - must be removed (_evicted_) from the cache to make space for the new entries.
 
 </details>
@@ -372,6 +374,28 @@ Hereby, **all existing** cache entries will be lost.
 
 Therefore, we recommend adjusting the cache once at application startup.
 
+:::
+
+:::info Improved automatic detection of necessity of user isolation in Destination Cache
+From version `4.6.0` of the SAP Cloud SDK, destination caching in BTP CF is improved by caching destinations based on users only for the authentication types that require user propagation. These are:
+- `OAuth2JWTBearer`
+- `OAuth2SAMLBearerAssertion`
+- `SAPAssertionSSO`
+- `OAuth2UserTokenExchange`
+- `SAMLAssertion`
+
+For better performance, while querying for these destinations, additionally also provide the `EXCHANGE_ONLY` token exchange strategy.Refer [here](#token-exchange-options) for more details.
+
+For the following authentication types:
+- `NoAuthentication`
+- `BasicAuthentication`
+- `ClientCertificateAuthentication`
+- `OAuth2ClientCredentials`
+- `OAuth2Password`
+
+destination caching is done per tenant.
+
+For these destinations,the improvement ensures that the cache is not filled up with multiple entries from the same tenant and different principals resulting in over 90% improvement in Cache hit ratio.
 :::
 
 #### Building Destination Options
