@@ -116,7 +116,7 @@ module.exports = {
             },
             {
               label: 'Support',
-              to: 'docs/java/support-java'
+              to: 'docs/java/support'
             }
           ]
         },
