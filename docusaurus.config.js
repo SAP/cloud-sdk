@@ -437,7 +437,7 @@ module.exports = {
     ],
     function nodeWebpackPolyfillPlugin(context, options) {
       return {
-        name: 'nodeWebpackPlyfill',
+        name: 'nodeWebpackPolyfill',
         configureWebpack(config, isServer) {
           return {
             plugins: [new ESMPolyfillWrapper()]
