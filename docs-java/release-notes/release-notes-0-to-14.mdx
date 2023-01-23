@@ -6,6 +6,7 @@
 
 <!-- vale off -->
 - Dependency Updates:
+
   - SAP dependency updates:
     - Update [Neo JavaEE7 WP API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-javaee7-wp-api) from `1.139.9` to `1.140.5`
   - Other dependency updates:
@@ -20,12 +21,13 @@
 
 - Improved destination caching in BTP CF by storing destinations for the entire tenant (i.e. all principals) just once if no user propagation is required.
   This affects following authentication types:
+
   - `NoAuthentication`
   - `BasicAuthentication`
   - `ClientCertificateAuthentication`
   - `OAuth2ClientCredentials`
   - `OAuth2Password`
-  
+
   Applications that use such authentication types for their destinations primarily may greatly benefit from this change as destinations are far more likely to be served from the cache instead of being retrieved from the BTP Destination service.
 
   For improved performance, while using destinations that require user propagation, users may provide the `EXCHANGE_ONLY` token exchange option via the `DestinationOptions` parameter while retrieving the destination in BTP CF.
