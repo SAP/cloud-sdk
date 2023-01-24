@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunksap_cloud_sdk_documentation=self.webpackChunksap_cloud_sdk_documentation||[]).push([[6547],{37234:s=>{s.exports=JSON.parse('{"name":"sap-cloud-sdk-api-doc-plugin","id":"default"}')}}]);
