@@ -20,7 +20,7 @@ export default function DocsVersionDropdownNavbarItemWrapper(props) {
   const label = useActiveDocContext(props.docsPluginId).activeVersion.label;
   const newProps = {
     position: 'right',
-    value: `<button>${label}</button>`
+    value: `<a class="navbar__link" role="button">${label}</a>`
   };
   return <HtmlNavbarItem {...newProps} />;
 }
