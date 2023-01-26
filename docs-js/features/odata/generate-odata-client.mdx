@@ -50,9 +50,13 @@ npx generate-odata-client --inputDir path/to/your/service-specifications --outpu
 
 Adapt the `path/to/your/service-specifications` to the directory containing your service specifications in EDMX format, for example `service-specifications/`.
 Also adapt `path/to/store/generated/modules` to your OData client directory for example `odata-client`.
-
 This will generate OData clients for all your service specifications.
-An `options-per-service.json` file is created if the `--optionsPerService` option is set to a file path.
+
+An `options-per-service.json` file is created using the `--optionsPerService` option.
+
+- When set to a directory path, a `options-per-service.json` is read from or created in the given directory.
+- When set to a file path, the file is read or created with the given name.
+
 This file is used for customizing subdirectory naming and contains a mapping from the original file name to the following information:
 
 - `directoryName`: the name of the subdirectory the client code will be generated into.
