@@ -21,7 +21,7 @@ Either way, the final result after fetching destinations and doing various other
 Sometimes you want to adjust the way the SAP Cloud SDK executes the axios request.
 
 The middleware adds a very flexible way to add custom functionality to the request execution.
-The idea is that you can add multiple middlewares adjusting the request.
+You can add multiple layers of middleware to adjust requests to your needs.
 
 ```ts
 executeHttpRequest(
@@ -49,8 +49,8 @@ export type MiddlewareFunction = (
 ) => Promise<HttpResponse>;
 ```
 
-The middleware returns a `MiddlewareFunction` which has the same signature as the input function `fn` but may contain different code.
-Let's investigate the different properties of the `MiddlewareOptions`:
+Every middleware needs to return a `MiddlewareFunction` instance which has the same parameters and return type as the input function `fn()`.
+Let's investigate the different properties of the `MiddlewareOptions` interface:
 
 - The `fn` handed in is the returned function from the previous middleware.
   For the first one it is the original HTTP request from the SAP Cloud SDK.
@@ -61,7 +61,7 @@ This may seem abstract now, but the example in the next section will bring some 
 
 ## Example Hello World
 
-A very simple middleware logs a 'Hello World' and leaves the original function unchanged.
+A middleware logs "Hello World" and leaves the original function unchanged.
 
 ```ts
 const helloWorld: Middleware = function (options) {
@@ -82,10 +82,10 @@ const helloWorld: Middleware = function (options) {
 };
 ```
 
-Note that a middleware is **not** actually executing the original function.
+Note that a middleware should **not** execute the original function.
 It adds functionality to the function and creates a new function from it.
 
-In the example the custom code executes before the function `fn`.
+In the example the custom code executes before the function `fn()`.
 This will result in a stack like behaviour for multiple middlewares.
 For a queue like behaviour, add the code after the function resolves:
 
@@ -102,9 +102,10 @@ const helloWorld: Middleware = function (options) {
 
 ## Example Multiple Middlewares
 
-Often you will use multiple small middlewares to add functionality to the request.
-Assume you want to include a `timeout` and `fallback` middleware.
-The implementation of the middlewares would look like:
+A good practice is to define reuseable, single-purpose middlewares.
+You can add multiple of those middlewares to combine the effects.
+Assume you want to modify your call to have a timeout and use a fallback.
+The implementation of these middlewares could look like this:
 
 ```ts
 const timeout: Middleware = function (options) {
@@ -123,10 +124,10 @@ const fallback: Middleware = function (options) {
 ```
 
 Also here the middleware does **not** execute the function but adds functionality.
-For the timeout middleware this property is crucial because a timeout must run in parallel to the actual function.
-This makes a chain of middlewares different from a (asynchronous) pipeline where the methods are executed after each other.
+For the timeout middleware, it is crucial because a timeout must run in parallel to the actual function.
+This makes a chain of middlewares different from a pipeline where the functions are executed one after another.
 
-Multiple middlewares are added one by one to the request.
+Multiple middlewares are added one-by-one to the request.
 The order is from left to right in the array.
 
 ```ts
@@ -139,7 +140,7 @@ executeHttpRequest(
 );
 ```
 
-The initial function is a `GET` request to `example.com`.
+The initial function is a `GET` request to `http://example.com`.
 The first middleware adds a timeout to this request leading a new function.
 The second middleware adds a fallback to this new function.
 
@@ -160,10 +161,13 @@ executeHttpRequest(
 );
 ```
 
-the timout would apply to the time for the original request plus additional time for a potential fallback call.
-From this example you see that the order of middlewares is crucial.
+The timout would apply to the time for the original request plus additional time for a potential fallback call.
+From this example, you see that the order of middlewares is crucial.
 
-For a list of default resilience middlewares, a timeout should be added first, then a circuit breaker followed by a retry.
+The provided default resilience middlewares should be added in the following order:
+1. timeout
+2. circuit breaker
+3. retry.
 The SAP Cloud SDK provides default resilience middlewares so that you do not have to worry about the details in most cases.
 You can find detailed information on the resilience topic in a [dedicated documentation](../guides/resilience).
 
