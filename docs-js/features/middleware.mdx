@@ -13,6 +13,9 @@ keywords:
   - middleware
 ---
 
+import ThemedImage from '@theme/ThemedImage';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
 ## Concept
 
 The main purpose of the SAP Cloud SDK is to execute asynchronous HTTP requests.
@@ -36,6 +39,10 @@ executeHttpRequest(
 The API for a middleware is as follows:
 
 ```ts
+export type MiddlewareFunction = (
+  request: HttpRequest
+) => Promise<HttpResponse>;
+
 export type Middleware = (options: MiddlewareOptions) => MiddlewareFunction;
 
 export interface MiddlewareOptions {
@@ -43,10 +50,6 @@ export interface MiddlewareOptions {
   context: HttpMiddlewareContext;
   skipNext: () => void;
 }
-
-export type MiddlewareFunction = (
-  request: HttpRequest
-) => Promise<HttpResponse>;
 ```
 
 Every middleware needs to return a `MiddlewareFunction` instance which has the same parameters and return type as the input function `fn()`.
@@ -57,6 +60,8 @@ Let's investigate the different properties of the `MiddlewareOptions` interface:
 - The `context` provides information on the request like URL, headers and HTTP method.
 - The `skipNext` will exit all following middlewares
 
+Note that a middleware should **not** execute the function but construct and return a `MiddlewareFunction`.
+This makes a chain of middlewares different from a pipeline where the functions are executed one after another.
 This may seem abstract now, but the example in the next section will bring some concreteness to the topic.
 
 ## Example Hello World
@@ -64,7 +69,7 @@ This may seem abstract now, but the example in the next section will bring some 
 A middleware logs "Hello World" and leaves the original function unchanged.
 
 ```ts
-const helloWorld: Middleware = function (options) {
+const helloWorldMiddleware = options => {
   console.log('hello world');
   return options.fn;
 };
@@ -72,25 +77,30 @@ const helloWorld: Middleware = function (options) {
 
 Note that the log statement is executed when the middleware is added and not when the function executes.
 If you want to trigger the log on function execution you have to create a new function in the middleware.
+Remember that a middleware must **not** execute the original function.
+It adds functionality to the function and creates a new function from it.
 
 ```ts
-const helloWorld: Middleware = function (options) {
+const helloWorldMiddleware = options => {
   return request => {
     console.log('hello world');
     options.fn(request);
   };
 };
-```
 
-Note that a middleware should **not** execute the original function.
-It adds functionality to the function and creates a new function from it.
+const helloWorldMiddlewareWrong = options => {
+  //This would execute the function while the middlewares are added - Do NOT do this.
+  const responseRunning = options.fn(options.context.fnArgument);
+  return request => responseRunning;
+};
+```
 
 In the example the custom code executes before the function `fn()`.
 This will result in a stack like behaviour for multiple middlewares.
 For a queue like behaviour, add the code after the function resolves:
 
 ```ts
-const helloWorld: Middleware = function (options) {
+const helloWorldMiddleware = options => {
   return request => {
     options.fn(request).then(response => {
       console.log('hello world');
@@ -102,17 +112,17 @@ const helloWorld: Middleware = function (options) {
 
 ## Example Multiple Middlewares
 
-A good practice is to define reuseable, single-purpose middlewares.
+A good practice is to define reusable, single-purpose middlewares.
 You can add multiple of those middlewares to combine the effects.
 Assume you want to modify your call to have a timeout and use a fallback.
 The implementation of these middlewares could look like this:
 
 ```ts
-const timeout: Middleware = function (options) {
+const timeoutMiddleware = options => {
   return request => Promise.race([options.fn(request), timeoutPromise]);
 };
 
-const fallback: Middleware = function (options) {
+const fallbackMiddleware = options => {
   return request => {
     try {
       return options.fn(request);
@@ -123,10 +133,6 @@ const fallback: Middleware = function (options) {
 };
 ```
 
-Also here the middleware does **not** execute the function but adds functionality.
-For the timeout middleware, it is crucial because a timeout must run in parallel to the actual function.
-This makes a chain of middlewares different from a pipeline where the functions are executed one after another.
-
 Multiple middlewares are added one-by-one to the request.
 The order is from left to right in the array.
 
@@ -134,22 +140,32 @@ The order is from left to right in the array.
 executeHttpRequest(
   { url: 'http://example.com' },
   {
-    middleware: [timeout, fallback],
+    middleware: [timeoutMiddleware, fallbackMiddleware],
     method: 'get'
   }
 );
 ```
 
 The initial function is a `GET` request to `http://example.com`.
-The first middleware adds a timeout to this request leading a new function.
-The second middleware adds a fallback to this new function.
+The first middleware creates a new function adding a timeout to the HTTP request (see _h<sub>1</sub>_ in the picture below).
+The second middleware adds a fallback to this new function leading _h<sub>2</sub>_ in the picture below.
 
 The middlewares in this example are implemented like a stack.
-The fallback was added last so it will execute first.
-It acts on the request with the timeout.
-The timeout was added first and counts only the time for the actual execution without the fallback.
+The fallback was added last, so it will execute first.
+It acts on the HTTP request with the timeout (_h<sub>1</sub>_ in the picture below).
+The timeout counts only the time for the actual execution of the original function _f<sub>0</sub>_.
 
-If you would use:
+<ThemedImage
+  alt="Middleware execution order"
+  sources={{
+    light: useBaseUrl('img/middleware_light.svg'),
+    dark: useBaseUrl('img/middleware_dark.svg')
+  }}
+  className="center"
+  width="100%"
+/>
+
+If you switched the order of the middlewares:
 
 ```ts
 executeHttpRequest(
@@ -161,15 +177,16 @@ executeHttpRequest(
 );
 ```
 
-The timout would apply to the time for the original request plus additional time for a potential fallback call.
+The timout would apply to the time for the original request plus additional time for a potential fallback call (see _g<sub>1</sub>_ and _g<sub>2</sub>_ in the picture above).
 From this example, you see that the order of middlewares is crucial.
 
 The provided default resilience middlewares should be added in the following order:
+
 1. timeout
 2. circuit breaker
 3. retry.
-The SAP Cloud SDK provides default resilience middlewares so that you do not have to worry about the details in most cases.
-You can find detailed information on the resilience topic in a [dedicated documentation](../guides/resilience).
+   The SAP Cloud SDK provides default resilience middlewares so that you do not have to worry about the details in most cases.
+   You can find detailed information on the resilience topic in a [dedicated documentation](../guides/resilience).
 
 ## Example Middleware Context
 
@@ -189,7 +206,7 @@ export interface HttpMiddlewareContext {
 The fallback middleware could consider the uri:
 
 ```ts
-const fallback: Middleware = function (options) {
+const fallbackMiddleware = options => {
   return (request: HttpRequest) => {
     try {
       return options.fn(request);
@@ -210,7 +227,7 @@ The SAP Cloud SDK uses the axios client which has a `timeout` property.
 You could set a timeout on client level like this:
 
 ```ts
-const httpClientTimeout: Middleware = function (options) {
+const clientTimeoutMiddleware = options => {
   options.fnArgument.timeout = 500;
   return options.fn;
 };
@@ -246,7 +263,7 @@ You have to adjust the request so that it matches your client and the response s
 ```ts
 import httpClient from 'some-client-like-node-fetch';
 
-replaceHttpClient: Middleware = function (options) {
+const replaceHttpClientMiddleware = options => {
   return request => {
     const castedRequest = castRequest(options.context.fnArgument);
     return httpClient(castedRequest).then(response => castResponse(response));
