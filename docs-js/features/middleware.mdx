@@ -24,7 +24,7 @@ Either way, the final result after fetching destinations and doing various other
 Sometimes you want to adjust the way the SAP Cloud SDK executes the axios request.
 
 The middleware adds a very flexible way to add custom functionality to the request execution.
-You can add multiple layers of middleware to adjust requests to your needs.
+You can add multiple middlewares to adjust requests to your needs.
 
 ```ts
 executeHttpRequest(
@@ -66,7 +66,7 @@ This may seem abstract now, but the example in the next section will bring some 
 
 ## Example Hello World
 
-A middleware logs "Hello World" and leaves the original function unchanged.
+The following middleware logs "Hello World" and leaves the original function unchanged.
 
 ```ts
 const helloWorldMiddleware = options => {
@@ -153,7 +153,7 @@ The second middleware adds a fallback to this new function leading _h<sub>2</sub
 The middlewares in this example are implemented like a stack.
 The fallback was added last, so it will execute first.
 It acts on the HTTP request with the timeout (_h<sub>1</sub>_ in the picture below).
-The timeout counts only the time for the actual execution of the original function _f<sub>0</sub>_.
+The timeout only counts the time for the actual execution of the original function _f<sub>0</sub>_.
 
 <ThemedImage
   alt="Middleware execution order"
@@ -177,15 +177,16 @@ executeHttpRequest(
 );
 ```
 
-The timout would apply to the time for the original request plus additional time for a potential fallback call (see _g<sub>1</sub>_ and _g<sub>2</sub>_ in the picture above).
+The timeout would apply to the time for the original request plus additional time for a potential fallback call (see _g<sub>1</sub>_ and _g<sub>2</sub>_ in the picture above).
 From this example, you see that the order of middlewares is crucial.
 
 The provided default resilience middlewares should be added in the following order:
 
 1. timeout
 2. circuit breaker
-3. retry.
-   The SAP Cloud SDK provides default resilience middlewares so that you do not have to worry about the details in most cases.
+3. retry
+
+The SAP Cloud SDK provides default resilience middlewares so that you do not have to worry about the details in most cases.
    You can find detailed information on the resilience topic in a [dedicated documentation](../guides/resilience).
 
 ## Example Middleware Context
@@ -203,7 +204,7 @@ export interface HttpMiddlewareContext {
 }
 ```
 
-The fallback middleware could consider the uri:
+The fallback middleware could consider the URI:
 
 ```ts
 const fallbackMiddleware = options => {
