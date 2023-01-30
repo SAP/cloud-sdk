@@ -79,6 +79,15 @@ Future runningTask = ThreadContextExecutors.submit(myTask);
 Operations that are submitted this way will be executed by a single instance of `ThreadContextExecutorService`.
 By default, this instance is based on a `CachedThreadPool`, which manages the concurrency internally.
 
+For executing multiple asynchronous operations we recommend the following:
+
+```java
+List<Callable> tasks;
+ThreadContextExecutorService executor = ThreadContextExecutors.getExecutor();
+List<Future> runningTasks = executor.invokeAll(tasks);
+```
+
+
 ### Spring Integration
 
 You can conveniently integrate this functionality to work with Springs `@Async` annotation.
