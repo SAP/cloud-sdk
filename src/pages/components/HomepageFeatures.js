@@ -34,9 +34,9 @@ const FeatureList = [
     ),
     description: (
       <div data-nosnippet>
-        The SAP Cloud SDK for JavaScript (and TypeScript) helps you build
-        cloud-based apps and extensions to SAP solutions using the power and
-        flexibility of Node.js and its ecosystem.
+        The SAP Cloud SDK for JavaScript helps you build cloud-based apps and
+        extensions to SAP solutions using the power and flexibility of Node.js
+        and its ecosystem.
         <br />
         <a href="docs/js/getting-started">
           Get started with the SDK for JavaScript
