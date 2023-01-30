@@ -52,7 +52,7 @@ export type MiddlewareFunction = (
 Every middleware needs to return a `MiddlewareFunction` instance which has the same parameters and return type as the input function `fn()`.
 Let's investigate the different properties of the `MiddlewareOptions` interface:
 
-- The `fn` handed in is the returned function from the previous middleware.
+- The `fn()` function is the returned function from the previous middleware.
   For the first one it is the original HTTP request from the SAP Cloud SDK.
 - The `context` provides information on the request like URL, headers and HTTP method.
 - The `skipNext` will exit all following middlewares
