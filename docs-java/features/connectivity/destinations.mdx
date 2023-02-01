@@ -340,6 +340,10 @@ ScpCfDestinationLoader.Cache.setSizeLimit(10_000L);
 ScpCfDestinationLoader.Cache.setExpiration(Duration.ofHours(2L), CacheExpirationStrategy.WHEN_CREATED);
 ```
 
+:::note Cache Size
+Please note that the size limit does not apply to the cache for `ScpCfDestinationLoader.tryGetAllDestinations()`.
+:::
+
 **Change Detection Mode**
 
 In case your application typically interacts with more than one destination per tenant you can significantly improve performace by enabling **change detection**:
