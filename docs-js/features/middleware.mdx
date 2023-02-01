@@ -65,7 +65,7 @@ Every middleware takes the `MiddlewareOptions` as input and returns a `Middlewar
 The `MiddlewareOptions` have the following properties:
 
 - The `fn()` function is the returned function from the previous middleware.
-  For the first one it is the original HTTP request from the SAP Cloud SDK.
+  For the last one it is the original HTTP request from the SAP Cloud SDK.
   Note that the type of the input and return function are the same.
 - The `context` provides information on the request like URL, headers and HTTP method.
 - The `skipNext` will exit all following middlewares
@@ -77,23 +77,11 @@ This may seem abstract now, but the examples in the next sections will bring som
 
 ## Implementation of a Middleware
 
-In this section you learn how to implement a middleware based on a 'hello world' example.
-The following middleware logs "Hello World" and leaves the original function unchanged.
+In this section you learn how to implement a middleware based on a didactic example.
+The following middleware logs a text and leaves the original function unchanged.
 
 ```ts
-const helloWorldMiddleware = options => {
-  console.log('hello world');
-  return options.fn;
-};
-```
-
-Note that the log statement is executed when the middleware is added and not when the function executes.
-In most cases this is not what you want.
-
-If you want to trigger your logic on function execution you have to create a new function in the middleware.
-
-```ts
-const helloWorldMiddleware = options => {
+const doSomethingBeforeMiddleware = options => {
   return request => {
     console.log('Implement something here.');
     options.fn(request);
@@ -103,10 +91,10 @@ const helloWorldMiddleware = options => {
 
 In the example the custom code executes before the function `fn()`.
 Do this when you want to adjust things before the actual HTTP request is executed.
-If you want to process the result of the function your middleware implement something like
+If you want to process the result of the function your middleware implement it the following way
 
 ```ts
-const helloWorldMiddleware = options => {
+const doSomethingAfterMiddleware = options => {
   return request => {
     options.fn(request).then(response => {
       console.log('Do some postprocessing.');
@@ -116,13 +104,27 @@ const helloWorldMiddleware = options => {
 };
 ```
 
-Remember that a middleware must **not** execute the original function.
-It adds functionality to the function and creates a new function from it.
+Remember that code you put outside the returned function is executed when the functions are composed.
+This is in general not what you want.
 
 ```ts
-const helloWorldMiddlewareWrong = options => {
+const unintendedMiddleware = options => {
+  console.log(
+    'Executed when middleware is added - not what you want in general'
+  );
+  return options.fn;
+};
+```
+
+The example above is not really useful but also not harmful.
+Remember that a middleware must **not** execute the original function.
+It adds functionality to the function and creates a new function from it.
+If you execute it the whole middleware composition idea is destroyed.
+
+```ts
+const wrongMiddleware = options => {
   //This would execute the function while the middlewares are added - Do NOT do this.
-  const responseRunning = options.fn(options.context.fnArgument);
+  const responseRunning = options.fn(someArgs);
   return request => responseRunning;
 };
 ```
