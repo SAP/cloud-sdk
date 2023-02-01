@@ -82,9 +82,9 @@ The following middleware logs a text and leaves the original function unchanged.
 
 ```ts
 const doSomethingBeforeMiddleware = options => {
-  return request => {
+  return requestConfig => {
     console.log('Implement something here.');
-    options.fn(request);
+    options.fn(requestConfig);
   };
 };
 ```
@@ -95,8 +95,8 @@ If you want to process the result of the function your middleware implement it t
 
 ```ts
 const doSomethingAfterMiddleware = options => {
-  return request => {
-    options.fn(request).then(response => {
+  return requestConfig => {
+    options.fn(requestConfig).then(response => {
       console.log('Do some postprocessing.');
       return response;
     });
@@ -125,11 +125,11 @@ If you execute it the whole middleware composition idea is destroyed.
 const wrongMiddleware = options => {
   //This would execute the function while the middlewares are added - Do NOT do this.
   const responseRunning = options.fn(someArgs);
-  return request => responseRunning;
+  return requestConfig => responseRunning;
 };
 ```
 
-## Execution Order of Multiple Middlewares
+## Order of Multiple Middlewares
 
 A good practice is to define reusable, single-purpose middlewares.
 You can add multiple of those middlewares to combine the effects.
@@ -138,13 +138,14 @@ The implementation of these middlewares could look like this:
 
 ```ts
 const timeoutMiddleware = options => {
-  return request => Promise.race([options.fn(request), timeoutPromise]);
+  return requestConfig =>
+    Promise.race([options.fn(requestConfig), timeoutPromise]);
 };
 
 const fallbackMiddleware = options => {
-  return request => {
+  return requestConfig => {
     try {
-      return options.fn(request);
+      return options.fn(requestConfig);
     } catch (e) {
       //implement some fallback logic
     }
@@ -201,8 +202,8 @@ executeHttpRequest(
 );
 ```
 
-the timeout would apply to the original request plus additional time for a potential fallback calls (see _g<sub>1</sub>_ and _g<sub>2</sub>_ in the picture above).
-The fallback would not handle a failure due to a timeout.
+the timeout would apply to the original request plus additional time for potential fallback calls (see _g<sub>1</sub>_ and _g<sub>2</sub>_ in the picture above).
+The fallback would not handle failures due to a timeout.
 From this example, you see that the order of middlewares is crucial.
 
 The provided default resilience middlewares should be added in the following order:
@@ -235,9 +236,9 @@ The fallback middleware could consider the URI:
 
 ```ts
 const fallbackMiddleware = options => {
-  return (request: HttpRequest) => {
+  return requestConfig => {
     try {
-      return options.fn(request);
+      return options.fn(requestConfig);
     } catch (e) {
       if (options.context.uri === 'http://system-one.com') {
         //do something
@@ -255,11 +256,82 @@ You could set a timeout on client level like this:
 
 ```ts
 const clientTimeoutMiddleware = options => {
-  return request => {
-    return options.fn({ ...request, timeout: 500 });
+  return requestConfig => {
+    return options.fn({ ...requestConfig, timeout: 500 });
   };
 };
 ```
+
+## Execution Order of Middlewares
+
+As discussed in the previous section the composition order for the new function is from right to left.
+However, the composition order does not mimic the order when the code related to the middleware is executed.
+To illustrate this, consider the four example middlewares (for simplicity assume that the response and config are just bare strings):
+
+```ts
+const appendConfigABC = options => {
+  return requestConfig => options.fn(requestConfig + '/ABC');
+};
+
+const appendConfigDEF = options => {
+  return requestConfig => options.fn(requestConfig + '/DEF');
+
+  const appendResponse123 = options => {
+    return requestConfig =>
+      options.fn(requestConfig).then(response => response + '-123');
+  };
+
+  const appendResponse456 = options => {
+    return requestConfig =>
+      options.fn(requestConfig).then(response => response + '-456');
+  };
+};
+```
+
+The first two change something before the method is executed and the second two change the response after the request resolves.
+If you add these four middlewares to a request
+
+```ts
+executeHttpRequest(
+  { url: 'http://example.com' },
+  {
+    middleware: [
+      appendConfigDEF,
+      appendResponse456,
+      appendConfigABC,
+      appendResponse123
+    ],
+    method: 'get'
+  }
+);
+```
+
+the resulting function is
+
+```ts
+requestConfig => axios.request(requestConfig); //initial function
+
+requestConfig =>
+  axios.request(requestConfig).then(response => response + '-123'); //appendResponse123 middleware
+
+requestConfig =>
+  axios.request(requestConfig + '/ABC').then(response => response + '-123'); //appendConfigABC
+
+requestConfig =>
+  axios
+    .request(requestConfig + '/ABC')
+    .then(response => response + '-123')
+    .then(response => response + '-456'); //appendResponse456
+
+requestConfig =>
+  axios
+    .request(requestConfig + '/DEF' + '/ABC') //appendConfigDEF
+    .then(response => response + '-123')
+    .then(response => response + '-456');
+```
+
+Note that the middlewares are added from right to left, but changes in the config will happen always first no matter where you put them.
+However, for the two kinds of middlewares (change config or response) the order does matter.
 
 ## Benefits of Middlewares
 
