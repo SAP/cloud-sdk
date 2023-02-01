@@ -30,7 +30,7 @@ You can add multiple middlewares to adjust requests to your needs.
 executeHttpRequest(
   { url: 'http://example.com' },
   {
-    middleware: [middleware1, middleware2,...],
+    middleware: [middlewareA, middlewareB,...],
     method: 'get'
   }
 );
@@ -39,12 +39,21 @@ executeHttpRequest(
 The API for a middleware is as follows:
 
 ```ts
+/**
+ * Type defining the function passed from one middleware to the next one.
+ */
 export type MiddlewareFunction = (
   request: HttpRequest
 ) => Promise<HttpResponse>;
 
+/**
+ * The actual middleware type returning a function.
+ */
 export type Middleware = (options: MiddlewareOptions) => MiddlewareFunction;
 
+/**
+ * The input options of the middleware.
+ */
 export interface MiddlewareOptions {
   fn: MiddlewareFunction;
   context: HttpMiddlewareContext;
@@ -52,20 +61,23 @@ export interface MiddlewareOptions {
 }
 ```
 
-Every middleware needs to return a `MiddlewareFunction` instance which has the same parameters and return type as the input function `fn()`.
-Let's investigate the different properties of the `MiddlewareOptions` interface:
+Every middleware takes the `MiddlewareOptions` as input and returns a `MiddlewareFunction` instance.
+The `MiddlewareOptions` have the following properties:
 
 - The `fn()` function is the returned function from the previous middleware.
   For the first one it is the original HTTP request from the SAP Cloud SDK.
+  Note that the type of the input and return function are the same.
 - The `context` provides information on the request like URL, headers and HTTP method.
 - The `skipNext` will exit all following middlewares
 
 Note that a middleware should **not** execute the function but construct and return a `MiddlewareFunction`.
+You can think of middlewares as a composition of functions where each middleware composes a new function.
 This makes a chain of middlewares different from a pipeline where the functions are executed one after another.
-This may seem abstract now, but the example in the next section will bring some concreteness to the topic.
+This may seem abstract now, but the examples in the next sections will bring some concreteness to the topic.
 
-## Example Hello World
+## Implementation of a Middleware
 
+In this section you learn how to implement a middleware based on a 'hello world' example.
 The following middleware logs "Hello World" and leaves the original function unchanged.
 
 ```ts
@@ -76,18 +88,38 @@ const helloWorldMiddleware = options => {
 ```
 
 Note that the log statement is executed when the middleware is added and not when the function executes.
-If you want to trigger the log on function execution you have to create a new function in the middleware.
-Remember that a middleware must **not** execute the original function.
-It adds functionality to the function and creates a new function from it.
+In most cases this is not what you want.
+
+If you want to trigger your logic on function execution you have to create a new function in the middleware.
 
 ```ts
 const helloWorldMiddleware = options => {
   return request => {
-    console.log('hello world');
+    console.log('Implement something here.');
     options.fn(request);
   };
 };
+```
 
+In the example the custom code executes before the function `fn()`.
+Do this when you want to adjust things before the actual HTTP request is executed.
+If you want to process the result of the function your middleware implement something like
+
+```ts
+const helloWorldMiddleware = options => {
+  return request => {
+    options.fn(request).then(response => {
+      console.log('Do some postprocessing.');
+      return response;
+    });
+  };
+};
+```
+
+Remember that a middleware must **not** execute the original function.
+It adds functionality to the function and creates a new function from it.
+
+```ts
 const helloWorldMiddlewareWrong = options => {
   //This would execute the function while the middlewares are added - Do NOT do this.
   const responseRunning = options.fn(options.context.fnArgument);
@@ -95,22 +127,7 @@ const helloWorldMiddlewareWrong = options => {
 };
 ```
 
-In the example the custom code executes before the function `fn()`.
-This will result in a stack like behaviour for multiple middlewares.
-For a queue like behaviour, add the code after the function resolves:
-
-```ts
-const helloWorldMiddleware = options => {
-  return request => {
-    options.fn(request).then(response => {
-      console.log('hello world');
-      return response;
-    });
-  };
-};
-```
-
-## Example Multiple Middlewares
+## Execution Order of Multiple Middlewares
 
 A good practice is to define reusable, single-purpose middlewares.
 You can add multiple of those middlewares to combine the effects.
@@ -134,26 +151,31 @@ const fallbackMiddleware = options => {
 ```
 
 Multiple middlewares are added one-by-one to the request.
-The order is from left to right in the array.
+The elements are combined as if the composition operator &#8728; for functions is used.
+
+```
+[middlewareA,middlewareB,...] -> middlewareA after middlewareB after ...
+```
+
+If you include the fallback and timeout middleware to your request in the following way:
 
 ```ts
 executeHttpRequest(
   { url: 'http://example.com' },
   {
-    middleware: [timeoutMiddleware, fallbackMiddleware],
+    middleware: [fallbackMiddleware, timeoutMiddleware],
     method: 'get'
   }
 );
 ```
 
-The initial function is a `GET` request to `http://example.com`.
-The first middleware creates a new function adding a timeout to the HTTP request (see _h<sub>1</sub>_ in the picture below).
-The second middleware adds a fallback to this new function leading _h<sub>2</sub>_ in the picture below.
+it would mean `fallbackMiddleware` after `timeoutMiddleware` or a bit more detailed:
 
-The middlewares in this example are implemented like a stack.
-The fallback was added last, so it will execute first.
-It acts on the HTTP request with the timeout (_h<sub>1</sub>_ in the picture below).
-The timeout only counts the time for the actual execution of the original function _f<sub>0</sub>_.
+- The initial function is a `GET` request to `http://example.com` called _f<sub>0</sub>_.
+- The timeout is added first to the HTTP request leading _h<sub>1</sub>_ in the picture below.
+  Therefore, at execution the timeout only counts the execution time of _f<sub>0</sub>_ and not considering a fallback call.
+- After this the fallback is added around _h<sub>1</sub>_ which is the function with timeout.
+  So the fallback would also handle failures due to the timeout.
 
 <ThemedImage
   alt="Middleware execution order"
@@ -171,36 +193,39 @@ If you switched the order of the middlewares:
 executeHttpRequest(
   { url: 'http://example.com' },
   {
-    middleware: [fallback, timeout],
+    middleware: [timeoutMiddleware, fallbackMiddleware],
     method: 'get'
   }
 );
 ```
 
-The timeout would apply to the time for the original request plus additional time for a potential fallback call (see _g<sub>1</sub>_ and _g<sub>2</sub>_ in the picture above).
+the timeout would apply to the original request plus additional time for a potential fallback calls (see _g<sub>1</sub>_ and _g<sub>2</sub>_ in the picture above).
+The fallback would not handle a failure due to a timeout.
 From this example, you see that the order of middlewares is crucial.
 
 The provided default resilience middlewares should be added in the following order:
 
-1. timeout
+1. retry
 2. circuit breaker
-3. retry
+3. timeout
 
 The SAP Cloud SDK provides default resilience middlewares so that you do not have to worry about the details in most cases.
-   You can find detailed information on the resilience topic in a [dedicated documentation](../guides/resilience).
+You can find detailed information on the resilience topic in a [dedicated documentation](../guides/resilience).
 
-## Example Middleware Context
+## Use the Middleware Context
 
 The previous examples did not use the middleware context.
 However, the context provides useful information you can use in your middleware.
 
 ```ts
+/**
+ * Represents the execution context of a middleware.
+ */
 export interface HttpMiddlewareContext {
   readonly tenantId: string;
   readonly uri: string;
   readonly jwt?: string;
   readonly destinationName?: string;
-  fnArgument: ArgumentT;
 }
 ```
 
@@ -222,15 +247,15 @@ const fallbackMiddleware = options => {
 };
 ```
 
-Note that the `fnArgument` is not marked as `readonly`.
-This indicates that changes to this object will change the argument for the actual execution.
+If you want to change the request parameters you can modify them as well.
 The SAP Cloud SDK uses the axios client which has a `timeout` property.
 You could set a timeout on client level like this:
 
 ```ts
 const clientTimeoutMiddleware = options => {
-  options.fnArgument.timeout = 500;
-  return options.fn;
+  return request => {
+    return options.fn({ ...request, timeout: 500 });
+  };
 };
 ```
 
@@ -257,7 +282,7 @@ However, this has two disadvantages:
   With the middleware you can include logic directly to the HTTP layer.
   This is much more powerful than code on the outer layer.
 
-Assume you want to replace the HTTP client of the SAP Cloud SDK uses with a different one.
+Assume you want to replace the HTTP client of the SAP Cloud SDK with a different one.
 Only with a middleware this is possible.
 You have to adjust the request so that it matches your client and the response so that it matches the expected form.
 
