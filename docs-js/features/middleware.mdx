@@ -266,72 +266,69 @@ const clientTimeoutMiddleware = options => {
 
 As discussed in the previous section the composition order for the new function is from right to left.
 However, the composition order does not mimic the order when the code related to the middleware is executed.
-To illustrate this, consider the four example middlewares (for simplicity assume that the response and config are just bare strings):
+To illustrate this, consider the four example middlewares below (for simplicity assume that the response and config are just bare strings):
 
 ```ts
-const appendConfigABC = options => {
-  return requestConfig => options.fn(requestConfig + '/ABC');
+const beforeMiddleware = options => {
+  return requestConfig => options.fn(requestConfig + '/before');
 };
 
-const appendConfigDEF = options => {
-  return requestConfig => options.fn(requestConfig + '/DEF');
-
-  const appendResponse123 = options => {
-    return requestConfig =>
-      options.fn(requestConfig).then(response => response + '-123');
-  };
-
-  const appendResponse456 = options => {
-    return requestConfig =>
-      options.fn(requestConfig).then(response => response + '-456');
-  };
+const afterMiddleware = options => {
+  return requestConfig =>
+    options.fn(requestConfig).then(response => response + '-after');
 };
 ```
 
-The first two change something before the method is executed and the second two change the response after the request resolves.
+The first middleware changes something before the method is executed and the second two change the response after the request resolves.
 If you add these four middlewares to a request
 
 ```ts
 executeHttpRequest(
   { url: 'http://example.com' },
   {
-    middleware: [
-      appendConfigDEF,
-      appendResponse456,
-      appendConfigABC,
-      appendResponse123
-    ],
+    middleware: [beforeMiddleware, afterMiddleware],
     method: 'get'
   }
 );
 ```
 
-the resulting function is
+you can work out the resulting function since the middlewares are simple:
 
 ```ts
 requestConfig => axios.request(requestConfig); //initial function
 
 requestConfig =>
-  axios.request(requestConfig).then(response => response + '-123'); //appendResponse123 middleware
-
-requestConfig =>
-  axios.request(requestConfig + '/ABC').then(response => response + '-123'); //appendConfigABC
+  axios.request(requestConfig).then(response => response + '-after'); //afterMiddleware middleware
 
 requestConfig =>
   axios
-    .request(requestConfig + '/ABC')
-    .then(response => response + '-123')
-    .then(response => response + '-456'); //appendResponse456
-
-requestConfig =>
-  axios
-    .request(requestConfig + '/DEF' + '/ABC') //appendConfigDEF
-    .then(response => response + '-123')
-    .then(response => response + '-456');
+    .request(requestConfig + '/before')
+    .then(response => response + '-after'); //beforeMiddleware
 ```
 
-Note that the middlewares are added from right to left, but changes in the config will happen always first no matter where you put them.
-However, for the two kinds of middlewares (change config or response) the order does matter.
+The middlewares are added from right to left, but changes in the config will happen before the response is adjusted.
+No matter where the related middlewares were positioned.
+This becomes clearer if you consider a middleware squaring a result which can be done before or after function execution:
+
+```ts
+const square = x => x ^ 2;
+
+const squareMiddlewareAfter = fn => x => fn(x).then(x => square(x)); // equivalent fn => x => square(fn(x))
+
+const squareMiddlewareBefore = fn => x => fn(x ^ 2); // equivalent fn => x => fn(square(x))
+```
+
+In one case the resulting function is `square(fn(x))` which is in line with the mathematical composition square &#8728; fn.
+In the other case it is `fn(square(x))` which is the opposite like the composition.
+
+Note that in practice this difference in behavior does not cause problems:
+
+- The ordering is crucial for the middlewares doing something after the request like the resilience.
+  For these the order is expected by the composition: the most left one is executed last.
+  Most of the middlewares are of this kind.
+- Middlewares changing the request configuration are rare and in most cases one of them is sufficient.
+  Even if you have multiple ones they do not interfere with each other.
+  Only if you have multiple middlewares of this kind changing the same configuration you need to be careful and consider the inverse execution order.
 
 ## Benefits of Middlewares
 
