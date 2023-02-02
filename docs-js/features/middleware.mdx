@@ -311,7 +311,7 @@ No matter where the related middlewares were positioned.
 This becomes clearer if you consider a middleware squaring a result which can be done before or after function execution:
 
 ```ts
-const square = x => x ^ 2;
+const square = x => x * x;
 
 const squareMiddlewareAfter = fn => x => fn(x).then(x => square(x)); // equivalent fn => x => square(fn(x))
 
