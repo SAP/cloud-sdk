@@ -32,7 +32,11 @@ Setting the `useCache` flag to `true` enables it:
 .execute({ destinationName: 'myDestination', jwt: 'yourJWT', useCache: true })
 ```
 
-A cached destination is stored for 5 minutes in the cache.
+The SAP Cloud SDK sets the cache expiration time depending on the [authentication flow](./destination.mdx#authentication-and-json-web-token-retrieval):
+
+- If no token with a lifetime is involved e.g. `BasicAuthentication` or `ClientCertificateAuthentication` the cache expires after 5 minutes.
+- If the destination contains an authorization token, the token lifetime is used for the expiration time.
+
 The SAP Cloud SDK tries to set the proper isolation strategy for the destination automatically.
 There are two options:
 
