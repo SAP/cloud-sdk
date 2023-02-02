@@ -344,15 +344,10 @@ In rare circumstances, it might make sense to disable either specific aspects of
 For those scenarios, following APIs are available:
 
 ```java
-// cache can store an infinite amount of entries
-ScpCfDestinationLoader.Cache.disableSizeLimit(); 
+ScpCfDestinationLoader.Cache.disableSizeLimit(); // cache can store an infinite amount of entries
+ScpCfDestinationLoader.Cache.disableExpiration(); // cache entries never expire
 
-// cache entries never expire
-// note: this setting is not available when the change detection mode is enabled
-ScpCfDestinationLoader.Cache.disableExpiration();
-
-// or don't cache destinations at all
-ScpCfDestinationLoader.Cache.disable();
+ScpCfDestinationLoader.Cache.disable(); // don't cache destinations
 ```
 
 :::note Shared Cache Size
@@ -717,7 +712,7 @@ final HttpDestination destination =
 
 :::note Caching
 Please note that these destinations are currently not cached.
-Please consider re-using the obtained destination objects when using `OAuth2ClientCredentials` or `OAuth2UserTokenExchange` to avoid unnecessary token retrievals.
+Please consider re-using the obtained destination objects when using `OAuth2ClientCredentials` or `OAuth2UserTokenExchange` oo avoid unnecessary token retrievals.
 :::
 
 #### Enable Access to SAP Business Technology Platform Connectivity Service
