@@ -333,7 +333,7 @@ This behavior has two implications:
 Depending on the use-case, the default cache configuration might be suboptimal.
 Therefore, the SAP Cloud SDK offers an API for adjusting the caching behavior at application runtime.
 
-The examaple below changes the cache to store more entries for a longer period of time.
+The example below changes the cache to store more entries for a longer period of time.
 
 ```java
 ScpCfDestinationLoader.Cache.setSizeLimit(10_000L);
@@ -352,13 +352,15 @@ ScpCfDestinationLoader.Cache.disable(); // don't cache destinations
 
 :::note Shared Cache Size
 
-The size limit is applied across all tenants and principals.
-That means that one tenant (with a lot of principals) might fill up the entire cache.
+The size limit is applied across all tenants (and principals in certain cases).
+One tenant (with a lot of principals) might fill up the entire cache, if all destinations requested require user propagation.
+If the requested destination doesn't require user propagation, destinations are cached per tenant instead.
 
 <details>
   <summary>Example</summary>
 
-If a thousand principals of the same tenant all query a single destination, the cache will be entirely filled up with destinations belonging to the same tenant.
+If a thousand principals of the same tenant all query a single destination requiring user propagation, the cache will be entirely filled up with destinations belonging to the same tenant.
+
 As a consequence, existing cache entries - also those of different tenants - must be removed (_evicted_) from the cache to make space for the new entries.
 
 </details>
@@ -371,6 +373,13 @@ Changing the cache configuration at runtime will lead to a recreation of the und
 Hereby, **all existing** cache entries will be lost.
 
 Therefore, we recommend adjusting the cache once at application startup.
+
+:::
+
+:::note Hint
+
+For better performance, while querying for destinations **with user propagation**, users may provide the `EXCHANGE_ONLY` token exchange strategy.
+Refer [here](#token-exchange-options) for more details.
 
 :::
 
