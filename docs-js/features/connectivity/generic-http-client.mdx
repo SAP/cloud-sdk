@@ -103,6 +103,69 @@ For keys that exist for both objects, the `requestConfig` takes precedence.
 
 The `executeHttpRequest()` function returns a promise of type [HttpResponse](pathname:///api/v3/interfaces/sap_cloud_sdk_http_client.HttpResponse.html).
 
+### Parameter Encoding
+
+[URL encoding](https://en.wikipedia.org/wiki/Percent-encoding) allows using characters as part of the URL which normally would cause issues such as spaces.
+For example, the space character is replaced with `%20`.
+
+The HTTP client automatically takes care of encoding parameters except for _custom parameters_.
+Custom parameters can be useful when you need control exactly how values are transmitted to the backend system.
+
+#### Customized Parameter Encoding
+
+If you need to customize parameter encoding, you can provide your own function to do the transformation.
+This feature is meant for cases where backends have special requirements for the encoding that don't work with the default URL-encoding done by the HTTP client.
+You should usually avoid this as it adds additional complexity to the application code.
+
+The example below shows how to do a string replace:
+
+```ts
+const myCustomParameterEncodingFunction: ParameterEncoder = function (
+  params: Record<string, any>
+): Record<string, any> {
+  const encodedParams: Record<string, any> = {};
+
+  for (const key in params) {
+    // Customize your required encoding logic here
+    encodedParams[key] = params[key].toString().replace('x', 'y');
+  }
+
+  return encodedParams;
+};
+
+const response = await executeHttpRequest(
+  {
+    url: 'https://example.com'
+  },
+  {
+    method: 'get',
+    params: {
+      param1: 'a/bx',
+      param2: 'x1'
+    },
+    // Pass your custom encoding function
+    parameterEncoder: myCustomParameterEncodingFunction
+  }
+);
+```
+
+### Setting Middlewares
+
+You can specify middlewares for a request via the `middleware` property of the request config
+
+```ts
+const response = await executeHttpRequest(httpsDestination, {
+  middleware: [myMiddleware],
+  method: 'get'
+});
+```
+
+Middleware is a general concept used to add [arbitrary enhancements to the request](../middleware).
+A typical use case is to also add [resilience](../../guides/resilience) to requests.
+
+The HTTP request in this example will contain the parameter values `a/by` and `y1` because the parameter encoder function replaced the `x` with a `y`.
+
+
 ### CSRF Token Fetching
 
 [Cross-Site Request Forgery (CSRF)](https://en.wikipedia.org/wiki/Cross-site_request_forgery) is a common type of attack on web applications.
@@ -161,68 +224,6 @@ const response = await executeHttpRequest(
   }
 );
 ```
-
-### Parameter Encoding
-
-[URL encoding](https://en.wikipedia.org/wiki/Percent-encoding) allows using characters as part of the URL which normally would cause issues such as spaces.
-For example, the space character is replaced with `%20`.
-
-The HTTP client automatically takes care of encoding parameters except for _custom parameters_.
-Custom parameters can be useful when you need control exactly how values are transmitted to the backend system.
-
-#### Customized Parameter Encoding
-
-If you need to customize parameter encoding, you can provide your own function to do the transformation.
-This feature is meant for cases where backends have special requirements for the encoding that don't work with the default URL-encoding done by the HTTP client.
-You should usually avoid this as it adds additional complexity to the application code.
-
-The example below shows how to do a string replace:
-
-```ts
-const myCustomParameterEncodingFunction: ParameterEncoder = function (
-  params: Record<string, any>
-): Record<string, any> {
-  const encodedParams: Record<string, any> = {};
-
-  for (const key in params) {
-    // Customize your required encoding logic here
-    encodedParams[key] = params[key].toString().replace('x', 'y');
-  }
-
-  return encodedParams;
-};
-
-const response = await executeHttpRequest(
-  {
-    url: 'https://example.com'
-  },
-  {
-    method: 'get',
-    params: {
-      param1: 'a/bx',
-      param2: 'x1'
-    },
-    // Pass your custom encoding function
-    parameterEncoder: myCustomParameterEncodingFunction
-  }
-);
-```
-
-## Setting Middlewares
-
-You can specify middlewares for a request via the `middleware` property of the request config
-
-```ts
-const response = await executeHttpRequest(httpsDestination, {
-  middleware: [myMiddleware],
-  method: 'get'
-});
-```
-
-Middleware is a general concept used to add [arbitrary enhancements to the request](../middleware).
-A typical use case is to also add [resilience](../../guides/resilience) to requests.
-
-The HTTP request in this example will contain the parameter values `a/by` and `y1` because the parameter encoder function replaced the `x` with a `y`.
 
 ## `executeHttpRequestWithOrigin()`
 
