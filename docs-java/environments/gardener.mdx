@@ -447,14 +447,14 @@ We generally recommend to go with approach (1) unless the given limitations appl
 
 #### Prerequisites
 
-This guide assumes you have both the **Transparent Proxy** and **Connectivity Proxy** installed in your cluster.
+This guide assumes you have both the **Transparent Proxy** (version `>= 1.2.0`) and **Connectivity Proxy** (version `>= 2.8.0`) installed in your cluster.
 Please refer to [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/1c18e0ca10884dad994fc3d7e1d046d7.html) and [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/23fc1100c60b45c58f09694b7f9c7700.html) documentation on how to install it if you haven't already.
 
 #### Background Information
 
 When using the Transparent Proxy your app performs requests against the Transparent Proxy without explicit authentication, assuming the network in your cluster can be trusted.
 The Transparent Proxy will obtain the relevant destination from the destination service and use it to forward the request via the Connectivity Proxy to the On-Premise system.
-Consequently, your app itself does not interact with destination or connectivity service at all and thus does not require bindings to these two services.
+Consequently, your app itself does not interact with destination or connectivity service at all and thus your application pods do not require bindings to these two services.
 
 :::tip
 This approach is conceptually different from what you may be used to from a CloufdFoundry environment.
@@ -502,6 +502,11 @@ The code above shows an example how you can use it to perform an OData request.
 
 :::note
 Repeat this process for all _destination names_ you want to use in your application.
+:::
+
+:::tip Connecting to Cloud systems
+The above approach is not limited to destinations of proxy type `ON_PREMISE`.
+`INTERNET` destinations are equally supported.
 :::
 
 ### 2. Using the Connectivity Proxy
