@@ -136,6 +136,32 @@ const response = await executeHttpRequest(
 );
 ```
 
+If you need to adjust the way CSRF token are fetched, you can do so by using the [middlewares](../middleware).
+
+- Disable the token fetching to deactivate the default code
+- Add a middleware to include your custom token fetching.
+
+The SAP Cloud SDK offers a `csrf` middleware which allows to configure some basic options:
+
+- `method` The HTTP method used to get a token
+- `URL` The URL which is called to retrieve a token
+- `middleware` Middlewares used for the token retrieval request
+
+```ts
+const response = await executeHttpRequest(
+  {
+    url: `https://example.com`
+  },
+  {
+    method: 'post',
+    middleware: [csrf({ url: 'https://example.com/csrf/token/url' })]
+  },
+  {
+    fetchCsrfToken: false
+  }
+);
+```
+
 ### Parameter Encoding
 
 [URL encoding](https://en.wikipedia.org/wiki/Percent-encoding) allows using characters as part of the URL which normally would cause issues such as spaces.
