@@ -340,14 +340,41 @@ ScpCfDestinationLoader.Cache.setSizeLimit(10_000L);
 ScpCfDestinationLoader.Cache.setExpiration(Duration.ofHours(2L), CacheExpirationStrategy.WHEN_CREATED);
 ```
 
+:::note Cache Size
+Please note that the size limit does not apply to the cache for `ScpCfDestinationLoader.tryGetAllDestinations()`.
+:::
+
+**Change Detection Mode**
+
+In case your application typically interacts with more than one destination per tenant you can significantly improve performace by enabling **change detection**:
+
+```java
+ScpCfDestinationLoader.Cache.enableChangeDetection();
+```
+
+This mode will ensure the current cache entries are still valid using a single request (per tenant), instead of checking for each destination individually.
+For a single destination this is not a benefit, but for two or more the benefit is up to 100% per additional destination.
+For example, if you are interacting with 5 destinations per tenant, you can expect a 3 to 4 times performance increase.
+
+:::tip Change Detection Interval
+When using change detection, the cache expiration duration configured becomes the change detection interval.
+As described above, this determines how quickly changes to a destination in the BTP cockpit are reflected in your application.
+For example, the default setting of 5 minutes ensures, that when changing a destination it will take no more than 5 minutes for the cache to detect the change.
+:::
+
 In rare circumstances, it might make sense to disable either specific aspects of the caching behavior, or even the entire cache.
 For those scenarios, following APIs are available:
 
 ```java
-ScpCfDestinationLoader.Cache.disableSizeLimit(); // cache can store an infinite amount of entries
-ScpCfDestinationLoader.Cache.disableExpiration(); // cache entries never expire
+// cache can store an infinite amount of entries
+ScpCfDestinationLoader.Cache.disableSizeLimit();
 
-ScpCfDestinationLoader.Cache.disable(); // don't cache destinations
+// cache entries never expire
+// note: this setting is not available when the change detection mode is enabled
+ScpCfDestinationLoader.Cache.disableExpiration();
+
+// or don't cache destinations at all
+ScpCfDestinationLoader.Cache.disable();
 ```
 
 :::note Shared Cache Size
