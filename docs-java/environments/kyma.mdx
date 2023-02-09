@@ -573,8 +573,14 @@ This guide assumes you have both the **Transparent Proxy** (version `>= 1.2.0`) 
 Please refer to [this](https://github.com/SAP-samples/kyma-runtime-extension-samples/tree/main/connectivity-proxy) and [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/23fc1100c60b45c58f09694b7f9c7700.html) documentation on how to install it if you haven't already.
 
 :::note Kyma Compatibility
-When using the Connecitivty Proxy provided by Kyma the [Transparent Proxy](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/e661713ef7d14373b57e3e26b0b03b86.html) is required to connect to On-Premise systems with the SAP Cloud SDK for Java.
-In case you operate the Connectivity Proxy yourself in "untrusted mode" you can also refer to [this guide](./kubernetes-gardener#2-using-the-connectivity-proxy) for using the Connectivity Proxy without Transparent Proxy.
+On Kyma, two scenarios are supported by the SAP Cloud SDK:
+
+1. Using the Connecitivty Proxy in "trusted mode" together with the Transparent Proxy
+2. Using a custom Connecitivty Proxy instance in "untrusted mode" without the Transparent Proxy
+
+The Connecitivty Proxy managed by Kyma is coming in "trusted mode", thus this guide covers scenario (1).
+In case you want to run scenario (2) refer to [this guide](./kubernetes-gardener#2-using-the-connectivity-proxy) for using the Connectivity Proxy without Transparent Proxy.
+Other scenarios are currently not supported.
 :::
 
 ### Background Information
@@ -582,6 +588,19 @@ In case you operate the Connectivity Proxy yourself in "untrusted mode" you can 
 When using the Transparent Proxy your app performs requests against the Transparent Proxy without explicit authentication, relying on the secure network communication provided by Kyma via Istio.
 The Transparent Proxy will obtain the relevant destination from the destination service and use it to forward the request via the Connectivity Proxy to the On-Premise system.
 Consequently, your app itself does not interact with destination or connectivity service at all and thus your application pods do not require bindings to these two services.
+
+Please note that the current implementation of the Transparent Proxy does not yet cover all use cases.
+Most prominently, only **single-tenant** mode is currently supported.
+
+<details>
+  <summary>Constraints when using the Transparent Proxy</summary>
+
+- Single tenant only
+- Private Link not yet supported
+- Destination names need to be known at design time
+  - see the note on [Create a Kubernetes Resource](#create-a-kubernetes-resource)
+
+</details>
 
 :::tip
 This approach is conceptually different from what you may be used to from a CloufdFoundry environment.
@@ -606,6 +625,11 @@ spec:
 
 It will create a Kubernetes resource in your cluster, pointing to the destination you created in the cockpit.
 Apply the YAML with `kubectl apply` to take effect.
+
+:::note
+This step is required for each destination that should be reachable via the Transparent Proxy.
+If you do not create a custom Kubernetes resource of type `destinations.destination.connectivity.api.sap` for a given destination, the destination will not be handled by the Transparent Proxy.
+:::
 
 ### Executing Requests
 

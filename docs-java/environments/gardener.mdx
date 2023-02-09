@@ -418,29 +418,29 @@ On Kubernetes there are generally two approaches to connect to On-Premise destin
 2. Using Connectivity Proxy only
 
 Approach **(1)** simplifies the application code but does not cover all features at the time of writing.
+Most prominently, only **single-tenant** mode is currently supported.
 
 <details>
-  <summary>Limitations of the Transparent Proxy</summary>
-
-The most prominent limitations are:
+  <summary>Constraints when using the Transparent Proxy</summary>
 
 - Single tenant only
-- Destination names need to be known at design time
 - Private Link not yet supported
+- Destination names need to be known at design time
+  - see the note on [Create a Kubernetes Resource](#create-a-kubernetes-resource)
 
 </details>
 
-Approach **(2)** does not come with the above limitations, but imposes limitations on the operation mode.
+Approach **(2)** does not come with the above constraints, but imposes limitations on the operation mode.
 
 <details>
-  <summary>Limitations of the Connectivity Proxy</summary>
+  <summary>Constraints when using the Connectivity Proxy</summary>
 
 - Connectivity Proxy must be operated in `untrusted` mode
 
 </details>
 
 :::tip
-We generally recommend to go with approach (1) unless the given limitations apply to your use case.
+We generally recommend to go with approach (1) unless the given constraints apply to your use case.
 :::
 
 ### 1. Using Transparent and Connectivity Proxies
@@ -479,6 +479,11 @@ spec:
 
 It will create a Kubernetes resource in your cluster, pointing to the destination you created in the cockpit.
 Apply the YAML with `kubectl apply` to take effect.
+
+:::note
+This step is required for each destination that should be reachable via the Transparent Proxy.
+If you do not create a custom Kubernetes resource of type `destinations.destination.connectivity.api.sap` for a given destination, the destination will not be handled by the Transparent Proxy.
+:::
 
 #### Executing Requests
 
