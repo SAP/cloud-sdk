@@ -712,7 +712,7 @@ The information there also applies to the SAP Cloud SDK for Java.
 
 #### Skip Destination Creation Step for Certain Authentication Types on Cloud Foundry
 
-For certain authentication types i.e. `NoAuthentication` and `OAuth2ClientCredentials` there is an API that eliminates the need to manually create a destination in the CF account for connecting to services.
+For certain authentication types i.e. `NoAuthentication`, `OAuth2ClientCredentials` and `OAuth2UserTokenExchange` there is an API that eliminates the need to manually create a destination in the CF account for connecting to services.
 
 Example:
 
@@ -745,6 +745,11 @@ final HttpDestination destination =
         ScpCfServiceDestinationLoader.CfServices.WORKFLOW,
         "my-workflow");
 ```
+
+:::note Caching
+These destinations are currently not cached.
+Please consider re-using the obtained destination objects when using `OAuth2ClientCredentials` or `OAuth2UserTokenExchange` oo avoid unnecessary token retrievals.
+:::
 
 #### Enable Access to SAP Business Technology Platform Connectivity Service
 
