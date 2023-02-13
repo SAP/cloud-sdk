@@ -270,7 +270,7 @@ Another usage for the middleware would be a custom `CSRF` token fetching:
 ```ts
 const customCsrf = options => {
   return async requestConfig => {
-    requestConfig.headers['x-csrf-token'] = await getCsrfToken()
+    requestConfig.headers['x-csrf-token'] = await getCsrfToken();
     return options.fn(requestConfig);
   };
 };
