@@ -1,3 +1,100 @@
+# 4.7.0 - February 08, 2023
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:4.7.0)
+
+## Known Issues
+
+- Arquillian based unit tests that use TomEE (embedded) as container may not work anymore with the latest SJB update.
+  If the runtime encounters missing method or class exceptions, then we recommend setting the following system property in the local `arquillian.xml` test resource file:
+  ```xml
+  <property name="properties">openejb.cxf.jmx=false</property>
+  ```
+
+## Compatibility Notes
+
+- Changing the configuration of `ScpCfDestinationLoader.Cache` after disabling it via `disable()` will now throw an exception.
+
+## New Functionality
+
+- The destination cache now offers a change detection mode.
+  When accessing multiple destinations per tenant this mode can yield a significant performance increase.
+  It is disabled by default but can be enabled via the new `ScpCfDestinationLoader.Cache.enableChangeDetection()`.
+  Further configuration is possible via the available setters on `ScpCfDestinationLoader.Cache`.
+  Refer to the [dedicated documentation](https://sap.github.io/cloud-sdk/docs/java/features/connectivity/destination-service#configuring-caching-when-querying-the-destination-service-on-cloud-foundry) for more information.
+- The destination cache now also applies to `ScpCfDestinationLoader.tryGetAllDestinations()`.
+  The same cache duration and expiration settings set on `ScpCfDestinationLoader.Cache` apply.
+  However, the cache size is not limited.
+- Extended the `ScpCfServiceDestinationLoader` to now also allow for `AuthenticationType.OAUTH2_USER_TOKEN_EXCHANGE`.
+  This enables accessing the service on behalf of a business user via user token exchange.
+
+## Improvements
+
+- Update the OData VDM to the [newest release 2302 of SAP S/4HANA Cloud](https://blogs.sap.com/2023/01/25/highlights-of-the-sap-s-4hana-cloud-public-edition-2302-release/).
+  This includes completely new services (available as usual in packages `com.sap.cloud.sdk.s4hana.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types.
+  The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/products/SAPS4HANACloud/overview).
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [SAP Java Buildpack](https://central.sonatype.dev/artifact/com.sap.cloud.sjb.cf/cf-tomcat-bom/1.65.0/versions) from `1.64.1` to `1.65.0`
+    - Update [Neo JavaEE7 WP API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-javaee7-wp-api) from `1.140.5` to `1.141.12`
+    - Update [Spring Boot](https://search.maven.org/search?q=g:org.springframework.boot%20AND%20a:spring-boot) (`org.springframework.boot:spring-boot-dependencies` and `org.springframework.boot:spring-boot-maven-plugin`) from `2.7.6` to `2.7.8`
+  - Other dependency updates:
+    - Minor version updates:
+      - Update [API Common](https://search.maven.org/search?q=g:com.google.api%20AND%20a:api-common) (`com.google.api:api-common`) from `2.4.0` to `2.5.0`
+      - Update [Spring Boot](https://search.maven.org/search?q=g:org.springframework.boot%20AND%20a:spring-boot) (`org.springframework.boot:spring-boot`) from `2.7.7` to `2.7.8`
+      - Update [Jackson Date/Time](https://search.maven.org/search?q=g:com.fasterxml.jackson.datatype%20AND%20a:jackson-datatype-jsr310) (`com.fasterxml.jackson.datatype:jackson-datatype-jsr310`) from `2.14.1` to `2.14.2`
+      - Update [Jackson Core](https://search.maven.org/search?q=g:com.fasterxml.jackson.core%20AND%20a:jackson-core) (`com.fasterxml.jackson.core:jackson-annotations`, `com.fasterxml.jackson.core:jackson-databind` and `com.fasterxml.jackson.core:jackson-core`) from `2.14.1` to `2.14.2`
+
+## 4.6.0 - January 26, 2023
+
+[Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:4.6.0)
+
+### Improvements
+
+<!-- vale off -->
+
+- Dependency Updates:
+
+  - SAP dependency updates:
+    - Update [Neo JavaEE7 WP API](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-javaee7-wp-api) from `1.139.9` to `1.140.5`
+  - Other dependency updates:
+    - Minor version updates:
+      - Update [Spring Boot](https://search.maven.org/search?q=g:org.springframework.boot%20AND%20a:spring-boot) (`org.springframework.boot:spring-boot`) from `2.7.6` to `2.7.7`
+      - Update [Spring Framework](https://search.maven.org/search?q=g:org.springframework%20AND%20a:spring-framework-bom) (`org.springframework:spring-framework-bom`) from `5.3.24` to `5.3.25`
+      - Update [Checker Equal](https://search.maven.org/search?q=g:org.checkerframework%20AND%20a:checker-qual) (`org.checkerframework:checker-equal`) from `3.28.0` to `3.29.0`
+      - Update [Annotations for Error Prone](https://search.maven.org/search?q=g:com.google.errorprone%20AND%20a:error_prone_annotations) (`com.google.errorprone:error_prone_annotations`) from `2.16` to `2.18.0`
+      - Update [Gson](https://search.maven.org/search?q=g:com.google.code.gson%20AND%20a:gson) (`com.google.code.gson:gson`) from `2.10` to `2.10.1`
+      - Update [Auth0 JWT](https://search.maven.org/search?q=g:com.auth0%20AND%20a:java-jwt) (`com.auth0:java-jwt`) from `4.2.1` to `4.2.2`
+      <!-- vale on -->
+
+- Improved destination caching in BTP CF by storing destinations for the entire tenant (i.e. all principals) just once if no user propagation is required.
+  This affects following authentication types:
+
+  - `NoAuthentication`
+  - `BasicAuthentication`
+  - `ClientCertificateAuthentication`
+  - `OAuth2ClientCredentials`
+  - `OAuth2Password`
+
+  Applications that use such authentication types for their destinations primarily may greatly benefit from this change as destinations are far more likely to be served from the cache instead of being retrieved from the BTP Destination service.
+
+  For improved performance, while using destinations that require user propagation, users may provide the `EXCHANGE_ONLY` token exchange option via the `DestinationOptions` parameter while retrieving the destination in BTP CF.
+
+  ```java
+  DestinationOptions options =
+      DestinationOptions
+          .builder()
+          .augmentBuilder(
+              ScpCfDestinationOptionsAugmenter
+                  .augmenter()
+                  .tokenExchangeStrategy(ScpCfDestinationTokenExchangeStrategy.EXCHANGE_ONLY))
+          .build();
+  Try<Destination> destination = DestinationAccessor.getLoader().tryGetDestination("MyDestination", options);
+  ```
+
+### Fixed Issues
+
+- Fix an issue when serializing `EDM.DateTime` objects in OData V2, which caused the resulting literal to contain 9 digits for the nanoseconds instead of 7.
+
 ## 4.5.0 - December 29, 2022
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:4.5.0)
@@ -109,8 +206,9 @@ AuthenticationType authType = destination.get(DestinationProperty.AUTH_TYPE)
   - SAP dependency updates:
     - Update [SAP Cloud Security Library](https://github.com/SAP/cloud-security-xsuaa-integration) from `2.13.2` to `2.13.4`
     - Update [SAP Java Buildpack](https://central.sonatype.dev/artifact/com.sap.cloud.sjb.cf/cf-tomcat-bom/1.63.0/versions) from `1.60.0` to `1.63.0`
-  - Other dependency updates: - Update [Spring Core and Web](<https://search.maven.org/search?q=g:org.springframework%20AND%20(a:spring-core%20OR%20a:spring-web)>) from `5.3.23` to `5.3.24`
-  <!-- vale on -->
+  - Other dependency updates:
+    - Update [Spring Core and Web](<https://search.maven.org/search?q=g:org.springframework%20AND%20(a:spring-core%20OR%20a:spring-web)>) from `5.3.23` to `5.3.24`
+    <!-- vale on -->
 
 ### Fixed Issues
 
