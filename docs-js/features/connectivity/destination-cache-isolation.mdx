@@ -180,13 +180,13 @@ setDestinationCache(customCache);
 ## Registered Destination Cache
 
 When [registering destinations](./destination.mdx#register-destination) using the [`registerDestination()`](pathname:///api/v3/functions/sap_cloud_sdk_connectivity.registerDestination.html) function, destinations are stored in a separate cache.
-This cache is always enabled and be behaves similarly to the destination cache discussed above.
-It uses the same default [isolation strategies](#isolation-strategy).
+This cache is always enabled and behaves similarly to the destination cache discussed above.
+It uses the same JWT-dependent defaults for the [isolation strategy](#isolation-strategy) as the destination cache.
 To change the isolation strategy pass the `isolationStrategy` option to the function.
 
 ```ts
 registerDestination(destination, {
-  jwt: 'yourJWT',
+  jwt: 'JWT',
   isolationStrategy: 'tenant'
 });
 ```
@@ -198,10 +198,10 @@ import { registerDestination } from '@sap-cloud-sdk/connectivity';
 
 const destination = {
   name: 'DESTINATION',
-  url: 'https://mys4hana.com'
+  url: 'https://example.com'
 };
 
-registerDestination(destination, { jwt: 'yourJWT' });
+registerDestination(destination, { jwt: 'JWT' });
 ```
 
 You cannot replace the registered destination cache with a custom cache.
