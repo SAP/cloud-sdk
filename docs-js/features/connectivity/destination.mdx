@@ -54,7 +54,7 @@ Similarly for OpenAPI:
 const responseOpenApi = await MyApi.myFunction().execute(myDestination);
 ```
 
-`myDestination` is an SAP Cloud SDK representation of a [destination](pathname:///api/interfaces/sap_cloud_sdk_connectivity.Destination.html).
+`myDestination` is an SAP Cloud SDK representation of a [destination](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.Destination.html).
 The given request is executed against `myDestination`.
 
 For the rest of the document, you will learn about the different options on destination lookup.
@@ -149,13 +149,13 @@ This can be avoided with a cache for cases like very frequent service-to-service
 import { registerDestination } from '@sap-cloud-sdk/connectivity';
 
 const destination = {
-  name: 'MY-DESTINATION',
+  name: 'DESTINATION',
   url: 'https://mys4hana.com'
 };
 
 registerDestination(destination, options);
 
-MyRequest.execute({ destinationName: 'MY-DESTINATION' });
+MyRequest.execute({ destinationName: 'DESTINATION' });
 ```
 
 Functions such as `execute()` and `executeHttpRequest()` call the `getDestination()` function internally for the destination lookup.
