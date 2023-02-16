@@ -25,6 +25,7 @@ module.exports = {
             'features/connectivity/destination-cache',
             'features/connectivity/proxies',
             'features/connectivity/http-client',
+            'features/connectivity/csrf',
             'features/connectivity/on-premise'
           ]
         },
