@@ -57,7 +57,6 @@ export type Middleware = (options: MiddlewareOptions) => MiddlewareFunction;
 export interface MiddlewareOptions {
   fn: MiddlewareFunction;
   context: HttpMiddlewareContext;
-  skipNext: () => void;
 }
 ```
 
@@ -68,7 +67,6 @@ The `MiddlewareOptions` have the following properties:
   For the last one it is the original HTTP request from the SAP Cloud SDK.
   Note that the type of the input and return function are the same.
 - The `context` provides information on the request like URL, headers and HTTP method.
-- `skipNext()` will exit all following middlewares
 
 Note that a middleware should **not** execute the function but construct and return a `MiddlewareFunction`.
 You can think of middlewares as a composition of functions where each middleware composes a new function.
