@@ -1,8 +1,14 @@
 import React from 'react';
-import DocsVersionDropdownNavbarItem from '@theme-original/NavbarItem/DocsVersionDropdownNavbarItem';
-import { useActiveDocContext } from '@docusaurus/plugin-content-docs/client';
+import DocsVersionDropdownLink from '@theme-original/NavbarItem/DocsVersionDropdownNavbarItem';
+import {
+  useActiveDocContext,
+  useActiveVersion,
+  useVersions
+} from '@docusaurus/plugin-content-docs/client';
 import { containsCurrentDocsPluginId, hasMoreThanOneVersion } from './helper';
 import HtmlNavbarItem from '@theme-original/NavbarItem/HtmlNavbarItem';
+import NavbarNavLink from '@theme-original/NavbarItem/NavbarNavLink';
+import DocsVersionDropdownNavbarItem from '@theme-original/NavbarItem/DocsVersionDropdownNavbarItem';
 
 /**
  * Only shows the docs version dropdown if the current path matches a corresponding path in the plugin id.
@@ -13,14 +19,6 @@ export default function DocsVersionDropdownNavbarItemWrapper(props) {
     return null;
   }
 
-  if (hasMoreThanOneVersion(props.docsPluginId)) {
-    return <DocsVersionDropdownNavbarItem {...props} />;
-  }
-
-  const label = useActiveDocContext(props.docsPluginId).activeVersion.label;
-  const newProps = {
-    position: 'right',
-    value: `<a class="navbar__link" role="button">${label}</a>`
-  };
-  return <HtmlNavbarItem {...newProps} />;
+  // default shows always 3 links are adjusted in NavbarNavLink.js
+  return <DocsVersionDropdownNavbarItem {...props} />;
 }
