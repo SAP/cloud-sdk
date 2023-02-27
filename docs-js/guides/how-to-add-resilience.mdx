@@ -80,10 +80,7 @@ The default timeout is 10 seconds, but can be changed on demand.
 import { timeout } from '@sap-cloud-sdk/resilience';
 
 // Three seconds timeout
-myApi
-  .getAll()
-  .middleware([timeout(3000)])
-  .execute(myDestination);
+myApi.getAll().middleware(timeout(3000)).execute(myDestination);
 ```
 
 :::note
@@ -98,7 +95,7 @@ You can create a circuit breaker middleware in the following way:
 ```ts
 import { circuitBreaker } from '@sap-cloud-sdk/resilience';
 
-myApi.getAll().middleware([circuitBreaker()]).execute(myDestination);
+myApi.getAll().middleware(circuitBreaker()).execute(myDestination);
 ```
 
 :::note
@@ -147,10 +144,7 @@ You can change the number in the following way:
 import { retry } from '@sap-cloud-sdk/resilience';
 
 // Four retries
-myApi
-  .getAll()
-  .middleware([retry(4)])
-  .execute(myDestination);
+myApi.getAll().middleware(retry(4)).execute(myDestination);
 ```
 
 The retry middleware uses the [async-retry](https://www.npmjs.com/package/async-retry) library and uses meaningful default values:
