@@ -1,0 +1,38 @@
+Other rare cases will bring you to the situation where you want to serialize your Entity back to the oData structure you did receive before.
+If you need to transform it from your SAP Cloud SDK representation of an entity back to a oData representation,
+you can use the `executeRaw()` functionality directly within your original request or
+you can serialize the SDK representation / entity by using the `serializeEntity` function.
+This function is part of the common oData service and has to be imported from the SAP Cloud SDK `odata-common` package.
+
+```ts
+import {
+  entitySerializer
+} from '@sap-cloud-sdk/odata-common';
+import { businessPartnerService } from './generated/business-partner-service';
+
+const { businessPartnerApi } = businessPartnerService();
+
+const deserializedEntity = businessPartnerApi
+  .entityBuilder()
+  .firstName('Peter')
+  .lastName('Pan')
+  .toBusinessPartnerAddress([
+    businessPartnerAddressApi.entityBuilder().country('Neverland').build()
+  ])
+  .build();
+
+const serializedEntity = entitySerializer(
+  businessPartnerApi.deSerializers
+).serializeEntity(deserializedEntity, businessPartnerApi);
+
+console.log(serializedEntity); 
+=> {
+  FirstName: 'Peter',
+  LastName: 'Pan',
+  to_BusinessPartnerAddress: [
+    {
+      Country: 'Neverland'
+    }
+  ]
+}
+```
