@@ -20,39 +20,39 @@ keywords:
 ## Default Behaviour
 
 The SAP Cloud SDK fetches a CSRF token for non `GET` requests per default.
-This is done no for all clients the SAP Cloud SDK provides:
+This is done for all clients that the SAP Cloud SDK provides:
 
 - [generic http-client](./http-client#csrf-token-fetching)
 - [v2 OData clients](../odata/v2-client#handling-of-cross-site-request-forgery-tokens)
 - [v4 OData clients](../odata/v4-client#handling-of-cross-site-request-forgery-tokens)
-- [OpenApi clients](../openapi/execute-request#handling-of-cross-site-request-forgery-tokens).
+- [OpenAPI clients](../openapi/execute-request#handling-of-cross-site-request-forgery-tokens)
 
 If the target system does not require a token you can disable the fetching as discussed in the sections:
 
 - [disable for http-client](./http-client#csrf-token-fetching)
 - [disable for v2 OData clients](../odata/v2-client#hskip-csrf-token-handling)
 - [disable for v4 OData clients](../odata/v4-client#skip-csrf-token-handling)
-- [disable OpenApi clients](../openapi/execute-request#skip-csrf-token-handling).
+- [disable for OpenAPI clients](../openapi/execute-request#skip-csrf-token-handling)
 
 In order to retrieve a token the SAP cloud SDK does the following steps:
 
 Makes a request using the resource URL adding a `/` in the end:
 
 ```
-Request:             HEAD /reource/path/
+Request:             HEAD /resource/path/
 Request Header:      X-CSRF-Token=fetch
 ```
 
-If this returns a token execute the request with the token.
-If not, make a second call without the `/` is tried:
+If this returns a token, execute the request with the token.
+If not, make a second call without the `/`:
 
 ```
-Request:             HEAD /reource/path
+Request:             HEAD /resource/path
 Request Header:      X-CSRF-Token=fetch
 ```
 
-If this returns a token execute the request with the token.
-If this also does not yield a token the request is executed without an additional token.
+If this returns a token, execute the request with the token.
+If this also does not yield a token, the request is executed without an additional token.
 Note that the SAP Cloud SDK consider `SET-COOKIE` headers provided the requests returning the tokens.
 
 Most systems will return a CSRF token independent of an additional `/` in the end.
@@ -63,7 +63,7 @@ If performance is relevant you should check:
 - Does the system fail to return a CSRF with a `/`? Adjust the token fetching via a middleware.
 
 :::note
-The SAP Cloud SDK will discontinue to fetch CSRF tokens per default.
+The SAP Cloud SDK will discontinue fetching CSRF tokens per default.
 From version 4 on you will need to add the `csrf()` middleware to enable fetching.
 Also, a failure in token fetching will stop the request execution and not silently be ignored.
 :::
