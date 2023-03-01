@@ -1,10 +1,10 @@
 ---
 id: csrf
-title: Csrf Fetching
+title: CSRF Fetching
 hide_title: false
 hide_table_of_contents: false
-sidebar_label: Csrf Fetching
-description: This article describes how destinations are fetched in the SDK and how they can be configured.
+sidebar_label: CSRF Fetching
+description: This article describes how CSRF tokens are fetched in the SDK and how you can configure the fetching.
 keywords:
   - sap
   - cloud
@@ -34,9 +34,8 @@ If the target system does not require a token you can disable the fetching as di
 - [disable for v4 OData clients](../odata/v4-client#skip-csrf-token-handling)
 - [disable for OpenAPI clients](../openapi/execute-request#skip-csrf-token-handling)
 
-In order to retrieve a token the SAP cloud SDK does the following steps:
-
-Makes a request using the resource URL adding a `/` in the end:
+In order to retrieve a token the SAP cloud SDK makes multiple calls.
+First it makes a request using the resource URL adding a `/` in the end:
 
 ```
 Request:             HEAD /resource/path/
