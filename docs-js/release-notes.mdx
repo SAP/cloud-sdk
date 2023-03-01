@@ -29,7 +29,7 @@ import LicenseBadge from '@site/src/sap/sdk-js/LicenseBadge';
 - [connectivity, http-client, openapi, odata-common, odata-v2, resilience] Remove the options `timeout` and `enableCircuitBreaker` from all BTP service interactions i.e. destination and token fetching. (1b974095f)
 - [connectivity, http-client, mail-client, openapi, odata-common, odata-v2, odata-v4, eslint-config, generator, test-util, util, openapi-generator, generator-common, temporal-de-serializers, resilience] Switch the compilerOptions.module to `Node16` instead of `CommonJS` for better interoperability with ES modules. See the [TypeScript handbook](https://www.typescriptlang.org/docs/handbook/esm-node.html) for technical details if needed. (1b974095f)
 - [connectivity] The enum `IsolationStrategy` was replaced with a string literal union type of the same name. Use 'tenant' and 'tenant-user' instead of `IsolationStrategy.Tenant` and `IsolationStrategy.Tenant_User`. (1b974095f)
-- [connectivity, http-client, odata-common] ] The `url` property in `Destination` is now optional as destinations of type `MAIL` do not have a URL. (1b974095f)
+- [connectivity, http-client, odata-common] The `url` property in `Destination` is now optional as destinations of type `MAIL` do not have a URL. (1b974095f)
 - [http-client, openapi, odata-common] Remove `timeout()` method from the request builders and the `timeout` options from the `executeHttpRequest()` function.
   Visit the [documentation portal](https://sap.github.io/cloud-sdk/docs/js/guides/resilience) to see how to add a timeout using middlewares. (1b974095f)
 - [http-client] Removed overload of executeHttpRequest
@@ -45,12 +45,12 @@ import LicenseBadge from '@site/src/sap/sdk-js/LicenseBadge';
 - [generator] The options per service behavior is now the same as for the OpenApi generator.
   For details on how to migrate and what has change look at the migration guide. (1b974095f)
 - [generator] The deprecated `forceOverwrite` option of the generator is removed. Use the `overwrite` option instead.
-  [Compatibility Note] The deprecated `generatePackageJson` option of the generator is removed. Use the `packageJson` option instead.
-  [Compatibility Note] The deprecated `writeReadme` option of the generator is removed. Use the `readme` option instead.
-  [Compatibility Note] The deprecated `processesJsGeneration` option of the generator is removed. Use the `transpilationProcesses` option instead.
-  [Compatibility Note] The internal options `sdkAfterVersionScript`, `s4HanaCloud` and `packageVersion` of the generator are removed.
+- [generator] The deprecated `generatePackageJson` option of the generator is removed. Use the `packageJson` option instead.
+- [generator] The deprecated `writeReadme` option of the generator is removed. Use the `readme` option instead.
+- [generator] The deprecated `processesJsGeneration` option of the generator is removed. Use the `transpilationProcesses` option instead.
+- [generator] The internal options `sdkAfterVersionScript`, `s4HanaCloud` and `packageVersion` of the generator are removed.
   These were hidden options never meant for external usage and there is no replacement.
-  [Compatibility Note] The deprecated `generateNpmrc` option of the generator is removed. Use the `include` option to add a `.npmrc` to the generated code if needed. (1b974095f)
+- [generator] The deprecated `generateNpmrc` option of the generator is removed. Use the `include` option to add a `.npmrc` to the generated code if needed. (1b974095f)
 - [generator] Add `verbose` generator option. By default, only error and warning logs will be displayed. If `verbose` is set to `true`, all logs will be displayed. (1b974095f)
 - [generator] The `generateJs` option has been replaced with the `transpile` option. Transpilation is not enabled by default. (1b974095f)
 - [generator] The command line argument `inputDir` of the OData generator is renamed to `input`.
@@ -61,7 +61,7 @@ import LicenseBadge from '@site/src/sap/sdk-js/LicenseBadge';
 - [generator, openapi-generator, generator-common] Removed the option `versionInPackageJson` from the OData and OpenAPI generator.
   If the option `packageJson` is enabled now a `package.json` with a default version `1.0.0` is created.
   If necessary use the `include` option to add a `package.json` with a custom value.
-  [Compatibility Note] Removed the option `licenseInPackageJson` from the OData and OpenAPI generator.
+- [generator, openapi-generator] Removed the option `licenseInPackageJson` from the OData and OpenAPI generator.
   If the option `packageJson` is enabled now a `package.json` with a default license `UNLICENSED` is created.
   If necessary use the `include` option to add a `package.json` with a custom value. (1b974095f)
 - [generator, openapi-generator] Rename servicePath to basePath. (1b974095f)
@@ -75,7 +75,7 @@ import LicenseBadge from '@site/src/sap/sdk-js/LicenseBadge';
 - [openapi-generator] The internal option `packageVersion` of the OpenAPI generator is removed. (1b974095f)
 - [openapi-generator] `tsConfig` option has been renamed to `tsconfig`. (1b974095f)
 - [generator-common] The generator does not create `d.ts.map` files per default anymore. If you need them include a custom `tsconfig.json`.
-  [Compatibility Note] All SAP Cloud SDK packages ship without `d.ts.map` files from now on.
+- [connectivity, http-client, mail-client, openapi, odata-common, odata-v2, odata-v4, eslint-config, generator, test-util, util, openapi-generator, generator-common, temporal-de-serializers, resilience] All SAP Cloud SDK packages ship without `d.ts.map` files from now on.
   Modern IDEs don't require those files for code navigation, thus they are removed to decrease download size of the SDK. (1b974095f)
 
 ### New Functionalities
