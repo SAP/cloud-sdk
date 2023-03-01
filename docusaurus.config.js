@@ -244,7 +244,7 @@ module.exports = {
           v2: {
             label: 'v2',
             path: 'v2',
-            banner: 'none',
+            banner: 'unmaintained',
             badge: false
           },
           v1: {
