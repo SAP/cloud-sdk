@@ -281,7 +281,7 @@ Once from the Buildpack and once packaged by maven into the deployment artifact.
 
 ## Spring Boot 3 compatibility
 
-SAP Cloud SDK can be used with JakartaEE (e.g. via Spring Boot 3, Spring 6, and Java 17) thanks to the experimental module `servlet-jakarta`.
+SAP Cloud SDK can be used with JakartaEE (e.g. via Spring Boot 3, Spring 6, and Java 17) thanks to the module `servlet-jakarta`.
 Here are instructions on how to update your application:
 
 1. Set Spring Boot version to 3 and Java version to 17:
@@ -320,7 +320,7 @@ Here are instructions on how to update your application:
 </dependencyManagement>
 ```
 
-3. Replace any `javax` dependency with a `jakarta` dependency:
+3. Replace any `javax` dependency with the respective `jakarta` dependency:
 
 ```xml
 <!--Before-->
@@ -364,4 +364,4 @@ Don't forget to replace `javax` imports in Java files with `jakarta` imports.
 5. Remove outdated dependencies:
 
 - Remove `logback-classic`
-- Some dependencies such as the `XSUAA Security library` are not yet updated for Spring Boot 3
+- Please note, some dependencies are not yet fully compatible for Java17 or Spring Boot 3.
