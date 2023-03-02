@@ -53,6 +53,7 @@ module.exports = {
       type: 'category',
       label: 'Guides',
       items: [
+        'guides/upgrade-to-version-3',
         'guides/kubernetes',
         'guides/bas',
         'guides/browser',
@@ -98,6 +99,11 @@ module.exports = {
       type: 'category',
       label: 'Video Tutorials',
       items: ['video/calm']
+    },
+    {
+      type: 'link',
+      label: 'API Reference',
+      href: 'pathname:///api/v3/index.html'
     },
     'release-notes',
     'support',
