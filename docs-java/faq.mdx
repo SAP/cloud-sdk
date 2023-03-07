@@ -300,20 +300,10 @@ Here are instructions on how to update your application:
 
 Don't forget to replace `javax` imports in Java files with `jakarta` imports.
 
-4. Modify the existing `scp-cf` dependency to enable the new `servlet-jakarta` module:
+4. Add the new `servlet-jakarta` module:
 
 ```xml
 <dependencies>
-    <dependency>
-        <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
-        <artifactId>scp-cf</artifactId>
-        <exclusions>
-            <exclusion>
-                <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
-                <artifactId>servlet</artifactId>
-            </exclusion>
-        </exclusions>
-    </dependency>
     <dependency>
         <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
         <artifactId>servlet-jakarta</artifactId>
@@ -332,4 +322,10 @@ Don't forget to replace `javax` imports in Java files with `jakarta` imports.
 
 - Remove `logback-classic`
 - [Configure SAP Java Buildpack to run with Java 17](https://help.sap.com/docs/btp/sap-business-technology-platform/sapmachine#activation)
+  - Add the SAPMachine JRE version 17 in you `manifest.yml`:
+  ```diff
+    env:
+  +   JBP_CONFIG_COMPONENTS: 'jres: [''com.sap.xs.java.buildpack.jre.SAPMachineJRE'']'
+  +   JBP_CONFIG_SAP_MACHINE_JRE: '{ use_offline_repository: false, version: 17.0.5 }'
+  ```
 - Please note, some dependencies are not yet fully compatible for Java17 or Spring Boot 3.
