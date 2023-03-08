@@ -32,10 +32,97 @@ Be cautious about using features annotated as _Beta_ because their API can chang
 
 ### Which Java Versions Are Supported by the SAP Cloud SDK?
 
-The SAP Cloud SDK itself is compatible with Java 8 and 11.
+The SAP Cloud SDK itself is compatible with Java 8, 11 [and 17](#spring-boot-3-and-java-17-support).
 Other Java versions may work as well, depending on your setup, but are not yet tested by us.
 Note that the SAP Business Technology Platform Cloud Foundry environment only supports Java 8 out of the box, but can be configured to also run with Java 11.
 SAP Business Technology Platform Neo only supports Java 8.
+
+#### Spring Boot 3 and Java 17 support
+
+SAP Cloud SDK can be used with JakartaEE (e.g. via Spring Boot 3, Spring 6, and Java 17) thanks to the experimental module `servlet-jakarta`.
+Here are instructions on how to update your application:
+
+1. Set Spring Boot version to 3 and Java version to 17:
+
+```xml
+<properties>
+    <spring-boot.version>3.0.2</spring-boot.version>
+    <java.version>17</java.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+    <maven.compiler.testSource>${java.version}</maven.compiler.testSource>
+    <maven.compiler.testTarget>${java.version}</maven.compiler.testTarget>
+</properties>
+```
+
+2. Place the Spring Boot dependency management **before** the SDK BOM:
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-dependencies</artifactId>
+            <version>${spring-boot.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sap.cloud.sdk</groupId>
+            <artifactId>sdk-bom</artifactId>
+            <version>4.9.0</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
+3. Replace any `javax` dependency with the respective `jakarta` dependency:
+
+```diff
+-<dependency>
+-    <groupId>javax.inject</groupId>
+-    <artifactId>javax.inject</artifactId>
+-</dependency>
++<dependency>
++    <groupId>jakarta.inject</groupId>
++    <artifactId>jakarta.inject-api</artifactId>
++    <version>2.0.1</version>
++</dependency>
+```
+
+Don't forget to replace `javax` imports in Java files with `jakarta` imports.
+
+4. Add the new `servlet-jakarta` module:
+
+```xml
+<dependencies>
+    <dependency>
+        <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
+        <artifactId>servlet-jakarta</artifactId>
+    </dependency>
+</dependencies>
+```
+
+5. When using the `@ServletComponentScan` annotation as suggested, please update the namespace:
+
+```diff
+- @ServletComponentScan({"com.sap.cloud.sdk", ...
++ @ServletComponentScan({"com.sap.cloud.sdk.cloudplatform.servletjakarta", ...
+```
+
+6. Handle outdated dependencies:
+
+- Remove `logback-classic`
+- [Configure SAP Java Buildpack to run with Java 17](https://help.sap.com/docs/btp/sap-business-technology-platform/sapmachine#activation)
+  - Add the SAPMachine JRE version 17 in you `manifest.yml`:
+  ```diff
+    env:
+  +   JBP_CONFIG_COMPONENTS: 'jres: [''com.sap.xs.java.buildpack.jre.SAPMachineJRE'']'
+  +   JBP_CONFIG_SAP_MACHINE_JRE: '{ use_offline_repository: false, version: 17.0.5 }'
+  ```
+- Please note, some dependencies are not yet fully compatible for Java17 or Spring Boot 3.
 
 ### Can I Use Features Annotated as Beta in Production?
 
@@ -242,90 +329,3 @@ For further reading on this vulnerability have a look at the following (external
 - <http://slf4j.org/log4shell.html>
 - <https://support.sap.com/content/dam/support/en_us/library/ssp/my-support/trust-center/sap-tc-01-5025.pdf>
 - <https://nvd.nist.gov/vuln/detail/CVE-2021-44228>
-
-## Do you support Spring Boot 3 and Java 17?
-
-SAP Cloud SDK can be used with JakartaEE (e.g. via Spring Boot 3, Spring 6, and Java 17) thanks to the experimental module `servlet-jakarta`.
-Here are instructions on how to update your application:
-
-1. Set Spring Boot version to 3 and Java version to 17:
-
-```xml
-<properties>
-    <spring-boot.version>3.0.2</spring-boot.version>
-    <java.version>17</java.version>
-    <maven.compiler.source>${java.version}</maven.compiler.source>
-    <maven.compiler.target>${java.version}</maven.compiler.target>
-    <maven.compiler.testSource>${java.version}</maven.compiler.testSource>
-    <maven.compiler.testTarget>${java.version}</maven.compiler.testTarget>
-</properties>
-```
-
-2. Place the Spring Boot dependency management **before** the SDK BOM:
-
-```xml
-<dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-dependencies</artifactId>
-            <version>${spring-boot.version}</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sap.cloud.sdk</groupId>
-            <artifactId>sdk-bom</artifactId>
-            <version>4.9.0</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-    </dependencies>
-</dependencyManagement>
-```
-
-3. Replace any `javax` dependency with the respective `jakarta` dependency:
-
-```diff
--<dependency>
--    <groupId>javax.inject</groupId>
--    <artifactId>javax.inject</artifactId>
--</dependency>
-+<dependency>
-+    <groupId>jakarta.inject</groupId>
-+    <artifactId>jakarta.inject-api</artifactId>
-+    <version>2.0.1</version>
-+</dependency>
-```
-
-Don't forget to replace `javax` imports in Java files with `jakarta` imports.
-
-4. Add the new `servlet-jakarta` module:
-
-```xml
-<dependencies>
-    <dependency>
-        <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
-        <artifactId>servlet-jakarta</artifactId>
-    </dependency>
-</dependencies>
-```
-
-5. When using the `@ServletComponentScan` annotation as suggested, please update the namespace:
-
-```diff
-- @ServletComponentScan({"com.sap.cloud.sdk", ...
-+ @ServletComponentScan({"com.sap.cloud.sdk.cloudplatform.servletjakarta", ...
-```
-
-6. Handle outdated dependencies:
-
-- Remove `logback-classic`
-- [Configure SAP Java Buildpack to run with Java 17](https://help.sap.com/docs/btp/sap-business-technology-platform/sapmachine#activation)
-  - Add the SAPMachine JRE version 17 in you `manifest.yml`:
-  ```diff
-    env:
-  +   JBP_CONFIG_COMPONENTS: 'jres: [''com.sap.xs.java.buildpack.jre.SAPMachineJRE'']'
-  +   JBP_CONFIG_SAP_MACHINE_JRE: '{ use_offline_repository: false, version: 17.0.5 }'
-  ```
-- Please note, some dependencies are not yet fully compatible for Java17 or Spring Boot 3.
