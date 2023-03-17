@@ -185,10 +185,10 @@ module.exports = {
           ignorePatterns: [
             '/cloud-sdk/api/**',
             '/cloud-sdk/components/**',
-            '/cloud-sdk/docs/js/v1/features/common/**',
-            '/cloud-sdk/docs/js/v1/features/odata/common/**',
-            '/cloud-sdk/docs/js/v1/features/odata/v2/**',
-            '/cloud-sdk/docs/js/v1/features/odata/v4/**',
+            '/cloud-sdk/docs/js/*/features/common/**',
+            '/cloud-sdk/docs/js/*/features/odata/common/**',
+            '/cloud-sdk/docs/js/*/features/odata/v2/**',
+            '/cloud-sdk/docs/js/*/features/odata/v4/**',
             '/cloud-sdk/docs/js/features/common/**',
             '/cloud-sdk/docs/js/features/odata/common/**',
             '/cloud-sdk/docs/js/features/odata/v2/**',
@@ -235,17 +235,16 @@ module.exports = {
         editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
         routeBasePath: 'docs/js',
         sidebarPath: require.resolve('./sidebarsDocsJs.js'),
-        lastVersion: 'v2',
+        lastVersion: 'current',
         versions: {
           current: {
             label: 'v3',
-            path: 'v3',
-            banner: 'unreleased',
             badge: false
           },
           v2: {
             label: 'v2',
-            banner: 'none',
+            path: 'v2',
+            banner: 'unmaintained',
             badge: false
           },
           v1: {

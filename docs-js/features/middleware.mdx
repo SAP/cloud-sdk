@@ -20,6 +20,7 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 The main purpose of the SAP Cloud SDK is to execute asynchronous HTTP requests.
 This can either happen via a generated [OData](./odata/execute-request#setting-middlewares) or [OpenAPI](./openapi/execute-request#setting-middlewares) client or the [http client](./connectivity/http-client#setting-middlewares).
+The examples presented in this guide use the http client, but all information applies to the typed clients as well.
 Either way, the final result after fetching destinations and doing various other things is an [axios](https://github.com/axios/axios) request.
 Sometimes you want to adjust the way the SAP Cloud SDK executes the axios request.
 
@@ -30,7 +31,7 @@ You can add multiple middlewares to adjust requests to your needs.
 executeHttpRequest(
   { url: 'http://example.com' },
   {
-    middleware: [middlewareA, middlewareB,...],
+    middleware: [middlewareA, middlewareB, ...],
     method: 'get'
   }
 );
@@ -57,7 +58,6 @@ export type Middleware = (options: MiddlewareOptions) => MiddlewareFunction;
 export interface MiddlewareOptions {
   fn: MiddlewareFunction;
   context: HttpMiddlewareContext;
-  skipNext: () => void;
 }
 ```
 
@@ -68,7 +68,6 @@ The `MiddlewareOptions` have the following properties:
   For the last one it is the original HTTP request from the SAP Cloud SDK.
   Note that the type of the input and return function are the same.
 - The `context` provides information on the request like URL, headers and HTTP method.
-- `skipNext()` will exit all following middlewares
 
 Note that a middleware should **not** execute the function but construct and return a `MiddlewareFunction`.
 You can think of middlewares as a composition of functions where each middleware composes a new function.
@@ -91,7 +90,7 @@ const doSomethingBeforeMiddleware = options => {
 
 In the example the custom code executes before the function `fn()`.
 Do this when you want to adjust things before the actual HTTP request is executed.
-If you want to process the result of the function your middleware implement it the following way
+If you want to process the result of the function in your middleware, implement it the following way:
 
 ```ts
 const doSomethingAfterMiddleware = options => {
@@ -104,7 +103,7 @@ const doSomethingAfterMiddleware = options => {
 };
 ```
 
-Remember that code you put outside the returned function is executed when the functions are composed.
+Remember that the code you put outside the returned function is executed when the functions are composed.
 This is in general not what you want.
 
 ```ts
@@ -116,10 +115,10 @@ const unintendedMiddleware = options => {
 };
 ```
 
-The example above is not really useful but also not harmful.
+The example above is not really useful, but also not harmful.
 Remember that a middleware must **not** execute the original function.
 It adds functionality to the function and creates a new function from it.
-If you execute it the whole middleware composition idea is destroyed.
+If you execute it, the whole middleware composition idea is destroyed.
 
 ```ts
 const wrongMiddleware = options => {
@@ -157,7 +156,7 @@ Multiple middlewares are added one-by-one to the request.
 The elements are combined as if the composition operator &#8728; for functions is used.
 
 ```
-[middlewareA,middlewareB,...] -> middlewareA after middlewareB after ...
+[middlewareA, middlewareB, ...] -> middlewareA after middlewareB after ...
 ```
 
 If you include the fallback and timeout middleware to your request in the following way:
@@ -250,6 +249,8 @@ const fallbackMiddleware = options => {
 };
 ```
 
+## Change Request Parameters
+
 If you want to change the request parameters you can modify them as well.
 The SAP Cloud SDK uses the axios client which has a `timeout` property.
 You could set a timeout on client level like this:
@@ -262,9 +263,22 @@ const clientTimeoutMiddleware = options => {
 };
 ```
 
+Another usage for the middleware would be a custom `CSRF` token fetching:
+
+```ts
+const customCsrf = options => {
+  return async requestConfig => {
+    requestConfig.headers['x-csrf-token'] = await getCsrfToken();
+    return options.fn(requestConfig);
+  };
+};
+```
+
+Note that you have to disable the [default token fetching](./connectivity/http-client#csrf-token-fetching) if you want to use a custom middleware.
+
 ## Execution Order of Middlewares
 
-As discussed in the previous section the composition order for the new function is from right to left.
+As discussed in the previous section, the composition order for the new function is from right to left.
 However, the composition order does not mimic the order when the code related to the middleware is executed.
 To illustrate this, consider the four example middlewares below (for simplicity assume that the response and config are just bare strings):
 

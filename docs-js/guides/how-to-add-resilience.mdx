@@ -25,6 +25,18 @@ Note that [middlewares](../features/middleware), and therefore resilience, appli
 The SAP Cloud SDK automatically applies resilience to the internal SAP BTP service calls done under the hood.
 This is done automatically, and you do not have to worry about resilience with respect to internal service calls.
 
+Here is a video that explains middlewares and resilience hands-on:
+
+<iframe
+  width="560"
+  height="315"
+  src="https://www.youtube.com/embed/Y-QyncTnJ6s"
+  title="Embrace Failure - Build resilient applications with the SAP Cloud SDK for JavaScript"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen
+></iframe>
+
 ## Resilience Middleware
 
 The SAP Cloud SDK offers a `resilience()` function to build a resilience middleware.
@@ -80,10 +92,7 @@ The default timeout is 10 seconds, but can be changed on demand.
 import { timeout } from '@sap-cloud-sdk/resilience';
 
 // Three seconds timeout
-myApi
-  .getAll()
-  .middleware([timeout(3000)])
-  .execute(myDestination);
+myApi.getAll().middleware(timeout(3000)).execute(myDestination);
 ```
 
 :::note
@@ -98,7 +107,7 @@ You can create a circuit breaker middleware in the following way:
 ```ts
 import { circuitBreaker } from '@sap-cloud-sdk/resilience';
 
-myApi.getAll().middleware([circuitBreaker()]).execute(myDestination);
+myApi.getAll().middleware(circuitBreaker()).execute(myDestination);
 ```
 
 :::note
@@ -119,8 +128,8 @@ These numbers mean the following:
   From this point in time, all requests to the target system are blocked directly and not executed anymore.
 - After a reset time of 30 seconds, the circuit breaker will go to the half-open state.
   This means the next request will go through as a test.
-  - If it is successful, the circuit breaker will open.
-  - If it fails, the circuit breaker will close again.
+  - If it is successful, the circuit breaker will close again.
+  - If it fails, the circuit breaker will remain open.
 
 :::note
 Requests with `HTTP` status `4XX` do not count as failed, because they do not indicate an unhealthy system.
@@ -147,10 +156,7 @@ You can change the number in the following way:
 import { retry } from '@sap-cloud-sdk/resilience';
 
 // Four retries
-myApi
-  .getAll()
-  .middleware([retry(4)])
-  .execute(myDestination);
+myApi.getAll().middleware(retry(4)).execute(myDestination);
 ```
 
 The retry middleware uses the [async-retry](https://www.npmjs.com/package/async-retry) library and uses meaningful default values:
