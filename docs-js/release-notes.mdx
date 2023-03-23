@@ -20,351 +20,113 @@ import LicenseBadge from '@site/src/sap/sdk-js/LicenseBadge';
 <!-- vale off -->
 <!-- This line is used for our release notes automation -->
 
-## 2.12.1 [Core Modules] - January 03, 2023
-
-**API Reference:** [2.12.1](https://sap.github.io/cloud-sdk/api/2.12.1)
-
-### Improvements
-
-- [connectivity] Update `jsonwebtoken` to 9.0.0 due to several security vulnerabilities:
-
-  - [CVE-2022-23529 (CVSS 9.8)](https://github.com/advisories/GHSA-27h2-hvpr-p74q)
-  - [CVE-2022-23539 (CVSS 8.1)](https://github.com/advisories/GHSA-8cf7-32gw-wr33)
-  - [CVE-2022-23540 (CVSS 9.8)](https://github.com/advisories/GHSA-qwph-4952-7xr6)
-  - [CVE-2022-23541 (CVSS 9.8)](https://github.com/advisories/GHSA-hjrf-2m68-5959)
-  - @sap-cloud-sdk/util@2.12.1 (466cbec36)
-
-## 2.12.0 [Core Modules] - December 07, 2022
-
-**API Reference:** [2.12.0](https://sap.github.io/cloud-sdk/api/2.12.0)
+## 3.0.2 [Core Modules] - March 23, 2023
 
 ### Compatibility Notes
 
-- [generator] Deprecate the `processesJsGeneration` option. (0f1056817)
-- [generator] Deprecate the `generatePackageJson` option. Use `packageJson` instead. (0f1056817)
-- [generator] Make options in `GeneratorOptions` optional, if they are not mandatory. (0f1056817)
-- [generator] Deprecate `generateCSN` option. (0f1056817)
-- [generator] Deprecate the `licenseInPackageJson` option. Use `include` instead. (0f1056817)
-- [generator] Deprecate the `forceOverwrite` option. Use `overwrite` instead. (0f1056817)
-
-### Improvements
-
-- [generator] Show warnings for deprecated options only if options where used.
-  - @sap-cloud-sdk/generator-common@2.12.0
-  - @sap-cloud-sdk/odata-common@2.12.0
-  - @sap-cloud-sdk/odata-v2@2.12.0
-  - @sap-cloud-sdk/odata-v4@2.12.0
-  - @sap-cloud-sdk/util@2.12.0 (0f1056817)
+- [odata-common, odata-v2, odata-v4] The `ActionFunctionImportRequestBuilderBase` has an additional mandatory type parameter to pass the according (de-)serializer type. This was missing previously due to a bug. (2fa8c36a6)
 
 ### Fixed Issues
 
-- [generator] Allow OData service to contain an entity name 'Service'. (0f1056817)
+- [connectivity] Fix the `The proxy configuration is undefined` error for OnPrem `MAIL` destinations by removing the `isHttpDestination` check when adding proxyConfiguration to the destination object.
+  - @sap-cloud-sdk/resilience@3.0.2
+  - @sap-cloud-sdk/util@3.0.2 (47fc7278d)
+- [mail-client] Fix error `Greeting never received` when sending emails to On-Premise mail servers. The `_readableListening` property of socket is set to `true` to allow nodemailer to receive SMTP greeting messages. (47fc7278d)
+- [mail-client] Fix `Invalid greeting` error from nodemailer by removing the `transport.verify` function call. (be04dafc2)
+- [odata-common, odata-v2, odata-v4] Fix batch requests to accept only functions or actions. (2fa8c36a6)
 
-## 2.11.0 [Core Modules] - November 16, 2022
+## 3.0.1 [Core Modules] - March 01, 2023
 
-**API Reference:** [2.11.0](https://sap.github.io/cloud-sdk/api/2.11.0)
+### Compatibility Notes
+
+- [resilience] Deprecate erroneously exposed `circuitBreakerHttp()` function in favor of `circuitBreaker()`.
+  - @sap-cloud-sdk/util@3.0.1 (fcab06c4b)
+
+### Improvements
+
+- [generator-common] Improve logs when generating OData clients without package.json
+  - @sap-cloud-sdk/util@3.0.1 (c78c16ddf)
+
+## 3.0.0 [Core Modules] - February 28, 2023
+
+### Compatibility Notes
+
+- [connectivity] The generic types of `JwtKeyMapping` is simplified so the second type argument `JwtKeysT` are always strings. (1b974095f)
+- [connectivity] The `Protocol` enum was replaced with a string literal union type. Now, instead of passing `Protocol.HTTPS` pass 'https'. (1b974095f)
+- [connectivity, http-client, openapi, odata-common, odata-v2, resilience] Remove the options `timeout` and `enableCircuitBreaker` from all BTP service interactions i.e. destination and token fetching. (1b974095f)
+- [connectivity, http-client, mail-client, openapi, odata-common, odata-v2, odata-v4, eslint-config, generator, test-util, util, openapi-generator, generator-common, temporal-de-serializers, resilience] Switch the compilerOptions.module to `Node16` instead of `CommonJS` for better interoperability with ES modules. See the [TypeScript handbook](https://www.typescriptlang.org/docs/handbook/esm-node.html) for technical details if needed. (1b974095f)
+- [connectivity] The enum `IsolationStrategy` was replaced with a string literal union type of the same name. Use 'tenant' and 'tenant-user' instead of `IsolationStrategy.Tenant` and `IsolationStrategy.Tenant_User`. (1b974095f)
+- [connectivity, http-client, odata-common] The `url` property in `Destination` is now optional as destinations of type `MAIL` do not have a URL. (1b974095f)
+- [http-client, openapi, odata-common] Remove `timeout()` method from the request builders and the `timeout` options from the `executeHttpRequest()` function.
+  Visit the [documentation portal](https://sap.github.io/cloud-sdk/docs/js/guides/resilience) to see how to add a timeout using middlewares. (1b974095f)
+- [http-client] Removed overload of executeHttpRequest
+  The overload, that accepted `HttpRequestConfigWithOrigin` as a parameter, is removed and replaced by the function `executeHttpRequestWithOrigin`. (1b974095f)
+- [odata-common, generator, util] By default, generation of OData clients fails if a service path cannot be determined. Either provide `servicePath` value in the `options-per-service.json` or set `skipValidation` to true, in which case, `/` will be used. (1b974095f)
+- [odata-common] The constructor of `ODataRequestConfig` was changed so that the third parameter cannot be a `string` anymore.
+  Passing in a string which was then interpreted as the value for the `Content-Type` HTTP header was deprecated.
+  The type of the parameter is now `Record<string, any>`, and if only want to set the `Content-Type` HTTP header you can do so by passing `{'content-type': 'some-value'}` to the constructor. (1b974095f)
+- [odata-common] The constructor of the entity API is private to avoid accidental usage. Use the service object to get a API instance. (1b974095f)
+- [odata-common, generator, openapi-generator] The `serviceMapping` option of the OData generator has been renamed to `optionsPerService`. The mapping file, `service-mapping.json` has also been renamed to `options-per-service.json`. By default, an options file will not be generated. (1b974095f)
+- [odata-common] Setting custom fields in `fromJson` through the `_customFields` property has been removed.
+  Add custom properties to your JSON object instead. (1b974095f)
+- [generator] The options per service behavior is now the same as for the OpenApi generator.
+  For details on how to migrate and what has change look at the migration guide. (1b974095f)
+- [generator] The deprecated `forceOverwrite` option of the generator is removed. Use the `overwrite` option instead.
+- [generator] The deprecated `generatePackageJson` option of the generator is removed. Use the `packageJson` option instead.
+- [generator] The deprecated `writeReadme` option of the generator is removed. Use the `readme` option instead.
+- [generator] The deprecated `processesJsGeneration` option of the generator is removed. Use the `transpilationProcesses` option instead.
+- [generator] The internal options `sdkAfterVersionScript`, `s4HanaCloud` and `packageVersion` of the generator are removed.
+  These were hidden options never meant for external usage and there is no replacement.
+- [generator] The deprecated `generateNpmrc` option of the generator is removed. Use the `include` option to add a `.npmrc` to the generated code if needed. (1b974095f)
+- [generator] Add `verbose` generator option. By default, only error and warning logs will be displayed. If `verbose` is set to `true`, all logs will be displayed. (1b974095f)
+- [generator] The `generateJs` option has been replaced with the `transpile` option. Transpilation is not enabled by default. (1b974095f)
+- [generator] The command line argument `inputDir` of the OData generator is renamed to `input`.
+  The new `input` options accepts now also file paths and glob patterns. (1b974095f)
+- [generator] The OData generator won't automatically rename identifiers to avoid name conflicts.
+  The generation process will fail if identifiers have conflicting names.
+  Switch on the `skipValidation` flag if you want to generate despite name conflicts and are okay with changed identifier names to avoid conflicts. (1b974095f)
+- [generator, openapi-generator, generator-common] Removed the option `versionInPackageJson` from the OData and OpenAPI generator.
+  If the option `packageJson` is enabled now a `package.json` with a default version `1.0.0` is created.
+  If necessary use the `include` option to add a `package.json` with a custom value.
+- [generator, openapi-generator] Removed the option `licenseInPackageJson` from the OData and OpenAPI generator.
+  If the option `packageJson` is enabled now a `package.json` with a default license `UNLICENSED` is created.
+  If necessary use the `include` option to add a `package.json` with a custom value. (1b974095f)
+- [generator, openapi-generator] Rename servicePath to basePath. (1b974095f)
+- [generator] The option `generateCSN` is removed. There is no replacement. (1b974095f)
+- [generator] The type for paths in the `GeneratorOptions` is changed from `fs.PathLike` to `string`.
+  In case you passed a buffer object please resolve it to a string before passing it to the SAP Cloud SDK. (1b974095f)
+- [generator, openapi-generator, generator-common] The two generators use the same CLI parsing code now, aligning the way paths are resolved.
+  In case you experience problems with the new logic, enable the `verbose` flag to investigate the new paths. (1b974095f)
+- [util] The function `variadicArgumentToArray` is replaced by the function `transformVariadicArgumentToArray`. (1b974095f)
+- [util] The field `logger` on the interface `LoggerOptions` was not used and is removed from the interface. (1b974095f)
+- [openapi-generator] The internal option `packageVersion` of the OpenAPI generator is removed. (1b974095f)
+- [openapi-generator] `tsConfig` option has been renamed to `tsconfig`. (1b974095f)
+- [generator-common] The generator does not create `d.ts.map` files per default anymore. If you need them include a custom `tsconfig.json`.
+- [connectivity, http-client, mail-client, openapi, odata-common, odata-v2, odata-v4, eslint-config, generator, test-util, util, openapi-generator, generator-common, temporal-de-serializers, resilience] All SAP Cloud SDK packages ship without `d.ts.map` files from now on.
+  Modern IDEs don't require those files for code navigation, thus they are removed to decrease download size of the SDK. (1b974095f)
 
 ### New Functionalities
 
-- [odata-common] Add `getBatchReference()` and `setBatchId()` in request builders to use the batch ID as a reference to an entity in a batch request changeset.
-  Batch reference are available in `create`, `delete`, `getByKey`, `update` and `actions/functions` request builder. (79e0fe811)
-- [odata-v4, generator] Support parsing and generating OData bound functions and actions in OData v4 (8ea28151b)
-- [generator, openapi-generator, generator-common] Generated sources are formatted using prettier with default config. Use the CLI option `prettierConfigPath` to provide a custom config. (74e14427a)
+- [connectivity] Support `OAuth2RefreshToken` authentication type (1b974095f)
+- [connectivity] Add a `retry` option in the `DestinationFetchOption`.
+  Enable this options if the token exchange done by the destination service is unstable. (1b974095f)
+- [connectivity, resilience] Add `ResilienceOptions` and `resilience()` function. The function returns an array of middlewares based on the provided options. (1b974095f)
+- [http-client, resilience] The request configuration used in the final request is now part of the middleware context.
+  User can implement middlewares to change request properties like `headers` using this reference in the middleware context.
+  The request configuration contains the `url`, `headers` and all other properties of the HTTP request. (1b974095f)
+- [http-client, openapi, odata-common] Introduce the middleware on the request builders and http-client.
+  Visit the [documentation portal](https://sap.github.io/cloud-sdk/docs/js/guides/resilience) to see how to use middlewares. (1b974095f)
+- [generator, generator-common] Introduced options `transpile` and `tsconfig` to configure transpilation for generated OData clients. (1b974095f)
 
 ### Improvements
 
-- [odata-common] Change the place where batch ID is generated from on serialization to request creation. (79e0fe811)
-
-## 2.10.0 [Core Modules] - November 02, 2022
-
-**API Reference:** [2.10.0](https://sap.github.io/cloud-sdk/api/2.10.0)
-
-### Compatibility Notes
-
-- [odata-common, odata-v2, odata-v4] Changed constructor argument of class `EntityBase` from `schema` to `_entityApi`. (144ff66f4)
-
-### Improvements
-
-- [openapi-generator] Add `force` option to`rm` commands, when setting `clearOutputDir` to true. (f76da3060)
+- [connectivity] Replace `Protocol` enum with a string literal union type. (1b974095f)
+- [connectivity] Replace `IsolationStrategy` enum with union type. (1b974095f)
+- [generator] Align naming rules for operations and properties in OData clients by removing `_` prefix (1b974095f)
 
 ### Fixed Issues
 
-- [odata-v2, odata-v4] Fix the "entity generic type" of the "delete request builder". (f76da3060)
-- [generator, openapi-generator] Show detailed error message of compilation errors instead of `[object Object]`. (f76da3060)
-- [generator-common] Show detailed error message of compilation errors instead of `[object Object]`.
-  - @sap-cloud-sdk/util@2.10.0 (f76da3060)
-
-## 2.9.0 [Core Modules] - September 20, 2022
-
-**API Reference:** [2.9.0](https://sap.github.io/cloud-sdk/api/2.9.0)
-
-### New Functionalities
-
-- [connectivity] Support fetching all subaccount- and service instance destinations from the destination service simultaneously. (24029503)
-- [mail-client] Expose SMTP transport options of `nodemailer`. (d1bf2dee)
-- [util] Add method `setGlobalTransports` to support setting custom transport globally. (4c51d3dc)
-
-### Improvements
-
-- [odata-common] Set `orderBy()` to ascending order by default. (f62eb0d3)
-
-## 2.8.0 [Core Modules] - September 06, 2022
-
-**API Reference:** [2.8.0](https://sap.github.io/cloud-sdk/api/2.8.0)
-
-### Compatibility Notes
-
-- [eslint-config] Activated the eslint rule 'check-tag-names' to allowed jsdoc tags. If you use custom tags add them via the 'definedTags' in the eslint options. (15e9ef4b)
-- [generator] Deprecated `generateNpmrc` cli option. This option was only used to configure the now defunct npm registry hosted by SAP. It now has no effect anymore and should be removed in all invocations of the generator cli. (15e9ef4b)
-- [generator, openapi-generator, generator-common] Description for package.json in a generated client has changed. (15e9ef4b)
-
-### New Functionalities
-
-- [mail-client] Support defining the strategy of sending emails. By default, the emails are sent "in parallel" and can be set to "in sequential". (15e9ef4b)
-- [odata-common, generator] Allow function imports using `GET` http method in batch requests. (15e9ef4b)
-
-### Improvements
-
-- [connectivity] Reduce default logs for failing requests in @sap-cloud-sdk/http-client.
-  - @sap-cloud-sdk/util@2.8.0 (15e9ef4b)
-
-### Fixed Issues
-
-- [connectivity] Remove last explicit references to 'VCAP_SERVICES' and replace them with '@sap/xsenv'. (15e9ef4b)
-- [connectivity] Fix that unparsable destinations in the subaccount prevent other destinations from beeing fetched. (15e9ef4b)
-
-## 2.7.1 [Core Modules] - August 12, 2022
-
-**API Reference:** [2.7.1](https://sap.github.io/cloud-sdk/api/2.7.1)
-
-### Fixed Issues
-
-- [mail-client] Fix proxy authorization for sending emails.
-
-## 2.7.0 [Core Modules] - August 10, 2022
-
-**API Reference:** [2.7.0](https://sap.github.io/cloud-sdk/api/2.7.0)
-
-### New Functionalities
-
-- [openapi-generator] Support globs in the `input` option. (3f70b0c9)
-
-### Improvements
-
-- [connectivity] Support consumption of the XSUAA API via destinations. (010a46fa)
-
-### Fixed Issues
-
-- [connectivity] Fix a breaking change of `serviceToken` introduced in 2.0, so it accepts `XsuaaServiceCredentials` again as an option. (3bff42e1)
-
-## 2.6.0 [Core Modules] - July 15, 2022
-
-**API Reference:** [2.6.0](https://sap.github.io/cloud-sdk/api/2.6.0)
-
-### Compatibility Notes
-
-- [odata-v4, temporal-de-serializers] Adjust parsing of `Edm.Date`, `Edm.DateTimeOffset`, `Edm.Time`, and `Edm.Duration` to be closer to the OData v4 specification.
-  There may be loss of precision if using the default (de-)serializers with high-precision fractional seconds. (de851289)
-- [generator] Deprecate generator option `versionInPackageJson`. If you need to set the version, use the new `include` option to add your own `package.json` file instead. (069aa168)
-- [generator] The hidden generator option `additionalFiles` is renamed to `include`. (069aa168)
-- [connectivity] Rename `transformationFn` into `serviceBindingTransformFn` in `DestinationForServiceBindingsOptions` to avoid ambiguity and make the function async. (8fdfebd6)
-
-### New Functionalities
-
-- [connectivity] Support JWTs without a `JKU` property. (cb598c16)
-- [connectivity] Add interface `DestinationCacheInterface` and method `setDestinationCache` to support implementation of custom destination cache. (09094607)
-- [connectivity] Fetch client credential token for destinations created by service bindings. (93d41281)
-- [generator] New generator option `include` which allows to add files to generated packages. (069aa168)
-
-### Improvements
-
-- [http-client] Make `requestConfig` of `OriginOptions` optional. (e46bb51d)
-
-### Fixed Issues
-
-- [connectivity] Fix `getDestination()` to allow passing an async transform function `serviceBindingTransformFn` in `options`. The transform function can also be passed by `execute()`, `executeHttpRequest()`, `executeRaw()`, etc.
-- [http-client] Fix the `executeHttpRequest`/`executeHttpRequestWithOrigin` function, so the warning is only shown when overwriting headers by using custom headers. (e44c214a)
-- [odata-common, odata-v4, temporal-de-serializers] Fix parsing of `Edm.DateTimeOffset` with high-precision fractional seconds and edge-cases like 5-digit years. (de851289)
-- [odata-common, generator] Allow OData service to contain an entity name 'entity'. (0675ee3b)
-- [odata-v2] Support negative epoch timestamps in serialization. (9ffe0824)
-
-# 2.5.0 [Core Modules] - June 13, 2022
-
-**API Reference:** [2.5.0](https://sap.github.io/cloud-sdk/api/2.5.0)
-
-## Compatibility Notes
-
-- [odata-common, generator] Change `Edm.String`, `Edm.Boolean` and `Edm.Guid` to be orderable to support `lt`/`lessThan()`, `le`/`lessOrEqual()`, `gt`/`greaterThan()`, and `ge`/`greaterOrEqual` operators. Re-generate odata services to adopt the changes. (c3166ff6)
-- [util] Stop using `VCAP_SERVICES` to determine the log format. Use `setLogFormat` and `setGlobalLogFormat` to specify the log format. By default, the log format is set to `kibana` for `NODE_ENV=production` and `local` otherwise. (89f1c423)
-
-## Fixed Issues
-
-- [http-client] Fix the `executeHttpRequest` function, so it accepts the same parameters as in version 1.
-  [Compatibility Note] Deprecate one overload of the `executeHttpRequest` function, that accepts `HttpRequestConfigWithOrigin` as a parameter. Use the new function `executeHttpRequestWithOrigin` as replacement.
-  [New Functionality] Support defining header options and query parameter options with origins. (9481ec69)
-
-## 2.4.0 [Core Modules] - May 20, 2022
-
-**API Reference:** [2.4.0](https://sap.github.io/cloud-sdk/api/2.4.0)
-
-### Compatibility Notes
-
-- [connectivity] Mark the function `noDestinationErrorMessage()` as internal API.
-- [odata-v4] Mark the function `uriConverter` as internal API.
-- [eslint-config] Switch the following `jsdoc` related levels from `warn` to `error`:
-  - `jsdoc/check-param-names`
-  - `jsdoc/require-description-complete-sentence`
-  - `jsdoc/require-jsdoc`
-  - `jsdoc/require-param`
-  - `jsdoc/require-returns`
-- [connectivity, http-client] Only log the successful retrieval of destinations on the `info` log level, log everything else as `debug` or `warn`.
-
-### New Functionality
-
-- [connectivity] Support self-signed certificate using the `trustStore` property of the destination object.
-
-### Improvements
-
-- [connectivity, http-client] Reduce default log output on the `info` level significantly.
-
-### Fixed Issues
-
-- [util] Fix a bug in the implementation of the trim method.
-
-## 2.3.0 [Core Modules] - Apr 22, 2022
-
-**API Reference:** [2.3.0](https://sap.github.io/cloud-sdk/api/2.3.0)
-
-## Compatibility Notes
-
-- [odata-common, odata-v2, odata-v4] Remove all `$format=json` query parameters since header `Accept: application/json` is sent by default.
-
-## New Functionality
-
-- [odata-common] Generate mandatory `Content-Id` headers for changeset parts in batch request payloads (see [OData Spec](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_MultipartBatchRequestBody)).
-- [odata-common] Support transforming response data for function and action imports before deserialization. [#682](https://github.com/SAP/cloud-sdk-js/issues/682).
-
-## Improvements
-
-- [generator] Change log level from `warn` to `error` if service path cannot be determined from the service specification (`VALUE_IS_UNDEFINED`).
-- [generator] Reduce memory usage of `schema` in API classes (e.g., `BusinessPartnerAPI`).
-
-## Fixed Issues
-
-- [openapi-generator, openapi] Support path parameters that are not separated by '/', e.g., `/path/{param}:{param}`.
-
-## 2.2.0 [Core Modules] - Apr 6, 2022
-
-**API Reference:** [2.2.0](https://sap.github.io/cloud-sdk/api/2.2.0)
-
-### Compatibility Notes
-
-- [eslint-config] Replace `valid-jsdoc` with `eslint-plugin-jsdoc` plugin for checking JSDoc comments, since the `valid-jsdoc` rule is deprecated in ESLint.
-  To stop your project from using a specific rule, turn it off by setting the rule ID to `off` under the `rules` key inside your configuration file.
-- [generator] Stop exporting service classes (e.g., `BusinessPartnerService`) from generated clients, use `businessPartnerService()` instead.
-- [generator] Stop exporting API classes (e.g., `BusinessPartnerAPI`) from generated clients, use `businessPartnerService().businessPartnerApi` instead.
-
-### New Functionality
-
-- [http-client] Introduce the `parameterEncoder` option to the request configuration of the `http-client` to allow custom parameter encoding.
-- [http-client] Remove `method` from `defaultDisallowedKeys` to not filter out custom http method when using `filterCustomRequestConfig`.
-- [odata-common] Support adding custom http method in `addCustomRequestConfiguration` to overwrite the default http method.
-- [openapi] Support adding custom http method in `addCustomRequestConfiguration` to overwrite the default http method.
-
-### Improvements
-
-- [generator] Remove unused imports (e.g, `moment`, `bignumber.js` and `EdmTypeField`) in API classes (e.g., `BusinessPartnerAPI`) to reduce memory usage.
-- [http-client] Introduce consistent query parameter encoding for all non custom parameters.
-
-## 2.1.0 [Core Modules] - Feb 18, 2022
-
-**API Reference:** [2.1.0](https://sap.github.io/cloud-sdk/api/2.1.0)
-
-### Improvements
-
-- [connectivity] Add details to error message for missing "URL" properties in destinations.
-- [util] Add `sanitizeRecord` function to `cloud-sdk-logger` which replaces potentially sensitive information in a `Record<string, any>` based on a list of sensitive keys.
-- [generator] The new CLI option `licenceInPackageJson` offers the possibility to specify the license property in a generated `package.json`.
-
-### Fixed Issues
-
-- [openapi-generator] Add `@sap-cloud-sdk/openapi` as a dependency to the OpenAPI generator to fix errors during generation with `--transpile` enabled.
-- [connectivity] Fix an issue when using registering destinations with a JWT but without XSUAA service binding.
-- [connectivity] Fix a missing export `DestinationSelectionStrategies`.
-- [odata-common] Fix URL encoding for `getByKey`
-
-## 2.0.0 [Core Modules] - Feb 03, 2022
-
-**API Reference:** [2.0.0](https://sap.github.io/cloud-sdk/api/2.0.0)
-
-We released version 2 :partying_face:
-Be mindful of breaking changes when upgrading.
-Enjoy multiple improvements and new features.
-Check the [upgrade guide](https://sap.github.io/cloud-sdk/docs/js/guides/upgrade-to-version-2).
-
-### Compatibility Notes
-
-- Upgrade the ES version to `es2019`.
-
-### New Functionality
-
-- [connectivity] Create a new package with minimal API.
-- [connectivity] Add `registerDestination` function to create destinations in the `destinations` environment variable.
-- [connectivity] Support the `SamlAssertion` flow in destination retrieval.
-- [http-client] Create a new package with minimal API.
-
-### Removed functionality
-
-- [generator] Remove the option: `aggregatorDirectoryName` and `aggregatorNpmPackageName`
-- [generator] Remove the option: `generateTypedocJson`
-- [generator] Remove `packageJson` function from aggregator-package
-- [core] Remove some functions
-- [analytics] Remove the `@sap-cloud-sdk/analytics` package
-
-### New module structure
-
-- [core] We have split the `core` package into smaller packages, so functions are moved to the target package.
-
-### Changed signatures
-
-- [core] `EdmTypeField` only support EDM types, no field types in generics
-
-### Changed implementation
-
-- [generator] changed the following implementations
-  - `ServiceNameFormatter` deprecated constructor removed, reserverdName parameter from typeNameToFactoryName method removed
-  - `VdmNavigationpropety` multiplicity, isMultiLink removed
-  - `VdmFunctionImportReturnType` isMulti removed
-- [openapi] changed the following implementations
-  - `execute` Request Builder APIs changed to use a single parameter, either a Destination or DestinationFetchOptions.
-  - `executeRaw` Request Builder APIs changed to use a single parameter, either a Destination or DestinationFetchOptions.
-- [odata-common] changed the following implementations
-  - `ComplexTypeField` deprecated constructors removed
-  - `Constructable` Selectable removed
-  - `CreateRequestBuilderBase` prepare removed
-  - `EntityBase` getCurrentMapKey, initializeCustomFields removed
-  - `EnumField` edmType removed
-  - `Filter` \_fieldName property removed
-  - `FilterFunction` toString, transformParameter removed
-  - `Link` clone, selects removed
-  - `MethodRequestBuilder` withCustomHeaders, withCustomQueryParameters, withCustomServicePath removed, build protected
-  - `ODataRequestConfig` contentType, deprecated constructor removed
-  - `ODataBatchRequestConfig` batchId, content_type_prefix removed
-  - `OneToOneLink` clone removed
-  - `UpdateRequestBuilderBase` prepare, requiredFields, ignoredFields, withCustomVersionIdentifier removed
-  - `execute` Request Builder APIs changed to use a single parameter, either a Destination or DestinationFetchOptions..
-  - `executeRaw` Request Builder APIs changed to use a single parameter, either a Destination or DestinationFetchOptions.
-- [odata-v2] changed the following implementations
-  - `execute` Request Builder APIs changed to use a single parameter, either a Destination or DestinationFetchOptions.
-  - `executeRaw` Request Builder APIs changed to use a single parameter, either a Destination or DestinationFetchOptions.
-- [odata-v4] changed the following implementations
-  - `execute` Request Builder APIs changed to use a single parameter, either a Destination or DestinationFetchOptions.
-  - `executeRaw` Request Builder APIs changed to use a single parameter, either a Destination or DestinationFetchOptions.
-- [connectivity] changed the following implementations
-  - `getDestination` changed to use DestinationFetchOptions as single parameter.
-  - `getProxyRelatedAuthHeaders` legacyNoAuthOnPremiseProxy case removed
-  - `serviceToken` uses `JWT` instead of userJwt now.
-  - `jwtBearerToken` uses `JWT` instead of userJwt now.
-  - `fetchVerificationKeys` merged with `executeFetchVerificationKeys`, now only accepts URL as parameter
-- [http-client] changed the following implementations
-  - `executeHttpRequest` fetches CsrfToken for non-`GET` requests by default.
+- [connectivity] Fix the combination of providing the `iss` together with `OnPremise` basic destinations. (1b974095f)
+- [odata-v2] Allow to update OData v2 entities to `null`. Fixes [3204](https://github.com/SAP/cloud-sdk-js/issues/3204). (1b974095f)
+- [generator] Allow OData service to contain an entity name 'Service'. (1b974095f)
+- [generator] Now links to the correct generator binary. (1b974095f)

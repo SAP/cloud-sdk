@@ -9,7 +9,7 @@ Operations can be _bound_ or _unbound_.
 Bound means that the operation is tied to an entity.
 This is similar to how a method is tied to a class instance in object oriented languages, while functions or "static" methods are not tied to an instance.
 
-To learn how to generate an API client from the service definition, look at [this article](features/odata/generate-odata-client.mdx).
+To learn how to generate an API client from the service definition, look at [this article](../generate-odata-client.mdx).
 
 ### Using Operations
 
@@ -33,14 +33,15 @@ entity
   .execute(destination);
 ```
 
-Unbound operations are generated into `actionImports` and `functionImports` respectively.
+Unbound actions and functions are generated into `operations`.
 
 The following code snippet shows the syntax for using them:
 
 ```ts
 const {
-  actionImports: { unboundActionWithArguments, unboundActionWithoutArguments },
-  functionImports: {
+  operations: {
+    unboundActionWithArguments,
+    unboundActionWithoutArguments,
     unboundFunctionWithArguments,
     unboundFunctionWithoutArguments
   }

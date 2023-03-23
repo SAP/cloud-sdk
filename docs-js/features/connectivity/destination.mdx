@@ -15,7 +15,6 @@ keywords:
   - TypeScript
 ---
 
-import LinkToLatestJsApiDocs from '@site/src/sap/sdk-js/LinkToLatestJsApiDocs';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
@@ -55,7 +54,7 @@ Similarly for OpenAPI:
 const responseOpenApi = await MyApi.myFunction().execute(myDestination);
 ```
 
-`myDestination` is an SAP Cloud SDK representation of a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="destination" />.
+`myDestination` is an SAP Cloud SDK representation of a [destination](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.Destination.html).
 The given request is executed against `myDestination`.
 
 For the rest of the document, you will learn about the different options on destination lookup.
@@ -103,7 +102,7 @@ Use [Register Destination](#register-destination) to cache destinations in produ
 :::
 
 The `destinations` environment variable is used for the destination lookup in the aforementioned order if they are presented.
-The value of the environment variable is expected to be a stringified JSON array, where the items adhere to the <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="Destination interface" />.
+The value of the environment variable is expected to be a stringified JSON array, where the items adhere to the [Destination interface](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.Destination.html).
 
 Example:
 
@@ -112,7 +111,7 @@ Example:
 ```
 
 The SAP Cloud SDK provides a `setTestDestination()` function to add a destination to the environment variable for the current process programmatically.
-It takes a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="destination object" />, transforms it to a JSON object, and adds it to `process.env.destinations`.
+It takes a [destination object](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.Destination.html), transforms it to a JSON object, and adds it to `process.env.destinations`.
 
 ```ts
 import { setTestDestination } from '@sap-cloud-sdk/test-util';
@@ -150,13 +149,13 @@ This can be avoided with a cache for cases like very frequent service-to-service
 import { registerDestination } from '@sap-cloud-sdk/connectivity';
 
 const destination = {
-  name: 'MY-DESTINATION',
+  name: 'DESTINATION',
   url: 'https://mys4hana.com'
 };
 
 registerDestination(destination, options);
 
-MyRequest.execute({ destinationName: 'MY-DESTINATION' });
+MyRequest.execute({ destinationName: 'DESTINATION' });
 ```
 
 Functions such as `execute()` and `executeHttpRequest()` call the `getDestination()` function internally for the destination lookup.
@@ -245,7 +244,7 @@ The following services are supported out of the box:
 - `service-manager`
 - `xsuaa`
 
-If you need the destination for another custom service, create a function with <LinkToLatestJsApiDocs slug="types/sap_cloud_sdk_connectivity.ServiceBindingTransformFunction" name="ServiceBindingTransformFunction type" /> to transform the <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Service" name="Service interface" /> into the <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="Destination interface" />.
+If you need the destination for another custom service, create a function with [ServiceBindingTransformFunction type](pathname:///api/v3/types/sap_cloud_sdk_connectivity.ServiceBindingTransformFunction.html) to transform the [Service interface](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.Service.html) into the [Destination interface](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.Destination.html).
 Pass the function with the `serviceBindingTransformFn` property in the `DestinationFetchOptions` argument.
 
 For example:
@@ -267,7 +266,7 @@ You can also consider creating a [feature request](https://github.com/SAP/cloud-
 Contributions providing transform functions are highly welcome.
 
 The `execute()` or `getDestination()` function try multiple steps to retrieve a destination, as discussed in the beginning.
-If you want to consider only the service bindings, call the <LinkToLatestJsApiDocs slug="functions/sap_cloud_sdk_connectivity.destinationForServiceBinding" name="destinationForServiceBinding()" /> function with the service name and options.
+If you want to consider only the service bindings, call the [destinationForServiceBinding()](pathname:///api/v3/functions/sap_cloud_sdk_connectivity.destinationForServiceBinding.html) function with the service name and options.
 
 ```ts
 const destination = destinationForServiceBinding('my-service-name', {

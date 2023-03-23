@@ -1,13 +1,13 @@
 The function import request builder helps build a request for service operations including their parameters.
 Not all services expose function imports.
 We will use the [Warehouse Outbound Delivery Order service](https://api.sap.com/api/API_WHSE_OUTB_DLV_ORDER/resource) as an example.
-To learn how to generate an API client from the service definition, look at [this article](features/odata/generate-odata-client.mdx).
+To learn how to generate an API client from the service definition, look at [this article](../generate-odata-client.mdx).
 
 The example below creates a function import request builder for the service operation `PostGoodsIssue` and then executes it against your destination.
 
 ```ts
 const {
-  functionImports: { postGoodsIssue }
+  operations: { postGoodsIssue }
 } = warehouseOutboundDeliveryOrderService();
 
 postGoodsIssue({ outboundDeliveryOrder: 'order' }).execute(destination);

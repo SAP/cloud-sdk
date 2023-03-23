@@ -281,7 +281,7 @@ export const features = [
     category: 'Connectivity',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/connectivity/sdk-connectivity-destination-service)`,
+      docsLink: `[docs](${baseUrl}/java/features/connectivity/destination-service)`,
       note: ''
     },
     js: {

@@ -1,4 +1,5 @@
 ---
+id: http-client
 title: Generic HTTP Client
 sidebar_label: Generic HTTP Client
 description: How to use the generic http client for untyped requests
@@ -11,8 +12,6 @@ keywords:
   - JavaScript
   - TypeScript
 ---
-
-import LinkToLatestJsApiDocs from '@site/src/sap/sdk-js/LinkToLatestJsApiDocs';
 
 ## What Is the Generic HTTP Client?
 
@@ -54,10 +53,10 @@ To make a request using the Generic HTTP client use the `executeHttpRequest` fun
 executeHttpRequest(destination, requestConfig, httpRequestOptions);
 ```
 
-The `destination` argument is either a full <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="destination object" />, that you have already fetched or an <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions" name="object containing a destination name and an optional JWT" />.
+The `destination` argument is either a full [destination object](pathname:///api/v1/interfaces/sap_cloud_sdk_connectivity.Destination.html), that you have already fetched or an [object containing a destination name and an optional JWT](pathname:///api/v1/interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions.html).
 In the latter case, the SAP Cloud SDK fetches the destination for you.
 For more details, see [here](destination.mdx).
-The <LinkToLatestJsApiDocs slug="modules/sap_cloud_sdk_http_client#HttpRequestConfig" name="request configuration" /> argument contains the request configuration.
+The [request configuration](pathname:///api/v1/modules/sap_cloud_sdk_http_client#HttpRequestConfig.html) argument contains the request configuration.
 A minimal configuration would look like this:
 
 ```JSON
@@ -120,7 +119,7 @@ You should consider the OData client if:
 
 ## Headers and Query Parameters from Different Origins
 
-As partially described in the [destination guide](./destination#additional-headers-and-query-parameters-on-destinations), there are multiple possible origins for query parameters:
+As partially described in the [destination guide](./destinations#additional-headers-and-query-parameters-on-destinations), there are multiple possible origins for query parameters:
 
 - Provided by the user on the request level.
   These parameters are referred to as `custom` parameters.
@@ -151,7 +150,7 @@ executeHttpRequest(myDestination, {
 
 ### Headers and Query Parameters from Destination
 
-You set these parameters on the destination object as described [here](./destination#additional-headers-and-query-parameters-on-destinations).
+You set these parameters on the destination object as described [here](./destinations#additional-headers-and-query-parameters-on-destinations).
 The example below shows how to get:
 
 - parsed parameters in the `queryParameters` property of the destination object

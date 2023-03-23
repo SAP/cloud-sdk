@@ -1,4 +1,5 @@
 ---
+id: destinations
 title: Destinations
 hide_title: false
 hide_table_of_contents: false
@@ -14,7 +15,6 @@ keywords:
   - TypeScript
 ---
 
-import LinkToLatestJsApiDocs from '@site/src/sap/sdk-js/LinkToLatestJsApiDocs';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
 Many applications on SAP Business Technology Platform (SAP BTP) communicate with other systems, e.g. line of business solutions.
@@ -51,7 +51,7 @@ Similarly for OpenAPI:
 const responseOpenApi = await MyApi.myFunction().execute(myDestination);
 ```
 
-`myDestination` is an SAP Cloud SDK representation of a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="destination" />.
+`myDestination` is an SAP Cloud SDK representation of a [destination](pathname:///api/v1/interfaces/sap_cloud_sdk_core.Destination.html).
 The given request is executed against `myDestination`.
 
 For the rest of the document, we will discuss the different options on destination lookup.
@@ -94,11 +94,11 @@ The second option `register a destination` was introduced in version 2.0 of the 
 
 This option is present for deployment and testing in a local environment outside the SAP BTP where no destination services are available.
 If a `destinations` environment variable is present, it will be used for the destination lookup as described above.
-The value is expected to be a stringified JSON array, where the items adhere to the <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="Destination interface" />.
+The value is expected to be a stringified JSON array, where the items adhere to the [destination interface](pathname:///api/v1/interfaces/sap_cloud_sdk_core.Destination.html).
 Example: `"[{\"name\": \"TESTINATION\", \"url\": \"http://url.hana.ondemand.com\", \"username\": \"DUMMY\", \"password\": \"dummy\"}]"`.
 
 The SAP Cloud SDK provides a `setTestDestination(destination)` function to add a destination to the environment variable for the current process programmatically.
-It takes a <LinkToLatestJsApiDocs slug="interfaces/sap_cloud_sdk_connectivity.Destination" name="destination object" />, transforms it to a JSON object, and adds it to `process.env.destinations`.
+It takes a [destination object](pathname:///api/v1/interfaces/sap_cloud_sdk_core.Destination.html), transforms it to a JSON object, and adds it to `process.env.destinations`.
 
 ```ts
 import { setTestDestination } from '@sap-cloud-sdk/test-util';
@@ -244,7 +244,7 @@ For simplicity, an optional argument of the destination lookup has been neglecte
 ```
 
 The `jwt` argument takes the JSON web token (JWT) issued by an XSUAA as input.
-Additional information on how to retrieve JWTs can be found [here](../../guides/how-to-retrieve-jwt).
+Additional information on how to retrieve JWTs can be found [here](../../guides/how-to-retrieve-jwt.mdx).
 This token contains a field `zid` holding the tenant id, which will be used in the lookup process.
 The lookup process done by the SAP Cloud SDK involves the following steps:
 
@@ -338,7 +338,7 @@ In the section above, we listed already a few of the options but this section gi
 - `useCache`: Switches on caching for destinations received from the destination service.
   The default value is false.
 - `isolationStrategy`: Specifies how the destination cache is scoped.
-  The value is automatically set but [under certain conditions](./destination-cache-isolation) you may want to optimize it.
+  The value is automatically set but [under certain conditions](./destination-cache-isolation.mdx) you may want to optimize it.
 - `enableCircuitBreaker`: Switches on circuit breakers to protect the calls to the `XSUAA` and `destination-service`.
   The default value is true.
 - `timeout`: Sets the timeout for the calls to SAP BTP services like `XSUAA` and `destination-service`.

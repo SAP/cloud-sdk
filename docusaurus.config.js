@@ -27,12 +27,16 @@ module.exports = {
   projectName: 'cloud-sdk',
   trailingSlash: false,
   themeConfig: {
+    colorMode: {
+      respectPrefersColorScheme: true,
+      disableSwitch: true
+    },
     announcementBar: {
       id: 'feedback_survey',
       content:
         'How do you like the SAP Cloud SDK? Share your <a href="https://sapinsights.eu.qualtrics.com/jfe/form/SV_0P69X6kJ0Pdxqbc" style="color: var(--ifm-link-color);text-decoration: var(--ifm-link-decoration);transition: color var(--ifm-transition-fast) var(--ifm-transition-timing-default)">feedback</a>.',
-      backgroundColor: 'var(--ifm-color-secondary)',
-      // textColor: '#091E42',
+      backgroundColor: 'var(--ifm-color-primary-contrast-background)',
+      textColor: 'var(--ifm-color-primary-contrast-foreground)',
       isCloseable: false
     },
     prism: {
@@ -46,19 +50,6 @@ module.exports = {
       appId: 'E4A268JVO0',
       algoliaOptions: {} // Optional, if provided by Algolia
     },
-    // ***************************************************************
-    // Activate this announcement bar for global urgent notifications
-    // ***************************************************************
-    //
-    // announcementBar: {
-    //   id: 'survey', // Any value that will identify this message
-    //   content:
-    //      '&#11088;&#11088;&#11088; Please, help us improving SAP Cloud SDK by taking <a target="_blank" rel="noopener noreferrer" href="https://sapinsights.eu.qualtrics.com/jfe/form/SV_0pUmWpCadpoLhyZ">our survey</a> &#11088;&#11088;&#11088;',
-    //   backgroundColor: '#fff', // Defaults to `#fff`
-    //   textColor: '#000', // Defaults to `#000`,
-    //   isCloseable: false, // Defaults to `true`.
-
-    // },
     navbar: {
       title: 'SAP Cloud SDK',
       logo: {
@@ -90,14 +81,6 @@ module.exports = {
           sdkSwitch: true
         },
         {
-          type: 'dropdown',
-          label: 'API Reference',
-          position: 'right',
-          items: [],
-          docsPluginId: 'docs-js',
-          apiReference: true
-        },
-        {
           type: 'docsVersionDropdown',
           position: 'right',
           docsPluginId: 'docs-js'
@@ -125,7 +108,7 @@ module.exports = {
             },
             {
               label: 'Support',
-              to: 'docs/java/support-java'
+              to: 'docs/java/support'
             }
           ]
         },
@@ -202,10 +185,10 @@ module.exports = {
           ignorePatterns: [
             '/cloud-sdk/api/**',
             '/cloud-sdk/components/**',
-            '/cloud-sdk/docs/js/v1/features/common/**',
-            '/cloud-sdk/docs/js/v1/features/odata/common/**',
-            '/cloud-sdk/docs/js/v1/features/odata/v2/**',
-            '/cloud-sdk/docs/js/v1/features/odata/v4/**',
+            '/cloud-sdk/docs/js/*/features/common/**',
+            '/cloud-sdk/docs/js/*/features/odata/common/**',
+            '/cloud-sdk/docs/js/*/features/odata/v2/**',
+            '/cloud-sdk/docs/js/*/features/odata/v4/**',
             '/cloud-sdk/docs/js/features/common/**',
             '/cloud-sdk/docs/js/features/odata/common/**',
             '/cloud-sdk/docs/js/features/odata/v2/**',
@@ -222,13 +205,6 @@ module.exports = {
   ],
   customFields: {},
   plugins: [
-    [
-      './src/plugins/plugin-latest-api-doc',
-      {
-        latestBaseUrl: '/cloud-sdk/api/latest',
-        versions: '../static/api/versions.json'
-      }
-    ],
     [
       '@docusaurus/plugin-content-docs',
       {
@@ -259,17 +235,16 @@ module.exports = {
         editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
         routeBasePath: 'docs/js',
         sidebarPath: require.resolve('./sidebarsDocsJs.js'),
-        lastVersion: 'v2',
+        lastVersion: 'current',
         versions: {
           current: {
             label: 'v3',
-            path: 'v3',
-            banner: 'unreleased',
             badge: false
           },
           v2: {
             label: 'v2',
-            banner: 'none',
+            path: 'v2',
+            banner: 'unmaintained',
             badge: false
           },
           v1: {
@@ -461,7 +436,7 @@ module.exports = {
     ],
     function nodeWebpackPolyfillPlugin(context, options) {
       return {
-        name: 'nodeWebpackPlyfill',
+        name: 'nodeWebpackPolyfill',
         configureWebpack(config, isServer) {
           return {
             plugins: [new ESMPolyfillWrapper()]

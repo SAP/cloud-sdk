@@ -759,7 +759,9 @@ id: frequently-asked-questions
 If you reference files by their path, e.g., `../my-file.mdx`, changes to the `id`, and therefore the slug, will automitcally carry over.
 Otherwise you would have to adjust the reference in all files that reference a specific slug.
 
-Therefore you should always reference other files by their (relative) path.
+Therefore you should always reference other files by their relative path.
+Note: Begin relative path with `./` or `../`.
+Not using this notation can result in an old versioned doc linking to the latest doc.
 
 ❌
 
@@ -767,10 +769,18 @@ Therefore you should always reference other files by their (relative) path.
 ... see our [JWT documentation](../retrieve-jwt)
 ```
 
+```
+... the concept of a [destination](features/connectivity/destination.mdx)
+```
+
 ✅
 
 ```
 ... see our [JWT documentation](../how-to-retrieve-jwt.mdx)
+```
+
+```
+... the concept of a [destination](./features/connectivity/destination.mdx)
 ```
 
 <!-- vale on -->
