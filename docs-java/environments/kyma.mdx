@@ -15,86 +15,11 @@ keywords:
 [Kyma](https://kyma-project.io/) is an application runtime that provides you a flexible and easy way to connect, extend, and customize your applications in the cloud-native world of Kubernetes.
 Find more details in the [official documentation](https://kyma-project.io/docs/kyma/latest/01-overview/).
 
-:::caution Document is outdated!
+You can also refer to this additional material available for getting started with SAP Cloud SDK on Kyma:
 
-While the Kyma runtime is improving over time, recent changes unfortunately rendered parts of this document outdated.
-We are currently re-evaluating and updating the information provided.
-Please follow the [official documentation](https://kyma-project.io/docs/kyma/latest/01-overview/).
-
-<details>
-  <summary>Workaround for On-Premise Connectivity</summary>
-
-Recent changes of the Kyma runtime environment prevent the SAP Cloud SDK's On-Premise connectivity from working as intended.
-While we are working on a permanent solution, please use the following workaround:
-
-<ol>
-  <li>Add following class to your project:
-
-```java
-public class OnPremiseHeaderProvider implements DestinationHeaderProvider {
-
-  @Override
-  @Nonnull
-  public List<Header> getHeaders(
-    @Nonnull final DestinationRequestContext requestContext
-  ) {
-    final Option<ProxyType> proxyType = requestContext
-      .getDestination()
-      .get("ProxyType", ProxyType.class);
-    if (proxyType.getOrElse(ProxyType.INTERNET) != ProxyType.ON_PREMISE) {
-      return Collections.emptyList();
-    }
-
-    final Option<AuthenticationType> authentication = requestContext
-      .getDestination()
-      .get("authentication", AuthenticationType.class);
-    if (
-      authentication.getOrElse(AuthenticationType.NO_AUTHENTICATION) !=
-      AuthenticationType.PRINCIPAL_PROPAGATION
-    ) {
-      return Collections.emptyList();
-    }
-
-    final Try<String> maybeBearerToken = AuthTokenAccessor
-      .tryGetCurrentToken()
-      .map(token -> String.format("Bearer %s", token.getJwt().getToken()));
-
-    if (maybeBearerToken.isEmpty()) {
-      return Collections.emptyList();
-    }
-
-    return Collections.singletonList(
-      new Header("SAP-Connectivity-Authentication", maybeBearerToken.get())
-    );
-  }
-}
-
-```
-
-  </li>
-  <li>
-    Create following file in your application resources:
-
-```
-src/main/resources/META-INF/com.sap.cloud.sdk.cloudplatform.connectivity.DestinationHeaderProvider
-```
-
-  </li>
-  <li>
-    Fill the file with the fully qualified name of the newly created class. 
-    For example, the content should look like this:
-
-```
-name.of.your.package.OnPremiseHeaderProvider
-```
-
-  </li>
-
-</ol>
-
-</details>
-
-:::
+- [Sample Application with Setup Guide](https://github.com/SAP-samples/kyma-runtime-extension-samples/tree/main/sample-cloudsdk-java)
+- [Blog Post on a Sample Use Case](https://blogs.sap.com/2022/01/11/use-sap-cloud-sdk-on-kyma-runtime-to-connect-to-external-systems-with-client-cert-authentication/)
+- [Using the Service Catalog with the SAP Cloud SDK](https://sap.github.io/cloud-sdk/docs/java/environments/sap-btp-kubernetes-environment-with-sap-gardener#excursion-bind-services-created-by-the-service-catalog)
 
 ## SAP Cloud SDK Features Supported on Kyma by SAP
 
@@ -105,7 +30,7 @@ Legend: ✅ - supported, ❗- partially supported, ❌ - not supported
 - ✅ Multitenancy
 - ✅ Resilience & Caching
 - ✅ Connect to and consume services from SAP S/4HANA Cloud
-- ❌ Connect to and consume services from SAP S/4HANA On-Premise
+- ❗ Connect to and consume services from SAP S/4HANA On-Premise
 - ✅ Seamless use of typed clients provided by the SAP Cloud SDK
 
 ## Getting Started with the SAP Cloud SDK on Kyma
@@ -640,8 +565,97 @@ You could also go ahead and expose the service for your application directly by 
 But, this would mean that access to your application would not be authenticated first.
 :::
 
-You can also refer to this additional material available for getting started with SAP Cloud SDK on Kyma:
+## On-Premise Connectivity
 
-- [Sample Application with Setup Guide](https://github.com/SAP-samples/kyma-runtime-extension-samples/tree/main/sample-cloudsdk-java)
-- [Blog Post on a Sample Use Case](https://blogs.sap.com/2022/01/11/use-sap-cloud-sdk-on-kyma-runtime-to-connect-to-external-systems-with-client-cert-authentication/)
-- [Using the Service Catalog with the SAP Cloud SDK](https://sap.github.io/cloud-sdk/docs/java/environments/kubernetes-gardener#excursion-bind-services-created-by-the-service-catalog)
+### Prerequisites
+
+This guide assumes you have both the **Transparent Proxy** (version `>= 1.2.0`) and **Connectivity Proxy** (version `>= 2.8.0`) installed in your cluster.
+Please refer to [this](https://github.com/SAP-samples/kyma-runtime-extension-samples/tree/main/connectivity-proxy) and [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/23fc1100c60b45c58f09694b7f9c7700.html) documentation on how to install it if you haven't already.
+
+:::note Kyma Compatibility
+On Kyma, two scenarios are supported by the SAP Cloud SDK:
+
+1. Using the Connecitivty Proxy in "trusted mode" together with the Transparent Proxy
+2. Using a custom Connecitivty Proxy instance in "untrusted mode" without the Transparent Proxy
+
+The Connecitivty Proxy managed by Kyma is coming in "trusted mode", thus this guide covers scenario (1).
+In case you want to run scenario (2) refer to [this guide](./kubernetes-gardener#2-using-the-connectivity-proxy) for using the Connectivity Proxy without Transparent Proxy.
+Other scenarios are currently not supported.
+:::
+
+### Background Information
+
+When using the Transparent Proxy your app performs requests against the Transparent Proxy without explicit authentication, relying on the secure network communication provided by Kyma via Istio.
+The Transparent Proxy will obtain the relevant destination from the destination service and use it to forward the request via the Connectivity Proxy to the On-Premise system.
+Consequently, your app itself does not interact with destination or connectivity service at all and thus your application pods do not require bindings to these two services.
+
+Please note that the current implementation of the Transparent Proxy does not yet cover all use cases.
+Most prominently, only **single-tenant** mode is currently supported.
+
+<details>
+  <summary>Constraints when using the Transparent Proxy</summary>
+
+- Single tenant only
+- Private Link not yet supported
+- Destination names need to be known at design time
+  - see the note on [Create a Kubernetes Resource](#create-a-kubernetes-resource)
+
+</details>
+
+:::tip
+This approach is conceptually different from what you may be used to from a CloufdFoundry environment.
+The official [documentation of the Transparent Proxy](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/e661713ef7d14373b57e3e26b0b03b86.html) gives more information on the architecture.
+:::
+
+### Create a Kubernetes Resource
+
+Create the following YAML file:
+
+```yaml title:"example-dest.yaml"
+apiVersion: destination.connectivity.api.sap/v1
+kind: Destination
+metadata:
+  name: example-dest
+spec:
+  destinationRef:
+    name: 'example-dest-onprem' # name from BTP Cockpit
+```
+
+- Adjust the name `example-dest-onprem` to the On-Premise destination you defined in your SAP BTP Cockpit.
+
+It will create a Kubernetes resource in your cluster, pointing to the destination you created in the cockpit.
+Apply the YAML with `kubectl apply` to take effect.
+
+:::note
+This step is required for each destination that should be reachable via the Transparent Proxy.
+If you do not create a custom Kubernetes resource of type `destinations.destination.connectivity.api.sap` for a given destination, the destination will not be handled by the Transparent Proxy.
+:::
+
+### Executing Requests
+
+In your application you can now configure a destination to execute requests:
+
+```java
+DefaultHttpDestination destination = DefaultHttpDestination
+        .builder("http://example-dest.namespace/")
+        // for principal propagation make sure to set the auth type to "TOKEN_FORWARDING"
+        // .authenticationType(AuthenticationType.TOKEN_FORWARDING)
+        .build();
+
+List<SalesArea> execute = new DefaultSalesAreaService().getAllSalesArea() // example OData request
+        .execute(destination);
+```
+
+- Replace `namespace` in the URL with the namespace you installed the Transparent Proxy into
+
+This will target the Kubernetes resource `example-dest` we created above which will be resolved to the destination we configured in that resource.
+The code above shows an example how you can use it to perform an OData request.
+
+:::note
+Repeat this process for all _destination names_ you want to use in your application.
+:::
+
+:::tip Connecting to Cloud systems
+The above approach is not limited to destinations of proxy type `ON_PREMISE`.
+`INTERNET` destinations are equally supported.
+:::
