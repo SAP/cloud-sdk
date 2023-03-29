@@ -407,26 +407,12 @@ export const features = [
     category: 'Connectivity',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/connectivity/-destination-service#connect-to-sap-s4hana-on-premise)`,
+      docsLink: `[docs](${baseUrl}/java/features/connectivity/destination-service#connect-to-sap-s4hana-on-premise)`,
       note: ''
     },
     js: {
       status: YES,
       docsLink: `[docs](${baseUrl}/js/features/connectivity/on-premise)`,
-      note: ''
-    }
-  },
-  {
-    name: 'CLI',
-    category: 'CLI',
-    java: {
-      status: YES,
-      docsLink: ``,
-      note: `Via a Maven plugin `
-    },
-    js: {
-      status: DEPRECATED,
-      docsLink: `[docs](${baseUrl}/js/features/cli/overview)`,
       note: ''
     }
   },
