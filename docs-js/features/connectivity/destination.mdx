@@ -280,14 +280,14 @@ const destination = destinationForServiceBinding('my-service-name', {
 
 In a productive environment, you will use a [Destination service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html) to retrieve destinations.
 
-#### Authentication and JSON Web Token Retrieval
+#### Authentication and JSON Web Token (JWT) Retrieval
 
 To access the destination service, the SAP Cloud SDK will first fetch an access token from the XSUAA service.
 The token retrieved from the XSUAA service is used to make a call to the destination service and receive the destinations.
 The destination service returns a destination with all relevant authentication information depending on the used authentication flow.
 Listed below are the SDK-supported authentication flows, categorized based on whether a user JWT (`jwt` property in [destination fetch options](#destination-fetch-options)) is required to retrieve a destination.
 
-- A user JWT is not required
+- No user JWT required
 
   - `NoAuthentication`
   - `BasicAuthentication`
@@ -296,7 +296,8 @@ Listed below are the SDK-supported authentication flows, categorized based on wh
   - `ClientCertificateAuthentication`
   - `OAuth2RefreshToken`
 
-- A user JWT is required
+- User JWT required
+
   - `OAuth2UserTokenExchange`
   - `OAuth2JWTBearer`
   - `OAuth2SAMLBearerAssertion`
@@ -373,7 +374,7 @@ In every request, these destinations are added to the destinations returned by t
 
 :::
 
-#### Destination Lookup Without a JSON Web Token
+#### Destination Lookup Without a JSON Web Token (JWT)
 
 There are situations where you do not have a JWT issued by the XSUAA but need to look up a destination, e.g., in background processes.
 In such situations, the property `iss` of the `DestinationAccessorOptions` can be used:
@@ -385,15 +386,18 @@ MyRequest.execute({ destinationName: 'myDestination', iss: yourIssuerValue });
 The value for `iss` is supposed to be the same as in a JWT issued from the XSUAA, e.g., `https://yourSubdomain.localhost:8080/uaa/oauth/token`.
 In principle, only the host of the URL is relevant, but since the same parsing and replacement methods are used for the JWT handling, the URL has to be provided in the format above.
 
+Some destinations have [user-related authentication flows](#authentication-and-json-web-token-jwt-retrieval) and require user information to be present.
+When working with the `iss` property, you can add a JWT to include user information.
+This will be used to identify the user in the `x-user-token` header in the request to the destination service.
+
 :::danger
 
-If a JWT is used in the destination lookup, a validation of the provided token is performed.
+If only a JWT is used in the destination lookup, it is validated.
 This validation ensures that the JWT has not been manipulated.
-If only the `iss` is provided, no such validation is performed.
+If `iss` is provided, no such validation is performed.
 
 Note that the given subdomain value defines from which tenant destinations are fetched.
 **A wrong value may break the isolation for tenants.**
-It is your responsibility as a developer to ensure that the provided value for the `iss` property is valid.
 
 :::
 
