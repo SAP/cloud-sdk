@@ -1,9 +1,7 @@
 If you need to transform entities from the typed SAP Cloud SDK representation to their OData representation, use the `serializeEntity()` function of the `entitySerializer` from the `@sap-cloud-sdk/odata-common` package:
 
 ```ts
-import {
-  entitySerializer
-} from '@sap-cloud-sdk/odata-common';
+import { entitySerializer } from '@sap-cloud-sdk/odata-common';
 import { businessPartnerService } from './generated/business-partner-service';
 
 const { businessPartnerApi } = businessPartnerService();
@@ -21,7 +19,7 @@ const serializedEntity = entitySerializer(
   businessPartnerApi.deSerializers
 ).serializeEntity(deserializedEntity, businessPartnerApi);
 
-console.log(serializedEntity); 
+console.log(serializedEntity);
 //{
 //  FirstName: 'Peter',
 //  LastName: 'Pan',
