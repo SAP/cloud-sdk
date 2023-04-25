@@ -14,9 +14,9 @@ export const features = [
     name: '[SOAP](https://help.sap.com/saphelp_snc700_ehp01/helpdata/en/bb/ddb33d2ae46b3be10000000a114084/content.htm?no_cache=true)',
     category: 'Legacy',
     java: {
-      status: YES,
+      status: DEPRECATED,
       docsLink: ``,
-      note: ''
+      note: 'Deprecated since 4.13'
     },
     js: {
       status: NO,
