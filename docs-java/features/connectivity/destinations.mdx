@@ -427,9 +427,9 @@ For a provider/subscriber setup, a [retrieval strategy](https://help.sap.com/doc
 - `CURRENT_TENANT` (default)
 - `ALWAYS_PROVIDER`
 - `ONLY_SUBSCRIBER`
-- `CURRENT_TENANT_THEN_PROVIDER`
+- `CURRENT_TENANT_THEN_PROVIDER` (deprecated)
 
-Here is an example for `CURRENT_TENANT_THEN_PROVIDER` option:
+Here is an example for `ONLY_SUBSCRIBER` option:
 
 ```java
 DestinationOptions options =
@@ -438,7 +438,7 @@ DestinationOptions options =
         .augmentBuilder(
             ScpCfDestinationOptionsAugmenter
                 .augmenter()
-                .retrievalStrategy(ScpCfDestinationRetrievalStrategy.CURRENT_TENANT_THEN_PROVIDER))
+                .retrievalStrategy(ScpCfDestinationRetrievalStrategy.ONLY_SUBSCRIBER))
         .build();
 ```
 
