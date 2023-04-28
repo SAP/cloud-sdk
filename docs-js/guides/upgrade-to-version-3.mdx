@@ -64,6 +64,29 @@ The following sub-sections describe affected modules, functions and interfaces w
 - The generic type parameter `JwtKeysT` in `JwtKeyMapping` is now narrowed to extend `string`.
 - The property `url` on the `Destination` interface is now optional.
   It is only present for HTTP destinations and not for Mail destinations.
+  
+  If you're using `getDestination({ destinationName: 'YOUR_DESTINATION'})` to fetch the destination separately, not within `execute()`, you'll need to adjust your coding as well. Add the typeguard function `isHttpDestination()` to typecast your fetched `Destination` to be `HttpDestination`. Example:
+
+  ```ts
+  const yourDestination = await getDestination( { destinationName: 'YOUR_DESTINATION', useCache: true } );
+  if (!dataLayerDestination) {
+      throw new Error('Destination not reachable.');
+  }
+  ...
+  .execute(yourDestination);
+  ```
+  
+  to
+  
+  ```ts
+  const yourDestination = await getDestination( { destinationName: 'YOUR_DESTINATION', useCache: true } );
+  if (!yourDestination || !isHttpDestination(yourDestination)) {
+      throw new Error('Destination not reachable.');
+  }
+  ...
+  .execute(yourDestination);
+  ```
+  
 - The `IsolationStrategy` enum is replaced by a union type of the same name.
 
   Make changes to your tenant isolation strategy like in this example:
