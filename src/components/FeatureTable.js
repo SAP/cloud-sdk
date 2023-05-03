@@ -19,7 +19,7 @@ export default function FeatureTable() {
     <>
       <ReactMarkdown remarkPlugins={[gfm, emoji]}>
         **Legend:** :heavy_check_mark: - Generally Available, :x: - Not
-        Available, :gear: - Beta, :date: - Planned
+        Available, :gear: - Beta, :date: - Planned, :warning: - Deprecated
       </ReactMarkdown>
       <Table columns={columns} data={data} />
     </>

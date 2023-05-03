@@ -1,8 +1,63 @@
-# 4.11.0 - March 31, 2023
+## 4.13.0 - April 28, 2023
+
+[Maven Central](https://central.sonatype.com/search?q=com.sap.cloud.sdk%2520v%253A4.13.0)
+
+### Compatibility Notes
+
+- We are planning to discontinue support of RFC- and SOAP queries with SAP Cloud SDK v5 by end of the year.
+  Therefore we're announcing module deprecation in advance.
+  The following modules and namespaces are deprecated while still being fully functional and considered supported in SAP Cloud SDK v4:
+  - **RFC Queries**: `com.sap.cloud.sdk.s4hana.rfc.*`
+  - **SOAP queries**: `com.sap.cloud.sdk.datamodel.soap.*`
+- Deprecate the destination retrieval strategy `CURRENT_TENANT_THEN_PROVIDER`.
+  - Please query subscriber and provider tenants individually instead using `ONLY_SUBSCRIBER` and `ALWAYS_PROVIDER`.
+    This reduces hidden complexity and makes potential troubleshooting easier.
+
+### New Functionality
+
+- Improved lookups of destinations from the BTP Destination Service:
+  - A new `ScpCfDestinationTokenExchangeStrategy.FORWARD_USER_TOKEN` has been introduced and made the default strategy.
+  - It is functionally equivalent to the previous default `ScpCfDestinationTokenExchangeStrategy.LOOKUP_THEN_EXCHANGE`, but performs significantly better for destinations that require a user token.
+  - **Note:** The new strategy is only enabled by default, if a user token exists in the current context and it's originating from the XSUAA identity service.
+  - Additional warnings and exceptions now better prevent incorrect usages of the different strategies.
+    See also the related compatibility notes.
+
+### Improvements
+
+- Added readable error messages in OpenAPI generator for files not found.
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [SAP Java Buildpack](https://central.sonatype.com/artifact/com.sap.cloud.sjb.cf/cf-tomcat-bom/1.68.1) from `1.68.0` to `1.68.1`
+  - Other dependency updates:
+    - Minor version updates:
+      - Update [JSON](https://central.sonatype.com/artifact/org.json/json/20230227) from `20220924` to `20230227`
+      - Update [Spring Framework](https://search.maven.org/search?q=g:org.springframework%20AND%20a:spring-framework-bom) (`org.springframework:spring-framework-bom`) from `5.3.26` to `5.3.27`
+      - Update [Spring Security](https://search.maven.org/search?q=g:org.springframework.security%2BAND%2Ba:spring-security-bom) (`org.springframework.security:spring-security-bom`) from `5.8.2` to `5.8.3`
+      - Update [Jackson](https://search.maven.org/search?q=g:com.fasterxml.jackson.core%20AND%20a:jackson-core) (`com.fasterxml.jackson.core:jackson-annotations`, `com.fasterxml.jackson.core:jackson-databind` and `com.fasterxml.jackson.core:jackson-core`) from `2.14.2` to `2.15.0`
+
+## 4.12.0 - April 13, 2023
+
+[Maven Central](https://central.sonatype.com/search?q=com.sap.cloud.sdk%2520v%253A4.12.0)
+
+### Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [SAP Java Buildpack](https://central.sonatype.com/artifact/com.sap.cloud.sjb.cf/cf-tomcat-bom/1.68.0) from `1.67.0` to `1.68.0`
+  - Other dependency updates:
+    - Minor version updates:
+      - Update [checker-qual](https://central.sonatype.com/artifact/org.checkerframework/checker-qual/3.33.0) from `3.32.0` to `3.33.0`
+      - Update [java-jwt](https://central.sonatype.com/artifact/com.auth0/java-jwt/4.4.0) from `4.3.0` to `4.4.0`
+
+### Fixed Issues
+
+- Fix an issue where SAML based destinations would not work properly when change detection is enabled.
+
+## 4.11.0 - March 31, 2023
 
 [Maven Central](https://central.sonatype.com/search?q=com.sap.cloud.sdk%2520v%253A4.11.0)
 
-## Improvements
+### Improvements
 
 - Dependency Updates:
   - SAP dependency updates:
@@ -13,26 +68,26 @@
         - Update [Spring Boot](https://search.maven.org/search?q=g:org.springframework.boot%20a:spring-boot) (`org.springframework.boot:spring-boot`) from `2.7.8` to `2.7.10`
         - Update [Spring Security](https://search.maven.org/search?q=g:org.springframework.security%20a:spring-security-bom) (`org.springframework.security:spring-security-bom`) from `5.8.1` to `5.8.2`
 
-# 4.10.0 - March 21, 2023
+## 4.10.0 - March 21, 2023
 
 [Maven Central](https://central.sonatype.com/search?q=com.sap.cloud.sdk%2520v%253A4.10.0)
 
-## New Functionality
+### New Functionality
 
 - Add support for the new destination authentication type: ["OAuth Technical User Propagation Authentication"](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/8634e210446844d09ae9627b450822fd.html)
 
-## Improvements
+### Improvements
 
 - Dependency Updates:
   - Other dependency updates:
     - Minor version updates:
       - Update [Checker Framework](https://central.sonatype.com/artifact/org.checkerframework/checker-qual/3.32.0) from `3.30.0` to `3.32.0`
 
-# 4.9.0 - March 14, 2023
+## 4.9.0 - March 14, 2023
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:4.9.0)
 
-## New Functionality
+### New Functionality
 
 - Update of the OData VDM to the [newest release 2022 FPS1 of SAP S/4HANA On-Premise](https://help.sap.com/viewer/product/SAP_S4HANA_ON-PREMISE/2022/en-US).
   The SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA On-Premise](https://api.sap.com/products/SAPS4HANA/overview).
@@ -50,22 +105,22 @@
 - SAP Cloud SDK can be used with JakartaEE (e.g. via Spring Boot 3). The necessary [instructions can be found here](https://sap.github.io/cloud-sdk/docs/java/frequently-asked-questions#spring-boot-3-and-java-17-support).
   - New module `servlet-jakarta` is released for experimental usage.
 
-## Improvements
+### Improvements
 
 - Dependency Updates:
   - SAP dependency updates:
     - Update [SAP Java Buildpack](https://central.sonatype.com/artifact/com.sap.cloud.sjb.cf/cf-tomcat-bom/1.66.0) from `1.65.0` to `1.66.0`
     - Update [XSUAA Security Client](https://central.sonatype.com/artifact/com.sap.cloud.security/java-bom/2.13.5) from `2.13.4` to `2.13.5`
 
-# 4.8.0 - February 23, 2023
+## 4.8.0 - February 23, 2023
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:4.8.0)
 
-## New Functionality
+### New Functionality
 
 - `FilterableBoolean` has been extended to allow custom filter expressions. This is useful when filter fields need to be passed dynamically. Refer to the [documentation](https://sap.github.io/cloud-sdk/docs/java/features/odata/v4-vdm-client#filter) for more information.
 
-## Improvements
+### Improvements
 
 - Dependency Updates:
   - Other dependency updates:
@@ -75,11 +130,11 @@
       - Update [Auth0 JWT](https://search.maven.org/search?q=g:com.auth0%20AND%20a:java-jwt) from `4.2.2` to `4.3.0`
       - Update [Lombok](https://central.sonatype.com/artifact/org.projectlombok/lombok/1.18.26) from `1.18.24` to `1.18.26`
 
-# 4.7.0 - February 08, 2023
+## 4.7.0 - February 08, 2023
 
 [Maven Central](https://search.maven.org/search?q=g:com.sap.cloud.sdk*%20AND%20v:4.7.0)
 
-## Known Issues
+### Known Issues
 
 - Arquillian based unit tests that use TomEE (embedded) as container may not work anymore with the latest SJB update.
   If the runtime encounters missing method or class exceptions, then we recommend setting the following system property in the local `arquillian.xml` test resource file:
@@ -87,11 +142,11 @@
   <property name="properties">openejb.cxf.jmx=false</property>
   ```
 
-## Compatibility Notes
+### Compatibility Notes
 
 - Changing the configuration of `ScpCfDestinationLoader.Cache` after disabling it via `disable()` will now throw an exception.
 
-## New Functionality
+### New Functionality
 
 - The destination cache now offers a change detection mode.
   When accessing multiple destinations per tenant this mode can yield a significant performance increase.
@@ -104,7 +159,7 @@
 - Extended the `ScpCfServiceDestinationLoader` to now also allow for `AuthenticationType.OAUTH2_USER_TOKEN_EXCHANGE`.
   This enables accessing the service on behalf of a business user via user token exchange.
 
-## Improvements
+### Improvements
 
 - Update the OData VDM to the [newest release 2302 of SAP S/4HANA Cloud](https://blogs.sap.com/2023/01/25/highlights-of-the-sap-s-4hana-cloud-public-edition-2302-release/).
   This includes completely new services (available as usual in packages `com.sap.cloud.sdk.s4hana.datamodel.odata.services` and `com.sap.cloud.sdk.s4hana.datamodel.odatav4.services`), new operations in previously existing services, and new entity types.
@@ -188,7 +243,7 @@
     - `Payment Data` removed from `CADOCUMENTMANAGE_0001`
     - `SupplierCostBreakdownIsEnabled` and `SuplrCostBreakdownIsRelevant` from `CE_SOURCINGPROJECT_0001`
 
-## Improvements
+### Improvements
 
 - Dependency Updates:
   - SAP dependency updates:
