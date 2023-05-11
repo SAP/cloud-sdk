@@ -1,3 +1,48 @@
+## 4.14.0 - May 12, 2023
+
+[Maven Central](https://central.sonatype.com/search?q=com.sap.cloud.sdk%2520v%253A4.14.0)
+
+### Compatibility Notes
+
+- Compatibility with the [SAP Security Library](https://github.com/SAP/cloud-security-services-integration-library)
+  - The SAP Cloud SDK can now be used with the new major version `3.0.0` of the security library .
+  - The **minimum required version** for the SAP Cloud SDK is now `2.13.9`.
+  - For WAR deployments using the SAP Java Buildpack, the **minimum required buildpack version** is now `1.69.0`.
+  - The related class `CertificateBasedHttpClientFactory` is no longer registered as an implementation of `com.sap.cloud.security.client.HttpClientFactory`.
+  - Deprecate functionality related to validation of JWT tokens from incoming requests:
+    - `AuthTokenBuilder`
+    - `ScpCfAuthTokenFacade(OAuth2TokenService, OAuth2ServiceConfiguration)`
+    - `ScpCfAuthTokenFacade#tryGetXsuaaServiceToken`
+    - `ScpCfAuthTokenFacade#getRefreshToken`
+    - `ScpCfTenantFacade#tryGetXsuaaServiceTenant`
+    - `CertificateBasedHttpClientFactory`
+- We are planning to discontinue support of Business Logging APIs with SAP Cloud SDK v5 by end of the year.
+  Therefore, we're announcing module deprecation in advance.
+  The following modules and namespaces are deprecated while still being fully functional and considered supported in SAP Cloud SDK v4:
+  - **BTP Business Logging - All**
+    - **BTP Business Logging OData**: `com.sap.cloud.sdk.services.scp.businesslogging.odata.*`
+      -  The replacement is to generate the API yourself using the existing plugins found in the [deprecated pom file](services/scp-business-logging-odata/pom.xml) with the `JSON` and `EDMX` spec files.
+    - **BTP Business Logging REST**: `com.sap.cloud.sdk.services.scp.businesslogging.rest.*`
+      - The replacement is to generate the API yourself using the existing plugins found in the [deprecated pom file](services/scp-business-logging-rest/pom.xml) with the `YAML` spec files.
+
+### New Functionality
+
+- `OpenAPI` generated objects can now read custom fields which are not part of the object's schema:
+  - `getCustomFieldNames()`
+  - `getCustomField("nameOfField")`
+
+### Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update the [SAP Security Library](https://github.com/SAP/cloud-security-services-integration-library) from `2.13.5` to `2.13.9`
+    - Update the SAP Java Buildpack BOM from `1.68.1` to `1.69.0`
+    - Update [SAP Service Binding Library](https://github.com/SAP/btp-environment-variable-access) from `0.5.2` to `0.6.0`
+
+### Fixed Issues
+
+- Fix an issue in OData V4 where custom fields in complex properties were not serialised when updating with `PATCH`.
+
 ## 4.13.0 - April 28, 2023
 
 [Maven Central](https://central.sonatype.com/search?q=com.sap.cloud.sdk%2520v%253A4.13.0)
