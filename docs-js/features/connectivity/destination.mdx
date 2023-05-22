@@ -168,7 +168,7 @@ Instead, you should enable token forwarding on the destination.
 
 :::
 
-With token forwarding the token used to execute the request is sent to the destination:
+With [token forwarding](#forwarding-auth-token) the token used to execute the request is sent to the destination:
 
 ```ts
 const destination = {
@@ -184,9 +184,6 @@ MyRequest.execute({
   jwt: 'forwardedJwt'
 });
 ```
-
-This only works if your target system accepts unchanged JWTs.
-Use the destination service if a transformation is needed, e.g., `OAuth` to `SamlBearer`.
 
 Note that the `registerDestination()` function is tenant-aware.
 The [destination cache guide](./destination-cache-isolation.mdx) describes the cache options used by the `registerDestination()` function.
@@ -538,6 +535,34 @@ Replace `HEADER_KEY` and `QUERY_KEY` with the name of the headers or query param
 In the example above, the destination has an `apiKey` header with the value `<my-api-key>` and a `language` query parameter with the value `EN`.
 
 The SAP Cloud SDK adds those additional headers and query parameters for every communication with the given destination.
+
+### Forwarding Auth Token
+
+The SDK provides the option of configuring a destination to directly forward a user JWT to the target system.
+This hebaiour can be enabled by setting the `forwardAuthToken` property on the destination to `true`, as shown in the code snippet below:
+
+```ts
+const destination = {
+  name: 'myDestination',
+  url: 'https://example.com',
+  forwardAuthToken: true,
+  ...
+}
+```
+
+After configuring the destination, you can execute the request by calling `execute()` or `executeHttpRequest()` methods and passing the token you wish to forward, as shown below:
+
+```ts
+executeHttpRequest({ destinationName: 'myDestination', jwt: 'userJwt' });
+```
+
+In the above request, the authorization header with the specified JWT will always be sent, overriding the authentication type of the destination.
+It is important to note that this approach will only work if the target system accepts unchanged JWTs.
+If any transformation is required, e.g., from `OAuth` to `SamlBearer`, it is recommended to use the destination service.
+
+:::note
+If a custom authorization header is provided in the `requestConfig`, it will take precedence over the JWT to be forwarded.
+:::
 
 #### Rules of Precedence
 
