@@ -1,3 +1,86 @@
+## 4.14.0 - May 12, 2023
+
+[Maven Central](https://central.sonatype.com/search?q=com.sap.cloud.sdk%2520v%253A4.14.0)
+
+### Compatibility Notes
+
+- Compatibility with the [SAP Security Library](https://github.com/SAP/cloud-security-services-integration-library)
+  - The SAP Cloud SDK can now be used with the new major version `3.0.0` of the security library .
+  - The **minimum required version** for the SAP Cloud SDK is now `2.13.9`.
+  - For WAR deployments using the SAP Java Buildpack, the **minimum required buildpack version** is now `1.69.0`.
+  - The related class `CertificateBasedHttpClientFactory` is no longer registered as an implementation of `com.sap.cloud.security.client.HttpClientFactory`.
+  - Deprecate functionality related to validation of JWT tokens from incoming requests:
+    - `AuthTokenBuilder`
+    - `ScpCfAuthTokenFacade(OAuth2TokenService, OAuth2ServiceConfiguration)`
+    - `ScpCfAuthTokenFacade#tryGetXsuaaServiceToken`
+    - `ScpCfAuthTokenFacade#getRefreshToken`
+    - `ScpCfTenantFacade#tryGetXsuaaServiceTenant`
+    - `CertificateBasedHttpClientFactory`
+- We are planning to discontinue support of Business Logging APIs with SAP Cloud SDK v5 by end of the year.
+  Therefore, we're announcing module deprecation in advance.
+  The following modules and namespaces are deprecated while still being fully functional and considered supported in SAP Cloud SDK v4:
+
+  - **BTP Business Logging - All**
+  - **BTP Business Logging OData**: `com.sap.cloud.sdk.services.scp.businesslogging.odata.*`
+  - **BTP Business Logging REST**: `com.sap.cloud.sdk.services.scp.businesslogging.rest.*`
+
+  The code can now be generated instead by using the [OData](https://sap.github.io/cloud-sdk/docs/java/features/odata/vdm-generator) and [OpenAPI](https://sap.github.io/cloud-sdk/docs/java/features/rest/generate-rest-client) generators with the `EDMX` and `JSON` specifications of the service.
+
+### New Functionality
+
+- `OpenAPI` generated objects can now read custom fields which are not part of the object's schema:
+  - `getCustomFieldNames()`
+  - `getCustomField("nameOfField")`
+
+### Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update the [SAP Security Library](https://github.com/SAP/cloud-security-services-integration-library) from `2.13.5` to `2.13.9`
+    - Update the SAP Java Buildpack BOM from `1.68.1` to `1.69.0`
+    - Update [SAP Service Binding Library](https://github.com/SAP/btp-environment-variable-access) from `0.5.2` to `0.6.0`
+
+### Fixed Issues
+
+- Fix an issue in OData V4 where custom fields in complex properties were not serialised when updating with `PATCH`.
+
+## 4.13.0 - April 28, 2023
+
+[Maven Central](https://central.sonatype.com/search?q=com.sap.cloud.sdk%2520v%253A4.13.0)
+
+### Compatibility Notes
+
+- We are planning to discontinue support of RFC- and SOAP queries with SAP Cloud SDK v5 by end of the year.
+  Therefore we're announcing module deprecation in advance.
+  The following modules and namespaces are deprecated while still being fully functional and considered supported in SAP Cloud SDK v4:
+  - **RFC Queries**: `com.sap.cloud.sdk.s4hana.rfc.*`
+  - **SOAP queries**: `com.sap.cloud.sdk.datamodel.soap.*`
+- Deprecate the destination retrieval strategy `CURRENT_TENANT_THEN_PROVIDER`.
+  - Please query subscriber and provider tenants individually instead using `ONLY_SUBSCRIBER` and `ALWAYS_PROVIDER`.
+    This reduces hidden complexity and makes potential troubleshooting easier.
+
+### New Functionality
+
+- Improved lookups of destinations from the BTP Destination Service:
+  - A new `ScpCfDestinationTokenExchangeStrategy.FORWARD_USER_TOKEN` has been introduced and made the default strategy.
+  - It is functionally equivalent to the previous default `ScpCfDestinationTokenExchangeStrategy.LOOKUP_THEN_EXCHANGE`, but performs significantly better for destinations that require a user token.
+  - **Note:** The new strategy is only enabled by default, if a user token exists in the current context and it's originating from the XSUAA identity service.
+  - Additional warnings and exceptions now better prevent incorrect usages of the different strategies.
+    See also the related compatibility notes.
+
+### Improvements
+
+- Added readable error messages in OpenAPI generator for files not found.
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [SAP Java Buildpack](https://central.sonatype.com/artifact/com.sap.cloud.sjb.cf/cf-tomcat-bom/1.68.1) from `1.68.0` to `1.68.1`
+  - Other dependency updates:
+    - Minor version updates:
+      - Update [JSON](https://central.sonatype.com/artifact/org.json/json/20230227) from `20220924` to `20230227`
+      - Update [Spring Framework](https://search.maven.org/search?q=g:org.springframework%20AND%20a:spring-framework-bom) (`org.springframework:spring-framework-bom`) from `5.3.26` to `5.3.27`
+      - Update [Spring Security](https://search.maven.org/search?q=g:org.springframework.security%2BAND%2Ba:spring-security-bom) (`org.springframework.security:spring-security-bom`) from `5.8.2` to `5.8.3`
+      - Update [Jackson](https://search.maven.org/search?q=g:com.fasterxml.jackson.core%20AND%20a:jackson-core) (`com.fasterxml.jackson.core:jackson-annotations`, `com.fasterxml.jackson.core:jackson-databind` and `com.fasterxml.jackson.core:jackson-core`) from `2.14.2` to `2.15.0`
+
 ## 4.12.0 - April 13, 2023
 
 [Maven Central](https://central.sonatype.com/search?q=com.sap.cloud.sdk%2520v%253A4.12.0)

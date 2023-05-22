@@ -427,9 +427,9 @@ For a provider/subscriber setup, a [retrieval strategy](https://help.sap.com/doc
 - `CURRENT_TENANT` (default)
 - `ALWAYS_PROVIDER`
 - `ONLY_SUBSCRIBER`
-- `CURRENT_TENANT_THEN_PROVIDER`
+- `CURRENT_TENANT_THEN_PROVIDER` [(deprecated)](../../release-notes#4130---april-28-2023)
 
-Here is an example for `CURRENT_TENANT_THEN_PROVIDER` option:
+Here is an example for `ONLY_SUBSCRIBER` option:
 
 ```java
 DestinationOptions options =
@@ -438,20 +438,24 @@ DestinationOptions options =
         .augmentBuilder(
             ScpCfDestinationOptionsAugmenter
                 .augmenter()
-                .retrievalStrategy(ScpCfDestinationRetrievalStrategy.CURRENT_TENANT_THEN_PROVIDER))
+                .retrievalStrategy(ScpCfDestinationRetrievalStrategy.ONLY_SUBSCRIBER))
         .build();
 ```
 
 ##### Token Exchange Options
 
 Besides the retrieval strategy, the SAP Cloud SDK also offers a [token exchange strategy](https://help.sap.com/doc/69f4a2d15d9b404fac06e968f0633d98/1.0/en-US/com/sap/cloud/sdk/cloudplatform/connectivity/ScpCfDestinationTokenExchangeStrategy.html) that lets you change the behavior when authentication requires a user token exchange.
-There are three different options available:
+There are four different options available:
 
-- `LOOKUP_THEN_EXCHANGE` (default)
+- `FORWARD_USER_TOKEN` (default)
+- `LOOKUP_THEN_EXCHANGE`
 - `LOOKUP_ONLY`
 - `EXCHANGE_ONLY`
 
-By default, the SAP Cloud SDK first looks up the destination on the destination service and evaluates the authentication type.
+By default, the SAP Cloud SDK checks whether the current context contains an user access token originating from the XSUAA identity service.
+If that's the case, then the token will be forwarded as part of the destination lookup queries.
+Otherwise, `LOOKUP_THEN_EXCHANGE` will be applied:
+First SAP Cloud SDK looks up the destination on the destination service and evaluates the authentication type.
 If the authentication type requires a user token exchange the SAP Cloud SDK immediately performs that exchange.
 
 If you know that the destination you are about to retrieve requires a user token exchange you can improve performance by skipping the initial "look up" request like so:

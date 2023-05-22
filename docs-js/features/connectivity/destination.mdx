@@ -188,6 +188,23 @@ MyRequest.execute({
 Note that the `registerDestination()` function is tenant-aware.
 The [destination cache guide](./destination-cache-isolation.mdx) describes the cache options used by the `registerDestination()` function.
 
+#### Using Mutual TLS authentication (mTLS) on Cloud Foundry
+
+Using [mTLS](https://en.wikipedia.org/wiki/Mutual_authentication#mTLS) means that both the client and the server check each other's TLS certificate.
+This might be a requirement in some microservice-based deployments.
+
+The SAP Cloud SDK for JavaScript supports registering destinations with mTLS on Cloud Foundry based on [Instance Identity Credentials](https://docs.cloudfoundry.org/devguide/deploy-apps/instance-identity.html).
+
+Set the `inferMtls` option to `true` in the `RegisterDestinationOptions` object:
+
+```
+const options: RegisterDestinationOptions = {
+  inferMtls: true
+};
+```
+
+This will configure HTTPS requests to automatically check for the `CF_INSTANCE_CERT` and `CF_INSTANCE_KEY` environment variables and read the certificate and key.
+
 ### Service Binding Environment Variables
 
 The service credentials (also known as the `VCAP_SERVICES` environment variable) represent services bound to the application.
