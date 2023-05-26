@@ -1,0 +1,49 @@
+## 4.15.0 - May 26, 2023
+
+## compatibilityNotes
+
+- The behaviour of `DestinationAccessor.getDestination(...)` has been changed to throw:
+  - `DestinationNotFoundException` instead of `DestinationAccessException` with cause `DestinationNotFoundException` when a destination is not found
+  - `DestinationAccessException` instead of `DestinationNotFoundException` when no adapters are declared
+- We are planning to discontinue support of Business Logging APIs with SAP Cloud SDK v5 by end of the year.
+  Therefore, we're announcing module deprecation in advance.
+  The following modules and namespaces are deprecated while still being fully functional and considered supported in SAP
+  Cloud SDK v4:
+    - **BTP Business Logging Core**: `com.sap.cloud.sdk.services.scp.businesslogging.core.*`
+      - `tryGetDestination("destinationName", CLIENT_CREDENTIALS)` is replaced by
+        `ScpCfServiceDestinationLoader.getDestinationForService(BUSINESS_LOGGING, "some-name")`
+      - `tryGetDestination("destinationName", USER_TOKEN)` is replaced by
+        `ScpCfServiceDestinationLoader.getDestinationForService(BUSINESS_LOGGING, "some-name", OnBehalfOf.NAMED_USER_CURRENT_TENANT)`
+- Rename references from _SAP API Business Hub_ to _SAP Business Accelerator Hub_ in JavaDoc.
+
+## newFunctionality
+
+- `OpenAPI` generated objects can now read custom fields which are not part of the object's schema:
+  - `getCustomFieldNames()`
+  - `getCustomField("nameOfField")`
+- The BTP CloudFoundry specific platform modules now support mTLS for communication with destinations having their `securityConfigurationStrategy` set to `FROM_PLATFORM`.
+
+
+## improvements
+
+- Dependency Updates:
+  - Other dependency updates:
+    - Minor version updates:
+        - Update `commons-io:commons-io` from `2.11.0` to `2.12.0`
+        - Update Jackson related dependencies from `2.15.0` to `2.15.1`
+        - Update `org.checkerframework:checker-qual` declared for dependency convergence from `3.33.0` to `3.34.0`
+        - Update `com.google.errorprone:error_prone_annotations` declared for dependency convergence from `2.18.0` to `2.19.1`
+        - Update `com.google.api:api-common` used in the `blockchain-client-fabric` module from `2.9.0` to `2.10.0`
+- To avoid running into connection leaks while re-using the same `HttpClient` to execute multiple OData batch requests, running batch requests with `try-with-resources` construct is now possible for both OData v2 and v4 clients.
+```java
+  //Suggestive example for OData v2
+  try(
+      BatchResponse result = service.batch().addReadOperations(readOperation).executeRequest(dest)
+   ) {
+      return result.get(0);
+  }
+```
+
+## fixedIssues
+
+- Fix an issue where connection leaks happens even when a `BatchResponse` is fully consumed. 
