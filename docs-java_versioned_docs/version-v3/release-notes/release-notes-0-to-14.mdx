@@ -38,7 +38,7 @@
 
 - _OData client_: Update the OData VDM to the [newest release 2002 of SAP S/4HANA Cloud](https://news.sap.com/2020/01/sap-s4hana-cloud-2002-release/).
   This includes completely new services (available as usual in package [com.sap.cloud.sdk.s4hana.datamodel.odata.services](https://help.sap.com/doc/e03ee6cbe2ea468f88e1970b61d55b62/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/package-summary.html)), new operations in previously existing services, and new entity types.
-  The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
+  The SAP Cloud SDK supports all OData services listed in the [SAP Business Accelerator Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
 
 ### Improvements
 
@@ -230,7 +230,7 @@
 
 ### Compatibility Notes
 
-- Create, update, and delete operations have been removed from some VDM services, as they are no longer available on the SAP API Business Hub.
+- Create, update, and delete operations have been removed from some VDM services, as they are no longer available on the SAP Business Accelerator Hub.
 - The custom constructor parameters of [`Resilience4jDecorationStrategy`](https://help.sap.com/doc/76f123ce6fae40df911590552579e523/1.0/en-US/com/sap/cloud/sdk/frameworks/resilience4j/Resilience4jDecorationStrategy.html) have been changed to accept generic modular decorators for the following properties. The default behavior has not been changed. This should not affect existing code, but you may need to recompile your code.
   - Time limiter
   - Bulkhead
@@ -241,7 +241,7 @@
 ### New Functionality
 
 - _OData client_: Update the OData VDM to the [newest release 1911 of SAP S/4HANA Cloud](https://news.sap.com/2019/11/sap-s4hana-cloud-1911-intelligent-enterprise-experience-economy/).
-  The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
+  The SAP Cloud SDK supports all OData services listed in the [SAP Business Accelerator Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
 
 ### Fixed Issues
 
@@ -390,7 +390,7 @@
 ### Compatibility Notes
 
 - The following methods in the resilience module have been deprecated in favor of the new methods introduced for asynchronous resilient execution: `decorateFutureSupplier` and `executeFutureSupplier` in [`ResilienceDecorator`](https://help.sap.com/doc/ef9bbec49d7d4c229d5e4e6295476572/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/resilience/ResilienceDecorator.html), `decorateFutureSupplier` and `executeFutureSupplier` in [`ResilienceDecorationStrategy`](https://help.sap.com/doc/ef9bbec49d7d4c229d5e4e6295476572/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/resilience/ResilienceDecorationStrategy.html).
-- _OData VDM_: we have added deprecation information to service classes that represent SAP S/4HANA Cloud APIs which are deprecated on the SAP API Business Hub, such as `ChangeMasterService`, `ProcessOrderConfirmationService`, and `ProductionOrderConfirmationService`. Take a look at the corresponding Javadoc and use the appropriate successor service listed therein.
+- _OData VDM_: we have added deprecation information to service classes that represent SAP S/4HANA Cloud APIs which are deprecated on the SAP Business Accelerator Hub, such as `ChangeMasterService`, `ProcessOrderConfirmationService`, and `ProductionOrderConfirmationService`. Take a look at the corresponding Javadoc and use the appropriate successor service listed therein.
 
 ### New Functionality
 
@@ -427,7 +427,7 @@
 
 ### Compatibility Notes
 
-- As part of the update of the OData VDM to SAP S/4HANA Cloud 1908, the `OutboundDeliveryService` has been removed from the SAP API Business Hub and, as a consequence, from the SAP Cloud SDK.
+- As part of the update of the OData VDM to SAP S/4HANA Cloud 1908, the `OutboundDeliveryService` has been removed from the SAP Business Accelerator Hub and, as a consequence, from the SAP Cloud SDK.
   Use [`OutboundDeliveryV2Service`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/OutboundDeliveryV2Service.html) instead.
 - The destination expected as the second parameter of the [`attachToService()`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/com/sap/cloud/sdk/datamodel/odata/helper/VdmEntity.html#attachToService-java.lang.String-com.sap.cloud.sdk.cloudplatform.connectivity.HttpDestinationProperties-) method of [`VdmEntity`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odata/helper/VdmEntity.html) is now mandatory (`@Nonnull`), rather than nullable because attaching to a service does not work without a destination to designate the target system.
 
@@ -435,10 +435,10 @@
 
 - OData VDM: Update the OData virtual data model to the [newest release 1908 of SAP S/4HANA Cloud](https://news.sap.com/2019/08/sap-s4hana-cloud-1908-new-release/).
   This includes completely new services (available as usual as from package [`com.sap.cloud.sdk.s4hana.datamodel.odata.services`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/odata/services/package-summary.html)), new operations in previously existing services, and new entity types.
-  The SAP Cloud SDK supports all OData services listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
+  The SAP Cloud SDK supports all OData services listed in the [SAP Business Accelerator Hub for SAP S/4HANA Cloud](https://api.sap.com/shell/discover/contentpackage/SAPS4HANACloud).
 - Message VDM: Update the message virtual data model for the [newest release 1908 of SAP S/4HANA Cloud](https://news.sap.com/2019/08/sap-s4hana-cloud-1908-new-release/).
   This includes 21 new message types to reflect the new event types added in SAP S/4HANA Cloud (available as usual from package [`com.sap.cloud.sdk.s4hana.datamodel.messaging.api.message`](https://help.sap.com/doc/0c49e20a27384c3abfcd8fdec643406b/1.0/en-US/index.html?com/sap/cloud/sdk/s4hana/datamodel/messaging/api/message/package-summary.html)).
-  The SAP Cloud SDK supports all event types listed in the [SAP API Business Hub for SAP S/4HANA Cloud](https://api.sap.com/package/SAPS4HANACloudBusinessEvents?section=Artifacts).
+  The SAP Cloud SDK supports all event types listed in the [SAP Business Accelerator Hub for SAP S/4HANA Cloud](https://api.sap.com/package/SAPS4HANACloudBusinessEvents?section=Artifacts).
 
 ### Improvements
 
