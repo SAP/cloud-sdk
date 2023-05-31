@@ -477,6 +477,33 @@ You can use the same methods to extract deserialized responses of function impor
 Instead of an index to indicate the batch position, the API expects the original request reference.
 The request-response mapping and deserialization are happening internally.
 
+:::note
+
+If all responses in a `BatchResponse` are evaluated using `getReadResult(...)` or/and `get(index)`, this ensures that the underlying `InputStream` of the `HttpEntity` is fully consumed
+and the HTTP connection is released back to the connection pool. If you do not evaluate all responses in a `BatchResponse` consider using the `try-with-resources` construct while executing batch requests.
+
+:::
+
+:::tip
+
+To ensure that all resources are properly closed while executing batch requests, we recommend using the `try-with-resources` construct.
+
+```java
+  try(
+      BatchResponse result = service.batch()
+                                    .addReadOperations(readOperation)
+                                    .addChangeSet(createRequest, updateRequest, deleteRequest)
+                                    .executeRequest(destination)
+   ) {
+      List<BusinessPartner> entities = result.getReadResult(readOperation);
+      Try<BatchResponseChangeSet> changeSetTry = result.get(0);
+  }
+```
+
+This is especially helpful in preventing connection leaks if you are re-using a `HttpClient` to execute multiple batch requests.
+
+:::
+
 ## Entity Update Strategies
 
 The SAP Cloud SDK supports different strategies for updating entities which differ in the HTTP method and the payload of the update request.
