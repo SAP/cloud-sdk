@@ -176,6 +176,25 @@ Use `prependDestinationLoader()` to add it at the beginning if you would like it
 Lastly use `setLoader()` to replace all existing loaders.
 This is useful if you want to supply a single destination to a piece of test code.
 
+### Enabling mTLS for Application to Destination communication
+
+To enable mTLS while communicating with the target destination, configure the security configuration option while building up your destination at runtime.
+
+There are two ways to specify where the HTTP Security Configuration like for e.g. the certificate, private key etc. for outbound HTTP calls is determined from.
+
+You can choose between the options `SecurityConfigurationStrategy.FROM_PLATFORM` or `SecurityConfigurationStrategy.FROM_DESTINATION`, which is the default.
+
+```java
+customHttpDestination = DefaultHttpDestination.builder("http://url")
+        .name("custom-destination")
+        .securityConfiguration(SecurityConfigurationStrategy.FROM_PLATFORM)
+        .build();
+```
+
+`SecurityConfigurationStrategy.FROM_PLATFORM` ensures that the security configuration is derived from the BTP CF [Instance Identity](https://docs.cloudfoundry.org/devguide/deploy-apps/instance-identity.html).
+
+On the other hand `SecurityConfigurationStrategy.FROM_DESTINATION` derives the security configuration from the destination properties.
+
 ## Provide Headers for Destinations
 
 ### How It Works
