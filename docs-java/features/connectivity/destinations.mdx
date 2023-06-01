@@ -858,7 +858,7 @@ private HttpDestination getDestinationServiceDestination()
         ServiceBindingDestinationOptions.builder(BindableService.DESTINATION, destinationServiceBinding).build();
 
     // 3. convert the ServiceBinding into an HttpDestination
-    return new DelegatingServiceBindingDestinationLoader().tryGetDestination(options).getOrNull();
+    return ServiceBindingDestinationLoader.defaultLoaderChain().tryGetDestination(options);
 }
 ```
 
@@ -889,5 +889,5 @@ This extensibility is based around the idea of having various dependencies, each
 There is, for example, the [connectivity-oauth](https://search.maven.org/search?q=g:com.sap.cloud.sdk.cloudplatform%2BAND%2Ba:connectivity-oauth) module, which provides an implementation of the `ServiceBindingDestinationLoader` interface that is capable of creating OAuth2 based `HttpDestination` instances.
 By customizing their dependecies, applications are able to easily choose the capabilities that fit their use case.
 
-Things are tied together using the `DelegatingServiceBindingDestinationLoader` class, which (by default) searches for available `ServiceBindingDestinationLoader` implementations on the classpath and delegates the actual transformation logic.
-This class can be leveraged as shown above.
+Things are tied together using the _loader chain_ concept, which (by default) searches for available `ServiceBindingDestinationLoader` implementations on the classpath and delegates the actual transformation logic.
+A default implementation of that concept can be leveraged as demonstrated above.
