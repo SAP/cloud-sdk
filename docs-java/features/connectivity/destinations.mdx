@@ -132,18 +132,6 @@ Similarly, for BAPI endpoints you need to use `asRfc()`:
 DestinationAccessor.getDestination("my-destination").asRfc();
 ```
 
-### Connect To SAP S/4HANA On-Premise
-
-If your destination is exposing an SAP S/4HANA On-premise service via a **[Cloud Connector](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e6c7616abb5710148cfcf3e75d96d596.html)** you need to decorate the destination with `DefaultErpHttpDestination`:
-
-```java
-final HttpDestination httpDestination =
-destination.asHttp().decorate(DefaultErpHttpDestination::new);
-```
-
-- This ensures the mapping of all SAP S/4HANA properties like `sap-client` and `sap-locale` as HTTP request headers.
-- In case **Principal Propagation** is specified as an authentication type for the destination the SAP Cloud SDK will automatically apply it.
-
 ## Registering Destinations at Runtime
 
 The SAP Cloud SDK offers convenient ways to create a destination at runtime and register it so that it will be available via `DestinationAccessor.getDestination()`.
@@ -274,6 +262,17 @@ To include headers into every call to a target system you can define them as pro
 It can be a destination object that you defined in the Cloud Foundry Cockpit, or one you built in code via a destination builder.
 For that, call the `.property()` method on the destination.
 It expects a key-value pair with a key formatted as `URL.headers.<key>` and an arbitrary value string.
+
+:::tip SAP Language Header
+
+When communicating with an S/4HANA (Cloud) system one can send a header to request a language preference.
+This can be done by setting the `sap-language` property on the destination.
+The value of this property should be a valid language tag as defined in [RFC 5646](https://tools.ietf.org/html/rfc5646).
+
+Alternatively, the SAP Cloud SDK can also dynamically send the `sap-language` header based on the current locale of an incoming request or the system locale.
+To achieve this, set the `sap-language` property to `dynamic` on the destination.
+
+:::
 
 ## Provide Query Parameters for Destinations
 
