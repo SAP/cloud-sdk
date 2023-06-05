@@ -855,10 +855,22 @@ private HttpDestination getDestinationServiceDestination()
     // 2. create ServiceBindingDestinationOptions
     final ServiceBindingDestinationOptions
         options =
-        ServiceBindingDestinationOptions.builder(BindableService.DESTINATION, destinationServiceBinding).build();
+        ServiceBindingDestinationOptions
+            .builder()
+            .bindableService(BindableService.DESTINATION)
+            .serviceBinding(destinationServiceBinding)
+            .build();
 
     // 3. convert the ServiceBinding into an HttpDestination
-    return ServiceBindingDestinationLoader.defaultLoaderChain().tryGetDestination(options);
+    final Try<HttpDestination>
+        maybeDestination =
+        ServiceBindingDestinationLoader.defaultLoaderChain().tryGetDestination(options);
+
+    if( maybeDestination.isSuccess() ) {
+        return maybeDestination.get();
+    }
+
+    throw new IllegalStateException(maybeDestination.getCause());
 }
 ```
 
@@ -869,8 +881,7 @@ The snippet above consists of three steps:
 As the name of the API suggests, a `ServiceBinding` instance is required.
 Getting such an instance can be achieved in different ways.
 One could, as demonstrated, use the `DefaultServiceBindingAccessor` to load all `ServiceBinding` instance that are available to the application.
-Alternatively, one could also create a `ServiceBinding` instance progammatically.
-This might be especially handy when testing.
+Alternatively, one could also create a `ServiceBinding` instance progammatically - this might be especially handy when testing.
 
 2. _Create ServiceBindingDestinationOptions_
 
