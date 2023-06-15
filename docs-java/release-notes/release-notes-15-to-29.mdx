@@ -1,3 +1,38 @@
+# 4.16.0 - June 14, 2023
+
+## Compatibility Notes
+
+- Deprecate `ErpHttpDestination` and all related classes.
+  The functionality is now integrated and handled automatically by `HttpDestination`s.
+  For most projects this means simply removing any occurrence of `decorate(DefaultErpHttpDestination::new)`.
+  In case you are using `ErpHttpDestination` to automatically add the `sap-language` based on the _current_ system locale, please configure a property `cloudsdk.dynamicSapLanguage` with value `true` on the destination.
+
+## Improvements
+
+- Improved the handling of `sap-client` and `sap-language` to be fully automated.
+  Projects can safely remove any invocations of `decorate(DefaultErpHttpDestination::new)`.
+  Please also see the related compatibility note above.
+- Dependency Updates:
+  - SAP Dependency Updates:
+    - Minor Dependency Updates:
+      - Update [Cf Tomee7 Bom](https://search.maven.org/search?q=g:com.sap.cloud.sjb.cf%2BAND%2Ba:cf-tomee7-bom) (`com.sap.cloud.sjb.cf:cf-tomee7-bom`) from `1.70.0` to `1.71.0`
+      - Update [Neo Java Web Api](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-java-web-api) (`com.sap.cloud:neo-java-web-api`) from `4.53.3` to `4.54.3`
+  - Other Dependency Updates:
+    - Minor Dependency Updates:
+      - Update [Jackson Annotations](https://search.maven.org/search?q=g:com.fasterxml.jackson.core%2BAND%2Ba:jackson-annotations) (`com.fasterxml.jackson.core:jackson-annotations`) from `2.15.1` to `2.15.2`
+      - Update [Jackson Core](https://search.maven.org/search?q=g:com.fasterxml.jackson.core%2BAND%2Ba:jackson-core) (`com.fasterxml.jackson.core:jackson-core`) from `2.15.1` to `2.15.2`
+      - Update [Jackson Databind](https://search.maven.org/search?q=g:com.fasterxml.jackson.core%2BAND%2Ba:jackson-databind) (`com.fasterxml.jackson.core:jackson-databind`) from `2.15.1` to `2.15.2`
+      - Update [Jackson Datatype Jsr310](https://search.maven.org/search?q=g:com.fasterxml.jackson.datatype%2BAND%2Ba:jackson-datatype-jsr310) (`com.fasterxml.jackson.datatype:jackson-datatype-jsr310`) from `2.15.1` to `2.15.2`
+      - Update [Jackson Dataformat Xml](https://search.maven.org/search?q=g:com.fasterxml.jackson.dataformat%2BAND%2Ba:jackson-dataformat-xml) (`com.fasterxml.jackson.dataformat:jackson-dataformat-xml`) from `2.15.1` to `2.15.2`
+      - Update [Jackson Dataformat Yaml](https://search.maven.org/search?q=g:com.fasterxml.jackson.dataformat%2BAND%2Ba:jackson-dataformat-yaml) (`com.fasterxml.jackson.dataformat:jackson-dataformat-yaml`) from `2.15.1` to `2.15.2`
+      - Update [Netty Codec Http](https://search.maven.org/search?q=g:io.netty%2BAND%2Ba:netty-codec-http) (`io.netty:netty-codec-http`) from `4.1.92.Final` to `4.1.93.Final`
+      - Update [Protobuf Java](https://search.maven.org/search?q=g:com.google.protobuf%2BAND%2Ba:protobuf-java) (`com.google.protobuf:protobuf-java`) from `3.23.1` to `3.23.2`
+      - Update [Checker Qual](https://search.maven.org/search?q=g:org.checkerframework%2BAND%2Ba:checker-qual) (`org.checkerframework:checker-qual`) from `3.34.0` to `3.35.0`
+      - Update [Lombok](https://search.maven.org/search?q=g:org.projectlombok%2BAND%2Ba:lombok) (`org.projectlombok:lombok`) from `1.18.26` to `1.18.28`
+      - Update [Kotlin Stdlib](https://search.maven.org/search?q=g:org.jetbrains.kotlin%2BAND%2Ba:kotlin-stdlib) (`org.jetbrains.kotlin:kotlin-stdlib`) from `1.8.21` to `1.8.22`
+      - Update [Kotlin Stdlib Common](https://search.maven.org/search?q=g:org.jetbrains.kotlin%2BAND%2Ba:kotlin-stdlib-common) (`org.jetbrains.kotlin:kotlin-stdlib-common`) from `1.8.21` to `1.8.22`
+      - Update [Kotlin Stdlib Jdk8](https://search.maven.org/search?q=g:org.jetbrains.kotlin%2BAND%2Ba:kotlin-stdlib-jdk8) (`org.jetbrains.kotlin:kotlin-stdlib-jdk8`) from `1.8.21` to `1.8.22`
+
 ## 4.15.0 - May 26, 2023
 
 [Maven Central](https://central.sonatype.com/search?q=com.sap.cloud.sdk%2520v%253A4.15.0)
