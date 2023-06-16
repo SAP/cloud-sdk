@@ -16,7 +16,7 @@ export const features = [
     java: {
       status: DEPRECATED,
       docsLink: ``,
-      note: 'Deprecated since 4.13'
+      note: 'Deprecated since 4.13.0'
     },
     js: {
       status: NO,
@@ -254,7 +254,7 @@ export const features = [
     java: {
       status: DEPRECATED,
       docsLink: ``,
-      note: 'Deprecated since 4.17'
+      note: 'Deprecated since 4.17.0'
     },
     js: {
       status: NO,
