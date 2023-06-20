@@ -72,7 +72,7 @@ You apply the resilience by adding it to your request as discussed in the [middl
 import { executeHttpRequest } from '@sap-cloud-sdk/http-client';
 import { myService } from './generated-client';
 
-executeHttpRequest(myDestination, { middleware: resilience() });
+executeHttpRequest(myDestination, { middleware: [resilience()] });
 
 const { myApi } = myService();
 myApi.getAll().middleware(resilience()).execute(myDestination);
