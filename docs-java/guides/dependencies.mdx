@@ -174,6 +174,14 @@ It does not yet include it as a dependency in your project.
 
 ## Notes on the SAP Java Buildpack
 
+:::danger Warning
+The BOM for the SAP Java Buildpack (SJB) `sdk-sjb-bom` has been deprecated.
+The latest tested SJB version is 1.71.0 with SDK 4.16.0.
+From now on, whenever you switch to a newer version of the SJB, it might not be magically compatible with the SDK.
+
+Alternatively, you can use the [BOMs provided by the SAP Java Buildpack](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/6c6936e8e4ea40c9a9a69f6783b1e978.html) directly.
+:::
+
 The [SAP Java Buildpack](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/a3f90069d6cd41da82f34a6123d82ce6.html) brings some dependencies that are also brought by the SAP Cloud SDK.
 This can lead to conflicts when using a `war` deployment.
 
@@ -188,8 +196,6 @@ To prevent any issues we recommend using our dedicated BOM for the SAP Java Buil
   <scope>import</scope>
 </dependency>
 ```
-
-Alternatively, you can use the [BOMs provided by the SAP Java Buildpack](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/6c6936e8e4ea40c9a9a69f6783b1e978.html) directly.
 
 :::tip
 The SAP Java Buildpack generally does not affect typical Spring Boot applications which are packed into an executable jar by default.

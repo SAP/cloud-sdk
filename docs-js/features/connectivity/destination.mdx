@@ -205,6 +205,18 @@ const options: RegisterDestinationOptions = {
 
 This will configure HTTPS requests to automatically check for the `CF_INSTANCE_CERT` and `CF_INSTANCE_KEY` environment variables and read the certificate and key.
 
+The caching of mTLS certificates is disabled by default, but can be enabled by adding the `useCache` option:
+
+```
+const options: RegisterDestinationOptions = {
+  inferMtls: true,
+  useCache: true
+};
+```
+
+Certificates are then cached for the entire validity time of the certificate.
+Since in Cloud Foundry each deployment has their own mTLS certificate, the cache is shared among all tenants of a deployment.
+
 ### Service Binding Environment Variables
 
 The service credentials (also known as the `VCAP_SERVICES` environment variable) represent services bound to the application.
