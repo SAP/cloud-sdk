@@ -4,137 +4,204 @@ title: Destination Cache and Isolation
 hide_title: false
 hide_table_of_contents: false
 sidebar_label: Destination Cache
-description: This article describes how destinations are cached and how the cache entries are isolated with respect to Tenant and User.
+description: This article describes how destinations are cached and how the cache entries are isolated with respect to tenants and users.
 keywords:
   - sap
   - cloud
   - sdk
   - destination
   - connectivity
+  - caching
+  - isolation
   - JavaScript
   - TypeScript
 ---
 
-The SAP Cloud SDK provides the option to cache destinations for efficiency reasons.
-Cached destination need to be isolated to the correct users.
+To reduce the number of calls to fetch destinations, the SAP Cloud SDK provides an option to cache destinations.
 
-This guide explains the different options for destination caching with the SAP Cloud SDK.
+This guide explains how destinations are cached and shows options for destination cache configuration.
 The general destination lookup is described in [this guide](./destination.mdx).
 
-## Destination Service Cache
+All options discussed in the following are part of the [`DestinationFetchOptions`](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions.html).
+You use those options when:
 
-To reduce the number of calls to the destination service, you can enable the destination cache.
-All the discussed options apply to the `execute()` and `getDestination()` methods of the SAP Cloud SDK.
-The destination caching is disabled by default.
-Setting the `useCache` flag to `true` enables it:
+- executing requests through a generated client using `execute()`
+- executing generic HTTP requests using [`executeHttpRequest()`](pathname:///api/v3/functions/sap_cloud_sdk_http_client.executeHttpRequest.html)
+- retrieving destinations using [`getDestination()`](pathname:///api/v3/functions/sap_cloud_sdk_connectivity.getDestination.html)
+
+The following examples will use `execute()` for brevity, but could be replaced by all of the above.
+
+## Destination Cache
+
+By default, destination caching is disabled.
+Enable it by setting the [`useCache`](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions.html#useCache) option to `true`:
 
 ```ts
-.execute({ destinationName: 'myDestination', jwt: 'yourJWT', useCache: true })
+.execute({ destinationName: 'DESTINATION', jwt: 'JWT', useCache: true })
 ```
 
-A cached destination is stored for 5 minutes in the cache.
-The SAP Cloud SDK tries to set the proper isolation strategy for the destination automatically.
-There are two options:
+The destination cache holds destinations that potentially require HTTP requests, i.e.:
 
-- `Tenant`: The destination is cached for a tenant and different users will hit the same cache entry.
-- `TenantUser`: The destination is cached separately for each user of a tenant.
+- destinations that were retrieved from the destination service (requires HTTP request to the destination service)
+- destinations from service bindings (potentially requires HTTP request for authentication flow)
 
-The SAP Cloud SDK sets the isolation based on the provided JWT:
+Registered destinations and destinations from environment variables are not held in the destination cache.
 
-- No JWT: Isolation is set to `Tenant` and value for the tenant is the provider account.
-- JWT without `user_id`: Isolation is set to `Tenant` and the value for the tenant is the `zid` property of the JWT.
-- JWT with `user_id`: Isolation is set to `TenantUser` and values are taken from `zid` and `user_id`.
+### Cache Expiration
 
+Destinations include authorization information and therefore should not be cached limitlessly.
+The cache expiration time depends on the [authentication type](./destination.mdx#authentication-and-json-web-token-retrieval) of the destination:
+
+- If the destination includes an authorization token, the cache expires at the expiration time of the authorization token.
+- Otherwise the cache expires after 5 minutes (e.g. `BasicAuthentication` or `ClientCertificateAuthentication`).
+
+### Isolation Strategy
+
+Cached destinations should only be available to authorized parties and therefore need to be isolated on user and/or tenant level.
+The SAP Cloud SDK provides two options for destination cache isolation:
+
+- `tenant`: Destinations are isolated on tenant level.
+  Different users on the same tenant hit the same cache entries for the same destination name.
+- `tenant-user`: Destinations are cached separately for each user and tenant.
+  Different users on the same tenant hit different cache entries for the same destination name.
+  The same user hits different chache entries on different tenants.
+
+The default cache isolation strategy depends on the provided JWT:
+
+- no JWT: Isolation is set to `tenant`.
+  The value for the tenant is the provider account tenant.
+- JWT without `user_id`: Isolation is set to `tenant`.
+  The value for the tenant is the `zid` property of the JWT.
+- JWT with `user_id`: Isolation is set to `tenant-user`.
+  The and values are taken from `zid` and `user_id`.
+
+The first two cases (no JWT and JWT wihout `user_id`) are typical for user-independent authentication types, like `BasicAuthentication`, `ClientCertificateAuthentication` or `OAuth2ClientCredentials`.
 This is a safe choice which prevents privilege escalation due to caching.
-The first two cases are typical for user-independent authentication flows.
-Examples of such a flow are `BasicAuthentication`, `ClientCertificateAuthentication` or `OAuth2ClientCredentials`.
 
-There are cases where the choice made by the SAP Cloud SDK is not optimal.
-Assume you have a multi-tenant scenario and you need to pass the JWT to obtain the destination for the right tenant.
+### Changing Isolation Strategy
 
-The JWT contains a `user_id` but the destination flow is user-independent.
-The SAP Cloud SDK would use isolation `TenantUser`, although `Tenant` would be sufficient.
+There are cases where the default isolation strategy is not optimal.
+Assume you have a multi-tenant scenario, where you pass a JWT to obtain the destination for the respective tenant.
 
-In such a case, you can manually enforce weaker isolation:
+The JWT contains a `user_id` but the authentication type of the destination is user-independent.
+The default isolation strategy for this case is `tenant-user`, although `tenant` would suffice.
+
+For such cases, you can manually enforce weaker isolation by passing the [`isolationStrategy`](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions.html#isolationStrategy) option:
 
 ```ts
 .execute({
-  destinationName: 'myDestination',
-  jwt: 'yourJWT',
-  isolationStrategy: IsolationStrategy.Tenant
+  destinationName: 'DESTINATION',
+  jwt: 'JWT',
+  isolationStrategy: 'tenant'
 })
 ```
 
 :::caution
-
 Be very careful with this option.
-You should know what you're doing when manually downgrading the isolation strategy from `TenantUser` level.
+You should know what you're doing when manually downgrading the isolation strategy from `tenant-user` level.
 An erroneous configuration can have severe consequences like privilege escalation between users.
-
 :::
 
-### Custom Destination Service Cache
+## Custom Destination Cache
 
-When the cache option is enabled, the SAP Cloud SDK stores the fetched destinations in an in-memory cache.
-However, in certain cases, a persistent or distributed cache may be more suitable according to your application architecture.
-
-To create your custom destination cache provider, implement the `DestinationCacheInterface` interface shown below and define the `get()`, `set()`, and `clear()` methods.
+When caching is enabled, destinations are cached in-memory.
+If you need more control over the destination cache, e.g. to use a persistent or distributed cache, you can create a custom destination cache.
+For this, implement the [`DestinationCacheInterface`](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.DestinationCacheInterface.html):
 
 ```ts
 export interface DestinationCacheInterface {
-  hasKey(key: string): Promise<boolean>;
-  get(key: string | undefined): Promise<Destination | undefined>;
+  /**
+   * This is called when an entry is added to the cache.
+   * @param key - The cache key to store the item under.
+   * @param item - The destination alongside an expiration time to store in the cache.
+   */
   set(key: string | undefined, item: CacheEntry<Destination>): Promise<void>;
+  /**
+   * This is called when an entry shall be retrieved from the cache.
+   * @param key - The cache key the item is stored under.
+   */
+  get(key: string | undefined): Promise<Destination | undefined>;
+  /**
+   * This is called when checking if a given key occurs in the cache.
+   * @param key - The cache key the item should be stored under, if available.
+   */
+  hasKey(key: string): Promise<boolean>;
+  /**
+   * This can be called to remove all existing entries from the cache.
+   */
   clear(): Promise<void>;
 }
 ```
 
-Note that each item in the cache is represented using the type `CacheEntry<T>` which defines two properties:
+Note that each item in the cache is represented using the [`CacheEntry<T>`](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.CacheEntry.html) type, which defines two properties:
 
-- `entry`, the item you want to store, and
-- `expires`, the expiration time for an individual cache item, this is optional.
+- `entry` - The item, i.e. destination, you want to cache.
+- `expires` - The expiration time of the entry in milliseconds.
+  This is optional.
 
-Once you have implemented your custom cache provider, you can tell the SAP Cloud SDK to use it in place of the default one.
-Pass your custom destination cache provider to the `setDestinationCache()` method before the first calls to either the `getDestination()` or the generic client's `executeHttpRequest()` function.
+You are free to choose, how you implement the `DestinationCacheInterface`, e.g. as a class or an object:
 
 ```ts
-class CustomCacheProvide implements DestinationCacheInterface {
-  // your custom implementation
-}
+// Custom cache implementation as an object
+const customCache = {
+  set(
+    key: string | undefined,
+    { entry, expires }: CacheEntry<Destination>
+  ): Promise<void> {
+    // add entry to cache
+    // ensure entry expires after given time
+  },
 
-setDestinationCache(new CustomCacheProvider());
+  get(key: string | undefined): Promise<Destination | undefined> {
+    // retrieve entry from cache
+  },
+
+  hasKey(key: string): Promise<boolean> {
+    // check cache based on key
+  },
+
+  clear(): Promise<void> {
+    // remove all entries from cache
+  }
+};
 ```
 
+To use your custom cache, pass your implementation to the global [`setDestinationCache()`](pathname:///api/v3/functions/sap_cloud_sdk_connectivity.setDestinationCache.html) function before fetching destinations for the first time.
 All subsequent calls to fetch destinations will use the custom cache.
 
-## Register Destination Cache
+```ts
+setDestinationCache(customCache);
 
-The `registerDestination()` function is like a manual cache for destinations.
-This function behaves similarly to the destination service cache discussed above.
-The [destination lookup guide](./destination.mdx) explains the usage of this function in more detail.
+// ...
+
+.execute({ destination:'DESTINATION', jwt:'JWT', useCache: true })
+```
+
+## Registered Destination Cache
+
+When [registering destinations](./destination.mdx#register-destination) using the [`registerDestination()`](pathname:///api/v3/functions/sap_cloud_sdk_connectivity.registerDestination.html) function, destinations are stored in a separate cache.
+This cache is always enabled and behaves similarly to the destination cache discussed above.
+It uses the same JWT-dependent defaults for the [isolation strategy](#isolation-strategy) as the destination cache.
+To change the isolation strategy pass the `isolationStrategy` option to the function.
+
+```ts
+registerDestination(destination, {
+  jwt: 'JWT',
+  isolationStrategy: 'tenant'
+});
+```
+
+Be cautious when downgrading the isolation strategy to avoid privilege escalation (see [change the isolation strategy](#changing-isolation-strategy)).
 
 ```ts
 import { registerDestination } from '@sap-cloud-sdk/connectivity';
 
 const destination = {
-  name: 'FORWARD-DESTINATION',
-  url: 'https://mys4hana.com'
+  name: 'DESTINATION',
+  url: 'https://example.com'
 };
 
-registerDestination(destination, { jwt: 'yourJWT' });
+registerDestination(destination, { jwt: 'JWT' });
 ```
 
-The isolation strategy is automatically detected and applied based on the given JWT:
-
-- No JWT: Isolation is set to `Tenant` and value for the tenant is the provider account.
-- JWT without `user_id`: Isolation is set to `Tenant` and the value for the tenant is the `zid` of the JWT.
-- JWT with `user_id`: Isolation is set to `TenantUser` and values are taken from `zid` and `user_id`.
-
-You can override the automatically detected isolation strategy.
-
-```ts
-registerDestination(destination, {
-  jwt: 'yourJWT',
-  isolationStrategy: IsolationStrategy.Tenant
-});
-```
+You cannot replace the registered destination cache with a custom cache.

@@ -13,7 +13,7 @@ keywords:
   - consume
 ---
 
-import { SkipCsrf } from '../common';
+import { SkipCsrf, Csrf } from '../common';
 import {
   CustomFields,
   CustomDeSerializers,
@@ -57,7 +57,7 @@ import {
   Responses,
   ConfigureSerialization
 } from './common/batch';
-import { Csrf, SkipCsrfExample, ETag } from './common';
+import { SkipCsrfExample, CustomCsrf, ETag } from './common';
 import {
   ExpandSelect,
   FilterOneToMany,
@@ -212,10 +212,16 @@ Note that the SAP Cloud SDK does not support the usage of count within a filter 
 
 <Csrf />
 
-## Skip CSRF Token Handling
+## Skip `CSRF` Token Handling
 
 <SkipCsrf />
 <SkipCsrfExample />
+
+## Custom `CSRF` Token Handling
+
+If you need to adjust the way CSRF tokens are fetched, you can do so by using [middlewares](../middleware):
+
+<CustomCsrf />
 
 ## Available Filter Expressions
 

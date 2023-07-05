@@ -26,9 +26,9 @@ To get started with the SAP Cloud SDK for Java you can either create a new proje
 You will need an installation of Java and Maven.
 
 :::note Java version compatibility
-The SAP Cloud SDK itself is compatible with Java 8 and 11.
+The SAP Cloud SDK is compatible with all current Long-Term-Support (LTS) releases of Java: 8, 11 [and 17](faq.mdx#spring-boot-3-and-java-17-support).
 Other Java versions may work as well depending on your setup but are not yet tested by us.
-Note that the SAP Business Technology Platform Cloud Foundry environment only supports Java 8 out of the box but can be configured to also run with Java 11.
+Note that the SAP Business Technology Platform Cloud Foundry environment only supports Java 8 out of the box but can be configured to also run with Java 11 or 17.
 SAP Business Technology Platform Neo only supports Java 8.
 :::
 
@@ -38,13 +38,6 @@ Alternatively, you can follow [these instructions](#integrate-the-cloud-sdk-for-
 ## Generating a Project from a Maven Archetype
 
 The SAP Cloud SDK provides archetypes based on [Spring](https://spring.io/) and [TomEE](https://tomee.apache.org/), so select whatever suits you best.
-
-:::note
-
-The mentioned archetypes work out-of-the-box for Cloud Foundry.
-For Neo platform we provide an archetype `scp-neo-javaee7` for only servlet based projects.
-
-:::
 
 Run:
 
@@ -179,6 +172,23 @@ That way you replace the scope of the dependencies marked as `provided` from the
 
 </Tabs>
 
+### Deploy to Cloud Foundry
+
+Assuming you have installed the [Cloud Foundry CLI](https://docs.cloudfoundry.org/cf-cli/) and are logged into your BTP account you can deploy the app via:
+
+```bash
+cf push
+```
+
+:::tip Authentication & Authorization
+Please note that the starter project does not come with any authentication or authorization checks enabled by default.
+This enables you to get started quickly and run locally without further configuration.
+
+However, we recommend securing your application as early as possible in the development process.
+The archetypes already come preconfigured for typical authorization scenarios.
+Following [this guide](https://developers.sap.com/tutorials/s4sdk-secure-cloudfoundry.html) you can secure your newly created application in just a few steps.
+:::
+
 ## Integrate the SAP Cloud SDK for Java Into Your Project
 
 ### Adding Dependencies
@@ -206,13 +216,6 @@ To get started with an existing project include the _SAP Cloud SDK BOM_ in the _
 
 If your application is running on **SAP Business Technology Platform** please add the appropriate dependency:
 
-<Tabs groupId="btp" defaultValue="cf" values={[
-{ label: 'Cloud Foundry', value: 'cf', },
-{ label: 'Neo', value: 'neo', },
-]}>
-
-<TabItem value="cf">
-
 ```xml
 <dependency>
     <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
@@ -220,65 +223,9 @@ If your application is running on **SAP Business Technology Platform** please ad
 </dependency>
 ```
 
-</TabItem>
-
-<TabItem value="neo">
-
-```xml
-<dependency>
-    <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
-    <artifactId>scp-neo</artifactId>
-</dependency>
-```
-
-</TabItem>
-</Tabs>
-
-If you want to connect to an **SAP S/4HANA** system via the **OData** protocol, you should also add a dependency to the client libraries of the SAP Cloud SDK.
-The dependencies differ with respect to the type of **SAP S/4HANA** system([**SAP S/4HANA Cloud**](https://api.sap.com/package/SAPS4HANACloud?section=Artifacts) or [**SAP S/4HANA On-premise**](https://api.sap.com/package/S4HANAOPAPI?section=Artifacts)):
-
-<Tabs groupId="s4" defaultValue="s4hc" values={[
-{ label: 'SAP S/4HANA Cloud', value: 's4hc', },
-{ label: 'SAP S/4HANA On-premise', value: 's4hop', }]}>
-
-<TabItem value="s4hc">
-
-<!-- vale off -->
-
-```xml
-<dependency>
-    <groupId>com.sap.cloud.sdk.s4hana</groupId>
-    <artifactId>s4hana-all</artifactId>
-</dependency>
-```
-
-</TabItem>
-
-<TabItem value="s4hop">
-
-```xml
-<dependency>
-    <groupId>com.sap.cloud.sdk.s4hana</groupId>
-    <artifactId>s4hana-api-odata-onpremise</artifactId>
-</dependency>
-<dependency>
-    <groupId>com.sap.cloud.sdk.s4hana</groupId>
-    <artifactId>s4hana-api-odata-v4-onpremise</artifactId>
-</dependency>
-<dependency>
- <groupId>com.sap.cloud.sdk.s4hana</groupId>
- <artifactId>s4hana-connectivity</artifactId>
-</dependency>
-<dependency>
- <groupId>com.sap.cloud.sdk.s4hana</groupId>
- <artifactId>s4hana-core</artifactId>
-</dependency>
-```
-
-<!-- vale on -->
-
-</TabItem>
-</Tabs>
+If you want to connect to an **SAP S/4HANA** system via the **OData** protocol, you should checkout our convenient [OData code generator](features/odata/vdm-generator).
+By downloading the OData service specifications for either type of **SAP S/4HANA** system ([**SAP S/4HANA Cloud**](https://api.sap.com/package/SAPS4HANACloud?section=Artifacts) or [**SAP S/4HANA On-premise**](https://api.sap.com/package/S4HANAOPAPI?section=Artifacts)) you can generate your own set of classes.
+Similarly the SAP Cloud SDK offers a [code generator for Open API](features/rest/generate-rest-client) protocol.
 
 In case you have a **CAP application** which uses **multitenancy** features and/or a **protected backend** your service will need the following dependency:
 
@@ -333,12 +280,14 @@ If you face dependency conflicts, you can instead try using the SAP Cloud SDK Mo
 
 :::
 
-## More Step-by-Step Guides
+## Next Steps
 
-If you want to continue learning by example check out our [tutorials for SAP Cloud SDK for Java](https://developers.sap.com/tutorial-navigator.html?tag=software-product%3Atechnology-platform%2Fsap-cloud-sdk%2Fsap-cloud-sdk&tag=programming-tool%3Ajava).
+- [Deploy your application to BTP Cloud Foundry](https://developers.sap.com/tutorials/s4sdk-cloud-foundry-sample-application.html)
+- [Call an OData Service on S/4HANA Cloud or On-Premise](https://developers.sap.com/tutorials/s4sdk-odata-service-cloud-foundry.html)
+- [Add resilience to your application](https://developers.sap.com/tutorials/s4sdk-resilience.html)
+- [Secure your application to prevent unauthorized access](https://developers.sap.com/tutorials/s4sdk-secure-cloudfoundry.html)
 
-## Next Steps and Useful Resources
+## Further Resources
 
-- Get and configure the [Cloud Foundry CLI](guides/cf-cli)
 - Check our latest [release notes](release-notes.mdx)
-- Welcome to our [support](https://github.com/SAP/cloud-sdk/issues/new/choose) if you have questions or experiencing any issues
+- Get [support](https://github.com/SAP/cloud-sdk/issues/new/choose) if you have questions or experience any issues

@@ -25,14 +25,14 @@ There are two widely used versions of the protocol: [**OData v2**](https://www.o
 
 ## What OData Versions do You Support?
 
-| OData protocol version                                          | SAP Cloud SDK V3 |
-| --------------------------------------------------------------- | ---------------- |
-| [OData v2](use-typed-odata-v2-client-in-sap-cloud-sdk-for-java) | &#10003;         |
-| [OData v4](use-typed-odata-v4-client-in-sap-cloud-sdk-for-java) | &#10003;         |
+| OData protocol version    | SAP Cloud SDK V3 |
+| ------------------------- | ---------------- |
+| [OData v2](v2-vdm-client) | &#10003;         |
+| [OData v4](v4-vdm-client) | &#10003;         |
 
 :::tip generate a client library yourself
 
-You can always [generate a type-safe OData client library](generate-client.mdx) based on API specifications available on the [SAP API Business Hub](https://api.sap.com/) or found elsewhere.
+You can always [generate a type-safe OData client library](generate-client.mdx) based on API specifications available on the [SAP Business Accelerator Hub](https://api.sap.com/) or found elsewhere.
 
 :::
 
@@ -56,9 +56,9 @@ Be careful and know what you're doing.
 ### Code Generator
 
 If you need a client for an OData service where we do not ship a pregenerated client.
-Use our [code generator](generate-typed-odata-v2-and-v4-client-for-java) to convert its service definition into the type-safe Java client library.
+Use our [code generator](vdm-generator) to convert its service definition into the type-safe Java client library.
 You can do it for any service either developed by yourself, provided by SAP, or other third parties.
-The [SAP API Business Hub](https://api.sap.com/) is where you'll find the specification for most of the SAP-published services.
+The [SAP Business Accelerator Hub](https://api.sap.com/) is where you'll find the specification for most of the SAP-published services.
 
 - Service definition usually comes in form of the `.edmx` file and contains metadata of OData service.
   The simplest way to obtain it, if you have access to the service, is navigating to the `http(s)://<service-path>/$metadata` endpoint.
@@ -69,7 +69,7 @@ The [SAP API Business Hub](https://api.sap.com/) is where you'll find the specif
 
 We simplify development process on the SAP BTP by providing convenient abstractions over:
 
-- [Destinations](../connectivity/sdk-connectivity-destination-service)
+- [Destinations](../connectivity/destination-service)
 - Authentication
 - [Multi-tenancy](../multi-tenancy/thread-context.mdx)
 - and some other related concepts.

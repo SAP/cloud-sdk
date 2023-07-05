@@ -133,18 +133,6 @@ Similarly, for BAPI endpoints you need to use `asRfc()`:
 DestinationAccessor.getDestination("my-destination").asRfc();
 ```
 
-### Connect To SAP S/4HANA On-Premise
-
-If your destination is exposing an SAP S/4HANA On-premise service via a **[Cloud Connector](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/e6c7616abb5710148cfcf3e75d96d596.html)** you need to decorate the destination with `DefaultErpHttpDestination`:
-
-```java
-final HttpDestination httpDestination =
-destination.asHttp().decorate(DefaultErpHttpDestination::new);
-```
-
-- This ensures the mapping of all SAP S/4HANA properties like `sap-client` and `sap-locale` as HTTP request headers.
-- In case **Principal Propagation** is specified as an authentication type for the destination the SAP Cloud SDK will automatically apply it.
-
 ## Registering Destinations at Runtime
 
 The SAP Cloud SDK offers convenient ways to create a destination at runtime and register it so that it will be available via `DestinationAccessor.getDestination()`.
@@ -176,6 +164,25 @@ Use `prependDestinationLoader()` to add it at the beginning if you would like it
 
 Lastly use `setLoader()` to replace all existing loaders.
 This is useful if you want to supply a single destination to a piece of test code.
+
+### Enabling mTLS for Application to Destination communication
+
+To enable mTLS while communicating with the target destination, configure the security configuration option while building up your destination at runtime.
+
+There are two ways to specify where the HTTP Security Configuration like for e.g. the certificate, private key etc. for outbound HTTP calls is determined from.
+
+You can choose between the options `SecurityConfigurationStrategy.FROM_PLATFORM` or `SecurityConfigurationStrategy.FROM_DESTINATION`, which is the default.
+
+```java
+customHttpDestination = DefaultHttpDestination.builder("http://url")
+        .name("custom-destination")
+        .securityConfiguration(SecurityConfigurationStrategy.FROM_PLATFORM)
+        .build();
+```
+
+`SecurityConfigurationStrategy.FROM_PLATFORM` ensures that the security configuration is derived from the BTP CF [Instance Identity](https://docs.cloudfoundry.org/devguide/deploy-apps/instance-identity.html).
+
+On the other hand `SecurityConfigurationStrategy.FROM_DESTINATION` derives the security configuration from the destination properties.
 
 ## Provide Headers for Destinations
 
@@ -257,6 +264,17 @@ It can be a destination object that you defined in the Cloud Foundry Cockpit, or
 For that, call the `.property()` method on the destination.
 It expects a key-value pair with a key formatted as `URL.headers.<key>` and an arbitrary value string.
 
+:::tip SAP Language Header
+
+When communicating with an S/4HANA (Cloud) system one can send a header to request a language preference.
+This can be done by setting the `sap-language` property on the destination.
+The value of this property should be a valid language tag as defined in [RFC 5646](https://tools.ietf.org/html/rfc5646).
+
+Alternatively, the SAP Cloud SDK can also dynamically send the `sap-language` header based on the current locale of an incoming request or the system locale.
+To achieve this, set a `cloudsdk.dynamicSapLanguage` property to `true` on the destination.
+
+:::
+
 ## Provide Query Parameters for Destinations
 
 ### How It Works
@@ -303,10 +321,12 @@ If your app requires more time when fetching destinations, you may create your o
 
 ```java
 // Allow requests to take up to 10 seconds instead of just 6
-DestinationLoader destinationLoader = new ScpCfDestinationLoader(Duration.ofSecond(10));
+DestinationLoader destinationLoader = ScpCfDestinationLoader.builder()
+            .withTimeLimiterConfiguration(ResilienceConfiguration.TimeLimiterConfiguration.of(Duration.ofSeconds(10)))
+            .build();
 ```
 
-This operation overrides the default timeout duration so that you are free to choose whatever value fits your needs.
+To disable the timeout entirely, use `TimeLimiterConfiguration.disabled()`.
 
 :::note Hint
 
@@ -332,32 +352,61 @@ This behavior has two implications:
 Depending on the use-case, the default cache configuration might be suboptimal.
 Therefore, the SAP Cloud SDK offers an API for adjusting the caching behavior at application runtime.
 
-The examaple below changes the cache to store more entries for a longer period of time.
+The example below changes the cache to store more entries for a longer period of time.
 
 ```java
 ScpCfDestinationLoader.Cache.setSizeLimit(10_000L);
 ScpCfDestinationLoader.Cache.setExpiration(Duration.ofHours(2L), CacheExpirationStrategy.WHEN_CREATED);
 ```
 
+:::note Cache Size
+Please note that the size limit does not apply to the cache for `ScpCfDestinationLoader.tryGetAllDestinations()`.
+:::
+
+**Change Detection Mode**
+
+In case your application typically interacts with more than one destination per tenant you can significantly improve performace by enabling **change detection**:
+
+```java
+ScpCfDestinationLoader.Cache.enableChangeDetection();
+```
+
+This mode will ensure the current cache entries are still valid using a single request (per tenant), instead of checking for each destination individually.
+For a single destination this is not a benefit, but for two or more the benefit is up to 100% per additional destination.
+For example, if you are interacting with 5 destinations per tenant, you can expect a 3 to 4 times performance increase.
+
+:::tip Change Detection Interval
+When using change detection, the cache expiration duration configured becomes the change detection interval.
+As described above, this determines how quickly changes to a destination in the BTP cockpit are reflected in your application.
+For example, the default setting of 5 minutes ensures, that when changing a destination it will take no more than 5 minutes for the cache to detect the change.
+:::
+
 In rare circumstances, it might make sense to disable either specific aspects of the caching behavior, or even the entire cache.
 For those scenarios, following APIs are available:
 
 ```java
-ScpCfDestinationLoader.Cache.disableSizeLimit(); // cache can store an infinite amount of entries
-ScpCfDestinationLoader.Cache.disableExpiration(); // cache entries never expire
+// cache can store an infinite amount of entries
+ScpCfDestinationLoader.Cache.disableSizeLimit();
 
-ScpCfDestinationLoader.Cache.disable(); // don't cache destinations
+// cache entries never expire
+// note: this setting is not available when the change detection mode is enabled
+ScpCfDestinationLoader.Cache.disableExpiration();
+
+// or don't cache destinations at all
+ScpCfDestinationLoader.Cache.disable();
 ```
 
 :::note Shared Cache Size
 
-The size limit is applied across all tenants and principals.
-That means that one tenant (with a lot of principals) might fill up the entire cache.
+The size limit is applied across all tenants (and principals in certain cases).
+One tenant (with a lot of principals) might fill up the entire cache, if all destinations requested require user propagation.
+If the requested destination doesn't require user propagation, destinations are cached per tenant instead.
 
 <details>
   <summary>Example</summary>
 
-If a thousand principals of the same tenant all query a single destination, the cache will be entirely filled up with destinations belonging to the same tenant.
+If a thousand principals of the same tenant all query a single destination requiring user propagation, the cache will be entirely filled up with destinations belonging to the same tenant.
+
 As a consequence, existing cache entries - also those of different tenants - must be removed (_evicted_) from the cache to make space for the new entries.
 
 </details>
@@ -370,6 +419,13 @@ Changing the cache configuration at runtime will lead to a recreation of the und
 Hereby, **all existing** cache entries will be lost.
 
 Therefore, we recommend adjusting the cache once at application startup.
+
+:::
+
+:::note Hint
+
+For better performance, while querying for destinations **with user propagation**, users may provide the `EXCHANGE_ONLY` token exchange strategy.
+Refer [here](#token-exchange-options) for more details.
 
 :::
 
@@ -390,9 +446,9 @@ For a provider/subscriber setup, a [retrieval strategy](https://help.sap.com/doc
 - `CURRENT_TENANT` (default)
 - `ALWAYS_PROVIDER`
 - `ONLY_SUBSCRIBER`
-- `CURRENT_TENANT_THEN_PROVIDER`
+- `CURRENT_TENANT_THEN_PROVIDER` [(deprecated)](../../release-notes#4130---april-28-2023)
 
-Here is an example for `CURRENT_TENANT_THEN_PROVIDER` option:
+Here is an example for `ONLY_SUBSCRIBER` option:
 
 ```java
 DestinationOptions options =
@@ -401,20 +457,24 @@ DestinationOptions options =
         .augmentBuilder(
             ScpCfDestinationOptionsAugmenter
                 .augmenter()
-                .retrievalStrategy(ScpCfDestinationRetrievalStrategy.CURRENT_TENANT_THEN_PROVIDER))
+                .retrievalStrategy(ScpCfDestinationRetrievalStrategy.ONLY_SUBSCRIBER))
         .build();
 ```
 
 ##### Token Exchange Options
 
 Besides the retrieval strategy, the SAP Cloud SDK also offers a [token exchange strategy](https://help.sap.com/doc/69f4a2d15d9b404fac06e968f0633d98/1.0/en-US/com/sap/cloud/sdk/cloudplatform/connectivity/ScpCfDestinationTokenExchangeStrategy.html) that lets you change the behavior when authentication requires a user token exchange.
-There are three different options available:
+There are four different options available:
 
-- `LOOKUP_THEN_EXCHANGE` (default)
+- `FORWARD_USER_TOKEN` (default)
+- `LOOKUP_THEN_EXCHANGE`
 - `LOOKUP_ONLY`
 - `EXCHANGE_ONLY`
 
-By default, the SAP Cloud SDK first looks up the destination on the destination service and evaluates the authentication type.
+By default, the SAP Cloud SDK checks whether the current context contains an user access token originating from the XSUAA identity service.
+If that's the case, then the token will be forwarded as part of the destination lookup queries.
+Otherwise, `LOOKUP_THEN_EXCHANGE` will be applied:
+First SAP Cloud SDK looks up the destination on the destination service and evaluates the authentication type.
 If the authentication type requires a user token exchange the SAP Cloud SDK immediately performs that exchange.
 
 If you know that the destination you are about to retrieve requires a user token exchange you can improve performance by skipping the initial "look up" request like so:
@@ -675,7 +735,7 @@ The information there also applies to the SAP Cloud SDK for Java.
 
 #### Skip Destination Creation Step for Certain Authentication Types on Cloud Foundry
 
-For certain authentication types i.e. `NoAuthentication` and `OAuth2ClientCredentials` there is an API that eliminates the need to manually create a destination in the CF account for connecting to services.
+For certain authentication types i.e. `NoAuthentication`, `OAuth2ClientCredentials` and `OAuth2UserTokenExchange` there is an API that eliminates the need to manually create a destination in the CF account for connecting to services.
 
 Example:
 
@@ -708,6 +768,11 @@ final HttpDestination destination =
         ScpCfServiceDestinationLoader.CfServices.WORKFLOW,
         "my-workflow");
 ```
+
+:::note Caching
+These destinations are currently not cached.
+Please consider re-using the obtained destination objects when using `OAuth2ClientCredentials` or `OAuth2UserTokenExchange` oo avoid unnecessary token retrievals.
+:::
 
 #### Enable Access to SAP Business Technology Platform Connectivity Service
 

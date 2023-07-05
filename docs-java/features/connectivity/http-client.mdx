@@ -18,6 +18,16 @@ keywords:
 The SAP Cloud SDK offers basic functionality that helps with connecting to other systems and services like SAP S/4HANA Cloud or On-premise edition.
 The SAP Cloud SDK leverages the existing API of `HttpClient` and applies conveniently managed properties, e.g. according to a specific destination configuration.
 
+:::info Apache Http Client 4
+
+The SAP Cloud SDK uses the [Apache Http Client 4](https://hc.apache.org/httpcomponents-client-4.5.x/index.html) library.
+This client is widely used and can also be used together with other frameworks e.g. Spring's `RestTemaplte`.
+
+However, please note that with the recent [Spring Framework 6 release](https://github.com/spring-projects/spring-framework/wiki/Upgrading-to-Spring-Framework-6.x#web-applications), the `RestTemplate` has been changed to require the successor [Apache Http Client 5](https://hc.apache.org/httpcomponents-client-5.2.x/index.html).
+Consequently, the `HttpClient` provided by the SAP Cloud SDK can only be used with `RestTemplate` in version 5 of Spring.
+
+:::
+
 In the following paragraphs, the `HttpClientAccessor` API and its usage will be described.
 
 ## General Usage

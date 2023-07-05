@@ -81,14 +81,6 @@ module.exports = {
           sdkSwitch: true
         },
         {
-          type: 'dropdown',
-          label: 'API Reference',
-          position: 'right',
-          items: [],
-          docsPluginId: 'docs-js',
-          apiReference: true
-        },
-        {
           type: 'docsVersionDropdown',
           position: 'right',
           docsPluginId: 'docs-js'
@@ -116,7 +108,7 @@ module.exports = {
             },
             {
               label: 'Support',
-              to: 'docs/java/support-java'
+              to: 'docs/java/support'
             }
           ]
         },
@@ -193,10 +185,10 @@ module.exports = {
           ignorePatterns: [
             '/cloud-sdk/api/**',
             '/cloud-sdk/components/**',
-            '/cloud-sdk/docs/js/v1/features/common/**',
-            '/cloud-sdk/docs/js/v1/features/odata/common/**',
-            '/cloud-sdk/docs/js/v1/features/odata/v2/**',
-            '/cloud-sdk/docs/js/v1/features/odata/v4/**',
+            '/cloud-sdk/docs/js/*/features/common/**',
+            '/cloud-sdk/docs/js/*/features/odata/common/**',
+            '/cloud-sdk/docs/js/*/features/odata/v2/**',
+            '/cloud-sdk/docs/js/*/features/odata/v4/**',
             '/cloud-sdk/docs/js/features/common/**',
             '/cloud-sdk/docs/js/features/odata/common/**',
             '/cloud-sdk/docs/js/features/odata/v2/**',
@@ -213,13 +205,6 @@ module.exports = {
   ],
   customFields: {},
   plugins: [
-    [
-      './src/plugins/plugin-latest-api-doc',
-      {
-        latestBaseUrl: '/cloud-sdk/api/latest',
-        versions: '../static/api/versions.json'
-      }
-    ],
     [
       '@docusaurus/plugin-content-docs',
       {
@@ -250,17 +235,16 @@ module.exports = {
         editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
         routeBasePath: 'docs/js',
         sidebarPath: require.resolve('./sidebarsDocsJs.js'),
-        lastVersion: 'v2',
+        lastVersion: 'current',
         versions: {
           current: {
             label: 'v3',
-            path: 'v3',
-            banner: 'unreleased',
             badge: false
           },
           v2: {
             label: 'v2',
-            banner: 'none',
+            path: 'v2',
+            banner: 'unmaintained',
             badge: false
           },
           v1: {
@@ -452,7 +436,7 @@ module.exports = {
     ],
     function nodeWebpackPolyfillPlugin(context, options) {
       return {
-        name: 'nodeWebpackPlyfill',
+        name: 'nodeWebpackPolyfill',
         configureWebpack(config, isServer) {
           return {
             plugins: [new ESMPolyfillWrapper()]

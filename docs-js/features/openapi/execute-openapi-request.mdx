@@ -15,7 +15,7 @@ keywords:
 ---
 
 import useBaseUrl from '@docusaurus/useBaseUrl';
-import { SkipCsrf } from '../common';
+import { SkipCsrf, Csrf } from '../common';
 import {
   CustomRequestConfig,
   CustomRequestConfigNote,
@@ -84,7 +84,7 @@ MyApi.myFunction()
 ```
 
 Custom headers take precedence over default headers.
-The example above can be used to execute requests against the sandbox systems of the SAP API Business Hub.
+The example above can be used to execute requests against the sandbox systems of the SAP Business Accelerator Hub.
 
 ### Setting a Custom Request Configuration
 
@@ -112,6 +112,7 @@ You can specify middlewares for a request via the `middleware()` method on the r
 MyApi.myFunction().middleware(myMiddlewares).execute(destination);
 ```
 
+The method accepts variable number of single elements as well as arrays.
 Middleware is a general concept used to add [arbitrary enhancements to the request](../middleware).
 A typical use case is to also add [resilience](../../guides/resilience) to requests.
 
@@ -129,6 +130,10 @@ const httpResponse: HttpResponse = MyEntity.requestBuilder()
 
 <ExecuteRawUseCases />
 
+## Handling of Cross-Site Request Forgery Tokens
+
+<Csrf />
+
 ### Skip CSRF Token Handling
 
 <SkipCsrf />
@@ -136,5 +141,25 @@ const httpResponse: HttpResponse = MyEntity.requestBuilder()
 ```ts
 const responseData = await MyApi.myFunction()
   .skipCsrfTokenFetching()
+  .execute(destination);
+```
+
+### Custom `CSRF` Token Handling
+
+If you need to adjust the way CSRF tokens are fetched, you can do so by using [middlewares](../middleware):
+
+- Disable the token fetching to deactivate the default code.
+- Add a middleware to include your custom token fetching.
+
+The SAP Cloud SDK offers a `csrf` middleware which allows to configure some basic options:
+
+- `method` The HTTP method used to get a token
+- `URL` The URL which is called to retrieve a token
+- `middleware` Middlewares used for the token retrieval request
+
+```ts
+const responseData = await MyApi.myFunction()
+  .skipCsrfTokenFetching()
+  .middleware([csrf({ url: 'https://example.com/csrf/token/url' })])
   .execute(destination);
 ```

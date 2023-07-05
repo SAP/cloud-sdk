@@ -14,9 +14,9 @@ export const features = [
     name: '[SOAP](https://help.sap.com/saphelp_snc700_ehp01/helpdata/en/bb/ddb33d2ae46b3be10000000a114084/content.htm?no_cache=true)',
     category: 'Legacy',
     java: {
-      status: YES,
+      status: DEPRECATED,
       docsLink: ``,
-      note: ''
+      note: 'Deprecated since 4.13.0'
     },
     js: {
       status: NO,
@@ -252,9 +252,9 @@ export const features = [
     name: '[BTP Neo Environment](https://help.sap.com/viewer/ea72206b834e4ace9cd834feed6c0e09/Cloud/en-US)',
     category: 'Environment',
     java: {
-      status: YES,
+      status: DEPRECATED,
       docsLink: ``,
-      note: `Not recommended for new projects`
+      note: 'Deprecated since 4.17.0'
     },
     js: {
       status: NO,
@@ -281,7 +281,7 @@ export const features = [
     category: 'Connectivity',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/connectivity/sdk-connectivity-destination-service)`,
+      docsLink: `[docs](${baseUrl}/java/features/connectivity/destination-service)`,
       note: ''
     },
     js: {
@@ -407,26 +407,12 @@ export const features = [
     category: 'Connectivity',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/connectivity/-destination-service#connect-to-sap-s4hana-on-premise)`,
+      docsLink: `[docs](${baseUrl}/java/features/connectivity/destination-service#connect-to-sap-s4hana-on-premise)`,
       note: ''
     },
     js: {
       status: YES,
       docsLink: `[docs](${baseUrl}/js/features/connectivity/on-premise)`,
-      note: ''
-    }
-  },
-  {
-    name: 'CLI',
-    category: 'CLI',
-    java: {
-      status: YES,
-      docsLink: ``,
-      note: `Via a Maven plugin `
-    },
-    js: {
-      status: DEPRECATED,
-      docsLink: `[docs](${baseUrl}/js/features/cli/overview)`,
       note: ''
     }
   },

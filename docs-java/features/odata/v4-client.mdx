@@ -24,7 +24,7 @@ import NotImplemented from '@site/src/components/NotImplemented.js';
 
 To leverage the type-safe OData v4 client, you need to add following dependencies to the `dependencies` section of your `pom.xml`:
 
-<Tabs groupId="odataClientType" defaultValue="PregeneratedCloud" values={[ { label: 'Pregenerated Clients (Cloud)', value: 'PregeneratedCloud' }, { label: 'Pregenerated Clients (On-Premise)', value: 'PregeneratedOnPremise' }, { label: 'Self Generated Clients', value: 'Selfgenerated' } ]}>
+<Tabs groupId="odataClientType" defaultValue="Selfgenerated" values={[ { label: 'Self Generated Clients', value: 'Selfgenerated' } ]}>
 
 <TabItem value="Selfgenerated">
 
@@ -46,35 +46,13 @@ To leverage the type-safe OData v4 client, you need to add following dependencie
 ```
 
 </TabItem>
-
-<TabItem value="PregeneratedCloud">
-
-```xml
-<dependency>
-    <groupId>com.sap.cloud.sdk.s4hana</groupId>
-    <artifactId>s4hana-api-odata-v4</artifactId>
-</dependency>
-```
-
-</TabItem>
-
-<TabItem value="PregeneratedOnPremise">
-
-```xml
-<dependency>
-    <groupId>com.sap.cloud.sdk.s4hana</groupId>
-    <artifactId>s4hana-api-odata-v4-onpremise</artifactId>
-</dependency>
-```
-
-</TabItem>
 </Tabs>
 
-:::tip Discover services on the SAP API Business Hub
+:::tip Discover services on the SAP Business Accelerator Hub
 
-If you would like to consume a specific service, try searching for it on the [SAP API Business Hub](https://api.sap.com/) and visit an **SAP Cloud SDK** tab on the landing page of that service.
+If you would like to consume a specific service, try searching for it on the [SAP Business Accelerator Hub](https://api.sap.com/) and visit an **SAP Cloud SDK** tab on the landing page of that service.
 There you will find detailed instructions on how to use the SAP Cloud SDK to get a client library for that specific service.
-Learn more about the integration with the SAP API Business Hub in the [blog](https://blogs.sap.com/2021/09/17/the-sap-cloud-sdk-integrates-with-the-sap-api-business-hub/).
+Learn more about the integration with the SAP Business Accelerator Hub in the [blog](https://blogs.sap.com/2021/09/17/the-sap-cloud-sdk-integrates-with-the-sap-api-business-hub/).
 
 :::
 
@@ -300,6 +278,20 @@ service.getAllBusinessPartner()
     .execute(destination);
 ```
 
+#### Custom Filter Expressions
+
+The SAP Cloud SDK for Java also allows custom filter expressions.
+This is useful when filter fields need to be passed dynamically.
+
+For example, to filter based on `MiddleName` use:
+
+```java
+ValueBoolean filterExpression = FieldReference.of("MiddleName").equalTo("SomeName");
+FilterableBoolean<BusinessPartner> customFilterExpression = FilterableBoolean.fromCustomFilter(filterExpression, BusinessPartner.class);
+
+service.getAllBusinessPartner().filter(customFilterExpression).execute(destination);
+```
+
 ### OData Functions and Actions
 
 OData defines bound and unbound [functions and actions](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_Operations).
@@ -503,6 +495,34 @@ BusinessPartner readByKeyResult = response.getReadResult(getBusinessPartnerByKey
 
 Per the OData specification, either all operations or none within the same changeset are successful.
 Hence, if the changeset was a failure then evaluating the result of the contained requests will contain the failure of the changeset.
+
+:::note
+
+If all responses in a `BatchResponse` are evaluated using `getReadResult(...)` or/and `getModificationResult(...)`, this ensures that the underlying `InputStream` of the `HttpEntity` is fully consumed
+and the HTTP connection is released back to the connection pool. If you do not evaluate all responses in a `BatchResponse` consider using the `try-with-resources` construct while executing batch requests.
+
+:::
+
+:::tip
+
+To ensure that all resources are properly closed while executing batch requests, we recommend using the `try-with-resources` construct.
+
+```java
+  try(
+      BatchResponse result = service.batch()
+                                    .addReadOperations(readOperation)
+                                    .addChangeSet(createRequest, updateRequest, deleteRequest)
+                                    .execute(destination)
+   ) {
+      List<BusinessPartner> entities = result.getReadResult(readOperation);
+      ModificationResponse<BusinessPartner> createResult = response.getModificationResult(createRequest);
+      ModificationResponse<BusinessPartner> deleteResult = response.getModificationResult(deleteRequest);
+  }
+```
+
+This is especially helpful in preventing connection leaks if you are re-using a `HttpClient` to execute multiple batch requests.
+
+:::
 
 ## Entity Update Strategies
 
