@@ -39,13 +39,6 @@ Alternatively, you can follow [these instructions](#integrate-the-cloud-sdk-for-
 
 The SAP Cloud SDK provides archetypes based on [Spring](https://spring.io/) and [TomEE](https://tomee.apache.org/), so select whatever suits you best.
 
-:::note
-
-The mentioned archetypes work out-of-the-box for Cloud Foundry.
-For Neo platform we provide an archetype `scp-neo-javaee7` for only servlet based projects.
-
-:::
-
 Run:
 
 <Tabs groupId="frameworks" defaultValue="spring" values={[
@@ -223,33 +216,12 @@ To get started with an existing project include the _SAP Cloud SDK BOM_ in the _
 
 If your application is running on **SAP Business Technology Platform** please add the appropriate dependency:
 
-<Tabs groupId="btp" defaultValue="cf" values={[
-{ label: 'Cloud Foundry', value: 'cf', },
-{ label: 'Neo', value: 'neo', },
-]}>
-
-<TabItem value="cf">
-
 ```xml
 <dependency>
     <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
     <artifactId>scp-cf</artifactId>
 </dependency>
 ```
-
-</TabItem>
-
-<TabItem value="neo">
-
-```xml
-<dependency>
-    <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
-    <artifactId>scp-neo</artifactId>
-</dependency>
-```
-
-</TabItem>
-</Tabs>
 
 If you want to connect to an **SAP S/4HANA** system via the **OData** protocol, you should also add a dependency to the client libraries of the SAP Cloud SDK.
 The dependencies differ with respect to the type of **SAP S/4HANA** system([**SAP S/4HANA Cloud**](https://api.sap.com/package/SAPS4HANACloud?section=Artifacts) or [**SAP S/4HANA On-premise**](https://api.sap.com/package/S4HANAOPAPI?section=Artifacts)):
