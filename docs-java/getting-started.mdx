@@ -223,51 +223,9 @@ If your application is running on **SAP Business Technology Platform** please ad
 </dependency>
 ```
 
-If you want to connect to an **SAP S/4HANA** system via the **OData** protocol, you should also add a dependency to the client libraries of the SAP Cloud SDK.
-The dependencies differ with respect to the type of **SAP S/4HANA** system([**SAP S/4HANA Cloud**](https://api.sap.com/package/SAPS4HANACloud?section=Artifacts) or [**SAP S/4HANA On-premise**](https://api.sap.com/package/S4HANAOPAPI?section=Artifacts)):
-
-<Tabs groupId="s4" defaultValue="s4hc" values={[
-{ label: 'SAP S/4HANA Cloud', value: 's4hc', },
-{ label: 'SAP S/4HANA On-premise', value: 's4hop', }]}>
-
-<TabItem value="s4hc">
-
-<!-- vale off -->
-
-```xml
-<dependency>
-    <groupId>com.sap.cloud.sdk.s4hana</groupId>
-    <artifactId>s4hana-all</artifactId>
-</dependency>
-```
-
-</TabItem>
-
-<TabItem value="s4hop">
-
-```xml
-<dependency>
-    <groupId>com.sap.cloud.sdk.s4hana</groupId>
-    <artifactId>s4hana-api-odata-onpremise</artifactId>
-</dependency>
-<dependency>
-    <groupId>com.sap.cloud.sdk.s4hana</groupId>
-    <artifactId>s4hana-api-odata-v4-onpremise</artifactId>
-</dependency>
-<dependency>
- <groupId>com.sap.cloud.sdk.s4hana</groupId>
- <artifactId>s4hana-connectivity</artifactId>
-</dependency>
-<dependency>
- <groupId>com.sap.cloud.sdk.s4hana</groupId>
- <artifactId>s4hana-core</artifactId>
-</dependency>
-```
-
-<!-- vale on -->
-
-</TabItem>
-</Tabs>
+If you want to connect to an **SAP S/4HANA** system via the **OData** protocol, you should checkout our convenient [OData code generator](features/odata/vdm-generator).
+By downloading the OData service specifications for either type of **SAP S/4HANA** system ([**SAP S/4HANA Cloud**](https://api.sap.com/package/SAPS4HANACloud?section=Artifacts) or [**SAP S/4HANA On-premise**](https://api.sap.com/package/S4HANAOPAPI?section=Artifacts)) you can generate your own set of classes.
+Similarly the SAP Cloud SDK offers a [code generator for Open API](features/rest/generate-rest-client) protocol.
 
 In case you have a **CAP application** which uses **multitenancy** features and/or a **protected backend** your service will need the following dependency:
 
