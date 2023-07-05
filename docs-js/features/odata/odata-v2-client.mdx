@@ -13,13 +13,14 @@ keywords:
   - consume
 ---
 
-import { SkipCsrf } from '../common';
+import { SkipCsrf, Csrf } from '../common';
 import { Select, ChangeSetExample, RequestBuilder } from './v2';
-import { Csrf, SkipCsrfExample, ETag } from './common';
+import { SkipCsrfExample, CustomCsrf, ETag } from './common';
 import {
   CustomFields,
   CustomDeSerializers,
   DeserializeEntity,
+  SerializeEntity,
   Entity,
   EntityBuilder,
   FromJson
@@ -88,6 +89,10 @@ For more details on **how to execute requests** using a OData type-safe client b
 ### Deserialize an OData JSON Response to an Entity
 
 <DeserializeEntity />
+
+### Serialize an Entity to a OData JSON (Response)
+
+<SerializeEntity />
 
 ### Customize (De-)Serialization
 
@@ -181,6 +186,12 @@ More advanced filter expressions can be found [here](#available-filter-expressio
 
 <SkipCsrf />
 <SkipCsrfExample />
+
+## Custom `CSRF` Token Handling
+
+If you need to adjust the way CSRF tokens are fetched, you can do so by using [middlewares](../middleware):
+
+<CustomCsrf />
 
 ## Available Filter Expressions
 

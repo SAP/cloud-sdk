@@ -17,7 +17,156 @@ import LicenseBadge from '@site/src/sap/sdk-js/LicenseBadge';
 
 <BuildBadge /> <LicenseBadge />
 
-Version 3 of the SAP Cloud SDK is not released yet.
-
 <!-- vale off -->
 <!-- This line is used for our release notes automation -->
+
+## 3.2.0 [Core Modules] - May 30, 2023
+
+### New Functionalities
+
+- [connectivity] Enable the use of mTLS certificates for registered destinations on CloudFoundry. (616d77b85)
+
+### Improvements
+
+- [connectivity] Set the default validity time of the client credentials token cache to 5 minutes instead of never expiring. (782b9e37e)
+
+### Fixed Issues
+
+- [connectivity, http-client] Forward the user JWT irrespective of the destination authentication type when `forwardAuthToken` is set to true on a destination (56c3f70f4)
+- [http-client] Improve CSRF token fetching for large requests. (73ff0ab03)
+- [odata-common] Remove encoding of keys in the `getEntityKeys()` as it should only happen once in `getResourcePathForKeys()`.Fixes the error `value.format is not a function` when executing requests for entities with `Edm.Date` type key property. (aa1a4bdb0)
+- [resilience] Fix parsing error when the last response in a chain of retries returned undefined.
+  - @sap-cloud-sdk/util@3.2.0 (234675fc3)
+
+## 3.1.1 [Core Modules] - April 14, 2023
+
+### Fixed Issues
+
+- [resilience] Fix transpilation on OData generation, where types for 'opossum' could not be found.
+  - @sap-cloud-sdk/util@3.1.1 (166a16d82)
+
+## 3.1.0 [Core Modules] - April 06, 2023
+
+### Compatibility Notes
+
+- [connectivity] The combination of `iss` and `jwt` is now supported when fetching destinations. When both properties are set, the `iss` property is no longer ignored. (28b7af86f)
+
+### New Functionalities
+
+- [connectivity] Add support for authentication type `NoAuthentication` on-premise destinations. (039412e59)
+- [connectivity] Allow combination of `iss` an `jwt` when fetching a destination. In this case the `iss` URL will be used to fetch the destination service token and `jwt` will be used for the `x-user-token` header of user based authentication types. (28b7af86f)
+
+### Fixed Issues
+
+- [odata-common] Adjust `FromJsonType` to stricter typings in TypeScript 5. (cc8425abc)
+
+## 3.0.2 [Core Modules] - March 23, 2023
+
+### Compatibility Notes
+
+- [odata-common, odata-v2, odata-v4] The `ActionFunctionImportRequestBuilderBase` has an additional mandatory type parameter to pass the according (de-)serializer type. This was missing previously due to a bug. (2fa8c36a6)
+
+### Fixed Issues
+
+- [connectivity] Fix the `The proxy configuration is undefined` error for OnPrem `MAIL` destinations by removing the `isHttpDestination` check when adding proxyConfiguration to the destination object.
+  - @sap-cloud-sdk/resilience@3.0.2
+  - @sap-cloud-sdk/util@3.0.2 (47fc7278d)
+- [mail-client] Fix error `Greeting never received` when sending emails to On-Premise mail servers. The `_readableListening` property of socket is set to `true` to allow nodemailer to receive SMTP greeting messages. (47fc7278d)
+- [mail-client] Fix `Invalid greeting` error from nodemailer by removing the `transport.verify` function call. (be04dafc2)
+- [odata-common, odata-v2, odata-v4] Fix batch requests to accept only functions or actions. (2fa8c36a6)
+
+## 3.0.1 [Core Modules] - March 01, 2023
+
+### Compatibility Notes
+
+- [resilience] Deprecate erroneously exposed `circuitBreakerHttp()` function in favor of `circuitBreaker()`.
+  - @sap-cloud-sdk/util@3.0.1 (fcab06c4b)
+
+### Improvements
+
+- [generator-common] Improve logs when generating OData clients without package.json
+  - @sap-cloud-sdk/util@3.0.1 (c78c16ddf)
+
+## 3.0.0 [Core Modules] - February 28, 2023
+
+### Compatibility Notes
+
+- [connectivity] The generic types of `JwtKeyMapping` is simplified so the second type argument `JwtKeysT` are always strings. (1b974095f)
+- [connectivity] The `Protocol` enum was replaced with a string literal union type. Now, instead of passing `Protocol.HTTPS` pass 'https'. (1b974095f)
+- [connectivity, http-client, openapi, odata-common, odata-v2, resilience] Remove the options `timeout` and `enableCircuitBreaker` from all BTP service interactions i.e. destination and token fetching. (1b974095f)
+- [connectivity, http-client, mail-client, openapi, odata-common, odata-v2, odata-v4, eslint-config, generator, test-util, util, openapi-generator, generator-common, temporal-de-serializers, resilience] Switch the compilerOptions.module to `Node16` instead of `CommonJS` for better interoperability with ES modules. See the [TypeScript handbook](https://www.typescriptlang.org/docs/handbook/esm-node.html) for technical details if needed. (1b974095f)
+- [connectivity] The enum `IsolationStrategy` was replaced with a string literal union type of the same name. Use 'tenant' and 'tenant-user' instead of `IsolationStrategy.Tenant` and `IsolationStrategy.Tenant_User`. (1b974095f)
+- [connectivity, http-client, odata-common] The `url` property in `Destination` is now optional as destinations of type `MAIL` do not have a URL. (1b974095f)
+- [http-client, openapi, odata-common] Remove `timeout()` method from the request builders and the `timeout` options from the `executeHttpRequest()` function.
+  Visit the [documentation portal](https://sap.github.io/cloud-sdk/docs/js/guides/resilience) to see how to add a timeout using middlewares. (1b974095f)
+- [http-client] Removed overload of executeHttpRequest
+  The overload, that accepted `HttpRequestConfigWithOrigin` as a parameter, is removed and replaced by the function `executeHttpRequestWithOrigin`. (1b974095f)
+- [odata-common, generator, util] By default, generation of OData clients fails if a service path cannot be determined. Either provide `servicePath` value in the `options-per-service.json` or set `skipValidation` to true, in which case, `/` will be used. (1b974095f)
+- [odata-common] The constructor of `ODataRequestConfig` was changed so that the third parameter cannot be a `string` anymore.
+  Passing in a string which was then interpreted as the value for the `Content-Type` HTTP header was deprecated.
+  The type of the parameter is now `Record<string, any>`, and if only want to set the `Content-Type` HTTP header you can do so by passing `{'content-type': 'some-value'}` to the constructor. (1b974095f)
+- [odata-common] The constructor of the entity API is private to avoid accidental usage. Use the service object to get a API instance. (1b974095f)
+- [odata-common, generator, openapi-generator] The `serviceMapping` option of the OData generator has been renamed to `optionsPerService`. The mapping file, `service-mapping.json` has also been renamed to `options-per-service.json`. By default, an options file will not be generated. (1b974095f)
+- [odata-common] Setting custom fields in `fromJson` through the `_customFields` property has been removed.
+  Add custom properties to your JSON object instead. (1b974095f)
+- [generator] The options per service behavior is now the same as for the OpenApi generator.
+  For details on how to migrate and what has change look at the migration guide. (1b974095f)
+- [generator] The deprecated `forceOverwrite` option of the generator is removed. Use the `overwrite` option instead.
+- [generator] The deprecated `generatePackageJson` option of the generator is removed. Use the `packageJson` option instead.
+- [generator] The deprecated `writeReadme` option of the generator is removed. Use the `readme` option instead.
+- [generator] The deprecated `processesJsGeneration` option of the generator is removed. Use the `transpilationProcesses` option instead.
+- [generator] The internal options `sdkAfterVersionScript`, `s4HanaCloud` and `packageVersion` of the generator are removed.
+  These were hidden options never meant for external usage and there is no replacement.
+- [generator] The deprecated `generateNpmrc` option of the generator is removed. Use the `include` option to add a `.npmrc` to the generated code if needed. (1b974095f)
+- [generator] Add `verbose` generator option. By default, only error and warning logs will be displayed. If `verbose` is set to `true`, all logs will be displayed. (1b974095f)
+- [generator] The `generateJs` option has been replaced with the `transpile` option. Transpilation is not enabled by default. (1b974095f)
+- [generator] The command line argument `inputDir` of the OData generator is renamed to `input`.
+  The new `input` options accepts now also file paths and glob patterns. (1b974095f)
+- [generator] The OData generator won't automatically rename identifiers to avoid name conflicts.
+  The generation process will fail if identifiers have conflicting names.
+  Switch on the `skipValidation` flag if you want to generate despite name conflicts and are okay with changed identifier names to avoid conflicts. (1b974095f)
+- [generator, openapi-generator, generator-common] Removed the option `versionInPackageJson` from the OData and OpenAPI generator.
+  If the option `packageJson` is enabled now a `package.json` with a default version `1.0.0` is created.
+  If necessary use the `include` option to add a `package.json` with a custom value.
+- [generator, openapi-generator] Removed the option `licenseInPackageJson` from the OData and OpenAPI generator.
+  If the option `packageJson` is enabled now a `package.json` with a default license `UNLICENSED` is created.
+  If necessary use the `include` option to add a `package.json` with a custom value. (1b974095f)
+- [generator, openapi-generator] Rename servicePath to basePath. (1b974095f)
+- [generator] The option `generateCSN` is removed. There is no replacement. (1b974095f)
+- [generator] The type for paths in the `GeneratorOptions` is changed from `fs.PathLike` to `string`.
+  In case you passed a buffer object please resolve it to a string before passing it to the SAP Cloud SDK. (1b974095f)
+- [generator, openapi-generator, generator-common] The two generators use the same CLI parsing code now, aligning the way paths are resolved.
+  In case you experience problems with the new logic, enable the `verbose` flag to investigate the new paths. (1b974095f)
+- [util] The function `variadicArgumentToArray` is replaced by the function `transformVariadicArgumentToArray`. (1b974095f)
+- [util] The field `logger` on the interface `LoggerOptions` was not used and is removed from the interface. (1b974095f)
+- [openapi-generator] The internal option `packageVersion` of the OpenAPI generator is removed. (1b974095f)
+- [openapi-generator] `tsConfig` option has been renamed to `tsconfig`. (1b974095f)
+- [generator-common] The generator does not create `d.ts.map` files per default anymore. If you need them include a custom `tsconfig.json`.
+- [connectivity, http-client, mail-client, openapi, odata-common, odata-v2, odata-v4, eslint-config, generator, test-util, util, openapi-generator, generator-common, temporal-de-serializers, resilience] All SAP Cloud SDK packages ship without `d.ts.map` files from now on.
+  Modern IDEs don't require those files for code navigation, thus they are removed to decrease download size of the SDK. (1b974095f)
+
+### New Functionalities
+
+- [connectivity] Support `OAuth2RefreshToken` authentication type (1b974095f)
+- [connectivity] Add a `retry` option in the `DestinationFetchOption`.
+  Enable this options if the token exchange done by the destination service is unstable. (1b974095f)
+- [connectivity, resilience] Add `ResilienceOptions` and `resilience()` function. The function returns an array of middlewares based on the provided options. (1b974095f)
+- [http-client, resilience] The request configuration used in the final request is now part of the middleware context.
+  User can implement middlewares to change request properties like `headers` using this reference in the middleware context.
+  The request configuration contains the `url`, `headers` and all other properties of the HTTP request. (1b974095f)
+- [http-client, openapi, odata-common] Introduce the middleware on the request builders and http-client.
+  Visit the [documentation portal](https://sap.github.io/cloud-sdk/docs/js/guides/resilience) to see how to use middlewares. (1b974095f)
+- [generator, generator-common] Introduced options `transpile` and `tsconfig` to configure transpilation for generated OData clients. (1b974095f)
+
+### Improvements
+
+- [connectivity] Replace `Protocol` enum with a string literal union type. (1b974095f)
+- [connectivity] Replace `IsolationStrategy` enum with union type. (1b974095f)
+- [generator] Align naming rules for operations and properties in OData clients by removing `_` prefix (1b974095f)
+
+### Fixed Issues
+
+- [connectivity] Fix the combination of providing the `iss` together with `OnPremise` basic destinations. (1b974095f)
+- [odata-v2] Allow to update OData v2 entities to `null`. Fixes [3204](https://github.com/SAP/cloud-sdk-js/issues/3204). (1b974095f)
+- [generator] Allow OData service to contain an entity name 'Service'. (1b974095f)
+- [generator] Now links to the correct generator binary. (1b974095f)

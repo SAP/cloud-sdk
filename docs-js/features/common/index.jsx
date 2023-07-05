@@ -4,6 +4,7 @@ import CustomRequestConfigNoteContent from './custom-request-config-note.mdx';
 import ExecuteRawOverviewContent from './execute-raw-overview.mdx';
 import ExecuteRawUseCasesContent from './execute-raw-use-cases.mdx';
 import SkipCsrfContent from './skip-csrf-token.mdx';
+import CsrfContent from './csrf-token.mdx';
 
 export function CustomRequestConfig() {
   return <CustomRequestConfigContent />;
@@ -23,4 +24,8 @@ export function ExecuteRawUseCases() {
 
 export function SkipCsrf() {
   return <SkipCsrfContent />;
+}
+
+export function Csrf() {
+  return <CsrfContent />;
 }

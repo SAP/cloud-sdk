@@ -30,7 +30,7 @@ Legend: ✅ - supported, ❗- partially supported, ❌ - not supported
 - ✅ Multitenancy
 - ✅ Resilience & Caching
 - ✅ Connect to and consume services from SAP S/4HANA Cloud
-- ❌ Connect to and consume services from SAP S/4HANA On-Premise
+- ❗ Connect to and consume services from SAP S/4HANA On-Premise
 - ✅ Seamless use of typed clients provided by the SAP Cloud SDK
 
 ## Getting Started with the SAP Cloud SDK on Gardener
@@ -410,282 +410,202 @@ spec:
 
 2. Repeat the same steps 2-5 from the previous section, always replacing `destination` with `identity`.
 
-## Excursion: Bind Services created by the Service Catalog
-
-In case of using the [Kubernetes Service Catalog](https://kubernetes.io/docs/concepts/extend-kubernetes/service-catalog/) via the [Service Catalog CLI](https://svc-cat.io/docs/cli/) you will receive service bindings that are not immediately compatible with the SAP Cloud SDK.
-
-### Known XSUAA Service Incompatibility
-
-For example, let us assume you want to create an XSUAA Service Binding.
-You would use commands similar to the following:
-
-```bash
-svcat provision svcat-xsuaa-service --class xsuaa --plan application
-svcat bind svcat-xsuaa-service
-```
-
-To see the resulting secret on K8s you can run the following command:
-
-```bash
-kubectl get secrets svcat-xsuaa-service -o yaml
-```
-
-The `data` block of the result looks something like this:
-
-```yaml
-apiurl: <base64-encoded-value>
-clientid: <base64-encoded-value>
-clientsecret: <base64-encoded-value>
-credential-type: <base64-encoded-value>
-identityzone: <base64-encoded-value>
-identityzoneid: <base64-encoded-value>
-sburl: <base64-encoded-value>
-subaccountid: <base64-encoded-value>
-tenantid: <base64-encoded-value>
-tenantmode: <base64-encoded-value>
-uaadomain: <base64-encoded-value>
-url: <base64-encoded-value>
-verificationkey: <base64-encoded-value>
-xsappname: <base64-encoded-value>
-zoneid: <base64-encoded-value>
-```
-
-You can see that the property `plan` is missing there.
-This property, however, is required by the SAP Cloud SDK, so that runtime errors are produced once the application tries to read this service binding.
-
-To fix this issue you need to edit the secret so that it contains the `plan` property.
-The easiest way, when you are already using the CLI, is by using the `kubectl edit` command:
-
-```bash
-kubectl edit secrets svcat-xsuaa-service
-```
-
-In there you can now add a `plan` property with one of the following base64 encoded values:
-
-| plan          | base64 encoded value |
-| ------------- | -------------------- |
-| `application` | `YXBwbGljYXRpb24K`   |
-| `broker`      | `YnJva2VyCg==`       |
-| `space`       | `c3BhY2UK`           |
-| `apiaccess`   | `YXBpYWNjZXNzCg==`   |
-
-The resulting service binding can now be consumed with the SAP Cloud SDK.
-
-### Known Connectivity Service Incompatibility
-
-As another example, let us assume you want to create an Connectivity Service Binding with the Service Catalog CLI.
-
-You would, again, use commands similar to the following to create the binding:
-
-```bash
-svcat provision svcat-connectivity-service --class connectivity --plan connectivity_proxy
-svcat bind svcat-connectivity-service
-```
-
-This time we will have a look at the decoded content by executing the following command:
-
-```
-kubectl get secret svcat-connectivity-service -o go-template='{{range $k,$v := .data}}{{printf "%s: " $k}}{{if not $v}}{{$v}}{{else}}{{$v | base64decode}}{{end}}{{"\n"}}{{end}}'
-```
-
-This will show you the content of the `data` block with all values base64 decoded:
-
-```
-clientid: <some-string>
-clientsecret: <some-string>
-connectivity_service: {"CAs_path":"<some-string>","CAs_signing_path":"<some-string>","api_path":"<some-string>","tunnel_path":"<some-string>","url":"<some-string>"}
-subaccount_id: <some-string>
-subaccount_subdomain: <some-string>
-token_service_domain: <some-string>
-token_service_url: <some-string>
-token_service_url_pattern: <some-string>
-token_service_url_pattern_tenant_key: <some-string>
-xsappname: <some-string>
-```
-
-Here you can see, that the `connectivity_service` property contains a JSON object, whereas the other properties only contain simple strings.
-Due to the way the SAP Cloud SDK reads the service bindings and tries to find the credentials, it assumes that a single JSON object property contains the credentials.
-In our case, however, this does not hold true.
-
-To fix this issue you would follow the same step described above, this time just removing the unnecessary property:
-
-```bash
-kubectl edit secrets svcat-connectivity-service
-```
-
 ## On-Premise Connectivity
 
-:::danger
-On-Premise connectivity in Kubernetes is currently not available for external SAP customers.
-This might be changed in the near future.
-We'll be updating our documentation accordingly.
+On Kubernetes there are generally two approaches to connect to On-Premise destinations:
 
-The following steps have not been tested by our team.
+1. Using Transparent Proxy and Connectivity Proxy
+2. Using Connectivity Proxy only
+
+Approach **(1)** simplifies the application code but does not cover all features at the time of writing.
+Most prominently, only **single-tenant** mode is currently supported.
+
+<details>
+  <summary>Constraints when using the Transparent Proxy</summary>
+
+- Single tenant only
+- Private Link not yet supported
+- Destination names need to be known at design time
+  - see the note on [Create a Kubernetes Resource](#create-a-kubernetes-resource)
+
+</details>
+
+Approach **(2)** does not come with the above constraints, but imposes limitations on the operation mode.
+
+<details>
+  <summary>Constraints when using the Connectivity Proxy</summary>
+
+- Connectivity Proxy must be operated in `untrusted` mode
+
+</details>
+
+:::tip
+We generally recommend to go with approach (1) unless the given constraints apply to your use case.
 :::
 
-To connect to On-Premise systems inside a Kubernetes cluster, you need to use the `Connectivity Proxy`.
-The following guide will show you what has to be done to create and use it.
+### 1. Using Transparent and Connectivity Proxies
 
-1. You need to create a route for the `Connectivity Proxy` to use.
-   This route needs to have TLS enabled.
-   To enable TLS on `SAP Gardener`, refer to the note on [Create an Ingress](#create-an-ingress) section.
+#### Prerequisites
 
-   Here is an example where we add our custom domain `connectivitytunnel.*` to our TLS section, in `SAP Gardener`.
-   This creates a certificate for this domain automatically.
+This guide assumes you have both the **Transparent Proxy** (version `>= 1.2.0`) and **Connectivity Proxy** (version `>= 2.8.0`) installed in your cluster.
+Please refer to [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/1c18e0ca10884dad994fc3d7e1d046d7.html) and [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/23fc1100c60b45c58f09694b7f9c7700.html) documentation on how to install it if you haven't already.
 
-   ```yaml
-   spec:
-     tls:
-       - hosts:
-           - '<your-cluster-host>'
-           - '*.ingress.<your-cluster-host>'
-           - 'connectivitytunnel.ingress.<your-cluster-host>'
-         secretName: secret-tls
-   ```
+#### Background Information
 
-2. Now we need to add our CA certificate to the JVM trust store of the `Cloud Connector`.
-   The CA certificate is stored in the TLS secret, in our case, it is `secret-tls`.
+When using the Transparent Proxy your app performs requests against the Transparent Proxy without explicit authentication, assuming the network in your cluster can be trusted.
+The Transparent Proxy will obtain the relevant destination from the destination service and use it to forward the request via the Connectivity Proxy to the On-Premise system.
+Consequently, your app itself does not interact with destination or connectivity service at all and thus your application pods do not require bindings to these two services.
 
-   To access the information inside a secret, use the following code snippet:
+:::tip
+This approach is conceptually different from what you may be used to from a CloufdFoundry environment.
+The official [documentation of the Transparent Proxy](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/e661713ef7d14373b57e3e26b0b03b86.html) gives more information on the architecture.
+:::
 
-   ```bash
-   kubectl get secret <secret-name> -o go-template='
-   {{range $k,$v := .data}}{{printf "%s: " $k}}{{if not $v}}{{$v}}{{else}}{{$v | base64decode}}{{end}}{{"\n"}}{{end}}'
-   ```
+#### Create a Kubernetes Resource
 
-   Inside the secret should be a block prefixed with `ca.crt`, copy this certificate into a file and then follow [this guide](https://connect2id.com/blog/importing-ca-root-cert-into-jvm-trust-store) to add it to the JVM trust store of your `Cloud Connector`.
+Create the following YAML file:
 
-3. Create and bind the connectivity service with the `connectivty_proxy` plan.
-   We already explained how to do it in the [section above](#known-connectivity-service-incompatibility).
-   Additionally, to bind the secret represented by Kubernetes native YAML format, you need to convert it to a JSON to be consumable by the connectivity proxy.
-   Retrieve the secret's content using the previous code snippet and convert it into a `JSON` before saving it.
-   You can use the following as a guiding example.
+```yaml title:"example-dest.yaml"
+apiVersion: destination.connectivity.api.sap/v1
+kind: Destination
+metadata:
+  name: example-dest
+spec:
+  destinationRef:
+    name: 'example-dest-onprem' # name from BTP Cockpit
+```
 
-   ```yaml
-   apiVersion: v1
-   kind: Secret
-   metadata:
-     name: connectivity-proxy-service-key
-   type: Opaque
+- Adjust the name `example-dest-onprem` to the On-Premise destination you defined in your SAP BTP Cockpit.
+
+It will create a Kubernetes resource in your cluster, pointing to the destination you created in the cockpit.
+Apply the YAML with `kubectl apply` to take effect.
+
+:::note
+This step is required for each destination that should be reachable via the Transparent Proxy.
+If you do not create a custom Kubernetes resource of type `destinations.destination.connectivity.api.sap` for a given destination, the destination will not be handled by the Transparent Proxy.
+:::
+
+#### Executing Requests
+
+In your application you can now configure a destination to execute requests:
+
+```java
+DefaultHttpDestination destination = DefaultHttpDestination
+        .builder("http://example-dest.namespace/")
+        // for principal propagation make sure to set the auth type to "TOKEN_FORWARDING"
+        // .authenticationType(AuthenticationType.TOKEN_FORWARDING)
+        .build();
+
+List<SalesArea> execute = new DefaultSalesAreaService().getAllSalesArea() // example OData request
+        .execute(destination);
+```
+
+- Replace `namespace` in the URL with the namespace you installed the Transparent Proxy into
+
+This will target the Kubernetes resource `example-dest` we created above which will be resolved to the destination we configured in that resource.
+The code above shows an example how you can use it to perform an OData request.
+
+:::note
+Repeat this process for all _destination names_ you want to use in your application.
+:::
+
+:::tip Connecting to Cloud systems
+The above approach is not limited to destinations of proxy type `ON_PREMISE`.
+`INTERNET` destinations are equally supported.
+:::
+
+### 2. Using the Connectivity Proxy
+
+#### Prerequisites
+
+This guide assumes you have the Connectivity Proxy installed in the [**untrusted mode**](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/148bbad274e545efa10de8a356dd474d.html) in your cluster.
+In case you used the Helm chart to install the proxy, the untrusted mode is enabled if the property `config.servers.proxy.http.enableProxyAuthorization` is set to `true`.
+Please refer to [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/23fc1100c60b45c58f09694b7f9c7700.html) documentation on how to install the Connectivity Proxy if you haven't already.
+
+The untrusted mode requires a service binding or service key for an XSUAA service instance.
+Make sure you have this binding/key at hand as you will need it in the steps below.
+
+### Create a Kubernetes Secret
+
+Copy the following JSON template:
+
+```json showLineNumbers
+{
+  "label": "connectivity",
+  "provider": null,
+  "plan": "lite",
+  "name": "connectivity",
+  "tags": ["connectivity", "conn", "connsvc"],
+  "instance_guid": "",
+  "instance_name": "connectivity",
+  "binding_guid": "",
+  "binding_name": null,
+  "credentials": {
+    "tenantmode": "",
+    "clientid": "",
+    "token_service_domain": "",
+    "token_service_url": "",
+    "xsappname": "",
+    "clientsecret": "",
+    "url": "",
+    "uaadomain": "",
+    "verificationkey": "",
+    "identityzone": "",
+    "tenantid": "",
+    "onpremise_proxy_port": "20003",
+    "onpremise_proxy_http_port": "20003",
+    "onpremise_socks5_proxy_port": "20004",
+    "onpremise_proxy_ldap_port": "20001",
+    "onpremise_proxy_rfc_port": "20001",
+    "onpremise_proxy_host": ""
+  }
+}
+```
+
+Perform the following adjustments:
+
+- Generate two random GUIDs and fill them into the fields `instance_guid` and `binding_guid`
+- Fill the fields from line **16-26** with the corresponding values from the XSUAA credentials you created to run the Connectivity Proxy in untrusted mode
+  - For `url` use the same value as `token_service_url`
+- Update `onpremise_proxy_host` to contain the URL under which the Connectivity Proxy is reachable within your cluster
+- Update the ports in case you configured custom values for them on the Connectivity Proxy
+
+Next, create a new YAML file and insert the prepared JSON object into `connectivity-service-key`:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: connectivity-service-secret
+type: Opaque
    stringData:
-     connectivity_key: '{
-       "clientid": "<client-id>",
-       "clientsecret": "<clientsecret>",
-       "xsappname": "<xsappname>",
-       "connectivity_service": {
-           "CAs_path":"/api/v1/CAs",
-           "CAs_signing_path":"/api/v1/CAs/signing",
-           "api_path":"/api/v1",
-           "tunnel_path":"/api/v1/tunnel",
-           "url":"https://connectivity.cf.sap.hana.ondemand.com"
-       },
-       "subaccount_id": "<subaccount_id",
-       "subaccount_subdomain": "<subaccount_subdomain>",
-       "token_service_domain": "<token_service_domain">",
-       "token_service_url": "<token_service_url>",
-       "token_service_url_pattern": "https://{tenant}.authentication.sap.hana.ondemand.com/oauth/token",
-       "token_service_url_pattern_tenant_key": "subaccount_subdomain"
-   }'
-   ```
+    connectivity-service-key: '{
+        "label": "connectivity",
+        "provider": null,
+        ....
+      }'
+```
 
-   :::info
-   Note that we used the `stringData` field type instead of the default `data` field type to benefit from automatic base64 encoding, instead of doing it ourselves.
-   This is a requirement of the connectivity proxy since it can't consume the data of the secret in YAML format yet.
-   :::
+Finally, adjust your deployment YAML to contain these two entries under `volumes` and `volumteMounts`:
 
-4. Now we need to download the CA certificate of the connectivity service and create a secret containing:
+```yml title="deployment.yaml:"
+  volumes:
+    - name: conectivity-service-binding-volume
+      secret:
+        secretName: connectivity-service-secret
+volumeMounts:
+      - name: conectivity-service-binding-volume
+        mountPath: '/etc/secrets/sapbtp/connectivity/connectivity-service'
+        readOnly: true
+```
 
-   - The CA certificate of the connectivity service
-   - Our private key
-   - Our public certificate
+Apply the YAML files for the changes to take effect.
+Your app should now be ready to connect to On-Premise systems via the Connectivity Proxy.
 
-   The private key and public certificate are also stored in our TLS secret, use the previous code snippet to retrieve it from the secret and save them in separate files.
-   Finally, download the CA certificate with the following line:
-
-   ```bash
-   curl https://connectivity.cf.sap.hana.ondemand.com/api/v1/CAs/signing -o connectivity_ca.crt
-   ```
-
-   Now you can create the secret with this command:
-
-   ```bash
-   kubectl create secret generic connectivity-tls --from-file=ca.crt=<your-connectivity-ca.crt> --from-file=tls.key=<your-private.key> --from-file=tls.crt=<your-public.crt> --namespace default
-   ```
-
-5. Create a secret that contains credentials to access the docker image which the `Connectivity Proxy` is using.
-
-   The image is located here: `deploy-releases.docker.repositories.sap.ondemand.com`
-
-   To create the registry secret, use the following command:
-
-   ```bash
-   kubectl create secret docker-registry <your-registry-secret> \
-     --docker-username=<your-username> \
-     --docker-password=<your-password> \
-     --docker-server=deploy-releases.docker.repositories.sap.ondemand.com
-   ```
-
-6. Create a `values.yaml` file containing the configuration that suits your desired operational mode of the connectivity proxy, for the available operational modes refer to the [documentation](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/f3c1ef45db77489c8d039acc9530358f.html).
-
-   For the specific content of the configuration refer to the [configuration guide](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/eaa8204fc7484df984b3c321624827ff.html).
-
-   Here is an example for the `Single tenant in a trusted environment` mode:
-
-   ```yaml
-   deployment:
-     replicaCount: 1
-     image:
-       pullSecret: 'proxy-secret'
-   ingress:
-     tls:
-       secretName: 'connectivity-tls'
-   config:
-     integration:
-       auditlog:
-         mode: console
-       connectivityService:
-         serviceCredentialsKey: 'connectivity_key'
-     tenantMode: dedicated
-     subaccountId: '<subaccount-id>'
-     subaccountSubdomain: '<subaccount-domain>'
-     servers:
-       businessDataTunnel:
-         externalHost: 'connectivitytunnel.ingress.<your-cluster-host>'
-         externalPort: 443
-       proxy:
-         rfcAndLdap:
-           enabled: true
-           enableProxyAuthorization: false
-         http:
-           enabled: true
-           enableProxyAuthorization: false
-           enableRequestTracing: true
-         socks5:
-           enableProxyAuthorization: false
-   ```
-
-7. For your application to reach On-Premise destinations, it needs to provide the proxy settings and the token URL.
-   Currently, you have to add them manually to the `secret` containing the connectivity service binding.
-
-   To do this, use the following code snippet:
-
-   ```bash
-   kubectl edit secret <binding-name>
-   ```
-
-   Now you have to add the fields `onpremise_proxy_host` and `onpremise_proxy_port` and `url`.
-   The host has the pattern `connectivity-proxy.<namespace>` which is in our case `connectivity-proxy.default`.
-   The default port is `20003`.
-   The `url` field should contain the same value as `token_service_url`.
-   Be aware that the values have to be encoded in base64, for example:
-
-   ```yaml
-   onpremise_proxy_host: Y29ubmVjdGl2aXR5LXByb3h5LmRlZmF1bHQ=
-   onpremise_proxy_port: MjAwMDM=
-   url: aHR0cHM6Ly9teS1hcGkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tCg==
-   ```
-
-8. Finally, add the binding to your `deployment.yml`, the same way you would add any other binding.
+:::tip Troubleshooting
+Issues about _"No connectivity service biding found"_ usually indicate a misconfiguration with the created secret.
+To fix them, please double check the JSON, the secret, and the volume mounts
+:::
 
 ## Excursion: Debug Kubernetes App From Your Local IDE
 

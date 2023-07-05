@@ -111,7 +111,7 @@ For more details on testing and troubleshooting have a look at [this guide](http
 
 If the connection is tested and working you can start the implementation.
 The SAP Cloud SDK helps you to consider the HTTP_PROXY automatically and makes it easy to use the same code base locally and in production on SAP BTP.
-The SAP Cloud SDK has a [destination lookup](../features/connectivity/destination.mdx) priority considering environment variables first.
+The SAP Cloud SDK has a [destination lookup](../features/connectivity/destinations) priority considering environment variables first.
 
 The trick is to define a `destinations` environment variable when you run locally, which works like a switch under the hood when you execute:
 
@@ -164,7 +164,7 @@ The `preLaunchTask` executes the build before each run which compiles the TypeSc
 The `outFiles` property defines where the compiled files will be located.
 
 We have to set the `destinations` environment variable, to provide our destination.
-This will interrupt the [destination lookup](../features/connectivity/destination.mdx) and lead to a destination with the HTTP_PROXY considered.
+This will interrupt the [destination lookup](../features/connectivity/destinations) and lead to a destination with the HTTP_PROXY considered.
 The easiest way to do that is via a `.env` file which is read when starting the application.
 If you do not have a `.env` file, create one or adjust the existing one.
 Just add the following entry to the `.env` file:
