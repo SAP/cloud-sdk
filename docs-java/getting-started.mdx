@@ -243,24 +243,50 @@ In general, the SAP Cloud SDK for Java integrates natively into the [Spring Boot
 In particular the [SAP Cloud SDK provides listeners](features/multi-tenancy/thread-context.mdx) that can extract tenant and principal information from an incoming request.
 To ensure these listeners are present, please configure your project accordingly.
 
-<Tabs groupId="frameworks" defaultValue="spring" values={[
-{ label: 'Spring', value: 'spring', },
+<Tabs groupId="frameworks" defaultValue="spring5" values={[
+{ label: 'Spring 5', value: 'spring5', },
+{ label: 'Spring 6', value: 'spring6', },
 { label: 'TomEE', value: 'tomee', }]}>
 
-<TabItem value="spring">
+<TabItem value="spring5">
 
-For a Spring based project please ensure that the application is annotated to scan for components of the SAP Cloud SDK:
+For a **Spring 5** based project please ensure that the application is annotated to scan for components of the SAP Cloud SDK:
 
 ```java
-@ComponentScan({"com.sap.cloud.sdk", "your.own.package"})
-@ServletComponentScan({"com.sap.cloud.sdk", "your.own.package"})
+@ComponentScan({"com.sap.cloud.sdk", <your.own.package>})
+@ServletComponentScan({"com.sap.cloud.sdk", <your.own.package>})
 ```
 
-Check the logs during application startup to ensure the listeners got registered.
 Also, please check [the Spring version](https://mvnrepository.com/artifact/com.sap.cloud.sdk/sdk-bom/latest) declared in the SAP Cloud SDK BOM doesn't clash with your version of Spring.
 
 :::note Spring Support for Cloud Foundry
-For Spring based projects we provide out-of-the-box support only on Cloud Foundry with archetype `scp-cf-spring`.
+For Spring based projects we provide out-of-the-box support only on Cloud Foundry with the archetype `scp-cf-spring`.
+:::
+
+</TabItem>
+<TabItem value="spring6">
+
+For a **Spring 6** based project please ensure that the application is annotated to scan for components of the SAP Cloud SDK:
+
+```java
+@ComponentScan({"com.sap.cloud.sdk", <your.own.package>})
+@ServletComponentScan({"com.sap.cloud.sdk.cloudplatform.servletjakarta", <your.own.package>})
+```
+
+Add the jakarta servlet dependency to your pom.xml:
+
+```xml
+<dependency>
+    <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
+    <artifactId>servlet-jakarta</artifactId>
+</dependency>
+```
+
+And, in case you are using the `sdk-bom`, make sure to set the spring version before importing the bom.
+You can find more details about the configuration for Java 17 / Spring 6 / Spring Boot 3 [here](/docs/java/frequently-asked-questions#which-java-versions-are-supported-by-the-sap-cloud-sdk).
+
+:::note Spring Support for Cloud Foundry
+For Spring based projects we provide out-of-the-box support only on Cloud Foundry with the archetype `scp-cf-spring`.
 :::
 
 </TabItem>
