@@ -253,11 +253,10 @@ To ensure these listeners are present, please configure your project accordingly
 For a **Spring 5** based project please ensure that the application is annotated to scan for components of the SAP Cloud SDK:
 
 ```java
-@ComponentScan({"com.sap.cloud.sdk", "your.own.package"})
-@ServletComponentScan({"com.sap.cloud.sdk", "your.own.package"})
+@ComponentScan({"com.sap.cloud.sdk", <your.own.package>})
+@ServletComponentScan({"com.sap.cloud.sdk", <your.own.package>})
 ```
 
-Check the logs during application startup to ensure the listeners got registered.
 Also, please check [the Spring version](https://mvnrepository.com/artifact/com.sap.cloud.sdk/sdk-bom/latest) declared in the SAP Cloud SDK BOM doesn't clash with your version of Spring.
 
 :::note Spring Support for Cloud Foundry
@@ -270,8 +269,8 @@ For Spring based projects we provide out-of-the-box support only on Cloud Foundr
 For a **Spring 6** based project please ensure that the application is annotated to scan for components of the SAP Cloud SDK:
 
 ```java
-@ComponentScan({"com.sap.cloud.sdk", "your.own.package"})
-@ServletComponentScan({"com.sap.cloud.sdk.cloudplatform.servletjakarta", "your.own.package"})
+@ComponentScan({"com.sap.cloud.sdk", <your.own.package>})
+@ServletComponentScan({"com.sap.cloud.sdk.cloudplatform.servletjakarta", <your.own.package>})
 ```
 
 Add the jakarta servlet dependency to your pom.xml:
@@ -285,8 +284,6 @@ Add the jakarta servlet dependency to your pom.xml:
 
 And, in case you are using the `sdk-bom`, make sure to set the spring version before importing the bom.
 You can find more details about the configuration for Java 17 / Spring 6 / Spring Boot 3 [here](/docs/java/frequently-asked-questions#which-java-versions-are-supported-by-the-sap-cloud-sdk).
-
-Check the logs during application startup to ensure the listeners got registered.
 
 :::note Spring Support for Cloud Foundry
 For Spring based projects we provide out-of-the-box support only on Cloud Foundry with the archetype `scp-cf-spring`.
