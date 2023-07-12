@@ -1,0 +1,139 @@
+# 4.17.0 - June 30, 2023
+
+## Compatibility Notes
+
+- Deprecate the pregenerated classes for SAP S/4HANA On-Premise and Cloud Edition OData services.
+  With the next major release we will discontinue the following Maven modules:
+
+  - [`s4hana-api-odata`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata)
+  - [`s4hana-api-odata-onpremise`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata-onpremise)
+  - [`s4hana-api-odata-v4`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata-v4)
+  - [`s4hana-api-odata-v4-onpremise`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata-v4-onpremise)
+
+  While these dependencies may still receive updates, it's no longer recommended to use them.
+  Instead, we suggest to generate your own OData classes using our [OData generator](https://sap.github.io/cloud-sdk/docs/java/features/odata/vdm-generator).
+  This approach saves many megabytes of unused dependencies in your application, while offering a useful set of customization options.
+
+- Deprecate the `sdk-sjb-bom`
+  Please use [the `cf-tomee7-bom` followed by the `sdk-bom`](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/6c6936e8e4ea40c9a9a69f6783b1e978.html)
+- We are planning to discontinue support of NEO with SAP Cloud SDK v5 by end of the year.
+  Therefore, we're announcing module deprecation in advance.
+  Please migrate to the Cloud Foundry environment. It is better suited for apps and SAP S/4HANA extension development.
+  The following modules are deprecated while still being fully functional and considered supported in SAP
+  Cloud SDK v4:
+  - `scp-neo`
+    - `auditlog-scp-neo`
+    - `cloudplatform-connectivity-scp-neo`
+    - `cloudplatform-core-scp-neo`
+    - `concurrency-scp-neo`
+    - `security-scp-neo`
+    - `tenant-scp-neo`
+  - `plugins-parent`
+    - `scp-neo-maven-plugin`
+  - `scp-neo-javaee7`
+- The "change detection" caching strategy for destinations is now more resilient.
+  Previously, a misconfigured destination could lead to degraded application performance.
+- Deprecate `s4hana-connectivity` and `s4hana-core`
+  - **SAP S/4HANA - Connectivity**: `com.sap.cloud.sdk.s4hana.connectivity.*`
+  - **SAP S/4HANA - Core**: `com.sap.cloud.sdk.s4hana.serialization.*` and `com.sap.cloud.sdk.s4hana.types.*`
+
+## Improvements
+
+- Update of the OData VDM to the newest updates of [SAP S/4HANA On-Premise](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE) and [SAP S/4HANA Cloud Edition](https://api.sap.com/products/SAPS4HANACloud/overview).
+  This includes completely new services, new operations in previously existing services, and new entity types in the existing Maven artifacts:
+  - [`s4hana-api-odata`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata)
+  - [`s4hana-api-odata-onpremise`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata-onpremise)
+  - [`s4hana-api-odata-v4`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata-v4)
+  - [`s4hana-api-odata-v4-onpremise`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata-v4-onpremise)
+- The [official system properties](https://docs.oracle.com/javase/8/docs/technotes/guides/security/jsse/JSSERefGuide.html#Customization) `javax.net.ssl.trustStore` and `javax.net.ssl.trustStorePassword` are now recognised when creating an SslContext.
+- Improve OData V4 Generator capability to extract label and description data from EDMX specification files.
+- Minor version updates:
+  - Update [Commons IO](https://mvnrepository.com/artifact/commons-io/commons-io) from `2.12.0` to `2.13.0`
+  - Update [Error Prone](https://central.sonatype.com/search?q=g:com.google.errorprone%20a:error_prone_annotations) declared for dependency convergence from `2.19.1` to `2.20.0`
+  - Update [Guava](https://central.sonatype.com/search?q=g:com.google.guava%20a:guava) from `31.1-jre` to `32.0.1-jre`
+
+# 4.16.0 - June 14, 2023
+
+## Compatibility Notes
+
+- Deprecate `ErpHttpDestination` and all related classes.
+  The functionality is now integrated and handled automatically by `HttpDestination`s.
+  For most projects this means simply removing any occurrence of `decorate(DefaultErpHttpDestination::new)`.
+  In case you are using `ErpHttpDestination` to automatically add the `sap-language` based on the _current_ system locale, please configure a property `cloudsdk.dynamicSapLanguage` with value `true` on the destination.
+
+## Improvements
+
+- Improved the handling of `sap-client` and `sap-language` to be fully automated.
+  Projects can safely remove any invocations of `decorate(DefaultErpHttpDestination::new)`.
+  Please also see the related compatibility note above.
+- Dependency Updates:
+  - SAP Dependency Updates:
+    - Minor Dependency Updates:
+      - Update [Cf Tomee7 Bom](https://search.maven.org/search?q=g:com.sap.cloud.sjb.cf%2BAND%2Ba:cf-tomee7-bom) (`com.sap.cloud.sjb.cf:cf-tomee7-bom`) from `1.70.0` to `1.71.0`
+      - Update [Neo Java Web Api](https://search.maven.org/search?q=g:com.sap.cloud%2BAND%2Ba:neo-java-web-api) (`com.sap.cloud:neo-java-web-api`) from `4.53.3` to `4.54.3`
+  - Other Dependency Updates:
+    - Minor Dependency Updates:
+      - Update [Jackson Annotations](https://search.maven.org/search?q=g:com.fasterxml.jackson.core%2BAND%2Ba:jackson-annotations) (`com.fasterxml.jackson.core:jackson-annotations`) from `2.15.1` to `2.15.2`
+      - Update [Jackson Core](https://search.maven.org/search?q=g:com.fasterxml.jackson.core%2BAND%2Ba:jackson-core) (`com.fasterxml.jackson.core:jackson-core`) from `2.15.1` to `2.15.2`
+      - Update [Jackson Databind](https://search.maven.org/search?q=g:com.fasterxml.jackson.core%2BAND%2Ba:jackson-databind) (`com.fasterxml.jackson.core:jackson-databind`) from `2.15.1` to `2.15.2`
+      - Update [Jackson Datatype Jsr310](https://search.maven.org/search?q=g:com.fasterxml.jackson.datatype%2BAND%2Ba:jackson-datatype-jsr310) (`com.fasterxml.jackson.datatype:jackson-datatype-jsr310`) from `2.15.1` to `2.15.2`
+      - Update [Jackson Dataformat Xml](https://search.maven.org/search?q=g:com.fasterxml.jackson.dataformat%2BAND%2Ba:jackson-dataformat-xml) (`com.fasterxml.jackson.dataformat:jackson-dataformat-xml`) from `2.15.1` to `2.15.2`
+      - Update [Jackson Dataformat Yaml](https://search.maven.org/search?q=g:com.fasterxml.jackson.dataformat%2BAND%2Ba:jackson-dataformat-yaml) (`com.fasterxml.jackson.dataformat:jackson-dataformat-yaml`) from `2.15.1` to `2.15.2`
+      - Update [Netty Codec Http](https://search.maven.org/search?q=g:io.netty%2BAND%2Ba:netty-codec-http) (`io.netty:netty-codec-http`) from `4.1.92.Final` to `4.1.93.Final`
+      - Update [Protobuf Java](https://search.maven.org/search?q=g:com.google.protobuf%2BAND%2Ba:protobuf-java) (`com.google.protobuf:protobuf-java`) from `3.23.1` to `3.23.2`
+      - Update [Checker Qual](https://search.maven.org/search?q=g:org.checkerframework%2BAND%2Ba:checker-qual) (`org.checkerframework:checker-qual`) from `3.34.0` to `3.35.0`
+      - Update [Lombok](https://search.maven.org/search?q=g:org.projectlombok%2BAND%2Ba:lombok) (`org.projectlombok:lombok`) from `1.18.26` to `1.18.28`
+      - Update [Kotlin Stdlib](https://search.maven.org/search?q=g:org.jetbrains.kotlin%2BAND%2Ba:kotlin-stdlib) (`org.jetbrains.kotlin:kotlin-stdlib`) from `1.8.21` to `1.8.22`
+      - Update [Kotlin Stdlib Common](https://search.maven.org/search?q=g:org.jetbrains.kotlin%2BAND%2Ba:kotlin-stdlib-common) (`org.jetbrains.kotlin:kotlin-stdlib-common`) from `1.8.21` to `1.8.22`
+      - Update [Kotlin Stdlib Jdk8](https://search.maven.org/search?q=g:org.jetbrains.kotlin%2BAND%2Ba:kotlin-stdlib-jdk8) (`org.jetbrains.kotlin:kotlin-stdlib-jdk8`) from `1.8.21` to `1.8.22`
+
+## 4.15.0 - May 26, 2023
+
+[Maven Central](https://central.sonatype.com/search?q=com.sap.cloud.sdk%2520v%253A4.15.0)
+
+### Compatibility Notes
+
+- The behaviour of `DestinationAccessor.getDestination(...)` has been changed to throw:
+  - `DestinationNotFoundException` instead of `DestinationAccessException` with cause `DestinationNotFoundException` when a destination is not found
+  - `DestinationAccessException` instead of `DestinationNotFoundException` when no adapters are declared
+- We are planning to discontinue support of Business Logging APIs with SAP Cloud SDK v5 by end of the year.
+  Therefore, we're announcing module deprecation in advance.
+  The following modules and namespaces are deprecated while still being fully functional and considered supported in SAP
+  Cloud SDK v4:
+  - **BTP Business Logging Core**: `com.sap.cloud.sdk.services.scp.businesslogging.core.*`
+    - `tryGetDestination("destinationName", CLIENT_CREDENTIALS)` is replaced by
+      `ScpCfServiceDestinationLoader.getDestinationForService(BUSINESS_LOGGING, "destinationName")`
+    - `tryGetDestination("destinationName", USER_TOKEN)` is replaced by
+      `ScpCfServiceDestinationLoader.getDestinationForService(BUSINESS_LOGGING, "destinationName", OnBehalfOf.NAMED_USER_CURRENT_TENANT)`
+- Rename references from _SAP API Business Hub_ to _SAP Business Accelerator Hub_ in JavaDoc.
+
+### New Functionality
+
+- `OpenAPI` generated objects can now read custom fields which are not part of the object's schema:
+  - `getCustomFieldNames()`
+  - `getCustomField("nameOfField")`
+- The BTP CloudFoundry specific platform modules now support mTLS for communication with destinations having their `securityConfigurationStrategy` set to `FROM_PLATFORM`.
+
+### Improvements
+
+- Dependency Updates:
+  - Minor version updates:
+    - Update `commons-io:commons-io` from `2.11.0` to `2.12.0`
+    - Update Jackson related dependencies from `2.15.0` to `2.15.1`
+    - Update `org.checkerframework:checker-qual` declared for dependency convergence from `3.33.0` to `3.34.0`
+    - Update `com.google.errorprone:error_prone_annotations` declared for dependency convergence from `2.18.0` to `2.19.1`
+    - Update `com.google.api:api-common` used in the `blockchain-client-fabric` module from `2.9.0` to `2.10.0`
+- To avoid running into connection leaks while re-using the same `HttpClient` to execute multiple OData batch requests, running batch requests with `try-with-resources` construct is now possible for both OData v2 and v4 clients.
+
+```java
+  //Suggestive example for OData v2
+  try(
+      BatchResponse result = service.batch().addReadOperations(readOperation).executeRequest(dest)
+   ) {
+      return result.get(0);
+  }
+```
+
+### Fixed Issues
+
+- Fix an issue where batch requests would leave open connections even after a `BatchResponse` was fully consumed.

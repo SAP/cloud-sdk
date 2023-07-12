@@ -1,0 +1,273 @@
+---
+id: generic-untyped-odata-client
+title: Generic Advanced OData Client
+sidebar_label: Generic OData Client
+description: Together with type-safe OData client we provide a more generic and untyped OData client implementation to be used in advanced use-cases when the capabilities of typed OData client are not yet covering your use-case or fundamentally not enough to achieve your development goals. You can leverage untyped generic OData client for workarounds and trying out OData features that are not very frequently used. It's also helpful in a situation when flexibility is above safety and convenience.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+---
+
+:::danger Advanced! Use on your own discretion.
+
+The API for generic OData client is not intended to be used by application developers unless required otherwise.
+
+Please, make sure you know what you're doing and check if the type-safe OData client API can solve your problem.
+:::
+
+## Overview
+
+In addition to the type-safe API we also provide a "low-level", untyped OData client.
+It is more generic and can be used in **advanced** use-cases when the capabilities of the typed OData client are not enough to achieve your development goals.
+You can leverage the untyped OData client for:
+
+- Workarounds and quick fixes
+- Trying out OData features that are not yet implemented in OData type-safe client.
+- When flexibility is above safety and convenience
+- Debugging and testing
+- Building specific OData protocol based API yourself
+- Integrating OData capabilities and awareness into your project
+
+:::tip
+The generic client is capable of both OData V2 and V4 protocols.
+The client is made aware about which version to use in requests via a dedicated parameter.
+:::
+
+## Basic API Usage
+
+### Creating Requests
+
+Requests are represented by dedicated request classes for each operation.
+For example to read a collection of entities use:
+
+```java
+StructuredQuery query = StructuredQuery.onEntity("A_Entity", ODataProtocol.V4);
+new ODataRequestRead("/path/to/service", query);
+```
+
+:::tip
+Queries can be created conveniently as described in [Building Queries below](#building-queries).
+:::
+
+**Other Operations:**
+
+```txt
+ODataRequestRead
+ODataRequestReadByKey
+ODataRequestCreate
+ODataRequestUpdate
+ODataRequestDelete
+ODataRequestFunction
+ODataRequestAction
+```
+
+:::note
+
+What used to be function imports in OData V2 have been split into functions and actions in the OData V4 standard.
+The above classes adopt the OData V4 notion.
+To perform V2 function imports leverage the function class in case the operation should use HTTP GET.
+If instead the operation should use POST, use the action class.
+
+:::
+
+### Evaluating Responses
+
+Requests can be executed by supplying an HTTP client to the `execute` method.
+You can obtain a client from any given destination as follows:
+
+```java
+final HttpClient client = HttpClientAccessor.getHttpClient(destination);
+// perform the HTTP operation:
+final ODataRequestResultGeneric result = request.execute(client);
+```
+
+Within `execute` the SAP Cloud SDK will perform a health check on the response.
+In case of a status code greater or equal to 400 an exception will be thrown.
+
+The result class allows for parsing the result into a specific Java type, getting metadata or even the raw HTTP response.
+For example, you can parse the response body into a `SalesOrder` or a list of sales orders as follows:
+
+```java
+SalesOrder order = result.as(SalesOrder.class);
+Collection<SalesOrder> order = result.asList(SalesOrder.class);
+```
+
+### Building Queries
+
+Queries can be build with dedicated, fluent builder classes.
+Use the `StructuredQuery` class to create a query:
+
+```java
+StructuredQuery query = StructuredQuery.onEntity("Movies", ODataProtocol.V4);
+// method names correspond to the OData query parameters $select, $filter, etc.
+query.select("Field A", "Field B");
+// obtain the encoded URL string representation:
+String encodedQuery = query.getEncodedQueryString();
+```
+
+For filters there is a dedicated API to build filter expressions:
+
+```java
+FieldUntyped fieldA = FieldReference.of("Field A")
+FieldUntyped fieldB = FieldReference.of("Field B")
+
+ValueBoolean expression = fieldA.equalTo("foo").and(fieldB.greaterThan(42));
+
+// add the expression as filter to a query:
+query.filter(expression);
+```
+
+## Cookbook - Generic OData Client
+
+We collect popular use-cases and scenarios leveraging the Generic OData Client in this cookbook section.
+
+### Handling OData Delta Token
+
+[OData v4 specification](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_RequestingChanges) provides capabilities to return only a delta between your last and ongoing request.
+For example, if your previous request loaded information from the service which continues to be updated with new records.
+Then with your next request you can ask to provide you only with the difference between what you've already loaded and current records on the service side.
+For that, you can leverage `$deltatokens` query parameter.
+
+We do not provide convenience API for delta tokens in our type-safe client.
+But you can leverage generic OData client to fetch the delta token from the `response` as in the code snippet below:
+
+```java
+ODataRequestResultGeneric response = request.execute(httpClient);
+// obtain delta token and add it to the next request, if present
+response.getDeltaLink()
+        .flatMap(ODataUriFactory::extractDeltaToken)
+        .peek(token -> deltaRequest.addQueryParameter("$deltatoken", token));
+```
+
+### Adding Trailing Slash to the Service Path
+
+By default, the SAP Cloud SDK strips all trailing slashes from a resource path.
+It's a standard behavior and works for almost every productively available services.
+Sometimes, however, services might complain or even fail if a path doesn't end with a slash `/`.
+
+- `https://host/service-path/resource-path/?$filter...` - works
+- `https://host/service-path/resource-path?$filter..` - doesn't work (default URI composition strategy in the SAP Cloud SDK)
+
+To work around this situation you can use the generic OData client:
+
+```java
+
+ODataRequestRead request = new ODataRequestRead("/service-path/resource-path/", "", "$filter=...", ODataProtocol.V2)
+// produces an URI like this: /service-path/resource-path/?$filter=...
+
+HttpClient client = HttpClientAccessor.getHttpClient(destination);
+ODataRequestResultGeneric result = request.execute(client);
+
+```
+
+### Fetching Raw Stream Data From /$value Endpoint
+
+You can get `fileStream` and `responseHeaders` in a single request by using the low-level Generic OData Client.
+Let's take this dummy OData request as an example: `/FileService/FileCollection(id='abc')/$value?foo=bar`
+
+The corresponding code to fetch the raw file's content will look like this:
+
+```java
+
+HttpDestination destination;
+
+ODataEntityKey entityKey = new ODataEntityKey(ODataProtocol.V2).addKeyProperty("id", "abc")
+ODataResourcePath resource = ODataResourcePath.of("FileCollection", entityKey).addSegment("$value");
+ODataRequestReadByKey request = new ODataRequestReadByKey("FileService", resource, "?foo=bar", ODataProtocol.V2);
+
+ODataRequestResultGeneric result = request.execute(HttpClientAccessor.getHttpClient(destination));
+HttpResponse httpResponse = result.getHttpResponse();
+Header[] responseHeaders = httpResponse.getAllHeaders();
+try( InputStream fileStream = httpResponse.getEntity().getContent(); ) {
+  // do thing
+}
+
+```
+
+Alternatively you can run the HTTP request yourself:
+
+```java
+
+HttpDestination destination;
+
+HttpClient httpClient = HttpClientAccessor.getHttpClient(destination);
+HttpResponse httpResponse = httpClient.execute(new HttpGet("/FileService/FileCollection(id='abc')/$value"));
+Header[] responseHeaders = httpResponse.getAllHeaders();
+try( InputStream fileStream = httpResponse.getEntity().getContent(); ) {
+  // do thing
+}
+
+```
+
+### OData v2 Batch Read Request
+
+Let's see an example of how to use the generic OData client for batch requests for OData v2.
+
+In the code snippet below we:
+
+1. Prepare an instance of `HttpClient` that will be used to execute the HTTP request.
+1. Initialize a generic OData Batch request with OData service path and protocol version.
+1. Build a read request for an OData entity collection and add it to the Batch request object.
+1. Execute the Batch request.
+1. Access the Batch response and fetch the list of fields from OData entities, that matched the applied read request.
+
+```java
+HttpDestination destination;
+String servicePath = "/sap/opu/odata/sap/<SERVICE_PATH>";
+String entityName = "EntityCollectionName";
+HttpClient httpClient = HttpClientAccessor.getHttpClient(destination);
+
+// instantiate custom OData V2 batch request
+ODataRequestBatch requestBatch = new ODataRequestBatch(servicePath, ODataProtocol.V2);
+
+// instantiate custom OData V2 read request
+StructuredQuery structuredQuery = StructuredQuery.onEntity(entityName, ODataProtocol.V2);
+structuredQuery.select("Field1", "Field2", "Field3");
+structuredQuery.filter(FieldReference.of("Field4").equalTo("FooBar"));
+String encodedQuery = structuredQuery.getEncodedQueryString();
+ODataRequestRead requestRead = new ODataRequestRead(servicePath, entityName, encodedQuery, ODataProtocol.V2);
+
+// add read request to batch
+requestBatch.addRead(requestRead);
+
+// execute the batch request
+ODataRequestResultMultipartGeneric batchResult = requestBatch.execute(httpClient);
+
+// extract information from batch response, by referring to the individual OData request reference
+ODataRequestResultGeneric queryResult = batchResult.getResult(requestRead);
+List<Map<String, Object>> listOfEntityFields = queryResult.asListOfMaps();
+```
+
+This example is a great demonstration of how you can work around certain limitations of a type-safe client aka VDM, tackle advanced OData features, or even take care of misbehaving servers or OData standard deviations.
+
+### Call OData v4 Bound Functions and Actions
+
+Bound function and actions were freshly introduced in OData v4 specification.
+Below is a generic client example:
+
+```java
+// this code will build the following URL:
+// "/service/Entity(key1='foo%2Fbar',key2=123)/Model.Function(param1='foo%2Fbar',param2=123)"
+
+ODataEntityKey key = new ODataEntityKey(ODataProtocol.V4)
+    .addKeyProperty("key1", "foo/bar")
+    .addKeyProperty("key2", 123);
+
+ODataFunctionParameters  params = new ODataFunctionParameters(ODataProtocol.V4)
+    .addKeyProperty("param1", "foo/bar")
+    .addKeyProperty("param2", 123);
+
+ODataResourcePath functionPath =
+    new ODataResourcePath()
+        .addSegment("Entity", key)
+        .addSegment("Model.Function", params);
+
+ODataRequestFunction request =
+    new ODataRequestFunction("/service", functionPath, null, ODataProtocol.V4);
+```
+
+This is essentially what happens under the hood when you are using the generated type-safe client code.

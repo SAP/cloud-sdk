@@ -1,0 +1,273 @@
+---
+id: caching
+title: Caching Capabilities
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Caching
+description: How to use SAP Cloud SDK for Java to introduce caching into your application.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - caching
+  - cache
+  - JCache
+  - CacheConfiguration
+---
+
+Caching may improve your application's performance and responsiveness to your consumers.
+The SAP Cloud SDK for Java provides abstractions for caching that make it easy to integrate caching into an application with almost no configuration overhead.
+Also, it integrates with other SAP Cloud SDK features and most importantly is tenant aware out of the box.
+The following article describes how to enable caching with the SAP Cloud SDK for Java in your application.
+
+## Using the Resilience API for Caching
+
+### Adding a JCache Provider
+
+The SAP Cloud SDK relies on the `JCache` SPI to create and manage cache instances.
+`JCache` is a [Service Provider Interface](https://www.baeldung.com/java-spi) which requires an implementation of this interface to be present at runtime.
+Be sure that such an implementation is present on your `classpath`.
+We recommend [Caffeine](https://github.com/ben-manes/caffeine) which you can use by adding the below dependency to your application `pom.xml`:
+
+```
+<dependency>
+    <groupId>com.github.ben-manes.caffeine</groupId>
+    <artifactId>jcache</artifactId>
+    <version>2.8.5</version>
+    <scope>runtime</scope>
+</dependency>
+```
+
+:::caution
+Caching only works when a service provider or implementation for JCache is available at runtime.
+Otherwise, you will face a runtime exception.
+:::
+
+### Creating a Cache Configuration
+
+As described in our [Resilience section](https://sap.github.io/cloud-sdk/docs/java/features/resilience/resilience) the SAP Cloud SDK allows you to run any code in the context of one or more resilience patterns.
+Caching is also a resilience pattern, so you can leverage the same API to build and apply a `CacheConfiguration`.
+
+```java
+CacheConfiguration cacheConfig = CacheConfiguration
+        .of(Duration.ofDays(1))
+        .withoutParameters();
+```
+
+This builds a simple cache that will store values for one day and does not require any additional parameters.
+The builder pattern requires at least a duration and if the cache requires parameters.
+The configuration options are explained further below.
+
+This configuration must then be added to a `ResilienceConfiguration`:
+
+```java
+ResilienceConfiguration resilienceConfig = ResilienceConfiguration
+        .empty(resilienceId)
+        .cacheConfiguration(cacheConfig);
+```
+
+The above creates an otherwise empty `ResilienceConfiguration` and thus only enables caching.
+Of course, you may use other resilience patterns as well.
+
+### Applying a Cache Configuration
+
+Since the cache configuration is part of a resilience configuration it is applied in the same way:
+
+```java
+ResilienceDecorator.executeSupplier(() -> operation(), resilienceConfig);
+ResilienceDecorator.executeSupplier(() -> operation(), resilienceConfig);
+```
+
+The above code will invoke `operation()` once since the result of the first invocation will be cached.
+Only if the first call fails the second one would still happen.
+
+Note that a specific cache instance is not yet created when the configuration is created.
+Instead, it is only created when an operation is decorated or executed by the `ResilienceDecorator`.
+
+:::tip
+The cache functionality is tenant aware by default.
+That means that by default cache entries created under a specific tenant will not be shared with other tenants.
+See the section on [multi tenancy](#multi-tenancy) below.
+:::
+
+## Configuring the Caching Strategy
+
+The cache configuration offers 3 options:
+
+1. Cache Duration (Required)
+1. Expiration Strategy (Optional)
+1. Parameters (Optional)
+
+Each cache configuration must at least specify a duration after which a cache expires.
+How this timeout is applied can be configured through the [Expiration Strategy](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/CacheExpirationStrategy.html).
+By default, a cache entry is cleared once the configured duration has passed since the entry was created.
+
+Finally, parameters can be listed that further refine the caching functionality.
+Parameter values will be attached to the cache key.
+When the cache is accessed, only entries with matching parameter values will be returned.
+
+```java
+// Set a parameter value
+cacheConfig = CacheConfiguration
+        .of(Duration.ofDays(1))
+        .withParameters("value1");
+resilienceConfig.cacheConfiguration(cacheConfig);
+
+// Cache is empty, so this will be a cache miss
+ResilienceDecorator.executeSupplier(() -> operation(), resilienceConfig);
+// Cache is hit, cached value will be returned
+ResilienceDecorator.executeSupplier(() -> operation(), resilienceConfig);
+
+// Set a different parameter value
+cacheConfig = CacheConfiguration
+        .of(Duration.ofDays(1))
+        .withParameters("value2");
+resilienceConfig.cacheConfiguration(cacheConfig);
+
+// Cache is not hit because the existing cache entry has a different parameter value
+ResilienceDecorator.executeSupplier(() -> operation(), resilienceConfig);
+
+cacheConfig = CacheConfiguration
+        .of(Duration.ofDays(1))
+        .withParameters("value1");
+resilienceConfig.cacheConfiguration(cacheConfig);
+
+// The cached value from the very first invocation is returned as the parameter is "value1" again
+ResilienceDecorator.executeSupplier(() -> operation(), resilienceConfig);
+```
+
+You can use parameters to separate cache entries as you see fit.
+Please note that there is no need to do this to achieve multi-tenancy.
+The SAP Cloud SDK is tenant aware by default as described below.
+
+### Multi Tenancy
+
+By default, this caching functionality is tenant aware.
+If a tenant is available the SAP Cloud SDK will create cache entries only for that specific tenant.
+Other tenants will not see the value cached for that specific tenant.
+
+For this example assume that `config` is a `ResilienceConfiguration` that has a `CacheConfiguration` in place:
+
+```java
+cachedOperation = ResilienceDecorator.decorateSupplier(() -> operation(), config)
+
+// cachedOperation() will be evaluated
+TenantAccessor.executeWithTenant(tenantA, () -> cachedOperation());
+// cached value will be taken
+TenantAccessor.executeWithTenant(tenantA, () -> cachedOperation());
+
+// cachedOperation() will be evaluated because the cached value is only accessible for tenantA
+TenantAccessor.executeWithTenant(tenantB, () -> cachedOperation());
+// cached value for tenantB will be taken
+TenantAccessor.executeWithTenant(tenantB, () -> cachedOperation());
+```
+
+:::danger Caution
+
+The `executeWith...()` methods depicted above are currently supported only when using the default `Facade` (e.g. `DefaultTenantFacade`) implementations.
+This is an issue especially when using the CAP integration dependency `cds-integration-cloud-sdk`.
+To still switch the isolation context, please refer to [the CAP documentation](https://cap.cloud.sap/docs/java/request-contexts#defining-requestcontext).
+
+:::
+
+You can configure this isolation via the isolation mode of the resilience configuration.
+Set the isolation mode to `NO_ISOLATION` to disable tenant aware caching.
+See the section on isolation levels under [Resilience](https://sap.github.io/cloud-sdk/docs/java/features/resilience/resilience#multi-tenancy) for more details.
+
+### Removing Cache Entries Manually
+
+The SAP Cloud SDK offers different possibilities to manually remove cached entries.
+First, you may remove individual cache entries by:
+
+```java
+// respect tenant/principal and parameter isolation
+ResilienceDecorator.clearCache(resilienceConfig);
+```
+
+This operation is implicitly tenant-aware/principal-aware and also considers parameters defined in the `CacheConfiguration` when choosing which entries to remove.
+
+Furthermore, should you need to remove all entries from a cache, you may use:
+
+```java
+// disregards tenant/principal and parameter isolation
+ResilienceDecorator.clearAllCacheEntries(resilienceConfig);
+```
+
+:::danger Warning
+
+This operation is intended to delete **all** cache entries associated with the given `CacheConfiguration`.
+It intentionally ignores the isolation mode and, in consequence, affects all tenants and principals.
+
+:::
+
+#### Precise Control Over Cache Entries via `CacheFilter`
+
+If you need fine-grained control over which cache entries to clear, you may create your custom `CacheFilter`.
+
+```java
+// CacheFilter which matches all cache entries belonging to tenant "tenant1"
+CacheFilter tenantFilter = ( configuration, cacheKey, cacheEntry ) -> cacheKey.getTenantId().isDefined() && cacheKey.getTenantId().get().equals("tenant1");
+
+// clears all cache entries which match the provided CacheFilter, in this example all cache entries for "tenant1"
+ResilienceDecorator.clearCache(resilienceConfig, tenantFilter);
+```
+
+You can even combine multiple `CacheFilter` instances for the cache clearing:
+
+```java
+// CacheFilter which matches all cache entries belonging to tenant "tenant1"
+CacheFilter tenantFilter = ( configuration, cacheKey, cacheEntry ) -> cacheKey.getTenantId().isDefined() && cacheKey.getTenantId().get().equals("tenant1");
+
+// CacheFilter which matches all cache entries belonging to principal "principal1"
+CacheFilter principalFilter = ( configuration, cacheKey, cacheEntry ) -> cacheKey.getPrincipalId().isDefined() && cacheKey.getPrincipalId().get().equals("principal1");
+
+// Combining two filters with CacheFilter.and(...) to a conjunction
+CacheFilter combinedAndFilter = CacheFilter.and(tenantFilter, principalFilter);
+
+// Combining two filters with CacheFilter.or(...) to a disjunction
+CacheFilter combinedOrFilter = CacheFilter.or(tenantFilter, principalFilter);
+
+// clears all cache entries which match the provided CacheFilter instance
+ResilienceDecorator.clearCache(resilienceConfig, combinedAndFilter);
+```
+
+This approach disregards the built-in tenant/principal and parameter isolation and solely considers the provided cache filters.
+
+The SAP Cloud SDK provides prepared cache filters you can reuse for matching on tenant, principal or parameters.
+
+```java
+CacheFilter matchesCurrentParameters = CacheFilter.keyMatchesParameters();
+
+CacheFilter matchesCurrentTenant = CacheFilter.keyMatchesTenant();
+
+CacheFilter matchesCurrentPrincipal = CacheFilter.keyMatchesPrincipal();
+```
+
+Note that these built-in cache filters determine the tenant, the principal and the parameters to match respecting the `ResilienceConfiguration` of the cache.
+
+Additionally, you can create cache filters for a certain tenant, principal or certain parameters as well.
+
+```java
+Iterable<Object> myParameters = obtainParameters();
+CacheFilter matchesMyParameters = CacheFilter.keyMatchesParameters(parameters);
+
+Tenant myTenant = obtainTenant();
+CacheFilter matchesMytenant = CacheFilter.keyMatchesTenant(myTenant);
+
+Principal myPrincipal = obtainPrincipal();
+CacheFilter matchesMyPrincipal = CacheFilter.keyMatchesPrincipal(myPrincipal);
+```
+
+## Advanced Cache Manipulation
+
+To get hold of the created cache instance and to use it for advanced operations like for e.g. registering [event listeners](https://www.baeldung.com/jcache#listeners) you can use JCache API.
+
+```java
+final Cache<SomeCacheKey, SomeResult> cache = Caching.getCachingProvider()
+                                                     .getCacheManager()
+                                                     .getCache(resilienceConfig.identifier()) //Returns the cache created using the resilienceId passed
+                                                     .registerCacheEntryListener(SimpleCacheEntryListener); //Registers the event listener
+```
+
+`SimpleCacheEntryListener` is a class that implements the interfaces of the required events with respect to cache defined in [`EventType`](https://javadoc.io/doc/javax.cache/cache-api/latest/javax/cache/event/EventType.html).
+Note that the identifier of the resilience configuration is also the identifier of the cache associated with it.
