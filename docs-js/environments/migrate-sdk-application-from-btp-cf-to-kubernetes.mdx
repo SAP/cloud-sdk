@@ -31,6 +31,7 @@ The samples repository contains the [Kubernetes application](https://github.com/
   ```bash
   kubectl create secret docker-registry regcred --docker-server=YOUR_DOCKER_SERVER --docker-username=YOUR_DOCKER_USERNAME --docker-password=YOUR_DOCKER_PASSWORD --docker-email=YOUR_DOCKER_EMAIL
   ```
+
   :::
 
 - Use [Gardener](https://dashboard.garden.canary.k8s.ondemand.com/) for a Kubernetes Cluster with a load balancer enabled
@@ -39,6 +40,7 @@ The samples repository contains the [Kubernetes application](https://github.com/
   We also recommend to have an **Ingress** set up that exposes the application to the internet.
 
   :::
+
 - [`helm`](https://helm.sh/docs/intro/install/), a package manager for Kubernetes
 - The [SAP BTP Service Operator](https://github.com/SAP/sap-btp-service-operator/) installed in the Cluster
   :::info
@@ -249,7 +251,7 @@ Deploy your application by running the command:
 
 `kubectl apply -f deployment.yml`
 
-:::note 
+:::note
 The `regcred` secret used by the `imagePullSecrets` config contains your registry credentials that you bound as a secret.
 :::
 
@@ -366,70 +368,70 @@ For that, create a [simple application](https://github.com/SAP-samples/cloud-sdk
 
 2. Create a Kubernetes Deployment and a Kubernetes Service to run and expose the application router.
 
-  ```yaml title="approuter/deployment.yml"
-  apiVersion: apps/v1
-  kind: Deployment
-  metadata:
-    name: approuter
-    labels:
+```yaml title="approuter/deployment.yml"
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: approuter
+  labels:
+    app: approuter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
       app: approuter
-  spec:
-    replicas: 1
-    selector:
-      matchLabels:
+  template:
+    metadata:
+      labels:
         app: approuter
-    template:
-      metadata:
-        labels:
-          app: approuter
-      spec:
-        containers:
-          - image: docker-cloudsdk.docker.repositories.sap.ondemand.com/k8s-approuter:latest
-            resources:
-              requests:
-                memory: '256Mi'
-                cpu: '250m'
-              limits:
-                memory: '512Mi'
-                cpu: '500m'
-            name: approuter
-            volumeMounts:
-              - name: xsuaa-volume
-                mountPath: '/etc/secrets/sapcp/xsuaa/operator-xsuaa-service'
-                readOnly: true
-            env:
-              - name: PORT
-                value: '5000'
-              - name: destinations
-                value: '[{"name":"backend", "url":"http://sdkjs-e2e-svc:8080/", "forwardAuthToken": true}]'
-        imagePullSecrets:
-          - name: regcred
-        volumes:
-          - name: xsuaa-volume
-            secret:
-              secretName: operator-xsuaa-service
-  ```
+    spec:
+      containers:
+        - image: docker-cloudsdk.docker.repositories.sap.ondemand.com/k8s-approuter:latest
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '250m'
+            limits:
+              memory: '512Mi'
+              cpu: '500m'
+          name: approuter
+          volumeMounts:
+            - name: xsuaa-volume
+              mountPath: '/etc/secrets/sapcp/xsuaa/operator-xsuaa-service'
+              readOnly: true
+          env:
+            - name: PORT
+              value: '5000'
+            - name: destinations
+              value: '[{"name":"backend", "url":"http://sdkjs-e2e-svc:8080/", "forwardAuthToken": true}]'
+      imagePullSecrets:
+        - name: regcred
+      volumes:
+        - name: xsuaa-volume
+          secret:
+            secretName: operator-xsuaa-service
+```
 
-  It references the application running in your cluster.
-  Instead of an Ingress endpoint, it directly points at the Service.
-  This is possible because the application router runs in your cluster and can therefore use the Kubernetes native service discovery.
+It references the application running in your cluster.
+Instead of an Ingress endpoint, it directly points at the Service.
+This is possible because the application router runs in your cluster and can therefore use the Kubernetes native service discovery.
 
-  The Service configuration:
+The Service configuration:
 
-  ```yaml title="approuter/approuter-service.yml"
-  apiVersion: v1
-  kind: Service
-  metadata:
-    name: approuter-svc
-    labels:
-      app: approuter
-  spec:
-    ports:
-      - port: 8080
-        targetPort: 5000
-    selector:
-      app: approuter
-  ```
+```yaml title="approuter/approuter-service.yml"
+apiVersion: v1
+kind: Service
+metadata:
+  name: approuter-svc
+  labels:
+    app: approuter
+spec:
+  ports:
+    - port: 8080
+      targetPort: 5000
+  selector:
+    app: approuter
+```
 
 4. Finally, configure the Ingress to create a session cookie that is consumed by the application router and point it at the `approuter` Service.
    To secure your application, remove all previous routes that pointed at your application's endpoints and only expose them through the application router.
@@ -439,34 +441,34 @@ For that, create a [simple application](https://github.com/SAP-samples/cloud-sdk
    Depending on the Ingress controller, you have to use different annotations.
    An Ingress that only exposes the application router and is using the annotations is shown in the following example:
 
-  ```yaml title="ingress.yml"
-  apiVersion: networking.k8s.io/v1
-  kind: Ingress
-  metadata:
-    name: sdkjs-e2e-ingress
-    annotations:
-      nginx.ingress.kubernetes.io/affinity: 'cookie'
-      nginx.ingress.kubernetes.io/proxy-read-timeout: '600'
-      nginx.ingress.kubernetes.io/session-cookie-name: 'JSESSIONID'
-      cert.gardener.cloud/purpose: managed
-  spec:
-    tls:
-      - hosts:
-          - cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
-          - e2e.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
-        secretName: secret-tls
-    rules:
-      - host: e2e.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
-        http:
-          paths:
-            - path: /
-              pathType: Prefix
-              backend:
-                service:
-                  name: approuter-svc
-                  port:
-                    number: 8080
-  ```
+```yaml title="ingress.yml"
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sdkjs-e2e-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/affinity: 'cookie'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '600'
+    nginx.ingress.kubernetes.io/session-cookie-name: 'JSESSIONID'
+    cert.gardener.cloud/purpose: managed
+spec:
+  tls:
+    - hosts:
+        - cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+        - e2e.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+      secretName: secret-tls
+  rules:
+    - host: e2e.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: approuter-svc
+                port:
+                  number: 8080
+```
 
 ## Principal Propagation
 
@@ -579,79 +581,79 @@ This is a requirement of the connectivity proxy since it can't consume the data 
    - your private key
    - your public certificate
 
-  The private key and public certificate are also stored in your TLS secret, use the previous code snippet to retrieve it from the secret and save them in separate files.
-  Finally, download the CA certificate with the following line:
+The private key and public certificate are also stored in your TLS secret, use the previous code snippet to retrieve it from the secret and save them in separate files.
+Finally, download the CA certificate with the following line:
 
-  ```bash
-  curl https://connectivity.cf.sap.hana.ondemand.com/api/v1/CAs/signing -o connectivity_ca.crt
-  ```
+```bash
+curl https://connectivity.cf.sap.hana.ondemand.com/api/v1/CAs/signing -o connectivity_ca.crt
+```
 
-  Now you can create the secret with this command:
+Now you can create the secret with this command:
 
-  ```bash
-  kubectl create secret generic connectivity-tls --from-file=ca.crt=YOUR_CONNECTIVITY_CA_KEY.crt --from-file=tls.key=YOUR_PRIVATE_KEY.key --from-file=tls.crt=YOUR_PUBLIC_KEY.crt --namespace default
-  ```
+```bash
+kubectl create secret generic connectivity-tls --from-file=ca.crt=YOUR_CONNECTIVITY_CA_KEY.crt --from-file=tls.key=YOUR_PRIVATE_KEY.key --from-file=tls.crt=YOUR_PUBLIC_KEY.crt --namespace default
+```
 
 5. Create a secret that contains credentials to access the docker image which the connectivity proxy is using.
 
 6. Create a `values.yaml` file containing the configuration that suits your desired operational mode of the connectivity proxy, for the available operational modes refer to the [documentation](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/f3c1ef45db77489c8d039acc9530358f.html).
    For the specific content of the configuration refer to the [configuration guide](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/eaa8204fc7484df984b3c321624827ff.html).
 
-  Here is an example for the "single tenant in a trusted environment" mode:
+Here is an example for the "single tenant in a trusted environment" mode:
 
-  ```yaml
-  deployment:
-    replicaCount: 1
-    image:
-      pullSecret: 'proxy-secret'
-  ingress:
-    tls:
-      secretName: 'connectivity-tls'
-  config:
-    integration:
-      auditlog:
-        mode: console
-      connectivityService:
-        serviceCredentialsKey: 'connectivity_key'
-    tenantMode: dedicated
-    subaccountId: 'YOUR_SUBACCOUNT_ID'
-    subaccountSubdomain: 'YOUR_SUBACCOUNT_SUBDOMAIN'
-    servers:
-      businessDataTunnel:
-        externalHost: 'connectivitytunnel.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com'
-        externalPort: 443
-      proxy:
-        rfcAndLdap:
-          enabled: true
-          enableProxyAuthorization: false
-        http:
-          enabled: true
-          enableProxyAuthorization: false
-          enableRequestTracing: true
-        socks5:
-          enableProxyAuthorization: false
-  ```
+```yaml
+deployment:
+  replicaCount: 1
+  image:
+    pullSecret: 'proxy-secret'
+ingress:
+  tls:
+    secretName: 'connectivity-tls'
+config:
+  integration:
+    auditlog:
+      mode: console
+    connectivityService:
+      serviceCredentialsKey: 'connectivity_key'
+  tenantMode: dedicated
+  subaccountId: 'YOUR_SUBACCOUNT_ID'
+  subaccountSubdomain: 'YOUR_SUBACCOUNT_SUBDOMAIN'
+  servers:
+    businessDataTunnel:
+      externalHost: 'connectivitytunnel.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com'
+      externalPort: 443
+    proxy:
+      rfcAndLdap:
+        enabled: true
+        enableProxyAuthorization: false
+      http:
+        enabled: true
+        enableProxyAuthorization: false
+        enableRequestTracing: true
+      socks5:
+        enableProxyAuthorization: false
+```
 
 7. For your application to reach on-premise destinations, it needs to provide the proxy settings and the token URL.
    You have to add them manually to the `secret` containing the service binding.
 
-  To do this, use the following code snippet:
+To do this, use the following code snippet:
 
-  ```bash
-  kubectl edit secret YOUR_BINDING
-  ```
+```bash
+kubectl edit secret YOUR_BINDING
+```
 
-  Now you have to add the fields `onpremise_proxy_host` and `onpremise_proxy_port` and `url`.
-  The host has the pattern `connectivity-proxy.YOUR_NAMESPACE` which in this case is `connectivity-proxy.default`.
-  The default port is `20003`.
-  The `url` field should contain the same value as `token_service_url`.
-  Be aware that the values have to be encoded in base64, for example:
+Now you have to add the fields `onpremise_proxy_host` and `onpremise_proxy_port` and `url`.
+The host has the pattern `connectivity-proxy.YOUR_NAMESPACE` which in this case is `connectivity-proxy.default`.
+The default port is `20003`.
+The `url` field should contain the same value as `token_service_url`.
+Be aware that the values have to be encoded in base64, for example:
 
-  ```yaml
-  onpremise_proxy_host: Y29ubmVjdGl2aXR5LXByb3h5LmRlZmF1bHQ=
-  onpremise_proxy_port: MjAwMDM=
-  url: aHR0cHM6Ly9teS1hcGkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tCg==
-  ```
+```yaml
+onpremise_proxy_host: Y29ubmVjdGl2aXR5LXByb3h5LmRlZmF1bHQ=
+onpremise_proxy_port: MjAwMDM=
+url: aHR0cHM6Ly9teS1hcGkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tCg==
+```
 
 8. Finally, add the binding to your `deployment.yml`, the same way you would add any other binding.
 
