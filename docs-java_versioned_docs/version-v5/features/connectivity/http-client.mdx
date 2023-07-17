@@ -154,10 +154,10 @@ HttpClient destinationClient = factory.createHttpClient(destination);
 The static factory method (`HttpClient5Factory.newDefault(Timeout, int, int)`) provides the following customization options:
 
 1. `Timeout timeout` - The timeout that should be used by `HttpClient` instances created by the returned `HttpClient5Factory`.
-  This timeout applies to the following concerns:
-    * Connection timeout: The time to establish the connection with the remote host.
-    * Socket timeout: The time to wait for data – after the connection was established; maximum time of inactivity between two data packets.
-    * Connection Request timeout: The time to wait when requesting a connection lease from the underlying [PoolingHttpClientConnectionManager](https://hc.apache.org/httpcomponents-client-5.1.x/current/httpclient5/apidocs/org/apache/hc/client5/http/impl/io/PoolingHttpClientConnectionManager.html).
+   This timeout applies to the following concerns:
+   - Connection timeout: The time to establish the connection with the remote host.
+   - Socket timeout: The time to wait for data – after the connection was established; maximum time of inactivity between two data packets.
+   - Connection Request timeout: The time to wait when requesting a connection lease from the underlying [PoolingHttpClientConnectionManager](https://hc.apache.org/httpcomponents-client-5.1.x/current/httpclient5/apidocs/org/apache/hc/client5/http/impl/io/PoolingHttpClientConnectionManager.html).
 2. `int maxTotalConnections` - The maximum number of parallel connections that can be established with a `HttpClient` created by the returned `HttpClient5Factory`.
 3. `int maxConnectionsPerRoute` - The maximum number of parallel connections **per route** (e.g. per remote host) that can be established with a `HttpClient` created by the returned `HttpClient5Factory`.
 
