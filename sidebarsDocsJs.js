@@ -51,10 +51,14 @@ module.exports = {
     },
     {
       type: 'category',
+      label: 'Environments',
+      items: ['environments/kubernetes']
+    },
+    {
+      type: 'category',
       label: 'Guides',
       items: [
         'guides/upgrade-to-version-3',
-        'guides/kubernetes',
         'guides/bas',
         'guides/browser',
         'guides/trust-and-keystores',

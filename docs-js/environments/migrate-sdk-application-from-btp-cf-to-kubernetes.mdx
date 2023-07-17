@@ -1,0 +1,691 @@
+---
+id: kubernetes
+title: Migrate your App from SAP BTP CF to Kubernetes with the SAP Cloud SDK for JavaScript
+sidebar_label: Kubernetes with SAP Gardener
+description: Learn how to migrate your application from SAP BTP Cloud Foundry to Kubernetes with the SAP Cloud SDK for JavaScript
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+  - kubernetes
+---
+
+# Migrate a Cloud Foundry Application to a Kubernetes Cluster
+
+This guide details the steps necessary to migrate an application from Cloud Foundry to a Gardener-based Kubernetes cluster.
+The samples repository contains the [Kubernetes application](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/k8s-sample-application) that will be used in this guide.
+
+### Prerequisites
+
+- [`kubectl`](https://kubernetes.io/docs/tasks/tools/)
+- [`docker`](https://docs.docker.com/get-docker/) and a publicly reachable Docker repository
+  :::info
+  This guide assumes you have [Docker](https://www.docker.com/) installed on your local machine and a publicly accessible **Docker repository** where you can store images.
+
+  A Kubernetes cluster uses a secret to authenticate with a container registry to pull an image.
+  For that, you will need to [configure a secret in your cluster](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line):
+
+  ```bash
+  kubectl create secret docker-registry regcred --docker-server=YOUR_DOCKER_SERVER --docker-username=YOUR_DOCKER_USERNAME --docker-password=YOUR_DOCKER_PASSWORD --docker-email=YOUR_DOCKER_EMAIL
+  ```
+  :::
+
+- Use [Gardener](https://dashboard.garden.canary.k8s.ondemand.com/) for a Kubernetes Cluster with a load balancer enabled
+  :::info
+  This guide assumes you have created a cluster via Gardener dashboard and have it set up for cluster access.
+  We also recommend to have an **Ingress** set up that exposes the application to the internet.
+
+  :::
+- [`helm`](https://helm.sh/docs/intro/install/), a package manager for Kubernetes
+- The [SAP BTP Service Operator](https://github.com/SAP/sap-btp-service-operator/) installed in the Cluster
+  :::info
+  For production environments, you need a reliable way of configuring which services are running in your cluster. To achieve that, leverage the SAP BTP Service Operator.
+  This guide assumes you have the SAP BTP Service Operator installed in your cluster.
+  If not, follow the setup instructions [here](https://github.com/SAP/sap-btp-service-operator#setup).
+  :::
+
+### Create and Bind SAP BTP Services
+
+Since the service operator is running in your cluster, you can create services just like you would do in SAP BTP CF, but instead of the SAP BTP cockpit, you'll use YAML service definitions.
+For this guide, we'll assume the application uses two services:
+
+- Destination Service
+- XSUAA Service
+
+#### Bind the Destination Service
+
+1. Create `yaml` files for the destination service instance and binding:
+
+```yaml title="operator-destination-service.yml"
+apiVersion: services.cloud.sap.com/v1alpha1
+kind: ServiceInstance
+metadata:
+  name: operator-destination-service
+spec:
+  serviceOfferingName: destination
+  servicePlanName: lite
+```
+
+```yaml title="operator-destination-binding.yml"
+apiVersion: services.cloud.sap.com/v1alpha1
+kind: ServiceBinding
+metadata:
+  name: operator-destination-service
+spec:
+  serviceInstanceName: operator-destination-service
+```
+
+2. Install the configuration using the commands:
+
+```bash
+kubectl apply -f operator-destination-service.yml
+kubectl apply -f operator-destination-binding.yml
+```
+
+3. Monitor the status via `kubectl describe ServiceInstance operator-destination-service`.
+   This should create a Kubernetes secret named `operator-destination-service`.
+   This secret will contain the actual service binding information.
+
+#### Bind the XSUAA Service
+
+Create `yaml` files for the XSUAA service instance and binding:
+
+```yaml title="operator-xsuaa-service.yml"
+apiVersion: services.cloud.sap.com/v1alpha1
+kind: ServiceInstance
+metadata:
+  name: operator-xsuaa-service
+spec:
+  serviceOfferingName: xsuaa
+  servicePlanName: application
+  parameters:
+    xsappname: kubernetes-xsuaa
+    tenant-mode: shared
+    scopes:
+      - name: '$XSAPPNAME.Callback'
+        description: 'With this scope set, the callbacks for tenant onboarding, offboarding and getDependencies can be called.'
+        grant-as-authority-to-apps:
+          - $XSAPPNAME(application,sap-provisioning,tenant-onboarding)
+    role-templates:
+      - name: TOKEN_EXCHANGE
+        description: Token exchange
+        scope-references:
+          - uaa.user
+      - name: 'MultitenancyCallbackRoleTemplate'
+        description: 'Call callback-services of applications'
+        scope-references:
+          - '$XSAPPNAME.Callback'
+    oauth2-configuration:
+      grant-types:
+        - authorization_code
+        - client_credentials
+        - password
+        - refresh_token
+        - urn:ietf:params:oauth:grant-type:saml2-bearer
+        - user_token
+        - client_x509
+        - urn:ietf:params:oauth:grant-type:jwt-bearer
+      # Allowed redirect URIs in case you want to use an approuter behind an ingress for user login
+      redirect-uris:
+        - https://*/**
+```
+
+```yaml title="operator-xsuaa-binding.yml"
+apiVersion: services.cloud.sap.com/v1alpha1
+kind: ServiceBinding
+metadata:
+  name: operator-xsuaa-service
+spec:
+  serviceInstanceName: operator-xsuaa-service
+```
+
+2. Repeat steps 2 and 3 from the previous section for the XSUAA service.
+
+We will see how to mount the created secrets into the file system of the application in the [deployment configuration](#create-a-deployment-configuration) step.
+
+:::info
+Notice that the `metadata -> name` property can be anything you want.
+In this case, it's `operator-destination-service`.
+Make sure it matches exactly to the `spec -> serviceInstanceName` field in the binding.
+:::
+
+## Deploy to Kubernetes
+
+We'll look at two things in this section:
+
+1. How to deploy your application to Kubernetes.
+2. How to consume the bound services in your application from within the cluster.
+
+### Containerize the Application
+
+Kubernetes Pods are running container images.
+You will create a `Dockerfile` defining a container for your application.
+Then it can be deployed to one or more Kubernetes Pods.
+
+```Dockerfile title="Dockerfile"
+FROM node:14-alpine
+
+WORKDIR /workdir
+
+COPY /deployment /workdir
+
+RUN ["npm", "install", "--unsafe-perm"]
+
+EXPOSE 3000
+CMD ["npm", "run", "start:prod"]
+```
+
+Compile and push the image by running:
+
+```bash
+docker build -t <YOUR_REPO>/<YOUR_IMAGE_NAME>:<YOUR_TAG> .
+docker push <YOUR_REPO>/<YOUR_IMAGE_NAME>:<YOUR_TAG>
+```
+
+### Create a Deployment Configuration
+
+Create a `deployment.yml` file that contains the following data:
+
+- resources definition for your application
+- container image and registry secrets (in case your image was pushed to a private repository)
+- service bindings created previously
+
+```yaml title="app/deployment.yml"
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sdkjs-e2e-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sdkjs-e2e
+  template:
+    metadata:
+      labels:
+        app: sdkjs-e2e
+    spec:
+      containers:
+        - name: sdkjs-e2e
+          image: docker-cloudsdk.common.repositories.cloud.sap/k8s-e2e-app:latest
+          resources:
+            requests:
+              memory: '256Mi'
+              cpu: '500m'
+            limits:
+              memory: '512Mi'
+              cpu: '1000m'
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: destination-volume
+              mountPath: '/etc/secrets/sapcp/destination/operator-destination-service'
+              readOnly: true
+            - name: xsuaa-volume
+              mountPath: '/etc/secrets/sapcp/xsuaa/operator-xsuaa-service'
+              readOnly: true
+      imagePullSecrets:
+        - name: regcred
+      volumes:
+        - name: destination-volume
+          secret:
+            secretName: operator-destination-service
+        - name: xsuaa-volume
+          secret:
+            secretName: operator-xsuaa-service
+```
+
+Notice the volumes `destination-volume` and `xsuaa-volume` that reference the secrets (service bindings).
+The volumes are mounted into the file system of your application at a specific path by adding them to the list of `volumeMounts` in the `containers` section of your `deployment.yml` file.
+
+:::info
+The path convention is provided by the [xsenv](https://www.npmjs.com/package/@sap/xsenv) library.
+:::
+
+Deploy your application by running the command:
+
+`kubectl apply -f deployment.yml`
+
+:::note 
+The `regcred` secret used by the `imagePullSecrets` config contains your registry credentials that you bound as a secret.
+:::
+
+### Access Your Application
+
+To access your application you have two options, either you expose it to the internet directly or port-forward to your local machine.
+
+#### Local Connection
+
+Run the command `kubectl port-forward deployment YOUR_DEPLOYMENT :3000` on your local machine to enable port forwarding.
+Your application will listen to port 3000.
+Kubernetes finds an available port on your local machine and forwards port 3000 of your deployment to it.
+Then you'll be able to make a call to your application via a provided link.
+
+#### Internet Facing Connection
+
+:::danger
+Exposing an application this way is good only for testing.
+**Don't use it in production.**
+:::
+
+Run the command below to expose your application to the internet.
+It will use your cluster's IP address and port your application listens on.
+
+`kubectl expose deployment YOUR_DEPLOYMENT --type="LoadBalancer"`
+
+### Configure TLS and Obtain a Domain in SAP Gardener
+
+If you want to expose your cluster under Domain name with TLS, check out the steps below or follow the official Kubernetes [documentation](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/) for a general setup.
+
+:::info **Prerequisite**
+Enable the NGINX Ingress add-on for your SAP Gardener cluster.
+:::
+
+The fastest way to enable TLS and obtain a domain for your application is to create a Service, which contains your Deployment, and an Ingress, which handles the routing.
+In SAP Gardener you can already specify your desired domain and the TLS will be managed for you, more on that later.
+
+Create a Service that contains your Deployment and the port you want to expose as shown in the example below:
+
+```yaml title="app/k8s-e2e-service.yml"
+apiVersion: v1
+kind: Service
+metadata:
+  name: sdkjs-e2e-svc
+spec:
+  selector:
+    app: sdkjs-e2e
+  ports:
+    - port: 8080
+      targetPort: 3000
+```
+
+Check your Shoot cluster's `kubeconfig.yaml` for the configured DNS, which should be located in your Gardener project's dashboard, under the YAML tab.
+It should be a field that looks like this:
+
+```yaml
+spec:
+  dns:
+    domain: cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+```
+
+Since the NGINX Ingress is enabled, all domains have to follow the pattern `*.ingress.YOUR_DNS`, for example:
+
+```yaml
+e2e.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+```
+
+This is how the Ingress configuration file should look like:
+
+```yaml title="ingress.yml"
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sdkjs-e2e-ingress
+  annotations:
+    cert.gardener.cloud/purpose: managed
+spec:
+  tls:
+    - hosts:
+        - cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+        - e2e.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+      secretName: secret-tls
+  rules:
+    - host: e2e.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sdkjs-e2e-svc
+                port:
+                  number: 8080
+```
+
+Notice how Ingress uses the SAP Gardener annotations, which is important so that SAP Gardener manages TLS.
+
+You can see in the `spec.tls.hosts` part that it expose 2 domains.
+The first one is your default domain, limited to a maximum of 64 characters.
+Other domains can be any size, but should follow the Ingress pattern.
+
+The field `secretName: secret-tls` in the configuration implies that all TLS certificates will be saved by SAP Gardener.
+Finally look at how to serve the Service at the root of your subdomain.
+This way the Service is exposed to the internet.
+
+After a short delay, you should be able to access the mentioned domains via a valid TLS.
+
+### Expose Your Application using Approuter
+
+In the next steps, you will configure and deploy an approuter so that only authenticated users can access your application.
+For that, create a [simple application](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/k8s-sample-application/approuter) that uses the @sap/approuter.
+
+1. Package the application router as a docker image so that it can run in Kubernetes, refer to the [documentation](https://blogs.sap.com/2020/04/03/sap-application-router/) for configuration details.
+
+2. Create a Kubernetes Deployment and a Kubernetes Service to run and expose the application router.
+
+  ```yaml title="approuter/deployment.yml"
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: approuter
+    labels:
+      app: approuter
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: approuter
+    template:
+      metadata:
+        labels:
+          app: approuter
+      spec:
+        containers:
+          - image: docker-cloudsdk.docker.repositories.sap.ondemand.com/k8s-approuter:latest
+            resources:
+              requests:
+                memory: '256Mi'
+                cpu: '250m'
+              limits:
+                memory: '512Mi'
+                cpu: '500m'
+            name: approuter
+            volumeMounts:
+              - name: xsuaa-volume
+                mountPath: '/etc/secrets/sapcp/xsuaa/operator-xsuaa-service'
+                readOnly: true
+            env:
+              - name: PORT
+                value: '5000'
+              - name: destinations
+                value: '[{"name":"backend", "url":"http://sdkjs-e2e-svc:8080/", "forwardAuthToken": true}]'
+        imagePullSecrets:
+          - name: regcred
+        volumes:
+          - name: xsuaa-volume
+            secret:
+              secretName: operator-xsuaa-service
+  ```
+
+  It references the application running in your cluster.
+  Instead of an Ingress endpoint, it directly points at the Service.
+  This is possible because the application router runs in your cluster and can therefore use the Kubernetes native service discovery.
+
+  The Service configuration:
+
+  ```yaml title="approuter/approuter-service.yml"
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: approuter-svc
+    labels:
+      app: approuter
+  spec:
+    ports:
+      - port: 8080
+        targetPort: 5000
+    selector:
+      app: approuter
+  ```
+
+4. Finally, configure the Ingress to create a session cookie that is consumed by the application router and point it at the `approuter` Service.
+   To secure your application, remove all previous routes that pointed at your application's endpoints and only expose them through the application router.
+   This way only users authenticated by your Identity Provider can access these endpoints.
+   For that, specify the Service names in your approuter destinations' configuration and remove the rules you previously created for these endpoints in the Ingress.
+
+   Depending on the Ingress controller, you have to use different annotations.
+   An Ingress that only exposes the application router and is using the annotations is shown in the following example:
+
+  ```yaml title="ingress.yml"
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: sdkjs-e2e-ingress
+    annotations:
+      nginx.ingress.kubernetes.io/affinity: 'cookie'
+      nginx.ingress.kubernetes.io/proxy-read-timeout: '600'
+      nginx.ingress.kubernetes.io/session-cookie-name: 'JSESSIONID'
+      cert.gardener.cloud/purpose: managed
+  spec:
+    tls:
+      - hosts:
+          - cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+          - e2e.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+        secretName: secret-tls
+    rules:
+      - host: e2e.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+        http:
+          paths:
+            - path: /
+              pathType: Prefix
+              backend:
+                service:
+                  name: approuter-svc
+                  port:
+                    number: 8080
+  ```
+
+## Principal Propagation
+
+Just as in SAP BTP Cloud Foundry, you have to collect the principal's JSON web token (JWT) from the authentication header after executing one of the requests with the typed client libraries.
+Below is an example utilizing the `retrieveJwt()` function:
+
+<!-- vale Vale.Spelling = NO -->
+
+```ts
+import { Injectable } from '@nestjs/common';
+import { retrieveJwt } from '@sap-cloud-sdk/connectivity';
+import { Request } from 'express';
+import { businessPartnerService } from './generated/business-partner-service';
+
+@Injectable()
+export class PrincipalBusinessPartnerService {
+  async getFiveBusinessPartners(request: Request): Promise<BusinessPartner[]> {
+    return BusinessPartner.requestBuilder()
+      .getAll()
+      .top(5)
+      .execute({
+        destinationName: 'MY-DESTINATION',
+        jwt: retrieveJwt(request)
+      });
+  }
+}
+```
+
+## On-Premise Connectivity
+
+:::danger
+On-Premise connectivity in Kubernetes is not available for SAP customers as of November 2022.
+:::
+
+You need connectivity proxy to connect to on-premise systems inside a Kubernetes cluster.
+The following steps show how to create and use it.
+
+1. Create a route with TLS enabled for the connectivity proxy to use.
+   To enable TLS on SAP Gardener, refer to [configure TLS and obtain a domain in SAP Gardener](#configure-tls-and-obtain-a-domain-in-sap-gardener) section.
+   If your cluster is not backed by SAP Gardener, refer to the official [Kubernetes documentation](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster/).
+
+This example shows how to add a custom domain `connectivitytunnel.*` to the TLS section in SAP Gardener.
+This creates a certificate for this domain automatically.
+
+```yaml
+spec:
+  tls:
+    - hosts:
+        - cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+        - e2e.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+        - connectivitytunnel.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+      secretName: secret-tls
+```
+
+2. Add your CA certificate to the JVM trust store of the cloud connector.
+   The CA certificate is stored in the TLS secret, in this case the name is `secret-tls`.
+
+To access the information inside a secret, use the following code snippet:
+
+```bash
+kubectl get secret YOUR_SECRET -o go-template='{{range $k,$v := .data}}{{printf "%s: " $k}}{{if not $v}}{{$v}}{{else}}{{$v | base64decode}}{{end}}{{"\n"}}{{end}}'
+```
+
+Inside the secret should be a block prefixed with `ca.crt`, copy this certificate into a file and then follow [this guide](https://connect2id.com/blog/importing-ca-root-cert-into-jvm-trust-store) to add it to the JVM trust store of your cloud connector.
+
+3. Create and bind the connectivity service with the `connectivty_proxy` plan.
+   This guide explains how to do it above.
+   Additionally, to bind the secret represented by Kubernetes native YAML format, you need to convert it to a JSON to be consumable by the connectivity proxy.
+   If you use the PoC environment, save the binding as a secret, use the example below to guide you.
+   Otherwise, you need to retrieve the binding first and then convert it to JSON before saving it as a secret.
+   For that you need to retrieve the secret's content first, you can use the previous code snippet to retrieve the values of a secret for that.
+
+   Then save the JSON as a secret, here is an example:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: connectivity-proxy-service-key
+type: Opaque
+stringData:
+  connectivity_key: '{
+    "clientid": "YOUR_CLIENT_ID",
+    "clientsecret": "YOUR_CLIENT_SECRET",
+    "xsappname": "YOUR_XS_APP_NAME",
+    "connectivity_service": {
+        "CAs_path":"/api/v1/CAs",
+        "CAs_signing_path":"/api/v1/CAs/signing",
+        "api_path":"/api/v1",
+        "tunnel_path":"/api/v1/tunnel",
+        "url":"https://connectivity.cf.sap.hana.ondemand.com"
+    },
+    "subaccount_id": "YOUR_SUBACCOUNT_ID",
+    "subaccount_subdomain": "YOUR_SUBACCOUNT_SUBDOMAIN",
+    "token_service_domain": "YOUR_TOKEN_SERVICE_DOMAIN",
+    "token_service_url": "YOUR_TOKEN_SERVICE_URL",
+    "token_service_url_pattern": "https://{tenant}.authentication.sap.hana.ondemand.com/oauth/token",
+    "token_service_url_pattern_tenant_key": "subaccount_subdomain"
+}'
+```
+
+:::info
+Note that the example used the `stringData` field type instead of the default `data` field type to benefit from automatic base64 encoding, instead of doing it ourselves.
+This is a requirement of the connectivity proxy since it can't consume the data of the secret in YAML format.
+:::
+
+4. Download the CA certificate of the connectivity service and create a secret containing:
+
+   - the CA certificate of the connectivity service
+   - your private key
+   - your public certificate
+
+  The private key and public certificate are also stored in your TLS secret, use the previous code snippet to retrieve it from the secret and save them in separate files.
+  Finally, download the CA certificate with the following line:
+
+  ```bash
+  curl https://connectivity.cf.sap.hana.ondemand.com/api/v1/CAs/signing -o connectivity_ca.crt
+  ```
+
+  Now you can create the secret with this command:
+
+  ```bash
+  kubectl create secret generic connectivity-tls --from-file=ca.crt=YOUR_CONNECTIVITY_CA_KEY.crt --from-file=tls.key=YOUR_PRIVATE_KEY.key --from-file=tls.crt=YOUR_PUBLIC_KEY.crt --namespace default
+  ```
+
+5. Create a secret that contains credentials to access the docker image which the connectivity proxy is using.
+
+6. Create a `values.yaml` file containing the configuration that suits your desired operational mode of the connectivity proxy, for the available operational modes refer to the [documentation](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/f3c1ef45db77489c8d039acc9530358f.html).
+   For the specific content of the configuration refer to the [configuration guide](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/eaa8204fc7484df984b3c321624827ff.html).
+
+  Here is an example for the "single tenant in a trusted environment" mode:
+
+  ```yaml
+  deployment:
+    replicaCount: 1
+    image:
+      pullSecret: 'proxy-secret'
+  ingress:
+    tls:
+      secretName: 'connectivity-tls'
+  config:
+    integration:
+      auditlog:
+        mode: console
+      connectivityService:
+        serviceCredentialsKey: 'connectivity_key'
+    tenantMode: dedicated
+    subaccountId: 'YOUR_SUBACCOUNT_ID'
+    subaccountSubdomain: 'YOUR_SUBACCOUNT_SUBDOMAIN'
+    servers:
+      businessDataTunnel:
+        externalHost: 'connectivitytunnel.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com'
+        externalPort: 443
+      proxy:
+        rfcAndLdap:
+          enabled: true
+          enableProxyAuthorization: false
+        http:
+          enabled: true
+          enableProxyAuthorization: false
+          enableRequestTracing: true
+        socks5:
+          enableProxyAuthorization: false
+  ```
+
+7. For your application to reach on-premise destinations, it needs to provide the proxy settings and the token URL.
+   You have to add them manually to the `secret` containing the service binding.
+
+  To do this, use the following code snippet:
+
+  ```bash
+  kubectl edit secret YOUR_BINDING
+  ```
+
+  Now you have to add the fields `onpremise_proxy_host` and `onpremise_proxy_port` and `url`.
+  The host has the pattern `connectivity-proxy.YOUR_NAMESPACE` which in this case is `connectivity-proxy.default`.
+  The default port is `20003`.
+  The `url` field should contain the same value as `token_service_url`.
+  Be aware that the values have to be encoded in base64, for example:
+
+  ```yaml
+  onpremise_proxy_host: Y29ubmVjdGl2aXR5LXByb3h5LmRlZmF1bHQ=
+  onpremise_proxy_port: MjAwMDM=
+  url: aHR0cHM6Ly9teS1hcGkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tCg==
+  ```
+
+8. Finally, add the binding to your `deployment.yml`, the same way you would add any other binding.
+
+## Create a Continuous Integration Pipeline
+
+You can create a simple CI/CD pipeline with GitHub Actions or change your existing pipeline.
+To automatically deploy your application into the Kubernetes cluster, two things are needed:
+
+1. Automatic build the container image and deploy into the container registry
+2. Automatic re-start of the Kubernetes Deployment
+
+Step (1) can be achieved by building and pushing the container image with a technical user.
+For Step (2), you need a technical user that is entitled to manage the cluster deployment.
+
+1. [Create a service account](https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/) in your cluster.
+2. Bind the `cluster-admin` cluster role to the service account.
+   Alternative, create a more strict role.
+3. Obtain the token and CA certificate from the secret that is automatically created for that service account.
+4. Obtain the cluster API endpoint via command `kubectl cluster-info`.
+
+Use the service account in your automation to connect to the cluster:
+
+```bash
+kubectl config set-cluster gardener --server=YOUR_CLUSTER_API_ENDPOINT
+kubectl config set-context gardener --cluster=gardener
+kubectl config use-context gardener
+kubectl config view
+kubectl --token=${{ secrets.KUBERNETES_SERVICE_TOKEN }} --certificate-authority YOUR_CA_CERT_PATH cluster-info
+```
+
+After completing the previous steps, run the command below to shutdown and restart all the Pods.
+
+```bash
+kubectl --token=${{ secrets.KUBERNETES_SERVICE_TOKEN }} --certificate-authority YOUR_CA_CERT_PATH rollout restart deployment/YOUR_DEPLOYMENT
+```
+
+If your Deployment is configured with `ImagePullStrategy: Always`, it will pull the updated image and use it.
