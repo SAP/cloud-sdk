@@ -15,25 +15,28 @@ keywords:
   - http
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 The SAP Cloud SDK offers basic functionality that helps with connecting to other systems and services like SAP S/4HANA Cloud or On-premise edition.
 The SAP Cloud SDK leverages the existing API of `HttpClient` and applies conveniently managed properties, e.g. according to a specific destination configuration.
-
-:::info Apache Http Client 4
-
-The SAP Cloud SDK uses the [Apache Http Client 4](https://hc.apache.org/httpcomponents-client-4.5.x/index.html) library.
-This client is widely used and can also be used together with other frameworks e.g. Spring's `RestTemaplte`.
-
-However, please note that with the recent [Spring Framework 6 release](https://github.com/spring-projects/spring-framework/wiki/Upgrading-to-Spring-Framework-6.x#web-applications), the `RestTemplate` has been changed to require the successor [Apache Http Client 5](https://hc.apache.org/httpcomponents-client-5.2.x/index.html).
-Consequently, the `HttpClient` provided by the SAP Cloud SDK can only be used with `RestTemplate` in version 5 of Spring.
-
-:::
-
 In the following paragraphs, the `HttpClientAccessor` API and its usage will be described.
 
 ## General Usage
 
 In general an `HttpClient` can be instantiated through the `HttpClientAcessor`.
 The SAP Cloud SDK itself uses the accessor class for all internal requests as well.
+
+<Tabs 
+  groupId="http-client"
+  defaultValue="v4"
+  values={[
+    {label: "Apache Version 4.x", value: "v4"},
+    {label: "Apache Version 5.x", value: "v5"}
+  ]}>
+<TabItem value="v4">
+
+To make use the `HttpClientAccessor`, make sure to include the [cloudplatform-connectivity](https://search.maven.org/search?q=g:com.sap.cloud.sdk.cloudplatform%2BAND%2Ba:cloudplatform-connectivity) dependency in your project.
 
 ```java
 HttpClient client = HttpClientAccessor.getHttpClient();
@@ -46,6 +49,31 @@ HttpDestination destination = DestinationAccessor.getDestination("my-destination
 HttpClient client = HttpClientAccessor.getHttpClient(destination);
 ```
 
+</TabItem>
+<TabItem value="v5">
+
+:::caution BETA API
+
+All APIs related to the Apache version 5 `HttpClient` are currently in `Beta`, i.e. they are experimental and might be changed at any time.
+
+:::
+
+To make use the `HttpClient5Accessor`, make sure to include the [cloudplatform-connectivity](https://search.maven.org/search?q=g:com.sap.cloud.sdk.cloudplatform%2BAND%2Ba:cloudplatform-connectivity) **and** the [http-client-5](https://search.maven.org/search?q=g:com.sap.cloud.sdk.cloudplatform%2BAND%2Ba:http-client-5) dependencies in your project.
+
+```java
+HttpClient client = HttpClient5Accessor.getHttpClient();
+```
+
+If On-premise the goal is to create a client with properties according to a specific destination, it can be provided as argument:
+
+```java
+HttpDestination destination = DestinationAccessor.getDestination("my-destination").asHttp();
+HttpClient client = HttpClient5Accessor.getHttpClient(destination);
+```
+
+</TabItem>
+</Tabs>
+
 When using a destination, the configured destination URL will be used as base path for the subsequent requests for `client`.
 
 :::note
@@ -55,8 +83,17 @@ Please note that similar to other accessor-based APIs, the SAP Cloud SDK offers 
 ## Customization
 
 When the properties of `HttpClient` are not working for the application, e.g. timeout is too short or too long, then the generation can be customized.
-Please find the `HttpClientFactory` interface and the provided implementation `DefaultHttpClientFactory`.
+Please find the `HttpClientFactory` interface.
 They offer a similar method `createHttpClient` with optional destination argument:
+
+<Tabs 
+  groupId="http-client"
+  defaultValue="v4"
+  values={[
+    {label: "Apache Version 4.x", value: "v4"},
+    {label: "Apache Version 5.x", value: "v5"}
+  ]}>
+<TabItem value="v4">
 
 ```java
 HttpClientFactory factory = new DefaultHttpClientFactory();
@@ -104,13 +141,58 @@ This inheritance enables custom implementation for the following methods:
 - `getSocketConfigBuilder`
 - `getConnectionManager`
 
+</TabItem>
+<TabItem value="v5">
+
+```java
+HttpClient5Factory factory = HttpClient5Factory.newDefault(Timeout.ofMinutes(1L), 100, 10);
+
+HttpClient genericClient = factory.createHttpClient();
+HttpClient destinationClient = factory.createHttpClient(destination);
+```
+
+The static factory method (`HttpClient5Factory.newDefault(Timeout, int, int)`) provides the following customization options:
+
+1. `Timeout timeout` - The timeout that should be used by `HttpClient` instances created by the returned `HttpClient5Factory`.
+  This timeout applies to the following concerns:
+    * Connection timeout: The time to establish the connection with the remote host.
+    * Socket timeout: The time to wait for data – after the connection was established; maximum time of inactivity between two data packets.
+    * Connection Request timeout: The time to wait when requesting a connection lease from the underlying [PoolingHttpClientConnectionManager](https://hc.apache.org/httpcomponents-client-5.1.x/current/httpclient5/apidocs/org/apache/hc/client5/http/impl/io/PoolingHttpClientConnectionManager.html).
+2. `int maxTotalConnections` - The maximum number of parallel connections that can be established with a `HttpClient` created by the returned `HttpClient5Factory`.
+3. `int maxConnectionsPerRoute` - The maximum number of parallel connections **per route** (e.g. per remote host) that can be established with a `HttpClient` created by the returned `HttpClient5Factory`.
+
+If these customization options are not enough, consider creating your own implementation of the `HttpClient5Factory`.
+
+</TabItem>
+</Tabs>
+
 ## Overriding Default Behavior
 
 Now the customization of the HTTP client factory is available and we can adjust the default behavior for the accessor:
+
+<Tabs 
+  groupId="http-client"
+  defaultValue="v4"
+  values={[
+    {label: "Apache Version 4.x", value: "v4"},
+    {label: "Apache Version 5.x", value: "v5"}
+  ]}>
+<TabItem value="v4">
 
 ```java
 HttpClientFactory factory = new MyCustomHttpClientFactory();
 HttpClientAccessor.setHttpClientFactory(factory);
 ```
+
+</TabItem>
+<TabItem value="v5">
+
+```java
+HttpClient5Factory factory = new MyCustomHttpClient5Factory();
+HttpClient5Accessor.setHttpClientFactory(factory);
+```
+
+</TabItem>
+</Tabs>
 
 From now on the custom factory will be used for every explicit and implicit HTTP request running through the SAP Cloud SDK.
