@@ -222,6 +222,13 @@ module.exports = {
           v3: {
             label: 'v3',
             path: 'v3',
+            banner: 'unmaintained',
+            badge: false
+          },
+          v5: {
+            label: 'v5',
+            path: 'v5',
+            banner: 'unreleased',
             badge: false
           }
         }
