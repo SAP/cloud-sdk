@@ -296,7 +296,7 @@ module.exports = {
           },
           {
             from: '/docs/js/guides/migrate-sdk-application-from-btp-cf-to-kubernetes',
-            to: '/docs/js/guides/kubernetes'
+            to: '/docs/js/environments/kubernetes'
           },
           {
             from: '/docs/js/guides/bas-external-system',
