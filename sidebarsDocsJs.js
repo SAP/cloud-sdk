@@ -52,7 +52,7 @@ module.exports = {
     {
       type: 'category',
       label: 'Environments',
-      items: ['environments/kubernetes']
+      items: ['environments/kubernetes', 'environments/kyma']
     },
     {
       type: 'category',
