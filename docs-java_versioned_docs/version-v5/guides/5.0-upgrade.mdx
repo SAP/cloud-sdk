@@ -1,10 +1,10 @@
 ---
-id: 4.0-upgrade
-title: Update to Version 4 of the SAP Cloud SDK
+id: 5.0-upgrade
+title: Update to Version 5 of the SAP Cloud SDK
 hide_title: false
 hide_table_of_contents: false
-sidebar_label: Update to Version 4
-description: Update your application to use version 4 of the SAP Cloud SDK
+sidebar_label: Update to Version 5
+description: Update your application to use version 5 of the SAP Cloud SDK
 keywords:
   - sap
   - cloud
@@ -12,13 +12,49 @@ keywords:
   - cloud native
   - cloud sdk
   - sap cloud sdk
-  - 4
+  - 5
   - Update
 ---
 
+## List of modules that have been removed with version 5 of the SAP Cloud SDK
+<details>
+    <summary>Full list of removed modules</summary>
+
+- Business Logging:
+  - `scp-business-logging-all`
+  - `scp-business-logging-core`
+  - `scp-business-logging-odata`
+  - `scp-business-logging-rest`
+- Blockchain:
+  - `blockchain-business-services-sdk`
+  - `blockchain-business-services-visibility`
+  - `blockchain-client-fabric`
+  - `blockchain-client-multichain`
+  - `scp-blockchain`
+- BTP Shared Ledger Client:
+  - `btp-shared-ledger-client`
+- MDI client convenience:
+  - `mdi-client-convenience`
+- SAP Passport:
+  - `sap-passport`
+- Neo related modules:
+  - `auditlog-scp-neo`
+  - `cloudplatform-connectivity-scp-neo`
+  - `cloudplatform-core-scp-neo`
+  - `scp-neo`
+  - `security-scp-neo`
+  - `tenant-scp-neo`
+- Others:
+  - `com.sap.cloud.sdk.archetypes:sdk-neo-javaee7`
+  - `com.sap.cloud.sdk.plugins:plugins-parent`
+  - `com.sap.cloud.sdk.plugins:scp-neo-maven-plugin`
+
+</details>
+
+<!--
 ## Introduction
 
-Version 4 of the SAP Cloud SDK is here and we highly recommend updating to it as soon as possible.
+Version 5 of the SAP Cloud SDK is here and we highly recommend updating to it as soon as possible.
 It brings various improvements while keeping the necessary adjustments to an absolute minimum.
 
 There is a good chance that just bumping the version to `4.0.0` is already enough, without the need for any further adjustments.
@@ -34,7 +70,9 @@ Before you increase the SAP Cloud SDK version to 4 it can be beneficial to migra
 Follow the deprecation note of the Javadoc in case you are still using deprecated API from the SAP Cloud SDK.
 All deprecated API is removed With version 4 (exception being audit logging).
 
-<!-- vale off -->
+ -->
+<!-- vale off --><!--
+
 
 <details>
     <summary>Full list of deprecated API</summary>
@@ -254,7 +292,9 @@ Please reach out to us directly if you use this class and are not sure how to re
 
 ## Update Your POM.XML
 
-<!-- vale on -->
+ -->
+<!-- vale on --><!--
+
 
 Begin by upgrading the version to `4.0.0`.
 Make sure to apply this for all the places where you declare the SAP Cloud SDK version.
@@ -541,13 +581,17 @@ On the `CloudPlatform` and related accessor classes the most notable changes are
 :::caution
 The `ThreadContext` interface and all related API have received substantial changes.
 
-<!-- vale off -->
+ -->
+<!-- vale off --><!--
+
 
 In most cases [the above mentioned change](#working-with-threads-and-the-threadcontext) should suffice.
 
 If this is not the case for your project and you find yourself affected by any of the below changes please **reach out to us directly**.
 
-<!-- vale on -->
+ -->
+<!-- vale on --><!--
+
 
 :::
 
@@ -679,3 +723,4 @@ The most notable remaining changes are:
     - `SoapNamespace`
 
 </details>
+ -->
