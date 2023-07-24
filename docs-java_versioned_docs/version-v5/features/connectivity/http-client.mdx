@@ -42,7 +42,7 @@ To make use the `HttpClientAccessor`, make sure to include the [cloudplatform-co
 HttpClient client = HttpClientAccessor.getHttpClient();
 ```
 
-If On-premise the goal is to create a client with properties according to a specific destination, it can be provided as argument:
+If you need an `HttpClient` to reach a system that has been configured as a Destination (e.g. an On-premise S/4HANA system), you may first fetch the destination and then use it as a argument for the accessor:
 
 ```java
 HttpDestination destination = DestinationAccessor.getDestination("my-destination").asHttp();
@@ -58,17 +58,17 @@ All APIs related to the Apache version 5 `HttpClient` are currently in `Beta`, i
 
 :::
 
-To make use the `HttpClient5Accessor`, make sure to include the [cloudplatform-connectivity](https://search.maven.org/search?q=g:com.sap.cloud.sdk.cloudplatform%2BAND%2Ba:cloudplatform-connectivity) **and** the [http-client-5](https://search.maven.org/search?q=g:com.sap.cloud.sdk.cloudplatform%2BAND%2Ba:http-client-5) dependencies in your project.
+To make use the `Apache5HttpClientAccessor`, make sure to include the [cloudplatform-connectivity](https://search.maven.org/search?q=g:com.sap.cloud.sdk.cloudplatform%2BAND%2Ba:cloudplatform-connectivity) **and** the [apache5-httpclient](https://search.maven.org/search?q=g:com.sap.cloud.sdk.frameworks%2BAND%2Ba:apache5-httpclient) dependencies in your project.
 
 ```java
-HttpClient client = HttpClient5Accessor.getHttpClient();
+HttpClient client = Apache5HttpClientAccessor.getHttpClient();
 ```
 
-If On-premise the goal is to create a client with properties according to a specific destination, it can be provided as argument:
+If you need an `HttpClient` to reach a system that has been configured as a Destination (e.g. an On-premise S/4HANA system), you may first fetch the destination and then use it as a argument for the accessor:
 
 ```java
 HttpDestination destination = DestinationAccessor.getDestination("my-destination").asHttp();
-HttpClient client = HttpClient5Accessor.getHttpClient(destination);
+HttpClient client = Apache5HttpClientAccessor.getHttpClient(destination);
 ```
 
 </TabItem>
@@ -145,23 +145,27 @@ This inheritance enables custom implementation for the following methods:
 <TabItem value="v5">
 
 ```java
-HttpClient5Factory factory = HttpClient5Factory.newDefault(Timeout.ofMinutes(1L), 100, 10);
+Apache5HttpClientFactory customFactory = new Apache5HttpClientFactoryBuilder()
+        .timeout(Duration.ofMinutes(1L))
+        .maxConnectionsTotal(100)
+        .maxConnectionsPerRoute(20)
+        .build();
 
-HttpClient genericClient = factory.createHttpClient();
-HttpClient destinationClient = factory.createHttpClient(destination);
+HttpClient genericClient = customFactory.createHttpClient();
+HttpClient destinationClient = customFactory.createHttpClient(destination);
 ```
 
-The static factory method (`HttpClient5Factory.newDefault(Timeout, int, int)`) provides the following customization options:
+The builder class (`Apache5HttpClientFactoryBuilder`) provides the following customization options:
 
 1. `Timeout timeout` - The timeout that should be used by `HttpClient` instances created by the returned `HttpClient5Factory`.
    This timeout applies to the following concerns:
    - Connection timeout: The time to establish the connection with the remote host.
    - Socket timeout: The time to wait for data – after the connection was established; maximum time of inactivity between two data packets.
    - Connection Request timeout: The time to wait when requesting a connection lease from the underlying [PoolingHttpClientConnectionManager](https://hc.apache.org/httpcomponents-client-5.1.x/current/httpclient5/apidocs/org/apache/hc/client5/http/impl/io/PoolingHttpClientConnectionManager.html).
-2. `int maxTotalConnections` - The maximum number of parallel connections that can be established with a `HttpClient` created by the returned `HttpClient5Factory`.
+2. `int maxConnectionsTotal` - The maximum number of parallel connections that can be established with a `HttpClient` created by the returned `HttpClient5Factory`.
 3. `int maxConnectionsPerRoute` - The maximum number of parallel connections **per route** (e.g. per remote host) that can be established with a `HttpClient` created by the returned `HttpClient5Factory`.
 
-If these customization options are not enough, consider creating your own implementation of the `HttpClient5Factory`.
+If these customization options are not enough, consider creating your own implementation of the `Apache5HttpClientFactory`.
 
 </TabItem>
 </Tabs>
@@ -188,8 +192,8 @@ HttpClientAccessor.setHttpClientFactory(factory);
 <TabItem value="v5">
 
 ```java
-HttpClient5Factory factory = new MyCustomHttpClient5Factory();
-HttpClient5Accessor.setHttpClientFactory(factory);
+Apache5HttpClientFactory factory = new MyCustomFactory();
+Apache5HttpClientAccessor.setHttpClientFactory(factory);
 ```
 
 </TabItem>
