@@ -27,7 +27,7 @@ The samples repository contains the [Kubernetes application](https://github.com/
 ### Prerequisites
 
 - Install [`kubectl`](https://kubernetes.io/docs/tasks/tools/).
-- Install [`docker`](https://docs.docker.com/get-docker/) and a publicly reachable Docker repository.
+- Install [`docker`](https://docs.docker.com/get-docker/) and ensure access to a publicly reachable Docker repository.
   :::info
   This guide assumes you have [Docker](https://www.docker.com/) installed on your local machine and a publicly accessible **Docker repository** where you can store images.
 
@@ -77,9 +77,10 @@ kubectl apply -f operator-destination-service.yml
 kubectl apply -f operator-destination-binding.yml
 ```
 
+This should create a Kubernetes secret named `operator-destination-service`.
+This secret will contain the actual service binding information.
+
 3. Monitor the status via `kubectl describe ServiceInstance operator-destination-service`.
-   This should create a Kubernetes secret named `operator-destination-service`.
-   This secret will contain the actual service binding information.
 
 #### Bind the XSUAA Service
 
@@ -87,7 +88,8 @@ Create `yaml` files for the XSUAA service instance and binding:
 
 <OperatorXsuaaService />
 
-2. Repeat steps 2 and 3 from the previous section for the XSUAA service.
+2. Repeat steps 2 and 3 from the [previous section](#bind-the-destination-service) for the XSUAA service.
+   Replace `destination` with `xsuaa`.
 
 We will see how to mount the created secrets into the file system of the application in the [deployment configuration](#create-a-deployment-configuration) step.
 
@@ -99,15 +101,14 @@ Make sure it matches exactly to the `spec -> serviceInstanceName` field in the b
 
 ## Deploy to Kubernetes
 
-We'll look at two things in this section:
+This section covers the following:
 
-1. How to deploy your application to Kubernetes.
-2. How to consume the bound services in your application from within the cluster.
+1. How to deploy an application to Kubernetes.
+2. How to consume the bound services in the application from within the cluster.
 
 ### Containerize the Application
 
-Kubernetes Pods are running container images.
-You will create a `Dockerfile` defining a container for your application.
+Create a `Dockerfile` defining a container for the application.
 Then it can be deployed to one or more Kubernetes Pods.
 
 <DockerFile />
@@ -123,8 +124,8 @@ docker push <YOUR_REPO>/<YOUR_IMAGE_NAME>:<YOUR_TAG>
 
 Create a `deployment.yml` file that contains the following data:
 
-- resources definition for your application
-- container image and registry secrets (in case your image was pushed to a private repository)
+- resources definition for the application
+- container image and registry secrets (in case the image was pushed to a private repository)
 - service bindings created previously
 
 ```yaml title="app/deployment.yml"
@@ -179,7 +180,7 @@ The volumes are mounted into the file system of your application at a specific p
 The path convention is provided by the [xsenv](https://www.npmjs.com/package/@sap/xsenv) library.
 :::
 
-Deploy your application by running the command:
+Deploy the application by running the command:
 
 `kubectl apply -f deployment.yml`
 
@@ -189,14 +190,15 @@ The `regcred` secret used by the `imagePullSecrets` config contains your registr
 
 ### Access Your Application
 
-To access your application you have two options, either you expose it to the internet directly or port-forward to your local machine.
+To access the application, you have two options.
+Either expose it to the internet directly or port-forward to your local machine.
 
 #### Local Connection
 
 Run the command `kubectl port-forward deployment YOUR_DEPLOYMENT :3000` on your local machine to enable port forwarding.
 Your application will listen to port 3000.
 Kubernetes finds an available port on your local machine and forwards port 3000 of your deployment to it.
-Then you'll be able to make a call to your application via a provided link.
+Make a call to the application via a provided link.
 
 #### Internet Facing Connection
 
@@ -205,8 +207,8 @@ Exposing an application this way is good only for testing.
 **Don't use it in production.**
 :::
 
-Run the command below to expose your application to the internet.
-It will use your cluster's IP address and the port your application listens on.
+Run the command below to expose the application to the internet.
+It will use the cluster's IP address and the port the application listens on.
 
 `kubectl expose deployment YOUR_DEPLOYMENT --type="LoadBalancer"`
 
@@ -279,9 +281,9 @@ spec:
                   number: 8080
 ```
 
-Notice how Ingress uses the SAP Gardener annotations, which is important so that SAP Gardener manages TLS.
+Notice how the Ingress uses the annotation `cert.gardener.cloud/purpose: managed`, which is important so that SAP Gardener manages TLS.
 
-You can see in the `spec.tls.hosts` part that it exposes 2 domains.
+The `spec.tls.hosts` config exposes 2 domains.
 The first one is your default domain, limited to a maximum of 64 characters.
 Other domains can be any size, but should follow the Ingress pattern.
 
@@ -289,9 +291,9 @@ The field `secretName: secret-tls` in the configuration implies that all TLS cer
 Finally, look at how to serve the Service at the root of your subdomain.
 This way the Service is exposed to the internet using TLS.
 
-### Expose Your Application using Approuter
+### Expose the Application using Approuter
 
-In the next steps, you will configure and deploy an approuter so that only authenticated users can access your application.
+In the next steps, you will configure and deploy an approuter so that only users authenticated by your identity provider can access the application endpoints.
 For that, create a [simple application](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/k8s-sample-application/approuter) that uses the @sap/approuter.
 
 1. Package the application router as a docker image so that it can run in Kubernetes, refer to the [documentation](https://blogs.sap.com/2020/04/03/sap-application-router/) for configuration details.
@@ -363,13 +365,13 @@ spec:
     app: approuter
 ```
 
-4. Finally, configure the Ingress to create a session cookie that is consumed by the application router and point it at the `approuter` Service.
+4. Finally, configure the Ingress to create a session cookie that is consumed by the application router.
+   Set the `backend.service.name` to `approuter-svc` to point the Ingress to the `approuter` Service.
    To secure your application, remove all previous routes that pointed to your application's endpoints and only expose them through the application router.
-   This way only users authenticated by your identity provider can access these endpoints.
    For that, specify the Service names in your approuter destinations' configuration and remove the rules you previously created for these endpoints in the Ingress.
 
-   Depending on the Ingress controller, you have to use different annotations.
-   An Ingress that only exposes the application router and uses the annotations is shown in the following example:
+Depending on the Ingress controller, you have to use different annotations.
+An Ingress that only exposes the application router and uses the annotations is shown in the following example:
 
 ```yaml title="ingress.yml"
 apiVersion: networking.k8s.io/v1
@@ -467,15 +469,11 @@ kubectl get secret YOUR_SECRET -o go-template='{{range $k,$v := .data}}{{printf 
 Inside the secret should be a block prefixed with `ca.crt`.
 Copy this certificate into a file and then follow [this guide](https://connect2id.com/blog/importing-ca-root-cert-into-jvm-trust-store) to add it to the JVM trust store of your SAP Cloud Connector.
 
-3. Create and bind the connectivity service with the `connectivty_proxy` plan.
-   This guide explains how to do it above.
-   Additionally, to bind the secret represented by Kubernetes native YAML format, you need to convert it to JSON for the connectivity proxy to consume it.
-   If you use the PoC environment, save the binding as a secret, use the example below to guide you.
-   Otherwise, you need to retrieve the binding first and then convert it to JSON before saving it as a secret.
-   For that you need to retrieve the secret's content first, you can use the previous code snippet to retrieve the values of a secret for that.
+3. Create and bind the connectivity service with the `connectivty_proxy` plan following the steps shown [before](#bind-the-destination-service).
+   Additionally, to bind the secret represented by Kubernetes native YAML format, you need to convert it to JSON format for the connectivity proxy to consume it.
+   Use the code snippet in step (2) above to retrieve the values of the secret.
 
-   Then save the JSON as a secret.
-   Here is an example:
+   Here is an example JSON secret:
 
 ```yaml
 apiVersion: v1
@@ -523,7 +521,7 @@ Finally, download the CA certificate with the following line:
 curl https://connectivity.cf.sap.hana.ondemand.com/api/v1/CAs/signing -o connectivity_ca.crt
 ```
 
-Now, you can create the secret with this command:
+Now, create the secret with this command:
 
 ```bash
 kubectl create secret generic connectivity-tls --from-file=ca.crt=YOUR_CONNECTIVITY_CA_KEY.crt --from-file=tls.key=YOUR_PRIVATE_KEY.key --from-file=tls.crt=YOUR_PUBLIC_KEY.crt --namespace default
@@ -570,15 +568,13 @@ config:
 ```
 
 7. For your application to reach on-premise destinations, it needs to provide the proxy settings and the token URL.
-   You have to add them manually to the `secret` containing the service binding.
-
-To do this, use the following code snippet:
+   Add them manually to the `secret` containing the service binding using the following code snippet:
 
 ```bash
 kubectl edit secret YOUR_BINDING
 ```
 
-Now you have to add the fields `onpremise_proxy_host` and `onpremise_proxy_port` and `url`.
+Now add the fields `onpremise_proxy_host` and `onpremise_proxy_port` and `url`.
 The host has the pattern `connectivity-proxy.YOUR_NAMESPACE` which in this case is `connectivity-proxy.default`.
 The default port is `20003`.
 The `url` field should contain the same value as `token_service_url`.
@@ -595,17 +591,11 @@ url: aHR0cHM6Ly9teS1hcGkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tCg==
 ## Create a Continuous Integration Pipeline
 
 You can create a simple CI/CD pipeline with GitHub Actions or change your existing pipeline.
-To automatically deploy your application into the Kubernetes cluster, two things are needed:
-
-1. Build the container image and deploy it into the container registry.
-2. Re-start the Kubernetes Deployment.
-
-Step (1) can be achieved by building and pushing the container image with a technical user.
-For Step (2), you need a technical user that is entitled to manage the cluster deployment.
+Follow the steps below to create a service account and obtain the authentication tokens and certificates needed to interact with your cluster within the pipeline.
 
 1. [Create a service account](https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/) in your cluster.
 2. Bind the `cluster-admin` cluster role to the service account.
-   Alternative, create a more strict role.
+   Alternatively, create a more strict role.
 3. Obtain the token and CA certificate from the secret that is automatically created for that service account.
 4. Obtain the cluster API endpoint via command `kubectl cluster-info`.
 
@@ -625,4 +615,4 @@ After completing the previous steps, run the command below to shutdown and resta
 kubectl --token=${{ secrets.KUBERNETES_SERVICE_TOKEN }} --certificate-authority YOUR_CA_CERT_PATH rollout restart deployment/YOUR_DEPLOYMENT
 ```
 
-If your Deployment is configured with `ImagePullStrategy: Always`, it will pull the updated image and use it.
+If the Deployment is configured with `ImagePullStrategy: Always`, it will pull the updated image and use it.
