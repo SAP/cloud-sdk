@@ -121,11 +121,7 @@ docker push <YOUR_REPO>/<YOUR_IMAGE_NAME>:<YOUR_TAG>
 
 ### Create a Deployment Configuration
 
-Create a `deployment.yml` file that contains the following data:
-
-- resources definition for the application
-- container image and registry secrets (in case the image was pushed to a private repository)
-- service bindings created previously
+Create a `deployment.yml` file as shown below:
 
 ```yaml title="app/deployment.yml"
 apiVersion: apps/v1
@@ -172,20 +168,20 @@ spec:
             secretName: operator-xsuaa-service
 ```
 
-Notice the volumes `destination-volume` and `xsuaa-volume` that reference the secrets (service bindings).
-The volumes are mounted into the file system of your application at a specific path by adding them to the list of `volumeMounts` in the `containers` section of your `deployment.yml` file.
+The file contains the following data:
 
-:::info
-The path convention is provided by the [xsenv](https://www.npmjs.com/package/@sap/xsenv) library.
-:::
+- **Resources definition**: The `requests` field specifies the CPU and memory requirements of the app.
+  Additionally, the resources can scale based on the values provided in the `limits` field.
+- **Service bindings**: the volumes `destination-volume` and `xsuaa-volume` reference the secrets (service bindings).
+  The volumes are mounted into the file system of your application at a specific path by adding them to the list of `volumeMounts` in the `containers` section.
+  :::info
+  The path convention is provided by the [xsenv](https://www.npmjs.com/package/@sap/xsenv) library.
+  :::
+- **Container image and registry secrets**: `regcred` secret used by the `imagePullSecrets` config contains your registry credentials that you bound as a secret (in case the image was pushed to a private repository).
 
 Deploy the application by running the command:
 
 `kubectl apply -f deployment.yml`
-
-:::note
-The `regcred` secret used by the `imagePullSecrets` config contains your registry credentials that you bound as a secret.
-:::
 
 ### Access Your Application
 
