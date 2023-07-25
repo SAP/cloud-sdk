@@ -22,20 +22,18 @@ import {
   OperatorXsuaaService
 } from './code';
 
-[Kyma](https://kyma-project.io/docs/kyma/latest/01-overview/) is an open-source project, offering a comprehensive suite of tools and services, specifically created for the development and operation of cloud-native applications seamlessly integrated with Kubernetes.
+[Kyma](https://kyma-project.io/docs/kyma/latest/01-overview/) is an open source project, that offers a comprehensive suite of tools and services, specifically created for the development and operation of cloud-native applications seamlessly integrated with Kubernetes.
 
 # Getting Started with the SAP Cloud SDK on Kyma
 
-This guide is meant for helping you migrate your existing application built with the SAP Cloud SDK for JavaScript to Kyma.
+This guide helps you migrate your existing application, built with the SAP Cloud SDK for JavaScript, to Kyma.
 The reference application we will use in this guide can be found in the [samples repository](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/helm-sample-application).
-We will also deploy an approuter so that only authenticated users can access your application.
+We will also deploy an approuter so that only authenticated users can access the application.
 
 ### Prerequisites
 
-- [`docker`](https://docs.docker.com/get-docker/) and a publicly reachable Docker repository
+- Install [`docker`](https://docs.docker.com/get-docker/) and ensure access to a publicly reachable Docker repository.
   :::info
-  This guide assumes you have [Docker](https://www.docker.com/) installed on your local machine and a publicly accessible **Docker repository** where you can store images.
-
   A Kubernetes cluster uses a secret to authenticate with a container registry to pull an image.
   For that, you will need to [configure a secret in your cluster](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line):
 
@@ -62,9 +60,9 @@ We will also deploy an approuter so that only authenticated users can access you
   Otherwise, use the code snippets given in this guide as reference and adjust the values accoridng to your application.
   :::
 
-- A node.js application using the SAP Cloud SDK and an approuter
+- A Node.js application using the SAP Cloud SDK and an approuter
   :::info
-  If you do not have an application already, you can use the [example application](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/helm-sample-application/application) and [approuter](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/k8s-sample-application/approuter).
+  If you do not have an application yet, you can use the [example application](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/helm-sample-application/application) and [approuter](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/k8s-sample-application/approuter).
   :::
 
 ### Create and Bind SAP BTP Services
@@ -88,9 +86,10 @@ kubectl apply -f operator-destination-service.yml
 kubectl apply -f operator-destination-binding.yml
 ```
 
+This should create a Kubernetes secret named `operator-destination-service`.
+This secret will contain the actual service binding information.
+
 3. Monitor the status via `kubectl describe ServiceInstance operator-destination-service`.
-   This should create a Kubernetes secret named `operator-destination-service`.
-   This secret will contain the actual service binding information.
 
 #### Bind the XSUAA Service
 
@@ -98,7 +97,8 @@ Create `yaml` files for the XSUAA service instance and binding:
 
 <OperatorXsuaaService />
 
-2. Repeat steps 2 and 3 from the previous section for the XSUAA service.
+2. Repeat steps 2 and 3 from the [previous section](#bind-the-destination-service) for the XSUAA service.
+   Replace `destination` with `xsuaa`.
 
 We will see how to mount the created secrets into the file system of the application in the [deployment configuration](#create-a-deployment-configuration) step.
 
@@ -126,13 +126,13 @@ docker push <YOUR_REPO>/<YOUR_IMAGE_NAME>:<YOUR_TAG>
 
 Instead of creating one `deployment.yml` configuration file for all your resources, you will create a Helm Chart that will contain all of the resource definitions necessary to run your application inside of a Kyma cluster.
 
-A chart describing our [example application](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/helm-sample-application/application) and [approuter](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/helm-sample-application/application/approuter) is stored as a collection of files inside of [`k8s-e2e-app-helm` directory](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/helm-sample-application/helm-chart/k8s-e2e-app-helm) as shown below.
+A chart, that describes our [example application](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/helm-sample-application/application) and [approuter](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/helm-sample-application/application/approuter) is stored as a collection of files inside of [`k8s-e2e-app-helm` directory](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/helm-sample-application/helm-chart/k8s-e2e-app-helm) as shown below.
 
 :::info
 For a deeper overview of Helm Charts, refer to the [development guide](https://helm.sh/docs/topics/charts/).
 :::
 
-In this section, we'll look into the configuring the charts for the following:
+In this section, we'll look into the chart configurations for the following:
 
 - application,
 - app router,
@@ -201,7 +201,7 @@ spec:
 {{- end }}
 ```
 
-Finally, package and deploy all your resources together using the Helm Charts created above.
+Finally, package and deploy all your resources together using the Helm charts created above.
 Run the below command:
 
 ```bash
@@ -211,7 +211,7 @@ helm install e2e-app <PATH_TO_PACKAGED_HELM_CHART>
 
 ### Access your Application
 
-You can view the created resources (application, api rule, etc) by navigating to the Kyma Dashboard, using the **Link to dashboard** link in the subaccount.
+You can view the created resources (application, api rule, etc) by navigating to the Kyma dashboard, using the **Link to dashboard** link in the subaccount.
 Verify the resources and choose the host link to open the application in your browser.
 
 ![API Rule](../img/kyma-api-rule.png)
