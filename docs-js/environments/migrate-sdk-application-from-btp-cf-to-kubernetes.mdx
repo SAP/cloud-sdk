@@ -220,8 +220,6 @@ Enable the NGINX Ingress add-on for your SAP Gardener cluster.
 :::
 
 The fastest way to enable TLS and obtain a domain for your application is to create a Service for your Deployment, and an Ingress to handle the routing.
-In SAP Gardener you can already specify your desired domain and the TLS will be managed for you, more on that later.
-
 Create a Service that contains your Deployment and the port you want to expose as shown in the example below:
 
 ```yaml title="app/k8s-e2e-service.yml"
@@ -264,8 +262,8 @@ metadata:
 spec:
   tls:
     - hosts:
-        - cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
-        - e2e.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
+        - cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com # - "<YOUR_DNS>"
+        - e2e.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com # - "*.ingress.<YOUR_DNS>"
       secretName: secret-tls
   rules:
     - host: e2e.ingress.cloud-sdk-js.sdktests.shoot.canary.k8s-hana.ondemand.com
