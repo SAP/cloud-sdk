@@ -42,6 +42,9 @@ We will publish the full migration guide when we release v5.
   - `security-scp-neo`
   - `tenant-scp-neo`
   - `concurrency-scp-neo`
+- Pregenerated clients
+  - `scp-workflow-cf`
+  - `btp-business-rules`
 - Others:
   - `com.sap.cloud.sdk.archetypes:sdk-neo-javaee7`
   - `com.sap.cloud.sdk.plugins:plugins-parent`
@@ -111,7 +114,6 @@ We will publish the full migration guide when we release v5.
   </table>
 </details>
 
-<!--
 ## Introduction
 
 Version 5 of the SAP Cloud SDK is here and we highly recommend updating to it as soon as possible.
@@ -130,61 +132,63 @@ Before you increase the SAP Cloud SDK version to 5 it can be beneficial to migra
 Follow the deprecation note of the Javadoc in case you are still using deprecated API from the SAP Cloud SDK.
 Most deprecated API is removed With version 5.
 
- -->
 <!-- vale off -->
-<!--
 
 <details>
     <summary>Full list of deprecated API</summary>
 
-  <table>
-    <thead>
-        <tr>
-            <td><b>API</b></td>
-            <td><b>Replacement</b></td>
-            <td><b>Comment</b></td>
-        </tr>
-    </thead>
-    <tbody>
-          <tr>
-            <td>DefaultErpHttpDestination</td>
-            <td>HttpDestination</td>
-            <td>
-              HttpDestination now automatically adds sap-client and sap-language
-              headers defined on the destination
-            </td>
-          </tr>
-          <tr>
-            <td>ErpHttpDestination</td>
-            <td>-</td>
-            <td>No replacement necessary</td>
-          </tr>
-          <tr>
-            <td>ErpHttpDestinationProperties</td>
-            <td>-</td>
-            <td>No replacement necessary</td>
-          </tr>
-          <tr>
-            <td>ErpHttpDestinationUtils</td>
-            <td>-</td>
-            <td>No replacement necessary</td>
-          </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    </tbody>
+{' '}
+<table>
+  <thead>
+    <tr>
+      <td>
+        <b>API</b>
+      </td>
+      <td>
+        <b>Replacement</b>
+      </td>
+      <td>
+        <b>Comment</b>
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>DefaultErpHttpDestination</td>
+      <td>HttpDestination</td>
+      <td>
+        HttpDestination now automatically adds sap-client and sap-language
+        headers defined on the destination
+      </td>
+    </tr>
+    <tr>
+      <td>ErpHttpDestination</td>
+      <td>-</td>
+      <td>No replacement necessary</td>
+    </tr>
+    <tr>
+      <td>ErpHttpDestinationProperties</td>
+      <td>-</td>
+      <td>No replacement necessary</td>
+    </tr>
+    <tr>
+      <td>ErpHttpDestinationUtils</td>
+      <td>-</td>
+      <td>No replacement necessary</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
 </table>
 
 </details>
 
 ## Update Your POM.XML
 
- -->
 <!-- vale on -->
-<!--
-
 
 Begin by upgrading the version to `5.0.0`.
 Make sure to apply this for all the places where you declare the SAP Cloud SDK version.
@@ -221,6 +225,9 @@ Remove them if they are present in your pom files.
   - `security-scp-neo`
   - `tenant-scp-neo`
   - `concurrency-scp-neo`
+- Pregenerated clients
+  - `scp-workflow-cf`
+  - `btp-business-rules`
 - Others:
   - `com.sap.cloud.sdk.archetypes:sdk-neo-javaee7`
   - `com.sap.cloud.sdk.plugins:plugins-parent`
@@ -242,6 +249,11 @@ We deprecated some modules in version 5, if you are using any of them, please no
 
 </details>
 
+## Pregenerated Clients
+
+OData and OpenAPI pregenerated clients have been removed, the replacement is to generate clients with the [OData](../features/odata/generator.mdx) or the [OpenAPI](../features/rest/generate-rest-client.mdx) code generator.
+Specifications are available at [SAP Business Accelerator Hub](https://api.sap.com/).
+
 ## Get Support
 
 Having trouble with any of the update steps?
@@ -260,4 +272,3 @@ Still, they are listed here for completeness and easy access.
 The most notable remaining changes are:
 
 -
- -->
