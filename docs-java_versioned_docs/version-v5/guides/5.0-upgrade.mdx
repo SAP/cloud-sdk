@@ -1,0 +1,263 @@
+---
+id: 5.0-upgrade
+title: Update to Version 5 of the SAP Cloud SDK
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Update to Version 5
+description: Update your application to use version 5 of the SAP Cloud SDK
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+  - 5
+  - Update
+---
+
+:::caution
+
+Version 5 of the SAP Cloud SDK is still under active development and hence the migration guide is incomplete.
+We will publish the full migration guide when we release v5.
+
+:::
+
+## List of modules that have been removed with version 5
+
+<details>
+    <summary>Full list of removed modules</summary>
+
+- Blockchain:
+  - `blockchain-business-services-sdk`
+  - `blockchain-business-services-visibility`
+  - `blockchain-client-fabric`
+  - `blockchain-client-multichain`
+  - `scp-blockchain`
+- Neo related modules:
+  - `auditlog-scp-neo`
+  - `cloudplatform-connectivity-scp-neo`
+  - `cloudplatform-core-scp-neo`
+  - `scp-neo`
+  - `security-scp-neo`
+  - `tenant-scp-neo`
+  - `concurrency-scp-neo`
+- Others:
+  - `com.sap.cloud.sdk.archetypes:sdk-neo-javaee7`
+  - `com.sap.cloud.sdk.plugins:plugins-parent`
+  - `com.sap.cloud.sdk.plugins:scp-neo-maven-plugin`
+
+</details>
+
+## List of modules that remain deprecated with version 5
+
+<details>
+    <summary>Full list of deprecated modules</summary>
+
+- `com.sap.cloud.sdk.s4hana:s4hana-connectivity`
+- `com.sap.cloud.sdk.s4hana:s4hana-core`
+- `com.sap.cloud.sdk.s4hana:rfc`
+- `com.sap.cloud.sdk.datamodel:soap`
+- `com.sap.cloud.sdk:sdk-sjb-bom`
+- `com.sap.cloud.sdk.cloudplatform:auditlog-scp-cf`
+
+</details>
+
+## List of API that have been removed with version 5
+
+<!-- vale off -->
+
+<details>
+  <summary>Full list of deprecated API</summary>
+  <table>
+    <thead>
+      <tr>
+        <td>
+          <b>API</b>
+        </td>
+        <td>
+          <b>Replacement</b>
+        </td>
+        <td>
+          <b>Comment</b>
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>DefaultErpHttpDestination</td>
+        <td>HttpDestination</td>
+        <td>
+          HttpDestination now automatically adds sap-client and sap-language
+          headers defined on the destination
+        </td>
+      </tr>
+      <tr>
+        <td>ErpHttpDestination</td>
+        <td>-</td>
+        <td>No replacement necessary</td>
+      </tr>
+      <tr>
+        <td>ErpHttpDestinationProperties</td>
+        <td>-</td>
+        <td>No replacement necessary</td>
+      </tr>
+      <tr>
+        <td>ErpHttpDestinationUtils</td>
+        <td>-</td>
+        <td>No replacement necessary</td>
+      </tr>
+    </tbody>
+  </table>
+</details>
+
+<!--
+## Introduction
+
+Version 5 of the SAP Cloud SDK is here and we highly recommend updating to it as soon as possible.
+It brings various improvements while keeping the necessary adjustments to an absolute minimum.
+
+There is a good chance that just bumping the version to `5.0.0` is already enough, without the need for any further adjustments.
+In particular, updating may be straightforward if you are not using any deprecated API.
+
+:::note Release Blog Post
+For more information also check out our version 5 release blog post
+:::
+
+## Before You Update
+
+Before you increase the SAP Cloud SDK version to 5 it can be beneficial to migrate any usage of **deprecated API** first.
+Follow the deprecation note of the Javadoc in case you are still using deprecated API from the SAP Cloud SDK.
+Most deprecated API is removed With version 5.
+
+ -->
+<!-- vale off -->
+<!--
+
+<details>
+    <summary>Full list of deprecated API</summary>
+
+  <table>
+    <thead>
+        <tr>
+            <td><b>API</b></td>
+            <td><b>Replacement</b></td>
+            <td><b>Comment</b></td>
+        </tr>
+    </thead>
+    <tbody>
+          <tr>
+            <td>DefaultErpHttpDestination</td>
+            <td>HttpDestination</td>
+            <td>
+              HttpDestination now automatically adds sap-client and sap-language
+              headers defined on the destination
+            </td>
+          </tr>
+          <tr>
+            <td>ErpHttpDestination</td>
+            <td>-</td>
+            <td>No replacement necessary</td>
+          </tr>
+          <tr>
+            <td>ErpHttpDestinationProperties</td>
+            <td>-</td>
+            <td>No replacement necessary</td>
+          </tr>
+          <tr>
+            <td>ErpHttpDestinationUtils</td>
+            <td>-</td>
+            <td>No replacement necessary</td>
+          </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+</details>
+
+## Update Your POM.XML
+
+ -->
+<!-- vale on -->
+<!--
+
+
+Begin by upgrading the version to `5.0.0`.
+Make sure to apply this for all the places where you declare the SAP Cloud SDK version.
+Typically, this is the `sdk-bom` in the dependency management section.
+
+In case you are using any of the code generators (OData, OpenAPI) also increase the version for those.
+
+:::tip Verify the version
+You can run `mvn dependency:tree | grep 'com.sap.cloud.sdk'` to verify that all entries are consistently on version 5.
+:::
+
+Finally, version 5 discontinued some (legacy) modules and plugins.
+Most notably are:
+
+- All Neo related modules
+-
+
+Remove them if they are present in your pom files.
+
+<details>
+    <summary>Full list of removed modules</summary>
+
+- Blockchain:
+  - `blockchain-business-services-sdk`
+  - `blockchain-business-services-visibility`
+  - `blockchain-client-fabric`
+  - `blockchain-client-multichain`
+  - `scp-blockchain`
+- Neo related modules:
+  - `auditlog-scp-neo`
+  - `cloudplatform-connectivity-scp-neo`
+  - `cloudplatform-core-scp-neo`
+  - `scp-neo`
+  - `security-scp-neo`
+  - `tenant-scp-neo`
+  - `concurrency-scp-neo`
+- Others:
+  - `com.sap.cloud.sdk.archetypes:sdk-neo-javaee7`
+  - `com.sap.cloud.sdk.plugins:plugins-parent`
+  - `com.sap.cloud.sdk.plugins:scp-neo-maven-plugin`
+
+</details>
+
+We deprecated some modules in version 5, if you are using any of them, please note that support for them may not be continued in upcoming major versions.
+
+<details>
+    <summary>Full list of deprecated modules</summary>
+
+- `com.sap.cloud.sdk.s4hana:s4hana-connectivity`
+- `com.sap.cloud.sdk.s4hana:s4hana-core`
+- `com.sap.cloud.sdk.s4hana:rfc`
+- `com.sap.cloud.sdk.datamodel:soap`
+- `com.sap.cloud.sdk:sdk-sjb-bom`
+- `com.sap.cloud.sdk.cloudplatform:auditlog-scp-cf`
+
+</details>
+
+## Get Support
+
+Having trouble with any of the update steps?
+Please don't hesitate to reach out to us!
+
+You can find our [public and internal support channels here](/docs/overview/get-support).
+
+## Further Changes
+
+At this point the update is probably already complete.
+There are more technically breaking API changes in version 5 that likely won't affect your project.
+Still, they are listed here for completeness and easy access.
+
+### Others
+
+The most notable remaining changes are:
+
+-
+ -->
