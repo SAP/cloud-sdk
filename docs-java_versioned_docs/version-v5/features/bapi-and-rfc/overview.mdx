@@ -443,18 +443,6 @@ In case you want to use multitenancy or multithreading the recommendations to [a
 
 Furthermore, please check out the documentation [here](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/fa4adc9bd40e45dbac573fd616695446.html), especially if you want to call JCo from any newly created thread.
 
-### Decoration of RFC Destinations
-
-In the realm of HTTP, destinations allow decoration to add further features to them.
-For instance, an `ErpHttpDestination` can decorate an `HttpDestination` which introduces the enhancement of request headers with SAP S/4HANA-specific destination properties (e.g., `sap-client`).
-
-```java
-final HttpDestination httpDestination = DestinationAccessor.getDestination(destinationName).asHttp();
-final DefaultErpHttpDestination erpHttpDestination = httpDestination.decorate(DefaultErpHttpDestination::new);
-```
-
-For RFC destinations, such decorations do not exist.
-
 ### Local Deployment
 
 It is possible to execute BAPI calls from a Java app that runs on `localhost`.
