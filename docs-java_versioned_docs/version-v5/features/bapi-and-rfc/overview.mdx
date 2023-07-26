@@ -19,7 +19,6 @@ import TabItem from '@theme/TabItem';
 
 :::danger Warning
 `RFC`, `JCo` and `SOAP` modules are **deprecated**.
-You can still use our SDK version 4, as it will be maintained for another half a year (until around Q1 2024).
 Please consider searching for an OData based service (e.g., via SAP Business Accelerator Hub) as possible replacement, and SDK offers OData type safe clients (both OData v2 and v4).
 If you have to use `JCo` or `RFC`, here is the [documentation](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/invoking-abap-function-modules-via-rfc) about how to consume ABAP functions via RFC, using JCo.
 :::
@@ -56,7 +55,6 @@ SAP Cloud SDK does _not_ package JCo as a library with its dependencies.
 The SAP Cloud SDK assumes that JCo is available on the JVM classpath.
 :::
 
-On the SAP BTP for the Neo environment, JCo is automatically provided by the infrastructure.
 On the SAP BTP for the Cloud Foundry environment one must use the SAP Java Build Pack during app deployment.
 There are other edge cases that we'll cover later.
 
@@ -444,18 +442,6 @@ Please visit the [Notes on the SAP Java Buildpack](../../guides/manage-dependenc
 In case you want to use multitenancy or multithreading the recommendations to [avoid scope conflicts](../../guides/manage-dependencies#avoiding-scope-conflicts) become mandatory.
 
 Furthermore, please check out the documentation [here](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/fa4adc9bd40e45dbac573fd616695446.html), especially if you want to call JCo from any newly created thread.
-
-### Decoration of RFC Destinations
-
-In the realm of HTTP, destinations allow decoration to add further features to them.
-For instance, an `ErpHttpDestination` can decorate an `HttpDestination` which introduces the enhancement of request headers with SAP S/4HANA-specific destination properties (e.g., `sap-client`).
-
-```java
-final HttpDestination httpDestination = DestinationAccessor.getDestination(destinationName).asHttp();
-final DefaultErpHttpDestination erpHttpDestination = httpDestination.decorate(DefaultErpHttpDestination::new);
-```
-
-For RFC destinations, such decorations do not exist.
 
 ### Local Deployment
 
