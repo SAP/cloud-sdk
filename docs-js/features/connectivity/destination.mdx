@@ -19,14 +19,15 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-SAP Business Technology Platform (SAP BTP) provides the concept of destinations for convenient communication between SAP BTP and other systems.
+Destinations represent information about a target system.
 A destination is an object with the following information, among others:
 
 - URL
 - authentication configuration
 - [proxy settings](./proxy.mdx)
 
-Destinations are managed separately from applications on SAP BTP and can be retrieved through the destination service at runtime.
+Destinations in the SAP Cloud SDK are based on the SAP Business Technology Platform (SAP BTP) concept of destinations for convenient communication between SAP BTP and other systems.
+On SAP BTP, destinations are managed separately from applications and can be retrieved through the destination service at runtime.
 Some reasons to separate destinations and the application are:
 
 - You can securely store authentication information that should not be part of the application code.
@@ -34,59 +35,22 @@ Some reasons to separate destinations and the application are:
 - Different customers may want to configure different systems.
 - Multiple applications might want to access the same systems.
 
-The SAP Cloud SDK helps you to authenticate against the destination service and retrieve destinations into your application.
-
-The SAP Cloud SDK supports [OData](../odata/overview.mdx) and [OpenAPI](../openapi/overview.mdx) services.
-For both service types, the `execute()` method triggers a request to a target system.
-For OData services, you can invoke the method as:
-
-```ts
-const { businessPartnerApi } = businessPartnerService();
-const responseOData = await businessPartnerApi
-  .requestBuilder()
-  .getAll()
-  .execute(myDestination);
-```
-
-Similarly for OpenAPI:
-
-```ts
-const responseOpenApi = await MyApi.myFunction().execute(myDestination);
-```
-
-`myDestination` is an SAP Cloud SDK representation of a [destination](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.Destination.html).
-The given request is executed against `myDestination`.
-
-For the rest of the document, you will learn about the different options on destination lookup.
-All statements apply equally to OData- and OpenAPI-based services.
-
-## Creating Destinations Manually
-
-:::caution
-
-This option is **not recommended** for productive use as you would lose the benefits of separating destinations from applications.
-
-:::
-
-You can construct a destination object manually and pass the destination information directly to the `execute()` method.
-A manually constructed destination requires at least a `url` property.
-
-```ts
-MyRequest.execute({ url: 'https://example.com' });
-```
+Use [destinations](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.Destination.html) to execute [arbitrary requests](./generic-http-client.mdx), [OData requests](../odata/overview.mdx), and [OpenAPI requests](../openapi/overview.mdx) as well as to [send e-mails](../mail-client/mail-client.mdx).
+The following examples use `req.execute()`, assuming req is an OData or OpenAPI request, to demonstrate options for the destination lookup.
+The same options apply to `executeHttpRequest()` and `sendMail()`.
 
 ## Referencing Destinations by Name
 
-Instead of defining your destination manually, you can reference it by a name:
+To reference a destination, pass an object with `destinationName`:
 
 ```ts
-MyRequest.execute({ destinationName: 'myDestination' });
+await req.execute({ destinationName: 'DESTINATION' });
 ```
 
 The SAP Cloud SDK searches for the destination by its name in the following locations and order:
 
 1. local environment variables
-2. destination registered in the SAP Cloud SDK
+2. destinations registered in the SAP Cloud SDK
 3. service binding environment variables
 4. SAP BTP's destination service
 
@@ -96,12 +60,12 @@ The search stops once a matching destination is found, even if other locations m
 
 :::caution
 
-This option should **only be used for testing purposes in a local environment** outside the SAP BTP where no destination services are available.
-Use [Register Destination](#register-destination) to cache destinations in production.
+You should use this option **only for testing purposes in local environments** outside the SAP BTP where no destination service is available.
+If you want to cache destinations in production, use [`registerDestination()`](#register-destination) instead.
 
 :::
 
-The `destinations` environment variable is used for the destination lookup in the aforementioned order if they are presented.
+You can provide destinations in the `destinations` environment variable.
 The value of the environment variable is expected to be a stringified JSON array, where the items adhere to the [Destination interface](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.Destination.html).
 
 Example:
@@ -109,6 +73,17 @@ Example:
 ```text
 "[{\"name\": \"TESTINATION\", \"url\": \"http://url.hana.ondemand.com\", \"username\": \"DUMMY_USER\", \"password\": \"EXAMPLE_PASSWORD\"}]"
 ```
+
+At runtime, the SAP Cloud SDK will check the environment variable for a destination with the given name and use it, if present.
+This allows you to use different destinations in different environments, e.g. a destination from the destination service in production and a destination from the `destinations` environment variable for local development.
+
+:::caution
+
+Note that this approach is **not suitable for multi-tenant scenarios**.
+
+:::
+
+#### Testing with Local Environment Variables
 
 The SAP Cloud SDK provides a `setTestDestination()` function to add a destination to the environment variable for the current process programmatically.
 It takes a [destination object](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.Destination.html), transforms it to a JSON object, and adds it to `process.env.destinations`.
@@ -120,46 +95,36 @@ setTestDestination({
   authentication: 'NoAuthentication',
   name: 'TESTINATION',
   isTrustingAllCertificates: false,
-  url: 'https://mys4hana.com'
+  url: 'https://example.com'
 });
 ```
 
-The above example sets a destination with the name `TESTINATION`.
-At runtime, the SAP Cloud SDK will check the environment variable for a destination with the given name and use it if present.
+In the above example, a destination with the name "TESTINATION" is added to the `destination` environment variable.
 
 The SAP Cloud SDK also offers a `mockTestDestination()` method, which reads in a `systems.json` and `credentials.json` to create destinations.
-The advantage of files is that they can be excluded from the repository since they contain sensitive information.
-
-:::caution
-
-Note that this approach is **not suitable for multi-tenant scenarios**, because only the destination service can return destinations for different tenants.
-
-:::
-
-Due to security concerns, the `forwardAuthToken` option is ignored and the `authTokens` is always empty.
+The advantage of files is that they can be excluded from the repository, if they contain sensitive information.
 
 ### Register Destination
 
-The destination service should always be used in production to fetch a destination.
-
-Each call to the destination service will introduce a small time overhead.
-This can be avoided with a cache for cases like very frequent service-to-service communication or when the destination needs no authentication at all.
+You can provide named destinations to your application, by registering them in your application.
+This is particularly helpful for service-to-service communication, where authentication is handled within a cluster and reaching out to the destination service would cause unnecessary overhead.
 
 ```ts
 import { registerDestination } from '@sap-cloud-sdk/connectivity';
 
-const destination = {
-  name: 'DESTINATION',
-  url: 'https://mys4hana.com'
-};
+await registerDestination(
+  {
+    name: 'DESTINATION',
+    url: 'https://example.com'
+  },
+  options
+);
 
-registerDestination(destination, options);
-
-MyRequest.execute({ destinationName: 'DESTINATION' });
+await req.execute({ destinationName: 'DESTINATION' });
 ```
 
-Functions such as `execute()` and `executeHttpRequest()` call the `getDestination()` function internally for the destination lookup.
-During the lookup, if a registered destination is found, the lookup is stopped, and the call to the destination service is avoided.
+In the example above a destination is registered under the name "DESTINATION" using `regsiterDestination()`.
+After that, you can reference this destination by passing its name.
 
 :::caution
 
@@ -173,13 +138,13 @@ With [token forwarding](#forwarding-auth-token) the token used to execute the re
 ```ts
 const destination = {
   name: 'FORWARD-DESTINATION',
-  url: 'https://mys4hana.com',
+  url: 'https://example.com',
   forwardAuthToken: true
 };
 
 registerDestination(destination, options);
 
-MyRequest.execute({
+req.execute({
   destinationName: 'FORWARD-DESTINATION',
   jwt: 'forwardedJwt'
 });
@@ -203,7 +168,7 @@ const options: RegisterDestinationOptions = {
 };
 ```
 
-This will configure HTTPS requests to automatically check for the `CF_INSTANCE_CERT` and `CF_INSTANCE_KEY` environment variables and read the certificate and key.
+This configures HTTPS requests to automatically check for the `CF_INSTANCE_CERT` and `CF_INSTANCE_KEY` environment variables and read the certificate and key.
 
 The caching of mTLS certificates is disabled by default, but can be enabled by adding the `useCache` option:
 
@@ -219,48 +184,12 @@ Since in Cloud Foundry each deployment has their own mTLS certificate, the cache
 
 ### Service Binding Environment Variables
 
-The service credentials (also known as the `VCAP_SERVICES` environment variable) represent services bound to the application.
-If you want to consume such a service, the SAP Cloud SDK can create a destination from the service binding for you.
-You do not need to create a dedicated destination in the destination service.
-Provide the name of the service instance as the destination name and the SAP Cloud SDK will:
+The service bindings (also known as the `VCAP_SERVICES` environment variable) represent services bound to the application.
+You can consume bound services as destinations to execute requests against those services.
+When you execute a request against a bound service, the name of the destination is the service instance name.
+The SAP Cloud SDK retrieves the according service binding and passes it to a callback function, that transforms the service to a destination.
 
-- Find the service binding with the given name
-- Extract the URL from the service binding
-- Fetch a client-credential-grant token if needed
-- Return a destination containing the token and URL
-
-If you created a binding for the workflow service:
-
-```json
-{
-  "VCAP_SERVICES": {
-    "workflow": [
-      {
-        "label": "workflow",
-        "plan": "standard",
-        "name": "my-workflow-service",
-        "tags": [],
-        "instance_name": "my-workflow-service",
-        "credentials": {
-          // ...
-        }
-      }
-    ]
-  }
-}
-```
-
-Call the service API using the instance name `my-workflow-service`:
-
-```ts
-import { WorkflowDefinitionsApi } from './generated/SAP_CP_Workflow_CF';
-
-WorkflowDefinitionsApi.queryDefinitions().execute({
-  destinationName: 'my-workflow-service'
-});
-```
-
-The following services are supported out of the box:
+The SAP Cloud SDK provides a default implementation for the transformation of service bindings of the following types:
 
 - `business-logging`
 - `s4-hana-cloud`
@@ -270,32 +199,55 @@ The following services are supported out of the box:
 - `service-manager`
 - `xsuaa`
 
-If you need the destination for another custom service, create a function with [ServiceBindingTransformFunction type](pathname:///api/v3/types/sap_cloud_sdk_connectivity.ServiceBindingTransformFunction.html) to transform the [Service interface](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.Service.html) into the [Destination interface](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.Destination.html).
-Pass the function with the `serviceBindingTransformFn` property in the `DestinationFetchOptions` argument.
+The default implementation also retrieves a service token, if needed.
 
-For example:
+For other types of service bindings or if you want to overwrite the default behavior, provide a callback function (`serviceBindingTransformFn()`) in the request execution.
+
+For example, if you have a binding for a custom service:
+
+```json
+{
+  "VCAP_SERVICES": {
+    "custom-service": [
+      // This object is passed to `serviceBindingTransformFn()`
+      {
+        "label": "custom-service",
+        "name": "my-custom-service",
+        "credentials": {
+          "url": "https://example.com",
+          "usr": "USERNAME",
+          "pwd": "PASSWORD"
+        }
+      }
+    ]
+  }
+}
+```
+
+To transform this custom service binding you need to provide the `serviceBindingTransformFn()` function.
+In the example below, we access the `service.credentials` to create a destination with authentiction type "BasicAuthentication".
 
 ```ts
-const serviceBindingTransformFn = async (service: Service) => ({
-  url: service.credentials.sys
-});
-
-MyRequest.execute({
-  destinationName: 'my-service-name',
-  serviceBindingTransformFn
+await req.execute({
+  destinationName: 'my-custom-service',
+  serviceBindingTransformFn: async (service, options) => ({
+    url: service.credentials.sys,
+    authentication: 'BasicAuthentication',
+    username: service.credentials.usr,
+    password: service.credentials.pwd
+  })
 });
 ```
 
+Note, that if your `serviceBindingTransformFn()` function does not provide a name in the transformed destination, it will automatically be inferred from the given destination name, i.e. 'my-custom-service' in the example above.
+
 More advanced examples with service token fetching can be found in [service-binding-to-destination.ts](https://github.com/SAP/cloud-sdk-js/blob/main/packages/connectivity/src/scp-cf/destination/service-binding-to-destination.ts).
 
-You can also consider creating a [feature request](https://github.com/SAP/cloud-sdk-js/issues/new?assignees=&labels=feature+request&template=feature_request.md&title=).
-Contributions providing transform functions are highly welcome.
-
-The `execute()` or `getDestination()` function try multiple steps to retrieve a destination, as discussed in the beginning.
-If you want to consider only the service bindings, call the [destinationForServiceBinding()](pathname:///api/v3/functions/sap_cloud_sdk_connectivity.destinationForServiceBinding.html) function with the service name and options.
+If you want to skip the destination lookup and consider only the service bindings, call the [getDestinationFromServiceBinding()](pathname:///api/v3/functions/sap_cloud_sdk_connectivity.getDestinationFromServiceBinding.html) function with the service name and options.
 
 ```ts
-const destination = destinationForServiceBinding('my-service-name', {
+const destination = getDestinationFromServiceBinding({
+  destinationName: 'my-service-name',
   serviceBindingTransformFn,
   jwt: 'jwt',
   useCache: false
@@ -304,7 +256,7 @@ const destination = destinationForServiceBinding('my-service-name', {
 
 ### Destination Service
 
-In a productive environment, you will use a [Destination service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html) to retrieve destinations.
+In a productive environment, in most cases you will use the [destination service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html) to retrieve destinations.
 
 #### Authentication and JSON Web Token (JWT) Retrieval
 
@@ -352,7 +304,7 @@ In the following, the term "subscriber account" will be used for the accounts us
 For simplicity, an optional argument of the destination lookup has been neglected in the beginning:
 
 ```ts
-MyRequest.execute({ destinationName: 'myDestination', jwt: 'yourJWT' });
+await req.execute({ destinationName: 'DESTINATION', jwt: 'yourJWT' });
 ```
 
 The `jwt` argument takes the JSON web token (JWT) issued by an XSUAA as input.
@@ -371,8 +323,8 @@ If no token is given or the destination is not found in the subscriber account, 
 To control this fallback behavior, a selection strategy can be passed to the destination lookup:
 
 ```ts
-MyRequest.execute({
-  destinationName: 'myDestination',
+await req.execute({
+  destinationName: 'DESTINATION',
   jwt: 'yourJWT',
   selectionStrategy: 'alwaysSubscriber'
 });
@@ -406,7 +358,7 @@ There are situations where you do not have a JWT issued by the XSUAA but need to
 In such situations, the property `iss` of the `DestinationAccessorOptions` can be used:
 
 ```ts
-MyRequest.execute({ destinationName: 'myDestination', iss: yourIssuerValue });
+await req.execute({ destinationName: 'DESTINATION', iss: yourIssuerValue });
 ```
 
 The value for `iss` is supposed to be the same as in a JWT issued from the XSUAA, e.g., `https://yourSubdomain.localhost:8080/uaa/oauth/token`.
@@ -542,39 +494,46 @@ Replace `HEADER_KEY` and `QUERY_KEY` with the name of the headers or query param
   className="center"
 />
 
-<!-- TODO replace my-api-key and adjust screenshot above -->
+<!--TODO replace my-api-key and adjust screenshot above-->
 
 In the example above, the destination has an `apiKey` header with the value `<my-api-key>` and a `language` query parameter with the value `EN`.
 
 The SAP Cloud SDK adds those additional headers and query parameters for every communication with the given destination.
 
-### Forwarding Auth Token
+### Forwarding Auth Tokens
 
-The SDK provides the option of configuring a destination to directly forward a user JWT to the target system.
-This hebaiour can be enabled by setting the `forwardAuthToken` property on the destination to `true`, as shown in the code snippet below:
+The SDK provides the option of configuring a destination to directly forward the given JWT to the target system.
+This behavior can be enabled by setting the `forwardAuthToken` property on the destination to `true`, as shown in the code snippet below:
 
 ```ts
 const destination = {
-  name: 'myDestination',
+  name: 'DESTINATION',
   url: 'https://example.com',
   forwardAuthToken: true,
   ...
 }
 ```
 
-After configuring the destination, you can execute the request by calling `execute()` or `executeHttpRequest()` methods and passing the token you wish to forward, as shown below:
+Now, when you reference the destination in a request, where you pass a JWT, the JWT is passed to the target system in the authorization header.
 
 ```ts
-executeHttpRequest({ destinationName: 'myDestination', jwt: 'userJwt' });
+// Sends a request with the JWT in the headers: { authorization: 'Bearer <JWT>' }
+await req.execute({ destinationName: 'DESTINATION', jwt: '<JWT>' });
 ```
 
-In the above request, the authorization header with the specified JWT will always be sent, overriding the authentication type of the destination.
-It is important to note that this approach will only work if the target system accepts unchanged JWTs.
+Forwarding a JWT is only intended with authentication type "NoAuthentication".
+For other authentication types the forwarded JWT will override the default authentication which can lead to unexpected behavior.
+
+Custom authorization headers in the `requestConfig` take precedence over the forwarded JWT.
+
+This approach only works, if the target system accepts unchanged JWTs.
 If any transformation is required, e.g., from `OAuth` to `SamlBearer`, it is recommended to use the destination service.
 
-:::note
-If a custom authorization header is provided in the `requestConfig`, it will take precedence over the JWT to be forwarded.
-:::
+#### `HTML5.ForwardAuthToken` vs. `forwardAuthToken`
+
+To enable token forwarding for destinations in the destination service set either `HTML5.ForwardAuthToken` or `forwardAuthToken` to `true`.
+Every other value is interpreted as `false`.
+If both options are specified only the value passed to `forwardAuthToken` is used.
 
 #### Rules of Precedence
 
@@ -594,3 +553,18 @@ Custom headers and query parameters, however, overwrite the additional propertie
 This does not apply to query **parameter names**`.
 
 :::
+
+## Creating Destinations Manually
+
+:::caution
+
+This option is **not recommended** for productive use as you would lose the benefits of separating destinations from applications.
+
+:::
+
+You can construct a destination object manually and pass the destination information directly to the `execute()` method.
+A manually constructed destination requires at least a `url` property.
+
+```ts
+await req.execute({ url: 'https://example.com' });
+```
