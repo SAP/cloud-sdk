@@ -34,9 +34,12 @@ Some reasons to separate destinations and the application are:
 - Different customers may want to configure different systems.
 - Multiple applications might want to access the same systems.
 
-The SAP Cloud SDK helps you to authenticate against the destination service and retrieve destinations into your application.
+The SAP Cloud SDK uses a representation of a [destination](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.Destination.html) to execute [arbitrary requests](../generic-http-client.mdx), [OData requests](../odata/overview.mdx), and [OpenAPI requests](../openapi/overview.mdx) as well as to [send e-mails](../mail-client/mail-client.mdx).
 
-The SAP Cloud SDK supports [OData](../odata/overview.mdx) and [OpenAPI](../openapi/overview.mdx) services.
+The SAP Cloud SDK helps you to authenticate against the destination service and retrieve destinations for your application.
+The given request is executed against `myDestination`.
+
+
 For both service types, the `execute()` method triggers a request to a target system.
 For OData services, you can invoke the method as:
 
@@ -135,8 +138,6 @@ The advantage of files is that they can be excluded from the repository since th
 Note that this approach is **not suitable for multi-tenant scenarios**, because only the destination service can return destinations for different tenants.
 
 :::
-
-Due to security concerns, the `forwardAuthToken` option is ignored and the `authTokens` is always empty.
 
 ### Register Destination
 
