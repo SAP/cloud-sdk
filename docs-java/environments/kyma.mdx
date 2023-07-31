@@ -297,62 +297,38 @@ For this guide we'll assume we want to use two services:
 1. Destination Service
 2. XSUAA Service
 
-#### Bind the Destination Service
+#### Create and Bind the Destination Service
 
-1. Open your Kyma dashboard by clicking the link in your SAP BTP cockpit:
+1. Open your Kyma dashboard and select the namespace of your application (top right hand side of the screen) and navigate to `Service Management > Service Instances`.
 
-![Kyma Console URL](sap-btp-kyma-environment/btp-cockpit-kyma-console-url.png)
+2. Create a new service instance by first clicking on the `+ Create Service Instance` button.
 
-2. In the Kyma dashboard, select your Kyma namespace (top right hand side of the screen), navigate to `Service Management > Catalog`, and select the `Destination` service.
+  Choose a name for the instance, then enter `destination` as offering name and `lite` as plan.
 
-![Destination Service Selection](sap-btp-kyma-environment/btp-kyma-dashboard-destination-service-selection.png)
+  ![Destination Service Instance Creation](sap-btp-kyma-environment/kyma-instance-creation.png)
 
-3. Configure your new service instance by first clicking on the `Add +` button followed by selecting both a name and a plan.
+3. Finalize the service instance creation by confirming your configuration with a click on the `Create` button.
+   
+   :::tip Save the configuration as YAML
+   If you prefer to maintain your configration as code you can copy the resulting YAML into your project.
+   :::
 
-4. Finalize the service instance creation by confirming your configuration with a click on the `Create` button.
+4. Navigate to `Service Management > Service Bindings` and create a binding for the service instance you just created.
+   
+   ![Destination Service Binding Creation](sap-btp-kyma-environment/kyma-binding-creation.png)
 
-![Destination Service Creation](sap-btp-kyma-environment/btp-kyma-dashboard-destination-service-creation.png)
+   The name you give to the binding will be used to create a secret which you will need in the next step.
 
-<details>
-  <summary>Alternative: Using Kubernetes Descriptors</summary>
+5. The service binding created a secret which you now need to mount as a volume into your application.
+   Open your `deployment.yml` and add the following content:
 
-1. Create a new YAML file :
-
-```yml title="destination-service.yaml"{8}
----
-apiVersion: servicecatalog.k8s.io/v1beta1
-kind: ServiceInstance
-metadata:
-  name: destination-service
-spec:
-  clusterServiceClassExternalName: destination
-  clusterServicePlanExternalName: <your-desired-plan>
----
-apiVersion: servicecatalog.k8s.io/v1beta1
-kind: ServiceBinding
-metadata:
-  name: my-destination-service-binding
-spec:
-  instanceRef:
-    name: destination-service
-  secretName: my-dest-secret
-```
-
-2. Install the configuration via `kubectl apply -f destination-service.yml`.
-
-3. Monitor the status via `kubectl describe ServiceInstance destination-service`.
-   Eventually this should automatically create a Kubernetes secret named `my-dest-secret`.
-   This secret will contain the actual service binding information.
-
-4. Mount the `my-dest-secret` secret into the file system of the application as follows:
-
-   1. Find the empty list of `volumes` at the end of your `deployment.yml`.
+   1. Find the empty list of `volumes` in your `deployment.yml`.
       Add a new volume, referencing the secret:
 
       ```yml title="volumes:"
       - name: my-destination-service-binding-volume
         secret:
-          secretName: my-dest-secret
+          secretName: <the name of your binding goes here>
       ```
 
    2. Mount this volume into the file system of your application.
@@ -364,49 +340,41 @@ spec:
         readOnly: true
       ```
 
-5. Update the configuration via `kubectl apply -f deployment.yml`.
-
-</details>
+6. Apply the changes to your deployment by running `kubectl apply -f deployment.yml`.
 
 #### Bind the XSUAA Service
 
-1. Open your Kyma dashboard (see previous section) and select the `Authorization and Trust Management Service` in `Service Managament > Catalog`:
+Apply the same steps as for the destination service, but use the following values when creating the service instance:
 
-![XSUAA Service Selection](sap-btp-kyma-environment/btp-kyma-dashboard-xsuaa-service-selection.png)
+* Offering Name: `xsuaa`
+* Plan: `application`
 
-2. Configure your new service instance by clicking the `Add +` button and selecting both a name and a plan or your new service instance.
-   Complete the process by clicking the `Create` button.
+Here is an example of what the YAML for the service instance and service binding might look like:
 
-![XSUAA Service Creation](sap-btp-kyma-environment/btp-kyma-dashboard-xsuaa-service-creation.png)
-
-<details>
-  <summary>Alternative: Using Kubernetes Descriptors</summary>
-
-1. Create a new YAML file :
-
-```yml title="xsuaa-service.yaml"{8}
----
-apiVersion: servicecatalog.k8s.io/v1beta1
+```yml
+apiVersion: services.cloud.sap.com/v1
 kind: ServiceInstance
 metadata:
-  name: xsuaa-service
+  name: my-xsuaa
+  labels:
+    app.kubernetes.io/name: my-xsuaa
+  annotations: {}
+  namespace: sdk-java
 spec:
-  clusterServiceClassExternalName: xsuaa
-  clusterServicePlanExternalName: <your-desired-plan>
+  serviceOfferingName: xsuaa
+  servicePlanName: application
 ---
-apiVersion: servicecatalog.k8s.io/v1beta1
+apiVersion: services.cloud.sap.com/v1
 kind: ServiceBinding
 metadata:
-  name: my-xsuaa-service-binding
+  name: my-xsuaa-binding
+  labels:
+    app.kubernetes.io/name: my-xsuaa-binding
+  annotations: {}
+  namespace: sdk-java
 spec:
-  instanceRef:
-    name: xsuaa-service
-  secretName: my-xsuaa-secret
+  serviceInstanceName: kyma-xsuaa-serv  
 ```
-
-2. Repeat the same steps 2-5 from the previous section but make use of `my-xsuaa-secret` for the steps.
-
-</details>
 
 ### Expose your Application to the Internet
 
