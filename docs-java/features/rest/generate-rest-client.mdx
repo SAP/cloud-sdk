@@ -157,6 +157,14 @@ Please note that the version of the above plugin must be specified at least once
 Also, the version of the plugin should be the same as of the SAP Cloud SDK.
 We recommend using a Maven property for defining the version of both the Maven plugin and the SAP Cloud SDK BOM.
 
+#### Using the Plugin from the Command Line
+
+The maven plugin can also be invoked without a project from the command line using `-D` parameter flags, for example:
+
+```
+mvn com.sap.cloud.datamodel:openapi-generator-maven-plugin:4.XX.X:generate -Dopenapi.generate.inputSpec=foo -Dopenapi.generate.outputDirectory=bar
+```
+
 ### Generating Java Client Library for Multiple OpenAPI Specifications
 
 This Maven plugin processes one OpenAPI specification per execution.
@@ -195,6 +203,8 @@ As an example refer to the plugin XML below:
 	</configuration>
 </plugin>
 ```
+
+See the full list of parameters [here](#available-parameters).
 
 ## Using the OpenAPI Generator CLI
 
