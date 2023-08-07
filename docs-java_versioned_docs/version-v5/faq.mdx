@@ -40,17 +40,6 @@ Note that the SAP Business Technology Platform Cloud Foundry environment only su
 
 SAP Cloud SDK can be used with JakartaEE (e.g. via Spring Boot 3, Spring 6, and Java 17) thanks to the experimental module `servlet-jakarta`.
 
-:::caution Compatibility of OpenAPI Features and `RestTemplate`
-
-Due to an [incompatible change in the Spring Framework 6](https://github.com/spring-projects/spring-framework/wiki/Upgrading-to-Spring-Framework-6.x#web-applications) the OpenAPI related functionality of the SAP Cloud SDK is currently not compatible with **version 6 of the Spring Framework**.
-
-The issue is caused by a change to the `RestTemplate`, which now requires Apache Http Client version 5 (previously required version 4).
-The new http client version is not downwards compatible and the Cloud SDK currently still relies on `RestTemplate` with Http Client version 4.
-
-This also affects use cases where `RestTemplate` is used directly with the [Http Client provided by the SAP Cloud SDK](/docs/java/features/connectivity/http-client).
-
-:::
-
 In case you are migrating your application from Spring Boot 2, the below steps make sure the Cloud SDK continues to work smoothly:
 
 1. Set Spring Boot version to 3 and Java version to 17:
@@ -81,7 +70,7 @@ In case you are migrating your application from Spring Boot 2, the below steps m
         <dependency>
             <groupId>com.sap.cloud.sdk</groupId>
             <artifactId>sdk-bom</artifactId>
-            <version>4.9.0</version>
+            <version>4.20.0</version> <!-- TODO: replace this with the most recent version -->
             <type>pom</type>
             <scope>import</scope>
         </dependency>
@@ -296,8 +285,6 @@ The `Content-Type` should correspond to the uploaded file or your upload might f
 Yes, we do support [OpenAPI 2.0 also known as Swagger](https://swagger.io/specification/v2/), and [OpenAPI 3.0](https://swagger.io/specification/) specifications.
 The latter is preferred.
 Find documentation how to generate a [type-safe Open API client here](features/rest/generate-rest-client.mdx).
-We also release pregenerated libraries in collaboration with service providers who release RESTful Open API services.
-For details check an [overview](features/rest/overview).
 For feedback or questions about our Open API offering, please, create an issue [here](https://github.com/SAP/cloud-sdk/issues).
 
 ## Questions About SAP Business Technology Platform
