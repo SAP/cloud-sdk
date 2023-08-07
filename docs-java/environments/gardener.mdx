@@ -418,12 +418,10 @@ On Kubernetes there are generally two approaches to connect to On-Premise destin
 2. Using Connectivity Proxy only
 
 Approach **(1)** simplifies the application code but does not cover all features at the time of writing.
-Most prominently, only **single-tenant** mode is currently supported.
 
 <details>
   <summary>Constraints when using the Transparent Proxy</summary>
 
-- Single tenant only
 - Private Link not yet supported
 - Destination names need to be known at design time
   - see the note on [Create a Kubernetes Resource](#create-a-kubernetes-resource)
@@ -447,7 +445,7 @@ We generally recommend to go with approach (1) unless the given constraints appl
 
 #### Prerequisites
 
-This guide assumes you have both the **Transparent Proxy** (version `>= 1.2.0`) and **Connectivity Proxy** (version `>= 2.8.0`) installed in your cluster.
+This guide assumes you have both the **Transparent Proxy** (version `>= 1.3.0`) and **Connectivity Proxy** (version `>= 2.9.2`) installed in your cluster.
 Please refer to [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/1c18e0ca10884dad994fc3d7e1d046d7.html) and [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/23fc1100c60b45c58f09694b7f9c7700.html) documentation on how to install it if you haven't already.
 
 #### Background Information
@@ -473,6 +471,7 @@ metadata:
 spec:
   destinationRef:
     name: 'example-dest-onprem' # name from BTP Cockpit
+  destinationServiceInstanceName: dest-service-instance-example # can be ommited if config.destinationService.defaultInstanceName was provided to the helm chart of the transparent proxy upon installation
 ```
 
 - Adjust the name `example-dest-onprem` to the On-Premise destination you defined in your SAP BTP Cockpit.
@@ -492,7 +491,9 @@ In your application you can now configure a destination to execute requests:
 ```java
 DefaultHttpDestination destination = DefaultHttpDestination
         .builder("http://example-dest.namespace/")
-        // for principal propagation make sure to set the auth type to "TOKEN_FORWARDING"
+        // for a subscriber tenant make sure to send the tenant header:
+        // .header(new Header("X-Tenant-Id", TenantAccessor.getCurrentTenant().getTenantId()))
+        // for principal propagation make sure to set the auth type to "TOKEN_FORWARDING":
         // .authenticationType(AuthenticationType.TOKEN_FORWARDING)
         .build();
 
