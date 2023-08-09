@@ -37,7 +37,7 @@ It can be used in the dependency management as follows:
 
 <Tabs groupId="deployment" defaultValue="default" values={[
 { label: 'Default', value: 'default', },
-{ label: 'Tomcat with SAP Java Buildpack', value: 'SJB', }
+{ label: 'Tomcat/TomEE with SAP Java Buildpack', value: 'SJB', }
 ]}>
 
 <TabItem value="default">
@@ -64,8 +64,15 @@ It can be used in the dependency management as follows:
 <dependencyManagement>
     <dependencies>
         <dependency>
+            <groupId>com.sap.cloud.sjb.cf</groupId>
+            <artifactId>cf-tomee7-bom</artifactId>
+            <version>use-latest-version-here</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+        <dependency>
             <groupId>com.sap.cloud.sdk</groupId>
-            <artifactId>sdk-sjb-bom</artifactId>
+            <artifactId>sdk-bom</artifactId>
             <version>use-latest-version-here</version>
             <type>pom</type>
             <scope>import</scope>
@@ -74,12 +81,10 @@ It can be used in the dependency management as follows:
 </dependencyManagement>
 ```
 
+[More information about Tomcat and TomEE BOMs here](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/6c6936e8e4ea40c9a9a69f6783b1e978.html)
+
 </TabItem>
 </Tabs>
-
-:::caution Dedicated BOM for SAP Java Buildpack
-Please refer to the [buildpack related notes below](#notes-on-the-sap-java-buildpack) in case you are using the SAP Java Buildpack with a WAR based deployment.
-:::
 
 It helps in various ways:
 
@@ -179,23 +184,14 @@ The BOM for the SAP Java Buildpack (SJB) `sdk-sjb-bom` has been deprecated.
 The latest tested SJB version is 1.71.0 with SDK 4.16.0.
 From now on, whenever you switch to a newer version of the SJB, it might not be magically compatible with the SDK.
 
-Alternatively, you can use the [BOMs provided by the SAP Java Buildpack](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/6c6936e8e4ea40c9a9a69f6783b1e978.html) directly.
+Alternatively, you can use [the SDK BOM with SAP Java Buildpack BOMs](#the-sap-cloud-sdk-bill-of-material) directly.
 :::
 
 The [SAP Java Buildpack](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/a3f90069d6cd41da82f34a6123d82ce6.html) brings some dependencies that are also brought by the SAP Cloud SDK.
 This can lead to conflicts when using a `war` deployment.
 
-To prevent any issues we recommend using our dedicated BOM for the SAP Java Buildpack:
-
-```xml
-<dependency>
-  <groupId>com.sap.cloud.sdk</groupId>
-  <artifactId>sdk-sjb-bom</artifactId>
-  <version>4.XX.X</version>
-  <type>pom</type>
-  <scope>import</scope>
-</dependency>
-```
+To prevent any SAP Java Buildpack issues we recommend using the `cf-tomee7-bom`
+([or Tomcat or TomEE BOMs](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/6c6936e8e4ea40c9a9a69f6783b1e978.html)) followed by our `sdk-bom`.
 
 :::tip
 The SAP Java Buildpack generally does not affect typical Spring Boot applications which are packed into an executable jar by default.
@@ -223,34 +219,82 @@ Still, the same strategy is also valid and useful for the community Buildpack.
 
 ### Avoiding Scope Conflicts
 
-Using our dedicated buildpack BOM `com.sap.cloud.sdk:sdk-sjb-bom` helps preventing scope conflicts.
-This combined BOM ensures that the SAP Cloud SDK and SAP Java Buildpack versions are compatible and that you only need to manage one BOM.
-
-It will set the version and the scope of the dependencies the SAP Java Buildpack adds to your application at runtime.
+The BOMs will set the version and the scope of the dependencies the SAP Java Buildpack adds to your application at runtime.
 The scope of the those dependencies is set to `provided`.
 
 You can verify the behavior by searching for the scope of, for example, the `com.sap.cloud.security.xsuaa:token-client` dependency in your application.
-When you use the dedicated `sdk-sjb-bom` or any of the [BOMs provided by the SAP Java Buildpack directly](https://search.maven.org/search?q=com.sap.cloud.sjb.cf) the `token-client` should have the scope `provided`.
+When you use any of the [BOMs provided by the SAP Java Buildpack directly](https://search.maven.org/search?q=com.sap.cloud.sjb.cf) the `token-client` should have the scope `provided`.
 If you are not using the BOMs, it should have the scope `compile` or `test`.
-
-:::tip
 
 Verify your dependency tree via `mvn dependency:tree`.
 The above dependencies should only be listed with scope `provided`.
-
-:::
-
-:::note
 
 Dependencies with the scope `provided` are not part of your `.war` file.
 This means you need to adapt the scopes if you want to run your applications without the SAP Java Buildpack.
 One common example for this is running your application locally.
 
-In our `scp-cf-tomee` archetype we provide a maven profile activated by the parameter `-Ddeployment=local`.
-This replaces our `sdk-sjb-bom` (a convenience combination of the SAP Java Buildpack and our SAP Cloud SDK BOMs) with our `sdk-bom`.
-As a result the SAP Java Buildpack BOM is removed from the `dependencyManagement`, which adapts the scopes of your dependencies for local deployment.
+Local deployment of TomEE is possible with a maven profile activated by the parameter `-Ddeployment=local`.
+As a result the SAP Java Buildpack BOM is removed from the `dependencyManagement`.
 
-:::
+<details>
+    <summary>Maven profile</summary>
+
+```xml
+<profiles>
+    <profile>
+        <id>cloud-deployment</id>
+        <activation>
+            <property>
+                <name>deployment</name>
+                <!-- Activate this profile when the 'local' is not defined -->
+                <value>!local</value>
+            </property>
+        </activation>
+        <dependencyManagement>
+            <dependencies>
+                <dependency>
+                    <groupId>com.sap.cloud.sjb.cf</groupId>
+                    <artifactId>cf-tomee7-bom</artifactId>
+                    <version>use-latest-version-here</version>
+                    <type>pom</type>
+                    <scope>import</scope>
+                </dependency>
+                <dependency>
+                    <groupId>com.sap.cloud.sdk</groupId>
+                    <artifactId>sdk-bom</artifactId>
+                    <version>use-latest-version-here</version>
+                    <type>pom</type>
+                    <scope>import</scope>
+                </dependency>
+            </dependencies>
+        </dependencyManagement>
+    </profile>
+    <!-- Having 2 profiles ensures that the tomee bom will always be in front of the sdk bom-->
+    <profile>
+        <id>local-deployment</id>
+        <activation>
+            <property>
+                <name>deployment</name>
+                <!-- Activate this profile when the 'local' is defined -->
+                <value>local</value>
+            </property>
+        </activation>
+        <dependencyManagement>
+            <dependencies>
+                <dependency>
+                    <groupId>com.sap.cloud.sdk</groupId>
+                    <artifactId>sdk-bom</artifactId>
+                    <version>use-latest-version-here</version>
+                    <type>pom</type>
+                    <scope>import</scope>
+                </dependency>
+            </dependencies>
+        </dependencyManagement>
+    </profile>
+</profiles>
+```
+
+</details>
 
 ### Background: Dependency Version Conflicts
 
