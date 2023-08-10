@@ -181,10 +181,10 @@ It does not yet include it as a dependency in your project.
 
 :::danger Warning
 The BOM for the SAP Java Buildpack (SJB) `sdk-sjb-bom` has been deprecated.
-The latest tested SJB version is 1.71.0 with SDK 4.16.0.
 From now on, whenever you switch to a newer version of the SJB, it might not be magically compatible with the SDK.
 
-Alternatively, you can use [the SDK BOM with SAP Java Buildpack BOMs](#the-sap-cloud-sdk-bill-of-material) directly.
+Alternatively, you can use [BOMs provided by the SAP Java Buildpack](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/6c6936e8e4ea40c9a9a69f6783b1e978.html)
+directly, [as described here](#the-sap-cloud-sdk-bill-of-material).
 :::
 
 The [SAP Java Buildpack](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/a3f90069d6cd41da82f34a6123d82ce6.html) brings some dependencies that are also brought by the SAP Cloud SDK.
@@ -226,18 +226,25 @@ You can verify the behavior by searching for the scope of, for example, the `com
 When you use any of the [BOMs provided by the SAP Java Buildpack directly](https://search.maven.org/search?q=com.sap.cloud.sjb.cf) the `token-client` should have the scope `provided`.
 If you are not using the BOMs, it should have the scope `compile` or `test`.
 
+:::tip
+
 Verify your dependency tree via `mvn dependency:tree`.
 The above dependencies should only be listed with scope `provided`.
+
+:::
+
+:::note
 
 Dependencies with the scope `provided` are not part of your `.war` file.
 This means you need to adapt the scopes if you want to run your applications without the SAP Java Buildpack.
 One common example for this is running your application locally.
 
-Local deployment of TomEE is possible with a maven profile activated by the parameter `-Ddeployment=local`.
-As a result the SAP Java Buildpack BOM is removed from the `dependencyManagement`.
+Local deployment of TomEE is possible with a maven profile activated by the parameter `-Ddeployment=local`:
 
 <details>
     <summary>Maven profile</summary>
+
+As a result the SAP Java Buildpack BOM is removed from the `dependencyManagement`.
 
 ```xml
 <profiles>
