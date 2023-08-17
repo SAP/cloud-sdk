@@ -73,6 +73,7 @@ We will publish the full migration guide when we release v5.
 
 <details>
   <summary>Full list of deprecated API</summary>
+
   <table>
     <thead>
       <tr>
@@ -110,6 +111,44 @@ We will publish the full migration guide when we release v5.
         <td>ErpHttpDestinationUtils</td>
         <td>-</td>
         <td>No replacement necessary</td>
+      </tr>
+      <tr>
+        <td>StringConverter</td>
+        <td>Java Standard Library</td>
+        <td>
+          The Java Standard Library offers the same features, e.g.
+          <code>SimpleDateFormat</code> or <code>DateTimeFormatter</code>, with the
+          pattern
+          <code>yyyy-MM-dd</code> or <code>yyyy-MM-dd HH:mm:ss</code>
+        </td>
+      </tr>
+      <tr>
+        <td>StringValidator</td>
+        <td>
+          <a href="https://commons.apache.org/proper/commons-codec/">
+            Apache Commons Codec
+          </a>
+        </td>
+        <td>
+          Use libraries like{' '}
+          <a href="https://commons.apache.org/proper/commons-codec/">
+            Apache Commons Codec
+          </a>
+          , which offers a{' '}
+          <a href="https://commons.apache.org/proper/commons-codec/apidocs/org/apache/commons/codec/binary/Base64.html">
+            Base64
+          </a>{' '}
+          class.
+        </td>
+      </tr>
+      <tr>
+        <td>ClientCredentialsValidator</td>
+        <td>Java Standard Library</td>
+        <td>
+          For validation client secrets see <code>StringValidator</code> above.
+          To validate the client id, try to match the regular expression
+          <code>[a-zA-Z0-9\\-!|]+</code>.
+        </td>
       </tr>
     </tbody>
   </table>
