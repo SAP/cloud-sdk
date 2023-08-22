@@ -150,6 +150,17 @@ We will publish the full migration guide when we release v5.
           <code>[a-zA-Z0-9\\-!|]+</code>.
         </td>
       </tr>
+      <tr>
+        <td>AuthTokenBuilder</td>
+        <td><a href="https://github.com/auth0/java-jwt">Java implementation of JWT</a></td>
+        <td>
+          For validation client secrets see <code>StringValidator</code> above.
+          To validate the client id, try to match the regular expression
+          <code><pre>String jwt = JWT.create()\n  .withClaim("zid", "tenant-id")\n  .withClaim("iss", "http://subscriber.domain")\n  .withAudience("my-app!t123")\n  .sign(Algorithm.none());\nAuthToken token = new AuthToken(JWT.decode(jwt));</pre></code>
+          <br>
+          Alternatively for creating extended unit tests based, please check out the [SAP BTP Java Security Test Library](https://github.com/SAP/cloud-security-services-integration-library/tree/main/java-security-test) instead.
+        </td>
+      </tr>
     </tbody>
   </table>
 </details>
