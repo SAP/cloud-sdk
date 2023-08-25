@@ -268,6 +268,10 @@ module.exports = {
       {
         redirects: [
           {
+            from: '/docs/js/guides/kubernetes',
+            to: '/docs/js/environments/kubernetes'
+          },
+          {
             from: [
               '/docs/js/frequently-asked-questions',
               '/docs/js/guides/migrate-to-open-source-version-of-cloud-sdk-for-javascript-typescript'
