@@ -84,13 +84,22 @@ Adjust your dependency management section to contain the following entries:
 <dependencyManagement>
 	<dependencies>
     <!-- Cloud SDK + SAP Java Buildpack BOMs -->
-    <dependency>
-    	<groupId>com.sap.cloud.sdk</groupId>
-    	<artifactId>sdk-sjb-bom</artifactId>
-    	<version>${cloudsdk.version}</version>
-    	<type>pom</type>
-    	<scope>import</scope>
-    </dependency>
+    <dependencies>
+        <dependency>
+            <groupId>com.sap.cloud.sjb.cf</groupId>
+            <artifactId>cf-tomee7-bom</artifactId>
+            <version>use-latest-version-here</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sap.cloud.sdk</groupId>
+            <artifactId>sdk-bom</artifactId>
+            <version>use-latest-version-here</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
     <!-- Work around error in Buildpack BOM -->
     <dependency>
     	<groupId>org.codehaus.woodstox</groupId>
@@ -113,10 +122,9 @@ Adjust your dependency management section to contain the following entries:
 :::caution Ordering of dependencies
 Please note that the ordering of entries under the `<dependencyManagement>` matters.
 To ensure the correct scopes are set make sure the order is implemented as shown above.
-In particular the `sdk-sjb-bom` should be the first entry if possible.
+In particular the `cf-tomee7-bom` should be the first entry if possible.
 :::
 
-- If you are already using the `sdk-bom` simply replace it with the `sdk-sjb-bom`
 - The versions for `stax2-api` and `spring-boot-starter-tomcat` are not relevant, only the scopes matter
 
 :::tip Further Guidance
