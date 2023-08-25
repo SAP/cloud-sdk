@@ -152,13 +152,16 @@ We will publish the full migration guide when we release v5.
       </tr>
       <tr>
         <td>AuthTokenBuilder</td>
-        <td><a href="https://github.com/auth0/java-jwt">Java implementation of JWT</a></td>
+        <td><a href="https://github.com/auth0/java-jwt">Java JWT implementation</a></td>
         <td>
-          For validation client secrets see <code>StringValidator</code> above.
-          To validate the client id, try to match the regular expression
-          <code><pre>String jwt = JWT.create()\n  .withClaim("zid", "tenant-id")\n  .withClaim("iss", "http://subscriber.domain")\n  .withAudience("my-app!t123")\n  .sign(Algorithm.none());\nAuthToken token = new AuthToken(JWT.decode(jwt));</pre></code>
-          <br>
-          Alternatively for creating extended unit tests based, please check out the [SAP BTP Java Security Test Library](https://github.com/SAP/cloud-security-services-integration-library/tree/main/java-security-test) instead.
+          For creating an <code>AuthToken</code> from scratch, please manually define the claims and optional audience field. For example:
+          <pre>String jwt = JWT.create()<br />
+          &nbsp;&nbsp;.withClaim("zid", "tenant-id")<br />
+          &nbsp;&nbsp;.withClaim("iss", "http://subscriber.domain")<br />
+          &nbsp;&nbsp;.withAudience("my-app!t123")<br />
+          &nbsp;&nbsp;.sign(Algorithm.none());<br />
+          AuthToken token = new AuthToken(JWT.decode(jwt));</pre>
+          Alternatively for creating extended unit tests based on token handling, please find the <a href="https://github.com/SAP/cloud-security-services-integration-library/tree/main/java-security-test">SAP BTP Java Security Test Library</a> instead.
         </td>
       </tr>
     </tbody>
