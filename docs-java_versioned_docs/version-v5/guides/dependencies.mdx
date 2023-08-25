@@ -187,6 +187,14 @@ Alternatively, you can use [BOMs provided by the SAP Java Buildpack](https://hel
 directly, [as described here](#the-sap-cloud-sdk-bill-of-material).
 :::
 
+:::caution Compatible Java and Spring Versions
+
+Please note that the SAP Java Buildpack is only compatible with version 7 of the Java EE and the `javax.*` namespaace.
+Consequently, frameworks based on the newer Jakarta EE and the `jakarta.*` namespace are not supported.
+
+In particular, Spring 6.X, Spring Boot 3.X and Java 17 are not compatible with the SJB.
+:::
+
 The [SAP Java Buildpack](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/a3f90069d6cd41da82f34a6123d82ce6.html) brings some dependencies that are also brought by the SAP Cloud SDK.
 This can lead to conflicts when using a `war` deployment.
 
