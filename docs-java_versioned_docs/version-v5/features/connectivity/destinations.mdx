@@ -340,6 +340,13 @@ That way, all future requests to the Destination Service will use the increased 
 
 #### Configuring Caching When Querying the Destination Service on Cloud Foundry
 
+:::tip Cached Destinations respects AuthToken Validity
+
+Although `DestinationAccessor` uses a cache to minimize the overhead of fetching destinations, it still respects the validity of the associated AuthToken(if applicable for the destination).
+If a cached destination's AuthToken is invalid, the SAP Cloud SDK will automatically fetch the destination again from the Destination Service and cache the results as long as `DestinationAccessor` API is used to fetch destinations.
+
+:::
+
 The SAP Cloud SDK, by default, caches up to 1,000 destinations retrieved from the Destination Service on Cloud Foundry for a maximum of 5 minutes.
 
 This behavior has two implications:
