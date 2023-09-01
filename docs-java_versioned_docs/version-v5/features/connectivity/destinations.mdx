@@ -738,47 +738,6 @@ If you are developing an application in the **Business Application Studio (BAS)*
 Please refer to [the BAS connectivity guide](/docs/js/guides/bas-external-system) created for the SAP Cloud SDK for JavaScript to get more information and a detailed description of the technical background.
 The information there also applies to the SAP Cloud SDK for Java.
 
-#### Skip Destination Creation Step for Certain Authentication Types on Cloud Foundry
-
-For certain authentication types i.e. `NoAuthentication`, `OAuth2ClientCredentials` and `OAuth2UserTokenExchange` there is an API that eliminates the need to manually create a destination in the CF account for connecting to services.
-
-Example:
-
-```java
-final Map<String, String> mapping =
-      ScpCfServiceDestinationLoader.buildClientCredentialsMapping(
-        "credentials.endpoints.service_rest_url",
-        "credentials.uaa.clientid",
-        "credentials.uaa.clientsecret",
-        "credentials.endpoints.token_url");
-```
-
-The `ScpCfServiceDestinationLoader.buildClientCredentialsMapping` method creates a mapping for loading a destination and provides JSON paths for all required destination properties.
-
-```java
-final HttpDestination destination =
-      ScpCfServiceDestinationLoader.getDestinationForService(
-        "label",
-        "serviceBindingName",
-        AuthenticationType.OAUTH2_CLIENT_CREDENTIALS,
-        mapping);
-```
-
-For certain services (only SAP BTP Workflow service for now), we provide further convenience that skips the need to provide the `mapping` explicitly.
-Example:
-
-```java
-final HttpDestination destination =
-      ScpCfServiceDestinationLoader.getDestinationForService(
-        ScpCfServiceDestinationLoader.CfServices.WORKFLOW,
-        "my-workflow");
-```
-
-:::note Caching
-These destinations are currently not cached.
-Please consider re-using the obtained destination objects when using `OAuth2ClientCredentials` or `OAuth2UserTokenExchange` oo avoid unnecessary token retrievals.
-:::
-
 #### Enable Access to SAP Business Technology Platform Connectivity Service
 
 The SAP BTP connectivity service builds the connection between SAP BTP and the On-premise network.
