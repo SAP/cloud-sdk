@@ -55,30 +55,7 @@ In case you are migrating your application from Spring Boot 2, the below steps m
 </properties>
 ```
 
-2. Place the Spring Boot dependency management **before** the SDK BOM:
-
-```xml
-<dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-dependencies</artifactId>
-            <version>${spring-boot.version}</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sap.cloud.sdk</groupId>
-            <artifactId>sdk-bom</artifactId>
-            <version>4.20.0</version> <!-- TODO: replace this with the most recent version -->
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-    </dependencies>
-</dependencyManagement>
-```
-
-3. Replace any `javax` dependency with the respective `jakarta` dependency:
+2. Replace any `javax` dependency with the respective `jakarta` dependency:
 
 ```diff
 -<dependency>
