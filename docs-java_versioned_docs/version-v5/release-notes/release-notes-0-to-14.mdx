@@ -6,18 +6,8 @@
 
 ### Compatibility Notes
 
-- All `Destination` implementations have been removed with `DefaultHttpDestination` and `DefaultRfcDestination` being the only exceptions.
-  The slightly different behaviors of the previous implementation have been consolidated and merged in the corresponding default implementations.
-  Therefore, users shouldn't notice any difference when using the regular `DestinationAccessor` API.
-- Public APIs that previously required a specific sub-type of `Destination` (or `DestinationProperties`) have been changed to simply accept an instance of `Destination`.
-  That way, application are no longer required to cast `Destination` instances retrieved via the `DestinationAccessor`.
-
 ### New Functionality
 
 ### Improvements
-
-- The `Destination#asHttp()` and `Destination#asRfc()` methods no longer always return a new instance of `HttpDestination` and `RfcDestination` if the current objects is already a `HttpDestination` or `RfcDestination` respectively.
-- `Destination#asHttp()` no longer throws an exception in case the `Destination` orignates from the Destination service and the attached auth token contains an error.
-  Instead, an exception will be thrown upon invoking the `getHeaders()` method, for example, during request execution.
 
 ### Fixed Issues
