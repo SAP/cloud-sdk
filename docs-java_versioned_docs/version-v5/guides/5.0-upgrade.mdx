@@ -23,6 +23,45 @@ We will publish the full migration guide when we release v5.
 
 :::
 
+## Changes to the `Destination` API
+
+One of the biggest changes in version 5 of the SAP Cloud SDK for Java evolves around the `Destination` API.
+Our primary goal with the following changes is to improve reusability of the `Destination` APIs across different runtime environments.
+As an added benefit, we also made the APIs simpler and easier to understand as we eliminated vast parts of (seemingly) duplicated implementations.
+
+### Unification of `HttpDestination` implementations
+
+Up until version 5 of the SAP Cloud SDK, modules were structured around the idea of splitting implementations for different runtime environments.
+As a consequence, there were many different implementations of the `HttpDestination` interface, such as `DefaultHttpDestination`, `ScpCfHttpDestination`, and `ScpNeoHttpDestination`.
+This structure was not optimal as those classes were mostly identical but still behaved slighlty differently in some cases.
+
+In version 5, these differences were eliminated by removing all implementations but the `DefaultHttpDestination`, which is now the one and only implementation of the `HttpDestination` that is shipped within the SAP Cloud SDK.
+One part of the removal of existing classes was to consolidate the slight differences in behavior of the previous implementations.
+Therefore, consumers shouldn't notice any differences in behavior when using the `DefaultHttpDestination` compared to the previous implementations, regardless on where their application is running.
+
+### Simplification of APIs that expect `Destination` instances
+
+In the past, many of the SAP Cloud SDK's APIs were tailored towards a specific type of `Destination`.
+The `HttpClientAccessor`, for example, required an instance of `HttpDestinationProperties` to be passed in order to create an `HttpClient` instance.
+This was not optimal as it required consumers to explicitly cast `Destination` instances they retrieved from the `DestinationAccessor` by using the `asHttp` method.
+In version 5, we changed our public APIs that previously relied on specific sub-types of `Destination` (or `DestinationProperties`) to use the `Destination` interface directly.
+That way, customers no longer need to worry about casting `Destination` instances to a specific sub-type - this will be done automatically within the SAP Cloud SDK.
+
+The `asHttp` (as well as the `asRfc`) methods are still available on the `Destination` interface, but they are no longer mandatory to be called from the application's side.
+
+### Removed API and changed error behavior
+
+Version 5 of the SAP Cloud SDK removes the `decorate(...)` method from the `Destination` interface.
+This method was previously needed to cover SAP specific On-Premise features.
+These features, however, are now integrated into the `DefaultHttpDestination` implementation so that the `decorate(...)` method is no longer needed.
+
+Furthermore, we slightly updated the behavior of `asHttp`:
+This method **no longer** throws an Exceptions in case the Destination Service wasn't able to provide a valid `Authorization` header.
+Instead, an Exception will be thrown when the `getHeaders` method is used, for example, during the actual request execution.
+This is an improvement especially for use cases where the application wants to use the provided convenience getters for HTTP specific properties without actually trying to establish a connection to the target system.
+
+Additionally, `asHttp` and `asRfc` will no longer always return a new instance of `HttpDestination` or `RfcDestination` if the current object is already an instance of `HttpDestination` or `RfcDestination` respectively.
+
 ## List of modules that have been removed with version 5
 
 <details>
