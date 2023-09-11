@@ -23,6 +23,63 @@ We will publish the full migration guide when we release v5.
 
 :::
 
+## Steps to migrate `Destination` usages
+
+Version 5 of the SAP Cloud SDK comes with a major cleanup of the APIs around the `Destination` concept.
+Luckily, this cleanup comes **without a lot of breaking changes** so that existing applications require only a minimum of adjustments.
+To make the process of adjusting existing applications as easy as possible, please follow the below steps:
+
+1. Remove any invocation of `Destination#decorate`.
+This method was only really used in conjunction with the `DefaultErpHttpDestination`, which has been removed in this major version update.
+The functionality has been moved internally, so that decorating existing `Destination` instances is no longer needed.
+
+2. (Optional) Remove any invocations of `Destination#asHttp` or `Destination#asRfc`.
+A big part of the `Destination` cleanup was to straighten our public APIs that previously expected specific sub-types of `Destination` or `DestinationProperties` (e.g. `HttpClientAccessor#getHttpClient(HttpDestinationProperties)`).
+These APIs now all simply rely on `Destination`, which makes casting via `#asHttp` or `#asRfc` unnecessary.
+
+3. Adjust error handling.
+Prior to version 5 of the SAP Cloud SDK, `Destination#asHttp` would throw an Exception in case the Destination Service wasn't able to provide a valid `Authorization` header suggestions.
+This has been changed so that `asHttp` will no longer throw an Exception.
+Instead, calling the `getHeaders` method on an `HttpDestination` will throw an exception if any `Authorization` header suggestion provided by the Destination service contained an error.
+
+This change is **very important** to keep in mind because it influences where applications are expected to catch Exceptions.
+For example, code that looks like shown below should be updated:
+
+```java
+// ******
+// BEFORE
+// ******
+
+Destination destination = DestinationAccessor.getDestination("my-destination");
+HttpDestination httpDestination;
+try {
+    httpDestination = destination.asHttp();
+} catch (DestinationAccessException e) {
+    throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
+}
+
+try {
+    new MyODataService().getAllEntities().executeRequest(httpDestination);
+} catch (ODataException e) {
+    throw new IllegalStateException("Unable to retrieve odata entities.", e);
+}
+
+// ******
+// AFTER
+// ******
+
+Destination destination = DestinationAccessor.getDestination("my-destination");
+
+try {
+    new MyODataService().getAllEntities().executeRequest(destination);
+} catch (DestinationAccessException e) {
+    throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
+} catch (ODataException e) {
+    throw new IllegalStateException("Unable to retrieve odata entities.", e);
+}
+```
+
+<!-- The following section has been commented out, as it doesn't really fit our migration guide. However, having this as a blog post might be suitable.
 ## Changes to the `Destination` API
 
 One of the biggest changes in version 5 of the SAP Cloud SDK for Java evolves around the `Destination` API.
@@ -61,6 +118,7 @@ Instead, an Exception will be thrown when the `getHeaders` method is used, for e
 This is an improvement especially for use cases where the application wants to use the provided convenience getters for HTTP specific properties without actually trying to establish a connection to the target system.
 
 Additionally, `asHttp` and `asRfc` will no longer always return a new instance of `HttpDestination` or `RfcDestination` if the current object is already an instance of `HttpDestination` or `RfcDestination` respectively.
+-->
 
 ## List of modules that have been removed with version 5
 
