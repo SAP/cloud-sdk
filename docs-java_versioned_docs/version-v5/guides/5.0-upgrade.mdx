@@ -30,59 +30,59 @@ Luckily, this cleanup comes **without a lot of breaking changes** so that existi
 To make the process of adjusting existing applications as easy as possible, please follow the below steps:
 
 1. Remove any invocation of `Destination#decorate`.
-This method was only really used in conjunction with the `DefaultErpHttpDestination`, which has been removed in this major version update.
-The functionality has been moved internally, so that decorating existing `Destination` instances is no longer needed.
+   This method was only really used in conjunction with the `DefaultErpHttpDestination`, which has been removed in this major version update.
+   The functionality has been moved internally, so that decorating existing `Destination` instances is no longer needed.
 
 2. (Optional) Remove any invocations of `Destination#asHttp` or `Destination#asRfc`.
-A big part of the `Destination` cleanup was to straighten our public APIs that previously expected specific sub-types of `Destination` or `DestinationProperties` (e.g. `HttpClientAccessor#getHttpClient(HttpDestinationProperties)`).
-These APIs now all simply rely on `Destination`, which makes casting via `#asHttp` or `#asRfc` unnecessary.
+   A big part of the `Destination` cleanup was to straighten our public APIs that previously expected specific sub-types of `Destination` or `DestinationProperties` (e.g. `HttpClientAccessor#getHttpClient(HttpDestinationProperties)`).
+   These APIs now all simply rely on `Destination`, which makes casting via `#asHttp` or `#asRfc` unnecessary.
 
 3. Adjust error handling.
-Prior to version 5 of the SAP Cloud SDK, `Destination#asHttp` would throw an Exception in case the Destination Service wasn't able to provide a valid `Authorization` header suggestions.
-This has been changed so that `asHttp` will no longer throw an Exception.
-Instead, calling the `getHeaders` method on an `HttpDestination` will throw an exception if any `Authorization` header suggestion provided by the Destination service contained an error.
+   Prior to version 5 of the SAP Cloud SDK, `Destination#asHttp` would throw an Exception in case the Destination Service wasn't able to provide a valid `Authorization` header suggestions.
+   This has been changed so that `asHttp` will no longer throw an Exception.
+   Instead, calling the `getHeaders` method on an `HttpDestination` will throw an exception if any `Authorization` header suggestion provided by the Destination service contained an error.
 
-This change is **very important** to keep in mind because it influences where applications are expected to catch Exceptions.
-For example, code that looks like shown below should be updated:
+   This change is **very important** to keep in mind because it influences where applications are expected to catch Exceptions.
+   For example, code that looks like shown below should be updated:
 
-```java
-// ******
-// BEFORE
-// ******
+   ```java
+   // ******
+   // BEFORE
+   // ******
 
-Destination destination = DestinationAccessor.getDestination("my-destination");
-HttpDestination httpDestination;
-try {
-    httpDestination = destination.asHttp();
-} catch (DestinationAccessException e) {
-    throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
-}
+   Destination destination = DestinationAccessor.getDestination("my-destination");
+   HttpDestination httpDestination;
+   try {
+       httpDestination = destination.asHttp();
+   } catch (DestinationAccessException e) {
+       throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
+   }
 
-try {
-    new MyODataService().getAllEntities().executeRequest(httpDestination);
-} catch (ODataException e) {
-    throw new IllegalStateException("Unable to retrieve odata entities.", e);
-}
+   try {
+       new MyODataService().getAllEntities().executeRequest(httpDestination);
+   } catch (ODataException e) {
+       throw new IllegalStateException("Unable to retrieve odata entities.", e);
+   }
 
-// ******
-// AFTER
-// ******
+   // ******
+   // AFTER
+   // ******
 
-Destination destination = DestinationAccessor.getDestination("my-destination");
+   Destination destination = DestinationAccessor.getDestination("my-destination");
 
-try {
-    new MyODataService().getAllEntities().executeRequest(destination);
-} catch (DestinationAccessException e) {
-    throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
-} catch (ODataException e) {
-    throw new IllegalStateException("Unable to retrieve odata entities.", e);
-}
-```
+   try {
+       new MyODataService().getAllEntities().executeRequest(destination);
+   } catch (DestinationAccessException e) {
+       throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
+   } catch (ODataException e) {
+       throw new IllegalStateException("Unable to retrieve odata entities.", e);
+   }
+   ```
 
 4. Replace any mentions of `Destination` / `DestinationProperties` implementations other than `DefaultHttpDestination` and `DefaultRfcDestination`.
-Version 5 of the SAP Cloud SDK removes all other implementations of `Destination` and `DestinationProperties` to unify the APIs and implementations.
-As a consequence, classes such as `ScpCfHttpDestination`, `ErpHttpDestination`, and `WrapperDestination` (see the table further down for all removed classes) have been removed.
-Therefore, any code that explicitly mentions those classes needs to be updated to use either just `Destination` / `DestinationProperties` or `DefaultHttpDestination` / `DefaultRfcDestination` instead.
+   Version 5 of the SAP Cloud SDK removes all other implementations of `Destination` and `DestinationProperties` to unify the APIs and implementations.
+   As a consequence, classes such as `ScpCfHttpDestination`, `ErpHttpDestination`, and `WrapperDestination` (see the table further down for all removed classes) have been removed.
+   Therefore, any code that explicitly mentions those classes needs to be updated to use either just `Destination` / `DestinationProperties` or `DefaultHttpDestination` / `DefaultRfcDestination` instead.
 
 <!-- The following section has been commented out, as it doesn't really fit our migration guide. However, having this as a blog post might be suitable.
 ## Changes to the `Destination` API
