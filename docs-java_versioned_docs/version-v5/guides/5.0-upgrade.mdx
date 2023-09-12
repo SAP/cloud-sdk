@@ -38,51 +38,63 @@ To make the process of adjusting existing applications as easy as possible, plea
    These APIs now all simply rely on `Destination`, which makes casting via `#asHttp` or `#asRfc` unnecessary.
 
 3. Adjust error handling.
-   Prior to version 5 of the SAP Cloud SDK, `Destination#asHttp` would throw an Exception in case the Destination Service wasn't able to provide a valid `Authorization` header suggestions.
+   Prior to version 5 of the SAP Cloud SDK, `Destination#asHttp` would throw an Exception in case the Destination Service wasn't able to provide valid `Authorization` header suggestions.
    This has been changed so that `asHttp` will no longer throw an Exception.
    Instead, calling the `getHeaders` method on an `HttpDestination` will throw an exception if any `Authorization` header suggestion provided by the Destination service contained an error.
 
-   This change is **very important** to keep in mind because it influences where applications are expected to catch Exceptions.
-   For example, code that looks like shown below should be updated:
+   This change is **important** to keep in mind because it influences where applications are expected to catch Exceptions as the `getHeaders` method will be called during request execution.
 
+   <details>
+   <summary>Example</summary>
+
+   Given the following code:
    ```java
-   // ******
-   // BEFORE
-   // ******
-
-   Destination destination = DestinationAccessor.getDestination("my-destination");
+   Try<Destination> maybeDestination = DestinationAccessor.tryGetDestination("my-destination");
+   if (maybeDestination.isFailure()) {
+       throw new IllegalStateException("Unable to retrieve 'my-destination'.", maybeDestination.getCause());
+   }
+   
    HttpDestination httpDestination;
    try {
-       httpDestination = destination.asHttp();
+       httpDestination = maybeDestination.get().asHttp();
    } catch (DestinationAccessException e) {
        throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
    }
-
+   
    try {
        new MyODataService().getAllEntities().executeRequest(httpDestination);
    } catch (ODataException e) {
        throw new IllegalStateException("Unable to retrieve odata entities.", e);
    }
-
-   // ******
-   // AFTER
-   // ******
-
-   Destination destination = DestinationAccessor.getDestination("my-destination");
-
-   try {
-       new MyODataService().getAllEntities().executeRequest(destination);
-   } catch (DestinationAccessException e) {
-       throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
-   } catch (ODataException e) {
-       throw new IllegalStateException("Unable to retrieve odata entities.", e);
-   }
    ```
 
-4. Replace any mentions of `Destination` / `DestinationProperties` implementations other than `DefaultHttpDestination` and `DefaultRfcDestination`.
-   Version 5 of the SAP Cloud SDK removes all other implementations of `Destination` and `DestinationProperties` to unify the APIs and implementations.
-   As a consequence, classes such as `ScpCfHttpDestination`, `ErpHttpDestination`, and `WrapperDestination` (see the table further down for all removed classes) have been removed.
-   Therefore, any code that explicitly mentions those classes needs to be updated to use either just `Destination` / `DestinationProperties` or `DefaultHttpDestination` / `DefaultRfcDestination` instead.
+   The code should be updated like this:
+   ```diff
+      Try<Destination> maybeDestination = DestinationAccessor.tryGetDestination("my-destination");
+      if (maybeDestination.isFailure()) {
+          throw new IllegalStateException("Unable to retrieve 'my-destination'.", maybeDestination.getCause());
+      }
+      
+   -  HttpDestination httpDestination;
+   -  try {
+   -      httpDestination = maybeDestination.get().asHttp();
+   -  } catch (DestinationAccessException e) {
+   -      throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
+   -  }
+      
+      try {
+   -      new MyODataService().getAllEntities().executeRequest(httpDestination);
+   +      new MyODataService().getAllEntities().executeRequest(maybeDestination.get());
+   +  } catch (DestinationAccessException e) {
+   +      throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
+      } catch (ODataException e) {
+          throw new IllegalStateException("Unable to retrieve odata entities.", e);
+      } 
+   ```
+
+   </details>
+
+4. Replace any of the removed classes related to the `Destination` API as mentioned in the [list of removed APIs](#list-of-apis-that-have-been-removed-with-version-5).
 
 <!-- The following section has been commented out, as it doesn't really fit our migration guide. However, having this as a blog post might be suitable.
 ## Changes to the `Destination` API
@@ -175,7 +187,7 @@ Additionally, `asHttp` and `asRfc` will no longer always return a new instance o
 
 </details>
 
-## List of API that have been removed with version 5
+## List of APIs that have been removed with version 5
 
 <!-- vale off -->
 
@@ -199,21 +211,21 @@ Additionally, `asHttp` and `asRfc` will no longer always return a new instance o
     <tbody>
       <tr>
         <td>DefaultErpHttpDestination</td>
-        <td><code>HttpDestination</code></td>
+        <td>HttpDestination</td>
         <td>
-          <code>HttpDestination</code> now automatically adds sap-client and sap-language
+          HttpDestination now automatically adds sap-client and sap-language
           headers defined on the destination
         </td>
       </tr>
       <tr>
         <td>ErpHttpDestination</td>
+        <td>DefaultHttpDestination</td>
         <td>-</td>
-        <td>No replacement necessary</td>
       </tr>
       <tr>
         <td>ErpHttpDestinationProperties</td>
+        <td>DefaultHttpDestination</td>
         <td>-</td>
-        <td>No replacement necessary</td>
       </tr>
       <tr>
         <td>ErpHttpDestinationUtils</td>
@@ -247,12 +259,12 @@ Additionally, `asHttp` and `asRfc` will no longer always return a new instance o
       </tr>
       <tr>
         <td>ScpCfHttpDestination</td>
-        <td><code>DefaultHttpDestination</code></td>
+        <td>DefaultHttpDestination</td>
         <td>-</td>
       </tr>
       <tr>
         <td>ScpCfRfcDestination</td>
-        <td><code>DefaultRfcDestination</code></td>
+        <td>DefaultRfcDestination</td>
         <td>-</td>
       </tr>
       <tr>
