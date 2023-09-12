@@ -79,6 +79,11 @@ try {
 }
 ```
 
+4. Replace any mentions of `Destination` / `DestinationProperties` implementations other than `DefaultHttpDestination` and `DefaultRfcDestination`.
+Version 5 of the SAP Cloud SDK removes all other implementations of `Destination` and `DestinationProperties` to unify the APIs and implementations.
+As a consequence, classes such as `ScpCfHttpDestination`, `ErpHttpDestination`, and `WrapperDestination` (see the table further down for all removed classes) have been removed.
+Therefore, any code that explicitly mentions those classes needs to be updated to use either just `Destination` / `DestinationProperties` or `DefaultHttpDestination` / `DefaultRfcDestination` instead.
+
 <!-- The following section has been commented out, as it doesn't really fit our migration guide. However, having this as a blog post might be suitable.
 ## Changes to the `Destination` API
 
@@ -194,9 +199,9 @@ Additionally, `asHttp` and `asRfc` will no longer always return a new instance o
     <tbody>
       <tr>
         <td>DefaultErpHttpDestination</td>
-        <td>HttpDestination</td>
+        <td><code>HttpDestination</code></td>
         <td>
-          HttpDestination now automatically adds sap-client and sap-language
+          <code>HttpDestination</code> now automatically adds sap-client and sap-language
           headers defined on the destination
         </td>
       </tr>
@@ -214,6 +219,41 @@ Additionally, `asHttp` and `asRfc` will no longer always return a new instance o
         <td>ErpHttpDestinationUtils</td>
         <td>-</td>
         <td>No replacement necessary</td>
+      </tr>
+      <tr>
+        <td>AbstractHttpDestination</td>
+        <td>-</td>
+        <td>No replacement necessary</td>
+      </tr>
+      <tr>
+        <td>WrappedDestination</td>
+        <td>-</td>
+        <td>No replacement necessary</td>
+      </tr>
+      <tr>
+        <td>AbstractScpDestination</td>
+        <td>-</td>
+        <td>No replacement necessary</td>
+      </tr> 
+      <tr>
+        <td>AbstractScpDestinationBuilder</td>
+        <td>-</td>
+        <td>No replacement necessary</td>
+      </tr>
+      <tr>
+        <td>ScpCfDestination</td>
+        <td>-</td>
+        <td>No replacement necessary</td>
+      </tr>
+      <tr>
+        <td>ScpCfHttpDestination</td>
+        <td><code>DefaultHttpDestination</code></td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>ScpCfRfcDestination</td>
+        <td><code>DefaultRfcDestination</code></td>
+        <td>-</td>
       </tr>
       <tr>
         <td>StringConverter</td>
