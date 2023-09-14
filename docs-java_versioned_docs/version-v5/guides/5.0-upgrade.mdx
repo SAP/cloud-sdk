@@ -44,58 +44,57 @@ To make the process of adjusting existing applications as easy as possible, plea
 
     This change is **important** to keep in mind because it influences where applications are expected to catch Exceptions as the `getHeaders` method will be called during request execution.
 
-          <details>
+<details>
+<summary>Example</summary>
 
-    <summary>Example</summary>
+Given the following code:
 
-    Given the following code:
+```java
+Try<Destination> maybeDestination = DestinationAccessor.tryGetDestination("my-destination");
+if (maybeDestination.isFailure()) {
+    throw new IllegalStateException("Unable to retrieve 'my-destination'.", maybeDestination.getCause());
+}
 
-    ```java
-    Try<Destination> maybeDestination = DestinationAccessor.tryGetDestination("my-destination");
-    if (maybeDestination.isFailure()) {
-        throw new IllegalStateException("Unable to retrieve 'my-destination'.", maybeDestination.getCause());
-    }
+HttpDestination httpDestination;
+try {
+    httpDestination = maybeDestination.get().asHttp();
+} catch (DestinationAccessException e) {
+    throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
+}
 
-    HttpDestination httpDestination;
-    try {
-        httpDestination = maybeDestination.get().asHttp();
-    } catch (DestinationAccessException e) {
-        throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
-    }
+try {
+    new MyODataService().getAllEntities().executeRequest(httpDestination);
+} catch (ODataException e) {
+    throw new IllegalStateException("Unable to retrieve odata entities.", e);
+}
+```
 
-    try {
-        new MyODataService().getAllEntities().executeRequest(httpDestination);
-    } catch (ODataException e) {
-        throw new IllegalStateException("Unable to retrieve odata entities.", e);
-    }
-    ```
+The code should be updated like this:
 
-    The code should be updated like this:
+```diff
+Try<Destination> maybeDestination = DestinationAccessor.tryGetDestination("my-destination");
+if (maybeDestination.isFailure()) {
+    throw new IllegalStateException("Unable to retrieve 'my-destination'.", maybeDestination.getCause());
+}
 
-    ```diff
-       Try<Destination> maybeDestination = DestinationAccessor.tryGetDestination("my-destination");
-       if (maybeDestination.isFailure()) {
-           throw new IllegalStateException("Unable to retrieve 'my-destination'.", maybeDestination.getCause());
-       }
+- HttpDestination httpDestination;
+- try {
+-   httpDestination = maybeDestination.get().asHttp();
+- } catch (DestinationAccessException e) {
+-   throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
+- }
 
-    -  HttpDestination httpDestination;
-    -  try {
-    -      httpDestination = maybeDestination.get().asHttp();
-    -  } catch (DestinationAccessException e) {
-    -      throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
-    -  }
+try {
+-   new MyODataService().getAllEntities().executeRequest(httpDestination);
++   new MyODataService().getAllEntities().executeRequest(maybeDestination.get());
++ } catch (DestinationAccessException e) {
++   throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
+} catch (ODataException e) {
+    throw new IllegalStateException("Unable to retrieve odata entities.", e);
+}
+```
 
-       try {
-    -      new MyODataService().getAllEntities().executeRequest(httpDestination);
-    +      new MyODataService().getAllEntities().executeRequest(maybeDestination.get());
-    +  } catch (DestinationAccessException e) {
-    +      throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
-       } catch (ODataException e) {
-           throw new IllegalStateException("Unable to retrieve odata entities.", e);
-       }
-    ```
-
-          </details>
+</details>
 
 4.  Replace any of the removed classes related to the `Destination` API as mentioned in the [list of removed APIs](#list-of-apis-that-have-been-removed-with-version-5).
 
