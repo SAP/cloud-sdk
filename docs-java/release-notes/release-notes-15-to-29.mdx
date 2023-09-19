@@ -1,3 +1,39 @@
+# 4.23.0 - September 15, 2022
+
+## Compatibility
+
+- Deprecate following legacy classes that are related to parsing the `VCAP_SERVICES` environment variable:
+
+  - In module [cloudplatform-connectivity-scp-cf](https://search.maven.org/search?q=g:com.sap.cloud.sdk.cloudplatform%20AND%20a:cloudplatform-connectivity-scp-cf) (package `com.sap.cloud.sdk.cloudplatform.connectivity`)
+    - `ScpCfService`
+    - `ScpCfServiceAuthorizationFailedException`
+    - `ScpCfServiceCreationFailedException`
+    - `ScpCfServiceDestinationLoader`
+    - `ScpVcapDestinationLoader`
+    - `ScpVcapDestinationOptionAugmenter`
+    - `ScpVcapLoaderUtils`
+    - `ScpXfDestinationData`
+    - `ScpXfDestinationLoader`
+  - In module [cloudplatform-core-scp-cf](https://search.maven.org/search?q=g:com.sap.cloud.sdk.cloudplatform%20AND%20a:cloudplatform-core-scp-cf) (package `com.sap.cloud.sdk.cloudplatform`)
+    - `ScpCfServiceDesignator`
+    - `ScpCfServiceInfo`
+    - `ServiceBindingDataException`
+
+  As a replacement, please refer to the **experimental** `ServiceBindingDestinationLoader` API (module [cloudplatform-connectivity](https://search.maven.org/search?q=g:com.sap.cloud.sdk.cloudplatform%20AND%20a:cloudplatform-connectivity), package `com.sap.cloud.sdk.cloudplatform.connectivity`) and [the `ServiceBinding` API](https://github.com/SAP/btp-environment-variable-access).
+
+## Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update [cf-java-logging-support-logback](https://central.sonatype.com/search?q=g%3Acom.sap.hcp.cf.logging+a%3Acf-java-logging-support-logback&smo=true) (`com.sap.hcp.cf.logging:cf-java-logging-support-logback`) from `3.7.0` to `3.7.1`
+    - Update [Neo JavaEE7 WP API](https://central.sonatype.com/search?q=g%3Acom.sap.cloud+a%3Aneo-javaee7-wp-api&smo=true) from `1.156.8` to `1.157.7`
+    - Update [Cf Tomee7 Bom](https://central.sonatype.com/search?q=g%3Acom.sap.cloud.sjb.cf+a%3Acf-tomee7-bom&smo=true) (`com.sap.cloud.sjb.cf:cf-tomee7-bom`) from `1.76.0` to `1.77.0`
+  - Other dependency updates:
+    - Minor version updates:
+      - Update `org.checkerframework:checker-qual` declared for dependency convergence from `3.37.0` to `3.38.0`
+      - Update `com.google.api:api-common` used in the `blockchain-client-fabric` module from `2.15.0` to `2.16.0`
+      - Update `org.apache.commons:commons-compress` used in the `blockchain-client-fabric` module from `1.23.0` to `1.24.0`
+
 # 4.22.0 - September 1, 2022
 
 ## Compatibility Notes
