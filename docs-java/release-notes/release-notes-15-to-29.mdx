@@ -1,6 +1,54 @@
-# 4.23.0 - September 15, 2023
+## 4.24.0 - September 28, 2023
 
-## Compatibility
+### Compatibility Notes
+
+- The following classes have been deprecated:
+    - In module [security](https://search.maven.org/search?q=g:com.sap.cloud.sdk.cloudplatform%20AND%20a:security) (package `com.sap.cloud.sdk.cloudplatform.security`)
+        - _No plans for removal due to compatibility reasons. It is, however, still recommended to move away from their use:_
+            - `Audience`
+            - `Authorization`
+            - `Role`
+            - `Scope`
+            - `TenantSpecificAuthorization`
+            - `UserSpecificAuthorization`
+    - In module [security](https://search.maven.org/search?q=g:com.sap.cloud.sdk.cloudplatform%20AND%20a:security) (package `com.sap.cloud.sdk.cloudplatform.security.principal`)
+        - _No plans for removal due to compatibility reasons. It is, however, still recommended to move away from their use:_
+            - `PrincipalAttribute`
+            - `CollectionPrincipalAttribute`
+            - `SimplePrincipalAttribute`
+            - `StringCollectionPrincipalAttribute`
+            - `StringPrincipalAttribute`
+        - _Will be removed without replacement_
+            - `AudienceAuthorizationUtil`
+    - In module [security-scp-cf](https://search.maven.org/search?q=g:com.sap.cloud.sdk.cloudplatform%20AND%20a:security-scp-cf) (package `com.sap.cloud.sdk.cloudplatform.security.principal`)
+        - _Will be removed without replacement_:
+            - `LocalScopePrefixProvider`
+            - `DefaultLocalScopePrefixProvider`
+            - `LocalScopePrefixExtractor`
+        - _Please use related Default classes:_
+            - `ScpCfPrincipal`
+            - `ScpCfPrincipalFacade`
+
+### Improvements
+
+- Dependency Updates:
+    - SAP dependency updates:
+        - Update [SAP Service Binding Library](https://github.com/SAP/btp-environment-variable-access) from `0.9.0` to `0.10.0`
+    - Other dependency updates:
+        - Minor version updates:
+            - Update [Annotations for Error Prone](https://search.maven.org/search?q=g:com.google.errorprone%20AND%20a:error_prone_annotations) (com.google.errorprone:error_prone_annotations) from `2.21.1` to `2.22.0`
+            - Update [Lombok](https://search.maven.org/search?q=g:org.projectlombok%20AND%20a:lombok) (`org.projectlombok:lombok`) from `1.18.28` to `1.18.30`
+            - Update [httpcore5](https://search.maven.org/search?q=g:org.apache.httpcomponents.core5%20AND%20a:httpcore5) (`org.apache.httpcomponents.core5:httpcore5`) from `5.2.2` to `5.2.3`
+            - Update [API Common](https://search.maven.org/search?q=g:com.google.api%20AND%20a:api-common) (`com.google.api:api-common`) used in the `blockchain-client-fabric` module from `2.16.0` to `2.17.0`
+
+### Fixed Issues
+
+- Fix an issue with nested any/all query filter expressions in the _Generic OData_ client.
+  For the _OData v4_ client the issue is already resolved since `4.22.0`.
+
+## 4.23.0 - September 15, 2023
+
+### Compatibility
 
 - Deprecate following legacy classes that are related to parsing the `VCAP_SERVICES` environment variable:
 
@@ -21,7 +69,7 @@
 
   As a replacement, please refer to the **experimental** `ServiceBindingDestinationLoader` API (module [cloudplatform-connectivity](https://search.maven.org/search?q=g:com.sap.cloud.sdk.cloudplatform%20AND%20a:cloudplatform-connectivity), package `com.sap.cloud.sdk.cloudplatform.connectivity`) and [the `ServiceBinding` API](https://github.com/SAP/btp-environment-variable-access).
 
-## Improvements
+### Improvements
 
 - Dependency Updates:
   - SAP dependency updates:
@@ -34,22 +82,22 @@
       - Update `com.google.api:api-common` used in the `blockchain-client-fabric` module from `2.15.0` to `2.16.0`
       - Update `org.apache.commons:commons-compress` used in the `blockchain-client-fabric` module from `1.23.0` to `1.24.0`
 
-# 4.22.0 - September 1, 2023
+## 4.22.0 - September 1, 2022
 
-## Compatibility Notes
+### Compatibility Notes
 
 - Internally deprecate automatic validation during AuthToken decoding.
   For proper user token validation, please use the [SAP XSUAA Security Library](https://github.com/SAP/cloud-security-services-integration-library#21-token-validation) instead.
 - Deprecate `OAuth2ServiceProvider` convenience API.
   Please directly use the [Token Client](https://github.com/SAP/cloud-security-services-integration-library/tree/main/token-client) library instead.
 
-## Fixed Issues
+### Fixed Issues
 
 - Fix an issue where nested any/all filter expressions in OData queries would have the same prefix.
 
-# 4.21.0 - August 18, 2023
+## 4.21.0 - August 18, 2023
 
-## Compatibility Notes
+### Compatibility Notes
 
 - The module `security-servlet` and all contained servlet filters have been deprecated without replacement.
   This should not impact most applications, as they were rather specific and can be replaced with standard security tooling such as the [SAP BTP Security Libraries](https://github.com/SAP/cloud-security-services-integration-library).
@@ -63,11 +111,11 @@
   - `DefaultJndiLookupFacade`
 - `StringConverter` and `StringValidator` have been deprecated without replacement. Java Standard Library can be used as a replacemet for `StringConverter` and [Apache Commons Codec](https://commons.apache.org/proper/commons-codec/) can be used as a replacement for `StringValidator`. Refer [here](https://sap.github.io/cloud-sdk/docs/java/v5/guides/5.0-upgrade) for more details.
 
-## New Functionality
+### New Functionality
 
 - While using destinations of authentication type `SAMLAssertion` to execute requests, the `x-sap-security-session` header is now always sent with every request to the destination.
 
-## Improvements
+### Improvements
 
 - Dependency Updates:
   - SAP dependency updates:
@@ -79,13 +127,13 @@
       - Update [Checker Qual](https://central.sonatype.com/search?q=g%3Aorg.checkerframework+a%3Achecker-qual) (org.checkerframework:checker-qual) from 3.36.0 to 3.37.0
       - Update [Annotations for Error Prone](https://central.sonatype.com/search?q=g%3Acom.google.errorprone+a%3Aerror_prone_annotations) (com.google.errorprone:error_prone_annotations) from 2.20.0 to 2.21.1
 
-## Fixed Issues
+### Fixed Issues
 
 - Fix an issue in OData v2 serialization, where an `Edm.Binary` entity field is represented with a `null`-value `byte[]` array.
 
-# 4.20.0 - August 7, 2023
+## 4.20.0 - August 7, 2023
 
-## Compatibility Notes
+### Compatibility Notes
 
 - The `BindableService` abstraction has been removed from the SAP Cloud SDK.
   As a replacement, the `ServiceIdentifier` (originating from the [Service Binding Library](https://github.com/SAP/btp-environment-variable-access)) class is now used.
@@ -115,7 +163,7 @@
 - `com.sap.cloud.sdk.datamodel.openapi.generator.model.LogLevel` enum has been removed in relation to the `OpenAPI OData Generator`
   `logLevel` property change.
 
-## New Functionality
+### New Functionality
 
 - Add a new module (`com.sap.cloud.sdk.frameworks:apache-httpclient5`) with APIs for retrieving an Apache version 5 `HttpClient` based on a given destination.
   These APIs consist of the following classes:
@@ -137,7 +185,7 @@
   This feature required a **breaking** API change, which shouldn't affect most users.
   Please refer to the _Compatibility Notes_ (above) for more details.
 
-## Improvements
+### Improvements
 
 - Dependency Updates:
 
@@ -154,14 +202,14 @@
   mvn com.sap.cloud.sdk.datamodel:openapi-generator-maven-plugin:4.XX.X:generate -Dopenapi.generate.inputSpec=/foo/bar
   ```
 
-## Fixed Issues
+### Fixed Issues
 
 - The _OpenAPI Generator_ property `logLevel` (default value: `INFO`) has been corrected to boolean flag `verbose` (default value: `false`).
   Any previous value other than `DEBUG` would correspond to `verbose=false` (default) now (for both the Maven plugin and CLI generators).
 
-# 4.19.0 - July 28, 2023
+## 4.19.0 - July 28, 2023
 
-## Improvements
+### Improvements
 
 - Dependency Updates:
   - SAP Dependency Updates:
@@ -179,13 +227,13 @@
       - Update [Checker Qual](https://search.maven.org/search?q=g:org.checkerframework%2BAND%2Ba:checker-qual) (`org.checkerframework:checker-qual`) from `3.35.0` to `3.36.0`
       - Update [JSON](https://central.sonatype.com/artifact/org.json/json/20230618) from `20230227` to `20230618`
 
-## Fixed Issues
+### Fixed Issues
 
 - Fix an issue where, while using the default token exchange strategy `FORWARD_USER_TOKEN`, the destination caching did not isolate the entries based on available user details.
 
-# 4.18.0 - July 11, 2023
+## 4.18.0 - July 11, 2023
 
-## Compatibility Notes
+### Compatibility Notes
 
 - Change internal dependency declaration of `com.google.code.findbugs:jsr305` to `optional`.
   It should no longer come up as (unnecessary) transitive dependency for users of SAP Cloud SDK.
@@ -197,7 +245,7 @@
   - **Services - SAP Blockchain - Multichain**: `com.sap.cloud.sdk.services.blockchain.multichain.*`
   - **Services - Shared Ledger Client**: `com.sap.cloud.sdk.services.sharedledger.client.*`
 
-## Improvements
+### Improvements
 
 - Dependency Updates:
   - Other dependency updates:
@@ -206,13 +254,13 @@
       - Update [Cf Tomee7 Bom](https://central.sonatype.com/search?q=g%3Acom.sap.cloud.sjb.cf+a%3Acf-tomee7-bom&smo=true) (`com.sap.cloud.sjb.cf:cf-tomee7-bom`) from `1.72.0` to `1.73.1`
       - Update [SAP Service Binding Library](https://github.com/SAP/btp-environment-variable-access) from `0.6.0` to `0.7.0`
 
-## Fixed Issues
+### Fixed Issues
 
 - For HTTP destinations with the authentication type `SAMLAssertion` the destination key store is no longer used for the TLS handshake.
 
-# 4.17.0 - June 30, 2023
+## 4.17.0 - June 30, 2023
 
-## Compatibility Notes
+### Compatibility Notes
 
 - Deprecate the pregenerated classes for SAP S/4HANA On-Premise and Cloud Edition OData services.
   With the next major release we will discontinue the following Maven modules:
@@ -249,7 +297,7 @@
   - **SAP S/4HANA - Connectivity**: `com.sap.cloud.sdk.s4hana.connectivity.*`
   - **SAP S/4HANA - Core**: `com.sap.cloud.sdk.s4hana.serialization.*` and `com.sap.cloud.sdk.s4hana.types.*`
 
-## Improvements
+### Improvements
 
 - Update of the OData VDM to the newest updates of [SAP S/4HANA On-Premise](https://help.sap.com/docs/SAP_S4HANA_ON-PREMISE) and [SAP S/4HANA Cloud Edition](https://api.sap.com/products/SAPS4HANACloud/overview).
   This includes completely new services, new operations in previously existing services, and new entity types in the existing Maven artifacts:
@@ -264,16 +312,16 @@
   - Update [Error Prone](https://central.sonatype.com/search?q=g:com.google.errorprone%20a:error_prone_annotations) declared for dependency convergence from `2.19.1` to `2.20.0`
   - Update [Guava](https://central.sonatype.com/search?q=g:com.google.guava%20a:guava) from `31.1-jre` to `32.0.1-jre`
 
-# 4.16.0 - June 14, 2023
+## 4.16.0 - June 14, 2023
 
-## Compatibility Notes
+### Compatibility Notes
 
 - Deprecate `ErpHttpDestination` and all related classes.
   The functionality is now integrated and handled automatically by `HttpDestination`s.
   For most projects this means simply removing any occurrence of `decorate(DefaultErpHttpDestination::new)`.
   In case you are using `ErpHttpDestination` to automatically add the `sap-language` based on the _current_ system locale, please configure a property `cloudsdk.dynamicSapLanguage` with value `true` on the destination.
 
-## Improvements
+### Improvements
 
 - Improved the handling of `sap-client` and `sap-language` to be fully automated.
   Projects can safely remove any invocations of `decorate(DefaultErpHttpDestination::new)`.
@@ -299,7 +347,7 @@
       - Update [Kotlin Stdlib Common](https://search.maven.org/search?q=g:org.jetbrains.kotlin%2BAND%2Ba:kotlin-stdlib-common) (`org.jetbrains.kotlin:kotlin-stdlib-common`) from `1.8.21` to `1.8.22`
       - Update [Kotlin Stdlib Jdk8](https://search.maven.org/search?q=g:org.jetbrains.kotlin%2BAND%2Ba:kotlin-stdlib-jdk8) (`org.jetbrains.kotlin:kotlin-stdlib-jdk8`) from `1.8.21` to `1.8.22`
 
-## 4.15.0 - May 26, 2023
+### 4.15.0 - May 26, 2023
 
 [Maven Central](https://central.sonatype.com/search?q=com.sap.cloud.sdk%2520v%253A4.15.0)
 
