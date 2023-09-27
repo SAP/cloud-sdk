@@ -321,10 +321,12 @@ If no token is given or the destination is not found in the subscriber account, 
 To control this fallback behavior, a selection strategy can be passed to the destination lookup:
 
 ```ts
+import { alwaysSubscriber } from '@sap-cloud-sdk/connectivity';
+
 await req.execute({
   destinationName: 'DESTINATION',
   jwt: 'yourJWT',
-  selectionStrategy: 'alwaysSubscriber'
+  selectionStrategy: alwaysSubscriber
 });
 ```
 
