@@ -136,6 +136,10 @@ This method **no longer** throws an Exceptions in case the Destination Service w
 Instead, an Exception will be thrown when the `getHeaders` method is used, for example, during the actual request execution.
 This is an improvement especially for use cases where the application wants to use the provided convenience getters for HTTP specific properties without actually trying to establish a connection to the target system.
 
+Moreover, the `HttpClientAccessor.getHttpClient` method now provides an overload accepting `Destination` instances directly.
+However, this method will throw an Exception in case the provided `Destination` instance is not an instance of `HttpDestination` or cannot be converted to such.
+This allows you to pass in your `Destination`s without the need to call `asHttp` before.
+
 Additionally, `asHttp` and `asRfc` will no longer always return a new instance of `HttpDestination` or `RfcDestination` if the current object is already an instance of `HttpDestination` or `RfcDestination` respectively.
 -->
 
