@@ -55,30 +55,7 @@ In case you are migrating your application from Spring Boot 2, the below steps m
 </properties>
 ```
 
-2. Place the Spring Boot dependency management **before** the SDK BOM:
-
-```xml
-<dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-dependencies</artifactId>
-            <version>${spring-boot.version}</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sap.cloud.sdk</groupId>
-            <artifactId>sdk-bom</artifactId>
-            <version>4.20.0</version> <!-- TODO: replace this with the most recent version -->
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-    </dependencies>
-</dependencyManagement>
-```
-
-3. Replace any `javax` dependency with the respective `jakarta` dependency:
+2. Replace any `javax` dependency with the respective `jakarta` dependency:
 
 ```diff
 -<dependency>
@@ -110,7 +87,7 @@ For example, if you were previously using `com.sap.hcp.cf.logging:cf-java-loggin
 +</dependency>
 ```
 
-4. Add the new `servlet-jakarta` module:
+3. Add the new `servlet-jakarta` module:
 
 ```xml
 <dependencies>
@@ -121,14 +98,14 @@ For example, if you were previously using `com.sap.hcp.cf.logging:cf-java-loggin
 </dependencies>
 ```
 
-5. When using the `@ServletComponentScan` annotation as suggested, please update the namespace:
+4. When using the `@ServletComponentScan` annotation as suggested, please update the namespace:
 
 ```diff
 - @ServletComponentScan({"com.sap.cloud.sdk", ...
 + @ServletComponentScan({"com.sap.cloud.sdk.cloudplatform.servletjakarta", ...
 ```
 
-6. Configure Cloud Foundry for Java 17
+5. Configure Cloud Foundry for Java 17
 
 - [Configure SAP Java Buildpack to run with Java 17](https://help.sap.com/docs/btp/sap-business-technology-platform/sapmachine#activation)
   - Add the SAPMachine JRE version 17 in you `manifest.yml`:
@@ -236,7 +213,7 @@ As a consequence the generated `AttachmentService` interface and `DefaultAttachm
 
 ```java
 // Resolve HttpClient instance
-HttpDestination destination;
+Destination destination;
 HttpClient httpClient = HttpClientAccessor.getHttpClient(destination);
 
 // Resolve CSRF token, internally runs HEAD request
