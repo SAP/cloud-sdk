@@ -136,6 +136,10 @@ This method **no longer** throws an Exceptions in case the Destination Service w
 Instead, an Exception will be thrown when the `getHeaders` method is used, for example, during the actual request execution.
 This is an improvement especially for use cases where the application wants to use the provided convenience getters for HTTP specific properties without actually trying to establish a connection to the target system.
 
+Moreover, the `HttpClientAccessor.getHttpClient` method now provides an overload accepting `Destination` instances directly.
+However, this method will throw an Exception in case the provided `Destination` instance is not an instance of `HttpDestination` or cannot be converted to such.
+This allows you to pass in your `Destination`s without the need to call `asHttp` before.
+
 Additionally, `asHttp` and `asRfc` will no longer always return a new instance of `HttpDestination` or `RfcDestination` if the current object is already an instance of `HttpDestination` or `RfcDestination` respectively.
 -->
 
@@ -339,6 +343,107 @@ Additionally, `asHttp` and `asRfc` will no longer always return a new instance o
           <br />
           This change also affects the Auditlog integration with the S/4HANA Connectivity module.
         </td>
+      </tr>
+      <tr>
+        <td>ScpCfPrincipal</td>
+        <td>DefaultPrincipal</td>
+        <td> - </td>
+      </tr>
+      <tr>
+        <td>ScpCfPrincipalFacade</td>
+        <td>DefaultPrincipalFacade</td>
+        <td> - </td>
+      </tr>
+      <tr>
+        <td>LocalScopePrefixProvider</td>
+        <td>-</td>
+        <td>No replacement.</td>
+      </tr>
+      <tr>
+        <td>DefaultLocalScopePrefixProvider</td>
+        <td>-</td>
+        <td>No replacement.</td>
+      </tr>
+      <tr>
+        <td>LocalScopePrefixExtractor</td>
+        <td>-</td>
+        <td>No replacement.</td>
+      </tr>
+      <tr>
+        <td>Audience</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                    SAP BTP Security Services Integration Libraries</a></td>
+        <td id="XsuaaComment">Use the SAP BTP Security Services Integration Libraries to retrieve token information from the token stored
+                    in the <code>SecurityContext</code>. For example: <br />
+         <pre>
+         Token token = SecurityContext.getToken(); <br />
+         String audience = token.getClaimAsString(TokenClaims.AUDIENCE); <br />
+         List&ltString&gt scopes = token.getClaimAsStringList(TokenClaims.XSUAA.SCOPES); <br />
+         ...
+         </pre>
+         See the <a href= "https://github.com/SAP/cloud-security-services-integration-library/blob/main/java-api/src/main/java/com/sap/cloud/security/token/TokenClaims.java">
+                    <code>TokenClaims</code></a> class for additional claims.
+        </td>
+      </tr>
+      <tr>
+        <td>Authorization</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                    SAP BTP Security Services Integration Libraries</a></td>
+        <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
+      </tr>
+      <tr>
+        <td>Role</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                            SAP BTP Security Services Integration Libraries</a></td>
+        <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
+      </tr>
+      <tr>
+        <td>Scope</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                            SAP BTP Security Services Integration Libraries</a></td>
+        <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
+      </tr>
+      <tr>
+        <td>TenantSpecificAuthorization</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                            SAP BTP Security Services Integration Libraries</a></td>
+        <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
+      </tr>
+      <tr>
+        <td>UserSpecificAuthorization</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                            SAP BTP Security Services Integration Libraries</a></td>
+        <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
+      </tr>
+      <tr>
+        <td>PrincipalAttribute</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                            SAP BTP Security Services Integration Libraries</a></td>
+        <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
+      </tr>
+      <tr>
+        <td>CollectionPrincipalAttribute</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                            SAP BTP Security Services Integration Libraries</a></td>
+        <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
+      </tr>
+      <tr>
+        <td>SimplePrincipalAttribute</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                            SAP BTP Security Services Integration Libraries</a></td>
+        <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
+      </tr>
+      <tr>
+        <td>StringCollectionPrincipalAttribute</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                            SAP BTP Security Services Integration Libraries</a></td>
+        <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
+      </tr>
+      <tr>
+        <td>StringPrincipalAttribute</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                            SAP BTP Security Services Integration Libraries</a></td>
+        <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
       </tr>
     </tbody>
   </table>
