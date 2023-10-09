@@ -198,11 +198,6 @@ module.exports = {
       }
     ]
   ],
-  scripts: [
-    {
-      src: 'https://sap.github.io/cloud-sdk/js/swa.js'
-    }
-  ],
   customFields: {},
   plugins: [
     [
