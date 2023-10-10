@@ -46,7 +46,6 @@ In case you are migrating your application from Spring Boot 2, the below steps m
 
 ```xml
 <properties>
-    <spring-boot.version>3.0.2</spring-boot.version>
     <java.version>17</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -55,7 +54,30 @@ In case you are migrating your application from Spring Boot 2, the below steps m
 </properties>
 ```
 
-2. Replace any `javax` dependency with the respective `jakarta` dependency:
+2. Place the Spring Boot dependency management **before** the SDK BOM:
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>com.sap.cloud.security</groupId>
+            <artifactId>java-bom</artifactId>
+            <version>3.1.3</version> <!-- TODO: replace this with the most recent version -->
+            <scope>import</scope>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>com.sap.cloud.sdk</groupId>
+            <artifactId>sdk-bom</artifactId>
+            <version>5.0.0</version> <!-- TODO: replace this with the most recent version -->
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
+3. Replace any `javax` dependency with the respective `jakarta` dependency:
 
 ```diff
 -<dependency>
@@ -87,7 +109,7 @@ For example, if you were previously using `com.sap.hcp.cf.logging:cf-java-loggin
 +</dependency>
 ```
 
-3. Add the new `servlet-jakarta` module:
+4. Add the new `servlet-jakarta` module:
 
 ```xml
 <dependencies>
@@ -98,14 +120,14 @@ For example, if you were previously using `com.sap.hcp.cf.logging:cf-java-loggin
 </dependencies>
 ```
 
-4. When using the `@ServletComponentScan` annotation as suggested, please update the namespace:
+5. When using the `@ServletComponentScan` annotation as suggested, please update the namespace:
 
 ```diff
 - @ServletComponentScan({"com.sap.cloud.sdk", ...
 + @ServletComponentScan({"com.sap.cloud.sdk.cloudplatform.servletjakarta", ...
 ```
 
-5. Configure Cloud Foundry for Java 17
+6. Configure Cloud Foundry for Java 17
 
 - [Configure SAP Java Buildpack to run with Java 17](https://help.sap.com/docs/btp/sap-business-technology-platform/sapmachine#activation)
   - Add the SAPMachine JRE version 17 in you `manifest.yml`:
@@ -114,7 +136,6 @@ For example, if you were previously using `com.sap.hcp.cf.logging:cf-java-loggin
   +   JBP_CONFIG_COMPONENTS: 'jres: [''com.sap.xs.java.buildpack.jre.SAPMachineJRE'']'
   +   JBP_CONFIG_SAP_MACHINE_JRE: '{ use_offline_repository: false, version: 17.0.5 }'
   ```
-- Please note, some dependencies such as the `XSUAA Security library` are not yet fully compatible for Java17 or Spring Boot 3.
 
 ### Can I Use Features Annotated as Beta in Production?
 
