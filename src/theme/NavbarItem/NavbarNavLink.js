@@ -6,7 +6,7 @@ import {
 } from '@docusaurus/plugin-content-docs/client';
 
 export default function NavbarNavLinkWrapper(props) {
-  if (!props.to.includes('docs/js') || props.label === '🚀 JavaScript') {
+  if (typeof props.to != "undefined" && (!props.to.includes('docs/js') || props.label === '🚀 JavaScript')) {
     return <NavbarNavLink {...props} />;
   }
   const label = props.label;
