@@ -259,9 +259,9 @@ An error message during the compilation from TS to JS provides a hint on how to 
       new ProvidePlugin({
         process: 'process/browser'
       }),
-      new NormalModuleReplacementPlugin(/^node:/, (resource) => {
-        resource.request = resource.request.replace(/^node:/, "");
-      }),
+      new NormalModuleReplacementPlugin(/^node:/, resource => {
+        resource.request = resource.request.replace(/^node:/, '');
+      })
     ];
 
     return config;
