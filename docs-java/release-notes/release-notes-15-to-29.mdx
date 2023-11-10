@@ -1,3 +1,55 @@
+## 4.27.0 - November 13, 2023
+
+### Compatibility Notes
+
+- Following classes have been deprecated and will be removed from the next major version (V5) of the SAP Cloud SDK:
+  - `com.sap.cloud.sdk.cloudplatform.CloudPlatform`
+  - `com.sap.cloud.sdk.cloudplatform.CloudPlatformFacade`
+  - `com.sap.cloud.sdk.cloudplatform.CloudPlatformAccessor`
+  - `com.sap.cloud.sdk.cloudplatform.ScpCfCloudPlatform`
+  - `com.sap.cloud.sdk.cloudplatform.ScpCfCloudPlatformFacade` 
+  - `com.sap.cloud.sdk.cloudplatform.connectivity.AccessToken`
+  - `com.sap.cloud.sdk.cloudplatform.connectivity.ScpCfDestinationServiceResponseProvider`
+  - `com.sap.cloud.sdk.cloudplatform.WithRuntimeDependencies`
+  - `com.sap.cloud.sdk.cloudplatform.exception.ConstraintViolationException`
+  - `com.sap.cloud.sdk.cloudplatform.exception.DependencyNotFoundException`
+  - `com.sap.cloud.sdk.cloudplatform.exception.EntityAlreadyExistsException`
+  - `com.sap.cloud.sdk.cloudplatform.exception.EntityNotFoundException`
+  - `com.sap.cloud.sdk.cloudplatform.exception.StringParsingException`
+  - `com.sap.cloud.sdk.cloudplatform.exception.UnsupportedCloudFeatureException`
+  - `com.sap.cloud.sdk.cloudplatform.security.principal.exception.PrincipalAttributeException`
+  - `com.sap.cloud.sdk.cloudplatform.security.secret.SecretStore`
+  - `com.sap.cloud.sdk.cloudplatform.security.secret.ScpCfSecretStore`
+  - `com.sap.cloud.sdk.cloudplatform.security.secret.SecretStoreFacade`
+  - `com.sap.cloud.sdk.cloudplatform.security.secret.ScpCfSecretStoreFacade`
+  - `com.sap.cloud.sdk.cloudplatform.security.secret.SecretStoreAccessor`
+  - `com.sap.cloud.sdk.cloudplatform.security.secret.exception.KeyStoreAccessException`
+  - `com.sap.cloud.sdk.cloudplatform.security.secret.exception.SecretStoreAccessException`
+  - `com.sap.cloud.sdk.testutil.ThreadContextInvocationInterceptor`
+  - `com.sap.cloud.sdk.testutil.ThrowableAssertionUtil`
+  
+  Most of the contained functionality has already been migrated to other places.
+  Accessing service bindings, for example, can now be done in a uniform and standardized way using the [Service Binding Library](https://github.com/SAP/btp-environment-variable-access).
+
+### Improvements
+
+- Dependency Updates:
+  - Other dependency updates:
+    - Minor version updates:
+      - Update [`commons-io:commons-io`](https://central.sonatype.com/artifact/commons-io/commons-io/2.15.0) from `2.14.0` to `2.15.0`
+      - Update [`org.checkerframework:checker-qual`](https://central.sonatype.com/artifact/org.checkerframework/checker-qual/3.40.0) declared for dependency convergence from `3.39.0` to `3.40.0`
+      - Update [Protobuf Java](https://central.sonatype.com/artifact/com.google.protobuf/protobuf-java/3.25.0) from `3.24.4` to `3.25.0`
+
+### Fixed Issues
+
+- Fix an issue where silently no resilience would be applied if more than one `ResiliencecDecorationStrategy` implementation is on the classpath.
+  Such a scenario will now produce a log message on `WARN` level.
+  In addition to the log message, using any resilience pattern will lead to an `ResilienceRuntimeException` being thrown.
+  The exception can be avoided by explicitly setting the correct `ResilienceDecorationStrategy` via the `ResilienceDecorator.setDecorationStrategy(ResilienceDecorationStrategy)` method (for example, at application start up).
+- Fix an issue with OData clients (Generic OData Client, OData v2 FluentHelpers, OData v4 RequestBuilders) repeatedly attaching duplicate `Accept` headers for every paginated request.
+- `ODataRequestResultMultipartGeneric.getResult()` now throws `ODataResponseException` instead of `IndexOutOfBoundsException` when a different number of batch request items are returned by the OData server than what was executed.
+  This may occur, depending on OData server configurations, when a read operation fails and subsequent request items are no longer executed as a result.
+
 ## 4.26.0 - October 27, 2023
 
 ### Improvements
