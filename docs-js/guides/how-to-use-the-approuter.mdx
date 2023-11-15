@@ -103,17 +103,14 @@ You also have to bind the `xsuaa` which you configured with your `xs-security.js
 applications:
   - name: approuter-scaffold-approuter
     routes:
-      - route: >-
-          approuter-scaffold-apps.cfapps.sap.hana.ondemand.com
+      - route: approuter-scaffold-apps.cfapps.sap.hana.ondemand.com
     path: .
     memory: 128M
     buildpacks:
       - nodejs_buildpack
     env:
-      TENANT_HOST_PATTERN: >-
-        "approuter-scaffold-(.*).cfapps.sap.hana.ondemand.com"
-      destinations: >-
-        [{"name":"approuter-scaffold","url":"approuter-scaffold.cfapps.sap.hana.ondemand.com","forwardAuthToken":true}]
+      TENANT_HOST_PATTERN: 'approuter-scaffold-(.*).cfapps.sap.hana.ondemand.com'
+      destinations: '[{"name":"approuter-scaffold","url":"approuter-scaffold.cfapps.sap.hana.ondemand.com","forwardAuthToken":true}]'
     services:
       - approuter-scaffold-xsuaa
 ```

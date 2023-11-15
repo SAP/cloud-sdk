@@ -198,29 +198,14 @@ As an example refer to the plugin XML below:
 </plugin>
 ```
 
-## Using the OpenAPI Generator CLI
-
-1. Download the latest command-line interface (CLI) of the generator from [Maven Central](https://search.maven.org/artifact/com.sap.cloud.sdk.datamodel/openapi-generator-cli).
-   Rename it to `openapi-generator-cli.jar` and put it in a directory of your choice.
-
-1. Run `java -jar openapi-generator-cli.jar -i /path/to/input/specification -o /path/to/output/folder -a name.of.api.package -m name.of.model.package`.
-   A full list of parameters is [available here](#available-parameters).
-
-1. Put the generated Java source files from the output folder into your project that is using the SAP Cloud SDK so that they are picked up by Java.
-   For example, move them to the `application/src/main/java` folder.
-
 ## Available Parameters
 
 :::tip Passing Additional Properties to the Underlying OpenAPI Generator
 
-You can pass arbitrary additional configuration properties to the underlying [open source OpenAPI generator](https://openapi-generator.tech/docs/generators/java/) via `<additionalProperties>` or `--additional-properties`.
+You can pass arbitrary additional configuration properties to the underlying [open source OpenAPI generator](https://openapi-generator.tech/docs/generators/java/) via `<additionalProperties>`.
 :::
 
 The complete list of available parameters with their description is as follows:
-
-<Tabs defaultValue="maven" values={[ { label: 'Maven Plugin', value: 'maven', }, { label: 'CLI', value: 'cli', }]}>
-
-<TabItem value="maven">
 
 | Parameter                 |  Default   | Required | Description                                                                                                                                                                                                                                                                                                                                                                     |
 | :------------------------ | :--------: | :------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -235,25 +220,6 @@ The complete list of available parameters with their description is as follows:
 | `<verbose>`               |  `False`   |    No    | Run the generator with verbose output                                                                                                                                                                                                                                                                                                                                           |
 | `<sapCopyrightHeader>`    |  `False`   |    No    | Add the SAP copyright header (overrides `copyrightHeader`)                                                                                                                                                                                                                                                                                                                      |
 | `<additionalProperties>`  |    `[]`    |    No    | Defines a map of key-value pairs that will be passed to the Java generator. E.g. `<param>value</param>`                                                                                                                                                                                                                                                                         |
-
-</TabItem>
-<TabItem value="cli">
-
-| Parameter                 | Alias |  Default   | Required | Description                                                                                                                                                                                                                                                                                                                                                                       |
-| :------------------------ | :---: | :--------: | :------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--input-spec`            | `-i`  |     -      |   Yes    | Location of the OpenAPI specification file                                                                                                                                                                                                                                                                                                                                        |
-| `--output-dir`            | `-o`  |     -      |   Yes    | Output directory for generated sources                                                                                                                                                                                                                                                                                                                                            |
-| `--api-package`           | `-a`  |     -      |   Yes    | Package name for the generated API classes                                                                                                                                                                                                                                                                                                                                        |
-| `--model-package`         | `-m`  |     -      |   Yes    | Package name for the generated Model classes                                                                                                                                                                                                                                                                                                                                      |
-| `--delete-output-dir`     | `-d`  |  `False`   |    No    | Determines whether to delete the output directory before running the generator                                                                                                                                                                                                                                                                                                    |
-| `--api-maturity`          | none  | `released` |    No    | Defines the maturity of the OpenAPI for which Java classes are generated. Possible values are `released` and `beta`. Please note if you define it as `beta` then [`@Beta` annotations](https://www.javadoc.io/doc/com.google.guava/guava/latest/com/google/common/annotations/Beta.html) are added to the generated classes which indicate that they are in an experimental state |
-| `--user-copyright`        | `-c`  |     -      |    No    | Copyright header to be added at the top of generated files                                                                                                                                                                                                                                                                                                                        |
-| `--verbose`               | `-v`  |  `False`   |    No    | Run the generator with verbose output                                                                                                                                                                                                                                                                                                                                             |
-| `--use-sap-copyright`     | `-u`  |  `False`   |    No    | Add the SAP copyright header (overrides `copyrightHeader`)                                                                                                                                                                                                                                                                                                                        |
-| `--additional-properties` | `-p`  |     -      |    No    | Defines a list of key-value pairs that will be passed to the Java generator in the format: `key1=val1,key2=val2`.                                                                                                                                                                                                                                                                 |
-
-</TabItem>
-</Tabs>
 
 ## Solving Compilation Issues After Generation
 

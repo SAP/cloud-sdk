@@ -46,7 +46,6 @@ In case you are migrating your application from Spring Boot 2, the below steps m
 
 ```xml
 <properties>
-    <spring-boot.version>3.0.2</spring-boot.version>
     <java.version>17</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -61,16 +60,16 @@ In case you are migrating your application from Spring Boot 2, the below steps m
 <dependencyManagement>
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-dependencies</artifactId>
-            <version>${spring-boot.version}</version>
-            <type>pom</type>
+            <groupId>com.sap.cloud.security</groupId>
+            <artifactId>java-bom</artifactId>
+            <version>3.1.3</version> <!-- TODO: replace this with the most recent version -->
             <scope>import</scope>
+            <type>pom</type>
         </dependency>
         <dependency>
             <groupId>com.sap.cloud.sdk</groupId>
             <artifactId>sdk-bom</artifactId>
-            <version>4.20.0</version> <!-- TODO: replace this with the most recent version -->
+            <version>5.0.0</version> <!-- TODO: replace this with the most recent version -->
             <type>pom</type>
             <scope>import</scope>
         </dependency>
@@ -137,7 +136,6 @@ For example, if you were previously using `com.sap.hcp.cf.logging:cf-java-loggin
   +   JBP_CONFIG_COMPONENTS: 'jres: [''com.sap.xs.java.buildpack.jre.SAPMachineJRE'']'
   +   JBP_CONFIG_SAP_MACHINE_JRE: '{ use_offline_repository: false, version: 17.0.5 }'
   ```
-- Please note, some dependencies such as the `XSUAA Security library` are not yet fully compatible for Java17 or Spring Boot 3.
 
 ### Can I Use Features Annotated as Beta in Production?
 
@@ -236,7 +234,7 @@ As a consequence the generated `AttachmentService` interface and `DefaultAttachm
 
 ```java
 // Resolve HttpClient instance
-HttpDestination destination;
+Destination destination;
 HttpClient httpClient = HttpClientAccessor.getHttpClient(destination);
 
 // Resolve CSRF token, internally runs HEAD request

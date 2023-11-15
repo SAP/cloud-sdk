@@ -40,6 +40,12 @@ The SAP Cloud SDK provides archetypes based on [Spring](https://spring.io/).
 
 Run:
 
+<Tabs groupId="frameworks" defaultValue="spring5" values={[
+{ label: 'Spring 5', value: 'spring5', },
+{ label: 'Spring 6', value: 'spring6', }]}>
+
+<TabItem value="spring5">
+
 ```bash
 mvn archetype:generate "-DarchetypeGroupId=com.sap.cloud.sdk.archetypes" \
     "-DarchetypeArtifactId=scp-cf-spring" \
@@ -109,6 +115,79 @@ skipUsageAnalytics: false
 [INFO] Finished at: 2020-04-19T19:25:33+02:00
 [INFO] ------------------------------------------------------------------------
 ```
+
+</TabItem>
+<TabItem value="spring6">
+
+```bash
+mvn archetype:generate "-DarchetypeGroupId=com.sap.cloud.sdk.archetypes" \
+    "-DarchetypeArtifactId=scp-cf-spring-jakarta" \
+    "-DarchetypeVersion=RELEASE"
+```
+
+Maven will ask you to provide the following:
+
+- `groupId` - usually serves as your organization identifier, i.e. `foo.bar.cloud.app`
+- `artifactId` - it's your application's name, i.e. `mydreamapp`
+- `version` - we recommend keeping `1.0-SNAPSHOT` if you're just starting
+- `package` - by default this equals to `groupId`. Change it only if you know what you're doing
+
+After providing all the interactive values to the CLI it will generate your first SAP Cloud SDK based application:
+
+```bash
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------------< org.apache.maven:standalone-pom >-------------------
+[INFO] Building Maven Stub Project (No POM) 1
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO]
+[INFO] >>> archetype:3.2.1:generate (default-cli) > generate-sources @ standalone-pom >>>
+[INFO]
+[INFO] <<< archetype:3.2.1:generate (default-cli) < generate-sources @ standalone-pom <<<
+[INFO]
+[INFO]
+[INFO] --- archetype:3.2.1:generate (default-cli) @ standalone-pom ---
+[INFO] Generating project in Interactive mode
+[INFO] ....
+[INFO] ....
+Define value for property 'artifactId' (should match expression '[^_]+'): mydreamapp
+[INFO] Using property: gitignore = .gitignore
+Define value for property 'groupId': foo.bar.cloud.app
+[INFO] Using property: artifactId = mydreamapp
+Define value for property 'version' 1.0-SNAPSHOT: :
+Define value for property 'package' foo.bar.cloud.app: :
+Confirm properties configuration:
+artifactId: mydreamapp
+gitignore: .gitignore
+groupId: foo.bar.cloud.app
+artifactId: mydreamapp
+version: 1.0-SNAPSHOT
+package: foo.bar.cloud.app
+ Y: :
+[INFO] ----------------------------------------------------------------------------
+[INFO] Using following parameters for creating project from Archetype: scp-cf-spring-jakarta:RELEASE
+[INFO] ----------------------------------------------------------------------------
+[INFO] Parameter: groupId, Value: foo.bar.cloud.app
+[INFO] Parameter: artifactId, Value: mydreamapp
+[INFO] Parameter: version, Value: 1.0-SNAPSHOT
+[INFO] Parameter: package, Value: foo.bar.cloud.app
+[INFO] Parameter: packageInPathFormat, Value: foo/bar/cloud/app
+[INFO] Parameter: package, Value: foo.bar.cloud.app
+[INFO] Parameter: gitignore, Value: .gitignore
+[INFO] Parameter: groupId, Value: foo.bar.cloud.app
+[INFO] Parameter: artifactId, Value: mydreamapp
+[INFO] Parameter: version, Value: 1.0-SNAPSHOT
+[INFO] Project created from Archetype in dir: /home/user/dev/temp/mydreamapp
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  20.616 s
+[INFO] Finished at: 2023-09-07T13:12:09+02:00
+[INFO] ------------------------------------------------------------------------
+```
+
+</TabItem>
+</Tabs>
 
 **Congratulations! You've just set up a brand-new application with the SAP Cloud SDK for Java.**
 
@@ -235,7 +314,7 @@ Add the jakarta servlet dependency to your pom.xml:
 </dependency>
 ```
 
-And, in case you are using the `sdk-bom`, make sure to set the spring version before importing the bom.
+And, in case you are using the `sdk-bom`, make sure to set the Spring and XSUAA Library versions before importing the bom.
 You can find more details about the configuration for Java 17 / Spring 6 / Spring Boot 3 [here](/docs/java/frequently-asked-questions#which-java-versions-are-supported-by-the-sap-cloud-sdk).
 
 :::note Spring Support for Cloud Foundry
@@ -262,4 +341,4 @@ If you face dependency conflicts, you can instead try using the SAP Cloud SDK Mo
 ## Further Resources
 
 - Check our latest [release notes](release-notes.mdx)
-- Get [support](https://github.com/SAP/cloud-sdk/issues/new/choose) if you have questions or experience any issues
+- Get [support](https://github.com/SAP/cloud-sdk-java/issues/new/choose) if you have questions or experience any issues
