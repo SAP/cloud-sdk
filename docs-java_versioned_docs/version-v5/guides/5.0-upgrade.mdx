@@ -23,6 +23,13 @@ We will publish the full migration guide when we release v5.
 
 :::
 
+:::info
+
+SAP Cloud SDK version 5 requires a minimum CAP/CDS version of at least `2.4.0`.
+If you are on an older CAP stack, please follow the [CAP migration guide](https://cap.cloud.sap/docs/java/migration#one-to-two) first.
+
+:::
+
 ## Steps to migrate `Destination` usages
 
 Version 5 of the SAP Cloud SDK comes with a major cleanup of the APIs around the `Destination` concept.
@@ -183,6 +190,12 @@ Additionally, `asHttp` and `asRfc` will no longer always return a new instance o
   - `com.sap.cloud.sdk.frameworks`
     - child module `com.sap.cloud.sdk.frameworks:resilience4j` has been moved to `com.sap.cloud.sdk.cloudplatform:resilience4j`
     - child module `com.sap.cloud.sdk.frameworks:apache-httpclient5` has been moved to `com.sap.cloud.sdk.cloudplatform:connectivity-apache-httpclient5`
+  - `com.sap.cloud.sdk.cloudplatform:cloudplatform-core-scp-cf`
+  - The following modules' logic has been refactored into other modules, see release notes for details:
+    - `com.sap.cloud.sdk.cloudplatform:security-dwc`
+    - `com.sap.cloud.sdk.cloudplatform:security-scp-cf`
+    - `com.sap.cloud.sdk.cloudplatform:tenant-dwc`
+    - `com.sap.cloud.sdk.cloudplatform:tenant-scp-cf`
 
 </details>
 
@@ -457,6 +470,21 @@ Additionally, `asHttp` and `asRfc` will no longer always return a new instance o
         <td>PrincipalPropagationStrategy.setDefaultStrategy(...)</td>
         <td>Destination custom property: <br /><code>cloudsdk.principalPropagationMode = (recommended|compatibility)</code></td>
         <td>Default: <code>compatibility</code>, for reduced token exchanges. <a href="https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/configure-principal-propagation-via-user-exchange-token" target="_new">See more.</a></td>
+      </tr>
+      <tr>
+        <td>ScpCfTenant</td>
+        <td>DefaultTenant</td>
+        <td> - </td>
+      </tr>
+      <tr>
+        <td>DwcTenant</td>
+        <td>DefaultTenant</td>
+        <td> - </td>
+      </tr>
+      <tr>
+        <td>ScpCfTenantFacade</td>
+        <td>DefaultTenantFacade</td>
+        <td> - </td>
       </tr>
     </tbody>
   </table>
