@@ -1,0 +1,171 @@
+---
+id: 5.0-upgrade-steps
+title: Steps to update to Version 5 of the SAP Cloud SDK
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Update Steps to Version 5
+description: Update your application to use version 5 of the SAP Cloud SDK
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+  - 5
+  - Update
+---
+
+This document will guide you, step-by-step on how you can leverage the new major version of the SAP Cloud SDK.
+
+## 1. Change version of your sdk-bom or sdk-modules-bom dependency
+
+The first step is to change the version of the SAP Cloud SDK dependency in your `pom.xml` file.
+Depending on your project setup you might use one of our BOMs or the individual modules.
+
+To find our BOMs, search for the following entries in your maven `dependencyManagement` section: `com.sap.cloud.sdk:sdk-bom` and `com.sap.cloud.sdk:sdk-modules-bom`.
+These you can update directly to version `5.0.0` or the [latest version](https://central.sonatype.com/artifact/com.sap.cloud.sdk/sdk-bom).
+If you are using `com.sap.cloud.sdk:sdk-sjb-bom` you will need to replace it by using the contained BOMs directly:
+
+```xml
+<dependencyManagement>
+    <dependencies>
+      <!-- Replace usage of com.sap.cloud.sdk:sdk-sjb-bom by the following two BOMs -->
+      <dependency>
+        <groupId>com.sap.cloud.sjb.cf</groupId>
+        <artifactId>cf-tomee7-bom</artifactId>
+        <version>${your.sjb.version}></version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.sap.cloud.sdk</groupId>
+        <artifactId>sdk-bom</artifactId>
+        <version>${sdk.v5.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+```
+
+## 2. Adapt dependencies as needed
+
+The lists below contains all modules that have been renamed or removed from the SDK without replacement.
+Therefore, you should also rename respectively remove those from your project setup.
+
+:::warning TODO
+
+check and extend lists with further renamed and removed modules
+
+:::
+
+<details>
+  <summary>Full list of renamed modules</summary>
+
+- Module `com.sap.cloud.sdk.frameworks:resilience4j` has been moved to `com.sap.cloud.sdk.cloudplatform:resilience4j`
+- Module `com.sap.cloud.sdk.frameworks:apache-httpclient5` has been moved to `com.sap.cloud.sdk.cloudplatform:connectivity-apache-httpclient5`
+
+</details>
+
+<details>
+    <summary>Full list of removed modules</summary>
+
+- Blockchain:
+  - `blockchain-business-services-sdk`
+  - `blockchain-business-services-visibility`
+  - `blockchain-client-fabric`
+  - `blockchain-client-multichain`
+  - `scp-blockchain`
+- Neo related modules:
+  - `auditlog-scp-neo`
+  - `cloudplatform-connectivity-scp-neo`
+  - `cloudplatform-core-scp-neo`
+  - `scp-neo`
+  - `security-scp-neo`
+  - `tenant-scp-neo`
+  - `concurrency-scp-neo`
+- Pregenerated clients
+  - `scp-workflow-cf`
+  - `btp-business-rules`
+- Others:
+  - `com.sap.cloud.sdk.archetypes:sdk-neo-javaee7`
+  - `com.sap.cloud.sdk.plugins:plugins-parent`
+  - `com.sap.cloud.sdk.plugins:scp-neo-maven-plugin`
+  - `com.sap.cloud.sdk.cloudplatform:security-servlet`
+  - `com.sap.cloud.sdk.cloudplatform:auditlog`
+  - `com.sap.cloud.sdk.cloudplatform:auditlog-scp-cf`
+  - `com.sap.cloud.sdk.cloudplatform:auditlog-scp-neo`
+  - `com.sap.cloud.sdk.frameworks`
+    - child module `com.sap.cloud.sdk.frameworks:resilience4j` has been moved to `com.sap.cloud.sdk.cloudplatform:resilience4j`
+    - child module `com.sap.cloud.sdk.frameworks:apache-httpclient5` has been moved to `com.sap.cloud.sdk.cloudplatform:connectivity-apache-httpclient5`
+  - `com.sap.cloud.sdk.cloudplatform:cloudplatform-core-scp-cf`
+  - The following modules' logic has been refactored into other modules, see release notes for details:
+    - `com.sap.cloud.sdk.cloudplatform:security-dwc`
+    - `com.sap.cloud.sdk.cloudplatform:security-scp-cf`
+    - `com.sap.cloud.sdk.cloudplatform:tenant-dwc`
+    - `com.sap.cloud.sdk.cloudplatform:tenant-scp-cf`
+
+</details>
+
+If you are using our BOMs to provide the module versions, a fast way to do identify those is to run any `mvn` command.
+This will now lead to error messages like this:
+
+> 'dependencies.dependency.version' for com.sap.cloud.sdk.cloudplatform:auditlog-scp-cf:jar is missing
+
+This helps you to identify which modules you need to remove or replace in your project setup.
+
+## 3. Introduce missing modules based on package name:
+
+Once the build doesn't complain about missing dependency versions anymore, you can start to fix the compilation errors.
+For this, the following table provides a helpful overview, over which packages can be found in which module.
+
+:::warning TODO
+
+check for further packages and remove lines for deprecated modules
+
+:::
+
+| Package                                             | Module                                                                                   |
+| --------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `com.sap.cloud.sdk.s4hana.serialization`            | `com.sap.cloud.sdk.s4hana:s4hana-core` (TODO: deprecated?)                               |
+| `com.sap.cloud.sdk.s4hana.connectivity.exception`   | `com.sap.cloud.sdk.s4hana:s4hana-connectivity` (TODO: deprecated?)                       |
+| `com.sap.cloud.sdk.s4hana.connectivity.rfc`         | `com.sap.cloud.sdk.s4hana:rfc` (TODO: deprecated?)                                       |
+| `com.sap.cloud.sdk.s4hana.datamodel.odata.services` | See the section below on [generating your own OData VDM](#4-generate-your-own-odata-vdm) |
+| `com.sap.cloud.sdk.cloudplatform.servlet`           | `com.sap.cloud.sdk.cloudplatform:servlet` dependency                                     |
+
+## 4. Generate your own OData VDM
+
+To generate your own OData VDM, you can use the [OData Generator Maven Plugin](../features/odata/vdm-generator) directly.
+You can use the following configuration to generate a VDM that is compatible with the OData VDM the SDK provided in version 4:
+
+```xml
+<inputDirectory>${project.basedir}/src/main/resources/odata/edmx</inputDirectory>
+<outputDirectory>${project.build.directory}/vdm</outputDirectory>
+<serviceNameMappingFile>${project.basedir}/src/main/resources/odata/serviceNameMappings.properties</serviceNameMappingFile>
+<deleteOutputDirectory>true</deleteOutputDirectory>
+<packageName>com.sap.cloud.sdk.s4hana.datamodel.odata</packageName>
+<compileScope>COMPILE</compileScope>
+```
+
+## 5. Handle OData VDM Instantiation
+
+Depending on your project setup, you might have relied on the `@Inject` annotation in your OData VDM services.
+As the Cloud SDK doesn't provide the pre-generated VDM anymore, you will need to instantiate your own services instead.
+For that you can either use your own dependency injection framework, or instantiate the services manually.
+
+The manual approach would look something like this:
+
+```diff
+- @Inject
+- private BusinessPartnerService businessPartnerService;
++ private BusinessPartnerService businessPartnerService = new DefaultBusinessPartnerService();
+```
+
+## 6. Remove HttpFilter from your `web.xml`
+
+As we no longer provide the `HttpSecurityHeadersFilter` and `HttpCachingHeaderFilter` you can remove them from your `web.xml`.
+Search for the following entries:
+
+- `com.sap.cloud.sdk.cloudplatform.security.servlet.HttpSecurityHeadersFilter`
+- `com.sap.cloud.sdk.cloudplatform.security.servlet.HttpCachingHeaderFilter`
