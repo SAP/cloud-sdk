@@ -22,7 +22,7 @@ This document pri step-by-step on how you can leverage the new major version of 
 
 Before you increase the SAP Cloud SDK version to 5 it can be beneficial to migrate any usage of deprecated API first. Follow the deprecation note of the Javadoc in case you are still using deprecated API from the SAP Cloud SDK. All deprecated API is removed With version 5.
 
-## 1. Change Version of Your `sdk-bom` or `sdk-modules-bom` Bill-of-Materials
+## 1. Change Version of Your `sdk-bom` or `sdk-modules-bom` Bill of Materials
 
 The first step is to change the version of the SAP Cloud SDK dependency in your `pom.xml` file.
 Depending on your project setup you might use one of our BOMs or the individual modules.
@@ -35,7 +35,7 @@ If you are using `com.sap.cloud.sdk:sdk-sjb-bom` you will either need to replace
 
 ## 2. Adapt Dependencies as Needed
 
-The lists below contains all modules that have been renamed or removed from the SDK without replacement.
+The lists below contains all modules that have been renamed or removed from the SDK.
 Therefore, you should also rename respectively remove those from your project setup.
 
 :::warning TODO
@@ -99,7 +99,7 @@ This will now lead to error messages like this:
 
 This helps you to identify which modules you need to remove or replace in your project setup.
 
-## 3. Introduce Missing Modules Based on Package Name:
+## 3. Introduce Missing Modules Based on Package Names
 
 Once the build doesn't complain about missing dependency versions anymore, you can start to fix the compilation errors.
 For this, the following table provides a helpful overview, over which packages can be found in which module.
@@ -146,7 +146,7 @@ The manual approach would look something like this:
 + private BusinessPartnerService businessPartnerService = new DefaultBusinessPartnerService();
 ```
 
-## 6. Remove HttpFilter from your `web.xml`
+## 6. Remove HttpFilter from Your `web.xml`
 
 As we no longer provide the `HttpSecurityHeadersFilter` and `HttpCachingHeaderFilter` you can remove them from your `web.xml`.
 Search for the following entries:
