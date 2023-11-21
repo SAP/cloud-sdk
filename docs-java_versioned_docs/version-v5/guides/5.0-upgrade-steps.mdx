@@ -16,7 +16,7 @@ keywords:
   - Update
 ---
 
-This document pri step-by-step on how you can leverage the new major version of the SAP Cloud SDK.
+This document provides a step-by-step guide on how you can leverage the new major version of the SAP Cloud SDK.
 
 ## 0. Before you Upgrade
 
@@ -30,7 +30,7 @@ Depending on your project setup you might use one of our BOMs or the individual 
 To find our BOMs, search for the following entries in your maven `dependencyManagement` section: `com.sap.cloud.sdk:sdk-bom` and `com.sap.cloud.sdk:sdk-modules-bom`.
 Update them directly to version `5.0.0` or the [latest version](https://central.sonatype.com/artifact/com.sap.cloud.sdk/sdk-bom).
 
-If you are using `com.sap.cloud.sdk:sdk-sjb-bom` you will either need to replace it with one of the BOMs mentioned above, or stay on the latest SDK verison `4.x`.
+If you are using `com.sap.cloud.sdk:sdk-sjb-bom` you will either need to replace it with one of the BOMs mentioned above, or stay on the latest version 4 of the SAP Cloud SDK.
 
 
 ## 2. Adapt Dependencies as Needed
@@ -120,6 +120,8 @@ check for further packages and remove lines for deprecated modules
 
 ## 4. Generate Your Own OData VDM
 
+The SAP Cloud SDK no longer provides a pre-generated OData VDM. We made this decision to reduce the maintenance effort and to allow you to generate your own VDM with the exact version of the OData service you are using. That way there is no need to wait for the next SDK release to get the latest changes of the OData service.
+
 To generate your own OData VDM, you can use the [OData Generator Maven Plugin](../features/odata/vdm-generator) directly.
 You can use the following configuration to generate a VDM that is compatible with the OData VDM the SDK provided in version 4:
 
@@ -131,6 +133,10 @@ You can use the following configuration to generate a VDM that is compatible wit
 <packageName>com.sap.cloud.sdk.s4hana.datamodel.odata</packageName>
 <compileScope>COMPILE</compileScope>
 ```
+
+The file specified under _serviceNameMappingFile_ will be created and populated, if it doesn't exist yet.
+If you want to create a VDM that is compatible with the OData VDM the SDK provided in version 4, you can use this [_serviceNameMappings.properties_](../../../static/resources/v4-serviceNameMappings.properties).
+
 
 ## 5. Handle OData VDM Instantiation
 
@@ -146,10 +152,10 @@ The manual approach would look something like this:
 + private BusinessPartnerService businessPartnerService = new DefaultBusinessPartnerService();
 ```
 
-## 6. Remove HttpFilter from Your `web.xml`
+## 6. Remove Discontinued ServletFilter from Your `web.xml`
 
-As we no longer provide the `HttpSecurityHeadersFilter` and `HttpCachingHeaderFilter` you can remove them from your `web.xml`.
-Search for the following entries:
+We decided to remove all security related `Filter` implementations from the SAP Cloud SDK, to have a clearer separation between the [SAP Security Libraries](https://github.com/SAP/cloud-security-services-integration-library/) and the SAP Cloud SDK.
 
-- `com.sap.cloud.sdk.cloudplatform.security.servlet.HttpSecurityHeadersFilter`
-- `com.sap.cloud.sdk.cloudplatform.security.servlet.HttpCachingHeaderFilter`
+This means you need to remove all mentions of the following filters from your `web.xml` (mind the `security` in the package): `com.sap.cloud.sdk.cloudplatform.security.servlet.*Filter`
+
+The `com.sap.cloud.sdk.cloudplatform.servlet.RequestAccessorFilter` remains in the SDK, as it is not security related.
