@@ -18,36 +18,20 @@ keywords:
 
 This document will guide you, step-by-step on how you can leverage the new major version of the SAP Cloud SDK.
 
-## 1. Change version of your sdk-bom or sdk-modules-bom dependency
+## 0. Before you Upgrade
+
+Before you increase the SAP Cloud SDK version to 5 it can be beneficial to migrate any usage of deprecated API first. Follow the deprecation note of the Javadoc in case you are still using deprecated API from the SAP Cloud SDK. All deprecated API is removed With version 5.
+
+## 1. Change Version of Your `sdk-bom` or `sdk-modules-bom` Bill-of-Materials
 
 The first step is to change the version of the SAP Cloud SDK dependency in your `pom.xml` file.
 Depending on your project setup you might use one of our BOMs or the individual modules.
 
 To find our BOMs, search for the following entries in your maven `dependencyManagement` section: `com.sap.cloud.sdk:sdk-bom` and `com.sap.cloud.sdk:sdk-modules-bom`.
 These you can update directly to version `5.0.0` or the [latest version](https://central.sonatype.com/artifact/com.sap.cloud.sdk/sdk-bom).
-If you are using `com.sap.cloud.sdk:sdk-sjb-bom` you will need to replace it by using the contained BOMs directly:
 
-```xml
-<dependencyManagement>
-    <dependencies>
-      <!-- Replace usage of com.sap.cloud.sdk:sdk-sjb-bom by the following two BOMs -->
-      <dependency>
-        <groupId>com.sap.cloud.sjb.cf</groupId>
-        <artifactId>cf-tomee7-bom</artifactId>
-        <version>${your.sjb.version}></version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>com.sap.cloud.sdk</groupId>
-        <artifactId>sdk-bom</artifactId>
-        <version>${sdk.v5.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-```
+If you are using `com.sap.cloud.sdk:sdk-sjb-bom` you will either need to replace it with one of the BOMs mentioned above, or stay on the latest SDK verison `4.x`.
+
 
 ## 2. Adapt dependencies as needed
 
