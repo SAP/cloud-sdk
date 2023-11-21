@@ -16,7 +16,7 @@ keywords:
   - Update
 ---
 
-This document will guide you, step-by-step on how you can leverage the new major version of the SAP Cloud SDK.
+This document pri step-by-step on how you can leverage the new major version of the SAP Cloud SDK.
 
 ## 0. Before you Upgrade
 
@@ -28,12 +28,12 @@ The first step is to change the version of the SAP Cloud SDK dependency in your 
 Depending on your project setup you might use one of our BOMs or the individual modules.
 
 To find our BOMs, search for the following entries in your maven `dependencyManagement` section: `com.sap.cloud.sdk:sdk-bom` and `com.sap.cloud.sdk:sdk-modules-bom`.
-These you can update directly to version `5.0.0` or the [latest version](https://central.sonatype.com/artifact/com.sap.cloud.sdk/sdk-bom).
+Update them directly to version `5.0.0` or the [latest version](https://central.sonatype.com/artifact/com.sap.cloud.sdk/sdk-bom).
 
 If you are using `com.sap.cloud.sdk:sdk-sjb-bom` you will either need to replace it with one of the BOMs mentioned above, or stay on the latest SDK verison `4.x`.
 
 
-## 2. Adapt dependencies as needed
+## 2. Adapt Dependencies as Needed
 
 The lists below contains all modules that have been renamed or removed from the SDK without replacement.
 Therefore, you should also rename respectively remove those from your project setup.
@@ -99,7 +99,7 @@ This will now lead to error messages like this:
 
 This helps you to identify which modules you need to remove or replace in your project setup.
 
-## 3. Introduce missing modules based on package name:
+## 3. Introduce Missing Modules Based on Package Name:
 
 Once the build doesn't complain about missing dependency versions anymore, you can start to fix the compilation errors.
 For this, the following table provides a helpful overview, over which packages can be found in which module.
@@ -118,7 +118,7 @@ check for further packages and remove lines for deprecated modules
 | `com.sap.cloud.sdk.s4hana.datamodel.odata.services` | See the section below on [generating your own OData VDM](#4-generate-your-own-odata-vdm) |
 | `com.sap.cloud.sdk.cloudplatform.servlet`           | `com.sap.cloud.sdk.cloudplatform:servlet` dependency                                     |
 
-## 4. Generate your own OData VDM
+## 4. Generate Your Own OData VDM
 
 To generate your own OData VDM, you can use the [OData Generator Maven Plugin](../features/odata/vdm-generator) directly.
 You can use the following configuration to generate a VDM that is compatible with the OData VDM the SDK provided in version 4:
