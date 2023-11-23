@@ -20,9 +20,17 @@ This document provides a step-by-step guide on how you can leverage the new majo
 
 ## 0. Before you Upgrade
 
-Before you increase the SAP Cloud SDK version to 5 it can be beneficial to migrate any usage of deprecated API first. Follow the deprecation note of the Javadoc in case you are still using deprecated API from the SAP Cloud SDK. All deprecated API is removed With version 5.
+Before you increase the SAP Cloud SDK version to 5, it is recommended to first update to the latest available version of the SAP Cloud SDK 4 and migrate any usage of deprecated API. Follow the deprecation notes in the Javadocs to find recommended replacements. All deprecated APIs are removed with version 5.
 
-## 1. Change Version of Your `sdk-bom` or `sdk-modules-bom` Bill of Materials
+Also, make sure that you are using Java 17 or higher. Besides changing the actual compilation binary you should also adapt the following maven properties to `17` in your `pom.xml` file:
+
+- `java.version`
+- `maven.compiler.source`
+- `maven.compiler.target`
+- `maven.compiler.testSource`
+- `maven.compiler.testTarget`
+
+## 1. Change Version of Your `sdk-bom` or `sdk-modules-bom`
 
 The first step is to change the version of the SAP Cloud SDK dependency in your `pom.xml` file.
 Depending on your project setup you might use one of our BOMs or the individual modules.
@@ -30,7 +38,10 @@ Depending on your project setup you might use one of our BOMs or the individual 
 To find our BOMs, search for the following entries in your maven `dependencyManagement` section: `com.sap.cloud.sdk:sdk-bom` and `com.sap.cloud.sdk:sdk-modules-bom`.
 Update them directly to version `5.0.0` or the [latest version](https://central.sonatype.com/artifact/com.sap.cloud.sdk/sdk-bom).
 
-If you are using `com.sap.cloud.sdk:sdk-sjb-bom` you will either need to replace it with one of the BOMs mentioned above, or stay on the latest version 4 of the SAP Cloud SDK.
+If you are using `com.sap.cloud.sdk:sdk-sjb-bom` and produce a `war` deployment (e.g. when you require JCo for your application) you will need to stay on the latest version 4 of the SAP Cloud SDK.
+In the other cases you should replace it with one of the BOMs mentioned above.
+
+<!-- drop of servlet module -->
 
 ## 2. Adapt Dependencies as Needed
 
@@ -49,7 +60,7 @@ Therefore, you should also rename respectively remove those from your project se
     <summary>Full list of removed modules</summary>
 
 - Bill of Materials
-  - `com.sap.cloud.sdk:sdk-sjb-bom
+  - `com.sap.cloud.sdk:sdk-sjb-bom`
 - Archetypes
   - `com.sap.cloud.sdk.archetypes:scp-cf-tomee`
   - `com.sap.cloud.sdk.archetypes:scp-neo-javaee7`
@@ -79,6 +90,13 @@ Therefore, you should also rename respectively remove those from your project se
   - `com.sap.cloud.sdk.services:blockchain-client-multichain`
   - `com.sap.cloud.sdk.services:btp-business-rules`
   - `com.sap.cloud.sdk.services:btp-shared-ledger-client`
+  - `com.sap.cloud.sdk.services:scp-blockchain`
+  - `com.sap.cloud.sdk.services:scp-business-logging-all`
+  - `com.sap.cloud.sdk.services:scp-business-logging-core`
+  - `com.sap.cloud.sdk.services:scp-business-logging-odata`
+  - `com.sap.cloud.sdk.services:scp-business-logging-rest`
+  - `com.sap.cloud.sdk.services:scp-workflow-cf`
+- SAP Internal (?????)
   - `com.sap.cloud.sdk.services:mdi-client-convenience`
   - `com.sap.cloud.sdk.services:mdi-client-core`
   - `com.sap.cloud.sdk.services:mdi-client-model`
@@ -88,13 +106,6 @@ Therefore, you should also rename respectively remove those from your project se
   - `com.sap.cloud.sdk.services:mdo-distribution-client-api`
   - `com.sap.cloud.sdk.services:mdo-distribution-client-integration-test`
   - `com.sap.cloud.sdk.services:mdo-distribution-client-odata`
-  - `com.sap.cloud.sdk.services:scp-blockchain`
-  - `com.sap.cloud.sdk.services:scp-business-logging-all`
-  - `com.sap.cloud.sdk.services:scp-business-logging-core`
-  - `com.sap.cloud.sdk.services:scp-business-logging-odata`
-  - `com.sap.cloud.sdk.services:scp-business-logging-rest`
-  - `com.sap.cloud.sdk.services:scp-workflow-cf`
-- SAP Internal (?????)
   - `com.sap.cloud.sdk.cloudplatform:cloudplatform-connectivity-dwc`
   - `com.sap.cloud.sdk.cloudplatform:cloudplatform-core-dwc`
   - `com.sap.cloud.sdk.cloudplatform:cloudplatform-core-dwc-cf`
@@ -140,7 +151,7 @@ check for further packages and remove lines for deprecated modules
 
 ## 4. Generate Your Own OData VDM
 
-The SAP Cloud SDK no longer provides a pre-generated OData VDM. We made this decision to reduce the maintenance effort and to allow you to generate your own VDM with the exact version of the OData service you are using. That way there is no need to wait for the next SDK release to get the latest changes of the OData service.
+The SAP Cloud SDK no longer provides pre-generated OData VDMs. We made this decision to reduce the maintenance effort and to allow you to generate your own VDM with the exact version of the OData service you are using. That way there is no need to wait for the next SDK release to get the latest changes of an OData service you are consuming.
 
 To generate your own OData VDM, you can use the [OData Generator Maven Plugin](../features/odata/vdm-generator) directly.
 You can use the following configuration to generate a VDM that is compatible with the OData VDM the SDK provided in version 4:
