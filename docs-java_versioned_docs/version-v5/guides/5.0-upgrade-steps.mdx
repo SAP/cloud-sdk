@@ -41,7 +41,41 @@ Update them directly to version `5.0.0` or the [latest version](https://central.
 If you are using `com.sap.cloud.sdk:sdk-sjb-bom` and produce a `war` deployment (e.g. when you require JCo for your application) you will need to stay on the latest version 4 of the SAP Cloud SDK.
 In the other cases you should replace it with one of the BOMs mentioned above.
 
-<!-- drop of servlet module -->
+If you are building on Spring or Spring Boot you should also update to the latest version of the respective BOMs, so `6.1.0` (Spring) or `3.1.6` (Spring Boot) as of the time of writing.
+These BOMs should be listed before any SAP Cloud SDK related BOM, so for Spring Boot your `dependencyManagement` section should look something like this:
+
+```xml
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-dependencies</artifactId>
+            <version>3.1.6</version> <!-- TODO: replace this with the most recent version -->
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sap.cloud.sdk</groupId>
+            <artifactId>sdk-bom</artifactId>
+            <version>5.0.0</version> <!-- TODO: replace this with the most recent version -->
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+```
+
+At the same time you should also replace usages of `javax` dependencies with the respective `jakarta` dependency. For example:
+```diff
+-<dependency>
+-    <groupId>javax.inject</groupId>
+-    <artifactId>javax.inject</artifactId>
+-</dependency>
++<dependency>
++    <groupId>jakarta.inject</groupId>
++    <artifactId>jakarta.inject-api</artifactId>
++</dependency>
+```
 
 ## 2. Adapt Dependencies as Needed
 
@@ -49,10 +83,11 @@ The lists below contains all modules that have been renamed or removed from the 
 Therefore, you should also rename respectively remove those from your project setup.
 
 <details>
-  <summary>Full list of renamed modules</summary>
+  <summary>Full list of renamed or replaced modules</summary>
 
 - Module `com.sap.cloud.sdk.frameworks:resilience4j` has been moved to `com.sap.cloud.sdk.cloudplatform:resilience4j`
 - Module `com.sap.cloud.sdk.frameworks:apache-httpclient5` has been moved to `com.sap.cloud.sdk.cloudplatform:connectivity-apache-httpclient5`
+- Module `com.sap.cloud.sdk.cloudplatform:servlet` has been removed and functionally replaced by `com.sap.cloud.sdk.cloudplatform:servlet-jakarta` (replacing usage of `javax.servlet` with `jakarta.servlet`)
 
 </details>
 
@@ -96,22 +131,6 @@ Therefore, you should also rename respectively remove those from your project se
   - `com.sap.cloud.sdk.services:scp-business-logging-odata`
   - `com.sap.cloud.sdk.services:scp-business-logging-rest`
   - `com.sap.cloud.sdk.services:scp-workflow-cf`
-- SAP Internal (?????)
-  - `com.sap.cloud.sdk.services:mdi-client-convenience`
-  - `com.sap.cloud.sdk.services:mdi-client-core`
-  - `com.sap.cloud.sdk.services:mdi-client-model`
-  - `com.sap.cloud.sdk.services:mdi-client-parent`
-  - `com.sap.cloud.sdk.services:mdi-generator`
-  - `com.sap.cloud.sdk.services:mdi-model-core`
-  - `com.sap.cloud.sdk.services:mdo-distribution-client-api`
-  - `com.sap.cloud.sdk.services:mdo-distribution-client-integration-test`
-  - `com.sap.cloud.sdk.services:mdo-distribution-client-odata`
-  - `com.sap.cloud.sdk.cloudplatform:cloudplatform-connectivity-dwc`
-  - `com.sap.cloud.sdk.cloudplatform:cloudplatform-core-dwc`
-  - `com.sap.cloud.sdk.cloudplatform:cloudplatform-core-dwc-cf`
-  - `com.sap.cloud.sdk.cloudplatform:sap-passport`
-  - `com.sap.cloud.sdk.cloudplatform:security-dwc`
-  - `com.sap.cloud.sdk.cloudplatform:tenant-dwc`
 - Others
   - `com.sap.cloud.sdk.cloudplatform:auditlog`
   - `com.sap.cloud.sdk.cloudplatform:auditlog-scp-cf`
@@ -143,7 +162,7 @@ check for further packages and remove lines for deprecated modules
 
 | Package                                             | Module                                                                                   |
 | --------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| `com.sap.cloud.sdk.s4hana.serialization`            | `com.sap.cloud.sdk.s4hana:s4hana-core` (TODO: deprecated?)                               |
+| `com.sap.cloud.sdk.s4hana.serialization`            | `com.sap.cloud.sdk.datamodel:odata-core`           |
 | `com.sap.cloud.sdk.s4hana.connectivity.exception`   | `com.sap.cloud.sdk.s4hana:s4hana-connectivity` (TODO: deprecated?)                       |
 | `com.sap.cloud.sdk.s4hana.connectivity.rfc`         | `com.sap.cloud.sdk.s4hana:rfc` (TODO: deprecated?)                                       |
 | `com.sap.cloud.sdk.s4hana.datamodel.odata.services` | See the section below on [generating your own OData VDM](#4-generate-your-own-odata-vdm) |
