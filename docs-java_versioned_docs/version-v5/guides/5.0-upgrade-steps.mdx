@@ -16,23 +16,34 @@ keywords:
   - Update
 ---
 
-This document provides a step-by-step guide on how you can leverage the new major version of the SAP Cloud SDK.
+Version 5 of the SAP Cloud SDK is here and we highly recommend updating to it as soon as possible.
+It brings various improvements while keeping the necessary adjustments to an absolute minimum.
 
-:::warning TODO
+There is a good chance that just bumping the version to `5.0.0` is already enough, without the need for any further adjustments.
+In particular, updating may be straightforward if you are not using any deprecated API.
 
-Starting with version 5.0.0 the SAP Cloud SDK requires a Java version of at least 17.
-
+:::note Release Blog Post
+For more information also check out our version 5 release blog post
 :::
 
-## 0. Before you Upgrade
+:::warning Minumum Java Version
+Starting with version 5.0.0 the SAP Cloud SDK requires a Java version of at least 17.
+:::
+
+:::info Minumum CAP version
+If you are using the Cloud Application Programming model (CAP) to build your application, please note that the SAP Cloud SDK version 5 requires a minimum CAP/CDS version of at least `2.4.0`.
+If you are on an older CAP stack, please follow the [CAP migration guide](https://cap.cloud.sap/docs/java/migration#one-to-two) first.
+:::
+
+## Before You Update
 
 Before you increase the SAP Cloud SDK version to 5, it is recommended to first update to the latest available version of the SAP Cloud SDK 4 and migrate any usage of deprecated API. Follow the deprecation notes in the Javadocs to find recommended replacements. All deprecated APIs are removed with version 5.
 
 Also, make sure that you are using Java 17 or higher. To setup your build to use Java 17 you can use [this guide](https://www.baeldung.com/maven-java-version).
-As Java EE modules have been removed from Java 11, you might also need to update your application to use the [Jakarta EE](https://jakarta.ee/) modules instead. 
+As Java EE modules have been removed from Java 11, you might also need to update your application to use the [Jakarta EE](https://jakarta.ee/) modules instead.
 This JEP provides a good overview of the changes: [JEP 320: Remove the Java EE and CORBA Modules](https://openjdk.java.net/jeps/320).
 
-## 1. Change Version of Your `sdk-bom` or `sdk-modules-bom`
+## Change Version of Your `sdk-bom` or `sdk-modules-bom`
 
 The first step is to change the version of the SAP Cloud SDK dependency in your `pom.xml` file.
 Depending on your project setup you might use one of our BOMs or the individual modules.
@@ -68,6 +79,7 @@ These BOMs should be listed before any SAP Cloud SDK related BOM, so for Spring 
 ```
 
 At the same time you should also replace usages of `javax` dependencies with the respective `jakarta` dependency. For example:
+
 ```diff
 -<dependency>
 -    <groupId>javax.inject</groupId>
@@ -79,7 +91,7 @@ At the same time you should also replace usages of `javax` dependencies with the
 +</dependency>
 ```
 
-## 2. Adapt Dependencies as Needed
+## Remove or Replace Modified Cloud SDK Dependencies
 
 The lists below contains all modules that have been renamed or removed from the SDK.
 Therefore, you should also rename respectively remove those from your project setup.
@@ -151,7 +163,82 @@ This will now lead to error messages like this:
 
 This helps you to identify which modules you need to remove or replace in your project setup.
 
-## 3. Introduce Missing Modules Based on Package Names
+## Steps to migrate `Destination` usages
+
+Version 5 of the SAP Cloud SDK comes with a major cleanup of the APIs around the `Destination` concept.
+Luckily, this cleanup comes **without a lot of breaking changes** so that existing applications require only a minimum of adjustments.
+To make the process of adjusting existing applications as easy as possible, please follow the below steps:
+
+1.  Remove any invocation of `Destination#decorate`.
+    This method was only really used in conjunction with the `DefaultErpHttpDestination`, which has been removed in this major version update.
+    The functionality has been moved internally, so that decorating existing `Destination` instances is no longer needed.
+
+2.  (Optional) Remove any invocations of `Destination#asHttp` or `Destination#asRfc`.
+    A big part of the `Destination` cleanup was to straighten our public APIs that previously expected specific sub-types of `Destination` or `DestinationProperties` (e.g. `HttpClientAccessor#getHttpClient(HttpDestinationProperties)`).
+    These APIs now all simply rely on `Destination`, which makes casting via `#asHttp` or `#asRfc` unnecessary.
+
+3.  Adjust error handling.
+    Prior to version 5 of the SAP Cloud SDK, `Destination#asHttp` would throw an Exception in case the Destination Service wasn't able to provide valid `Authorization` header suggestions.
+    This has been changed so that `asHttp` will no longer throw an Exception.
+    Instead, calling the `getHeaders` method on an `HttpDestination` will throw an exception if any `Authorization` header suggestion provided by the Destination service contained an error.
+
+    This change is **important** to keep in mind because it influences where applications are expected to catch Exceptions as the `getHeaders` method will be called during request execution.
+
+<details>
+<summary>Example</summary>
+
+Given the following code:
+
+```java
+Try<Destination> maybeDestination = DestinationAccessor.tryGetDestination("my-destination");
+if (maybeDestination.isFailure()) {
+    throw new IllegalStateException("Unable to retrieve 'my-destination'.", maybeDestination.getCause());
+}
+
+HttpDestination httpDestination;
+try {
+    httpDestination = maybeDestination.get().asHttp();
+} catch (DestinationAccessException e) {
+    throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
+}
+
+try {
+    new MyODataService().getAllEntities().executeRequest(httpDestination);
+} catch (ODataException e) {
+    throw new IllegalStateException("Unable to retrieve odata entities.", e);
+}
+```
+
+The code should be updated like this:
+
+```diff
+Try<Destination> maybeDestination = DestinationAccessor.tryGetDestination("my-destination");
+if (maybeDestination.isFailure()) {
+    throw new IllegalStateException("Unable to retrieve 'my-destination'.", maybeDestination.getCause());
+}
+
+- HttpDestination httpDestination;
+- try {
+-   httpDestination = maybeDestination.get().asHttp();
+- } catch (DestinationAccessException e) {
+-   throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
+- }
+
+try {
+-   new MyODataService().getAllEntities().executeRequest(httpDestination);
++   new MyODataService().getAllEntities().executeRequest(maybeDestination.get());
++ } catch (DestinationAccessException e) {
++   throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
+} catch (ODataException e) {
+    throw new IllegalStateException("Unable to retrieve odata entities.", e);
+}
+```
+
+</details>
+
+4.  Replace any of the removed classes related to the `Destination` API as mentioned in the [list of removed APIs](#list-of-apis-that-have-been-removed-with-version-5).
+
+## Introduce Missing Modules Based on Package Names
 
 Once the build doesn't complain about missing dependency versions anymore, you can start to fix the compilation errors.
 For this, the following table provides a helpful overview, over which packages can be found in which module.
@@ -164,13 +251,15 @@ check for further packages and remove lines for deprecated modules
 
 | Package                                             | Module                                                                                   |
 | --------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| `com.sap.cloud.sdk.s4hana.serialization`            | `com.sap.cloud.sdk.datamodel:odata-core`           |
+| `com.sap.cloud.sdk.s4hana.serialization`            | `com.sap.cloud.sdk.datamodel:odata-core`                                                 |
 | `com.sap.cloud.sdk.s4hana.connectivity.exception`   | `com.sap.cloud.sdk.s4hana:s4hana-connectivity` (TODO: deprecated?)                       |
 | `com.sap.cloud.sdk.s4hana.connectivity.rfc`         | `com.sap.cloud.sdk.s4hana:rfc` (TODO: deprecated?)                                       |
 | `com.sap.cloud.sdk.s4hana.datamodel.odata.services` | See the section below on [generating your own OData VDM](#4-generate-your-own-odata-vdm) |
 | `com.sap.cloud.sdk.cloudplatform.servlet`           | `com.sap.cloud.sdk.cloudplatform:servlet` dependency                                     |
 
-## 4. Generate Your Own OData VDM
+## Generate and Use Your Own OData VDM
+
+### Generate Your Own OData VDM
 
 The SAP Cloud SDK no longer provides pre-generated OData VDMs. We made this decision to reduce the maintenance effort and to allow you to generate your own VDM with the exact version of the OData service you are using. That way there is no need to wait for the next SDK release to get the latest changes of an OData service you are consuming.
 
@@ -189,10 +278,10 @@ You can use the following configuration to generate a VDM that is compatible wit
 The file specified under _serviceNameMappingFile_ will be created and populated, if it doesn't exist yet.
 If you want to create a VDM that is compatible with the OData VDM the SDK provided in version 4, you can use this [_serviceNameMappings.properties_](../../../static/resources/v4-serviceNameMappings.properties).
 
-## 5. Handle OData VDM Instantiation
+### Handle OData VDM Instantiation
 
 Depending on your project setup, you might have relied on the `@Inject` annotation in your OData VDM services.
-As the Cloud SDK doesn't provide the pre-generated VDM anymore, you will need to instantiate your own services instead.
+As the OData generators don't generate the `javax.inject.Named` annotations anymore, you will need to instantiate your own services instead.
 For that you can either use your own dependency injection framework, or instantiate the services manually.
 
 The manual approach would look something like this:
@@ -203,7 +292,7 @@ The manual approach would look something like this:
 + private BusinessPartnerService businessPartnerService = new DefaultBusinessPartnerService();
 ```
 
-## 6. Remove Discontinued ServletFilter from Your `web.xml`
+## Remove Discontinued ServletFilter from Your `web.xml`
 
 We decided to remove all security related `Filter` implementations from the SAP Cloud SDK, to have a clearer separation between the [SAP Security Libraries](https://github.com/SAP/cloud-security-services-integration-library/) and the SAP Cloud SDK.
 
