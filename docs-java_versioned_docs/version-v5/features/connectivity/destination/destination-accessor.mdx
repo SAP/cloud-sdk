@@ -1,0 +1,181 @@
+---
+id: destination-accessor
+title: About the DestinationAccessor API
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: DestinationAccessor
+description: TODO
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - destination
+  - accessor
+  - destinationaccessor
+  - java
+  - connectivity
+  - btp
+---
+
+# About the `DestinationAccessor` API
+
+The `DestinationAccessor` API is part of the [`cloudplatform-connectivity` dependency](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity) and provides easy and convenient access to destinations that can be identified by their name.
+Those are, in the vast majority of use cases, destinations managed in the [Destination Service on Cloud Foundry](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview).
+
+So whenever your application needs such a destination, using the `DestinationAccessor` is as straight-forward as shown below:
+
+```java
+Destination myDestination = DestinationAccessor.getDestination("my-destination");
+
+// ---
+// alternatively:
+// ---
+
+import io.vavr.control.Try;
+
+Try<Destination> maybeMyDestination = DestinationAccessor.tryGetDestination("my-destination");
+```
+
+It is **strongly recommended** to use the shown code **every time** a destination is needed as [explained below](#how-authentication-at-the-target-system-works).
+
+## About the `DestinationLoader` API
+
+Diving deeper into the `DestinationAccessor` reveals that it is actually a facade for the `DestinationLoader` API.
+
+A `DestinationLoader` is responsible for loading destinations, identified by their name, from a specific source.
+The SAP Cloud SDK comes with a number of `DestinationLoader` implementations that can be used to load destination from, for example, the [Cloud Foundry Destination Service](#the-destinationservice) or the [application's environment variables](#the-envvardestinationloader).
+Furthermore, [the `DestinationLoaderChain`](#the-destinationloaderchain) (which is a `DestinationLoader` itself) can be used to combine multiple `DestinationLoader` implementations into a single chain.
+The `DestinationAccessor` makes use of that concept as [explained below](#usage-in-the-destinationaccessor).
+
+## About the `DestinationService`
+
+The `DestinationService` class (formerly known as `ScpCfDestinationLoader`) is part of the [`connectivity-destination-service` dependency](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/connectivity-destination-service) and represents the [Cloud Foundry Destination Service](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview).
+As such, it can be used to retrieve both individual destinations as well as all destinstions stored for either a subscriber or the provider tenant.
+
+### How Authentication at the Target System Works
+
+The [Destination Service on Cloud Foundry](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview) offers a [broad range of authentication methods](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/http-destinations#configuring-authentication).
+
+When retrieving any destination, the Cloud Foundry Destination Service takes over the heavy lifting of authenticating at the target system on behalf of the calling application.
+Once authentication has been performed successfully, the Cloud Foundry Destination Service returns a destination configuration that contains all the information required to connect to the target system - including, for example, an `Authorization` header that can be used by the application.
+
+As a consequence, the SAP Cloud SDK's `DestinationService` abstraction automatically supports all authentication methods offered by the Cloud Foundry Destination Service.
+
+#### Caution
+
+Please keep in mind that the authentication flows are **not** executed by the SAP Cloud SDK itself.
+Therefore, reusing existing `Destination` objects for longer periods of time is **not recommended** as the underlying authentication information may expire (e.g. a JWT).
+Instead, `Destination` objects should be retrieved via the `DestinationLoader` (or `DestinationAccessor`) API **every time** they are needed - don't worry, there is [caching](#default-caching-behavior) in place to prevent excessive HTTP calls.
+
+### Resilience
+
+Since the `DestinationService` is performing error prone operations (i.e. HTTP calls), it comes with some resilience mechanisms out of the box:
+
+* _Time Limiter_ - Destination retrieval is limited to a maximum of **6 seconds**.
+* (**tenant isolated**) _Circuit Breaker_ - Requests will be blocked once more than **50%** of the **last 10** requests failed.
+  * For fetching **individual** destinations, the circuit breaker will stay open for **6 seconds**.
+  * For fetching **all** destinations, the circuit breaker will stay open for **60 seconds**.
+* (**tenant isolated**) _Bulk Head_ - The maximum number of concurrent requests is limited to **50**. Queued tasks will wait for up to **60 seconds** before being rejected.
+
+### Default Caching Behavior
+
+Besides the resilience measures explained above, the `DestinationService` also comes with a cache.
+This cache stores retrieved destinations **based on tenant** and (for some scenarios) **based on user**.
+
+_For example_:
+When retrieving a destination that uses _BasicAuthentication_, using **tenant isolation** is sufficient as all users share the same credentials.
+However, when retrieving a destination that uses _OAuth2SAMLBearerAssertion_ authentication, the destination is isolated **based on tenant and user**.
+
+Once cached, entries will be stored for **up to 5 minutes**, where destinations that use JWT-based authentication may expire earlier.
+Additionally, the cache is configured to store only the **1000 latest entries _across all tenants_**.
+This is to prevent excessive memory usage in case of a large number of tenants and/or destinations.
+
+### Tweaking the Caching Behavior
+
+Even though the [default caching behavior](#default-caching-behavior) should serve as a good starting point for many applications, it may be necessary to tweak it for specific use cases.
+For that, the `DestinationService.Cache` offers a number of configuration APIs:
+
+* `disable()`: Disables the cache completely. This is not recommended for production use.
+* `setSizeLimit(long)`: Sets the maximum number of entries **across _all tenants_** that can be stored in the cache. Defaults to **1000**.
+* `disableSizeLimit()`: Disables the size limit completely.
+* `setExpiration(Duration, CacheExpirationDuration)`: Sets the expiration duration for cached entries. Defaults to **5 minutes after write**.
+* `disableExpiration()`: Disables the expiration completely.
+
+#### Caution
+
+When using any of the above APIs, the underlying cache instance will be **recreated**. 
+All existing entries will be lost.
+Therefore, it is highly recommended to configure the cache **_once_ and _before_** using the `DestinationService` for the first time (e.g. during application start up).
+
+### Change Detection Mode
+
+In case your application typically interacts with more than one destination per tenant, you can significantly improve caching performance by enabling **change detection**:
+
+```java
+DestinationService.Cache.enableChangeDetection();
+```
+
+The change detection mode will disable the time-based expiration of cached entries.
+Instead, when accessing the cache, the implementation checks whether the destination has changed since the last access.
+This is done by performing a single HTTP request (per tenant) to fetch **all destination** configurations - this request is cached itself as well and uses the expiration configured via `DestinationService.Cache.setExpiration` (or the default value).
+The received configurations are then compared to the cached ones and, if nothing has changed, the cache entry is considered valid.
+
+_Note_:
+Destinations that use JWT-based authentication will still be refreshed before the attached JWT expires.
+
+For a single destination (per tenant) this is not a benefit, but for two or more the benefit is **up to 100% per additional destination**.
+For example, if your application is interacting with 5 destinations per tenant, you can expect a 3 to 4 times performance increase (i.e. 3 to 4 times less costly HTTP calls).
+
+## About the `EnvVarDestinationLoader`
+
+The `EnvVarDestinationLoader` is part of the [`cloudplatform-connectivity` dependency](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity) and can be used to load destinations from the application's environment variables.
+This functionality is intended for development and CI/CD environments only.
+
+### Default Behavior
+
+By default, the implementation parses the `destinations` environment variable.
+It assumes to find a JSON array that contains individual destination configurations like so:
+
+```bash
+destinations='[{"name": "destinationName", "url": "www.sap.de"}]'
+```
+
+Since this class is not meant to be used in production environments, it comes with support for destinations that use _BasicAuthentication_ or _no authentication_ at all only.
+
+### Customization
+
+In case you need support for more authentication methods, you can provide a custom parsing function via the constructor:
+
+```java
+String environmentVariableName;
+new EnvVarDestinationLoader(System::getenv, this::parseDestination, environmentVariableName);
+
+...
+
+private Destination parseDestination(String destinationName);
+```
+
+## About the `DestinationLoaderChain`
+
+The `DestinationLoaderChain` comes as part of the [`cloudplatform-connectivity` dependency](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity) and can be used to combine multiple `DestinationLoader` implementations.
+Hereby, upon loading a destination, the chain iterates over all delegate loaders **in order** until the first of them finds a destination.
+This behavior can be thought of as a fallback mechanism.
+
+Furthermore, the chain also stops iterating if a delegate loader throws any exception other than `DestinationNotFoundException`.
+
+### Usage in the `DestinationAccessor`
+
+The `DestinationAccessor` combines the `DestinationLoaderChain` with class loading to achieve its **default behavior** when trying to load a destination.
+Hereby, it uses an instance of [the `EnvVarDestinationLoader`](#about-the-envvardestinationloader) as the first delegate loader in the chain.
+Additionally, it scans the class path, following the _Service Locator Pattern_, for further `DestinationLoader` implementations and **appends** them to the chain as well.
+
+In other words: The `DestinationAccessor` will (by default) always try to load destinations from the application's environment variables first.
+After that, the concrete behavior depends on the class path, which is usually influenced by the dependencies that have been added to the application.
+
+### Tweaking the `DestinationAccessor` Chain
+
+[The default behavior](#usage-in-the-destinationaccessor) can be adjusted through the following `DestinationAccessor` APIs:
+
+* `appendDestinationLoader` - Appends (i.e. lowest priority) the given `DestinationLoader` to the chain.
+* `prependDestinationLoader` - Prepends (i.e. highest priority) the given `DestinationLoader` to the chain.
+* `setLoader` - Overwrites the current `DestinationLoader` with the given one.
