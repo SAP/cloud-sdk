@@ -138,11 +138,11 @@ Therefore, you should also rename respectively remove those from your project se
     <summary>Full list of removed modules</summary>
 
 - Bill of Materials
-  - `com.sap.cloud.sdk:sdk-sjb-bom`
+  - `com.sap.cloud.sdk:sdk-sjb-bom` Please use the cf-tomee7-bom and the sdk-bom instead.
 - Archetypes
   - `com.sap.cloud.sdk.archetypes:scp-cf-tomee`
   - `com.sap.cloud.sdk.archetypes:scp-neo-javaee7`
-- Neo related modules
+- Neo related modules. Please migrate to the Cloud Foundry environment.
   - `com.sap.cloud.sdk.cloudplatform:auditlog-scp-neo`
   - `com.sap.cloud.sdk.cloudplatform:cloudplatform-connectivity-scp-neo`
   - `com.sap.cloud.sdk.cloudplatform:cloudplatform-core-scp-neo`
@@ -153,9 +153,15 @@ Therefore, you should also rename respectively remove those from your project se
   - `com.sap.cloud.sdk.plugins:scp-neo-maven-plugin`
 - Generator CLIs
   - `com.sap.cloud.sdk.datamodel:odata-generator-cli`
+    - Call the generator directly as a maven plugin:
+    - `mvn com.sap.cloud.sdk.datamodel:odata-generator-maven-plugin:5.0.0:generate`
   - `com.sap.cloud.sdk.datamodel:odata-v4-generator-cli`
+    - Call the generator directly as a maven plugin:
+    - `mvn com.sap.cloud.sdk.datamodel:odata-v4-generator-maven-plugin:5.0.0:generate`
   - `com.sap.cloud.sdk.datamodel:openapi-generator-cli`
-- Pregenerated Clients
+    - Call the generator directly as a maven plugin:
+    - `mvn com.sap.cloud.sdk.datamodel:openapi-generator-maven-plugin:5.0.0:generate`
+- Pregenerated Clients. [Generate and use your own OData VDM](#generate-and-use-your-own-odata-vdm) instead.
   - `com.sap.cloud.sdk.s4hana:s4hana-all`
   - `com.sap.cloud.sdk.s4hana:s4hana-api-odata`
   - `com.sap.cloud.sdk.s4hana:s4hana-api-odata-onpremise`
@@ -180,8 +186,10 @@ Therefore, you should also rename respectively remove those from your project se
   - `com.sap.cloud.sdk.cloudplatform:cloudplatform-connectivity-scp`
   - `com.sap.cloud.sdk.cloudplatform:cloudplatform-core-scp-cf`
   - `com.sap.cloud.sdk.cloudplatform:security-scp-cf`
+    - Replaced by `com.sap.cloud.sdk.cloudplatform:security`
   - `com.sap.cloud.sdk.cloudplatform:security-servlet`
   - `com.sap.cloud.sdk.cloudplatform:tenant-scp-cf`
+    - Replaced by `com.sap.cloud.sdk.cloudplatform:tenant`
 
 </details>
 
