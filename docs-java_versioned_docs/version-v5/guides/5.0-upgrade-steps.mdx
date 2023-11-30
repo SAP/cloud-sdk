@@ -55,18 +55,11 @@ If you are using `com.sap.cloud.sdk:sdk-sjb-bom` and produce a `war` deployment 
 In the other cases you should replace it with one of the BOMs mentioned above.
 
 If you are building on Spring or Spring Boot you should also update to the latest version of the respective BOMs, so `6.1.0` (Spring) or `3.1.6` (Spring Boot) as of the time of writing.
-These BOMs should be listed before any SAP Cloud SDK related BOM, so for Spring Boot your `dependencyManagement` section should look something like this:
+These BOMs should be listed after any SAP Cloud SDK related BOM, so for Spring Boot your `dependencyManagement` section should look something like this:
 
 ```xml
 <dependencyManagement>
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-dependencies</artifactId>
-            <version>3.1.6</version> <!-- TODO: replace this with the most recent version -->
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
         <dependency>
             <groupId>com.sap.cloud.sdk</groupId>
             <artifactId>sdk-bom</artifactId>
@@ -74,11 +67,18 @@ These BOMs should be listed before any SAP Cloud SDK related BOM, so for Spring 
             <type>pom</type>
             <scope>import</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-dependencies</artifactId>
+            <version>3.1.6</version> <!-- TODO: replace this with the most recent version -->
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
     </dependencies>
 </dependencyManagement>
 ```
 
-At the same time you should also replace usages of `javax` dependencies with the respective `jakarta` dependency. For example:
+At the same time you should also replace usages of `javax` dependencies with the respective `jakarta` dependency:
 
 ```diff
 -<dependency>
@@ -91,6 +91,36 @@ At the same time you should also replace usages of `javax` dependencies with the
 +</dependency>
 ```
 
+Also remember to migrate all your dependencies to their respective `jakarta` versions if applicable.
+
+For example, if you were previously using `com.sap.hcp.cf.logging:cf-java-logging-support-servlet` for application logging you must instead switch to using `com.sap.hcp.cf.logging:cf-java-logging-support-servlet-jakarta`.
+
+```diff
+-<dependency>
+-    <groupId>com.sap.hcp.cf.logging</groupId>
+-    <artifactId>cf-java-logging-support-servlet</artifactId>
+-</dependency>
++<dependency>
++    <groupId>com.sap.hcp.cf.logging</groupId>
++    <artifactId>cf-java-logging-support-servlet-jakarta</artifactId>
++    <version>latest-lib-version</version>
++</dependency>
+```
+
+<details>
+<summary>For projects that were already upgraded to Java 17 and Spring Boot 3 in SDK 4</summary>
+
+Please remove any workarounds that were needed to make Java 17 and Spring Boot 3 work with SDK 4:
+- When using the `scp-cf` module or its replacement `sdk-core`, please remove the `servlet-jakarta` module.
+- When using the `@ServletComponentScan` annotation, please update the namespace back to:
+
+```diff
+- @ServletComponentScan({"com.sap.cloud.sdk.cloudplatform.servletjakarta", ...
++ @ServletComponentScan({"com.sap.cloud.sdk", ...
+```
+
+</details>
+
 ## Remove or Replace Modified Cloud SDK Dependencies
 
 The lists below contains all modules that have been renamed or removed from the SDK.
@@ -102,6 +132,7 @@ Therefore, you should also rename respectively remove those from your project se
 - Module `com.sap.cloud.sdk.frameworks:resilience4j` has been moved to `com.sap.cloud.sdk.cloudplatform:resilience4j`
 - Module `com.sap.cloud.sdk.frameworks:apache-httpclient5` has been moved to `com.sap.cloud.sdk.cloudplatform:connectivity-apache-httpclient5`
 - Module `com.sap.cloud.sdk.cloudplatform:servlet` has been removed and functionally replaced by `com.sap.cloud.sdk.cloudplatform:servlet-jakarta` (replacing usage of `javax.servlet` with `jakarta.servlet`)
+- Module `com.sap.cloud.sdk.cloudplatform:scp-cf` has been deprecated and functionally replaced by `com.sap.cloud.sdk:sdk-core`
 
 </details>
 
