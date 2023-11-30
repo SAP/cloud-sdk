@@ -17,20 +17,17 @@ keywords:
 ---
 
 Version 5 of the SAP Cloud SDK is here and we highly recommend updating to it as soon as possible.
-It brings various improvements while keeping the necessary adjustments to an absolute minimum.
-
-There is a good chance that just bumping the version to `5.0.0` is already enough, without the need for any further adjustments.
-In particular, updating may be straightforward if you are not using any deprecated API.
+It brings various improvements, it is now Open Source and the Destination API has been unified.
 
 :::note Release Blog Post
 For more information also check out our version 5 release blog post
 :::
 
-:::warning Minumum Java Version
+:::warning Minimum Java Version
 Starting with version 5.0.0 the SAP Cloud SDK requires a Java version of at least 17.
 :::
 
-:::info Minumum CAP version
+:::info Minimum CAP version
 If you are using the Cloud Application Programming model (CAP) to build your application, please note that the SAP Cloud SDK version 5 requires a minimum CAP/CDS version of at least `2.4.0`.
 If you are on an older CAP stack, please follow the [CAP migration guide](https://cap.cloud.sap/docs/java/migration#one-to-two) first.
 :::
@@ -111,6 +108,7 @@ For example, if you were previously using `com.sap.hcp.cf.logging:cf-java-loggin
 <summary>For projects that were already upgraded to Java 17 and Spring Boot 3 in SDK 4</summary>
 
 Please remove any workarounds that were needed to make Java 17 and Spring Boot 3 work with SDK 4:
+
 - When using the `scp-cf` module or its replacement `sdk-core`, please remove the `servlet-jakarta` module.
 - When using the `@ServletComponentScan` annotation, please update the namespace back to:
 
@@ -267,12 +265,11 @@ try {
 
 </details>
 
-4.  Replace any of the removed classes related to the `Destination` API as mentioned in the [list of removed APIs](#list-of-apis-that-have-been-removed-with-version-5).
+4.  Replace any of the removed classes related to the `Destination` API as mentioned in the [list of removed APIs](#remove-or-replace-modified-cloud-sdk-apis).
 
-## Introduce Missing Modules Based on Package Names
+## Remove or Replace Modified Cloud SDK APIs
 
 Once the build doesn't complain about missing dependency versions anymore, you can start to fix the compilation errors.
-
 
 <details>
   <summary>Full list of deprecated API</summary>
@@ -589,4 +586,4 @@ We decided to remove all security related `Filter` implementations from the SAP 
 
 This means you need to remove all mentions of the following filters from your `web.xml` (mind the `security` in the package): `com.sap.cloud.sdk.cloudplatform.security.servlet.*Filter`
 
-The `com.sap.cloud.sdk.cloudplatform.servlet.RequestAccessorFilter` is functionially replaced by `com.sap.cloud.sdk.cloudplatform.servletjakarta.RequestAccessorFilter` found in `com.sap.cloud.sdk.cloudplatform:servlet-jakarta`.
+The `com.sap.cloud.sdk.cloudplatform.servlet.RequestAccessorFilter` is functionally replaced by `com.sap.cloud.sdk.cloudplatform.servletjakarta.RequestAccessorFilter` found in `com.sap.cloud.sdk.cloudplatform:servlet-jakarta`.
