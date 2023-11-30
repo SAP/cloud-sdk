@@ -102,6 +102,7 @@ Therefore, you should also rename respectively remove those from your project se
 - Module `com.sap.cloud.sdk.frameworks:resilience4j` has been moved to `com.sap.cloud.sdk.cloudplatform:resilience4j`
 - Module `com.sap.cloud.sdk.frameworks:apache-httpclient5` has been moved to `com.sap.cloud.sdk.cloudplatform:connectivity-apache-httpclient5`
 - Module `com.sap.cloud.sdk.cloudplatform:servlet` has been removed and functionally replaced by `com.sap.cloud.sdk.cloudplatform:servlet-jakarta` (replacing usage of `javax.servlet` with `jakarta.servlet`)
+- Module `com.sap.cloud.sdk.cloudplatform:scp-cf` has been removed and functionally replaced by `com.sap.cloud.sdk:sdk-core`
 
 </details>
 
@@ -241,21 +242,281 @@ try {
 ## Introduce Missing Modules Based on Package Names
 
 Once the build doesn't complain about missing dependency versions anymore, you can start to fix the compilation errors.
-For this, the following table provides a helpful overview, over which packages can be found in which module.
 
-:::warning TODO
 
-check for further packages and remove lines for deprecated modules
+<details>
+  <summary>Full list of deprecated API</summary>
 
-:::
-
-| Package                                             | Module                                                                                   |
-| --------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| `com.sap.cloud.sdk.s4hana.serialization`            | `com.sap.cloud.sdk.datamodel:odata-core`                                                 |
-| `com.sap.cloud.sdk.s4hana.connectivity.exception`   | `com.sap.cloud.sdk.s4hana:s4hana-connectivity` (TODO: deprecated?)                       |
-| `com.sap.cloud.sdk.s4hana.connectivity.rfc`         | `com.sap.cloud.sdk.s4hana:rfc` (TODO: deprecated?)                                       |
-| `com.sap.cloud.sdk.s4hana.datamodel.odata.services` | See the section below on [generating your own OData VDM](#4-generate-your-own-odata-vdm) |
-| `com.sap.cloud.sdk.cloudplatform.servlet`           | `com.sap.cloud.sdk.cloudplatform:servlet` dependency                                     |
+  <table>
+    <thead>
+      <tr>
+        <td>
+          <b>API</b>
+        </td>
+        <td>
+          <b>Replacement</b>
+        </td>
+        <td>
+          <b>Comment</b>
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>DefaultErpHttpDestination</td>
+        <td>HttpDestination</td>
+        <td>
+          HttpDestination now automatically adds sap-client and sap-language
+          headers defined on the destination
+        </td>
+      </tr>
+      <tr>
+        <td>ErpHttpDestination</td>
+        <td>DefaultHttpDestination</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>ErpHttpDestinationProperties</td>
+        <td>DefaultHttpDestination</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>ErpHttpDestinationUtils</td>
+        <td>-</td>
+        <td>No replacement necessary</td>
+      </tr>
+      <tr>
+        <td>AbstractHttpDestination</td>
+        <td>-</td>
+        <td>No replacement necessary</td>
+      </tr>
+      <tr>
+        <td>WrappedDestination</td>
+        <td>-</td>
+        <td>No replacement necessary</td>
+      </tr>
+      <tr>
+        <td>AbstractScpDestination</td>
+        <td>-</td>
+        <td>No replacement necessary</td>
+      </tr> 
+      <tr>
+        <td>AbstractScpDestinationBuilder</td>
+        <td>-</td>
+        <td>No replacement necessary</td>
+      </tr>
+      <tr>
+        <td>ScpCfDestination</td>
+        <td>-</td>
+        <td>No replacement necessary</td>
+      </tr>
+      <tr>
+        <td>ScpCfHttpDestination</td>
+        <td>DefaultHttpDestination</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>ScpCfRfcDestination</td>
+        <td>DefaultRfcDestination</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>StringConverter</td>
+        <td>Java Standard Library</td>
+        <td>
+          The Java Standard Library offers the same features, e.g.
+          <code>SimpleDateFormat</code> or <code>DateTimeFormatter</code>, with the
+          pattern
+          <code>yyyy-MM-dd</code> or <code>yyyy-MM-dd HH:mm:ss</code>
+        </td>
+      </tr>
+      <tr>
+        <td>StringValidator</td>
+        <td>
+          <a href="https://commons.apache.org/proper/commons-codec/">
+            Apache Commons Codec
+          </a>
+        </td>
+        <td>
+          Use libraries like{' '}
+          <a href="https://commons.apache.org/proper/commons-codec/">
+            Apache Commons Codec
+          </a>
+          , which offers a{' '}
+          <a href="https://commons.apache.org/proper/commons-codec/apidocs/org/apache/commons/codec/binary/Base64.html">
+            Base64
+          </a>{' '}
+          class.
+        </td>
+      </tr>
+      <tr>
+        <td>ClientCredentialsValidator</td>
+        <td>Java Standard Library</td>
+        <td>
+          For validation client secrets see <code>StringValidator</code> above.
+          To validate the client id, try to match the regular expression
+          <code>[a-zA-Z0-9\\-!|]+</code>.
+        </td>
+      </tr>
+      <tr>
+        <td>OAuth2ServiceProvider</td>
+        <td><a href="https://github.com/SAP/cloud-security-services-integration-library/tree/main/token-client">SAP BTP Java Token Client</a></td>
+        <td>
+          Please directly use the <a href="https://github.com/SAP/cloud-security-services-integration-library/tree/main/token-client">SAP BTP Java Token Client</a> library instead.
+        </td>
+      </tr>
+      <tr>
+        <td>AuthTokenBuilder</td>
+        <td><a href="https://github.com/auth0/java-jwt">Java JWT implementation</a></td>
+        <td>
+          For creating an <code>AuthToken</code> from scratch, please manually define the claims and optional audience field. For example:
+          <pre>String jwt = JWT.create()<br />
+          &nbsp;&nbsp;.withClaim("zid", "tenant-id")<br />
+          &nbsp;&nbsp;.withClaim("iss", "http://subscriber.domain")<br />
+          &nbsp;&nbsp;.withAudience("my-app!t123")<br />
+          &nbsp;&nbsp;.sign(Algorithm.none());<br />
+          AuthToken token = new AuthToken(JWT.decode(jwt));</pre>
+          Alternatively for creating extended unit tests based on token handling, please find the <a href="https://github.com/SAP/cloud-security-services-integration-library/tree/main/java-security-test">SAP BTP Java Security Test</a> library instead.
+        </td>
+      </tr>
+      <tr>
+        <td>AuditLogger</td>
+        <td>-</td>
+        <td>
+          Please approach the SAP Cloud SDK development team about migration guidance by <a href="https://github.com/SAP/cloud-sdk-java/issues/new">creating a GitHub support issue</a>.
+          <br />
+          This change also affects the Auditlog integration with the S/4HANA Connectivity module.
+        </td>
+      </tr>
+      <tr>
+        <td>ScpCfPrincipal</td>
+        <td>DefaultPrincipal</td>
+        <td> - </td>
+      </tr>
+      <tr>
+        <td>ScpCfPrincipalFacade</td>
+        <td>DefaultPrincipalFacade</td>
+        <td> - </td>
+      </tr>
+      <tr>
+        <td>LocalScopePrefixProvider</td>
+        <td>-</td>
+        <td>No replacement.</td>
+      </tr>
+      <tr>
+        <td>DefaultLocalScopePrefixProvider</td>
+        <td>-</td>
+        <td>No replacement.</td>
+      </tr>
+      <tr>
+        <td>LocalScopePrefixExtractor</td>
+        <td>-</td>
+        <td>No replacement.</td>
+      </tr>
+      <tr>
+        <td>Audience</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                    SAP BTP Security Services Integration Libraries</a></td>
+        <td id="XsuaaComment">Use the SAP BTP Security Services Integration Libraries to retrieve token information from the token stored
+                    in the <code>SecurityContext</code>. For example: <br />
+         <pre>
+         Token token = SecurityContext.getToken(); <br />
+         String audience = token.getClaimAsString(TokenClaims.AUDIENCE); <br />
+         List&lt;String&gt; scopes = token.getClaimAsStringList(TokenClaims.XSUAA.SCOPES); <br />
+         ...
+         </pre>
+         See the <a href= "https://github.com/SAP/cloud-security-services-integration-library/blob/main/java-api/src/main/java/com/sap/cloud/security/token/TokenClaims.java">
+                    <code>TokenClaims</code></a> class for additional claims.
+        </td>
+      </tr>
+      <tr>
+        <td>Authorization</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                    SAP BTP Security Services Integration Libraries</a></td>
+        <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
+      </tr>
+      <tr>
+        <td>Role</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                            SAP BTP Security Services Integration Libraries</a></td>
+        <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
+      </tr>
+      <tr>
+        <td>Scope</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                            SAP BTP Security Services Integration Libraries</a></td>
+        <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
+      </tr>
+      <tr>
+        <td>TenantSpecificAuthorization</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                            SAP BTP Security Services Integration Libraries</a></td>
+        <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
+      </tr>
+      <tr>
+        <td>UserSpecificAuthorization</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                            SAP BTP Security Services Integration Libraries</a></td>
+        <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
+      </tr>
+      <tr>
+        <td>PrincipalAttribute</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                            SAP BTP Security Services Integration Libraries</a></td>
+        <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
+      </tr>
+      <tr>
+        <td>CollectionPrincipalAttribute</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                            SAP BTP Security Services Integration Libraries</a></td>
+        <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
+      </tr>
+      <tr>
+        <td>SimplePrincipalAttribute</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                            SAP BTP Security Services Integration Libraries</a></td>
+        <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
+      </tr>
+      <tr>
+        <td>StringCollectionPrincipalAttribute</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                            SAP BTP Security Services Integration Libraries</a></td>
+        <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
+      </tr>
+      <tr>
+        <td>StringPrincipalAttribute</td>
+        <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
+                            SAP BTP Security Services Integration Libraries</a></td>
+        <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
+      </tr>
+      <tr>
+        <td>ScpCfDestinationRetrievalStrategy.CURRENT_TENANT_THEN_PROVIDER</td>
+        <td>Please query subscriber and provider tenants individually instead using <code>ONLY_SUBSCRIBER</code> and <code>ALWAYS_PROVIDER</code></td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>PrincipalPropagationStrategy.setDefaultStrategy(...)</td>
+        <td>Destination custom property: <br /><code>cloudsdk.principalPropagationMode = (recommended|compatibility)</code></td>
+        <td>Default: <code>compatibility</code>, for reduced token exchanges. <a href="https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/configure-principal-propagation-via-user-exchange-token" target="_new">See more.</a></td>
+      </tr>
+      <tr>
+        <td>ScpCfTenant</td>
+        <td>DefaultTenant</td>
+        <td> - </td>
+      </tr>
+      <tr>
+        <td>DwcTenant</td>
+        <td>DefaultTenant</td>
+        <td> - </td>
+      </tr>
+      <tr>
+        <td>ScpCfTenantFacade</td>
+        <td>DefaultTenantFacade</td>
+        <td> - </td>
+      </tr>
+    </tbody>
+  </table>
+</details>
 
 ## Generate and Use Your Own OData VDM
 
@@ -298,4 +559,4 @@ We decided to remove all security related `Filter` implementations from the SAP 
 
 This means you need to remove all mentions of the following filters from your `web.xml` (mind the `security` in the package): `com.sap.cloud.sdk.cloudplatform.security.servlet.*Filter`
 
-The `com.sap.cloud.sdk.cloudplatform.servlet.RequestAccessorFilter` remains in the SDK, as it is not security related.
+The `com.sap.cloud.sdk.cloudplatform.servlet.RequestAccessorFilter` is functionially replaced by `com.sap.cloud.sdk.cloudplatform.servletjakarta.RequestAccessorFilter` found in `com.sap.cloud.sdk.cloudplatform:servlet-jakarta`.
