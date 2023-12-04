@@ -190,7 +190,7 @@ Therefore, you should also rename respectively remove those from your project se
   - `com.sap.cloud.sdk.cloudplatform:auditlog` (See `AuditLogger` in the <a href="#replaceremove-changed-api">list of deprecated API</a> section below)
   - `com.sap.cloud.sdk.cloudplatform:auditlog-scp-cf` (See `AuditLogger` in the <a href="#replaceremove-changed-api">list of deprecated API</a> section below)
   - `com.sap.cloud.sdk.cloudplatform:cloudplatform-connectivity-scp` (No replacement necessary)
-  - `com.sap.cloud.sdk.cloudplatform:cloudplatform-core-scp-cf` ()
+  - `com.sap.cloud.sdk.cloudplatform:cloudplatform-core-scp-cf` (No replacement necessary)
   - `com.sap.cloud.sdk.cloudplatform:security-scp-cf` (Functionally integrated into the `com.sap.cloud.sdk.cloudplatform:security` module)
   - `com.sap.cloud.sdk.cloudplatform:security-servlet` (See the <a href="">ServletFilter</a> section below)
   - `com.sap.cloud.sdk.cloudplatform:tenant-scp-cf` (Functionally integrated into the `com.sap.cloud.sdk.cloudplatform:tenant` module)
@@ -350,6 +350,11 @@ Once the build doesn't complain about missing dependency versions anymore, you c
         <td>No replacement necessary</td>
       </tr>
       <tr>
+        <td>ScpCfDestinationServiceResponseProvider</td>
+        <td>-</td>
+        <td>No replacement necessary</td>
+      </tr>
+      <tr>
         <td>ScpCfHttpDestination</td>
         <td>DefaultHttpDestination</td>
         <td>-</td>
@@ -358,6 +363,11 @@ Once the build doesn't complain about missing dependency versions anymore, you c
         <td>ScpCfRfcDestination</td>
         <td>DefaultRfcDestination</td>
         <td>-</td>
+      </tr>
+      <tr>
+        <td>WithDestinationName</td>
+        <td>-</td>
+        <td>No replacement</td>
       </tr>
       <tr>
         <td>StringConverter</td>
@@ -559,11 +569,6 @@ Once the build doesn't complain about missing dependency versions anymore, you c
         <td> - </td>
       </tr>
       <tr>
-        <td>ScpCfDestinationServiceResponseProvider</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
         <td>ThreadContextDecoratorInternal</td>
         <td>-</td>
         <td>Neo related classes are not supported anymore.</td>
@@ -584,14 +589,9 @@ Once the build doesn't complain about missing dependency versions anymore, you c
         <td>Neo related classes are not supported anymore.</td>
       </tr>
       <tr>
-        <td>WithDestinationName</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>PrincipalAttributeException</td>
-        <td></td>
-        <td></td>
+        <td>WithRuntimeDependencies</td>
+        <td>-</td>
+        <td>Neo related classes are not supported anymore.</td>
       </tr>
       <tr>
         <td>ScpCfSecretStore</td>
@@ -619,104 +619,39 @@ Once the build doesn't complain about missing dependency versions anymore, you c
         <td>No SDK replacement. A similiar functioniality can be achieved by using the java.security.KeyStore feature.</td>
       </tr>
       <tr>
-        <td>KeyStoreAccessException</td>
-        <td>-</td>
-        <td>No SDK replacement.</td>
-      </tr>
-      <tr>
-        <td>SecretStoreAccessException</td>
-        <td>-</td>
-        <td>No SDK replacement.</td>
-      </tr>
-      <tr>
         <td>CloudPlatform</td>
-        <td></td>
-        <td></td>
+        <td>-</td>
+        <td>No replacement, as all platform specifics are handled by the <a href="btp-environment-variable-access">Service Binding library</a>.</td>
       </tr>
       <tr>
         <td>ScpCfCloudPlatform</td>
-        <td></td>
-        <td></td>
+        <td>-</td>
+        <td>No replacement, as all platform specifics are handled by the <a href="btp-environment-variable-access">Service Binding library</a>.</td>
       </tr>
       <tr>
         <td>CloudPlatformFacade</td>
-        <td></td>
-        <td></td>
+        <td>-</td>
+        <td>No replacement, as all platform specifics are handled by the <a href="btp-environment-variable-access">Service Binding library</a>.</td>
       </tr>
       <tr>
         <td>ScpCfCloudPlatformFacade</td>
-        <td></td>
-        <td></td>
+        <td>-</td>
+        <td>No replacement, as all platform specifics are handled by the <a href="btp-environment-variable-access">Service Binding library</a>.</td>
       </tr>
       <tr>
         <td>CloudPlatformAccessor</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>CloudPlatformAccessor</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>WithRuntimeDependencies</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>ConstraintViolationException</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>DependencyNotFoundException</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>EntityAlreadyExistsException</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>EntityNotFoundException</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>StringParsingException</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>UnsupportedCloudFeatureException</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>MissingConfigException</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>VersionNotSupportedException</td>
-        <td></td>
-        <td></td>
+        <td>-</td>
+        <td>No replacement, as all platform specifics are handled by the <a href="btp-environment-variable-access">Service Binding library</a>.</td>
       </tr>
       <tr>
         <td>ThreadContextInvocationInterceptor</td>
-        <td></td>
-        <td></td>
+        <td>-</td>
+        <td>No replacement.</td>
       </tr>
       <tr>
         <td>ThrowableAssertionUtil</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>ThreadContextInvocationInterceptor</td>
-        <td></td>
-        <td></td>
+        <td>-</td>
+        <td>No replacement.</td>
       </tr>
     </tbody>
   </table>
