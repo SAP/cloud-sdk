@@ -111,12 +111,11 @@ class MyHttpHeader implements ServiceBindingDestinationOptions.OptionsEnhancer<S
 }
 ```
 
-The first implementation use an `enum` to implement a **fixed set of choices** option.
+The first implementation uses an `enum` to implement a **fixed set of choices** option.
 It is noteworthy that the actual parameter type is the `MyApiChoice` enum itself.
 That way, we will be able to retrieve the set value later on.
 
-The second implementation should allow the user to provide an arbitrary HTTP header value.
-Therefore, using an `enum` as the parameter type would not be a good idea.
+In contrast to that, the second implementation provides a `String` parameter.
 
 Setting the options can then be done like so:
 
@@ -136,7 +135,7 @@ Finally, we can retrieve and use the set values like so:
 ServiceBindingDestinationOptions options;
 Option<MyApiChoice> maybeOption = options.getOption(MyApiChoice.class);
 if (maybeOption.isEmpty()) {
-    return; // we are not handling this service binding
+    return; // we are not handling this transformation
 }
 
 Option<String> maybeHeaderValue = options.getOption(MyHttpHeader.class);
