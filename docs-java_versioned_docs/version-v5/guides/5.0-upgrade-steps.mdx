@@ -16,6 +16,9 @@ keywords:
   - Update
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 Version 5 of the SAP Cloud SDK is here and we highly recommend updating to it as soon as possible.
 It brings various improvements, it is now Open Source and the Destination API has been unified.
 
@@ -40,11 +43,7 @@ Also, make sure that you are using Java 17 or higher. To setup your build to use
 As Java EE modules have been removed from Java 11, you might also need to update your application to use the [Jakarta EE](https://jakarta.ee/) modules instead.
 This JEP provides a good overview of the changes: [JEP 320: Remove the Java EE and CORBA Modules](https://openjdk.java.net/jeps/320).
 
-:::warning TODO
-
-When to update java and spring? Together or separately?
-
-:::
+If you are consuming SOAP APIs and are relying on the `axis2-wsdl2code-maven-plugin` to generate classes, please also additionally include `javax.activation:activation` artifact to your dependencies to avoid compilation errors.
 
 ## Change Version of Your `sdk-bom` or `sdk-modules-bom`
 
@@ -81,7 +80,8 @@ These BOMs should be listed after any SAP Cloud SDK related BOM, so for Spring B
 </dependencyManagement>
 ```
 
-At the same time you should also replace usages of `javax` dependencies with the respective `jakarta` dependency:
+At the same time you should also replace usages of `javax` dependencies with the respective `jakarta` dependency.
+As we only provide a managed version for `jakarta.servlet-api` in our BOM, you will need to add the formerly managed version for the `jakarta.inject-api` dependency manually:
 
 ```diff
 -<dependency>
@@ -91,6 +91,7 @@ At the same time you should also replace usages of `javax` dependencies with the
 +<dependency>
 +    <groupId>jakarta.inject</groupId>
 +    <artifactId>jakarta.inject-api</artifactId>
++    <version>2.0.1</version>
 +</dependency>
 ```
 
@@ -666,6 +667,25 @@ The SAP Cloud SDK no longer provides pre-generated OData VDMs. We made this deci
 To generate your own OData VDM, you can use the [OData Generator Maven Plugin](../features/odata/vdm-generator) directly.
 You can use the following configuration to generate a VDM that is compatible with the OData VDM the SDK provided in version 4:
 
+<Tabs groupId="odataVersion" defaultValue="v4" values={[ { label: 'OData v2', value: 'v2', }, { label: 'OData v4', value: 'v4', }]}>
+
+<TabItem value="v4">
+
+```xml
+<inputDirectory>${project.basedir}/src/main/resources/odata/edmx</inputDirectory>
+<outputDirectory>${project.build.directory}/vdm</outputDirectory>
+<serviceNameMappingFile>${project.basedir}/src/main/resources/odata/serviceNameMappings.properties</serviceNameMappingFile>
+<deleteOutputDirectory>true</deleteOutputDirectory>
+<packageName>com.sap.cloud.sdk.s4hana.datamodel.odatav4</packageName>
+<compileScope>COMPILE</compileScope>
+```
+
+The file specified under _serviceNameMappingFile_ will be created and populated, if it doesn't exist yet.
+If you want to create a VDM that is compatible with the OData VDM the SDK provided in version 4, you can use this [_serviceNameMappings.properties_](../../../static/resources/SDKv4-ODatav4-serviceNameMappings.properties).
+
+</TabItem>
+<TabItem value="v2">
+
 ```xml
 <inputDirectory>${project.basedir}/src/main/resources/odata/edmx</inputDirectory>
 <outputDirectory>${project.build.directory}/vdm</outputDirectory>
@@ -676,7 +696,12 @@ You can use the following configuration to generate a VDM that is compatible wit
 ```
 
 The file specified under _serviceNameMappingFile_ will be created and populated, if it doesn't exist yet.
-If you want to create a VDM that is compatible with the OData VDM the SDK provided in version 4, you can use this [_serviceNameMappings.properties_](../../../static/resources/v4-serviceNameMappings.properties).
+If you want to create a VDM that is compatible with the OData VDM the SDK provided in version 4, you can use this [_serviceNameMappings.properties_](../../../static/resources/SDKv4-ODatav2-serviceNameMappings.properties).
+
+</TabItem>
+</Tabs>
+
+If you want to generate a VDM that is compatible with the On-Premise OData VDM the SDK provided in version 4, take special care of the `packageName` and the contents of the _serviceNameMappingFile_ to reflect what you are expecting.
 
 ### Handle OData VDM Instantiation
 
