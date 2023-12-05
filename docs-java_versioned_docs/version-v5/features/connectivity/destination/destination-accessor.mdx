@@ -4,7 +4,7 @@ title: About the DestinationAccessor API
 hide_title: false
 hide_table_of_contents: false
 sidebar_label: DestinationAccessor
-description: TODO
+description: This article dives into the DestinationAccessor API, explaining important implementation details and to customize it.
 keywords:
   - sap
   - cloud
@@ -19,8 +19,8 @@ keywords:
 
 # About the `DestinationAccessor` API
 
-The `DestinationAccessor` API is part of the [`cloudplatform-connectivity` dependency](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity) and provides easy and convenient access to destinations that can be identified by their name.
-Those are, in the vast majority of use cases, destinations managed in the [Destination Service on Cloud Foundry](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview).
+The `DestinationAccessor` API is part of the [`cloudplatform-connectivity` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity) and provides easy and convenient access to destinations that can be identified by their name.
+Those are, in the vast majority of use cases, destinations managed in the [BTP Destination Service on Cloud Foundry](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview).
 
 So whenever your application needs such a destination, using the `DestinationAccessor` is as straight-forward as shown below:
 
@@ -43,18 +43,18 @@ It is **strongly recommended** to use the shown code **every time** a destinatio
 Diving deeper into the `DestinationAccessor` reveals that it is actually a facade for the `DestinationLoader` API.
 
 A `DestinationLoader` is responsible for loading destinations, identified by their name, from a specific source.
-The SAP Cloud SDK comes with a number of `DestinationLoader` implementations that can be used to load destination from, for example, the [Cloud Foundry Destination Service](#the-destinationservice) or the [application's environment variables](#the-envvardestinationloader).
+The SAP Cloud SDK comes with a number of `DestinationLoader` implementations that can be used to load destination from, for example, the [BTP Destination Service on Cloud Foundry](#the-destinationservice) or the [application's environment variables](#the-envvardestinationloader).
 Furthermore, [the `DestinationLoaderChain`](#the-destinationloaderchain) (which is a `DestinationLoader` itself) can be used to combine multiple `DestinationLoader` implementations into a single chain.
 The `DestinationAccessor` makes use of that concept as [explained below](#usage-in-the-destinationaccessor).
 
 ## About the `DestinationService`
 
-The `DestinationService` class (formerly known as `ScpCfDestinationLoader`) is part of the [`connectivity-destination-service` dependency](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/connectivity-destination-service) and represents the [Cloud Foundry Destination Service](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview).
+The `DestinationService` class (formerly known as `ScpCfDestinationLoader`) is part of the [`connectivity-destination-service` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/connectivity-destination-service) and represents the [Cloud Foundry Destination Service](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview).
 As such, it can be used to retrieve both individual destinations as well as all destinstions stored for either a subscriber or the provider tenant.
 
 ### How Authentication at the Target System Works
 
-The [Destination Service on Cloud Foundry](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview) offers a [broad range of authentication methods](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/http-destinations#configuring-authentication).
+The [BTP Destination Service on Cloud Foundry](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview) offers a [broad range of authentication methods](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/http-destinations#configuring-authentication).
 
 When retrieving any destination, the Cloud Foundry Destination Service takes over the heavy lifting of authenticating at the target system on behalf of the calling application.
 Once authentication has been performed successfully, the Cloud Foundry Destination Service returns a destination configuration that contains all the information required to connect to the target system - including, for example, an `Authorization` header that can be used by the application.
@@ -128,7 +128,7 @@ For example, if your application is interacting with 5 destinations per tenant, 
 
 ## About the `EnvVarDestinationLoader`
 
-The `EnvVarDestinationLoader` is part of the [`cloudplatform-connectivity` dependency](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity) and can be used to load destinations from the application's environment variables.
+The `EnvVarDestinationLoader` is part of the [`cloudplatform-connectivity` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity) and can be used to load destinations from the application's environment variables.
 This functionality is intended for development and CI/CD environments only.
 
 ### Default Behavior
@@ -157,7 +157,7 @@ private Destination parseDestination(String destinationName);
 
 ## About the `DestinationLoaderChain`
 
-The `DestinationLoaderChain` comes as part of the [`cloudplatform-connectivity` dependency](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity) and can be used to combine multiple `DestinationLoader` implementations.
+The `DestinationLoaderChain` comes as part of the [`cloudplatform-connectivity` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity) and can be used to combine multiple `DestinationLoader` implementations.
 Hereby, upon loading a destination, the chain iterates over all delegate loaders **in order** until the first of them finds a destination.
 This behavior can be thought of as a fallback mechanism.
 
@@ -167,10 +167,10 @@ Furthermore, the chain also stops iterating if a delegate loader throws any exce
 
 The `DestinationAccessor` combines the `DestinationLoaderChain` with class loading to achieve its **default behavior** when trying to load a destination.
 Hereby, it uses an instance of [the `EnvVarDestinationLoader`](#about-the-envvardestinationloader) as the first delegate loader in the chain.
-Additionally, it scans the class path, following the _Service Locator Pattern_, for further `DestinationLoader` implementations and **appends** them to the chain as well.
+Additionally, it scans the classpath, following the _Service Locator Pattern_, for further `DestinationLoader` implementations and **appends** them to the chain as well.
 
 In other words: The `DestinationAccessor` will (by default) always try to load destinations from the application's environment variables first.
-After that, the concrete behavior depends on the class path, which is usually influenced by the dependencies that have been added to the application.
+After that, the concrete behavior depends on the classpath, which is usually influenced by the dependencies that have been added to the application.
 
 ### Tweaking the `DestinationAccessor` Chain
 
