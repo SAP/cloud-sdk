@@ -37,12 +37,122 @@ In general, the `ServiceBindingDestinationLoader` API is designed very similarly
 Each `ServiceBindingDestinationLoader` implementation is supposed to provide the transformation logic for one specific "type" of `ServiceBinding`. <br />
 The SAP Cloud SDK provides, for example, [an implementation that is capable of dealing with service bindings that use OAuth2 authentication](#about-the-oauth2servicebindingdestinationloader).
 
-In contrast to the `DestinationLoader` API, however, the `ServiceBindingDestinationLoader` API requires more sophisticated input, namely the `ServiceBindingDestinationOptions`.
+In contrast to the `DestinationLoader` API, however, the `ServiceBindingDestinationLoader` API requires more sophisticated input, namely [the `ServiceBindingDestinationOptions`](#about-the-options).
 This class is designed to hold all information that is required to transform a `ServiceBinding` into an `HttpDestination` - this, first and foremost, includes the `ServiceBinding` itself.
 
 Furthermore, there is also a [_chain_ implementation](#about-the-chain-implementation) (compare [the `DestinationLoaderChain`](destination-accessor#about-the-destinationloaderchain)) that can be used to combine multiple `ServiceBindingDestinationLoader` implementations into one.
 Hereby, the chain will try to load a destination using the given `ServiceBindingDestinationLoader` delegates until the first of them succeeds - much like a fallback mechanism.
 This concept is also reflected in the example from above, where the `defaultLoaderChain` is used to load a destination.
+
+## About the _Options_
+
+The `ServiceBindingDestinationOptions` is an **extensible and type-safe** collection of parameters that can be used to configure the `ServiceBinding` to `HttpDestination` transformation process.
+Hereby, the least information that is needed is the `ServiceBinding` itself, which can be provided using the `ServiceBindingDestinationOptions.forService(ServiceBinding)` method.
+
+Alternatively, you can also use `ServiceBindingDestinationOptions.forService(ServiceIdentifier)`.
+This method will try to find a `ServiceBinding` for the given `ServiceIdentifier` using the [`DefaultServiceBindingAccessor` instance](https://github.com/SAP/btp-environment-variable-access/blob/main/api-parent/access-api/src/main/java/com/sap/cloud/environment/servicebinding/api/DefaultServiceBindingAccessor.java).
+
+#### Caution
+
+If there are multiple or no `ServiceBinding`s for the given `ServiceIdentifier`, an exception will be thrown.
+
+Besides the `ServiceBinding`, there is a second parameter that is shared between all `ServiceBindingDestinationLoader` implementations: The `OnBehalfOf`, for which the destination should be loaded.
+This can be set using the `onBehalfOf` method. <br />
+If not explicitly specified, `OnBehalfOf.TECHNICAL_USER_CURRENT_TENANT` is used.
+
+### Custom Parameters
+
+Adding custom parameters to the `ServiceBindingDestinationOptions` can be done using the `withOption(OptionsEnhancer)` method.
+Hereby, an `OptionsEnhancer` is a type-safe way of adding arbitrary parameters to the `ServiceBindingDestinationOptions`.
+
+The type-safety is implemented by, internally, storing the parameters in a `Map` that is keyed by the `Class` of the parameter's type.
+Using generics, the `ServiceBindingDestinationOptions.getOption(Class)` method can guarantee that the returned value is of the requested type. <br />
+Furthermore, using the `Class` as the key for the internal `Map` ensures that there cannot be any parameter clashes.
+
+<details>
+<summary>Example</summary>
+
+Lets assume we are providing a custom `ServiceBindingDestinationLoader` implementation that requires some additional information to be able to transform a `ServiceBinding` into an `HttpDestination`.
+
+In this example, we assume that there are two different APIs for our service.
+Depending on which API we want to create our `HttpDestination` for, we need to slightly alter the transformation logic.
+Additionally, we want to be able to supply an additional HTTP header value that should be added to the `HttpDestination`.
+
+To achieve this behavior, we would need to implement two `OptionsEnhancer`s like so:
+
+```java
+enum MyApiChoice implements ServiceBindingDestinationOptions.OptionsEnhancer<MyApiChoice> {
+    API1,
+    API2;
+
+    @Nonnull
+    @Override
+    public MyApiChoice getValue() {
+        return this;
+    }
+}
+
+class MyHttpHeader implements ServiceBindingDestinationOptions.OptionsEnhancer<String> {
+    private final String value;
+
+    public static MyHttpHeader of(String value) {
+        return new MyHttpHeader(value);
+    }
+
+    private MyHttpHeader(String value) {
+        this.value = value;
+    }
+
+    @Nonnull
+    @Override
+    public String getValue() {
+        return value;
+    }
+}
+```
+
+The first implementation use an `enum` to implement a **fixed set of choices** option.
+It is noteworthy that the actual parameter type is the `MyApiChoice` enum itself.
+That way, we will be able to retrieve the set value later on.
+
+The second implementation should allow the user to provide an arbitrary HTTP header value.
+Therefore, using an `enum` as the parameter type would not be a good idea.
+
+Setting the options can then be done like so:
+
+```java
+ServiceBinding someServiceBinding;
+
+ServiceBindingDestinationOptions
+        .forService(someServiceBinding)
+        .withOption(MyApiChoice.API1)
+        .withOption(MyHttpHeader.of("some-value"))
+        .build();
+```
+
+Finally, we can retrieve and use the set values like so:
+
+```java
+ServiceBindingDestinationOptions options;
+Option<MyApiChoice> maybeOption = options.getOption(MyApiChoice.class);
+if (maybeOption.isEmpty()) {
+    return; // we are not handling this service binding
+}
+
+Option<String> maybeHeaderValue = options.getOption(MyHttpHeader.class);
+
+MyApiChoice option = maybeOption.get();
+switch (option) {
+    case API1:
+        // do something
+        break;
+    case API2:
+        // do something else
+        break;
+}
+```
+
+</details>
 
 ## About the _OAuth2Loader_
 
@@ -83,6 +193,20 @@ By default, the SAP Cloud SDK pre-configures the `OAuth2ServiceBindingDestinatio
   * Text API
   * Reading API
   * Writing API
+
+#### Caution
+
+For BTP services that offer different APIs (such as the Workflow service), make sure to define which API the converted `HttpDestination` should point to using the corresponding `BtpServiceOptions`. <br />
+For example:
+
+```java
+import com.sap.cloud.sdk.cloudplatform.connectivity.BtpServiceOptions;
+
+ServiceBindingDestinationOptions
+        .forService(ServiceIdentifier.WORKFLOW)
+        .withOption(BtpServiceOptions.WorkflowOptions.REST_API)
+        .build();
+```
 
 ### Customization
 
