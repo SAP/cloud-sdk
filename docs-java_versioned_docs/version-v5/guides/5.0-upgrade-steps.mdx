@@ -188,8 +188,8 @@ Therefore, you should also rename respectively remove those from your project se
   - `com.sap.cloud.sdk.services:scp-business-logging-rest`
   - `com.sap.cloud.sdk.services:scp-workflow-cf`
 - Others
-  - `com.sap.cloud.sdk.cloudplatform:auditlog` (See `AuditLogger` in the <a href="#replaceremove-changed-api">list of deprecated API</a> section below)
-  - `com.sap.cloud.sdk.cloudplatform:auditlog-scp-cf` (See `AuditLogger` in the <a href="#replaceremove-changed-api">list of deprecated API</a> section below)
+  - `com.sap.cloud.sdk.cloudplatform:auditlog` (See [Auditlogging usage](./5.0-upgrade-steps#auditlogging-usagesap-internal-only) section below)
+  - `com.sap.cloud.sdk.cloudplatform:auditlog-scp-cf` (See [Auditlogging usage](./5.0-upgrade-steps#auditlogging-usagesap-internal-only) section below)
   - `com.sap.cloud.sdk.cloudplatform:cloudplatform-connectivity-scp` (No replacement necessary)
   - `com.sap.cloud.sdk.cloudplatform:cloudplatform-core-scp-cf` (No replacement necessary)
   - `com.sap.cloud.sdk.cloudplatform:security-scp-cf` (Functionally integrated into the `com.sap.cloud.sdk.cloudplatform:security` module)
@@ -438,9 +438,10 @@ Once the build doesn't complain about missing dependency versions anymore, you c
         <td>AuditLogger</td>
         <td>-</td>
         <td>
-          Please approach the SAP Cloud SDK development team about migration guidance by <a href="https://github.com/SAP/cloud-sdk-java/issues/new">creating a GitHub support issue</a>.
+          You can use version 4 of the auditlog artifact with version 5 of the SAP Cloud SDK. Please refer the [Auditlogging usage](./5.0-upgrade-steps#auditlogging-usagesap-internal-only) section below for more details.
+          Please approach the SAP Cloud SDK development team if you face issues by <a href="https://github.com/SAP/cloud-sdk-java/issues/new">creating a GitHub support issue</a>.
           <br />
-          This change also affects the Auditlog integration with the S/4HANA Connectivity module.
+          This change also affects the Auditlog integration with the S/4HANA Connectivity module. You will have to explicitly use `AuditLogger` to log events.
         </td>
       </tr>
       <tr>
@@ -724,3 +725,35 @@ We decided to remove all security related `Filter` implementations from the SAP 
 This means you need to remove all mentions of the following filters from your `web.xml` (mind the `security` in the package): `com.sap.cloud.sdk.cloudplatform.security.servlet.*Filter`
 
 The `com.sap.cloud.sdk.cloudplatform.servlet.RequestAccessorFilter` is functionally replaced by `com.sap.cloud.sdk.cloudplatform.servletjakarta.RequestAccessorFilter` found in `com.sap.cloud.sdk.cloudplatform:servlet-jakarta`.
+
+## Auditlogging usage(SAP Internal only)
+
+Auditlogging feature is no longer released with version 5 of the SAP Cloud SDK.
+If you want to continue using audit logging, you could still use version 4 of the audit logging artifact along with version 5 of the SAP Cloud SDK.
+
+You would have to manually add all of the following artifacts(only available internally) to your project:
+
+```xml
+      <dependency>
+         <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
+         <artifactId>auditlog-scp-cf</artifactId>
+         <version>4.28.0</version> <!-- Pay attention that this the old v4 artifact -->
+      </dependency>
+      <dependency>
+         <groupId>com.sap.xs.auditlog</groupId>
+         <artifactId>audit-java-client-api</artifactId>
+         <version>latest-available-version-in-artifactory</version>
+      </dependency>
+      <dependency>
+         <groupId>com.sap.xs.auditlog</groupId>
+         <artifactId>audit-java-client-impl</artifactId>
+         <version>latest-available-version-in-artifactory</version>
+      </dependency>
+      <dependency>
+         <groupId>com.sap.xs.java</groupId>
+         <artifactId>xs-env</artifactId>
+         <version>latest-available-version-in-artifactory</version>
+      </dependency>
+```
+
+You will then be able to log events using the `AuditLogger` API.
