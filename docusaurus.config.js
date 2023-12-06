@@ -435,6 +435,18 @@ module.exports = {
           {
             from: '/docs/java/support-java',
             to: '/docs/java/support'
+          },
+          {
+            from: '/docs/java/features/rest/clients/btp-business-rules-rest-api',
+            to: '/docs/java/v4/features/rest/clients/btp-business-rules-rest-api'
+          },
+          {
+            from: '/docs/java/features/rest/clients/scp-workflow-rest-api',
+            to: '/docs/java/v4/features/rest/clients/scp-workflow-rest-api'
+          },
+          {
+            from: '/docs/java/guides/4.0-upgrade',
+            to: '/docs/java/v4/guides/4.0-upgrade'
           }
         ]
       }
