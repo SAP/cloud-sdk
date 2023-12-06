@@ -23,6 +23,10 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 To leverage the type-safe OData v2 client, you need to add following dependencies to the `dependencies` section of your `pom.xml`:
 
+<Tabs groupId="odataClientType" defaultValue="Selfgenerated" values={[ { label: 'Self Generated Clients', value: 'Selfgenerated' } ]}>
+
+<TabItem value="Selfgenerated">
+
 ```xml
 <dependency>
     <groupId>com.sap.cloud.sdk.datamodel</groupId>
@@ -33,15 +37,11 @@ To leverage the type-safe OData v2 client, you need to add following dependencie
     <artifactId>lombok</artifactId>
     <scope>provided</scope>
 </dependency>
-<dependency>
-    <groupId>javax.inject</groupId>
-    <artifactId>javax.inject</artifactId>
-    <scope>provided</scope>
-</dependency>
 ```
 
-Furthermore, you need to have generated a client library for your OData service.
-See the [generator documentation](vdm-generator) for how to generate such a client library.
+</TabItem>
+
+</Tabs>
 
 :::tip Discover services on the SAP Business Accelerator Hub
 
@@ -78,7 +78,7 @@ To execute HTTP requests the OData client leverages _Destinations_ and are docum
 The following code snippets assume that such a destination is in place:
 
 ```java
-HttpDestination destination;
+Destination destination;
 ```
 
 On an abstract level requests are generally build up according to the following pattern:
@@ -96,18 +96,12 @@ result = service.operation()
 - Which OData parameters are available depends on the operation.
   For example, when updating entities the `$filter` parameter is not available.
 
-:::info Business Partner Example
-
-Below, different OData features are documented using the [Business Partner Service](https://api.sap.com/api/API_BUSINESS_PARTNER/resource) on SAP S/4HANA as an example.
-The service is represented by the `BusinessPartnerService` class which you can obtain by [generating a client](vdm-generator) for the Business Partner service.
-
-The following code snippets assume that such a client is generated an instance of this service is set up:
+Below different OData features are documented using the [Business Partner Service](https://api.sap.com/api/API_BUSINESS_PARTNER/resource) on SAP S/4HANA as an example.
+It is represented by the `BusinessPartnerService` class which is part of the pregenerated SAP S/4HANA Virtual Data Model (VDM). The following code snippets assume that an instance of this service is set up:
 
 ```java
 BusinessPartnerService service = new DefaultBusinessPartnerService();
 ```
-
-:::
 
 ## OData Features
 
@@ -268,7 +262,7 @@ To achieve a different order with `and` as the top level statement one would nes
 <!-- TODO: Explain filters on complex types and navigational properties -->
 
 The [OData v2 standard](https://www.odata.org/documentation/odata-version-2-0/uri-conventions/) allows for a limited range of filter expressions compared to OData v4.
-A detailed list of what is available in the SAP Cloud SDK can be obtained from [the Javadoc](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/datamodel/odata/helper/package-summary.html).
+A detailed list of what is available in the SAP Cloud SDK can be obtained from [the Javadoc](pathname:///java-api/v5/com/sap/cloud/sdk/datamodel/odata/helper/package-summary.html).
 The functionality can also be discovered through the fluent API.
 
 #### Custom Filter Expressions
@@ -570,7 +564,7 @@ try { ... }
 
 This handling is the most generic, handling all possible failures.
 For more specific information dedicated exceptions are inheriting from `ODataException`.
-Please check the [documentation](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/datamodel/odata/client/exception/ODataException.html) for details on all the exception types.
+Please check the [documentation](pathname:///java-api/v5/com/sap/cloud/sdk/datamodel/odata/client/exception/ODataException.html) for details on all the exception types.
 
 To handle different kinds of failure one can list multiple catch clauses to cover different levels or cases that might occur, e.g.:
 

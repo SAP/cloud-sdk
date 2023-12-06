@@ -32,118 +32,9 @@ Be cautious about using features annotated as _Beta_ because their API can chang
 
 ### Which Java Versions Are Supported by the SAP Cloud SDK?
 
-The SAP Cloud SDK itself is compatible with Java 8, 11 [and 17](#spring-boot-3-and-java-17-support).
-Other Java versions may work as well, depending on your setup, but are not yet tested by us.
-Note that the SAP Business Technology Platform Cloud Foundry environment only supports Java 8 out of the box, but can be configured to also run with Java 11 or 17.
-SAP Business Technology Platform Neo only supports Java 8.
-
-#### Spring Boot 3 and Java 17 support
-
-SAP Cloud SDK can be used with JakartaEE (e.g. via Spring Boot 3, Spring 6, and Java 17) thanks to the experimental module `servlet-jakarta`.
-
-In case you are migrating your application from Spring Boot 2, the below steps make sure the Cloud SDK continues to work smoothly:
-
-1. Set Spring Boot version to 3 and Java version to 17:
-
-```xml
-<properties>
-    <java.version>17</java.version>
-    <maven.compiler.source>${java.version}</maven.compiler.source>
-    <maven.compiler.target>${java.version}</maven.compiler.target>
-    <maven.compiler.testSource>${java.version}</maven.compiler.testSource>
-    <maven.compiler.testTarget>${java.version}</maven.compiler.testTarget>
-</properties>
-```
-
-2. Place the Spring Boot dependency management **before** the SDK BOM:
-
-```xml
-<dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-dependencies</artifactId>
-            <version>3.0.2</version> <!-- TODO: replace this with the most recent version -->
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sap.cloud.security</groupId>
-            <artifactId>java-bom</artifactId>
-            <version>3.1.3</version> <!-- TODO: replace this with the most recent version -->
-            <scope>import</scope>
-            <type>pom</type>
-        </dependency>
-        <dependency>
-            <groupId>com.sap.cloud.sdk</groupId>
-            <artifactId>sdk-bom</artifactId>
-            <version>4.20.0</version> <!-- TODO: replace this with the most recent version -->
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-    </dependencies>
-</dependencyManagement>
-```
-
-3. Replace any `javax` dependency with the respective `jakarta` dependency:
-
-```diff
--<dependency>
--    <groupId>javax.inject</groupId>
--    <artifactId>javax.inject</artifactId>
--</dependency>
-+<dependency>
-+    <groupId>jakarta.inject</groupId>
-+    <artifactId>jakarta.inject-api</artifactId>
-+    <version>2.0.1</version>
-+</dependency>
-```
-
-Don't forget to replace `javax` imports in Java files with `jakarta` imports.
-
-Also remember to migrate all your dependencies to their respective `jakarta` versions if applicable.
-
-For example, if you were previously using `com.sap.hcp.cf.logging:cf-java-logging-support-servlet` for application logging you must instead switch to using `com.sap.hcp.cf.logging:cf-java-logging-support-servlet-jakarta`.
-
-```diff
--<dependency>
--    <groupId>com.sap.hcp.cf.logging</groupId>
--    <artifactId>cf-java-logging-support-servlet</artifactId>
--</dependency>
-+<dependency>
-+    <groupId>com.sap.hcp.cf.logging</groupId>
-+    <artifactId>cf-java-logging-support-servlet-jakarta</artifactId>
-+    <version>latest-lib-version</version>
-+</dependency>
-```
-
-4. Add the new `servlet-jakarta` module:
-
-```xml
-<dependencies>
-    <dependency>
-        <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
-        <artifactId>servlet-jakarta</artifactId>
-    </dependency>
-</dependencies>
-```
-
-5. When using the `@ServletComponentScan` annotation as suggested, please update the namespace:
-
-```diff
-- @ServletComponentScan({"com.sap.cloud.sdk", ...
-+ @ServletComponentScan({"com.sap.cloud.sdk.cloudplatform.servletjakarta", ...
-```
-
-6. Configure Cloud Foundry for Java 17
-
-- [Configure SAP Java Buildpack to run with Java 17](https://help.sap.com/docs/btp/sap-business-technology-platform/sapmachine#activation)
-  - Add the SAPMachine JRE version 17 in you `manifest.yml`:
-  ```diff
-    env:
-  +   JBP_CONFIG_COMPONENTS: 'jres: [''com.sap.xs.java.buildpack.jre.SAPMachineJRE'']'
-  +   JBP_CONFIG_SAP_MACHINE_JRE: '{ use_offline_repository: false, version: 17.0.5 }'
-  ```
+The SAP Cloud SDK is compatible with Java 17 Long-Term-Support (LTS)
+Newer Java versions may work as well depending on your setup but are not yet tested by us.
+Note that the SAP Business Technology Platform Cloud Foundry environment can be configured to run with Java 17.
 
 ### Can I Use Features Annotated as Beta in Production?
 
@@ -242,7 +133,7 @@ As a consequence the generated `AttachmentService` interface and `DefaultAttachm
 
 ```java
 // Resolve HttpClient instance
-HttpDestination destination;
+Destination destination;
 HttpClient httpClient = HttpClientAccessor.getHttpClient(destination);
 
 // Resolve CSRF token, internally runs HEAD request
@@ -307,8 +198,6 @@ The `Content-Type` should correspond to the uploaded file or your upload might f
 Yes, we do support [OpenAPI 2.0 also known as Swagger](https://swagger.io/specification/v2/), and [OpenAPI 3.0](https://swagger.io/specification/) specifications.
 The latter is preferred.
 Find documentation how to generate a [type-safe Open API client here](features/rest/generate-rest-client.mdx).
-We also release pregenerated libraries in collaboration with service providers who release RESTful Open API services.
-For details check an [overview](features/rest/overview).
 For feedback or questions about our Open API offering, please, create an issue [here](https://github.com/SAP/cloud-sdk/issues).
 
 ## Questions About SAP Business Technology Platform
@@ -321,15 +210,8 @@ Let us know if you miss functionality of the SAP BTP for the Cloud Foundry envir
 
 ### Do You Support SAP Business Technology Platform - Neo?
 
-:::warning warning
-All the NEO specific classes and functions have been deprecated.
-We are planning to discontinue support of NEO with SAP Cloud SDK v5 by end of 2023.
-:::
-
-We still provide full support for SAP Business Technology Platform Neo.
-However, we do not recommend starting new projects with SAP BTP for the Neo environment.
+We do not provide support for SAP Business Technology Platform Neo.
 The Cloud Foundry environment is better suited for apps and SAP S/4HANA extension development.
-Also, for Neo we provide out-of-the-box support with only servlet based applications and not spring based applications.
 
 ### Do You Support Reactive Spring Technology, e.g. Webflux?
 
@@ -347,7 +229,7 @@ That is why the SAP Cloud SDK for Java itself does not render your application b
 
 However, you should still check that your application or one of its dependencies doesn't include `log4j-core` on the classpath.
 
-Our SAP BTP CF Archetypes use logback as the logging implementation, the SAP BTP Neo archetype relies on the logger provided by the Neo Platform.
+Our SAP BTP CF Archetypes use logback as the logging implementation.
 
 For further reading on this vulnerability have a look at the following (external) links:
 

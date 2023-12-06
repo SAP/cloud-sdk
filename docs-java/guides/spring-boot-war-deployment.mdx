@@ -18,6 +18,11 @@ keywords:
 This document outlines how to adjust a Spring Boot project to use WAR deployment (also known as traditional deployment).
 The traditional deployment of Spring helps overcome exceptions related to the SAP JCo library.
 
+:::warning WAR Deployment not supported for SDK 5
+SAP Cloud SDK 5 support for WAR deployment will only be available after the release of SAP Java Buildpack 2.
+For now, only SDK 4 supports WAR deployment.
+:::
+
 ## Modern and Traditional Spring Deployment
 
 Traditionally, Java projects based on Spring were built as war files which had to be deployed to standalone application servers, such as Tomcat.
@@ -27,7 +32,7 @@ The advantage of that modern deployment form is that the application can be star
 ## Target Projects of This Guide
 
 This guide is applicable to all Spring-based Java projects which use the modern deployment of Spring as jar file.
-That comprises in the first place any project using the [new CAP stack](https://cap.cloud.sap/docs/) as well as the [Spring Boot Maven archetype](https://search.maven.org/artifact/com.sap.cloud.sdk.archetypes/scp-cf-spring) of the SAP Cloud SDK.
+That comprises in the first place any project using the [new CAP stack](https://cap.cloud.sap/docs/) as well as the [Spring Boot Maven archetype](https://search.maven.org/artifact/com.sap.cloud.sdk.archetypes/spring-boot3) of the SAP Cloud SDK.
 
 The problem with the modern deployment is that the [SAP Java Connector](https://support.sap.com/en/product/connectors/jco.html) library cannot be used when the application gets deployed as jar file.
 That results in runtime exceptions like `java.lang.NoClassDefFoundError: com/sap/conn/jco/JCoException`.

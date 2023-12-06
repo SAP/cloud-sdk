@@ -211,7 +211,7 @@ module.exports = {
         lastVersion: 'current',
         versions: {
           current: {
-            label: 'v4',
+            label: 'v5',
             badge: false
           },
           v3: {
@@ -220,10 +220,9 @@ module.exports = {
             banner: 'unmaintained',
             badge: false
           },
-          v5: {
-            label: 'v5',
-            path: 'v5',
-            banner: 'unreleased',
+          v4: {
+            label: 'v4',
+            path: 'v4',
             badge: false
           }
         }
