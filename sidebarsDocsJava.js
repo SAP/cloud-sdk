@@ -107,5 +107,4 @@ module.exports = {
       href: 'https://search.maven.org/search?q=g:com.sap.cloud.sdk*'
     }
   ]
-}
-;
+};
