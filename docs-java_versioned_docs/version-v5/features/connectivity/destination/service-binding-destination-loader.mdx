@@ -63,11 +63,12 @@ If not explicitly specified, `OnBehalfOf.TECHNICAL_USER_CURRENT_TENANT` is used.
 ### Custom Parameters
 
 Adding custom parameters to the `ServiceBindingDestinationOptions` can be done using the `withOption(OptionsEnhancer)` method.
-Hereby, an `OptionsEnhancer` is a type-safe way of adding arbitrary parameters to the `ServiceBindingDestinationOptions`.
+Hereby, an `OptionsEnhancer` is a type-safe representation of arbitrary parameters.
 
 The type-safety is implemented by, internally, storing the parameters in a `Map` that is keyed by the `Class` of the parameter's type.
 Using generics, the `ServiceBindingDestinationOptions.getOption(Class)` method can guarantee that the returned value is of the requested type. <br />
-Furthermore, using the `Class` as the key for the internal `Map` ensures that there cannot be any parameter clashes.
+Furthermore, using the `Class` as the key for the internal `Map` ensures that there cannot be any parameter clashes. <br />
+If the implementation would use a `String` key instead, for example, parameters could be overwritten accidentially.
 
 <details>
 <summary>Example</summary>
