@@ -71,11 +71,11 @@ Instead, `Destination` objects should be retrieved via the `DestinationLoader` (
 
 Since the `DestinationService` is performing error prone operations (i.e. HTTP calls), it comes with some resilience mechanisms out of the box:
 
-* _Time Limiter_ - Destination retrieval is limited to a maximum of **6 seconds**.
-* (**tenant isolated**) _Circuit Breaker_ - Requests will be blocked once more than **50%** of the **last 10** requests failed.
-  * For fetching **individual** destinations, the circuit breaker will stay open for **6 seconds**.
-  * For fetching **all** destinations, the circuit breaker will stay open for **60 seconds**.
-* (**tenant isolated**) _Bulk Head_ - The maximum number of concurrent requests is limited to **50**. Queued tasks will wait for up to **60 seconds** before being rejected.
+- _Time Limiter_ - Destination retrieval is limited to a maximum of **6 seconds**.
+- (**tenant isolated**) _Circuit Breaker_ - Requests will be blocked once more than **50%** of the **last 10** requests failed.
+  - For fetching **individual** destinations, the circuit breaker will stay open for **6 seconds**.
+  - For fetching **all** destinations, the circuit breaker will stay open for **60 seconds**.
+- (**tenant isolated**) _Bulk Head_ - The maximum number of concurrent requests is limited to **50**. Queued tasks will wait for up to **60 seconds** before being rejected.
 
 ### Default Caching Behavior
 
@@ -95,15 +95,15 @@ This is to prevent excessive memory usage in case of a large number of tenants a
 Even though the [default caching behavior](#default-caching-behavior) should serve as a good starting point for many applications, it may be necessary to tweak it for specific use cases.
 For that, the `DestinationService.Cache` offers a number of configuration APIs:
 
-* `disable()`: Disables the cache completely. This is not recommended for production use.
-* `setSizeLimit(long)`: Sets the maximum number of entries **across _all tenants_** that can be stored in the cache. Defaults to **1000**.
-* `disableSizeLimit()`: Disables the size limit completely.
-* `setExpiration(Duration, CacheExpirationDuration)`: Sets the expiration duration for cached entries. Defaults to **5 minutes after write**.
-* `disableExpiration()`: Disables the expiration completely.
+- `disable()`: Disables the cache completely. This is not recommended for production use.
+- `setSizeLimit(long)`: Sets the maximum number of entries **across _all tenants_** that can be stored in the cache. Defaults to **1000**.
+- `disableSizeLimit()`: Disables the size limit completely.
+- `setExpiration(Duration, CacheExpirationDuration)`: Sets the expiration duration for cached entries. Defaults to **5 minutes after write**.
+- `disableExpiration()`: Disables the expiration completely.
 
 #### Caution
 
-When using any of the above APIs, the underlying cache instance will be **recreated**. 
+When using any of the above APIs, the underlying cache instance will be **recreated**.
 All existing entries will be lost.
 Therefore, it is highly recommended to configure the cache **_once_ and _before_** using the `DestinationService` for the first time (e.g. during application start up).
 
@@ -176,6 +176,6 @@ After that, the concrete behavior depends on the classpath, which is usually inf
 
 [The default behavior](#usage-in-the-destinationaccessor) can be adjusted through the following `DestinationAccessor` APIs:
 
-* `appendDestinationLoader` - Appends (i.e. lowest priority) the given `DestinationLoader` to the chain.
-* `prependDestinationLoader` - Prepends (i.e. highest priority) the given `DestinationLoader` to the chain.
-* `setLoader` - Overwrites the current `DestinationLoader` with the given one.
+- `appendDestinationLoader` - Appends (i.e. lowest priority) the given `DestinationLoader` to the chain.
+- `prependDestinationLoader` - Prepends (i.e. highest priority) the given `DestinationLoader` to the chain.
+- `setLoader` - Overwrites the current `DestinationLoader` with the given one.

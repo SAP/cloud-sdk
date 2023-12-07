@@ -160,11 +160,12 @@ The `OAuth2ServiceBindingDestinationLoader` comes as part of the [`connectivity-
 More precisely, it supports the **OAuth2 Client Credentials** and **OAuth2 Client Certificate** grant types.
 
 Internally, the implementation performs the following steps:
+
 1. Check whether the given `ServiceBindingDestinationOptions` can be transformed (e.g. whether the `ServiceBinding` uses a supported grant type).
 2. Extract the required information from the `ServiceBinding` (i.e. the service URL, the token URL, and the client identity).
 3. Check whether the `ServiceBindingDestinationOptions` contain another `HttpDestination` that should be _proxied_.
-    1. If so, create a new `HttpDestination` that points to the _destination to be proxied_ and uses the authentication information provided in the given `ServiceBinding` for the **proxy authentication** (i.e. HTTP header `Proxy-Authorization`).
-    2. If not, create a new `HttpDestination` that points to the service URL and uses the authentication information provided in the `ServiceBinding` (i.e. HTTP header `Authorization`).
+   1. If so, create a new `HttpDestination` that points to the _destination to be proxied_ and uses the authentication information provided in the given `ServiceBinding` for the **proxy authentication** (i.e. HTTP header `Proxy-Authorization`).
+   2. If not, create a new `HttpDestination` that points to the service URL and uses the authentication information provided in the `ServiceBinding` (i.e. HTTP header `Authorization`).
 
 ### Dealing With Arbitrary Service Bindings
 
@@ -174,25 +175,27 @@ Therefore, the `OAuth2ServiceBindingDestinationLoader` leverages the `OAuth2Prop
 
 The `OAuth2ServiceBindingDestinationLoader` stores a **static list** of `OAuth2PropertySupplier` instances.
 Whenever the `OAuth2ServiceBindingDestinationLoader` is asked to load a destination, it will iterate over this list (**in order**) to see whether
+
 1. the given `ServiceBindingDestinationOptions` can be transformed into an `HttpDestination` using the current `OAuth2PropertySupplier` instance, and, if so
 2. extract the required information from the given `ServiceBindingDestinationOptions` using the current `OAuth2PropertySupplier`.
 
 This approach should look familar as it is effectively a fallback mechanism, once again.
 
 By default, the SAP Cloud SDK pre-configures the `OAuth2ServiceBindingDestinationLoader` so that is able to deal with `ServiceBinding`s for the following BTP services:
-* [The BTP Destination Service on Cloud Foundry](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview)
-* [The BTP Connectivity Service on Cloud Foundry](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/what-is-sap-btp-connectivity)
-* [The SAP Workflow Service on Cloud Foundry](https://api.sap.com/package/SAPCPWorkflowAPIs/all)
-    * [Inbox API (OData)](https://api.sap.com/api/SAP_CP_Workflow_TCM_CF/overview)
-    * [Workflow API (REST)](https://api.sap.com/api/SAP_CP_Workflow_CF/overview)
-* [The SAP Business Rules Service on Cloud Foundry](https://api.sap.com/package/SAPCPBusinessRulesAPIs/all)
-    * [Rule Authoring API](https://api.sap.com/api/SAP_CF_BusinessRules_Repository/overview)
-    * [Rule Execution API (v2)](https://api.sap.com/api/SAP_CF_BusinessRules_Runtime_V2/overview)
-* The _SAP Business Logging on Cloud Foundry_ (SAP internal)
-  * Configuration API
-  * Text API
-  * Reading API
-  * Writing API
+
+- [The BTP Destination Service on Cloud Foundry](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview)
+- [The BTP Connectivity Service on Cloud Foundry](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/what-is-sap-btp-connectivity)
+- [The SAP Workflow Service on Cloud Foundry](https://api.sap.com/package/SAPCPWorkflowAPIs/all)
+  - [Inbox API (OData)](https://api.sap.com/api/SAP_CP_Workflow_TCM_CF/overview)
+  - [Workflow API (REST)](https://api.sap.com/api/SAP_CP_Workflow_CF/overview)
+- [The SAP Business Rules Service on Cloud Foundry](https://api.sap.com/package/SAPCPBusinessRulesAPIs/all)
+  - [Rule Authoring API](https://api.sap.com/api/SAP_CF_BusinessRules_Repository/overview)
+  - [Rule Execution API (v2)](https://api.sap.com/api/SAP_CF_BusinessRules_Runtime_V2/overview)
+- The _SAP Business Logging on Cloud Foundry_ (SAP internal)
+  - Configuration API
+  - Text API
+  - Reading API
+  - Writing API
 
 #### Caution
 
@@ -231,19 +234,20 @@ In other words: Using the `registerPropertySupplier` method will make your `OAut
 To make things a bit more concrete, let's assume we wanted to implement support for an other service, which uses it's very own `ServiceBinding` structure.
 
 Lets assume our service produces service bindings that look like this:
+
 ```json
 {
-    "service": "my-service",
-    "credentials": {
-        "service": {
-          "uri": "https://my-service.com"
-        },
-        "oauth": {
-            "uri": "https://my-service.com/oauth/token",
-            "id": "my-client-id",
-            "secret": "my-client-secret"
-        }
+  "service": "my-service",
+  "credentials": {
+    "service": {
+      "uri": "https://my-service.com"
+    },
+    "oauth": {
+      "uri": "https://my-service.com/oauth/token",
+      "id": "my-client-id",
+      "secret": "my-client-secret"
     }
+  }
 }
 ```
 
@@ -293,7 +297,8 @@ Next thing we should pay attention to is the constructor of our class. <br />
 It takes an instance of `ServiceBindingDestinationOptions` as a parameter.
 This instance is then passed to the `super` constructor (line 4) along with a list of `String`s.
 
-The super class (`DefaultOAuth2PropertySupplier`) uses these parameters to 
+The super class (`DefaultOAuth2PropertySupplier`) uses these parameters to
+
 1. cache the _credentials_ portion of the `ServiceBinding` (given in the `ServiceBindingDestinationOptions`) as a [`TypedMapView` instance](https://github.com/SAP/btp-environment-variable-access/blob/main/api-parent/consumption-api/src/main/java/com/sap/cloud/environment/servicebinding/api/TypedMapView.java) and
 2. set the _default oauth2 properties path_ **within** the _credentials_ portion of the `ServiceBinding`.
 
@@ -350,7 +355,7 @@ If the [guarantee mentioned above](#caution) does not hold, you can create your 
 ```java
 ServiceBindingDestinationLoader myChain = ServiceBindingDestinationLoader.newLoaderChain(
         Arrays.asList(
-                new MyFirstLoader(), 
+                new MyFirstLoader(),
                 new MySecondLoader()
         ));
 ```

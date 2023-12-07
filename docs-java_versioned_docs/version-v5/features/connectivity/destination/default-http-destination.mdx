@@ -45,8 +45,8 @@ The `DefaultHttpDestination` implements support for following sources of HTTP he
 3. Headers that were [directly added](#adding-individual-headers) via the [Builder API](#about-the-builder-api) while assembling the `DefaultHttpDestination` instance.
 4. Headers that are provided by [`DestinationHeaderProvider`s](#about-headerproviders).
 5. (Conditional) A `Proxy-Authorization` (and potentially a `SAP-Connectivity-SCC-Location_ID`) HTTP header will automatically be added, **iff** the `ProxyType` property is set to `OnPremise` as [explained below](#on-premise-handling).
-5. (Conditional) Headers that are dervied from [authentication related properties](#deriving-the-authorization-header), **iff** no `Authorization` header was provided by any of the previous options.
-6. (Conditional) Headers that are derived from [proxy authentication related properties](#deriving-the-proxy-authorization-header), **iff** no `Proxy-Authorization` header was provided by any of the previous options.
+6. (Conditional) Headers that are dervied from [authentication related properties](#deriving-the-authorization-header), **iff** no `Authorization` header was provided by any of the previous options.
+7. (Conditional) Headers that are derived from [proxy authentication related properties](#deriving-the-proxy-authorization-header), **iff** no `Proxy-Authorization` header was provided by any of the previous options.
 
 ### On-Premise Handling
 
@@ -55,8 +55,8 @@ The `DefaultHttpDestination` implements dedicated support for on-premise connect
 This feature is enabled by setting the `ProxyType` property to `OnPremise`.
 Doing so will trigger the following behavior:
 
-* The `Proxy-Authorization` header will be derived from the bound [SAP BTP Connectivity Service on Cloud Foundry](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/what-is-sap-btp-connectivity) as [explained here](service-binding-destination-loader#dealing-with-arbitrary-service-bindings).
-* The `SAP-Connectivity-SCC-Location_ID` header will be added, **iff** the `CloudConnectorLocationId` property is set.
+- The `Proxy-Authorization` header will be derived from the bound [SAP BTP Connectivity Service on Cloud Foundry](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/what-is-sap-btp-connectivity) as [explained here](service-binding-destination-loader#dealing-with-arbitrary-service-bindings).
+- The `SAP-Connectivity-SCC-Location_ID` header will be added, **iff** the `CloudConnectorLocationId` property is set.
 
 #### Caution
 
@@ -68,23 +68,24 @@ As [explained above](#about-http-headers), the `DefaultHttpDestination` tries to
 
 The concrete properties, hereby, depend on the `AuthenticationType` of the `DefaultHttpDestination`.
 
-* For `AuthenticationType.BASIC_AUTHENTICATION`, the basic credentials are taken from the `User` (or `username`, if the former doesn't exist) and the `Password` properties.
+- For `AuthenticationType.BASIC_AUTHENTICATION`, the basic credentials are taken from the `User` (or `username`, if the former doesn't exist) and the `Password` properties.
 
 #### Caution
 
 The `DefaultHttpDestination` will throw an exception if the `AuthenticationType` is set to `BASIC_AUTHENTICATION`, but no `User` (or `username`) or `Password` property is provided.
 
-* For `AuthenticationType.TOKEN_FORWARDING`, the `RequestHeaderAccessor` is used to find any `Authorization` header in the current request. All headers that are found (there should usually only be one) is then be forwarded.
+- For `AuthenticationType.TOKEN_FORWARDING`, the `RequestHeaderAccessor` is used to find any `Authorization` header in the current request. All headers that are found (there should usually only be one) is then be forwarded.
 
 ### Deriving The `Proxy-Authorization` Header
 
 Similar to [the `Authorization` header](#deriving-the-authorization-header), the `Proxy-Authentication` header is derived from proxy authentication related properties, **iff** no `Proxy-Authentication` header is provided by any other source.
 
 This is done by attempting to transform the value of the `ProxyAuthorization` property as follows:
-* If the property doesn't exist or contains an empty `String`, no header is derived.
-* If the property contains a `String` that starts with `Basic `, the value is assumed to be a Base64-encoded `username:password` pair and is transformed into a `Basic` header.
-* If the property contains a `String` that starts with `Bearer `, the value is assumed to be a JWT token and is transformed into a `Bearer` header.
-* Any other value will be **ignored** and no header will be derived. Additionally, an error message will be logged.
+
+- If the property doesn't exist or contains an empty `String`, no header is derived.
+- If the property contains a `String` that starts with `Basic `, the value is assumed to be a Base64-encoded `username:password` pair and is transformed into a `Basic` header.
+- If the property contains a `String` that starts with `Bearer `, the value is assumed to be a JWT token and is transformed into a `Bearer` header.
+- Any other value will be **ignored** and no header will be derived. Additionally, an error message will be logged.
 
 #### Caution
 
@@ -106,7 +107,7 @@ It allows you to set any desired property, header, header provider, or any other
 
 ### Building On Top Of An Existing Destination
 
-Sometimes, you may want to slightly adjust an existing `Destination` instance. 
+Sometimes, you may want to slightly adjust an existing `Destination` instance.
 For example, there might be just this one single header missing for a specific request. <br />
 Unfortunately, adding this header directly to the existing `Destination` instance is not possible, as [the `Destination` interface is immutable](#about-immutability).
 
@@ -245,7 +246,8 @@ The SAP Cloud SDK comes with a set of `DestinationHeaderProvider`s that are auto
 
 The `ErpDestinationHeaderProvider` is part of the [`cloudplatform-connectivity` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity) and, therefore, will **always** be added to any `DefaultHttpDestination` instance. <br />
 It provides the following headers:
-* The `sap-client` header, **iff** the `DefaultHttpDestination` contains a `sap-client` property.
-* The `sap-language` header.
-    * If the `DefaultHttpDestination` contains a property called `cloudsdk.dynamicSapLanguage` with value `true`, the `LocaleAccessor` will be used to determine the current locale.
-    * Otherwise, if there is a `sap-language` property, its value will be used.
+
+- The `sap-client` header, **iff** the `DefaultHttpDestination` contains a `sap-client` property.
+- The `sap-language` header.
+  - If the `DefaultHttpDestination` contains a property called `cloudsdk.dynamicSapLanguage` with value `true`, the `LocaleAccessor` will be used to determine the current locale.
+  - Otherwise, if there is a `sap-language` property, its value will be used.
