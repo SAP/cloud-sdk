@@ -52,6 +52,11 @@ The `DestinationAccessor` makes use of that concept as [explained below](#usage-
 The `DestinationService` class (formerly known as `ScpCfDestinationLoader`) is part of the [`connectivity-destination-service` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/connectivity-destination-service) and represents the [Cloud Foundry Destination Service](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview).
 As such, it can be used to retrieve both individual destinations as well as all destinstions stored for either a subscriber or the provider tenant.
 
+### Multitenancy
+
+The `DestinationService` is tenant-aware by default.
+This means that the `DestinationService` will, by default, perform requests on behalf of the current tenant, if a tenant is available.
+
 ### How Authentication at the Target System Works
 
 The [BTP Destination Service on Cloud Foundry](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview) offers a [broad range of authentication methods](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/http-destinations#configuring-authentication).
