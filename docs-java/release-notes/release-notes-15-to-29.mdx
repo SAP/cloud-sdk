@@ -1,3 +1,41 @@
+## 4.28.0 - December 5th, 2023
+
+### Compatibility Notes
+
+- `AuditLogFacade` implementation `ScpCfAuditLogFacade` will no longer throw an exception of legacy type `DependencyNotFoundException` but of type `IllegalStateException`, in case classes are missing at runtime.
+  The exception message details remain untouched.
+
+### New Functionality
+
+- The Auditlog convenience API is now compatible for both JavaEE and JakartaEE.
+  `AccessRequester` can now be used like the following:
+
+  ```java
+
+  // for jakarta (new API)
+  AccessRequester.ofJakarta(...);
+
+  // for javax (existing API)
+  AccessRequester.of(...);
+
+  // for both (existing API)
+  AccessRequester.ofCurrentRequest();
+  ```
+
+  **Note:** The _SAP Java Buildpack_ may not provide a JakartaEE compatible implementation yet.
+
+### Improvements
+
+- Dependency Updates:
+  - SAP dependency updates:
+    - Update the [SAP Security Library](https://github.com/SAP/cloud-security-services-integration-library) from `2.14.2` to `2.17.0`
+  - Other dependency updates:
+    - Minor version updates:
+      - Update [Jackson](https://search.maven.org/search?q=g:com.fasterxml.jackson.core) (`com.fasterxml.jackson.core:jackson-databind`) from `2.15.3` to `2.16.0`
+      - Update `org.apache.httpcomponents.client5` from `5.2.1` to `5.2.2`
+      - Update `org.apache.httpcomponents.core5` from `5.2.1` to `5.2.2`
+      - Update `org.apache.commons:commons-lang3` from `3.13.0` to `3.14.0`
+
 ## 4.27.0 - November 13, 2023
 
 ### Compatibility Notes
@@ -215,7 +253,7 @@
   - `JndiLookupAccessor`
   - `JndiLookupFacade`
   - `DefaultJndiLookupFacade`
-- `StringConverter` and `StringValidator` have been deprecated without replacement. Java Standard Library can be used as a replacemet for `StringConverter` and [Apache Commons Codec](https://commons.apache.org/proper/commons-codec/) can be used as a replacement for `StringValidator`. Refer [here](https://sap.github.io/cloud-sdk/docs/java/v5/guides/5.0-upgrade) for more details.
+- `StringConverter` and `StringValidator` have been deprecated without replacement. Java Standard Library can be used as a replacemet for `StringConverter` and [Apache Commons Codec](https://commons.apache.org/proper/commons-codec/) can be used as a replacement for `StringValidator`. Refer [here](https://sap.github.io/cloud-sdk/docs/java/v5/guides/5.0-upgrade-steps) for more details.
 
 ### New Functionality
 
@@ -225,7 +263,7 @@
 
 - Dependency Updates:
   - SAP dependency updates:
-    - Update [Neo Java Web Api])(https://central.sonatype.com/search?q=g%3Acom.sap.cloud+a%3Aneo-java-web-api) (com.sap.cloud:neo-java-web-api) from 4.58.1 to 4.59.2
+    - Update [Neo Java Web Api](https://central.sonatype.com/search?q=g%3Acom.sap.cloud+a%3Aneo-java-web-api) (com.sap.cloud:neo-java-web-api) from 4.58.1 to 4.59.2
   - Other dependency updates:
     - Minor version updates:
       - Update [Protobuf Java](https://central.sonatype.com/search?q=g%3Acom.google.protobuf+a%3Aprotobuf-java) from 3.23.4 to 3.24.0
