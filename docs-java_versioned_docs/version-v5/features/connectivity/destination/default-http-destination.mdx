@@ -18,7 +18,7 @@ keywords:
 
 # The `DefaultHttpDestination` API
 
-The `DefaultHttpDestination` is the default implementation of the `HttpDestination` interface and comes as part of the [`cloudplatform-connectivity` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity).
+The [`DefaultHttpDestination`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.html) is the default implementation of the [`HttpDestination`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/HttpDestination.html) interface and comes as part of the [`cloudplatform-connectivity` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity).
 Besides being the default implementation, it is also **the only** one that comes with the SAP Cloud SDK. <br />
 This is noteworthy as earlier versions of the SAP Cloud SDK used to come with various implementations.
 
@@ -102,7 +102,7 @@ We encourage users to rather use [the `DestinationAccessor` API](destination-acc
 
 :::
 
-The `DefaultHttpDestination.Builder` allows you to create a `DefaultHttpDestination` instance from scratch.
+The [`DefaultHttpDestination.Builder`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.Builder.html) allows you to create a `DefaultHttpDestination` instance from scratch.
 It allows you to set any desired property, header, header provider, or any other value that is supported by the `DefaultHttpDestination` implementation.
 
 ### Building On Top Of An Existing Destination
@@ -112,7 +112,7 @@ For example, there might be just this one single header missing for a specific r
 Unfortunately, adding this header directly to the existing `Destination` instance is not possible, as [the `Destination` interface is immutable](#about-immutability).
 
 Luckily, the `DefaultHttpDestination` provides a way to create a new `DefaultHttpDestination` instance that is based on an existing `Destination` instance.
-This way is implemented in the `static fromDestination(Destination)` and `static fromProperties(DestinationProperties)` methods.
+This way is implemented in the [`fromDestination(Destination)`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.html#fromDestination(com.sap.cloud.sdk.cloudplatform.connectivity.Destination)) and [`fromProperties(DestinationProperties)`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.html#fromProperties(com.sap.cloud.sdk.cloudplatform.connectivity.DestinationProperties)) methods.
 
 Both methods will return a new `DefaultHttpDestination.Builder` instance, which is pre-configured with all properties of the given `DestinationProperties`.
 If you are using the `fromDestination` method with an instance of `DefaultHttpDestination`, further details will be copied, such as the manually added HTTP headers and `DestinationHeaderProvider`s.
@@ -154,13 +154,13 @@ Also, pay attention to [potentially shared state](#about-immutability) between t
 
 ### Adding Individual Headers
 
-Individual headers can be added via the `DefaultHttpDestination.Builder#header(Header)` and `DefaultHttpDestination.Builder#header(String, String)` methods.
+Individual headers can be added via the [`header(Header)`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.Builder.html#header(com.sap.cloud.sdk.cloudplatform.connectivity.Header)) and [`header(String, String)`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.Builder.html#header(java.lang.String,java.lang.String)) methods.
 In either case, the newly added header is **only added** to the list of all headers.
 It will **not** override any existing header with the same name.
 
 ### Adding Individual Header Providers
 
-The `DefaultHttpDestination.Builder#headerProviders(DestinationHeaderProvider...)` method allows you to add as many `DestinationHeaderProvider`s to the `DefaultHttpDestination` instance as you wish.
+The [`headerProviders(DestinationHeaderProvider...)`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.Builder.html#headerProviders(com.sap.cloud.sdk.cloudplatform.connectivity.DestinationHeaderProvider...)) method allows you to add as many `DestinationHeaderProvider`s to the `DefaultHttpDestination` instance as you wish.
 Once again, existing header providers will **not** be overridden.
 
 ### Adding Static Header Providers
@@ -221,7 +221,7 @@ The result should look like this:
 
 ## About _HeaderProviders_
 
-A `DestinationHeaderProvider` is a simple, yet powerful way of adding HTTP headers to a `DefaultHttpDestination`.
+A [`DestinationHeaderProvider`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationHeaderProvider.html) is a simple, yet powerful way of adding HTTP headers to a `DefaultHttpDestination`.
 
 The interface defines just a single method:
 
@@ -244,7 +244,7 @@ Calling the `HttpDestination#getHeaders()` method within a `DestinationHeaderPro
 
 The SAP Cloud SDK comes with a set of `DestinationHeaderProvider`s that are automatically added to any `DefaultHttpDestination` instance.
 
-The `ErpDestinationHeaderProvider` is part of the [`cloudplatform-connectivity` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity) and, therefore, will **always** be added to any `DefaultHttpDestination` instance. <br />
+The [`ErpDestinationHeaderProvider`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ErpDestinationHeaderProvider.html) is part of the [`cloudplatform-connectivity` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity) and, therefore, will **always** be added to any `DefaultHttpDestination` instance. <br />
 It provides the following headers:
 
 - The `sap-client` header, **iff** the `DefaultHttpDestination` contains a `sap-client` property.

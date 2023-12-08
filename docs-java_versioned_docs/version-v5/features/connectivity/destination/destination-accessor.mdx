@@ -19,7 +19,7 @@ keywords:
 
 # About the `DestinationAccessor` API
 
-The `DestinationAccessor` API is part of the [`cloudplatform-connectivity` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity) and provides easy and convenient access to destinations that can be identified by their name.
+The [`DestinationAccessor`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationAccessor.html) API is part of the [`cloudplatform-connectivity` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity) and provides easy and convenient access to destinations that can be identified by their name.
 Those are, in the vast majority of use cases, destinations managed in the [BTP Destination Service on Cloud Foundry](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview).
 
 So whenever your application needs such a destination, using the `DestinationAccessor` is as straight-forward as shown below:
@@ -40,7 +40,7 @@ It is **strongly recommended** to use the shown code **every time** a destinatio
 
 ## About the `DestinationLoader` API
 
-Diving deeper into the `DestinationAccessor` reveals that it is actually a facade for the `DestinationLoader` API.
+Diving deeper into the `DestinationAccessor` reveals that it is actually a facade for the [`DestinationLoader`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationLoader.html) API.
 
 A `DestinationLoader` is responsible for loading destinations, identified by their name, from a specific source.
 The SAP Cloud SDK comes with a number of `DestinationLoader` implementations that can be used to load destination from, for example, the [BTP Destination Service on Cloud Foundry](#the-destinationservice) or the [application's environment variables](#the-envvardestinationloader).
@@ -49,7 +49,7 @@ The `DestinationAccessor` makes use of that concept as [explained below](#usage-
 
 ## About the `DestinationService`
 
-The `DestinationService` class (formerly known as `ScpCfDestinationLoader`) is part of the [`connectivity-destination-service` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/connectivity-destination-service) and represents the [Cloud Foundry Destination Service](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview).
+The [`DestinationService`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationService.html) class (formerly known as `ScpCfDestinationLoader`) is part of the [`connectivity-destination-service` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/connectivity-destination-service) and represents the [Cloud Foundry Destination Service](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview).
 As such, it can be used to retrieve both individual destinations as well as all destinstions stored for either a subscriber or the provider tenant.
 
 ### Multitenancy
@@ -98,17 +98,11 @@ This is to prevent excessive memory usage in case of a large number of tenants a
 ### Tweaking the Caching Behavior
 
 Even though the [default caching behavior](#default-caching-behavior) should serve as a good starting point for many applications, it may be necessary to tweak it for specific use cases.
-For that, the `DestinationService.Cache` offers a number of configuration APIs:
-
-- `disable()`: Disables the cache completely. This is not recommended for production use.
-- `setSizeLimit(long)`: Sets the maximum number of entries **across _all tenants_** that can be stored in the cache. Defaults to **1000**.
-- `disableSizeLimit()`: Disables the size limit completely.
-- `setExpiration(Duration, CacheExpirationDuration)`: Sets the expiration duration for cached entries. Defaults to **5 minutes after write**.
-- `disableExpiration()`: Disables the expiration completely.
+For that, the [`DestinationService.Cache`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationService.Cache.html) offers a number of configuration APIs ([JavaDoc](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationService.Cache.html)).
 
 #### Caution
 
-When using any of the above APIs, the underlying cache instance will be **recreated**.
+When using any of these APIs, the underlying cache instance will be **recreated**.
 All existing entries will be lost.
 Therefore, it is highly recommended to configure the cache **_once_ and _before_** using the `DestinationService` for the first time (e.g. during application start up).
 
@@ -133,7 +127,7 @@ For example, if your application is interacting with 5 destinations per tenant, 
 
 ## About the `EnvVarDestinationLoader`
 
-The `EnvVarDestinationLoader` is part of the [`cloudplatform-connectivity` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity) and can be used to load destinations from the application's environment variables.
+The [`EnvVarDestinationLoader`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/EnvVarDestinationLoader.html) is part of the [`cloudplatform-connectivity` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity) and can be used to load destinations from the application's environment variables.
 This functionality is intended for development and CI/CD environments only.
 
 ### Default Behavior
@@ -162,7 +156,7 @@ private Destination parseDestination(String destinationName);
 
 ## About the `DestinationLoaderChain`
 
-The `DestinationLoaderChain` comes as part of the [`cloudplatform-connectivity` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity) and can be used to combine multiple `DestinationLoader` implementations.
+The [`DestinationLoaderChain`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationLoaderChain.html) comes as part of the [`cloudplatform-connectivity` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity) and can be used to combine multiple `DestinationLoader` implementations.
 Hereby, upon loading a destination, the chain iterates over all delegate loaders **in order** until the first of them finds a destination.
 This behavior can be thought of as a fallback mechanism.
 
