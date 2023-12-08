@@ -47,9 +47,9 @@ This concept is also reflected in the example from above, where the `defaultLoad
 ## About the _Options_
 
 The [`ServiceBindingDestinationOptions`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.html) is an **extensible and type-safe** collection of parameters that can be used to configure the `ServiceBinding` to `HttpDestination` transformation process.
-Hereby, the least information that is needed is the `ServiceBinding` itself, which can be provided using the [`forService(ServiceBinding)`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.html#forService(com.sap.cloud.environment.servicebinding.api.ServiceBinding)) method.
+Hereby, the least information that is needed is the `ServiceBinding` itself, which can be provided using the [`forService(ServiceBinding)`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.html#forService(com.sap.cloud.environment.servicebinding.api.ServiceBinding)>) method.
 
-Alternatively, you can also use [`forService(ServiceIdentifier)`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.html#forService(com.sap.cloud.environment.servicebinding.api.ServiceIdentifier)).
+Alternatively, you can also use [`forService(ServiceIdentifier)`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.html#forService(com.sap.cloud.environment.servicebinding.api.ServiceIdentifier)>).
 This method will try to find a `ServiceBinding` for the given `ServiceIdentifier` using the [`DefaultServiceBindingAccessor` instance](https://github.com/SAP/btp-environment-variable-access/blob/main/api-parent/access-api/src/main/java/com/sap/cloud/environment/servicebinding/api/DefaultServiceBindingAccessor.java).
 
 #### Caution
@@ -57,12 +57,12 @@ This method will try to find a `ServiceBinding` for the given `ServiceIdentifier
 If there are multiple or no `ServiceBinding`s for the given `ServiceIdentifier`, an exception will be thrown.
 
 Besides the `ServiceBinding`, there is a second parameter that is shared between all `ServiceBindingDestinationLoader` implementations: The `OnBehalfOf`, for which the destination should be loaded.
-This can be set using the [`onBehalfOf(OnBehalfOf)`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.Builder.html#onBehalfOf(com.sap.cloud.sdk.cloudplatform.connectivity.OnBehalfOf)) method. <br />
+This can be set using the [`onBehalfOf(OnBehalfOf)`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.Builder.html#onBehalfOf(com.sap.cloud.sdk.cloudplatform.connectivity.OnBehalfOf)>) method. <br />
 If not explicitly specified, `OnBehalfOf.TECHNICAL_USER_CURRENT_TENANT` is used.
 
 ### Custom Parameters
 
-Adding custom parameters to the `ServiceBindingDestinationOptions` can be done using the [`withOption(OptionsEnhancer)`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.Builder.html#withOption(com.sap.cloud.sdk.cloudplatform.connectivity.ServiceBindingDestinationOptions.OptionsEnhancer)) method.
+Adding custom parameters to the `ServiceBindingDestinationOptions` can be done using the [`withOption(OptionsEnhancer)`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.Builder.html#withOption(com.sap.cloud.sdk.cloudplatform.connectivity.ServiceBindingDestinationOptions.OptionsEnhancer)>) method.
 Hereby, an [`OptionsEnhancer`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.OptionsEnhancer.html) is a type-safe representation of arbitrary parameters.
 
 The type-safety is implemented by, internally, storing the parameters in a `Map` that is keyed by the `Class` of the parameter's type.
@@ -222,7 +222,7 @@ boolean canBeConverted(ServiceBindingDestinationOptions options);
 OAuth2PropertySupplier propertySupplierFactory(ServiceBindingDestinationOptions options);
 ```
 
-As shown above, the [`registerPropertySupplier`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/OAuth2ServiceBindingDestinationLoader.html#registerPropertySupplier(java.util.function.Predicate,java.util.function.Function)) method takes two methods as parameters.
+As shown above, the [`registerPropertySupplier`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/OAuth2ServiceBindingDestinationLoader.html#registerPropertySupplier(java.util.function.Predicate,java.util.function.Function)>) method takes two methods as parameters.
 This might be unintuitive, but is needed to allow for efficient implementations.
 
 What is happening internally when this method is used, is that the given parameters are transformed into an internal representation, which is then **prepended** to the list of available `OAuth2PropertySupplier` instances.
@@ -306,7 +306,7 @@ Converting the _credentials_ portion of the `ServiceBinding` into a `TypedMapVie
 Therefore, it is a good idea to do the conversion (i.e. `TypeMapView.ofCredentials(ServiceBinding)`) just once as it performs an expensive deep-copy.
 Hereby, the `DefaultOAuth2PropertySupplier` takes care of doing the conversion upon initialization and caching the result for later use.
 
-Further down in our code (i.e. within the overriden methods), we can then use the [`getCredential/OrThrow`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultOAuth2PropertySupplier.html#getCredential(java.lang.Class,java.lang.String...)) and [`getOAuthCredential/OrThrow`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultOAuth2PropertySupplier.html#getOAuthCredential(java.lang.Class,java.lang.String...)) methods to extract the required information from the cached _credentials_. <br />
+Further down in our code (i.e. within the overriden methods), we can then use the [`getCredential/OrThrow`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultOAuth2PropertySupplier.html#getCredential(java.lang.Class,java.lang.String...)>) and [`getOAuthCredential/OrThrow`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultOAuth2PropertySupplier.html#getOAuthCredential(java.lang.Class,java.lang.String...)>) methods to extract the required information from the cached _credentials_. <br />
 The main difference between `getCredential` and `getOAuthCredential` is that the latter will **prepend** the _default oauth2 properties path_ to the one given in the method invocation before trying to extract the information. <br />
 In our example (line 9), this means that `getOAuthCredential(String.class, "id")` will try to extract a `String` value from `credentials.get("oauth").get("id")` (_pseudo code_). <br />
 In contrast to that, using just `getCredential(String.class, "id")` would try to extract a `String` value from `credentials.get("id")` (_pseudo code_). <br />

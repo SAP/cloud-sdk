@@ -57,6 +57,47 @@ As such, it can be used to retrieve both individual destinations as well as all 
 The `DestinationService` is tenant-aware by default.
 This means that the `DestinationService` will, by default, perform requests on behalf of the current tenant, if a tenant is available.
 
+#### Caution
+
+If there is no tenant available, the `DestinationService` will **fall back to the provider tenant**.
+Even though this behavior makes sense in many cases, it may not be desired in some scenarios.
+
+Therefore, the `Destination` retrieval can be configured using the [`DestinationOptions`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationOptions.html) API.
+
+<details>
+<summary>Example</summary>
+
+The `DestinationService` offers two configuration options, which can be set using the `DestinationOptions`:
+
+- The [`DestinationServiceRetrievalStrategy`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationServiceRetrievalStrategy.html) and
+- the [`DestinationServiceTokenExchangeStrategy`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationServiceTokenExchangeStrategy.html)
+
+Using these options can be done like follows:
+
+```java
+DestinationLoader loader;
+
+DestinationOptions options =
+    DestinationOptions
+        .builder()
+        .augmentBuilder(
+            DestinationServiceOptionsAugmenter
+                .augmenter()
+                .retrievalStrategy(DestinationServiceRetrievalStrategy.ONLY_SUBSCRIBER))
+        .augmentBuilder(
+            DestinationServiceOptionsAugmenter
+                .augmenter()
+                .tokenExchangeStrategy(DestinationServiceTokenExchangeStrategy.FORWARD_USER_TOKEN))
+        .build();
+
+Try<Destination> maybeDestination = loader.tryGetDestination("my-destination", options);
+```
+
+Note that you need an actual instance of `DestinationLoader` to be able to supply the `DestinationOptions`.
+The `DestinationAccessor` **does not** offer this API.
+
+</details>
+
 ### How Authentication at the Target System Works
 
 The [BTP Destination Service on Cloud Foundry](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview) offers a [broad range of authentication methods](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/http-destinations#configuring-authentication).

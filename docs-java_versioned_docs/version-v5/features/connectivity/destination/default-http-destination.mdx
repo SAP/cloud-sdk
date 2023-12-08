@@ -112,7 +112,7 @@ For example, there might be just this one single header missing for a specific r
 Unfortunately, adding this header directly to the existing `Destination` instance is not possible, as [the `Destination` interface is immutable](#about-immutability).
 
 Luckily, the `DefaultHttpDestination` provides a way to create a new `DefaultHttpDestination` instance that is based on an existing `Destination` instance.
-This way is implemented in the [`fromDestination(Destination)`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.html#fromDestination(com.sap.cloud.sdk.cloudplatform.connectivity.Destination)) and [`fromProperties(DestinationProperties)`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.html#fromProperties(com.sap.cloud.sdk.cloudplatform.connectivity.DestinationProperties)) methods.
+This way is implemented in the [`fromDestination(Destination)`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.html#fromDestination(com.sap.cloud.sdk.cloudplatform.connectivity.Destination)>) and [`fromProperties(DestinationProperties)`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.html#fromProperties(com.sap.cloud.sdk.cloudplatform.connectivity.DestinationProperties)>) methods.
 
 Both methods will return a new `DefaultHttpDestination.Builder` instance, which is pre-configured with all properties of the given `DestinationProperties`.
 If you are using the `fromDestination` method with an instance of `DefaultHttpDestination`, further details will be copied, such as the manually added HTTP headers and `DestinationHeaderProvider`s.
@@ -154,13 +154,13 @@ Also, pay attention to [potentially shared state](#about-immutability) between t
 
 ### Adding Individual Headers
 
-Individual headers can be added via the [`header(Header)`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.Builder.html#header(com.sap.cloud.sdk.cloudplatform.connectivity.Header)) and [`header(String, String)`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.Builder.html#header(java.lang.String,java.lang.String)) methods.
+Individual headers can be added via the [`header(Header)`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.Builder.html#header(com.sap.cloud.sdk.cloudplatform.connectivity.Header)>) and [`header(String, String)`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.Builder.html#header(java.lang.String,java.lang.String)>) methods.
 In either case, the newly added header is **only added** to the list of all headers.
 It will **not** override any existing header with the same name.
 
 ### Adding Individual Header Providers
 
-The [`headerProviders(DestinationHeaderProvider...)`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.Builder.html#headerProviders(com.sap.cloud.sdk.cloudplatform.connectivity.DestinationHeaderProvider...)) method allows you to add as many `DestinationHeaderProvider`s to the `DefaultHttpDestination` instance as you wish.
+The [`headerProviders(DestinationHeaderProvider...)`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.Builder.html#headerProviders(com.sap.cloud.sdk.cloudplatform.connectivity.DestinationHeaderProvider...)>) method allows you to add as many `DestinationHeaderProvider`s to the `DefaultHttpDestination` instance as you wish.
 Once again, existing header providers will **not** be overridden.
 
 ### Adding Static Header Providers
@@ -218,6 +218,11 @@ The result should look like this:
 ```
 
 </details>
+
+### Using mTLS
+
+The `DefaultHttpDestination` can be configured to use the [BTP CF Instance Identity](https://docs.cloudfoundry.org/devguide/deploy-apps/instance-identity.html) by using [`SecurityConfigurationStrategy.FROM_PLATFORM`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/SecurityConfigurationStrategy.html#FROM_PLATFORM). <br />
+[`SecurityConfigurationStrategy.FROM_DESTINATION`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/SecurityConfigurationStrategy.html#FROM_DESTINATION), on the other hand, derives the security configuration from the destination properties.
 
 ## About _HeaderProviders_
 
