@@ -30,13 +30,13 @@ module.exports = {
           label: 'Connectivity',
           items: [
             {
-              "type": "category",
-              "label": "Destinations",
-              "items": [
-                "features/connectivity/destination-service-new",
-                "features/connectivity/destination/destination-accessor",
-                "features/connectivity/destination/service-binding-destination-loader",
-                "features/connectivity/destination/default-http-destination"
+              type: 'category',
+              label: 'Destinations',
+              items: [
+                'features/connectivity/destination-service-new',
+                'features/connectivity/destination/destination-accessor',
+                'features/connectivity/destination/service-binding-destination-loader',
+                'features/connectivity/destination/default-http-destination'
               ]
             },
             'features/connectivity/destination-service',
