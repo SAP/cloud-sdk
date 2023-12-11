@@ -6,7 +6,6 @@ module.exports = {
       type: 'category',
       label: 'Features',
       items: [
-        // authorization & authentication
         {
           type: 'category',
           label: 'OData',
@@ -23,18 +22,9 @@ module.exports = {
           label: 'OpenAPI',
           items: [
             'features/rest/overview',
-            'features/rest/generate-rest-client',
-            {
-              type: 'category',
-              label: 'Released Clients',
-              items: [
-                'features/rest/clients/scp-workflow-rest-api',
-                'features/rest/clients/btp-business-rules-rest-api'
-              ]
-            }
+            'features/rest/generate-rest-client'
           ]
         },
-        'features/bapi-and-rfc/overview',
         {
           type: 'category',
           label: 'Connectivity',
@@ -73,7 +63,7 @@ module.exports = {
       type: 'category',
       label: 'Guides',
       items: [
-        'guides/4.0-upgrade',
+        'guides/5.0-upgrade-steps',
         'guides/manage-dependencies',
         'guides/cap-sdk-integration',
         'guides/logging-overview',
@@ -105,6 +95,11 @@ module.exports = {
     'release-notes',
     'support',
     'frequently-asked-questions',
+    {
+      type: 'link',
+      label: 'API Reference',
+      href: 'pathname:///java-api/v5/index.html'
+    },
     {
       type: 'link',
       label: 'Maven Central',
