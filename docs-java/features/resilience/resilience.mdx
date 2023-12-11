@@ -31,7 +31,7 @@ To make use of the resilience capabilities by the SAP Cloud SDK, make sure to ad
     <artifactId>resilience</artifactId>
 </dependency>
 <dependency>
-    <groupId>com.sap.cloud.sdk.frameworks</groupId>
+    <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
     <artifactId>resilience4j</artifactId>
     <scope>runtime</scope>
 </dependency>
@@ -43,10 +43,10 @@ There are two essential building blocks for achieving this:
 1. The `ResilienceConfiguration` that determines which patterns should be applied.
 2. The `ResilienceDecorator` is capable of applying the configuration to an operation.
 
-The fluent [Resilience Configuration API](https://help.sap.com/http.svc/rc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.html) provides builders that help with assembling different resilience patterns and their associated parameters.
+The fluent [Resilience Configuration API](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.html) provides builders that help with assembling different resilience patterns and their associated parameters.
 Which patterns are available and how to use them is explained in the [dedicated section below](#building-a-resilience-configuration).
 
-The [Resilience Decorator](https://help.sap.com/http.svc/rc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceDecorator.html) is capable of applying such a configuration to a given `Callable` or `Supplier`.
+The [Resilience Decorator](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceDecorator.html) is capable of applying such a configuration to a given `Callable` or `Supplier`.
 
 ### Executing Operations
 
@@ -89,7 +89,7 @@ The decorator operates with two kinds of operations:
   <tbody>
     <tr>
       <td>
-        <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Callable.html">
+        <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/Callable.html">
           Callable
         </a>
       </td>
@@ -97,7 +97,7 @@ The decorator operates with two kinds of operations:
     </tr>
     <tr>
       <td>
-        <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/Supplier.html">
+        <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html">
           Supplier
         </a>
       </td>
@@ -182,7 +182,7 @@ The identifier can be either a string or a class.
 In the case of the latter, the (full) class name will be used as the identifier.
 The identifier will be used to apply resilience patterns across [multiple invocations to operations](#executing-operations).
 
-Check [the Javadoc](https://help.sap.com/http.svc/rc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.html#of-java.lang.String-) for which patterns and parameters will be applied by default.
+Check [the Javadoc](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.html#of-java.lang.String-) for which patterns and parameters will be applied by default.
 You can also create a configuration with all patterns disabled:
 
 ```java
@@ -223,7 +223,7 @@ Other than no isolation there are essentially two modes for tenant and/or princi
   </tbody>
 </table>
 
-Details can be found on the API reference of [`ResilienceIsolationMode`](https://help.sap.com/http.svc/rc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceIsolationMode.html).
+Details can be found on the API reference of [`ResilienceIsolationMode`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceIsolationMode.html).
 
 ## Resilience Capabilities
 
@@ -235,7 +235,7 @@ The following resilience patterns are available and can be configured in a Resil
       <td>Timeout</td>
       <td>
         <em>
-          <a href="https://help.sap.com/http.svc/rc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.TimeLimiterConfiguration.html">
+          <a href="pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.TimeLimiterConfiguration.html">
             TimeLimiterConfiguration
           </a>
         </em>
@@ -255,7 +255,7 @@ The following resilience patterns are available and can be configured in a Resil
       <td>Retry</td>
       <td>
         <em>
-          <a href="https://help.sap.com/http.svc/rc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.RetryConfiguration.html">
+          <a href="pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.RetryConfiguration.html">
             RetryConfiguration
           </a>
         </em>
@@ -266,7 +266,7 @@ The following resilience patterns are available and can be configured in a Resil
       <td>Circuit Breaker</td>
       <td>
         <em>
-          <a href="https://help.sap.com/http.svc/rc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.CircuitBreakerConfiguration.html">
+          <a href="pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.CircuitBreakerConfiguration.html">
             CircuitBreakerConfiguration
           </a>
         </em>
@@ -279,7 +279,7 @@ The following resilience patterns are available and can be configured in a Resil
       </td>
       <td>
         <em>
-          <a href="https://help.sap.com/http.svc/rc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.BulkheadConfiguration.html">
+          <a href="pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.BulkheadConfiguration.html">
             BulkheadConfiguration
           </a>
         </em>
@@ -292,7 +292,7 @@ The following resilience patterns are available and can be configured in a Resil
 <!-- Caching is not documented yet, leave it out for now
 <tr>
     <td><em>Caching</em></td>
-    <td><em><a href="https://help.sap.com/http.svc/rc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.CacheConfiguration.html">CacheConfiguration</a></em></td>
+    <td><em><a href="pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/resilience/ResilienceConfiguration.CacheConfiguration.html">CacheConfiguration</a></em></td>
     <td>Enables caching. See the dedicated article on caching.</td>
 </tr>
 -->

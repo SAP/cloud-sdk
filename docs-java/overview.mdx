@@ -37,7 +37,7 @@ It enables you to perform outbound requests using various protocols while only w
 For example, with the SAP Cloud SDK for Java you can connect to an SAP S/4HANA (Cloud) system via OData with only a few lines of code:
 
 ```java
-HttpDestination destination = DestinationAccessor.getDestination("my-s4-system").asHttp();
+Destination destination = DestinationAccessor.getDestination("my-s4-system");
 
 List<BusinessPartner> businessPartners = new DefaultBusinessPartnerService()
                 .getAllBusinessPartner()
@@ -117,7 +117,6 @@ The SAP Cloud SDK for Java also provides an easy and convenient type safe way to
 <!-- vale on -->
 
 You can use a pre-generated OData client that contains all services of [SAP S/4HANA Cloud](https://api.sap.com/package/SAPS4HANACloud?section=Artifacts) and [SAP S/4HANA On-premise](https://api.sap.com/package/S4HANAOPAPI?section=Artifacts).
-For select OpenAPI services like [SAP Workflow Service](https://sap.github.io/cloud-sdk/docs/java/features/rest/clients/scp-workflow-rest-api) and [SAP Business Rules Service](https://sap.github.io/cloud-sdk/docs/java/features/rest/clients/btp-business-rules-rest-api) a client is also already available with the SAP Cloud SDK.
 
 Or you can generate your own API client for [OData](https://sap.github.io/cloud-sdk/docs/js/features/odata/generate-client) or [OpenAPI](https://sap.github.io/cloud-sdk/docs/js/features/openapi/generate-client) using the respective generators provided by the SAP Cloud SDK.
 You can also find detailed steps and a usage examples on the [SAP Business Accelerator Hub](https://api.sap.com/).
@@ -180,18 +179,17 @@ Currently supported environments are :
 2. [K8S](https://kubernetes.io/) , [K8S with SAP Gardener](https://gardener.cloud/)
 3. [SAP BTP Kyma](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/468c2f3c3ca24c2c8497ef9f83154c44.html)
 4. Deploy with Confidence (For SAP internal customers only)
-5. [SAP BTP Neo](https://help.sap.com/viewer/ea72206b834e4ace9cd834feed6c0e09/Cloud/en-US) (Deprecated, not recommended for new projects)
 
 ### Supported Java Versions
 
-The SAP Cloud SDK for Java runs with Java 8 or higher.
-For Spring based applications Java 11 [and 17](faq.mdx#spring-boot-3-and-java-17-support) are supported.
+The SAP Cloud SDK for Java runs with Java 17.
 
-For apps built on TomEE / Tomcat Java 11 is supported. What is our support policy?
+Support for apps built on TomEE / Tomcat using SAP Java Buildpack will come after the release of SAP Java Buildpack 2.
+Using the SAP Cloud SDK on a TomEE / Tomcat based application without the SAP Java Buildpack is still supported.
 
 ### Supported Frameworks
 
-The SAP Cloud SDK can be integrated into applications based on [SAP Cloud Application Programming Model](https://cap.cloud.sap/docs/), [Spring](https://spring.io/projects/spring-framework) or [Spring Boot](https://spring.io/projects/spring-boot).
+The SAP Cloud SDK can be integrated into applications based on [SAP Cloud Application Programming Model](https://cap.cloud.sap/docs/) version `2.4.0` or higher, [Spring 6](https://spring.io/projects/spring-framework) or [Spring Boot 3](https://spring.io/projects/spring-boot).
 
 ### Availability and Licensing
 
