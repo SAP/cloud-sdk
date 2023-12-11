@@ -42,7 +42,7 @@ This implies, that the _tenantId_ exposed in the _Tenant_ interface either retur
 
 ## How Is a Thread Context Created?
 
-The SAP Cloud SDK provides a [`RequestFilter`](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/servlet/RequestAccessorFilter.html) that will listen to incoming HTTP requests.
+The SAP Cloud SDK provides a [`RequestFilter`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/servlet/RequestAccessorFilter.html) that will listen to incoming HTTP requests.
 This filter will extract **all** provided HTTP headers from the incoming request and store them in the `ThreadContext`.
 Additionally, if the `Authorization` header contains a `JWT` from the [`AppRouter`](https://blogs.sap.com/2020/04/03/sap-application-router/), the filter will:
 
@@ -157,7 +157,7 @@ Such a custom `ThreadContextDecorator` can be registered via `DefaultThreadConte
 
 :::tip
 The SAP Cloud SDK already comes with a default decorator that passes on the `SecurityContext` of `com.sap.cloud.security:java-api`.
-If the [CAP integration](../../guides/cap-sdk-integration.mdx) is used, also the `RequestContext` is passed on (requires CDS version `1.28` or higher).
+If the [CAP integration](../../guides/cap-sdk-integration.mdx) is used, also the `RequestContext` is passed on (requires CDS version `2.4.0` or higher).
 :::
 
 ### Configuring the Executor
@@ -210,7 +210,7 @@ To avoid multiple wrappings, in particular when changing multiple values, you ca
 
 ```java
 Tenant myTenant = new DefaultTenant("foo");
-Principal myPrincipal = new DefaultPrincipal("bar", Collections.emptySet(), Collections.emptyMap());
+Principal myPrincipal = new DefaultPrincipal("bar");
 
 ThreadContextExecutor customExecutor = ThreadContextExecutor.fromNewContext()
             .withListeners(
@@ -225,18 +225,18 @@ ThreadContextExecutors.submit(myTask, customExecutor);
 
 ### Accessing Information
 
-The Thread context can be accessed via the static [`ThreadContextAccessor`](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/thread/ThreadContextAccessor.html).
+The Thread context can be accessed via the static [`ThreadContextAccessor`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/thread/ThreadContextAccessor.html).
 
 For the frequently needed _HTTP Headers_, _Tenant_, _Principal_, and _JWT_ there are also dedicated accessors:
 
-- `RequestHeaderAccessor`
-- [`TenantAccessor`](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/tenant/TenantAccessor.html)
-- [`PrincipalAccessor`](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html)
-- [`AuthTokenAccessor`](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/security/AuthTokenAccessor.html)
+- [`RequestHeaderAccessor`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/requestheader/RequestHeaderAccessor.html)
+- [`TenantAccessor`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/tenant/TenantAccessor.html)
+- [`PrincipalAccessor`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html)
+- [`AuthTokenAccessor`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/security/AuthTokenAccessor.html)
 
 ### Storing Information
 
-The [`ThreadContext`](https://help.sap.com/doc/b579bf8578954412aea2b458e8452201/1.0/en-US/com/sap/cloud/sdk/cloudplatform/thread/ThreadContext.html) allows for some manipulation by the application.
+The [`ThreadContext`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/thread/ThreadContext.html) allows for some manipulation by the application.
 However, oftentimes it is more convenient to leverage the `executeWith...()` functionality offered by the dedicated accessors.
 
 Consider a scenario where some part of the code should run on behalf of a specific tenant.
@@ -341,7 +341,7 @@ These values can be accessed as follows:
 ```java
 RequestHeaderContainer headers = RequestHeaderAccessor.getHeaderContainer();
 headers.getHeaderValues("authorization"); // will return ["Bearer DUMMY_JWT"]
-headers.getHeaderValues("set-cookie"); // will return ["cookie-1", "cookie-2"]
+headers.getHeaderValues("set-cookie"); // will return ["cookie-1; cookie-2"]
 headers.getHeaderValues("accept-language"); // will return ["en-US"]
 headers.getHeaderValues("x-app-specific-header"); // will return ["customer-value"]
 ```

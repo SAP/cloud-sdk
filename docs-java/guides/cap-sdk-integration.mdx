@@ -30,6 +30,25 @@ That guide is applicable for your project if you need to invoke BAPIs via the SA
 
 :::
 
+:::info
+For all features of the SAP Cloud SDK to work seamlessly with CAP, please maintain a CAP/CDS version of at least `2.4.0`.
+
+If for some reason you are using a version earlier than `2.4.0` and using SAP Cloud SDK's [resilience](../features/resilience/resilience.mdx) features, this additional step is required:
+
+<details>
+<summary>Resolve multiple implementations of ResilienceDecorationStrategy</summary>
+
+If you see an `ObjectLookupFailedException` in your stack trace with an underlying message `Found multiple implementations of ResilienceDecorationStrategy`, please add the following code to any class that gets executed on application startup:
+
+```java
+ResilienceDecorator.setDecorationStrategy(new Resilience4jDecorationStrategy());
+```
+
+Please ensure that the import for the class is `com.sap.cloud.sdk.cloudplatform.resilience4j.Resilience4jDecorationStrategy` and not `com.sap.cloud.sdk.frameworks.resilience4j.Resilience4jDecorationStrategy`.
+
+</details>
+:::
+
 ## Integration Steps
 
 :::note Assumption
@@ -76,8 +95,8 @@ Add the respective SAP Cloud SDK dependencies to the POM file under the `srv` di
 
 ```xml
 <dependency>
-    <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
-    <artifactId>scp-cf</artifactId>
+    <groupId>com.sap.cloud.sdk</groupId>
+    <artifactId>sdk-core</artifactId>
 </dependency>
 ```
 
@@ -110,26 +129,11 @@ To still manipulate the request context, please refer to [the CAP documentation]
 :::note Multitenancy Integration with CAP
 You can learn more about how the multitenancy of the SAP Cloud SDK integrates with CAP in [this article](../features/multi-tenancy/thread-context#how-is-a-thread-context-created).
 Please make sure you are using a CDS version that is up to date.
-For the integration at least `1.28` is required.
+For the integration at least `2.4.0` is required.
 :::
 
 :::info
-This step is only required if you are using CAP/CDS versions earlier than `1.23.0`.
 
-<details>
-<summary>Enable the Component Scan for SAP Cloud SDK Package</summary>
-
-Let the Spring component scan crawl the SAP Cloud SDK package.
-We'll annotate the Spring Boot application class which is annotated with `@SpringBootApplication` as follows.
-
-```java
-@ComponentScan({"com.sap.cloud.sdk", "com.mycompany.myapplication"})
-@ServletComponentScan({"com.sap.cloud.sdk", "com.mycompany.myapplication"})
-```
-
-Make sure that you also add the package name of your application.
-
-</details>
 :::
 
 :::success Integration finished
