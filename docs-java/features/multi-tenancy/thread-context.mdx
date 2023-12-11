@@ -42,7 +42,7 @@ This implies, that the _tenantId_ exposed in the _Tenant_ interface either retur
 
 ## How Is a Thread Context Created?
 
-The SAP Cloud SDK provides a [`RequestFilter`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/servlet/RequestAccessorFilter.html) that will listen to incoming HTTP requests.
+The SAP Cloud SDK provides a [`RequestFilter`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/servletjakarta/RequestAccessorFilter.html) that will listen to incoming HTTP requests.
 This filter will extract **all** provided HTTP headers from the incoming request and store them in the `ThreadContext`.
 Additionally, if the `Authorization` header contains a `JWT` (typically forwarded from the [`AppRouter`](https://blogs.sap.com/2020/04/03/sap-application-router/)), the filter will:
 
@@ -50,9 +50,23 @@ Additionally, if the `Authorization` header contains a `JWT` (typically forwarde
 - Store it in the `ThreadContext` and
 - Pull the _Tenant_ and _Principal_ information from it
 
+To ensure this logic is executed at runtime you need to add the following annotations to your application:
+
+```java title="Application.java"
+@ComponentScan({"com.sap.cloud.sdk", <your.own.package>})
+@ServletComponentScan({"com.sap.cloud.sdk", <your.own.package>})
+```
+
+You can verify these annotations are effective at runtime by checking the application logs on debug level.
+Or, in case you get an exception, search the stack trace for `RequestAccessorFilter.doFilter`.
+
 :::tip Integration with CAP
+
 In case you are using CAP (with the `cds-integration-cloud-sdk` dependency) the Tenant, Principal, and Headers will **instead** be derived from the [CAP Request Context](https://cap.cloud.sap/docs/java/request-contexts).
 That also means that the `ThreadContext` will not be used when accessing this information.
+
+For other information (e.g. the current authentication token) the `ThreadContext` will still be used.
+
 :::
 
 ## Running Asynchronous Operations

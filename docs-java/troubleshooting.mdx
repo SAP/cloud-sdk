@@ -36,16 +36,13 @@ Tenant or principal information is not available or an incorrect tenant is used.
 
 **Possible causes:**
 
-- A subscriber based JWT is passed in, but its validation fails, causing the SAP Cloud SDK to fall back to the provider account.
-  See [JWT validation fails](#json-web-token-validation-fails).
-
-- An operation is performed in an asynchronous manner without propagating the `ThreadContext`.
-  See [Running Asynchronous Operations](features/multi-tenancy/thread-context#running-asynchronous-operations).
+- There was no JWT in the authorization header.
 
 - The SAP Cloud SDK components are not registered as listeners on incoming requests.
   See [Framework Support](getting-started#framework-integration).
 
-- There was no JWT in the authorization header.
+- An operation is performed in an asynchronous manner without propagating the `ThreadContext`.
+  See [Running Asynchronous Operations](features/multi-tenancy/thread-context#running-asynchronous-operations).
 
 - A BAPI/RFC call was attempted while using resilience or multithreading capabilities of the SAP Cloud SDK.
   See [Subscriber Tenant Is Not Found at Runtime](features/bapi-and-rfc/overview#subscriber-tenant-is-not-found-at-runtime)
@@ -60,17 +57,6 @@ Destinations are returned only for the provider account, but not for a subscribe
 
 - The SAP Cloud SDK defaults back to the provider account if no tenant information is available.
   See the above section on [Tenant or Principal not available](#tenant-or-principal-not-available).
-
-## JSON Web Token Validation Fails
-
-:::info **Symptoms:**
-Logs show JWT validation exceptions, Tenant information is not available.
-:::
-
-**Possible causes:**
-
-- The SAP Cloud SDK version might be outdated.
-  Check with the [latest SAP Cloud SDK version](https://search.maven.org/artifact/com.sap.cloud.sdk/sdk-bom).
 
 ## Connecting to an ERP System fails
 
@@ -127,20 +113,6 @@ Compilation fails due to missing _Getters_ and _Setters_ on entity objects.
 - If even after achieving the maximum vertical scale of your instance, your app doesn't reach the desired performance level, try to optimize it.
   Consider scaling it horizontally or different custom solutions to boost performance where it lags.
 
-## Request via Cloud Connector Fails with HTTP 407
-
-:::info **Symptoms**
-In your application log you find the HTTP error code 407 and the request targets an On-Premise system via the SAP Cloud Connector.
-:::
-
-**Possible causes:**
-
-- You are caching the `Destination` instance in your application code instead of retrieving it for each request.
-  Since the `Destination` object stores the JWT needed for passing the SAP Cloud Connector, the JWT does not get refreshed after its expiration.
-
-  To solve this issue, retrieve the `Destination` for each request again with the `DestinationAccessor` API.
-  There is no need to worry about performance, because the SAP Cloud SDK uses an optimized built-in cache for Destinations.
-
 ## `No Such Method: com.google.gson.JsonParser.parseReader`
 
 :::info **Symptoms**
@@ -182,7 +154,7 @@ Your OData request returns with a 400 (bad request) or 500 (server error) HTTP c
 - The SAP Cloud SDK may send an incorrect OData request.
 
   Verify that the request the SAP Cloud SDK sends out ([looking at HTTP logs](./guides/logging-overview)) does not conform to the [OData documentation](https://www.odata.org/documentation/).
-  In that case please [raise an issue on our GitHub](https://github.com/SAP/cloud-sdk/issues/new?assignees=&labels=Java&template=sap-cloud-sdk-for-java-issue.md&title=).
+  In that case please [raise an issue on our GitHub](https://github.com/SAP/cloud-sdk-java/issues).
 
   In addition, you can leverage the [low-level generic OData client](./features/odata/generic-untyped-odata-client) which gives you more flexibility to adapt requests to overcome potential issues with the typed APIs.
 
@@ -206,7 +178,7 @@ While generating a type-safe API client for an OData service, you encounter the 
 ## `DestinationAccessException: Failed to read authentication token. The destination service responded with an error: Could not verify the provided CSRF token because your session was not found`
 
 :::info **Symptoms**
-When running `Destination#asHttp()` you encounter an exception message like `"DestinationAccessException: Failed to read authentication token. The destination service responded with an error: Could not verify the provided CSRF token because your session was not found"`.
+When running using a `Destination` you encounter an exception message like `"DestinationAccessException: Failed to read authentication token. The destination service responded with an error: Could not verify the provided CSRF token because your session was not found"`.
 :::
 
 **Possible causes:**
@@ -233,3 +205,30 @@ You may experience the follow-up error message: `"ODataConnectionException: Conn
   To solve the issue there are many tutorials on how to register certificates.
   However, if you require a quick solution for your local development environmment, you can add a special flag to your `"destinations"` environment variable: `"TrustAll" : "true"`.
   This will disable the certificate validation on your local runtime.
+
+## `DefaultHttpClientFactory not a subtype` Error
+
+:::info **Symptoms**
+Applications that rely on the SAP Java Buildpack, which is always true for application that require JCo, may throw the following exception when trying to access a RFC destination:
+
+```java
+java.util.ServiceConfigurationError: com.sap.cloud.security.client.HttpClientFactory: com.sap.cloud.security.client.DefaultHttpClientFactory not a subtype
+```
+
+:::
+
+**Possible causes:**
+
+- This issue is typically caused by a dependency scope conflict and can be solved by following [our guidance](./guides/manage-dependencies#avoiding-scope-conflicts).
+
+## Incoming Requests Fail Because a Request Header is Too Large
+
+:::info **Symptoms**
+your app is responding with 400 codes and you see a log entry `Request header is too large`
+:::
+
+**Possible causes:**
+
+- In some cases you may need to configure your app/server to accept larger request headers.
+  Refer to [this guide](https://www.baeldung.com/spring-boot-max-http-header-size#overview-1) on how to achieve this for Spring based applications.
+  In case you are deploying a WAR file with the SAP Java Buildpack refer to [this documentation](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/79c039ab43b946a7b50c5d0326a3b40b.html#customizing-the-sap-java-buildpack-defaults).
