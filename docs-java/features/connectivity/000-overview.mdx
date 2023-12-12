@@ -1,0 +1,86 @@
+---
+id: destination-service
+title: Connectivity Features
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Overview
+description: This article provides a brief overview of the connectivity features of the SAP Cloud SDK.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - destination
+  - java
+  - connectivity
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+## Accessing Destinations
+
+A **destination** is an abstraction of a real system or service that applications may want to connect to.
+It is a representation of the connection details, such as the URL, authentication, proxy settings, and HTTP headers.
+The **destination** concept is an integral part of the SAP Cloud SDK for Java.
+
+The SAP Cloud SDK offers APIs to load destinations from following sources:
+
+- From the [BTP Destination Service on Cloud Foundry](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview).
+  - Via the [`DestinationAccessor` API](btp-destination-service)
+- From [Service Bindings](https://github.com/SAP/btp-environment-variable-access/wiki/Fundamentals#service-binding).
+  - Via the [`ServiceBindingDestinationLoader` API](service-bindings)
+- From existing `Destination` objects.
+  - Via the [`DefaultHttpDestination` API](http-destinations)
+
+## Using Destinations
+
+Once a [`Destination`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/Destination.html) has been retrieved, it can be used to connect to the system or service it represents.
+This is done by converting the given `Destination` into an HTTP client, which is then used to send requests to the system or service.
+
+### For OData and OpenApi Services
+
+While the `Destination` to HTTP client conversion [can be done explicitly](#for-other-services) to connect to any system or service, the SAP Cloud SDK provides convenient integrations in generated [OData](../odata/vdm-generator) and [OpenApi](../rest/generate-rest-client) clients.
+
+<Tabs defaultValue="odatav4" values={[ { label: "OData V4 Example", value: "odatav4" }, { label: "OData V2 Example", value: "odatav2"}, { label: "OpenApi Example", value: "openapi" }]}>
+
+<TabItem value="odatav4">
+
+```java
+Destination myDestination;
+SomeODataV4Service myService;
+
+var serviceResponse = myService.getAllEntities().execute(myDestination);
+```
+
+</TabItem>
+
+<TabItem value="odatav2">
+
+```java
+Destination myDestination;
+SomeODataV2Service myService;
+
+var serviceResponse = myService.getAllEntities().executeRequest(myDestination);
+```
+
+</TabItem>
+
+<TabItem value="openapi">
+
+```java
+Destination myDestination;
+
+var myService = new SomeOpenApiService(myDestination);
+var serviceResponse = myService.entitiesGet();
+```
+
+</TabItem>
+
+</Tabs>
+
+When running code as above, the SAP Cloud SDK internally takes care of converting the provided `Destination` into a suitable HTTP client.
+This process is fully transparent to the user and has proven to be sufficient for almost all use cases.
+
+### For Other Services
+
+If the [above approach](#for-odata-and-openapi-services) is not applicable, the `Destination` to HTTP client conversion can be done explicitly as [described here](http-client).

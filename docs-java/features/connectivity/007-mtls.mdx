@@ -1,0 +1,155 @@
+---
+id: mtls
+title: Certificate-Based Authentication Using SAP Cloud SDK
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Certificate-based Authentication
+description: This article describes how the SAP Cloud SDK for Java can be used to establish connections to other cloud services using mTLS
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - mTLS
+  - java
+  - connectivity
+---
+
+:::note
+
+This article talks about using mTLS to connect with cloud services like `XSUAA` or `Destination` service.
+If you are interested in using mTLS for communication between your application and target destination, please refer [here](/cloud-sdk/docs/java/features/connectivity/destination-service#enabling-mtls-for-application-to-destination-communication) instead.
+
+:::
+
+The SAP Cloud SDK supports certificate-based authentication while establishing connections to other cloud services like `XSUAA` or `Destination` service.
+
+## Why Certificate-Based Authentication (mTLS)
+
+Mutual `TLS` or `mTLS` for short is a method for mutual authentication.
+It ensures that before proceeding with the `HTTP` exchange both the client and the server each mutually verify each other's identities by the use of `X.509` certificates.
+Using certificate-based authentication ensures overcoming the shortcomings of authenticating with `clientsecret`.
+
+## Shortcomings of Using Secret for Token Retrieval
+
+Let's take an example of a service or an application protected by [`XSUAA`](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/6373bb7a96114d619bfdfdc6f505d1b9.html).
+To access the service or application, you'll need a `JWT`.
+You will usually fetch a `JWT` by providing `clientid`, `clientsecret` and `uri` stored in your service binding to run a [`token retrieval flow`](https://github.com/SAP/cloud-security-xsuaa-integration/tree/main/token-client) say for e.g. `client`
+
+The use of `clientsecret` has an inherent risk of these credentials being leaked, especially as they are not frequently rotated.
+Leaking these credentials into the hands of an attacker can cause a lot of harm and stay long unnoticed.
+The use of certificate-based authentication to fetch the `JWT` from `XSUAA` significantly reduces the risk of leaking secrets and makes rotating them easier.
+
+:::note
+
+The SAP Cloud SDK automatically
+
+- Fetches the `JWT` for you
+- Adds the fetched `JWT` to the `Authorization` header when requesting a service to ensure that the request gets authenticated and authorized.
+
+Application developers do not need to worry about doing any of this themselves.
+
+:::
+
+## Certificate-Based Authentication for Services
+
+To adhere to the latest recommended security best practices by SAP, some re-use and kernel services have enabled certificate-based authentication.
+As a consequence, SAP Cloud SDK also supports certificate-based authentication while accessing these services.
+If a service binding has a property `credentials: { credential-type: x509 }` then this is an indication that you can use certificate-based authentication to access the service.
+
+`XSUAA` service is one of the services that has enabled certificate-based authentication.
+This means that in the service binding in addition to the `client_secret` you will also find `certificate` and `key` entries now.
+Example:
+
+```json
+{
+    "VCAP_SERVICES": {
+		"xsuaa": [
+			{
+				"label": "xsuaa",
+				...
+				"credentials": {
+				    ...
+				    "credential-type": "x509"
+					"clientid": "fictional-client-id",
+					"clientsecret": "fictional-secret",
+					"certificate": "-----BEGIN CERTIFICATE-----fictional-certificate-----END CERTIFICATE-----\n",
+					"key": "key"
+					...
+				},
+			}
+		]
+	}
+}
+```
+
+This certificate would now be used in place of `clientsecret` to obtain the `JWT` using [`XSUAA` token retrieval flows](https://github.com/SAP/cloud-security-xsuaa-integration/tree/main/token-client).
+The SAP Cloud SDK will as before fetch the `JWT` for you.
+The only difference is that the `certificate` from your service binding is used to authenticate the client.
+
+## Default Validity Period of Certificates
+
+The `X.509` certificates used in the service binding could either be external or `XSUAA` managed.
+By default `XSUAA` managed certificates are valid only for **7 days**.
+Your calls to the `XSUAA` to fetch a `JWT` will fail after your certificate expires.
+
+You can verify this by looking at the logs of your application, you should see
+
+```
+[APP/PROC/WEB/0] OUT Caused by: com.sap.cloud.sdk.cloudplatform.security.exception.TokenRequestFailedException:
+com.sap.cloud.security.xsuaa.tokenflows.TokenFlowException:
+Error requesting technical user token with grant_type 'client_credentials':
+Error retrieving JWT token. Server URI https://<subdomain>.authentication.cert.<landscape domain>/oauth/token.
+Http status code 400. Response body '400 Bad Request: TLS handshake failed.
+
+[APP/PROC/WEB/0] OUT ssl_c_err: X509_V_ERR_CERT_HAS_EXPIRED
+```
+
+Don't get confused with the grant_type of `client_credentials` in the log, this is expected.
+
+For `X.509` certificate-based authentication, the token retrieval end point will look like
+`https://<subdomain>.authentication.cert.<landscape domain>/oauth/token`.
+Notice that the endpoint contains **cert** .
+
+For authentication based on `clientsecret`, the end point would have looked like: `https://<subdomain>.authentication.<landscape domain>/oauth/token`
+
+:::caution certificate renewal process
+
+To obtain a new certificate, you will have to delete and re-create a service binding.
+The application also needs to be restarted to use the updated service binding.
+
+:::
+
+### Extending the Validity of a Certificate
+
+For less frequent certificate rotation you can extend its validity to a maximum of 1 year.
+For the `XSUAA` managed certificate use parameters below while creating a service **binding**.
+
+`cf bind-service myapp myservice -c parameters.json`
+
+```json
+{
+  "credential-type": "x509",
+  "x509": {
+    "key-length": 2048,
+    "validity": 365,
+    "validity-type": "DAYS"
+  }
+}
+```
+
+:::note
+
+With longer certificate validity there is a danger that compromised certificate might go unnoticed for a significant period of time.
+This significantly increases potential damage to a compromised system.
+
+:::
+
+## Sticking to Using Secret for Token Retrieval
+
+If you prefer to continue using **clientSecret** instead of **Certificate-based Authentication**, make sure your `xs-security.json` contains the `instance-secret` as the first entry in the property `credential-types`.
+
+```json
+"oauth2-configuration": {
+  "credential-types": ["instance-secret"]
+}
+```
