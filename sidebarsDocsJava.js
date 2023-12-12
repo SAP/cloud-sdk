@@ -29,19 +29,15 @@ module.exports = {
           type: 'category',
           label: 'Connectivity',
           items: [
-            {
-              type: 'category',
-              label: 'Destinations',
-              items: [
-                'features/connectivity/destination-service-new',
-                'features/connectivity/destination/destination-accessor',
-                'features/connectivity/destination/service-binding-destination-loader',
-                'features/connectivity/destination/default-http-destination'
-              ]
-            },
             'features/connectivity/destination-service',
+            'features/connectivity/btp-destination-service',
+            'features/connectivity/on-premise',
+            'features/connectivity/service-bindings',
+            'features/connectivity/http-destinations',
+            // 'features/connectivity/destination-service',
             'features/connectivity/http-client',
-            'features/connectivity/mtls'
+            'features/connectivity/local-development',
+            'features/connectivity/mtls',
           ]
         },
         {
