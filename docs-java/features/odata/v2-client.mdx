@@ -21,27 +21,8 @@ import useBaseUrl from '@docusaurus/useBaseUrl';
 
 ## Prerequisites
 
-To leverage the type-safe OData v2 client, you need to add following dependencies to the `dependencies` section of your `pom.xml`:
-
-<Tabs groupId="odataClientType" defaultValue="Selfgenerated" values={[ { label: 'Self Generated Clients', value: 'Selfgenerated' } ]}>
-
-<TabItem value="Selfgenerated">
-
-```xml
-<dependency>
-    <groupId>com.sap.cloud.sdk.datamodel</groupId>
-    <artifactId>odata-core</artifactId>
-</dependency>
-<dependency>
-    <groupId>org.projectlombok</groupId>
-    <artifactId>lombok</artifactId>
-    <scope>provided</scope>
-</dependency>
-```
-
-</TabItem>
-
-</Tabs>
+To leverage the type-safe OData v2 client you need to have generated a client library for your OData service.
+See the [generator documentation](vdm-generator) for how to generate such a client library.
 
 :::tip Discover services on the SAP Business Accelerator Hub
 
@@ -97,7 +78,8 @@ result = service.operation()
   For example, when updating entities the `$filter` parameter is not available.
 
 Below different OData features are documented using the [Business Partner Service](https://api.sap.com/api/API_BUSINESS_PARTNER/resource) on SAP S/4HANA as an example.
-It is represented by the `BusinessPartnerService` class which is part of the pregenerated SAP S/4HANA Virtual Data Model (VDM). The following code snippets assume that an instance of this service is set up:
+It is represented by the `BusinessPartnerService` class which is created by the [OData geneartor](vdm-generator) when generating a client for this service.
+The following code snippets assume that a client has been generated and an instance of this service is set up:
 
 ```java
 BusinessPartnerService service = new DefaultBusinessPartnerService();

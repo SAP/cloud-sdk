@@ -77,11 +77,6 @@ module.exports = {
     },
     {
       type: 'category',
-      label: 'Extensions',
-      items: ['extensions/extensions-supported-by-sap-cloud-sdk-for-java']
-    },
-    {
-      type: 'category',
       label: 'Video Tutorials',
       items: [
         'video/video-tutorial-about-getting-started-with-sap-cloud-sdk-for-java',
