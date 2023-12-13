@@ -650,7 +650,9 @@ Once the build doesn't complain about missing dependency versions anymore, you c
       <tr>
         <td>CloudPlatformFacade</td>
         <td>-</td>
-        <td>No replacement, as all platform specifics are handled by the <a href="https://github.com/SAP/btp-environment-variable-access">Service Binding library</a>.</td>
+        <td>No replacement, as all platform specifics are handled by the <a href="https://github.com/SAP/btp-environment-variable-access">Service Binding library</a><br />
+Except for <code>getVcapApplication()</code>, which is replaced by:<br />
+<pre>new Gson().fromJson(JsonSanitizer.sanitize(System.getenv("VCAP_APPLICATION")), new TypeToken &lt;Map&lt;String, JsonElement>>(){}.getType());</pre></td>
       </tr>
       <tr>
         <td>ScpCfCloudPlatformFacade</td>
