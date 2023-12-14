@@ -62,14 +62,14 @@ void testRemoteSystemInteraction() {
             .build();
     DestinationAccessor.prependDestinationLoader((name, options) -> Try.success(destination));
     // optional sanity check: no matter which name we use, we always get our mocked destination
-    assertThat(DestinationAccessor.getDestination("any-name")).isSameAs(destination); 
-    
+    assertThat(DestinationAccessor.getDestination("any-name")).isSameAs(destination);
+
     // TODO: perform actual test
 }
 ```
 
 The code above demonstrates how to easily inject a `Destination` into the `DestinationAccessor` API (line 14).
-Please note that we are using the [`prependDestinationLoader` API](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationAccessor.html#prependDestinationLoader(com.sap.cloud.sdk.cloudplatform.connectivity.DestinationLoader)) to make sure our mocked destination is always returned, no matter which other `DestinationLoader` instances might still be registered.
+Please note that we are using the [`prependDestinationLoader` API](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationAccessor.html#prependDestinationLoader(com.sap.cloud.sdk.cloudplatform.connectivity.DestinationLoader)>) to make sure our mocked destination is always returned, no matter which other `DestinationLoader` instances might still be registered.
 
 Additionally, it is very important to remember that the `DestinationAccessor` is based on **static state**. <br />
 In other words: Once we are injecting a `Destination` (as in line 14), it will be **used for all subsequent calls** to the `DestinationAccessor` API - even when our initial test is already finished.
@@ -79,6 +79,7 @@ That way, we are avoiding hard-to-debug issues that are only visible when runnin
 
 Furthermore, it is also recommended to use [JUnit5's `@ResourceLock`](https://junit.org/junit5/docs/current/api/org.junit.jupiter.api/org/junit/jupiter/api/parallel/ResourceLock.html) when manipulating static state (as in this example).
 Using this annotation will prevent our tests from running concurrently, which could lead to unexpected results due to race conditions.
+
 </details>
 
 <details>
@@ -147,6 +148,7 @@ cf restart app-name
 ```
 
 - Inspect the value of the entry `connectivity` of your `VCAP_SERVICES` and take note of the values of the fields
+
   - `credentials.onpremise_proxy_port` (we will refer to the value as _proxy-port_ hereafter)
   - `credentials.onpremise_proxy_host` (we will refer to the value as _proxy-host_ hereafter)
 
@@ -160,6 +162,5 @@ cf ssh app-name -L proxy-port:proxy-host:proxy-port
   - **Tip** Many IDEs provide support for using the content of a file (e.g. `default-env.json`) as environment variables when starting your application.
     This way, you can avoid the hustle of creating the environment variables yourself.
     Please refer to the documentation of your IDE to learn more about this feature.
-  
 - Replace the value of the field `VCAP_SERVICES.connectivity.credentials.onpremise_proxy_host` with `localhost`.
   - That way, the SAP Cloud SDK will use the SSH tunnel instead of the real connectivity service.

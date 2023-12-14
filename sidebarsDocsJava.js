@@ -34,10 +34,9 @@ module.exports = {
             'features/connectivity/on-premise',
             'features/connectivity/service-bindings',
             'features/connectivity/http-destinations',
-            // 'features/connectivity/destination-service',
             'features/connectivity/http-client',
             'features/connectivity/running-locally',
-            'features/connectivity/mtls',
+            'features/connectivity/mtls'
           ]
         },
         {
