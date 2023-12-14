@@ -36,7 +36,7 @@ module.exports = {
             'features/connectivity/http-destinations',
             // 'features/connectivity/destination-service',
             'features/connectivity/http-client',
-            'features/connectivity/local-development',
+            'features/connectivity/running-locally',
             'features/connectivity/mtls',
           ]
         },

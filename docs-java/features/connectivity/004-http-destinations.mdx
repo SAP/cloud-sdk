@@ -69,6 +69,13 @@ The `DefaultHttpDestination` will throw an exception if the `AuthenticationType`
 
 ### Deriving The `Proxy-Authorization` Header
 
+:::info On-Premise Handling
+
+As described [above](#on-premise-handling), the `DefaultHttpDestination` implements dedicated support for on-premise connectivity.
+Therefore, the `Proxy-Authorization` header will automatically be created as [documented here](on-premise) **iff** the `ProxyType` property is set to `ON_PREMISE`.
+
+:::
+
 Similar to [the `Authorization` header](#deriving-the-authorization-header), the `Proxy-Authentication` header is derived from proxy authentication related properties, **iff** no `Proxy-Authentication` header is provided by any other source.
 
 This is done by attempting to transform the value of the `ProxyAuthorization` property as follows:
