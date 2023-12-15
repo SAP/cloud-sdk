@@ -643,7 +643,7 @@ Once the build doesn't complain about missing dependency versions anymore, you c
         <td>No SDK replacement. <br />
         Handling bound applications (i.e. <code>VCAP_SERVICES</code>) is done via the <a href="https://github.com/SAP/btp-environment-variable-access">Service Binding library</a>.<br />
         Handling application information (i.e. <code>VCAP_APPLICATION</code>) can be done manually: <br />
-        <pre>new Gson().fromJson(JsonSanitizer.sanitize(System.getenv("VCAP_APPLICATION")), new TypeToken &lt;Map&lt;String, JsonElement>>(){}.getType());</pre>
+        <pre>new Gson().fromJson(System.getenv("VCAP_APPLICATION"), JsonObject.class).asMap();</pre>
         </td>
       </tr>
       <tr>
