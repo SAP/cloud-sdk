@@ -172,6 +172,27 @@ Since the `DestinationService` is performing error prone operations (i.e. HTTP c
   - For fetching **all** destinations, the circuit breaker will stay open for **60 seconds**.
 - (**tenant isolated**) _Bulk Head_ - The maximum number of concurrent requests is limited to **50**. Queued tasks will wait for up to **60 seconds** before being rejected.
 
+### Tweaking Time Limiter
+
+Even though the [default time limiter configuration](#resilience) should serve as a good starting point for many applications, it may be necessary to tweak it for specific use cases.
+This can be achieved by building your own `DestinationService` instance:
+
+```java
+import static com.sap.cloud.sdk.cloudplatform.resilience.ResilienceConfiguration.TimeLimiterConfiguration;
+
+DestinationService service =
+    DestinationService
+        .builder()
+        .withTimeLimiterConfiguration(TimeLimiterConfiguration.of(Duration.ofSeconds(30)))
+        .build();
+```
+
+To apply this customized configuration for all future destination retrievals, you need to **prepend** your customized instance to the `DestinationAccessor`:
+
+```java
+DestinationAccessor.prependDestinationLoader(service);
+```
+
 ## Default Caching Behavior
 
 Besides the resilience measures explained above, the `DestinationService` also comes with a cache.
