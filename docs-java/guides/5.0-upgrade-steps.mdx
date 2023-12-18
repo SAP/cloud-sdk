@@ -345,7 +345,7 @@ Once the build doesn't complain about missing dependency versions anymore, you c
       <tr>
         <td>AbstractHttpDestination</td>
         <td>-</td>
-        <td>No replacement necessary</td>
+        <td>No direct replacement.<br />Most use cases, however, should be able to leverage the <code>DefaultHttpDestination</code> instead.</td>
       </tr>
       <tr>
         <td>WrappedDestination</td>
@@ -649,27 +649,31 @@ Once the build doesn't complain about missing dependency versions anymore, you c
       <tr>
         <td>CloudPlatform</td>
         <td>-</td>
-        <td>No replacement, as all platform specifics are handled by the <a href="https://github.com/SAP/btp-environment-variable-access">Service Binding library</a>.</td>
+        <td>No SDK replacement. <br />
+        Handling bound applications (i.e. <code>VCAP_SERVICES</code>) is done via the <a href="https://github.com/SAP/btp-environment-variable-access">Service Binding library</a>.<br />
+        Handling application information (i.e. <code>VCAP_APPLICATION</code>) can be done manually: <br />
+        <pre>new Gson().fromJson(System.getenv("VCAP_APPLICATION"), JsonObject.class).asMap();</pre>
+        </td>
       </tr>
       <tr>
         <td>ScpCfCloudPlatform</td>
         <td>-</td>
-        <td>No replacement, as all platform specifics are handled by the <a href="https://github.com/SAP/btp-environment-variable-access">Service Binding library</a>.</td>
+        <td>No replacement. See note on <code>CloudPlatform</code> (above).</td>
       </tr>
       <tr>
         <td>CloudPlatformFacade</td>
         <td>-</td>
-        <td>No replacement, as all platform specifics are handled by the <a href="https://github.com/SAP/btp-environment-variable-access">Service Binding library</a>.</td>
+        <td>No replacement. See note on <code>CloudPlatform</code> (above).</td>
       </tr>
       <tr>
         <td>ScpCfCloudPlatformFacade</td>
         <td>-</td>
-        <td>No replacement, as all platform specifics are handled by the <a href="https://github.com/SAP/btp-environment-variable-access">Service Binding library</a>.</td>
+        <td>No replacement. See note on <code>CloudPlatform</code> (above).</td>
       </tr>
       <tr>
         <td>CloudPlatformAccessor</td>
         <td>-</td>
-        <td>No replacement, as all platform specifics are handled by the <a href="https://github.com/SAP/btp-environment-variable-access">Service Binding library</a>.</td>
+        <td>No replacement. See note on <code>CloudPlatform</code> (above).</td>
       </tr>
       <tr>
         <td>ThreadContextInvocationInterceptor</td>
