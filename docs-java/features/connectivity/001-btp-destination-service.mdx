@@ -40,33 +40,61 @@ Destinations retrieved from the BTP Destination Service for Cloud Foundry are [c
 ## About the `DestinationService`
 
 Internally, the `DestinationAccessor` uses the [`DestinationService`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationService.html) class to retrieve destinations managed by the BTP Destination Service on Cloud Foundry.
-This class comes as part of the [`connectivity-destination-service` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/connectivity-destination-service) and will be used **only if** this artifact is on the classpath.
 
-It offers APIs to retrieve both [individual destinations](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationService.html#tryGetDestination(java.lang.String,com.sap.cloud.sdk.cloudplatform.connectivity.DestinationOptions)>) as well as [all destinstions](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationService.html#tryGetAllDestinations(com.sap.cloud.sdk.cloudplatform.connectivity.DestinationOptions)>) stored for [either a subscriber or the provider tenant](#multitenancy).
+It offers APIs to 
 
-#### Caution
+1. Retrieve [individual destinations](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationService.html#tryGetDestination(java.lang.String,com.sap.cloud.sdk.cloudplatform.connectivity.DestinationOptions)>) to [connect to the target system](#how-authentication-at-the-target-system-works):
 
-The `DestinationService` assumes that there is **exactly one service binding** for the BTP Destination Service on Cloud Foundry available at runtime.
+```java
+var service = new DestinationService();
+
+DestinationOptions options;
+Try<Destination> destination = service.tryGetDestination("my-destination", options);
+```
+
+2. Retrieve [all destinstions](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationService.html#tryGetAllDestinations(com.sap.cloud.sdk.cloudplatform.connectivity.DestinationOptions)>) to [read destination configurations](#if-authentication-is-not-required):
+
+```java
+var service = new DestinationService();
+
+DestinationOptions options;
+Try<Iterable<Destination>> destinations = service.tryGetAllDestinations(options);
+```
+
+
+3. Both for [either a subscriber or the provider tenant](#multitenancy).
+4. [Tweak caching behavior](#tweaking-the-caching-behavior):
+
+```java
+DestinationService.Cache.setSizeLimit(2_000L);
+DestinationService.Cache.setExpiration(Duration.ofMinutes(10), CacheExpirationStrategy.WHEN_CREATED);
+```
+
 
 ### How Authentication at the Target System Works
 
-The [BTP Destination Service on Cloud Foundry](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview) offers a [broad range of authentication methods](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/http-destinations#configuring-authentication).
+The BTP Destination Service on Cloud Foundry offers a broad range of authentication methods.
+You can find further details about how to configured destinations in the BTP Cockpit [here](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/http-destinations#configuring-authentication).
 
 When retrieving **a single** destination, the Cloud Foundry Destination Service takes over the heavy lifting of authenticating at the target system on behalf of the calling application.
 Once authentication has been performed successfully, the Cloud Foundry Destination Service returns a destination configuration that contains all the information required to connect to the target system - including, for example, an `Authorization` header that can be used by the application.
 
 As a consequence, the SAP Cloud SDK's `DestinationService` abstraction automatically supports all authentication methods offered by the Cloud Foundry Destination Service.
 
-#### Caution
+:::info Authentication Flows
 
 Please keep in mind that the authentication flows are **not** executed by the SAP Cloud SDK itself.
 Therefore, reusing existing `Destination` objects for longer periods of time is **not recommended** as the underlying authentication information may expire (e.g. a JWT).
-Instead, `Destination` objects should be retrieved via the `DestinationLoader` (or `DestinationAccessor`) API **every time** they are needed - don't worry, there is [caching](#default-caching-behavior) in place to prevent excessive HTTP calls.
+Instead, `Destination` objects should be retrieved via the `DestinationLoader` (or `DestinationAccessor`) API **every time** they are needed.
+
+Don't worry, there is [caching](#default-caching-behavior) in place to prevent excessive HTTP calls.
+
+:::
 
 ### If Authentication Is Not Required
 
 Sometimes, applications might be interested in reading the destination configuration without actually performing any HTTP calls.
-In such scenarios, retrieving individual destinations from the BTP Destination Service is suboptimal as the service will resolve an `Authentication` header for the target system, which can be a costly operation.
+In such scenarios, retrieving individual destinations from the BTP Destination Service is suboptimal as the service will perform the configured authentication flow, which can be a costly operation.
 
 To prevent any unnecessary performance loss, the `DestinationService` offers an API to retrieve all destination configurations.
 Hereby, **no authentication** will be performed by the BTP Destination Service for Cloud Foundry.
@@ -84,20 +112,21 @@ Using any of these `Destination` instances for an actual remote system call will
 The `DestinationService` is tenant-aware by default.
 This means that the `DestinationService` will, by default, perform requests on behalf of the current tenant, if a tenant is available.
 
+The tenant and principal information is taken from the `ThreadContext` as [documented here](../multi-tenancy/thread-context).
+
 #### Caution
 
 If there is **no tenant available**, the `DestinationService` will **fall back to the provider tenant**.
 Even though this behavior makes sense in many cases, it may not be desired in some scenarios.
 
 Therefore, the `Destination` retrieval can be configured using the [`DestinationOptions`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationOptions.html) API.
-
-<details>
-<summary>Example</summary>
-
-The `DestinationService` offers two configuration options, which can be set using the `DestinationOptions`:
+More precisely, there are two stratgies that can be configured for the destination retrieval:
 
 - The [`DestinationServiceRetrievalStrategy`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationServiceRetrievalStrategy.html) and
 - the [`DestinationServiceTokenExchangeStrategy`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationServiceTokenExchangeStrategy.html)
+
+<details>
+<summary>Example</summary>
 
 Using these options can be done like follows:
 
@@ -120,12 +149,20 @@ DestinationOptions options =
 Try<Destination> maybeDestination = loader.tryGetDestination("my-destination", options);
 ```
 
+In the above code, we are configuring the `DestinationService` to only retrieve destinations from the subscriber tenant. <br />
+If there is no current tenant or the current tenant is the provider, the destination retrieval will fail.
+
+Furthermore, we are also using the `FORWARD_USER_TOKEN` strategy. <br />
+This strategy will eagerly forward the current user token (e.g. JWT) to the destination service for the destination retrieval.
+That way, the service is immediately able to perform the authentication flow on behalf of the user. <br />
+In contrast to that, using the `LOOKUP_THEN_EXCHANGE` strategy would first retrieve the destination configuration and then perform a second HTTP request that includes the user token if the destination requires it.
+
 Note that you need an actual instance of `DestinationLoader` (e.g. `DestinationService`) to be able to supply the `DestinationOptions`.
 The `DestinationAccessor` **does not** offer this API.
 
 </details>
 
-### Resilience
+## Resilience
 
 Since the `DestinationService` is performing error prone operations (i.e. HTTP calls), it comes with some resilience mechanisms out of the box:
 
@@ -135,7 +172,7 @@ Since the `DestinationService` is performing error prone operations (i.e. HTTP c
   - For fetching **all** destinations, the circuit breaker will stay open for **60 seconds**.
 - (**tenant isolated**) _Bulk Head_ - The maximum number of concurrent requests is limited to **50**. Queued tasks will wait for up to **60 seconds** before being rejected.
 
-### Default Caching Behavior
+## Default Caching Behavior
 
 Besides the resilience measures explained above, the `DestinationService` also comes with a cache.
 This cache stores retrieved destinations **based on tenant** and (for some scenarios) **based on user**.
