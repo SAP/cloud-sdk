@@ -46,18 +46,16 @@ The `DefaultHttpDestination` implements support for following sources of HTTP he
 3. Headers that were [directly added](#adding-individual-headers) via the [Builder API](#about-the-builder-api) while assembling the `DefaultHttpDestination` instance.
 4. Headers that are provided by [`DestinationHeaderProvider`s](#about-headerproviders).
 5. Any headers required for on-premise connectivity will automatically be added, **iff** the `ProxyType` property is set to `OnPremise` as [explained below](#on-premise-handling).
-6. (Conditional) Headers that are dervied from [authentication related properties](#deriving-the-authorization-header), **iff** no `Authorization` header was provided by any of the previous options.
-7. (Conditional) Headers that are derived from [proxy authentication related properties](#deriving-the-proxy-authorization-header), **iff** no `Proxy-Authorization` header was provided by any of the previous options.
-
-### On-Premise Handling
-
-The `DefaultHttpDestination` implements dedicated support for on-premise connectivity as [documented here](on-premise).
+6. Headers that are dervied from [authentication related properties](#deriving-the-authorization-header), **iff** no `Authorization` header was provided by any of the previous options.
+7. Headers that are derived from [proxy authentication related properties](#deriving-the-proxy-authorization-header), **iff** no `Proxy-Authorization` header was provided by any of the previous options. <br />
+   In most cases, the `Proxy-Authorization` header will be [derived automatically](on-premise) from the bound BTP Connectivity Service.
 
 ### Deriving The `Authorization` Header
 
-As [explained above](#about-http-headers), the `DefaultHttpDestination` tries to derive the `Authorization` header from authentication related properties, **iff** no `Authorization` header is provided by any other source.
+The `DefaultHttpDestination` tries to derive the `Authorization` header from authentication related properties, **iff** no `Authorization` header is provided by any other source.
+In most cases, however, the BTP Destination Service will [provide a `Authorization` header](btp-destination-service#how-authentication-at-the-target-system-works), so this step will be skipped.
 
-The concrete properties, hereby, depend on the `AuthenticationType` of the `DefaultHttpDestination`.
+If the destination does not stem from the BTP destination service, then the concrete properties depend on the `AuthenticationType` of the `DefaultHttpDestination`.
 
 - For `AuthenticationType.BASIC_AUTHENTICATION`, the basic credentials are taken from the `User` (or `username`, if the former doesn't exist) and the `Password` properties.
 
@@ -107,13 +105,14 @@ It allows you to set any desired property, header, header provider, or any other
 
 Sometimes, you may want to slightly adjust an existing `Destination` instance.
 For example, there might be just this one single header missing for a specific request. <br />
-Unfortunately, adding this header directly to the existing `Destination` instance is not possible, as [the `Destination` interface is immutable](#about-immutability).
+Adding this header directly to the existing `Destination` instance, however, is not possible, as [the `Destination` interface is immutable](#about-immutability).
 
-Luckily, the `DefaultHttpDestination` provides a way to create a new `DefaultHttpDestination` instance that is based on an existing `Destination` instance.
-This way is implemented in the [`fromDestination(Destination)`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.html#fromDestination(com.sap.cloud.sdk.cloudplatform.connectivity.Destination)>) and [`fromProperties(DestinationProperties)`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.html#fromProperties(com.sap.cloud.sdk.cloudplatform.connectivity.DestinationProperties)>) methods.
+Therefore, the `DefaultHttpDestination` provides a way to create a new `DefaultHttpDestination` instance that is based on an existing `Destination` instance.
+This way is implemented in the [`fromDestination(Destination)`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.html#fromDestination(com.sap.cloud.sdk.cloudplatform.connectivity.Destination)>), [`fromProperties(DestinationProperties)`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.html#fromProperties(com.sap.cloud.sdk.cloudplatform.connectivity.DestinationProperties)>), and [`toBuilder()`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.html#toBuilder()>) methods.
 
-Both methods will return a new `DefaultHttpDestination.Builder` instance, which is pre-configured with all properties of the given `DestinationProperties`.
+All of these methods will return a new `DefaultHttpDestination.Builder` instance, which is pre-configured with all properties of the given `DestinationProperties`.
 If you are using the `fromDestination` method with an instance of `DefaultHttpDestination`, further details will be copied, such as the manually added HTTP headers and `DestinationHeaderProvider`s.
+The same is true for the `toBuilder` method.
 
 <details>
 <summary>Example</summary>
@@ -161,7 +160,33 @@ It will **not** override any existing header with the same name.
 The [`headerProviders(DestinationHeaderProvider...)`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.Builder.html#headerProviders(com.sap.cloud.sdk.cloudplatform.connectivity.DestinationHeaderProvider...)>) method allows you to add as many `DestinationHeaderProvider`s to the `DefaultHttpDestination` instance as you wish.
 Once again, existing header providers will **not** be overridden.
 
-### Adding Static Header Providers
+### Using mTLS
+
+The `DefaultHttpDestination` can be configured to use the [BTP CF Instance Identity](https://docs.cloudfoundry.org/devguide/deploy-apps/instance-identity.html) by using [`SecurityConfigurationStrategy.FROM_PLATFORM`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/SecurityConfigurationStrategy.html#FROM_PLATFORM). <br />
+[`SecurityConfigurationStrategy.FROM_DESTINATION`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/SecurityConfigurationStrategy.html#FROM_DESTINATION), on the other hand, derives the security configuration from the destination properties.
+
+## About _HeaderProviders_
+
+A [`DestinationHeaderProvider`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationHeaderProvider.html) is a simple, yet powerful way of adding HTTP headers to a `DefaultHttpDestination`.
+
+The interface defines just a single method:
+
+```java
+List<Header> getHeaders( DestinationRequestContext requestContext );
+```
+
+If attached to a `DefaultHttpDestination`, this method will be called whenever the `DefaultHttpDestination` is collecting its HTTP headers (i.e. whenever the `DefaultHttpDestination#getHeaders()` method is called).
+
+The `DestinationHeaderProvider` implementation hereby gets an instance of `DestinationRequestContext`, which provides access to the current request URI and the destination.
+Thus, the implementation gets full access to all properties of the calling `DefaultHttpDestination` instance and can, therefore, decide whether and which HTTP headers it wants to add.
+
+:::danger Infinite Loop
+
+Calling the `HttpDestination#getHeaders()` method within a `DestinationHeaderProvider` implementation will result in an infinite loop and, therefore, a `StackOverflowError`.
+
+:::
+
+## Adding Static Header Providers
 
 In some scenarios, there are certain HTTP headers that should always be sent to a destination, regardless of the request.
 
@@ -216,32 +241,6 @@ The result should look like this:
 ```
 
 </details>
-
-### Using mTLS
-
-The `DefaultHttpDestination` can be configured to use the [BTP CF Instance Identity](https://docs.cloudfoundry.org/devguide/deploy-apps/instance-identity.html) by using [`SecurityConfigurationStrategy.FROM_PLATFORM`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/SecurityConfigurationStrategy.html#FROM_PLATFORM). <br />
-[`SecurityConfigurationStrategy.FROM_DESTINATION`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/SecurityConfigurationStrategy.html#FROM_DESTINATION), on the other hand, derives the security configuration from the destination properties.
-
-## About _HeaderProviders_
-
-A [`DestinationHeaderProvider`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationHeaderProvider.html) is a simple, yet powerful way of adding HTTP headers to a `DefaultHttpDestination`.
-
-The interface defines just a single method:
-
-```java
-List<Header> getHeaders( DestinationRequestContext requestContext );
-```
-
-If attached to a `DefaultHttpDestination`, this method will be called whenever the `DefaultHttpDestination` is collecting its HTTP headers (i.e. whenever the `DefaultHttpDestination#getHeaders()` method is called).
-
-The `DestinationHeaderProvider` implementation hereby gets an instance of `DestinationRequestContext`, which provides access to the current request URI and the destination.
-Thus, the implementation gets full access to all properties of the calling `DefaultHttpDestination` instance and can, therefore, decide whether and which HTTP headers it wants to add.
-
-:::danger Infinite Loop
-
-Calling the `HttpDestination#getHeaders()` method within a `DestinationHeaderProvider` implementation will result in an infinite loop and, therefore, a `StackOverflowError`.
-
-:::
 
 ### Special Header Providers
 
