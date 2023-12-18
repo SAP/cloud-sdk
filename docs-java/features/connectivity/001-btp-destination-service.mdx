@@ -37,17 +37,6 @@ Destinations retrieved from the BTP Destination Service for Cloud Foundry are [c
 
 :::
 
-<!--
-## About the `DestinationLoader` API
-
-Diving deeper into the `DestinationAccessor` reveals that it is actually a facade for the [`DestinationLoader`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationLoader.html) API.
-
-A `DestinationLoader` is responsible for loading destinations, identified by their name, from a specific source.
-The SAP Cloud SDK comes with a number of `DestinationLoader` implementations that can be used to load destination from, for example, the [BTP Destination Service on Cloud Foundry](#the-destinationservice) or the [application's environment variables](#the-envvardestinationloader).
-Furthermore, [the `DestinationLoaderChain`](#the-destinationloaderchain) (which is a `DestinationLoader` itself) can be used to combine multiple `DestinationLoader` implementations into a single chain.
-The `DestinationAccessor` makes use of that concept as [explained below](#usage-in-the-destinationaccessor).
--->
-
 ## About the `DestinationService`
 
 Internally, the `DestinationAccessor` uses the [`DestinationService`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationService.html) class to retrieve destinations managed by the BTP Destination Service on Cloud Foundry.
@@ -188,59 +177,3 @@ Destinations that use JWT-based authentication will still be refreshed before th
 
 For a single destination (per tenant) this is not a benefit, but for two or more the benefit is **up to 100% per additional destination**.
 For example, if your application is interacting with 5 destinations per tenant, you can expect a 3 to 4 times performance increase (i.e. 3 to 4 times less costly HTTP calls).
-
-<!--
-## About the `EnvVarDestinationLoader`
-
-The [`EnvVarDestinationLoader`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/EnvVarDestinationLoader.html) is part of the [`cloudplatform-connectivity` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity) and can be used to load destinations from the application's environment variables.
-This functionality is intended for development and CI/CD environments only.
-
-### Default Behavior
-
-By default, the implementation parses the `destinations` environment variable.
-It assumes to find a JSON array that contains individual destination configurations like so:
-
-```bash
-destinations='[{"name": "destinationName", "url": "www.sap.de"}]'
-```
-
-Since this class is not meant to be used in production environments, it comes with support for destinations that use _BasicAuthentication_ or _no authentication_ at all only.
-
-### Customization
-
-In case you need support for more authentication methods, you can provide a custom parsing function via the constructor:
-
-```java
-String environmentVariableName;
-new EnvVarDestinationLoader(System::getenv, this::parseDestination, environmentVariableName);
-
-...
-
-private Destination parseDestination(String destinationName);
-```
-
-## About the `DestinationLoaderChain`
-
-The [`DestinationLoaderChain`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationLoaderChain.html) comes as part of the [`cloudplatform-connectivity` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity) and can be used to combine multiple `DestinationLoader` implementations.
-Hereby, upon loading a destination, the chain iterates over all delegate loaders **in order** until the first of them finds a destination.
-This behavior can be thought of as a fallback mechanism.
-
-Furthermore, the chain also stops iterating if a delegate loader throws any exception other than `DestinationNotFoundException`.
-
-### Usage in the `DestinationAccessor`
-
-The `DestinationAccessor` combines the `DestinationLoaderChain` with class loading to achieve its **default behavior** when trying to load a destination.
-Hereby, it uses an instance of [the `EnvVarDestinationLoader`](#about-the-envvardestinationloader) as the first delegate loader in the chain.
-Additionally, it scans the classpath, following the _Service Locator Pattern_, for further `DestinationLoader` implementations and **appends** them to the chain as well.
-
-In other words: The `DestinationAccessor` will (by default) always try to load destinations from the application's environment variables first.
-After that, the concrete behavior depends on the classpath, which is usually influenced by the dependencies that have been added to the application.
-
-### Tweaking the `DestinationAccessor` Chain
-
-[The default behavior](#usage-in-the-destinationaccessor) can be adjusted through the following `DestinationAccessor` APIs:
-
-- `appendDestinationLoader` - Appends (i.e. lowest priority) the given `DestinationLoader` to the chain.
-- `prependDestinationLoader` - Prepends (i.e. highest priority) the given `DestinationLoader` to the chain.
-- `setLoader` - Overwrites the current `DestinationLoader` with the given one.
--->
