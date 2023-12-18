@@ -41,7 +41,7 @@ Destinations retrieved from the BTP Destination Service for Cloud Foundry are [c
 
 Internally, the `DestinationAccessor` uses the [`DestinationService`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationService.html) class to retrieve destinations managed by the BTP Destination Service on Cloud Foundry.
 
-It offers APIs to 
+It offers APIs to
 
 1. Retrieve [individual destinations](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationService.html#tryGetDestination(java.lang.String,com.sap.cloud.sdk.cloudplatform.connectivity.DestinationOptions)>) to [connect to the target system](#how-authentication-at-the-target-system-works):
 
@@ -61,7 +61,6 @@ DestinationOptions options;
 Try<Iterable<Destination>> destinations = service.tryGetAllDestinations(options);
 ```
 
-
 3. Both for [either a subscriber or the provider tenant](#multitenancy).
 4. [Tweak caching behavior](#tweaking-the-caching-behavior):
 
@@ -69,7 +68,6 @@ Try<Iterable<Destination>> destinations = service.tryGetAllDestinations(options)
 DestinationService.Cache.setSizeLimit(2_000L);
 DestinationService.Cache.setExpiration(Duration.ofMinutes(10), CacheExpirationStrategy.WHEN_CREATED);
 ```
-
 
 ### How Authentication at the Target System Works
 
