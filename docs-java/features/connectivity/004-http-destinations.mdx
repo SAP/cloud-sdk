@@ -45,7 +45,7 @@ The `DefaultHttpDestination` implements support for following sources of HTTP he
 2. [Special properties](#special-header-providers), which will be converted into HTTP headers.
 3. Headers that were [directly added](#adding-individual-headers) via the [Builder API](#about-the-builder-api) while assembling the `DefaultHttpDestination` instance.
 4. Headers that are provided by [`DestinationHeaderProvider`s](#about-headerproviders).
-5. (Conditional) A `Proxy-Authorization` (and potentially a `SAP-Connectivity-SCC-Location_ID`) HTTP header will automatically be added, **iff** the `ProxyType` property is set to `OnPremise` as [explained below](#on-premise-handling).
+5. Any headers required for on-premise connectivity will automatically be added, **iff** the `ProxyType` property is set to `OnPremise` as [explained below](#on-premise-handling).
 6. (Conditional) Headers that are dervied from [authentication related properties](#deriving-the-authorization-header), **iff** no `Authorization` header was provided by any of the previous options.
 7. (Conditional) Headers that are derived from [proxy authentication related properties](#deriving-the-proxy-authorization-header), **iff** no `Proxy-Authorization` header was provided by any of the previous options.
 
