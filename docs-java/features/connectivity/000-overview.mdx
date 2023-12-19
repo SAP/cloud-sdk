@@ -93,3 +93,18 @@ This process is fully transparent to the user and has proven to be sufficient fo
 ### For Other Services
 
 If the [above approach](#for-odata-and-openapi-services) is not applicable, the `Destination` to HTTP client conversion can be done explicitly as [described here](http-client).
+
+### To Read Its Configuration
+
+A `Destination` consists of a set of properties that describe the connection details of the represented system or service.
+These properties can be read from the `Destination` object as follows:
+
+```java
+Destination myDestination;
+
+String destinationName = myDestination.get(DestinationProperty.NAME).getOrElse("");
+```
+
+Reading those properties is most useful when a `Destination` is retrieved [from the BTP Destination Service](btp-destination-service), as it allows to read the properties that have been provided by a user via the BTP Cockpit.
+
+Please refer to [this documentation](btp-destination-service#if-authentication-is-not-required) for more details.

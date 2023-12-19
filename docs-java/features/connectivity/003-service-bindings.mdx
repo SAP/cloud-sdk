@@ -23,10 +23,6 @@ As such, both _Service Bindings_ as well as [_Destination_](destination-service#
 
 The SAP Cloud SDK, therefore, provides a way to convert [`ServiceBinding`](https://github.com/SAP/btp-environment-variable-access/blob/main/api-parent/core-api/src/main/java/com/sap/cloud/environment/servicebinding/api/ServiceBinding.java) instances into `HttpDestination` instances.
 
-<!-- The [`ServiceBindingDestinationLoader`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationLoader.html) API is part of the [`cloudplatform-connectivity` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity) and can be used to convert [Service Bindings](https://github.com/SAP/btp-environment-variable-access/wiki/Fundamentals#service-binding) into `HttpDestination` instances.
-
-The following example demonstrates how to use the API: -->
-
 ```java
 import com.sap.cloud.environment.servicebinding.api.ServiceIdentifier;
 
@@ -56,11 +52,8 @@ The [`ServiceBindingDestinationOptions`](pathname:///java-api/v5/com/sap/cloud/s
 Hereby, the least information that is needed is the `ServiceBinding` itself, which can be provided using the [`forService(ServiceBinding)`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.html#forService(com.sap.cloud.environment.servicebinding.api.ServiceBinding)>) method.
 
 Alternatively, you can also use [`forService(ServiceIdentifier)`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.html#forService(com.sap.cloud.environment.servicebinding.api.ServiceIdentifier)>).
-This method will try to find a `ServiceBinding` for the given `ServiceIdentifier` using the [`DefaultServiceBindingAccessor` instance](https://github.com/SAP/btp-environment-variable-access/blob/main/api-parent/access-api/src/main/java/com/sap/cloud/environment/servicebinding/api/DefaultServiceBindingAccessor.java).
-
-#### Caution
-
-If there are multiple or no `ServiceBinding`s for the given `ServiceIdentifier`, an exception will be thrown.
+This method will try to find a `ServiceBinding` for the given `ServiceIdentifier` using the [`DefaultServiceBindingAccessor` instance](https://github.com/SAP/btp-environment-variable-access/blob/main/api-parent/access-api/src/main/java/com/sap/cloud/environment/servicebinding/api/DefaultServiceBindingAccessor.java). <br />
+**Please note:** If there are multiple or no `ServiceBinding`s for the given `ServiceIdentifier`, an exception will be thrown.
 
 Besides the `ServiceBinding`, there is a second parameter that is shared between all `ServiceBindingDestinationLoader` implementations: The `OnBehalfOf`, for which the destination should be loaded.
 This can be set using the [`onBehalfOf(OnBehalfOf)`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.Builder.html#onBehalfOf(com.sap.cloud.sdk.cloudplatform.connectivity.OnBehalfOf)>) method. <br />
@@ -202,8 +195,6 @@ By default, the SAP Cloud SDK pre-configures the `OAuth2ServiceBindingDestinatio
   - Text API
   - Reading API
   - Writing API
-
-#### Caution
 
 For BTP services that offer different APIs (such as the Workflow service), make sure to define which API the converted `HttpDestination` should point to using the corresponding `BtpServiceOptions`. <br />
 For example:
@@ -348,15 +339,18 @@ The default instance of that chain (`ServiceBindingDestinationLoader.defaultLoad
 Instances of these implementations are then used as delegate loaders.
 When transforming a `ServiceBindingDestinationOptions` into an `HttpDestination`, the chain will invoke the delegates **in order** until the first one either succeeds or throws an exception other than `DestinationNotFoundException`.
 
-#### Caution
+:::info
 
 The _Service Locator Pattern_ does not provide any guarantees about the order in which implementations on the classpath are found.
-Therefore, it is **crucial** that `ServiceBindingDestinationLoader` implementations do **not handle the same `ServiceBindingDestinationOptions`** as otherwise the default chain's behavior would be **unpredictable**. <br />
+Therefore, it is **crucial** that `ServiceBindingDestinationLoader` implementations do **not handle the same `ServiceBindingDestinationOptions`** as otherwise the default chain's behavior would be **unpredictable**.
+
 Implementations provided by the SAP Cloud SDK follow this rule.
+
+:::
 
 ### Custom Chain Instances
 
-If the [guarantee mentioned above](#caution-2) does not hold, you can create your own chain instance:
+If the default chain implementation does not meet your needs, you can create your own chain instance:
 
 ```java
 ServiceBindingDestinationLoader myChain = ServiceBindingDestinationLoader.newLoaderChain(
