@@ -22,30 +22,12 @@ import NotImplemented from '@site/src/components/NotImplemented.js';
 
 ## Prerequisites
 
-To leverage the type-safe OData v4 client, you need to add following dependencies to the `dependencies` section of your `pom.xml`:
-
-<Tabs groupId="odataClientType" defaultValue="Selfgenerated" values={[ { label: 'Self Generated Clients', value: 'Selfgenerated' } ]}>
-
-<TabItem value="Selfgenerated">
-
-```xml
-<dependency>
-    <groupId>com.sap.cloud.sdk.datamodel</groupId>
-    <artifactId>odata-v4-core</artifactId>
-</dependency>
-<dependency>
-    <groupId>org.projectlombok</groupId>
-    <artifactId>lombok</artifactId>
-    <scope>provided</scope>
-</dependency>
-```
-
-</TabItem>
-</Tabs>
+To leverage the type-safe OData v4 client you need to have generated a client library for your OData service.
+See the [generator documentation](vdm-generator) for how to generate such a client library.
 
 :::tip Discover services on the SAP Business Accelerator Hub
 
-If you would like to consume a specific service, try searching for it on the [SAP Business Accelerator Hub](https://api.sap.com/) and visit an **SAP Cloud SDK** tab on the landing page of that service.
+If you would like to consume a specific service, try searching for it on the [SAP Business Accelerator Hub](https://api.sap.com/) and visit the **SAP Cloud SDK** tab on the landing page of that service.
 There you will find detailed instructions on how to use the SAP Cloud SDK to get a client library for that specific service.
 Learn more about the integration with the SAP Business Accelerator Hub in the [blog](https://blogs.sap.com/2021/09/17/the-sap-cloud-sdk-integrates-with-the-sap-api-business-hub/).
 
@@ -97,8 +79,8 @@ result = service.operation()
   For example, when updating entities the `$filter` parameter is not available.
 
 Below different OData features are documented using the [Business Partner Service](https://api.sap.com/api/API_BUSINESS_PARTNER/resource) on SAP S/4HANA as an example.
-It is represented by the `BusinessPartnerService` class which is part of the pregenerated type-safe client for SAP S/4HANA also known as the Virtual Data Model (VDM).
-The following code snippets assume that an instance of this service is set up:
+It is represented by the `BusinessPartnerService` class which is created by the [OData geneartor](vdm-generator) when generating a client for this service.
+The following code snippets assume that a client has been generated and an instance of this service is set up:
 
 ```java
 BusinessPartnerService service = new DefaultBusinessPartnerService();

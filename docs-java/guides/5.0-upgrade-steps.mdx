@@ -30,6 +30,13 @@ For more information also check out our version 5 release blog post
 Starting with version 5.0.0 the SAP Cloud SDK requires a Java version of at least 17.
 :::
 
+:::warning WAR Deployment
+`war` deployment in combination with the **SAP Java Buildpack** is currently **not supported**.
+As a consequence, we are **not releasing** our [`rfc` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/rfc) with the SAP Cloud SDK for Java in version 5 at the moment. <br />
+Support will come after the release of the upcoming SAP Java Buildpack 2.X<br />
+Consumers that need to use the RFC functionality (e.g. JCo) are requested to **stay on version 4** for now.
+:::
+
 :::info Minimum CAP version
 If you are using the Cloud Application Programming model (CAP) to build your application, please note that the SAP Cloud SDK version 5 requires a minimum CAP/CDS version of at least `2.4.0`.
 If you are on an older CAP stack, please follow the [CAP migration guide](https://cap.cloud.sap/docs/java/migration#one-to-two) first.
@@ -198,8 +205,8 @@ Therefore, you should also rename respectively remove those from your project se
   - `com.sap.cloud.sdk.services:scp-business-logging-rest`
   - `com.sap.cloud.sdk.services:scp-workflow-cf`
 - Others
-  - `com.sap.cloud.sdk.cloudplatform:auditlog` (See `AuditLogger` in the <a href="#replaceremove-changed-api">list of deprecated API</a> section below)
-  - `com.sap.cloud.sdk.cloudplatform:auditlog-scp-cf` (See `AuditLogger` in the <a href="#replaceremove-changed-api">list of deprecated API</a> section below)
+  - `com.sap.cloud.sdk.cloudplatform:auditlog` (See [Auditlogging usage](./5.0-upgrade-steps#auditlogging-usage) section below)
+  - `com.sap.cloud.sdk.cloudplatform:auditlog-scp-cf` (See [Auditlogging usage](./5.0-upgrade-steps#auditlogging-usage) section below)
   - `com.sap.cloud.sdk.cloudplatform:cloudplatform-connectivity-scp` (No replacement necessary)
   - `com.sap.cloud.sdk.cloudplatform:cloudplatform-core-scp-cf` (No replacement necessary)
   - `com.sap.cloud.sdk.cloudplatform:security-scp-cf` (Functionally integrated into the `com.sap.cloud.sdk.cloudplatform:security` module)
@@ -338,7 +345,7 @@ Once the build doesn't complain about missing dependency versions anymore, you c
       <tr>
         <td>AbstractHttpDestination</td>
         <td>-</td>
-        <td>No replacement necessary</td>
+        <td>No direct replacement.<br />Most use cases, however, should be able to leverage the <code>DefaultHttpDestination</code> instead.</td>
       </tr>
       <tr>
         <td>WrappedDestination</td>
@@ -448,9 +455,10 @@ Once the build doesn't complain about missing dependency versions anymore, you c
         <td>AuditLogger</td>
         <td>-</td>
         <td>
-          Please approach the SAP Cloud SDK development team about migration guidance by <a href="https://github.com/SAP/cloud-sdk-java/issues/new">creating a GitHub support issue</a>.
+          You can use version 4 of the auditlog artifact with version 5 of the SAP Cloud SDK. Please refer the <a href="#auditlogging-usage">Auditlogging usage</a> section below for more details.
+          Please approach the SAP Cloud SDK development team if you face issues by <a href="https://github.com/SAP/cloud-sdk-java/issues/new">creating a GitHub support issue</a>.
           <br />
-          This change also affects the Auditlog integration with the S/4HANA Connectivity module.
+          This change also affects the Auditlog integration with the S/4HANA Connectivity module. You will have to explicitly use `AuditLogger` to log events.
         </td>
       </tr>
       <tr>
@@ -481,8 +489,8 @@ Once the build doesn't complain about missing dependency versions anymore, you c
       <tr>
         <td>Audience</td>
         <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
-                    SAP BTP Security Services Integration Libraries</a></td>
-        <td id="XsuaaComment">Use the SAP BTP Security Services Integration Libraries to retrieve token information from the token stored
+                    SAP BTP Security Libraries</a></td>
+        <td id="XsuaaComment">Use the SAP BTP Security Libraries to retrieve token information from the token stored
                     in the <code>SecurityContext</code>. For example: <br />
          <pre>
          Token token = SecurityContext.getToken(); <br />
@@ -497,72 +505,72 @@ Once the build doesn't complain about missing dependency versions anymore, you c
       <tr>
         <td>Authorization</td>
         <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
-                    SAP BTP Security Services Integration Libraries</a></td>
+                    SAP BTP Security Libraries</a></td>
         <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
       </tr>
       <tr>
         <td>Role</td>
         <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
-                            SAP BTP Security Services Integration Libraries</a></td>
+                            SAP BTP Security Libraries</a></td>
         <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
       </tr>
       <tr>
         <td>Scope</td>
         <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
-                            SAP BTP Security Services Integration Libraries</a></td>
+                            SAP BTP Security Libraries</a></td>
         <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
       </tr>
       <tr>
         <td>TenantSpecificAuthorization</td>
         <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
-                            SAP BTP Security Services Integration Libraries</a></td>
+                            SAP BTP Security Libraries</a></td>
         <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
       </tr>
       <tr>
         <td>UserSpecificAuthorization</td>
         <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
-                            SAP BTP Security Services Integration Libraries</a></td>
+                            SAP BTP Security Libraries</a></td>
         <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
       </tr>
       <tr>
         <td>PrincipalAttribute</td>
         <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
-                            SAP BTP Security Services Integration Libraries</a></td>
+                            SAP BTP Security Libraries</a></td>
         <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
       </tr>
       <tr>
         <td>CollectionPrincipalAttribute</td>
         <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
-                            SAP BTP Security Services Integration Libraries</a></td>
+                            SAP BTP Security Libraries</a></td>
         <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
       </tr>
       <tr>
         <td>SimplePrincipalAttribute</td>
         <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
-                            SAP BTP Security Services Integration Libraries</a></td>
+                            SAP BTP Security Libraries</a></td>
         <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
       </tr>
       <tr>
         <td>StringCollectionPrincipalAttribute</td>
         <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
-                            SAP BTP Security Services Integration Libraries</a></td>
+                            SAP BTP Security Libraries</a></td>
         <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
       </tr>
       <tr>
         <td>StringPrincipalAttribute</td>
         <td><a href= "https://github.com/SAP/cloud-security-services-integration-library/tree/main">
-                            SAP BTP Security Services Integration Libraries</a></td>
+                            SAP BTP Security Libraries</a></td>
         <td>See comment on <a href="#XsuaaComment">retrieving token information.</a></td>
       </tr>
       <tr>
-        <td>ScpCfDestinationRetrievalStrategy.CURRENT_TENANT_THEN_PROVIDER</td>
-        <td>Please query subscriber and provider tenants individually instead using <code>ONLY_SUBSCRIBER</code> and <code>ALWAYS_PROVIDER</code></td>
+        <td><p>ScpCfDestinationRetrievalStrategy</p><p>.CURRENT_TENANT_THEN_PROVIDER</p></td>
         <td>-</td>
+        <td>Please query subscriber and provider tenants individually instead using <code>ONLY_SUBSCRIBER</code> and <code>ALWAYS_PROVIDER</code></td>
       </tr>
       <tr>
-        <td>PrincipalPropagationStrategy.setDefaultStrategy(...)</td>
-        <td>Destination custom property: <br /><code>DestinationProperty.PRINCIPAL_PROPAGATION_MODE = (TOKEN_FORWARDING|TOKEN_EXCHANGE)</code></td>
-        <td>Default: <code>TOKEN_FORWARDING</code>, for reduced token exchanges. <a href="https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/configure-principal-propagation-via-user-exchange-token" target="_new">See more.</a></td>
+        <td><p>PrincipalPropagationStrategy</p><p>.setDefaultStrategy(...)</p></td>
+        <td>PrincipalPropagationMode</td>
+        <td>Use via destination custom property: <br /><code>DestinationProperty.PRINCIPAL_PROPAGATION_MODE = (TOKEN_FORWARDING|TOKEN_EXCHANGE)</code>Default: <code>TOKEN_FORWARDING</code>, for reduced token exchanges. <a href="https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/configure-principal-propagation-via-user-exchange-token" target="_new">See more.</a></td>
       </tr>
       <tr>
         <td>ScpCfTenant</td>
@@ -632,27 +640,31 @@ Once the build doesn't complain about missing dependency versions anymore, you c
       <tr>
         <td>CloudPlatform</td>
         <td>-</td>
-        <td>No replacement, as all platform specifics are handled by the <a href="https://github.com/SAP/btp-environment-variable-access">Service Binding library</a>.</td>
+        <td>No SDK replacement. <br />
+        Handling bound applications (i.e. <code>VCAP_SERVICES</code>) is done via the <a href="https://github.com/SAP/btp-environment-variable-access">Service Binding library</a>.<br />
+        Handling application information (i.e. <code>VCAP_APPLICATION</code>) can be done manually: <br />
+        <pre>new Gson().fromJson(System.getenv("VCAP_APPLICATION"), JsonObject.class).asMap();</pre>
+        </td>
       </tr>
       <tr>
         <td>ScpCfCloudPlatform</td>
         <td>-</td>
-        <td>No replacement, as all platform specifics are handled by the <a href="https://github.com/SAP/btp-environment-variable-access">Service Binding library</a>.</td>
+        <td>No replacement. See note on <code>CloudPlatform</code> (above).</td>
       </tr>
       <tr>
         <td>CloudPlatformFacade</td>
         <td>-</td>
-        <td>No replacement, as all platform specifics are handled by the <a href="https://github.com/SAP/btp-environment-variable-access">Service Binding library</a>.</td>
+        <td>No replacement. See note on <code>CloudPlatform</code> (above).</td>
       </tr>
       <tr>
         <td>ScpCfCloudPlatformFacade</td>
         <td>-</td>
-        <td>No replacement, as all platform specifics are handled by the <a href="https://github.com/SAP/btp-environment-variable-access">Service Binding library</a>.</td>
+        <td>No replacement. See note on <code>CloudPlatform</code> (above).</td>
       </tr>
       <tr>
         <td>CloudPlatformAccessor</td>
         <td>-</td>
-        <td>No replacement, as all platform specifics are handled by the <a href="https://github.com/SAP/btp-environment-variable-access">Service Binding library</a>.</td>
+        <td>No replacement. See note on <code>CloudPlatform</code> (above).</td>
       </tr>
       <tr>
         <td>ThreadContextInvocationInterceptor</td>
@@ -734,3 +746,35 @@ We decided to remove all security related `Filter` implementations from the SAP 
 This means you need to remove all mentions of the following filters from your `web.xml` (mind the `security` in the package): `com.sap.cloud.sdk.cloudplatform.security.servlet.*Filter`
 
 The `com.sap.cloud.sdk.cloudplatform.servlet.RequestAccessorFilter` is functionally replaced by `com.sap.cloud.sdk.cloudplatform.servletjakarta.RequestAccessorFilter` found in `com.sap.cloud.sdk.cloudplatform:servlet-jakarta`.
+
+## Auditlogging usage
+
+Auditlogging feature is no longer released with version 5 of the SAP Cloud SDK.
+If you want to continue using audit logging, you could still use version 4 of the audit logging artifact along with version 5 of the SAP Cloud SDK.
+
+You would have to manually add all of the following artifacts(only available internally) to your project:
+
+```xml
+      <dependency>
+         <groupId>com.sap.cloud.sdk.cloudplatform</groupId>
+         <artifactId>auditlog-scp-cf</artifactId>
+         <version>4.28.0</version> <!-- Pay attention that this the old v4 artifact -->
+      </dependency>
+      <dependency>
+         <groupId>com.sap.xs.auditlog</groupId>
+         <artifactId>audit-java-client-api</artifactId>
+         <version>latest-available-version-in-artifactory</version>
+      </dependency>
+      <dependency>
+         <groupId>com.sap.xs.auditlog</groupId>
+         <artifactId>audit-java-client-impl</artifactId>
+         <version>latest-available-version-in-artifactory</version>
+      </dependency>
+      <dependency>
+         <groupId>com.sap.xs.java</groupId>
+         <artifactId>xs-env</artifactId>
+         <version>latest-available-version-in-artifactory</version>
+      </dependency>
+```
+
+You will then be able to log events using the `AuditLogger` API.
