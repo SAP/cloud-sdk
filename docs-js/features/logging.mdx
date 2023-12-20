@@ -42,14 +42,25 @@ myLogger.warn('Here is a warning.');
 myLogger.error('Here is a error.');
 ```
 
-The default value for the log level is `info`.
-In the example above the first line would not appear in the logs.
+The log level can be set using the environment variable `SAP_CLOUD_SDK_LOG_LEVEL`.
+You can then create a logger as below:
+
+```ts
+process.env.SAP_CLOUD_SDK_LOG_LEVEL = 'warn';
+
+const myLogger = createLogger({
+  messageContext: 'my-message-context'
+});
+```
+
+In the example above, the first two lines will not appear in the logs.
+
 You can set the log level either on creation:
 
 ```ts
 const myLogger = createLogger({
   messageContext: 'my-message-context',
-  level: 'info'
+  level: 'error'
 });
 ```
 
@@ -58,6 +69,10 @@ or later in you application via the `setLogLevel()` method:
 ```ts
 setLogLevel('error', 'my-message-context');
 ```
+
+In the example above, the first three lines would not appear in the logs.
+
+If none of the above methods are specified, the default value for the log level is `info`.
 
 ## Logging Exceptions
 
@@ -122,10 +137,11 @@ unmuteLogger(); // unmute all loggers
 
 The SAP Cloud SDK sets the log level **during the creation of a logger** based on the following order:
 
-1. **log level for a specific message context or logger**: `setLogLevel('info', messageContextOrLogger)`
-2. **`level` field in the `createLogger()` function**: `createLogger({..., level: "info"})`
-3. **global log level**: `setGlobalLogLevel('info')`
-4. **default log level**: `info`
+1. **log level set in the environment variable**: `process.env.SAP_CLOUD_SDK_LOG_LEVEL = 'silly';`
+2. **log level for a specific message context or logger**: `setLogLevel('info', messageContextOrLogger)`
+3. **`level` field in the `createLogger()` function**: `createLogger({..., level: "info"})`
+4. **global log level**: `setGlobalLogLevel('info')`
+5. **default log level**: `info`
 
 :::note
 Please notice that the `setGlobalLogLevel()` function will not only affect the creation of the next logger, but also the log level of all existing loggers.
