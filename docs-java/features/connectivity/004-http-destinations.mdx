@@ -45,7 +45,7 @@ The `DefaultHttpDestination` implements support for following sources of HTTP he
 2. [Special properties](#special-header-providers), which will be converted into HTTP headers.
 3. Headers that were [directly added](#adding-individual-headers) via the [Builder API](#about-the-builder-api) while assembling the `DefaultHttpDestination` instance.
 4. Headers that are provided by [`DestinationHeaderProvider`s](#about-headerproviders).
-5. Any headers required for on-premise connectivity will automatically be added, **iff** the `ProxyType` property is set to `OnPremise` as [explained below](#on-premise-handling).
+5. Any headers required for on-premise connectivity will automatically be added, **iff** the `ProxyType` property is set to `OnPremise` as [explained below](#deriving-the-proxy-authorization-header).
 6. Headers that are dervied from [authentication related properties](#deriving-the-authorization-header), **iff** no `Authorization` header was provided by any of the previous options.
 7. Headers that are derived from [proxy authentication related properties](#deriving-the-proxy-authorization-header), **iff** no `Proxy-Authorization` header was provided by any of the previous options. <br />
    In most cases, the `Proxy-Authorization` header will be [derived automatically](on-premise) from the bound BTP Connectivity Service.
@@ -66,7 +66,7 @@ If the destination does not stem from the BTP destination service, then the conc
 
 :::info On-Premise Handling
 
-As described [above](#on-premise-handling), the `DefaultHttpDestination` implements dedicated support for on-premise connectivity.
+As described above, the `DefaultHttpDestination` implements dedicated support for on-premise connectivity.
 Therefore, the `Proxy-Authorization` header will automatically be created as [documented here](on-premise) **iff** the `ProxyType` property is set to `ON_PREMISE`.
 
 :::

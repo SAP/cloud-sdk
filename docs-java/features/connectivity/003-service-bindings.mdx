@@ -37,9 +37,9 @@ It comes as prt of the [`cloudplatform-connectivity` artifact](https://search.ma
 
 The API is designed for easy extensibility and customization.
 Hereby, each `ServiceBindingDestinationLoader` implementation is supposed to provide the transformation logic for one specific "type" of `ServiceBinding`. <br />
-The SAP Cloud SDK provides, for example, [an implementation that is capable of dealing with service bindings that use OAuth2 authentication](#about-the-oauth2servicebindingdestinationloader).
+The SAP Cloud SDK provides, for example, [an implementation that is capable of dealing with service bindings that use OAuth2 authentication](#about-the-oauth2loader).
 
-As an input, the API requires a [the `ServiceBindingDestinationOptions`](#about-the-options) instance.
+As an input, the API requires [the `ServiceBindingDestinationOptions`](#about-the-options) instance.
 This class is designed to hold all information that is required to transform a `ServiceBinding` into an `HttpDestination` - this, first and foremost, includes the `ServiceBinding` itself.
 
 Furthermore, there is also a [_chain_ implementation](#about-the-chain-implementation) that can be used to combine multiple `ServiceBindingDestinationLoader` implementations into one.
