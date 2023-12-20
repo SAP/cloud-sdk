@@ -21,13 +21,70 @@ keywords:
 A _Service Binding_, in essence, is a set of configurations that applications can use to establish a connection to a (remote) service.
 As such, both _Service Bindings_ as well as [_Destination_](destination-service#accessing-destinations) resemble the same concept.
 
-The SAP Cloud SDK, therefore, provides a way to convert [`ServiceBinding`](https://github.com/SAP/btp-environment-variable-access/blob/main/api-parent/core-api/src/main/java/com/sap/cloud/environment/servicebinding/api/ServiceBinding.java) instances into `HttpDestination` instances.
+The SAP Cloud SDK, therefore, provides a way to convert [`ServiceBinding`](https://github.com/SAP/btp-environment-variable-access/blob/main/api-parent/core-api/src/main/java/com/sap/cloud/environment/servicebinding/api/ServiceBinding.java) instances into `HttpDestination` instances. <br />
+The code below, for example, demonstrates how to transform a `ServiceBinding` for the [Workflow REST API](https://api.sap.com/api/SAP_CP_Workflow_CF/overview) into an `HttpDestination`:
 
 ```java
 import com.sap.cloud.environment.servicebinding.api.ServiceIdentifier;
+import com.sap.cloud.sdk.cloudplatform.connectivity.BtpServiceOptions;
 
-var options = ServiceBindingDestinationOptions.forService(ServiceIdentifier.DESTINATION).build();
+var options =
+    ServiceBindingDestinationOptions
+        .forService(ServiceIdentifier.WORKFLOW)
+        .withOption(BtpServiceOptions.WorkflowOptions.REST_API)
+        .build();
 HttpDestination destination = ServiceBindingDestinationLoader.defaultLoaderChain().getDestination(options);
+```
+
+## Out Of The Box Support
+
+:::caution Prerequisites
+
+For the following to work, the application needs to add the [**`connectivity-oauth` artifact**](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/connectivity-oauth) to its dependencies.
+
+:::
+
+The SAP Cloud SDK is able to deal with `ServiceBinding`s for the following BTP services:
+
+- [The BTP Destination Service on Cloud Foundry](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview)
+- [The BTP Connectivity Service on Cloud Foundry](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/what-is-sap-btp-connectivity)
+- [The SAP Workflow Service on Cloud Foundry](https://api.sap.com/package/SAPCPWorkflowAPIs/all)
+  - [Inbox API (OData)](https://api.sap.com/api/SAP_CP_Workflow_TCM_CF/overview)
+  - [Workflow API (REST)](https://api.sap.com/api/SAP_CP_Workflow_CF/overview)
+- [The SAP Business Rules Service on Cloud Foundry](https://api.sap.com/package/SAPCPBusinessRulesAPIs/all)
+  - [Rule Authoring API](https://api.sap.com/api/SAP_CF_BusinessRules_Repository/overview)
+  - [Rule Execution API (v2)](https://api.sap.com/api/SAP_CF_BusinessRules_Runtime_V2/overview)
+- The _SAP Business Logging on Cloud Foundry_ (SAP internal)
+  - Configuration API
+  - Text API
+  - Reading API
+  - Writing API
+
+For BTP services that offer different APIs (such as the Workflow service), make sure to define which API the converted `HttpDestination` should point to using the corresponding `BtpServiceOptions`. <br />
+For example:
+
+```java
+import com.sap.cloud.sdk.cloudplatform.connectivity.BtpServiceOptions;
+
+ServiceBindingDestinationOptions
+        .forService(ServiceIdentifier.WORKFLOW)
+        .withOption(BtpServiceOptions.WorkflowOptions.REST_API)
+        .build();
+```
+
+### Multitenancy
+
+`HttpDestination` instances created by the `ServiceBindingDestinationLoader` API are, by default, **tenant-aware**.
+This means that communication with the target system will happen according to the specified [`OnBehalfOf`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.Builder.html#onBehalfOf(com.sap.cloud.sdk.cloudplatform.connectivity.OnBehalfOf)>).
+
+The default value, `OnBehalfOf.TECHNICAL_USER_CURRENT_TENANT`, can be overwritten when assembling the `ServiceBindingDestinationOptions` instance:
+
+```java {4}
+ServiceBindingDestinationOptions
+    .forService(ServiceIdentifier.WORKFLOW)
+    .withOption(BtpServiceOptions.WorkflowOptions.REST_API)
+    .onBehalfOf(OnBehalfOf.NAMED_USER_CURRENT_TENANT)
+    .build();
 ```
 
 ## How It Works
@@ -64,23 +121,27 @@ If not explicitly specified, `OnBehalfOf.TECHNICAL_USER_CURRENT_TENANT` is used.
 Adding custom parameters to the `ServiceBindingDestinationOptions` can be done using the [`withOption(OptionsEnhancer)`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.Builder.html#withOption(com.sap.cloud.sdk.cloudplatform.connectivity.ServiceBindingDestinationOptions.OptionsEnhancer)>) method.
 Hereby, an [`OptionsEnhancer`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.OptionsEnhancer.html) is a type-safe representation of arbitrary parameters.
 
-The type-safety is implemented by, internally, storing the parameters in a `Map` that is keyed by the `Class` of the parameter's type.
-Using generics, the `ServiceBindingDestinationOptions.getOption(Class)` method can guarantee that the returned value is of the requested type. <br />
-Furthermore, using the `Class` as the key for the internal `Map` ensures that there cannot be any parameter clashes. <br />
-If the implementation would use a `String` key instead, for example, parameters could be overwritten accidentially.
-
 <details>
-<summary>Example</summary>
+<summary>Example: Custom Service Binding Transformation</summary>
+
+:::tip Advanced Usage
+
+The following example demonstrates a very advanced usage of our `ServiceBindingDestinationLoader` API.
+
+A fast majority of use cases do not require a custom `ServiceBindingDestinationLoader` implementation. <br />
+Instead, customize the existing `OAuth2ServiceBindingDestinationLoader` as [described below](#customization) is most probably sufficient.
+
+:::
 
 Lets assume we are providing a custom `ServiceBindingDestinationLoader` implementation that requires some additional information to be able to transform a `ServiceBinding` into an `HttpDestination`.
 
 In this example, we assume that there are two different APIs for our service.
 Depending on which API we want to create our `HttpDestination` for, we need to slightly alter the transformation logic.
-Additionally, we want to be able to supply an additional HTTP header value that should be added to the `HttpDestination`.
+Additionally, we want to be able to supply an additional `String` parameter that also affects the created `HttpDestination`.
 
 To achieve this behavior, we would need to implement two `OptionsEnhancer`s like so:
 
-```java
+```java title="MyApiChoice.java" showLineNumbers
 enum MyApiChoice implements ServiceBindingDestinationOptions.OptionsEnhancer<MyApiChoice> {
     API1,
     API2;
@@ -91,15 +152,17 @@ enum MyApiChoice implements ServiceBindingDestinationOptions.OptionsEnhancer<MyA
         return this;
     }
 }
+```
 
-class MyHttpHeader implements ServiceBindingDestinationOptions.OptionsEnhancer<String> {
+```java title="MyStringParameter.java" showLineNumbers
+class MyStringParameter implements ServiceBindingDestinationOptions.OptionsEnhancer<String> {
     private final String value;
 
-    public static MyHttpHeader of(String value) {
-        return new MyHttpHeader(value);
+    public static MyStringParameter of(String value) {
+        return new MyStringParameter(value);
     }
 
-    private MyHttpHeader(String value) {
+    private MyStringParameter(String value) {
         this.value = value;
     }
 
@@ -125,29 +188,36 @@ ServiceBinding someServiceBinding;
 ServiceBindingDestinationOptions
         .forService(someServiceBinding)
         .withOption(MyApiChoice.API1)
-        .withOption(MyHttpHeader.of("some-value"))
+        .withOption(MyStringParameter.of("some-value"))
         .build();
 ```
 
-Finally, we can retrieve and use the set values like so:
+Finally, we can implement our custom `ServiceBindingDestinationLoader` that uses our new options like so:
 
-```java
-ServiceBindingDestinationOptions options;
-Option<MyApiChoice> maybeOption = options.getOption(MyApiChoice.class);
-if (maybeOption.isEmpty()) {
-    return; // we are not handling this transformation
-}
+```java title="MyCustomServiceBindingLoader.java" showLineNumbers
+class MyCustomServiceBindingLoader implements ServiceBindingDestinationLoader
+{
+    @Nonnull
+    @Override
+    public Try<HttpDestination> tryGetDestination( @Nonnull ServiceBindingDestinationOptions options )
+    {
+        Option<MyApiChoice> maybeOption = options.getOption(MyApiChoice.class);
+        if( maybeOption.isEmpty() ) {
+            return Try.failure(new DestinationNotFoundException("No API choice was specified."));
+        }
 
-Option<String> maybeHeaderValue = options.getOption(MyHttpHeader.class);
+        Option<String> maybeStringValue = options.getOption(MyStringParameter.class);
 
-MyApiChoice option = maybeOption.get();
-switch (option) {
-    case API1:
-        // do something
-        break;
-    case API2:
-        // do something else
-        break;
+        MyApiChoice option = maybeOption.get();
+        switch( option ) {
+            case API1:
+                // do something
+                break;
+            case API2:
+                // do something else
+                break;
+        }
+    }
 }
 ```
 
@@ -178,35 +248,7 @@ Whenever the `OAuth2ServiceBindingDestinationLoader` is asked to load a destinat
 1. the given `ServiceBindingDestinationOptions` can be transformed into an `HttpDestination` using the current `OAuth2PropertySupplier` instance, and, if so
 2. extract the required information from the given `ServiceBindingDestinationOptions` using the current `OAuth2PropertySupplier`.
 
-This approach should look familar as it is effectively a fallback mechanism, once again.
-
-By default, the SAP Cloud SDK pre-configures the `OAuth2ServiceBindingDestinationLoader` so that is able to deal with `ServiceBinding`s for the following BTP services:
-
-- [The BTP Destination Service on Cloud Foundry](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview)
-- [The BTP Connectivity Service on Cloud Foundry](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/what-is-sap-btp-connectivity)
-- [The SAP Workflow Service on Cloud Foundry](https://api.sap.com/package/SAPCPWorkflowAPIs/all)
-  - [Inbox API (OData)](https://api.sap.com/api/SAP_CP_Workflow_TCM_CF/overview)
-  - [Workflow API (REST)](https://api.sap.com/api/SAP_CP_Workflow_CF/overview)
-- [The SAP Business Rules Service on Cloud Foundry](https://api.sap.com/package/SAPCPBusinessRulesAPIs/all)
-  - [Rule Authoring API](https://api.sap.com/api/SAP_CF_BusinessRules_Repository/overview)
-  - [Rule Execution API (v2)](https://api.sap.com/api/SAP_CF_BusinessRules_Runtime_V2/overview)
-- The _SAP Business Logging on Cloud Foundry_ (SAP internal)
-  - Configuration API
-  - Text API
-  - Reading API
-  - Writing API
-
-For BTP services that offer different APIs (such as the Workflow service), make sure to define which API the converted `HttpDestination` should point to using the corresponding `BtpServiceOptions`. <br />
-For example:
-
-```java
-import com.sap.cloud.sdk.cloudplatform.connectivity.BtpServiceOptions;
-
-ServiceBindingDestinationOptions
-        .forService(ServiceIdentifier.WORKFLOW)
-        .withOption(BtpServiceOptions.WorkflowOptions.REST_API)
-        .build();
-```
+By default, there are `OAuth2PropertySupplier` for the services [mentioned above](#out-of-the-box-support) in place.
 
 ### Customization
 
@@ -228,16 +270,17 @@ In other words: Using the `registerPropertySupplier` method will make your `OAut
 <details>
 <summary>Full Example</summary>
 
-To make things a bit more concrete, let's assume we wanted to implement support for an other service, which uses it's very own `ServiceBinding` structure.
+To make things a bit more concrete, let's assume we wanted to implement support for an other service, which uses its very own `ServiceBinding` structure.
 
-Lets assume our service produces service bindings that look like this:
+Our hypothetical service binding could look like this:
 
-```json
+```json showLineNumbers
 {
   "service": "my-service",
   "credentials": {
     "service": {
-      "uri": "https://my-service.com"
+      "read": "https://my-service.com/api/v1/read",
+      "write": "https://my-service.com/api/v2/write"
     },
     "oauth": {
       "uri": "https://my-service.com/oauth/token",
@@ -248,9 +291,23 @@ Lets assume our service produces service bindings that look like this:
 }
 ```
 
-To support this service, we would need to implement an `OAuth2PropertySupplier` that is capable of extracting the required information from this structure:
+The service binding above contains two different API endpoints (`read` and `write`), which we would like to be able to access using the `OAuth2ServiceBindingDestinationLoader`.
+To support that, we need to implement an `OAuth2PropertySupplier` (to implement the property extraction logic) and an `OptionsEnhancer` (to allow users to define which endpoint they would like to use):
 
-```java showLineNumbers="true"
+```java title="MyApiEndpoint.java" showLineNumbers
+enum MyApiEndpoint implements ServiceBindingDestinationOptions.OptionsEnhancer<MyApiEndpoint> {
+    READ,
+    WRITE;
+
+    @Nonnull
+    @Override
+    public MyApiEndpoint getValue() {
+        return this;
+    }
+}
+```
+
+```java title="MyServiceOAuth2PropertySupplier.java" showLineNumbers
 class MyServiceOAuth2PropertySupplier extends DefaultOAuth2PropertySupplier
 {
     public MyServiceOAuth2PropertySupplier(ServiceBindingDestinationOptions options) {
@@ -265,7 +322,11 @@ class MyServiceOAuth2PropertySupplier extends DefaultOAuth2PropertySupplier
     @Nonnull
     @Override
     public URI getServiceUri() {
-        return getCredentialOrThrow(URI.class, "service", "uri");
+        MyApiEndpoint endpoint = options.getOption(MyApiEndpoint.class).getOrElse(MyApiEndpoint.READ);
+        return switch (endpoint) {
+            case READ -> getCredentialOrThrow(URI.class, "service", "read");
+            case WRITE -> getCredentialOrThrow(URI.class, "service", "write");
+        };
     }
 
     @Nonnull
@@ -309,9 +370,13 @@ In our example (line 9), this means that `getOAuthCredential(String.class, "id")
 In contrast to that, using just `getCredential(String.class, "id")` would try to extract a `String` value from `credentials.get("id")` (_pseudo code_). <br />
 `getOAuthCredential` is therefore just a neat shortcut that can help to reduce repetitive code.
 
+Please note how we are handling our `MyApiEndpoint` option in the `getServiceUri` method (lines 14 - 20). <br />
+We are reading the option by simply providing the `MyApiEndpoint.class` as the parameter to the `getOption` method.
+That way, we can decide which service URI to use, depending on the user input.
+
 Lastly, we need to register our `OAuth2PropertySupplier` implementation with the `OAuth2ServiceBindingDestinationLoader`:
 
-```java
+```java title="MyServiceOAuth2PropertySupplier.java" showLineNumbers
 class MyServiceOAuth2PropertySupplier extends DefaultOAuth2PropertySupplier {
     private static final ServiceIdentifier MY_SERVICE_IDENTIFIER = ServiceIdentifier.of("my-service");
 
@@ -326,7 +391,7 @@ class MyServiceOAuth2PropertySupplier extends DefaultOAuth2PropertySupplier {
 OAuth2ServiceBindingDestinationLoader.registerPropertySupplier(MyServiceOAuth2PropertySupplier::matches, MyServiceOAuth2PropertySupplier::new);
 ```
 
-In the above example, we added a static `matches` method to our `OAuth2PropertySupplier` implementation, which we can use to check whether the given `ServiceBindingDestinationOptions` can be transformed into an `HttpDestination` using our implementation.
+In the above example, we added a static `matches` method (lines 4 - 7) to our `OAuth2PropertySupplier` implementation, which we can use to check whether the given `ServiceBindingDestinationOptions` can be transformed into an `HttpDestination` using our implementation.
 We are then using method references to register our implementation with the `OAuth2ServiceBindingDestinationLoader`.
 
 </details>
