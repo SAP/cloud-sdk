@@ -90,7 +90,7 @@ ServiceBindingDestinationOptions
 ## How It Works
 
 In general, the [`ServiceBindingDestinationLoader` API](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationLoader.html) can be used to convert `ServiceBinding` instances into `HttpDestination` instances.
-It comes as prt of the [`cloudplatform-connectivity` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity).
+It comes as part of the [`cloudplatform-connectivity` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity).
 
 The API is designed for easy extensibility and customization.
 Hereby, each `ServiceBindingDestinationLoader` implementation is supposed to provide the transformation logic for one specific "type" of `ServiceBinding`. <br />
@@ -232,9 +232,7 @@ Internally, the implementation performs the following steps:
 
 1. Check whether the given `ServiceBindingDestinationOptions` can be transformed (e.g. whether the `ServiceBinding` uses a supported grant type).
 2. Extract the required information from the `ServiceBinding` (i.e. the service URL, the token URL, and the client identity).
-3. Check whether the `ServiceBindingDestinationOptions` contain another `HttpDestination` that should be _proxied_.
-   1. If so, create a new `HttpDestination` that points to the _destination to be proxied_ and uses the authentication information provided in the given `ServiceBinding` for the **proxy authentication** (i.e. HTTP header `Proxy-Authorization`).
-   2. If not, create a new `HttpDestination` that points to the service URL and uses the authentication information provided in the `ServiceBinding` (i.e. HTTP header `Authorization`).
+3. Assemble an `HttpDestination` that uses the extracted information for the **target authentication** (i.e. HTTP header `Authorization`).
 
 ### Dealing With Arbitrary Service Bindings
 
