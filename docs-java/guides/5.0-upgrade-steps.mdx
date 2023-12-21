@@ -236,66 +236,13 @@ To make the process of adjusting existing applications as easy as possible, plea
     A big part of the `Destination` cleanup was to straighten our public APIs that previously expected specific sub-types of `Destination` or `DestinationProperties` (e.g. `HttpClientAccessor#getHttpClient(HttpDestinationProperties)`).
     These APIs now all simply rely on `Destination`, which makes casting via `#asHttp` or `#asRfc` unnecessary.
 
-3.  Adjust error handling.
-    Prior to version 5 of the SAP Cloud SDK, `Destination#asHttp` would throw an Exception in case the Destination Service wasn't able to provide valid `Authorization` header suggestions.
-    This has been changed so that `asHttp` will no longer throw an Exception.
-    Instead, calling the `getHeaders` method on an `HttpDestination` will throw an exception if any `Authorization` header suggestion provided by the Destination service contained an error.
+3.  Replace any of the removed classes related to the `Destination` API as mentioned in the [list of removed APIs](#remove-or-replace-modified-cloud-sdk-apis).
 
-    This change is **important** to keep in mind because it influences where applications are expected to catch Exceptions as the `getHeaders` method will be called during request execution.
-
-<details>
-<summary>Example</summary>
-
-Given the following code:
-
-```java
-Try<Destination> maybeDestination = DestinationAccessor.tryGetDestination("my-destination");
-if (maybeDestination.isFailure()) {
-    throw new IllegalStateException("Unable to retrieve 'my-destination'.", maybeDestination.getCause());
-}
-
-HttpDestination httpDestination;
-try {
-    httpDestination = maybeDestination.get().asHttp();
-} catch (DestinationAccessException e) {
-    throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
-}
-
-try {
-    new MyODataService().getAllEntities().executeRequest(httpDestination);
-} catch (ODataException e) {
-    throw new IllegalStateException("Unable to retrieve odata entities.", e);
-}
-```
-
-The code should be updated like this:
-
-```diff
-Try<Destination> maybeDestination = DestinationAccessor.tryGetDestination("my-destination");
-if (maybeDestination.isFailure()) {
-    throw new IllegalStateException("Unable to retrieve 'my-destination'.", maybeDestination.getCause());
-}
-
-- HttpDestination httpDestination;
-- try {
--   httpDestination = maybeDestination.get().asHttp();
-- } catch (DestinationAccessException e) {
--   throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
-- }
-
-try {
--   new MyODataService().getAllEntities().executeRequest(httpDestination);
-+   new MyODataService().getAllEntities().executeRequest(maybeDestination.get());
-+ } catch (DestinationAccessException e) {
-+   throw new IllegalStateException("Destination service wasn't able to provide a valid HTTP destination.", e);
-} catch (ODataException e) {
-    throw new IllegalStateException("Unable to retrieve odata entities.", e);
-}
-```
-
-</details>
-
-4.  Replace any of the removed classes related to the `Destination` API as mentioned in the [list of removed APIs](#remove-or-replace-modified-cloud-sdk-apis).
+:::caution Updated guidance on `DestinationAccessException`
+An earlier version of the upgrade guide contained an additional instruction to move handling of `DestinationAccessException` from `DestinationAccessor.getDestination()` to `destination.getHeaders()`.
+This instruction was incorrect and has been removed.
+In case you have followed this instruction, please revert the change.
+:::
 
 ## Remove or Replace Modified Cloud SDK APIs
 
