@@ -30,7 +30,12 @@ module.exports = {
           label: 'Connectivity',
           items: [
             'features/connectivity/destination-service',
+            'features/connectivity/btp-destination-service',
+            'features/connectivity/on-premise',
+            'features/connectivity/service-bindings',
+            'features/connectivity/http-destinations',
             'features/connectivity/http-client',
+            'features/connectivity/running-locally',
             'features/connectivity/mtls'
           ]
         },

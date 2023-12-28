@@ -1,0 +1,55 @@
+---
+id: on-premise
+title: On-Premise Connectivity
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: On-Premise
+description: This article describes the On-Premise connectivity features of the SAP Cloud SDK for Java.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - java
+  - connectivity
+  - btp
+  - on-premise
+---
+
+Connecting to On-Premise systems is a crucial part of many enterprise applications.
+To make this as easy as possible, the SAP Cloud SDK offers seamless integration with the [SAP BTP Connectivity Service](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/connectivity) both on [Cloud Foundry](#cloud-foundry-to-on-premise) and [Kubernetes-based environments](#kubernetes-to-on-premise) (e.g. Kyma).
+
+## Cloud Foundry To On-Premise
+
+To enable On-Premise connectivity for applications that are deployed on Cloud Foundry, the SAP Cloud SDK requires **_exactly_ one service binding** to the SAP BTP Connectivity Service.
+The information provided within this service binding is then used to [derive the `ProxyAuthorization` header](http-destinations#deriving-the-proxy-authorization-header) for `Destination` objects that use [`ON_PREMISE`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ProxyType.html#ON_PREMISE) as their [`ProxyType`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/HttpDestinationProperties.html#getProxyType()>).
+
+### Principal Propagation
+
+Often times, On-Premise systems do have their own user management, which, in most cases, does not match the user management of Cloud Identity Providers.
+This is why tenants and users on the application side need to be exchanged for entities that are registered within the On-Premise system.
+This process is called [**_principal propagation_**](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/configuring-principal-propagation?locale=en-).
+
+The SAP Cloud SDK, therefore, supports the [`PrincipalPropagation` authentication type](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/AuthenticationType.html#PRINCIPAL_PROPAGATION) for On-Premise destinations.
+The concrete authentication flow is hereby separated into two parts, which can be configued by setting a property called _`cloudsdk.principalPropagationMode`_ on the `Destination` object.
+
+#### 1. Token Forwarding (Default)
+
+If the _`cloudsdk.principalPropagationMode`_ property is set to `TOKEN_FORWARDING`, or if the property is not set at all, the [`TOKEN_FORWARDING` strategy](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/PrincipalPropagationMode.html#TOKEN_FORWARDING) will be applied.
+
+#### 2. Token Exchange (Discouraged)
+
+:::caution Discouraged
+
+Using the `TOKEN_EXCHANGE` strategy is discouraged as it results in unnecessary roundtrips and is therefore less performant than the `TOKEN_FORWARDING` strategy.
+
+:::
+
+If the _`cloudsdk.principalPropagationMode`_ property is set to `TOKEN_EXCHANGE`, the [`TOKEN_EXCHANGE` strategy](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/PrincipalPropagationMode.html#TOKEN_EXCHANGE) will be applied.
+
+## Kubernetes To On-Premise
+
+The SAP Cloud SDK provides support On-Premise connectivity on Kubernetes-based environments as [documented here](../../environments/kubernetes-kyma#on-premise-connectivity).
+
+## Non-Production Deployment To On-Premise
+
+In non-production environments, such as a developer's local machine or a CI/CD pipeline, the SAP Cloud SDK can still be used to connect to On-Premise systems as [documented here](running-locally).
