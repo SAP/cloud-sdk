@@ -98,67 +98,21 @@ To prevent any unnecessary performance loss, the `DestinationService` offers an 
 Hereby, **no authentication** will be performed by the BTP Destination Service for Cloud Foundry.
 
 ```java
-Try<Iterable<Destination>> maybeDestinations = new DestinationService().tryGetAllDestinations();
-```
+var service = new DestinationService();
 
-Keep in mind that **using one of these** `Destination` instances for an actual remote system call **will result in an error** as the `Destination` does not contain any authentication information.
+Collection<DestinationProperties> allDestinationProperties = service.getAllDestinationProperties();
+DestinationProperties individualProperties = service.getDestinationProperties("my-destination");
+```
 
 #### Accessing Destination Properties
 
-The `Destination` object offers a number of APIs to access the destination configuration.
+The `DestinationProperties` object offers a number of APIs to access the destination configuration.
 For example, to access the `URI` property, you can use the following code:
 
 ```java
 Destination destination;
 String uri = destination.get(DestinationProperty.URI).getOrElse("");
 ```
-
-<details>
-<summary>Example: Read Properties of one Specific Destination Configuration</summary>
-
-Finding the information you want from the `tryGetAllDestinations` result can be a bit cumbersome.
-
-The following code shows how to "unwrap" the `Try` and find a specific destination configuration:
-
-```java
-Try<Iterable<Destination>> destinations = new DestinationService().tryGetAllDestinations();
-if( destinations.isFailure() ) {
-    // TODO: handle failure case
-}
-
-var myDestinationConfiguration = findMyDestination(destinations.get());
-if( myDestinationConfiguration == null ) {
-    // TODO: handle destination not found case
-}
-
-
-static Destination findMyDestination( Iterable<Destination> destinations )
-{
-    return StreamSupport
-        .stream(destinations.spliterator(), false)
-        .filter(d -> d.get(DestinationProperty.NAME).getOrElse("").equalsIgnoreCase("my-destination"))
-        .findFirst()
-        .orElse(null);
-}
-```
-
-Once you have filtered down the `Iterable` of `Destination` objects, you can access individual properties like this:
-
-```java showLineNumbers
-String uri = myDestinationConfiguration.get(DestinationProperty.URI).getOrElse("");
-AuthenticationType authenticationType =
-    myDestinationConfiguration
-        .get(DestinationProperty.AUTH_TYPE)
-        .orElse(() -> myDestinationConfiguration.get(DestinationProperty.AUTH_TYPE_FALLBACK))
-        .getOrElse(AuthenticationType.NO_AUTHENTICATION);
-String myCustomProperty = myDestinationConfiguration.get("MyCustomProperty", String.class).getOrElse("");
-```
-
-Note how the code above leverages the `Option` return type of the [`get`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationProperties.html#get(com.sap.cloud.sdk.cloudplatform.connectivity.DestinationPropertyKey)>) method to implement a fallback strategy for the `AUTH_TYPE` property (lines 2 - 6).
-
-Furthermore, the code shows how to access custom properties (line 7), where no well-defined constant [`DestinationProperty`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationProperty.html) exists.
-
-</details>
 
 ### Multitenancy
 
