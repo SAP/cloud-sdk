@@ -52,13 +52,13 @@ DestinationOptions options;
 Try<Destination> destination = service.tryGetDestination("my-destination", options);
 ```
 
-2. Retrieve [all destinations](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationService.html#tryGetAllDestinations(com.sap.cloud.sdk.cloudplatform.connectivity.DestinationOptions)>) to [read destination configurations](#if-authentication-is-not-required):
+2. Retrieve [all destination properties](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationService.html#getAllDestinationProperties()>) and [individual destination properties](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DestinationService.html#getDestinationProperties(java.lang.String)>) to [read destination configurations](#if-authentication-is-not-required):
 
 ```java
 var service = new DestinationService();
 
-DestinationOptions options;
-Try<Iterable<Destination>> destinations = service.tryGetAllDestinations(options);
+Collection<DestinationProperties> allDestinationProperties = service.getAllDestinationProperties();
+DestinationProperties individualProperties = service.getDestinationProperties("my-destination");
 ```
 
 3. Both for [either a subscriber or the provider tenant](#multitenancy).
