@@ -16,7 +16,7 @@ jobs:
           ALL_FILES=$(gh pr view ${{ github.event.pull_request.number }} --json files)
           echo "[DEBUG] All files: $ALL_FILES"
 
-          CHANGED_FILES=$(echo "$ALL_FILES" | jq -r ".files.[] | select(.additions > 0) | .path")
+          CHANGED_FILES=$(echo "$ALL_FILES" | jq -r ".files.\[\] | select(.additions > 0) | .path")
 
           echo "[DEBUG] Following files have been changed: $CHANGED_FILES"
           echo "CHANGED_FILES=$CHANGED_FILES" >> $GITHUB_OUTPUT
