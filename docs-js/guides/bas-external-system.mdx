@@ -213,19 +213,6 @@ In case you use principal propagation, the BAS will fill the `SAP-Connectivity-A
 The user logged into the BAS will be propagated.
 In case your BAS user is **not** a valid user of the on-premise system you can use a destination using basic authorization.
 
-### Supported Authentication Types for Cloud Systems
-
-For calls to cloud systems, i.e. systems that are reachable over the internet, the local BAS proxy is not needed.
-However, the web proxy will be used for all requests.
-In general, this does not cause problems because the proxy is totally transparent.
-
-An exception to this rule is destinations using `ClientCertificateAuthentication` because the http-agent does not yet [allow for certificate forwarding](https://github.com/TooTallNate/node-https-proxy-agent/pull/111).
-As a workaround you can add the target system to the `no_proxy` environment variable:
-
-```
-process.env.no_proxy = process.env.no_proxy  + ",<YourDestinationUrl>"
-```
-
 ## Case 2: Connection to Cloud Systems
 
 Cloud systems are reachable via the internet and you do not need any cloud connector to reach them.
@@ -259,3 +246,15 @@ Create dedicated development destinations which use the following authentication
 - `ClientCertificateAuthentication` (you will have to disable the proxy until the [http-proxy-agent](https://github.com/TooTallNate/node-https-proxy-agent/pull/111) provides a fix)
 
 Note that for the connection to the cloud system, the destinations do not need the two properties `WebIDEEnabled` and `HTML5.DynamicDestination`, because the BAS connectivity proxy is not needed.
+
+### Supported Authentication Types for Cloud Systems
+
+For calls to cloud systems, i.e. systems that are reachable over the internet, the local BAS proxy is not needed.
+However, the web proxy is used for all requests.
+In general, this does not cause problems except for destinations with authentication type `ClientCertificateAuthentication` because proxies break the certificate chain.
+As a workaround you can add the target system to the `no_proxy` environment variable in your application code.
+Replace _DESTINATION_URL_ with the URL of your destination and add the following line before you execute your request:
+
+```js
+process.env.no_proxy += ',DESTINATION_URL';
+```
