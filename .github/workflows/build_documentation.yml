@@ -14,9 +14,10 @@ jobs:
         id: changed-files
         run: |
           ALL_FILES=$(gh pr view ${{ github.event.pull_request.number }} --json files --jq '.files.[] | select(.additions > 0) | .path')
+          CHANGED_FILES="${ALL_FILES//$'\n'/,}"
 
-          echo "[DEBUG] Following files have been changed: $ALL_FILES"
-          echo "CHANGED_FILES=$ALL_FILES" >> $GITHUB_OUTPUT
+          echo "[DEBUG] Following files have been changed: $CHANGED_FILES"
+          echo "CHANGED_FILES=$CHANGED_FILES" >> $GITHUB_OUTPUT
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: Vale Linter
@@ -28,7 +29,7 @@ jobs:
           # see https://github.com/errata-ai/vale for all releases
           version: 3.0.4
           files: ${{ steps.changed-files.outputs.CHANGED_FILES }}
-          separator: "\n"
+          separator: ","
         env:
           # Required
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
