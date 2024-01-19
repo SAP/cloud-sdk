@@ -87,7 +87,7 @@ When the properties of `HttpClient` are not working for the application, e.g. ti
 ### Configuring the Cache
 
 HTTP Clients are reused to ensure existing connections can be reused for better performance.
-By default clients are cached for 5 minutes.
+By default, clients are **cached for 5 minutes**.
 This can be configured to allow for better performance.
 
 <Tabs 
@@ -108,7 +108,8 @@ HttpClientAccessor.setHttpClientCache(cache);
 <TabItem value="v5">
 
 ```java
-ApacheHttpClient5Cache cache = ApacheHttpClient5CacheBuilder.duration(Duration.ofHours(1)).build();
+ApacheHttpClient5Cache cache = new ApacheHttpClient5CacheBuilder()
+                                      .duration(Duration.ofHours(1)).build();
 
 ApacheHttpClient5Accessor.setHttpClientCache(cache);
 ```
