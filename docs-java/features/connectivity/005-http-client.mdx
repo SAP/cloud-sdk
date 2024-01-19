@@ -83,6 +83,50 @@ Please note that similar to other accessor-based APIs, the SAP Cloud SDK offers 
 ## Customization
 
 When the properties of `HttpClient` are not working for the application, e.g. timeout is too short or too long, then the generation can be customized.
+
+### Configuring the Cache
+
+HTTP Clients are reused to ensure existing connections can be reused for better performance.
+By default clients are cached for 5 minutes.
+This can be configured to allow for better performance.
+
+<Tabs 
+  groupId="http-client"
+  defaultValue="v4"
+  values={[
+    {label: "Apache Version 4.x", value: "v4"},
+    {label: "Apache Version 5.x", value: "v5"}
+  ]}>
+<TabItem value="v4">
+
+```java
+DefaultHttpClientCache cache = new DefaultHttpClientCache(1, TimeUnit.HOURS);
+HttpClientAccessor.setHttpClientCache(cache);
+```
+
+</TabItem>
+<TabItem value="v5">
+
+```java
+ApacheHttpClient5Cache cache = ApacheHttpClient5CacheBuilder.duration(Duration.ofHours(1)).build();
+
+ApacheHttpClient5Accessor.setHttpClientCache(cache);
+```
+
+</TabItem>
+</Tabs>
+
+:::tip Implications for Cookies
+
+Cookies are maintained per `HttpClient` object.
+Once a new client is created (for a destination) cookies from previous requests will no longer be avaiable.
+
+We generally recommend to keep the cache duration for HTTP clients longer or equal to the cache duration of destinations.
+
+:::
+
+### Configuring the Clients
+
 Please find the `HttpClientFactory` interface.
 They offer a similar method `createHttpClient` with optional destination argument:
 
