@@ -40,7 +40,7 @@
 - Improved the resilience module structure.
   The de-facto standard `resilience4j` implementation is now included by default.
   It is no longer necessary to explicitly reference this module in the `pom.xml`, if `resilience` is already referenced or is present transitively.
-- Improved the upgrade path from SAP Cloud SDK version 4 by gracefully handling older implementations of `Resilience4jDecorationStrategy`.
+- Improved the upgrade path from SAP Cloud SDK version 4 by handling older implementations of `Resilience4jDecorationStrategy` in a graceful manner.
   In the previous releases, any occurrence of the `com.sap.cloud.sdk.frameworks:resilience4j` maven module needed to be excluded (in case it came in transitively) to not conflict with `com.sap.cloud.sdk.cloudplatform:resilience4j`.
   This is no longer required, as the SAP Cloud SDK 4 strategy will be ignored now, if there is exactly one alternative.
 - Improved the application of resilience patterns for OAuth authorization flows.
