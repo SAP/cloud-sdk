@@ -41,11 +41,11 @@
   The de-facto standard `resilience4j` implementation is now included by default.
   It is no longer necessary to explicitly reference this module in the `pom.xml`, if `resilience` is already referenced or is present transitively.
 - Improved the upgrade path from SAP Cloud SDK version 4 by gracefully handling older implementations of `Resilience4jDecorationStrategy`.
-  Previously any occurrence of the `com.sap.cloud.sdk.frameworks:resilience4j` maven module needed to be excluded (in case it came in transitively) to not conflict with `com.sap.cloud.sdk.cloudplatform:resilience4j`.
-  This is no longer required, as the SAP Cloud SDK 4 strategy will gracefully be ignored, if there is exactly one alternative.
+  In the previous releases, any occurrence of the `com.sap.cloud.sdk.frameworks:resilience4j` maven module needed to be excluded (in case it came in transitively) to not conflict with `com.sap.cloud.sdk.cloudplatform:resilience4j`.
+  This is no longer required, as the SAP Cloud SDK 4 strategy will be ignored now, if there is exactly one alternative.
 - Improved the application of resilience patterns for OAuth authorization flows.
   Stateful resilience patterns (e.g. circuit breaker) will now be applied per `client_id` of the OAuth client (was per instance of the OAuth service / destination).
-- Improved the `ApacheHttpClient5CacheBuilder` API, it previously would return a non-public class.
+- Improved the `ApacheHttpClient5CacheBuilder` API, it would return a non-public class in the previous releases.
 - Dependency Updates:
   - SAP dependency updates:
     - Update the [SAP Security Library](https://github.com/SAP/cloud-security-services-integration-library) from `3.3.1` to `3.3.3`
