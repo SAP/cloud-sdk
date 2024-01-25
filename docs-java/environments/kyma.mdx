@@ -685,3 +685,21 @@ The code above shows an example how you can then use the `destination` object to
 The above approach is not limited to destinations of proxy type `ON_PREMISE`.
 `INTERNET` destinations are equally supported.
 :::
+
+### Troubleshooting
+
+When using proxy servers it can be difficult to troubleshoot issues as it is often not obvious where exactly the error occurred.
+For example, with the Transparent Proxy errors might occur on the target system (e.g. OData service), the Destination Service or the Transparent Proxy itself.
+
+To make troubleshooting easier the Transparent Proxy adds additional response headers to provide more information about where an error occurred.
+For the above example of executing OData requests you can access the response headers as follows:
+
+```java
+try {
+    // execute OData request
+} catch (ODataResponseException e) {
+    System.out.println(e.getHttpCode());
+    // the Transparent Proxy will attach additional response headers in case an error occurred
+    System.out.println(e.getHttpHeaders());
+}
+```
