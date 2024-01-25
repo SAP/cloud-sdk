@@ -12,6 +12,9 @@ keywords:
   - sap cloud sdk
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 [Kyma](https://kyma-project.io/) is an application runtime that provides you a flexible and easy way to connect, extend, and customize your applications in the cloud-native world of Kubernetes.
 Find more details in the [official documentation](https://kyma-project.io/docs/kyma/latest/01-overview/).
 
@@ -578,6 +581,35 @@ The official [documentation of the Transparent Proxy](https://help.sap.com/docs/
 
 ### Create a Kubernetes Resource
 
+You can either configure connectivity to individual destinations, or for arbitrary destinations in your destination service instance or subaccount (dynamic destinations).
+
+<Tabs 
+  groupId="dynamic-dest"
+  defaultValue="single"
+  values={[
+    {label: "Individual Destination", value: "single"},
+    {label: "Dynamic Desitnations", value: "dynamic"}
+  ]}>
+<TabItem value="single">
+
+Given you have created a destination with the name `my-destination` in the BTP Cockpit, create the following YAML file:
+
+```yaml title:"my-destination.yaml"
+apiVersion: destination.connectivity.api.sap/v1
+kind: Destination
+metadata:
+  name: my-destination
+spec:
+  destinationRef:
+    name: 'my-destination'
+  destinationServiceInstanceName: dest-service-instance-example # can be ommited if config.destinationService.defaultInstanceName was provided to the helm chart of the transparent proxy upon installation
+```
+
+This will create a Kubernetes resource in your cluster, pointing to the destination `my-destination` you created in the BTP cockpit.
+
+</TabItem>
+<TabItem value="dynamic">
+
 Create the following YAML file:
 
 ```yaml title:"example-dest.yaml"
@@ -591,18 +623,29 @@ spec:
   destinationServiceInstanceName: dest-service-instance-example # can be ommited if config.destinationService.defaultInstanceName was provided to the helm chart of the transparent proxy upon installation
 ```
 
-It will create a Kubernetes resource in your cluster, allowing you to create requests against arbitrary destinations.
-Apply the YAML with `kubectl apply` to take effect.
+This will create a Kubernetes resource in your cluster, allowing you to create requests against arbitrary destinations.
+
+</TabItem>
+</Tabs>
+
+Apply the YAML with `kubectl apply -n` into the Transparent Proxy Kubernetes namespace to take effect.
 
 ### Executing Requests
 
 In your application you can now configure a destination to execute requests:
 
+<Tabs 
+  groupId="dynamic-dest"
+  defaultValue="single"
+  values={[
+    {label: "Individual Destination", value: "single"},
+    {label: "Dynamic Desitnations", value: "dynamic"}
+  ]}>
+<TabItem value="single">
+
 ```java
 DefaultHttpDestination destination = DefaultHttpDestination
-        .builder("http://dynamic-destination.namespace/")
-        // use the name of the desitnation you configured in the BTP Cockpit
-        .header(new Header("X-Destination-Name", "my-destination"))
+        .builder("http://my-destination.namespace/")
         // for a subscriber tenant make sure to send the tenant header:
         // .header(new Header("X-Tenant-Id", TenantAccessor.getCurrentTenant().getTenantId()))
         // for principal propagation make sure to set the auth type to "TOKEN_FORWARDING":
@@ -613,10 +656,30 @@ List<SalesArea> execute = new DefaultSalesAreaService().getAllSalesArea() // exa
         .execute(destination);
 ```
 
+</TabItem>
+<TabItem value="dynamic">
+
+```java
+DefaultHttpDestination destination = DefaultHttpDestination
+        .builder("http://dynamic-destination.namespace/")
+        // use the name of the desitnation you configured in the BTP Cockpit
+         .header(new Header("X-Destination-Name", "my-destination"))
+        // for a subscriber tenant make sure to send the tenant header:
+        // .header(new Header("X-Tenant-Id", TenantAccessor.getCurrentTenant().getTenantId()))
+        // for principal propagation make sure to set the auth type to "TOKEN_FORWARDING":
+        // .authenticationType(AuthenticationType.TOKEN_FORWARDING)
+        .build();
+
+List<SalesArea> execute = new DefaultSalesAreaService().getAllSalesArea() // example OData request
+        .execute(destination);
+```
+
+</TabItem>
+</Tabs>
+
 - Replace `namespace` in the URL with the namespace you installed the Transparent Proxy into.
 
-This will target the Kubernetes resource `dynamic-destination` we created above which will be resolved to the destination name we passed in the header.
-The code above shows an example how you can use it to perform an OData request.
+The code above shows an example how you can then use the `destination` object to perform an OData request against the system.
 
 :::tip Connecting to Cloud systems
 The above approach is not limited to destinations of proxy type `ON_PREMISE`.
