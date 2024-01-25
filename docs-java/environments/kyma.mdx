@@ -546,7 +546,8 @@ But, this would mean that access to your application would not be authenticated 
 ### Prerequisites
 
 This guide assumes you have both the **Transparent Proxy** (version `>= 1.4.0`) and **Connectivity Proxy** (version `>= 2.11.0`) installed in your cluster.
-Please refer to [this](https://github.com/SAP-samples/kyma-runtime-extension-samples/tree/main/connectivity-proxy) and [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/23fc1100c60b45c58f09694b7f9c7700.html) documentation on how to install it if you haven't already.
+For Kyma the Transparent Proxy is available as a module that can be enabled as described [here](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/transparent-proxy-in-kyma-environment).
+The Connectivity Proxy can be installed as described [here](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/operations-via-helm).
 
 :::note Kyma Compatibility
 On Kyma, two scenarios are supported by the SAP Cloud SDK:
@@ -703,3 +704,13 @@ try {
     System.out.println(e.getHttpHeaders());
 }
 ```
+
+<details><summary>List of headers added by the Transparent Proxy</summary>
+
+- `X-Error-Origin` - the source of the error
+- `X-Proxy-Server` - the proxy server (Transparent Proxy)
+- `X-Error-Message` - thorough error message
+- `X-Error-Internal-Code` - set only when the source of the error is the XSUAA or Destination service. The value is the HTTP code returned from one of these services.
+- `X-Request-Id` is sent with the response in all requests, both successful and failed
+
+</details>
