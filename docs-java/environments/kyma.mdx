@@ -542,13 +542,13 @@ But, this would mean that access to your application would not be authenticated 
 
 ### Prerequisites
 
-This guide assumes you have both the **Transparent Proxy** (version `>= 1.3.0`) and **Connectivity Proxy** (version `>= 2.9.2`) installed in your cluster.
+This guide assumes you have both the **Transparent Proxy** (version `>= 1.4.0`) and **Connectivity Proxy** (version `>= 2.11.0`) installed in your cluster.
 Please refer to [this](https://github.com/SAP-samples/kyma-runtime-extension-samples/tree/main/connectivity-proxy) and [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/23fc1100c60b45c58f09694b7f9c7700.html) documentation on how to install it if you haven't already.
 
 :::note Kyma Compatibility
 On Kyma, two scenarios are supported by the SAP Cloud SDK:
 
-1. Using the Connecitivty Proxy in "trusted mode" together with the Transparent Proxy
+1. Using the Connecitivty Proxy together with the Transparent Proxy
 2. Using a custom Connecitivty Proxy instance in "untrusted mode" without the Transparent Proxy
 
 The Connecitivty Proxy managed by Kyma is coming in "trusted mode", thus this guide covers scenario (1).
@@ -568,8 +568,6 @@ Please note that the current implementation of the Transparent Proxy does not ye
   <summary>Constraints when using the Transparent Proxy</summary>
 
 - Private Link not yet supported
-- Destination names need to be known at design time
-  - see the note on [Create a Kubernetes Resource](#create-a-kubernetes-resource)
 
 </details>
 
@@ -586,22 +584,15 @@ Create the following YAML file:
 apiVersion: destination.connectivity.api.sap/v1
 kind: Destination
 metadata:
-  name: example-dest
+  name: dynamic-destination
 spec:
   destinationRef:
-    name: 'example-dest-onprem' # name from BTP Cockpit
+    name: '*'
   destinationServiceInstanceName: dest-service-instance-example # can be ommited if config.destinationService.defaultInstanceName was provided to the helm chart of the transparent proxy upon installation
 ```
 
-- Adjust the name `example-dest-onprem` to the On-Premise destination you defined in your SAP BTP Cockpit.
-
-It will create a Kubernetes resource in your cluster, pointing to the destination you created in the cockpit.
+It will create a Kubernetes resource in your cluster, allowing you to create requests against arbitrary destinations.
 Apply the YAML with `kubectl apply` to take effect.
-
-:::note
-This step is required for each destination that should be reachable via the Transparent Proxy.
-If you do not create a custom Kubernetes resource of type `destinations.destination.connectivity.api.sap` for a given destination, the destination will not be handled by the Transparent Proxy.
-:::
 
 ### Executing Requests
 
@@ -609,7 +600,9 @@ In your application you can now configure a destination to execute requests:
 
 ```java
 DefaultHttpDestination destination = DefaultHttpDestination
-        .builder("http://example-dest.namespace/")
+        .builder("http://dynamic-destination.namespace/")
+        // use the name of the desitnation you configured in the BTP Cockpit
+        .header(new Header("X-Destination-Name", "my-destination"))
         // for a subscriber tenant make sure to send the tenant header:
         // .header(new Header("X-Tenant-Id", TenantAccessor.getCurrentTenant().getTenantId()))
         // for principal propagation make sure to set the auth type to "TOKEN_FORWARDING":
@@ -620,14 +613,10 @@ List<SalesArea> execute = new DefaultSalesAreaService().getAllSalesArea() // exa
         .execute(destination);
 ```
 
-- Replace `namespace` in the URL with the namespace you installed the Transparent Proxy into
+- Replace `namespace` in the URL with the namespace you installed the Transparent Proxy into.
 
-This will target the Kubernetes resource `example-dest` we created above which will be resolved to the destination we configured in that resource.
+This will target the Kubernetes resource `dynamic-destination` we created above which will be resolved to the destination name we passed in the header.
 The code above shows an example how you can use it to perform an OData request.
-
-:::note
-Repeat this process for all _destination names_ you want to use in your application.
-:::
 
 :::tip Connecting to Cloud systems
 The above approach is not limited to destinations of proxy type `ON_PREMISE`.
