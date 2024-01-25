@@ -220,13 +220,9 @@ For that, the [`DestinationService.Cache`](pathname:///java-api/v5/com/sap/cloud
 
 ### Change Detection Mode
 
-In cases where applications interact with more than one destination per tenant, caching performance can be significantly boosted by enabling **change detection**:
+**Change detection** mode is a special caching mode that significantly boosts performance in most scenarios.
 
-```java
-DestinationService.Cache.enableChangeDetection();
-```
-
-Usually, without change detection mode, all cache entries will expire latest after a fixed amount of time (i.e. 5 minutes by default).
+Traditionally, without change detection mode, all cache entries expire latest after a fixed amount of time (i.e. 5 minutes by default).
 
 With change detection, this time-based expiration is disabled.
 Instead, when accessing the cache, the implementation checks whether the destination has changed since the last access.
@@ -238,3 +234,9 @@ Destinations that use JWT-based authentication will still be refreshed before th
 
 For a single destination (per tenant) this is not a benefit, but for two or more the benefit is **up to 100% per additional destination**.
 For example, if your application is interacting with 5 destinations per tenant, you can expect a 3 to 4 times performance increase (i.e. 3 to 4 times less costly HTTP calls).
+
+If that behavior is not desired, you may disable the change detection mode:
+
+```java
+DestinationService.Cache.disableChangeDetection();
+```
