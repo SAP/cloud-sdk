@@ -169,7 +169,7 @@ export const features = [
     category: 'Advanced',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/resilience/resilience)`,
+      docsLink: `[docs](${baseUrl}/java/features/resilience)`,
       note: ''
     },
     js: {
@@ -183,7 +183,7 @@ export const features = [
     category: 'Advanced',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/resilience/resilience)`,
+      docsLink: `[docs](${baseUrl}/java/features/resilience)`,
       note: ''
     },
     js: {
