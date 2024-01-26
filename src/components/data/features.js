@@ -29,7 +29,7 @@ export const features = [
     category: 'Legacy',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/bapi-and-rfc/overview/)`,
+      docsLink: `[docs](${baseUrl}/java/features/bapi-and-rfc/overview)`,
       note: ''
     },
     js: {
@@ -43,7 +43,7 @@ export const features = [
     category: 'Legacy',
     java: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/java/features/bapi-and-rfc/overview/)`,
+      docsLink: `[docs](${baseUrl}/java/features/bapi-and-rfc/overview)`,
       note: ''
     },
     js: {
