@@ -50,7 +50,7 @@ The `DefaultHttpDestination` implements support for following sources of HTTP he
 7. Headers that are derived from [proxy authentication related properties](#deriving-the-proxy-authorization-header), **iff** no `Proxy-Authorization` header was provided by any of the previous options. <br />
    In most cases, the `Proxy-Authorization` header will be [derived automatically](on-premise) from the bound BTP Connectivity Service.
 
-### Deriving The `Authorization` Header
+### Deriving the `Authorization` Header
 
 The `DefaultHttpDestination` tries to derive the `Authorization` header from authentication related properties, **iff** no `Authorization` header is provided by any other source.
 In most cases, however, the BTP Destination Service will [provide a `Authorization` header](btp-destination-service#how-authentication-at-the-target-system-works), so this step is usually skipped.
@@ -62,7 +62,7 @@ If the destination does not stem from the BTP destination service, then the conc
 
 - For `AuthenticationType.TOKEN_FORWARDING`, the `RequestHeaderAccessor` is used to find any `Authorization` header in the current request. All headers that are found (there should usually only be one) are then forwarded.
 
-### Deriving The `Proxy-Authorization` Header
+### Deriving the `Proxy-Authorization` Header
 
 :::info On-Premise Handling
 
@@ -83,12 +83,12 @@ This is done by attempting to transform the value of the `ProxyAuthorization` pr
 In general, the `Proxy-Authorization` header will **only** be derived if the properties contain a full proxy configuration.
 Such a proxy configuration must contain a proxy URI, which is either taken from the `Proxy` property or, if that doesn't exist, is constructed from the `ProxyHost` and `ProxyPort` properties.
 
-## About The _Builder_ API
+## About the _Builder_ API
 
 The [`DefaultHttpDestination.Builder`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.Builder.html) allows applications to either create a `DefaultHttpDestination` instance from scratch or to "modify" an existing one.
 It offers APIs to set any desired property, header, header provider, or any other value that is supported by the `DefaultHttpDestination` implementation.
 
-### Building On Top Of An Existing Destination
+### Building on Top of an Existing Destination
 
 Sometimes, it is needed to slightly adjust an existing `Destination` instance.
 For example, there might be just this one single header missing for a specific request. <br />
