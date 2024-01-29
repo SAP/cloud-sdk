@@ -608,6 +608,18 @@ spec:
 
 This will create a Kubernetes resource in your cluster, pointing to the destination `my-destination` you created in the SAP BTP cockpit.
 
+:::note Security Considerations
+
+With the configuration above you are exposing a specific target system defined as a destination.
+Therefore, allowing communication to it from any pod within the namespace.
+
+Keep in mind that this includes the destination configuration of any **subscribed tenants**, if they have defined a destination with the same name.
+
+Make sure to secure your cluster accordingly to avoid any potential security risks.
+For more information on how to restrict access to the destinations refer to [this document](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/destination-custom-resource-scope).
+
+:::
+
 </TabItem>
 <TabItem value="dynamic">
 
@@ -626,10 +638,22 @@ spec:
 
 This will create a Kubernetes resource in your cluster, allowing you to create requests against arbitrary destinations.
 
+:::note Security Considerations
+
+With the configuration above you are exposing all destinations from the configured Destination service instance.
+Therefore, allowing communication to it from any pod within the namespace.
+
+Keep in mind that this includes all destinations of all **subscribed tenants**.
+
+Make sure to secure your cluster accordingly to avoid any potential security risks.
+For more information on how to restrict access to the destinations refer to [this document](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/destination-custom-resource-scope).
+
+:::
+
 </TabItem>
 </Tabs>
 
-Apply the YAML with `kubectl apply -n` into the Transparent Proxy Kubernetes namespace to take effect.
+Apply the YAML with `kubectl apply -n` into the namespace of your application pods to take effect.
 
 ### Executing Requests
 
