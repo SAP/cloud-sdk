@@ -443,77 +443,8 @@ We generally recommend to go with approach (1) unless the given constraints appl
 
 ### 1. Using Transparent and Connectivity Proxies
 
-#### Prerequisites
-
-This guide assumes you have both the **Transparent Proxy** (version `>= 1.3.0`) and **Connectivity Proxy** (version `>= 2.9.2`) installed in your cluster.
-Please refer to [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/1c18e0ca10884dad994fc3d7e1d046d7.html) and [this](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/23fc1100c60b45c58f09694b7f9c7700.html) documentation on how to install it if you haven't already.
-
-#### Background Information
-
-When using the Transparent Proxy your app performs requests against the Transparent Proxy without explicit authentication, assuming the network in your cluster can be trusted.
-The Transparent Proxy will obtain the relevant destination from the destination service and use it to forward the request via the Connectivity Proxy to the On-Premise system.
-Consequently, your app itself does not interact with destination or connectivity service at all and thus your application pods do not require bindings to these two services.
-
-:::tip
-This approach is conceptually different from what you may be used to from a CloufdFoundry environment.
-The official [documentation of the Transparent Proxy](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/e661713ef7d14373b57e3e26b0b03b86.html) gives more information on the architecture.
-:::
-
-#### Create a Kubernetes Resource
-
-Create the following YAML file:
-
-```yaml title:"example-dest.yaml"
-apiVersion: destination.connectivity.api.sap/v1
-kind: Destination
-metadata:
-  name: example-dest
-spec:
-  destinationRef:
-    name: 'example-dest-onprem' # name from BTP Cockpit
-  destinationServiceInstanceName: dest-service-instance-example # can be ommited if config.destinationService.defaultInstanceName was provided to the helm chart of the transparent proxy upon installation
-```
-
-- Adjust the name `example-dest-onprem` to the On-Premise destination you defined in your SAP BTP Cockpit.
-
-It will create a Kubernetes resource in your cluster, pointing to the destination you created in the cockpit.
-Apply the YAML with `kubectl apply` to take effect.
-
-:::note
-This step is required for each destination that should be reachable via the Transparent Proxy.
-If you do not create a custom Kubernetes resource of type `destinations.destination.connectivity.api.sap` for a given destination, the destination will not be handled by the Transparent Proxy.
-:::
-
-#### Executing Requests
-
-In your application you can now configure a destination to execute requests:
-
-```java
-DefaultHttpDestination destination = DefaultHttpDestination
-        .builder("http://example-dest.namespace/")
-        // for a subscriber tenant make sure to send the tenant header:
-        // .header(new Header("X-Tenant-Id", TenantAccessor.getCurrentTenant().getTenantId()))
-        // for principal propagation make sure to set the auth type to "TOKEN_FORWARDING":
-        // .authenticationType(AuthenticationType.TOKEN_FORWARDING)
-        .build();
-
-List<SalesArea> execute = new DefaultSalesAreaService().getAllSalesArea() // example OData request
-        .execute(destination);
-```
-
-- Replace `namespace` in the URL with the namespace you installed the Transparent Proxy into
-
-This will target the Kubernetes resource `example-dest` we created above which will be resolved to the destination we configured in that resource.
-The code above shows an example how you can use it to perform an OData request.
-
-:::note
-Repeat this process for all _destination names_ you want to use in your application.
-:::
-
-:::tip Connecting to Cloud systems
-The above approach is not limited to destinations of proxy type `ON_PREMISE`.
-`INTERNET` destinations are equally supported.
-:::
+Using the SAP Cloud SDK with the Transparent Proxy on Gardener is identical to how it is used on Kyma.
+Please refer to [this documentation](/docs/java/environments/kubernetes-kyma#on-premise-connectivity).
 
 ### 2. Using the Connectivity Proxy
 
