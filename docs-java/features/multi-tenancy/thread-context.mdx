@@ -192,14 +192,11 @@ ThreadContextExecutors.setExecutor(executor);
 ThreadContextExecutors.submit(myTask);
 ```
 
-The API is also compatible with Java virtual threads (JDK19+).
+The above API is also compatible with Java virtual threads (JDK21).
 
 ```java
-try (ExecutorService executor =
-  DefaultThreadContextExecutorService.of(Executors.newVirtualThreadPerTaskExecutor()))
-{
-  executor.submit(myTask);
-}
+ExecutorService executor =
+  DefaultThreadContextExecutorService.of(Executors.newVirtualThreadPerTaskExecutor());
 ```
 
 ### Modifying the ThreadContext
