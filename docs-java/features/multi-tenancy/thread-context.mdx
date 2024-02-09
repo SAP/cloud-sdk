@@ -181,8 +181,8 @@ The `ThreadContextExecutors` class leverages a single `ThreadContextExecutorServ
 You can create a custom `ThreadContextExecutorService`, for example to use a different thread pool, via:
 
 ```java
-ThreadContextExecutorService executor = DefaultThreadContextExecutorService
-            .of(Executors.newFixedThreadPool(3));
+ThreadContextExecutorService executor =
+  DefaultThreadContextExecutorService.of(Executors.newFixedThreadPool(3));
 
 // use it directly:
 executor.submit(myTask);
@@ -190,6 +190,13 @@ executor.submit(myTask);
 // or set it to be used by the static ThreadContextExecutors API:
 ThreadContextExecutors.setExecutor(executor);
 ThreadContextExecutors.submit(myTask);
+```
+
+The above API is also compatible with Java virtual threads (JDK21).
+
+```java
+ThreadContextExecutorService executor =
+  DefaultThreadContextExecutorService.of(Executors.newVirtualThreadPerTaskExecutor());
 ```
 
 ### Modifying the ThreadContext
