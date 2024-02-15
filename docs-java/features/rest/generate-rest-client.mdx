@@ -207,37 +207,33 @@ You can pass arbitrary additional configuration properties to the underlying [op
 
 The complete list of available parameters with their description is as follows:
 
-| Parameter                 |  Default   | Required | Description                                                                                                                                                                                                                                                                                                                                                                     |
-| :------------------------ | :--------: | :------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `<inputSpec>`             |     -      |   Yes    | Location of the OpenAPI specification file                                                                                                                                                                                                                                                                                                                                      |
-| `<outputDirectory>`       |     -      |   Yes    | Output directory for generated sources                                                                                                                                                                                                                                                                                                                                          |
-| `<apiPackage>`            |     -      |   Yes    | Package name for the generated API classes                                                                                                                                                                                                                                                                                                                                      |
-| `<modelPackage>`          |     -      |   Yes    | Package name for the generated Model classes                                                                                                                                                                                                                                                                                                                                    |
-| `<deleteOutputDirectory>` |  `False`   |    No    | Determines whether to delete the output directory before running the generator                                                                                                                                                                                                                                                                                                  |
-| `<apiMaturity>`           | `released` |    No    | Defines the maturity of the OpenAPI for which Java classes are generated. Possible values are `released` and `beta`. Please note if you define it as `beta` then [@Beta annotations](https://www.javadoc.io/doc/com.google.guava/guava/latest/com/google/common/annotations/Beta.html) are added to the generated classes which indicate that they are in an experimental state |
-| `<compileScope>`          |   `NONE`   |    No    | Adds the generated sources to the compilation or test phase. Respective values are `COMPILE` and `TEST_COMPILE`                                                                                                                                                                                                                                                                 |
-| `<copyrightHeader>`       |   `null`   |    No    | Copyright header to be added at the top of generated files                                                                                                                                                                                                                                                                                                                      |
-| `<verbose>`               |  `False`   |    No    | Run the generator with verbose output                                                                                                                                                                                                                                                                                                                                           |
-| `<sapCopyrightHeader>`    |  `False`   |    No    | Add the SAP copyright header (overrides `copyrightHeader`)                                                                                                                                                                                                                                                                                                                      |
-| `<additionalProperties>`  |    `[]`    |    No    | Defines a map of key-value pairs that will be passed to the Java generator. E.g. `<param>value</param>`                                                                                                                                                                                                                                                                         |
+| Parameter                      |  Default   | Required | Description                                                                                                                                                                                                                                                                                                                                                                     |
+| :----------------------------- | :--------: | :------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `<inputSpec>`                  |     -      |   Yes    | Location of the OpenAPI specification file                                                                                                                                                                                                                                                                                                                                      |
+| `<outputDirectory>`            |     -      |   Yes    | Output directory for generated sources                                                                                                                                                                                                                                                                                                                                          |
+| `<apiPackage>`                 |     -      |   Yes    | Package name for the generated API classes                                                                                                                                                                                                                                                                                                                                      |
+| `<modelPackage>`               |     -      |   Yes    | Package name for the generated Model classes                                                                                                                                                                                                                                                                                                                                    |
+| `<deleteOutputDirectory>`      |  `False`   |    No    | Determines whether to delete the output directory before running the generator                                                                                                                                                                                                                                                                                                  |
+| `<apiMaturity>`                | `released` |    No    | Defines the maturity of the OpenAPI for which Java classes are generated. Possible values are `released` and `beta`. Please note if you define it as `beta` then [@Beta annotations](https://www.javadoc.io/doc/com.google.guava/guava/latest/com/google/common/annotations/Beta.html) are added to the generated classes which indicate that they are in an experimental state |
+| `<compileScope>`               |   `NONE`   |    No    | Adds the generated sources to the compilation or test phase. Respective values are `COMPILE` and `TEST_COMPILE`                                                                                                                                                                                                                                                                 |
+| `<copyrightHeader>`            |   `null`   |    No    | Copyright header to be added at the top of generated files                                                                                                                                                                                                                                                                                                                      |
+| `<verbose>`                    |  `False`   |    No    | Run the generator with verbose output                                                                                                                                                                                                                                                                                                                                           |
+| `<sapCopyrightHeader>`         |  `False`   |    No    | Add the SAP copyright header (overrides `copyrightHeader`)                                                                                                                                                                                                                                                                                                                      |
+| `<enableOneofAnyofGeneration>` |  `False`   |    No    | Defines whether to enable processing of anyOf/oneOf keywords during client generation                                                                                                                                                                                                                                                                                                                     |
+| `<additionalProperties>`       |    `[]`    |    No    | Defines a map of key-value pairs that will be passed to the Java generator. E.g. `<param>value</param>`                                                                                                                                                                                                                                                                         |
 
-## Solving Compilation Issues After Generation
+## Support for `anyOf/oneOf` keywords
 
 :::info
 
-From version `3.58` of the SAP Cloud SDK, the OpenAPI generator has been enhanced to fail if the input specification contains keywords `anyOf` or `oneOf` in certain positions.
+From version `5.4` of the SAP Cloud SDK, the OpenAPI generator can be configured to generate clients for specification with `anyOf/oneOf` keywords by using the `<enableOneofAnyofGeneration>` parameter in the OpenAPI maven generator plugin.
+But, the generated client though may not be feature complete and work as expected for all cases involving `anyOf/oneOf` although supporting some use cases.
 
 :::
 
-In certain cases although the generation of the client succeeds the subsequent compilation fails due to multiple reasons.
+By default, the client generation for input specification with `anyOf/oneOf` keywords in the following locations fails:
 
-If you observe that you notice `Cannot find Symbol for AnyOf{ClassName} Classes` or `Cannot find symbol OneOf{ClassName} Classes` or `Cannot find symbol UNKNOWN_BASE_TYPE` during compilation, check if your specification contains keywords `anyOf` or `oneOf`.
-
-The public open-source [OpenAPI Generator](https://github.com/OpenAPITools/openapi-generator) that is used by the SAP Cloud SDK under the hood generates non-compilable code if `anyOf` or `oneOf` are present in certain parts of the input specification.
-
-Compilation fails if:
-
-- These keywords exist under the `paths` part, under any operation while defining either the `requestbody` or `responses`
+- Keywords existing under the `paths` part, under any operation while defining either the `requestbody` or `responses`
 
 <details>
   <summary>Keywords under paths</summary>
@@ -270,7 +266,7 @@ paths:
 
 </details>
 
-- These keywords exist under any of the `schemas` either under any property in `properties` or under `additionalProperties`
+- Keywords existing under any of the `schemas` either under any property in `properties` or under `additionalProperties`
 
 <details>
   <summary>Keywords under properties of schema</summary>
@@ -315,9 +311,4 @@ components:
 
 </details>
 
-To make the compilation succeed, please remove these keywords from your specification and generate the client again.
-
-Please note that while removing these keywords from a property, you must also supply a meaningful replacement.
-Sometimes you may also choose to drop the property altogether for e.g, in the case of `additionalProperties`
-
-Refer to the [Swagger documentation](https://swagger.io/docs/specification/data-models/oneof-anyof-allof-not/) to understand more about the usage of these keywords and to derive their replacement.
+To make the generation to succeed, please use `<enableOneofAnyofGeneration>` parameter in the OpenAPI maven generator plugin and re-generate the client again.
