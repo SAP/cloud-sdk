@@ -154,7 +154,7 @@ We recommend using a Maven property for defining the version of both the Maven p
 The maven plugin can also be invoked without a project from the command line using `-D` parameter flags, for example:
 
 ```bash
-mvn com.sap.cloud.datamodel:openapi-generator-maven-plugin:5.XX.X:generate -Dopenapi.generate.inputSpec=foo -Dopenapi.generate.outputDirectory=bar
+mvn com.sap.cloud.sdk.datamodel:openapi-generator-maven-plugin:5.XX.X:generate -Dopenapi.generate.inputSpec=foo -Dopenapi.generate.outputDirectory=bar -Dopenapi.generate.apiPackage=api -Dopenapi.generate.modelPackage=model
 ```
 
 See the full list of parameters [here](#available-parameters).
@@ -219,14 +219,14 @@ The complete list of available parameters with their description is as follows:
 | `<copyrightHeader>`            |   `null`   |    No    | Copyright header to be added at the top of generated files                                                                                                                                                                                                                                                                                                                      |
 | `<verbose>`                    |  `False`   |    No    | Run the generator with verbose output                                                                                                                                                                                                                                                                                                                                           |
 | `<sapCopyrightHeader>`         |  `False`   |    No    | Add the SAP copyright header (overrides `copyrightHeader`)                                                                                                                                                                                                                                                                                                                      |
-| `<enableOneofAnyofGeneration>` |  `False`   |    No    | Defines whether to enable processing of anyOf/oneOf keywords during client generation                                                                                                                                                                                                                                                                                           |
+| `<enableOneOfAnyOfGeneration>` |  `False`   |    No    | Defines whether to enable processing of anyOf/oneOf keywords during client generation                                                                                                                                                                                                                                                                                           |
 | `<additionalProperties>`       |    `[]`    |    No    | Defines a map of key-value pairs that will be passed to the Java generator. E.g. `<param>value</param>`                                                                                                                                                                                                                                                                         |
 
 ## Support for `anyOf/oneOf` keywords
 
 :::info
 
-From version `5.4` of the SAP Cloud SDK, the OpenAPI generator can be configured to generate clients for specification with `anyOf/oneOf` keywords by using the `<enableOneofAnyofGeneration>` parameter in the OpenAPI maven generator plugin.
+From version `5.4` of the SAP Cloud SDK, the OpenAPI generator can be configured to generate clients for specification with `anyOf/oneOf` keywords by using the `<enableOneOfAnyOfGeneration>` parameter in the OpenAPI maven generator plugin.
 But, the generated client though may not be feature complete and work as expected for all cases involving `anyOf/oneOf` although supporting some use cases.
 
 :::
@@ -311,4 +311,4 @@ components:
 
 </details>
 
-To make the generation to succeed, please use `<enableOneofAnyofGeneration>` parameter in the OpenAPI maven generator plugin and re-generate the client again.
+To make the generation to succeed, please use `<enableOneOfAnyOfGeneration>` parameter in the OpenAPI maven generator plugin and re-generate the client again.
