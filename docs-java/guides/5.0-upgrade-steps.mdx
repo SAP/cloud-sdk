@@ -38,12 +38,12 @@ If you are on an older CAP stack, please follow the [CAP migration guide](https:
 ## Before You Update
 
 Before you increase the SAP Cloud SDK version to 5, it is recommended to first update to the latest available version of
-the SAP Cloud SDK 4 and migrate any usage of deprecated API. Follow the deprecation notes in the Javadocs to find
-recommended replacements. All deprecated APIs are removed with version 5.
+the SAP Cloud SDK 4 and migrate any usage of deprecated API.
+Follow the deprecation notes in the Javadocs to find recommended replacements.
+All deprecated APIs are removed with version 5.
 
 Also, make sure that you are using Java 17 or higher. To setup your build to use Java 17 you can use [this guide](https://www.baeldung.com/maven-java-version).
-As Java EE modules have been removed from Java 11, you might also need to update your application to use the
-[Jakarta EE](https://jakarta.ee/) modules instead.
+As Java EE modules have been removed from Java 11, you might also need to update your application to use the [Jakarta EE](https://jakarta.ee/) modules instead.
 This JEP provides a good overview of the changes: [JEP 320: Remove the Java EE and CORBA Modules](https://openjdk.java.net/jeps/320).
 
 If you are consuming SOAP APIs and are relying on the `axis2-wsdl2code-maven-plugin` to generate classes, please also additionally include `javax.activation:activation` artifact to your dependencies to avoid compilation errors.
@@ -172,7 +172,7 @@ Therefore, you should also rename respectively remove those from your project se
 - Archetypes (Replaced by single archetype: `com.sap.cloud.sdk.archetypes:spring-boot3`)
   - `com.sap.cloud.sdk.archetypes:scp-cf-tomee`
   - `com.sap.cloud.sdk.archetypes:scp-neo-javaee7`
-- Neo related modules. Please migrate to the Cloud Foundry environment.
+- Neo related modules, please migrate to the Cloud Foundry environment.
   - `com.sap.cloud.sdk.cloudplatform:auditlog-scp-neo`
   - `com.sap.cloud.sdk.cloudplatform:cloudplatform-connectivity-scp-neo`
   - `com.sap.cloud.sdk.cloudplatform:cloudplatform-core-scp-neo`
@@ -191,7 +191,7 @@ Therefore, you should also rename respectively remove those from your project se
   - `com.sap.cloud.sdk.datamodel:openapi-generator-cli`
     - Call the generator directly as a maven plugin:
     - `mvn com.sap.cloud.sdk.datamodel:openapi-generator-maven-plugin:5.0.0:generate`
-- Pregenerated Clients. [Generate and use your own OData VDM](#generate-and-use-your-own-odata-virtual-data-model) instead.
+- Pregenerated Clients, [generate and use your own OData VDM](#generate-and-use-your-own-odata-virtual-data-model) instead.
   - `com.sap.cloud.sdk.s4hana:s4hana-all`
   - `com.sap.cloud.sdk.s4hana:s4hana-api-odata`
   - `com.sap.cloud.sdk.s4hana:s4hana-api-odata-onpremise`
@@ -417,7 +417,7 @@ Once the build doesn't complain about missing dependency versions anymore, you c
         <td>AuditLogger</td>
         <td>-</td>
         <td>
-          You can use version 4 of the auditlog artifact with version 5 of the SAP Cloud SDK. Please refer the <a href="#audit-log-usage">Audit Log usage</a> section below for more details.
+          You can use version 4 of the Audit Log artifact with version 5 of the SAP Cloud SDK. Please refer the <a href="#audit-log-usage">Audit Log usage</a> section below for more details.
           Please approach the SAP Cloud SDK development team if you face issues by <a href="https://github.com/SAP/cloud-sdk-java/issues/new">creating a GitHub support issue</a>.
           <br />
           This change also affects the Audit Log integration with the S/4HANA Connectivity module. You will have to explicitly use `AuditLogger` to log events.
@@ -646,7 +646,9 @@ Once the build doesn't complain about missing dependency versions anymore, you c
 
 ### Generate Your Own OData Virtual Data Model
 
-The SAP Cloud SDK no longer provides pre-generated OData VDMs. We made this decision to reduce the maintenance effort and to allow you to generate your own VDM with the exact version of the OData service you are using. That way there is no need to wait for the next SAP Cloud SDK release to get the latest changes of an OData service you are consuming.
+The SAP Cloud SDK no longer provides pre-generated OData Virtual Data Models.
+We made this decision to reduce the maintenance effort and to allow you to generate your own VDM with the exact version of the OData service you are using.
+That way there is no need to wait for the next SAP Cloud SDK release to get the latest changes of an OData service you are consuming.
 
 To generate your own OData VDM, you can use the [OData Generator Maven Plugin](../features/odata/vdm-generator) directly.
 You can use the following configuration to generate a VDM that is compatible with the OData VDM the SAP Cloud SDK provided in version 4:
