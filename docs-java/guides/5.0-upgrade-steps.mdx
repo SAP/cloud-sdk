@@ -30,13 +30,6 @@ For more information also check out our version 5 release blog post
 Starting with version 5.0.0 the SAP Cloud SDK requires a Java version of at least 17.
 :::
 
-:::warning WAR Deployment
-`war` deployment in combination with the **SAP Java Buildpack** is currently **not supported**.
-As a consequence, we are **not releasing** our [`rfc` artifact](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/rfc) with the SAP Cloud SDK for Java in version 5 at the moment. <br />
-Support will come after the release of the upcoming SAP Java Buildpack 2.X<br />
-Consumers that need to use the RFC functionality (e.g. JCo) are requested to **stay on version 4** for now.
-:::
-
 :::info Minimum CAP version
 If you are using the Cloud Application Programming model (CAP) to build your application, please note that the SAP Cloud SDK version 5 requires a minimum CAP/CDS version of at least `2.4.0`.
 If you are on an older CAP stack, please follow the [CAP migration guide](https://cap.cloud.sap/docs/java/migration#one-to-two) first.
@@ -70,8 +63,15 @@ Depending on your project setup you might use one of our BOMs or the individual 
 To find our BOMs, search for the following entries in your maven `dependencyManagement` section: `com.sap.cloud.sdk:sdk-bom` and `com.sap.cloud.sdk:sdk-modules-bom`.
 Update them directly to version `5.0.0` or the [latest version](https://central.sonatype.com/artifact/com.sap.cloud.sdk/sdk-bom).
 
-If you are using `com.sap.cloud.sdk:sdk-sjb-bom` and produce a `war` deployment (e.g. when you require JCo for your application) you will need to stay on the latest version 4 of the SAP Cloud SDK.
-In the other cases you should replace it with one of the BOMs mentioned above.
+<Tabs groupId="bomType" defaultValue="springBoot" values={[ { label: 'Spring Boot', value: 'springBoot', }, { label: 'SAP Java Buildpack', value: 'sjb', }]}>
+
+<TabItem value="sjb">
+
+If you are using the SAP Java Buildpack and produce a `war` deployment (e.g. when you require JCo for your application),
+please replace the `sdk-sjb-bom` with the `cf-tomee7-bom` (This might change) and the `sdk-bom` [like so](spring-boot-war-deployment#adjust-dependency-scopes) instead.
+
+</TabItem>
+<TabItem value="springBoot">
 
 If you are building on Spring or Spring Boot you should also update to the latest version of the respective BOMs, so `6.1.0` (Spring) or `3.1.6` (Spring Boot) as of the time of writing.
 These BOMs should be listed after any SAP Cloud SDK related BOM, so for Spring Boot your `dependencyManagement` section should look something like this:
@@ -96,6 +96,9 @@ These BOMs should be listed after any SAP Cloud SDK related BOM, so for Spring B
     </dependencies>
 </dependencyManagement>
 ```
+
+</TabItem>
+</Tabs>
 
 At the same time you should also replace usages of `javax` dependencies with the respective `jakarta` dependency.
 As we only provide a managed version for `jakarta.servlet-api` in our BOM, you will need to add the formerly managed version for the `jakarta.inject-api` dependency manually:
