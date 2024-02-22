@@ -37,10 +37,13 @@ If you are on an older CAP stack, please follow the [CAP migration guide](https:
 
 ## Before You Update
 
-Before you increase the SAP Cloud SDK version to 5, it is recommended to first update to the latest available version of the SAP Cloud SDK 4 and migrate any usage of deprecated API. Follow the deprecation notes in the Javadocs to find recommended replacements. All deprecated APIs are removed with version 5.
+Before you increase the SAP Cloud SDK version to 5, it is recommended to first update to the latest available version of
+the SAP Cloud SDK 4 and migrate any usage of deprecated API. Follow the deprecation notes in the Javadocs to find
+recommended replacements. All deprecated APIs are removed with version 5.
 
 Also, make sure that you are using Java 17 or higher. To setup your build to use Java 17 you can use [this guide](https://www.baeldung.com/maven-java-version).
-As Java EE modules have been removed from Java 11, you might also need to update your application to use the [Jakarta EE](https://jakarta.ee/) modules instead.
+As Java EE modules have been removed from Java 11, you might also need to update your application to use the
+[Jakarta EE](https://jakarta.ee/) modules instead.
 This JEP provides a good overview of the changes: [JEP 320: Remove the Java EE and CORBA Modules](https://openjdk.java.net/jeps/320).
 
 If you are consuming SOAP APIs and are relying on the `axis2-wsdl2code-maven-plugin` to generate classes, please also additionally include `javax.activation:activation` artifact to your dependencies to avoid compilation errors.
@@ -49,9 +52,9 @@ If you are consuming SOAP APIs and are relying on the `axis2-wsdl2code-maven-plu
 
 We recommend to update your application in the following order:
 
-1. Make sure you use the latest Cloud SDK v4 version available.
+1. Make sure you use the latest SAP Cloud SDK v4 version available.
 2. Update your application to use Java 17.
-3. Update your application to use the latest Cloud SDK v5 and Spring Boot/Spring version available.
+3. Update your application to use the latest SAP Cloud SDK v5 and Spring Boot/Spring version available.
 
 :::
 
@@ -117,7 +120,7 @@ As we only provide a managed version for `jakarta.servlet-api` in our BOM, you w
 
 Also remember to migrate all your dependencies to their respective `jakarta` versions if applicable.
 
-For example, if you were previously using `com.sap.hcp.cf.logging:cf-java-logging-support-servlet` for application logging you must instead switch to using `com.sap.hcp.cf.logging:cf-java-logging-support-servlet-jakarta`.
+For example, if you were using `com.sap.hcp.cf.logging:cf-java-logging-support-servlet` for application logging you must instead switch to using `com.sap.hcp.cf.logging:cf-java-logging-support-servlet-jakarta`.
 
 ```diff
 -<dependency>
@@ -132,9 +135,9 @@ For example, if you were previously using `com.sap.hcp.cf.logging:cf-java-loggin
 ```
 
 <details>
-<summary>For projects that were already upgraded to Java 17 and Spring Boot 3 in SDK 4</summary>
+<summary>For projects that were already upgraded to Java 17 and Spring Boot 3 in SAP Cloud SDK 4</summary>
 
-Please remove any workarounds that were needed to make Java 17 and Spring Boot 3 work with SDK 4:
+Please remove any workarounds that were needed to make Java 17 and Spring Boot 3 work with SAP Cloud SDK 4:
 
 - When using the `scp-cf` module or its replacement `sdk-core`, please remove the `servlet-jakarta` module.
 - When using the `@ServletComponentScan` annotation, please update the namespace back to:
@@ -146,9 +149,9 @@ Please remove any workarounds that were needed to make Java 17 and Spring Boot 3
 
 </details>
 
-## Remove or Replace Modified Cloud SDK Dependencies
+## Remove or Replace Modified SAP Cloud SDK Dependencies
 
-The lists below contains all modules that have been renamed or removed from the SDK.
+The lists below contains all modules that have been renamed or removed from the SAP Cloud SDK.
 Therefore, you should also rename respectively remove those from your project setup.
 
 <details>
@@ -165,7 +168,7 @@ Therefore, you should also rename respectively remove those from your project se
     <summary>Full list of removed modules</summary>
 
 - Bill of Materials
-  - `com.sap.cloud.sdk:sdk-sjb-bom` Please use the cf-tomee7-bom and the sdk-bom instead.
+  - `com.sap.cloud.sdk:sdk-sjb-bom` Please use the `cf-tomee7-bom` (This might change) and the `sdk-bom` instead.
 - Archetypes (Replaced by single archetype: `com.sap.cloud.sdk.archetypes:spring-boot3`)
   - `com.sap.cloud.sdk.archetypes:scp-cf-tomee`
   - `com.sap.cloud.sdk.archetypes:scp-neo-javaee7`
@@ -188,7 +191,7 @@ Therefore, you should also rename respectively remove those from your project se
   - `com.sap.cloud.sdk.datamodel:openapi-generator-cli`
     - Call the generator directly as a maven plugin:
     - `mvn com.sap.cloud.sdk.datamodel:openapi-generator-maven-plugin:5.0.0:generate`
-- Pregenerated Clients. [Generate and use your own OData VDM](#generate-and-use-your-own-odata-vdm) instead.
+- Pregenerated Clients. [Generate and use your own OData VDM](#generate-and-use-your-own-odata-virtual-data-model) instead.
   - `com.sap.cloud.sdk.s4hana:s4hana-all`
   - `com.sap.cloud.sdk.s4hana:s4hana-api-odata`
   - `com.sap.cloud.sdk.s4hana:s4hana-api-odata-onpremise`
@@ -208,8 +211,8 @@ Therefore, you should also rename respectively remove those from your project se
   - `com.sap.cloud.sdk.services:scp-business-logging-rest`
   - `com.sap.cloud.sdk.services:scp-workflow-cf`
 - Others
-  - `com.sap.cloud.sdk.cloudplatform:auditlog` (See [Auditlogging usage](./5.0-upgrade-steps#auditlogging-usage) section below)
-  - `com.sap.cloud.sdk.cloudplatform:auditlog-scp-cf` (See [Auditlogging usage](./5.0-upgrade-steps#auditlogging-usage) section below)
+  - `com.sap.cloud.sdk.cloudplatform:auditlog` (See [Audit Log usage](./5.0-upgrade-steps#audit-log-usage) section below)
+  - `com.sap.cloud.sdk.cloudplatform:auditlog-scp-cf` (See [Audit Log usage](./5.0-upgrade-steps#audit-log-usage) section below)
   - `com.sap.cloud.sdk.cloudplatform:cloudplatform-connectivity-scp` (No replacement necessary)
   - `com.sap.cloud.sdk.cloudplatform:cloudplatform-core-scp-cf` (No replacement necessary)
   - `com.sap.cloud.sdk.cloudplatform:security-scp-cf` (Functionally integrated into the `com.sap.cloud.sdk.cloudplatform:security` module)
@@ -228,16 +231,16 @@ This helps you to identify which modules you need to remove or replace in your p
 ## Steps to migrate `Destination` usages
 
 Version 5 of the SAP Cloud SDK comes with a major cleanup of the APIs around the `Destination` concept.
-Luckily, this cleanup comes **without a lot of breaking changes** so that existing applications require only a minimum of adjustments.
+This cleanup comes **without a lot of breaking changes** so that existing applications require only a minimum of adjustments.
 To make the process of adjusting existing applications as easy as possible, please follow the below steps:
 
 1.  Remove any invocation of `Destination#decorate`.
-    This method was only really used in conjunction with the `DefaultErpHttpDestination`, which has been removed in this major version update.
+    This method was only used in conjunction with the `DefaultErpHttpDestination`, which has been removed in this major version update.
     The functionality has been moved internally, so that decorating existing `Destination` instances is no longer needed.
 
 2.  (Optional) Remove any invocations of `Destination#asHttp` or `Destination#asRfc`.
-    A big part of the `Destination` cleanup was to straighten our public APIs that previously expected specific sub-types of `Destination` or `DestinationProperties` (e.g. `HttpClientAccessor#getHttpClient(HttpDestinationProperties)`).
-    These APIs now all simply rely on `Destination`, which makes casting via `#asHttp` or `#asRfc` unnecessary.
+    A big part of the `Destination` cleanup was to straighten our public APIs that expected specific sub-types of `Destination` or `DestinationProperties` (e.g. `HttpClientAccessor#getHttpClient(HttpDestinationProperties)`).
+    These APIs now all rely on `Destination`, which makes casting via `#asHttp` or `#asRfc` unnecessary.
 
 3.  Replace any of the removed classes related to the `Destination` API as mentioned in the [list of removed APIs](#remove-or-replace-modified-cloud-sdk-apis).
 
@@ -247,7 +250,7 @@ This instruction was incorrect and has been removed.
 In case you have followed this instruction, please revert the change.
 :::
 
-## Remove or Replace Modified Cloud SDK APIs
+## Remove or Replace Modified SAP Cloud SDK APIs
 
 Once the build doesn't complain about missing dependency versions anymore, you can start to fix the compilation errors.
 
@@ -414,10 +417,10 @@ Once the build doesn't complain about missing dependency versions anymore, you c
         <td>AuditLogger</td>
         <td>-</td>
         <td>
-          You can use version 4 of the auditlog artifact with version 5 of the SAP Cloud SDK. Please refer the <a href="#auditlogging-usage">Auditlogging usage</a> section below for more details.
+          You can use version 4 of the auditlog artifact with version 5 of the SAP Cloud SDK. Please refer the <a href="#audit-log-usage">Audit Log usage</a> section below for more details.
           Please approach the SAP Cloud SDK development team if you face issues by <a href="https://github.com/SAP/cloud-sdk-java/issues/new">creating a GitHub support issue</a>.
           <br />
-          This change also affects the Auditlog integration with the S/4HANA Connectivity module. You will have to explicitly use `AuditLogger` to log events.
+          This change also affects the Audit Log integration with the S/4HANA Connectivity module. You will have to explicitly use `AuditLogger` to log events.
         </td>
       </tr>
       <tr>
@@ -574,32 +577,32 @@ Once the build doesn't complain about missing dependency versions anymore, you c
       <tr>
         <td>ScpCfSecretStore</td>
         <td>-</td>
-        <td>No SDK replacement. A similiar functioniality can be achieved by using the java.security.KeyStore feature.</td>
+        <td>No SAP Cloud SDK replacement. A similar functionality can be achieved by using the java.security.KeyStore feature.</td>
       </tr>
       <tr>
         <td>ScpCfSecretStoreFacade</td>
         <td>-</td>
-        <td>No SDK replacement. A similiar functioniality can be achieved by using the java.security.KeyStore feature.</td>
+        <td>No SAP Cloud SDK replacement. A similar functionality can be achieved by using the java.security.KeyStore feature.</td>
       </tr>
       <tr>
         <td>SecretStore</td>
         <td>-</td>
-        <td>No SDK replacement. A similiar functioniality can be achieved by using the java.security.KeyStore feature.</td>
+        <td>No SAP Cloud SDK replacement. A similar functionality can be achieved by using the java.security.KeyStore feature.</td>
       </tr>
       <tr>
         <td>SecretStoreAccessor</td>
         <td>-</td>
-        <td>No SDK replacement. A similiar functioniality can be achieved by using the java.security.KeyStore feature.</td>
+        <td>No SAP Cloud SDK replacement. A similar functionality can be achieved by using the java.security.KeyStore feature.</td>
       </tr>
       <tr>
         <td>SecretStoreFacade</td>
         <td>-</td>
-        <td>No SDK replacement. A similiar functioniality can be achieved by using the java.security.KeyStore feature.</td>
+        <td>No SAP Cloud SDK replacement. A similar functionality can be achieved by using the java.security.KeyStore feature.</td>
       </tr>
       <tr>
         <td>CloudPlatform</td>
         <td>-</td>
-        <td>No SDK replacement. <br />
+        <td>No SAP Cloud SDK replacement. <br />
         Handling bound applications (i.e. <code>VCAP_SERVICES</code>) is done via the <a href="https://github.com/SAP/btp-environment-variable-access">Service Binding library</a>.<br />
         Handling application information (i.e. <code>VCAP_APPLICATION</code>) can be done manually: <br />
         <pre>new Gson().fromJson(System.getenv("VCAP_APPLICATION"), JsonObject.class).asMap();</pre>
@@ -639,14 +642,14 @@ Once the build doesn't complain about missing dependency versions anymore, you c
   </table>
 </details>
 
-## Generate and Use Your Own OData VDM
+## Generate and Use Your Own OData Virtual Data Model
 
-### Generate Your Own OData VDM
+### Generate Your Own OData Virtual Data Model
 
-The SAP Cloud SDK no longer provides pre-generated OData VDMs. We made this decision to reduce the maintenance effort and to allow you to generate your own VDM with the exact version of the OData service you are using. That way there is no need to wait for the next SDK release to get the latest changes of an OData service you are consuming.
+The SAP Cloud SDK no longer provides pre-generated OData VDMs. We made this decision to reduce the maintenance effort and to allow you to generate your own VDM with the exact version of the OData service you are using. That way there is no need to wait for the next SAP Cloud SDK release to get the latest changes of an OData service you are consuming.
 
 To generate your own OData VDM, you can use the [OData Generator Maven Plugin](../features/odata/vdm-generator) directly.
-You can use the following configuration to generate a VDM that is compatible with the OData VDM the SDK provided in version 4:
+You can use the following configuration to generate a VDM that is compatible with the OData VDM the SAP Cloud SDK provided in version 4:
 
 <Tabs groupId="odataVersion" defaultValue="v4" values={[ { label: 'OData v2', value: 'v2', }, { label: 'OData v4', value: 'v4', }]}>
 
@@ -662,7 +665,7 @@ You can use the following configuration to generate a VDM that is compatible wit
 ```
 
 The file specified under _serviceNameMappingFile_ will be created and populated, if it doesn't exist yet.
-If you want to create a VDM that is compatible with the OData VDM the SDK provided in version 4, you can use this [_serviceNameMappings.properties_](/resources/SDKv4-ODatav4-serviceNameMappings.properties).
+If you want to create a VDM that is compatible with the OData VDM the SAP Cloud SDK provided in version 4, you can use this [_serviceNameMappings.properties_](/resources/SDKv4-ODatav4-serviceNameMappings.properties).
 
 </TabItem>
 <TabItem value="v2">
@@ -677,14 +680,14 @@ If you want to create a VDM that is compatible with the OData VDM the SDK provid
 ```
 
 The file specified under _serviceNameMappingFile_ will be created and populated, if it doesn't exist yet.
-If you want to create a VDM that is compatible with the OData VDM the SDK provided in version 4, you can use this [_serviceNameMappings.properties_](/resources/SDKv4-ODatav2-serviceNameMappings.properties).
+If you want to create a VDM that is compatible with the OData VDM the SAP Cloud SDK provided in version 4, you can use this [_serviceNameMappings.properties_](/resources/SDKv4-ODatav2-serviceNameMappings.properties).
 
 </TabItem>
 </Tabs>
 
-If you want to generate a VDM that is compatible with the On-Premise OData VDM the SDK provided in version 4, take special care of the `packageName` and the contents of the _serviceNameMappingFile_ to reflect what you are expecting.
+If you want to generate a VDM that is compatible with the On-Premise OData VDM the SAP Cloud SDK provided in version 4, take special care of the `packageName` and the contents of the _serviceNameMappingFile_ to reflect what you are expecting.
 
-### Handle OData VDM Instantiation
+### Handle OData Virtual Data Model Instantiation
 
 Depending on your project setup, you might have relied on the `@Inject` annotation in your OData VDM services.
 As the OData generators don't generate the `javax.inject.Named` annotations anymore, you will need to instantiate your own services instead.
@@ -706,12 +709,12 @@ This means you need to remove all mentions of the following filters from your `w
 
 The `com.sap.cloud.sdk.cloudplatform.servlet.RequestAccessorFilter` is functionally replaced by `com.sap.cloud.sdk.cloudplatform.servletjakarta.RequestAccessorFilter` found in `com.sap.cloud.sdk.cloudplatform:servlet-jakarta`.
 
-## Auditlogging usage
+## Audit Log usage
 
-Auditlogging feature is no longer released with version 5 of the SAP Cloud SDK.
+The Audit Log feature is no longer released with version 5 of the SAP Cloud SDK.
 If you want to continue using audit logging, you could still use version 4 of the audit logging artifact along with version 5 of the SAP Cloud SDK.
 
-You would have to manually add all of the following artifacts(only available internally) to your project:
+You would have to manually add all the following artifacts(only available internally) to your project:
 
 ```xml
       <dependency>
