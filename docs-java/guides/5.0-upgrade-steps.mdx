@@ -71,7 +71,31 @@ Update them directly to version `5.0.0` or the [latest version](https://central.
 <TabItem value="sjb">
 
 If you are using the SAP Java Buildpack and produce a `war` deployment (e.g. when you require JCo for your application),
-please replace the `sdk-sjb-bom` with the `cf-tomee7-bom` (This might change) and the `sdk-bom` [like so](spring-boot-war-deployment#adjust-dependency-scopes) instead.
+please replace the `sdk-sjb-bom` with the `cf-tomee7-bom` (This might change) and the `sdk-bom` instead:
+
+```xml
+<dependencyManagement>
+	<dependencies>
+    <!-- Cloud SDK + SAP Java Buildpack BOMs -->
+    <dependencies>
+        <dependency>
+            <groupId>com.sap.cloud.sjb.cf</groupId>
+            <artifactId>cf-tomee7-bom</artifactId>
+            <version>use-latest-version-here</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sap.cloud.sdk</groupId>
+            <artifactId>sdk-bom</artifactId>
+            <version>use-latest-version-here</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+  </dependencies>
+</dependencyManagement>
+```
 
 </TabItem>
 <TabItem value="springBoot">
