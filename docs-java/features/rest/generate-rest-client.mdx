@@ -44,9 +44,24 @@ To use the generated client library, either the SAP Cloud SDK BOM should be part
 ## Generated Java Classes and Usage
 
 In this section, we will explain how to use the OpenAPI Generator Maven Plugin.
-A sample result can be seen in our [open-source public repository](https://github.com/SAP/cloud-sdk-java/tree/main/datamodel/openapi/openapi-api-sample): the soda store example.
+A sample result can be seen in our [open-source public repository](https://github.com/SAP/cloud-sdk-java/tree/main/datamodel/openapi/openapi-api-sample) with the _SodaStore_ OpenAPI.
+Given the `sodastore.json` as input the following service classes get generated:
 
-After generation the following API is available:
+```
+openapi-api-sample/
+├── src/main/
+│   ├── java/com/sap/cloud/sdk/datamodel/openapi/sample/
+│   |   ├── api/
+│   |   |   ├── OrdersApi.java
+│   |   |   └── SodasApi.java
+│   |   └── model/
+│   |       └── ...
+│   └── resources/
+│       └── sodastore.json
+└── pom.xml
+```
+
+The generated API can be used like the following:
 
 ```java
 Destination destination;
@@ -61,7 +76,7 @@ SodaWithId soda = new SodaWithId().id(0L).name("Cola").brand("SAP-Cola").quantit
 service.sodasPut(soda);
 ```
 
-Services can be instantiated with:
+Services can be instantiated in different ways:
 
 ```java
 new SodasApi( Destination )
