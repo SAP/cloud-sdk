@@ -73,7 +73,7 @@ Update them directly to version `5.0.0` or the [latest version](https://central.
 If you are using the SAP Java Buildpack and produce a `war` deployment (e.g. when you require JCo for your application),
 please replace the `sdk-sjb-bom` with the `cf-tomee7-bom` and the `sdk-bom` instead:
 
-```xml
+```xml title="pom.xml"
 <dependencyManagement>
 	<dependencies>
     <!-- Cloud SDK + SAP Java Buildpack BOMs -->
@@ -92,9 +92,34 @@ please replace the `sdk-sjb-bom` with the `cf-tomee7-bom` and the `sdk-bom` inst
             <type>pom</type>
             <scope>import</scope>
         </dependency>
+        <!-- Work around errors in Buildpack BOM -->
+        <dependency>
+            <groupId>org.codehaus.woodstox</groupId>
+            <artifactId>stax2-api</artifactId>
+            <version>4.2.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sap.cloud.security.xsuaa</groupId>
+            <artifactId>api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sap.cloud.security</groupId>
+            <artifactId>java-security</artifactId>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
   </dependencies>
 </dependencyManagement>
+```
+
+And change the target runtime from `tomee7` to `tomcat`:
+
+```diff title="manifest.yml"
+  env:
+-    TARGET_RUNTIME: tomee7
++    TARGET_RUNTIME: tomcat
 ```
 
 </TabItem>
@@ -103,7 +128,7 @@ please replace the `sdk-sjb-bom` with the `cf-tomee7-bom` and the `sdk-bom` inst
 If you are building on Spring or Spring Boot you should also update to the latest version of the respective BOMs, so `6.1.0` (Spring) or `3.1.6` (Spring Boot) as of the time of writing.
 These BOMs should be listed after any SAP Cloud SDK related BOM, so for Spring Boot your `dependencyManagement` section should look something like this:
 
-```xml
+```xml title="pom.xml"
 <dependencyManagement>
     <dependencies>
         <dependency>
