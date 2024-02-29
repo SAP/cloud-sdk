@@ -114,12 +114,15 @@ please replace the `sdk-sjb-bom` with the `cf-tomee7-bom` and the `sdk-bom` inst
 </dependencyManagement>
 ```
 
-And change the target runtime from `tomee7` to `tomcat`:
+Change the target runtime from `tomee7` to `tomcat`, and the buildpack from `sap_java_buildpack` to `sap_java_buildpack_jakarta`:
 
 ```diff title="manifest.yml"
+  buildpacks:
+-   - sap_java_buildpack
++   - sap_java_buildpack_jakarta
   env:
--    TARGET_RUNTIME: tomee7
-+    TARGET_RUNTIME: tomcat
+-   TARGET_RUNTIME: tomee7
++   TARGET_RUNTIME: tomcat
 ```
 
 </TabItem>

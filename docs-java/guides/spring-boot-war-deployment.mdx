@@ -154,7 +154,7 @@ For that particular module, perform the following changes:
 - Change the `type` from `java` to `java.tomcat`.
 - Change the `build-result` so that the file extension is `war`.
 - If not present, add the property `USE_JCO` with the value `true` under `properties`.
-- If not present, add `buildpack: sap_java_buildpack` under `parameters`.
+- If not present, add `buildpack: sap_java_buildpack_jakarta` under `parameters`.
 
 In the following example we have commented the old values for your reference:
 
@@ -175,7 +175,7 @@ modules:
       # set the WAR file according to your artifact id
       build-result: target/example-project.war # do not use the -exec.war variant
     parameters:
-      buildpack: sap_java_buildpack
+      buildpack: sap_java_buildpack_jakarta
     provides:
       - name: srv-api
         properties:
