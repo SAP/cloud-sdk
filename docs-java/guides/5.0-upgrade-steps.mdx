@@ -694,16 +694,16 @@ Once the build doesn't complain about missing dependency versions anymore, you c
   </table>
 </details>
 
-## Generate and Use Your Own OData Virtual Data Model
+## Generate and Use Your Own OData Clients
 
-### Generate Your Own OData Virtual Data Model
+### Generate Your Own OData Clients
 
 The SAP Cloud SDK no longer provides pre-generated OData Virtual Data Models.
-We made this decision to reduce the maintenance effort and to allow you to generate your own VDM with the exact version of the OData service you are using.
+We made this decision to reduce the maintenance effort and to allow you to generate your own OData clients with the exact version of the OData service you are using.
 That way there is no need to wait for the next SAP Cloud SDK release to get the latest changes of an OData service you are consuming.
 
 To generate your own OData VDM, you can use the [OData Generator Maven Plugin](../features/odata/vdm-generator) directly.
-You can use the following configuration to generate a VDM that is compatible with the OData VDM the SAP Cloud SDK provided in version 4:
+You can use the following configuration to generate an OData client that is compatible with the OData VDM the SAP Cloud SDK provided in version 4:
 
 <Tabs groupId="odataVersion" defaultValue="v4" values={[ { label: 'OData v2', value: 'v2', }, { label: 'OData v4', value: 'v4', }]}>
 
@@ -719,7 +719,7 @@ You can use the following configuration to generate a VDM that is compatible wit
 ```
 
 The file specified under _serviceNameMappingFile_ will be created and populated, if it doesn't exist yet.
-If you want to create a VDM that is compatible with the OData VDM the SAP Cloud SDK provided in version 4, you can use this [_serviceNameMappings.properties_](/resources/SDKv4-ODatav4-serviceNameMappings.properties).
+If you want to create an OData client that is compatible with the OData VDM the SAP Cloud SDK provided in version 4, you can use this [_serviceNameMappings.properties_](/resources/SDKv4-ODatav4-serviceNameMappings.properties).
 
 </TabItem>
 <TabItem value="v2">
@@ -734,12 +734,12 @@ If you want to create a VDM that is compatible with the OData VDM the SAP Cloud 
 ```
 
 The file specified under _serviceNameMappingFile_ will be created and populated, if it doesn't exist yet.
-If you want to create a VDM that is compatible with the OData VDM the SAP Cloud SDK provided in version 4, you can use this [_serviceNameMappings.properties_](/resources/SDKv4-ODatav2-serviceNameMappings.properties).
+If you want to create an OData client that is compatible with the OData VDM the SAP Cloud SDK provided in version 4, you can use this [_serviceNameMappings.properties_](/resources/SDKv4-ODatav2-serviceNameMappings.properties).
 
 </TabItem>
 </Tabs>
 
-If you want to generate a VDM that is compatible with the On-Premise OData VDM the SAP Cloud SDK provided in version 4, take special care of the `packageName` and the contents of the _serviceNameMappingFile_ to reflect what you are expecting.
+If you want to generate an OData client that is compatible with the On-Premise OData VDM the SAP Cloud SDK provided in version 4, take special care of the `packageName` and the contents of the _serviceNameMappingFile_ to reflect what you are expecting.
 
 ### Handle OData Virtual Data Model Instantiation
 
