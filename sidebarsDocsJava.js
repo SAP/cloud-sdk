@@ -103,7 +103,7 @@ module.exports = {
     {
       type: 'link',
       label: 'Maven Central',
-      href: 'https://search.maven.org/search?q=g:com.sap.cloud.sdk*'
+      href: 'https://central.sonatype.com/search?q=g:com.sap.cloud.sdk*&smo=true'
     }
   ]
 };
