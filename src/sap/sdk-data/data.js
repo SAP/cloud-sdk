@@ -47,7 +47,7 @@ export const features = [
       'SAP S/4HANA Cloud, SAP S/4HANA On-Premise, Workflow and more...',
       <>
         Available on{' '}
-        <a href="https://search.maven.org/search?q=g:com.sap.cloud.sdk*">
+        <a href="https://central.sonatype.com/search?q=g:com.sap.cloud.sdk*&smo=true">
           Maven Central
         </a>
       </>,
