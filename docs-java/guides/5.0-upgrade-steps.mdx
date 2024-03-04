@@ -75,9 +75,8 @@ please replace the `sdk-sjb-bom` with the `cf-tomee7-bom` and the `sdk-bom` inst
 
 ```xml title="pom.xml"
 <dependencyManagement>
-	<dependencies>
-    <!-- Cloud SDK + SAP Java Buildpack BOMs -->
     <dependencies>
+        <!-- Cloud SDK + SAP Java Buildpack BOMs -->
         <dependency>
             <groupId>com.sap.cloud.sjb.cf</groupId>
             <artifactId>cf-tomee7-bom</artifactId>
@@ -92,7 +91,7 @@ please replace the `sdk-sjb-bom` with the `cf-tomee7-bom` and the `sdk-bom` inst
             <type>pom</type>
             <scope>import</scope>
         </dependency>
-        <!-- Work around errors in Buildpack BOM -->
+        <!-- Work around for SOAP users only -->
         <dependency>
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>stax2-api</artifactId>
@@ -100,7 +99,6 @@ please replace the `sdk-sjb-bom` with the `cf-tomee7-bom` and the `sdk-bom` inst
             <scope>compile</scope>
         </dependency>
     </dependencies>
-  </dependencies>
 </dependencyManagement>
 ```
 

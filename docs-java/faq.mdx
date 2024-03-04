@@ -51,10 +51,12 @@ In case you found a bug or opportunity for improvement you can directly open an 
 
 Use these CF CLI instructions to activate debugging for your App.
 
-<!--**TomEE (when using SAP Java Buildpack)**
+**Tomcat (when using SAP Java Buildpack Jakarta)**
 
-TODO: Add instructions for TomEE when the documentation is updated.
-https://github.tools.sap/buildpacks/cf-sjb/blob/main/docs/help.sap.com/cf/debugging.md-->
+```bash
+cf ssh application -c 'export JAVA_PID=`ps -C java -o pid=` && /home/vcap/app/META-INF/.sap_java_buildpack/sap_machine_jre/bin/jcmd $JAVA_PID VM.start_java_debugging'
+cf ssh application -N -T -L 8000:localhost:8000
+```
 
 **Spring**
 
