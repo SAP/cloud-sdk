@@ -179,8 +179,151 @@ It does not yet include it as a dependency in your project.
 
 ## Notes on the SAP Java Buildpack
 
-`war` deployment in combination with the **SAP Java Buildpack** is currently **not supported**.
-Consumers are requested to **stay on version 4** for now.
-Support will come after the release of the upcoming SAP Java Buildpack 2.X
+The [SAP Java Buildpack](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/a3f90069d6cd41da82f34a6123d82ce6.html) brings some dependencies that are also brought by the SAP Cloud SDK.
+This can lead to conflicts when using a `war` deployment.
 
-<!-- The content of this chapter can be found in v4 -->
+To prevent any SAP Java Buildpack issues we recommend using the `cf-tomee7-bom`
+([or Tomcat or TomEE BOMs](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/6c6936e8e4ea40c9a9a69f6783b1e978.html)) followed by our `sdk-bom`.
+
+:::tip
+The SAP Java Buildpack generally does not affect typical Spring Boot applications which are packed into an executable jar by default.
+:::
+
+### Managing the Buildpack Version
+
+We recommend setting a fixed Buildpack version in the `manifest.yml` and updating it regularly.
+Use `cf buildpacks` to see which Buildpacks are currently available.
+Please note that usually only the last 3 Buildpack versions are kept alive, and usually every two weeks a new version is released.
+Consequently, with this strategy, you should update at least once a month.
+
+In general, this is safer than using always the latest Buildpack.
+Because this strategy avoids that a simple restart can break your application due to a changed Buildpack.
+
+In particular, it ensures that the specific Buildpack + SAP Cloud SDK combination has been tested.
+
+Also see [this note](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/a3f90069d6cd41da82f34a6123d82ce6.html) on Buildpack versioning.
+
+:::note
+
+There are no known dependencies in the [Community Java Buildpack](https://github.com/cloudfoundry/java-buildpack) that could interfere with the ones provided by the SAP Cloud SDK.
+Still, the same strategy is also valid and useful for the community Buildpack.
+:::
+
+### Avoiding Scope Conflicts
+
+The BOMs will set the version and the scope of the dependencies the SAP Java Buildpack adds to your application at runtime.
+The scope of the those dependencies is set to `provided`.
+
+You can verify the behavior by searching for the scope of, for example, the `com.sap.cloud.security.xsuaa:token-client` dependency in your application.
+When you use any of the [BOMs provided by the SAP Java Buildpack directly](https://search.maven.org/search?q=com.sap.cloud.sjb.cf) the `token-client` should have the scope `provided`.
+If you are not using the BOMs, it should have the scope `compile` or `test`.
+
+:::tip
+
+Verify your dependency tree via `mvn dependency:tree`.
+The above dependencies should only be listed with scope `provided`.
+
+:::
+
+:::note
+
+Dependencies with the scope `provided` are not part of your `.war` file.
+This means you need to adapt the scopes if you want to run your applications without the SAP Java Buildpack.
+One common example for this is running your application locally.
+
+Local deployment of TomEE is possible with a maven profile activated by the parameter `-Ddeployment=local`:
+
+<details>
+    <summary>Maven profile</summary>
+
+As a result the SAP Java Buildpack BOM is removed from the `dependencyManagement`.
+
+```xml
+<profiles>
+    <profile>
+        <id>cloud-deployment</id>
+        <activation>
+            <property>
+                <name>deployment</name>
+                <!-- Activate this profile when the 'local' is not defined -->
+                <value>!local</value>
+            </property>
+        </activation>
+        <dependencyManagement>
+            <dependencies>
+                <dependency>
+                    <groupId>com.sap.cloud.sjb.cf</groupId>
+                    <artifactId>cf-tomee7-bom</artifactId>
+                    <version>use-latest-version-here</version>
+                    <type>pom</type>
+                    <scope>import</scope>
+                </dependency>
+                <dependency>
+                    <groupId>com.sap.cloud.sdk</groupId>
+                    <artifactId>sdk-bom</artifactId>
+                    <version>use-latest-version-here</version>
+                    <type>pom</type>
+                    <scope>import</scope>
+                </dependency>
+            </dependencies>
+        </dependencyManagement>
+    </profile>
+    <!-- Having 2 profiles ensures that the tomee bom will always be in front of the sdk bom-->
+    <profile>
+        <id>local-deployment</id>
+        <activation>
+            <property>
+                <name>deployment</name>
+                <!-- Activate this profile when the 'local' is defined -->
+                <value>local</value>
+            </property>
+        </activation>
+        <dependencyManagement>
+            <dependencies>
+                <dependency>
+                    <groupId>com.sap.cloud.sdk</groupId>
+                    <artifactId>sdk-bom</artifactId>
+                    <version>use-latest-version-here</version>
+                    <type>pom</type>
+                    <scope>import</scope>
+                </dependency>
+            </dependencies>
+        </dependencyManagement>
+    </profile>
+</profiles>
+```
+
+</details>
+
+### Background: Dependency Version Conflicts
+
+The dependency versions from the `sdk-bom` and the Buildpack may differ.
+
+Consider this example:
+
+- Buildpack version `1.43` contains `java-security:2.10.5`
+- SAP Cloud SDK version `3.59` contains `java-security:2.11.2`
+
+If there are breaking API changes in `java-security` this can lead to runtime errors.
+
+:::note
+
+There is no way to solve this versioning problem on SAP Cloud SDK or Buildpack side.
+Generally, we try to keep the versions as consistent as possible.
+
+However, the exact combination of Buildpack and SAP Cloud SDK depends on the release schedule of the two products.
+In addition to that, it also depends on the time an application updates the SAP Cloud SDK version & deploys it.
+
+:::
+
+### Background: Dependency Scope Conflicts
+
+In addition to potential version conflicts also scope problems can occur.
+
+Consider this example:
+
+- Buildpack contains `java-security`
+- SAP Cloud SDK depends on `java-security` with scope `compile`
+
+As a result, the classes from `java-security` will be on the classpath twice.
+Once from the Buildpack and once packaged by maven into the deployment artifact.
