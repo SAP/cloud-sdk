@@ -25,6 +25,7 @@ module.exports = {
             'features/rest/generate-rest-client'
           ]
         },
+        'features/bapi-and-rfc/overview',
         {
           type: 'category',
           label: 'Connectivity',

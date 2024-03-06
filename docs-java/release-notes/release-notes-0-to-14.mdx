@@ -22,11 +22,7 @@
 
 ## 5.4.0 - February 15, 2024
 
-[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.X.0)
-
-### 🚧 Known Issues
-
--
+[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.4.0)
 
 ### 📈 Improvements
 
@@ -65,10 +61,6 @@
 </details>
 
 <!-- vale on -->
-
-### 🐛 Fixed Issues
-
--
 
 ## 5.3.0 - February 1, 2024
 
@@ -173,7 +165,7 @@
 
 ### ✨ New Functionality
 
-- Added new API to retrieve destination properties only from the BTP Destination Service.
+- Added new API to retrieve destination properties only from the SAP BTP Destination Service.
   `DestinationService` now offers `getDestinationProperties(String destinationName)` and `getAllDestinationProperties()`.
 
 ### 📈 Improvements
@@ -188,7 +180,7 @@
 ### 🐛 Fixed Issues
 
 - Fix an issue where an invalid hostname in a destination would lead to an empty hostname. The hostname is now accepted.
-- Fix an issue where errors from token flows of destinations retrieved from the BTP destination service were not handled consistently.
+- Fix an issue where errors from token flows of destinations retrieved from the SAP BTP destination service were not handled consistently.
   For the non-default strategy `LOOKUP_ONLY` errors were handled too late and results would get cached unintentionally.
 
 ## Major Version Update: 5.0.0
@@ -213,7 +205,7 @@ Please take note of the following changes introduced with version 5:
 - The minimum required versions for Spring and the SAP BTP Security Libraries increased:
   - **Spring 6** and **SAP BTP Security Libraries version 3** are now the minimum required versions.
 - The compatibility with the SAP Java Buildpack changed:
-  - Deployments to SAP BTP Cloud Foundry with packaging type `war` require version 2 of the SAP Java Buildpack (not yet available at the time of writing).
+  - Deployments to SAP BTP Cloud Foundry with packaging type `war` require version 2 of the SAP Java Buildpack.
 - The SAP BTP Neo Environment is no longer supported.
 - A significant number of modules have been renamed, moved or been removed.
   Please refer to the [Upgrade Guide](../guides/5.0-upgrade-steps.mdx) for the full list of module changes.
@@ -222,7 +214,7 @@ Please take note of the following changes introduced with version 5:
 
 #### Changes to the overall Destination API:
 
-- Both `HttpDestination` as well as `HttpDestinationProperties` are now sub-types of `Destination` for improved compatibility with the Cloud SDK APIs.
+- Both `HttpDestination` as well as `HttpDestinationProperties` are now sub-types of `Destination` for improved compatibility with the SAP Cloud SDK APIs.
 - The `Destination#decorate` method has been removed without replacement.
 - The public constructor of `DefaultHttpDestination` has been replaced with a static factory method `DefaultHttpDestination#fromProperties`.
   - We also added some extra static factory methods (`DefaultHttpDestination#fromMap` and `DefaultHttpDestination#fromDestination`) for convenience.
@@ -243,7 +235,7 @@ Please take note of the following changes introduced with version 5:
 - The `BearerCredentials` behavior has been adjusted slightly: The `getToken()` method no longer just returns the value passed in via the constructor but instead is now guaranteed to **NOT** contain the prefix `"Bearer "`.
   To compensate this change, the `#getHttpHeaderValue()` method has been added, which is guaranteed to contain the `"Bearer "` prefix.
 
-#### Changes related to the BTP Destination Service:
+#### Changes related to the SAP BTP Destination Service:
 
 - The `ScpCfDestination` and `ScpCfHttpDestination` classes are replaced by the baseline `Destination` and `DefaultHttpDestination` implementations.
 - The `ScpCfDestinationLoader` has been renamed to `DestinationService`.
@@ -269,9 +261,9 @@ Please take note of the following changes introduced with version 5:
 - The `ODataRequestResult` no longer splits header values.
 - The `AuthTokenFacade` of the `AuthTokenAccessor` will default to `DefaultAuthTokenFacade`
 - The `TenantFacade` of the `TenantAccessor` will default to `DefaultTenantFacade`
-- The `TenantWithSubdomain#getSubdomain` is now nullable.
+- The `TenantWithSubdomain#getSubdomain` is now `@Nullable`.
 
-#### Changes to the Cloud Platform API:
+#### Changes to the SAP Cloud Platform API:
 
 - The `CloudPlatform` interface and all related classes have been removed.
   In particular, the following classes have been removed:
@@ -315,14 +307,14 @@ Please take note of the following changes introduced with version 5:
 
 - The `Destination#asHttp()` and `Destination#asRfc()` methods no longer always return a new instance of `HttpDestination` and `RfcDestination` if the current objects is already a `HttpDestination` or `RfcDestination` respectively.
 - The OData, OpenAPI and SOAP APIs are generalised to accept instances of `Destination`, making invocations to `.asHttp()` superfluous when executing OData or REST requests.
-  - OData V2 and OpenAPI clients need to be re-generated to adjust for this change.
+  - OData v2 and OpenAPI clients need to be re-generated to adjust for this change.
 - `Destination#asHttp()` no longer throws an exception in case the `Destination` originates from the Destination service and the attached auth token contains an error.
   Instead, an exception will be thrown upon invoking the `getHeaders()` method, for example, during request execution.
-- Loading a `Destination` from the BTP Destination service will now:
+- Loading a `Destination` from the SAP BTP Destination service will now:
   - No longer eagerly evaluate authentication tokens or On-Premise related headers (if applicable).
     Instead, those will be evaluated lazily upon request execution.
     As a consequence, the `getHeaders` method might now throw an exception if resolving (on-premise) authentication information fails.
-  - Throw an exception if the tenant changed in between loading and using the destination to execute requests.
+  - Throw an exception if the tenant changed between loading and using the destination to execute requests.
   - Throw an exception if any of the attached certificates isn't valid.
 - Removed the `javax.inject.Named` annotation from code generated with any of the OData generators (v2, v4).
 
