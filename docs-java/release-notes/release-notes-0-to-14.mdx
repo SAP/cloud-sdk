@@ -100,22 +100,23 @@
 
   - In case you are using custom facade implementations for accessors (e.g. `TenantAccessor`) this might have additional implications.
 
-    <details>
-<summary>Details: Impact on custom facades</summary>
+        <details>
 
-    First, check if all the following conditions apply for your use case:
+    <summary>Details: Impact on custom facades</summary>
 
-    - You are providing a custom implementation of a facade interface (e.g. the `TenantFacade` registered to the `TenantAccessor`).
-    - Your custom facade implementation uses `ThreadLocal` variables which are not configured to be passed on by the `ThreadContextExecutor`.
-    - Before version `5.2.0` the `resilience4j` module was not in the dependency tree and no alternative implementation was provided.
-    - You are implicitly or explicitly using a resilience configuration with a `TimeLimiter` defined.
-      - This means that the `TimeLimiter` was not taking effect before `5.2.0` and respective warnings have been logged about this.
-    - The code inside the resilient execution is implicitly or explicitly using the facade implementation.
+        First, check if all the following conditions apply for your use case:
 
-    If all the above conditions apply, you might need to ensure that the `ThreadLocal` variables you are using for your custom facades are passed on by the `ThreadContextExecutor`.
-    Please follow [this documentation](https://sap.github.io/cloud-sdk/docs/java/features/multi-tenancy/thread-context#passing-on-other-threadlocals) on how to achieve this.
+        - You are providing a custom implementation of a facade interface (e.g. the `TenantFacade` registered to the `TenantAccessor`).
+        - Your custom facade implementation uses `ThreadLocal` variables which are not configured to be passed on by the `ThreadContextExecutor`.
+        - Before version `5.2.0` the `resilience4j` module was not in the dependency tree and no alternative implementation was provided.
+        - You are implicitly or explicitly using a resilience configuration with a `TimeLimiter` defined.
+          - This means that the `TimeLimiter` was not taking effect before `5.2.0` and respective warnings have been logged about this.
+        - The code inside the resilient execution is implicitly or explicitly using the facade implementation.
 
-    </details>
+        If all the above conditions apply, you might need to ensure that the `ThreadLocal` variables you are using for your custom facades are passed on by the `ThreadContextExecutor`.
+        Please follow [this documentation](https://sap.github.io/cloud-sdk/docs/java/features/multi-tenancy/thread-context#passing-on-other-threadlocals) on how to achieve this.
+
+        </details>
 
 - `com.sap.cloud.sdk.cloudplatform.connectivity.DestinationService.Cache` now enables change detection by default, but can be disabled via `DestinationService.Cache.disableChangeDetection()`.
   - `DestinationService.Cache.enableChangeDetection()` has been deprecated.
