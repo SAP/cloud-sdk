@@ -308,7 +308,7 @@ Please be aware that such an example can work for all tenants only if `ShoeSize`
 
 Batch requests allow wrapping multiple OData requests into one single batch call.
 Thereby we reduce the number of round trips to the remote server.
-Refer to the [official OData V2 spec](https://www.odata.org/documentation/odata-version-2-0/batch-processing/) for further reference about batch requests, their semantics, and the request/response format.
+Refer to the [official OData v2 spec](https://www.odata.org/documentation/odata-version-2-0/batch-processing/) for further reference about batch requests, their semantics, and the request/response format.
 
 #### Execute Batch Request
 
@@ -428,8 +428,8 @@ The request-response mapping and deserialization are happening internally.
 
 :::note
 
-If all responses in a `BatchResponse` are evaluated using `getReadResult(...)` or/and `get(index)`, this ensures that the underlying `InputStream` of the `HttpEntity` is fully consumed
-and the HTTP connection is released back to the connection pool. If you do not evaluate all responses in a `BatchResponse` consider using the `try-with-resources` construct while executing batch requests.
+If all responses in a `BatchResponse` are evaluated using `getReadResult(...)` or/and `get(index)`, this ensures that the underlying `InputStream` of the `HttpEntity` is fully consumed and the HTTP connection is released back to the pool.
+If you do not evaluate all responses in a `BatchResponse` consider using the `try-with-resources` construct while executing batch requests.
 
 :::
 
@@ -492,7 +492,7 @@ service.updateBusinessPartner(partner)
 <TabItem value="replace">
 
 The _replacing entity update strategy_ attempts to replace the full entity in the remote system.
-It issues a PUT request and submits all fields in the update request, regardless of any field changes.
+It issues a `PUT` request and submits all fields in the update request, regardless of any field changes.
 
 This update strategy can be explicitly chosen to invoke the method `replacingEntity()` while building the update request.
 
@@ -518,7 +518,7 @@ service.updateBusinessPartner(partner)
 
 :::note
 It depends on the capabilities of the specific OData service in the remote system which update strategies are supported in an end-to-end scenario.
-For example, there are cases where OData services do not support PUT requests.
+For example, there are cases where OData services do not support `PUT` requests.
 :::
 
 ## Error Handling
@@ -655,7 +655,7 @@ Please note that the OData service is not obliged to respect this setting.
 
 ## Cross Site Request Forgery (CSRF)
 
-Many OData server (especially S/4HANA services) require proper CSRF-token handling when creating, updating, or deleting entities for security reasons.
+Many OData server (especially SAP S/4HANA services) require proper CSRF-token handling when creating, updating, or deleting entities for security reasons.
 The SAP Cloud SDK for Java supports this requirement by sending a _pre-flight_ request to obtain a valid CSRF token for the subsequent, actual request.
 
 By default, this _pre-flight_ request is sent automatically **and every time** before running a modification request.
@@ -678,13 +678,13 @@ While doing so, the SAP Cloud SDK eventually needs an HTTP client to actually ru
 This client is retrieved via the [HttpClientAccessor](/docs/java/features/connectivity/http-client#general-usage) and, therefore, will be the **exact same** instance across all 10 threads.
 
 In itself, this is not an issue and, in fact, is the desired behavior because it performs a lot better than creating a new HTTP client instance for every call.
-What is a problem, however, is that the OData service, at least in the S/4HANA case, sends back the CSRF token twice: Once in a special header (the `x-csrf-token` header) and once in a `Set-Cookie` header.
+What is a problem, however, is that the OData service, at least in the SAP S/4HANA case, sends back the CSRF token twice: Once in a special header (the `x-csrf-token` header) and once in a `Set-Cookie` header.
 The HTTP cookie ends up being stored within the HTTP client instance so that it can be used to carry some server-set state across multiple requests.
 
 In our multi-threaded example, this is an issue because there is a race condition between the 10 threads.
 Since the SAP Cloud SDK executes two requests (the _pre-flight_ and the actual request) for every modification request, it is possible that the _pre-flight_ request of one thread overwrites the CSRF cookie of another thread.
 This can lead to an inconsistent state where the `Cookie` sent by the SAP Cloud SDK does no longer match the `x-csrf-token` header sent by the OData service.
-The OData service recognizes this inconsistency and, rightfully, rejects the request.
+The OData service recognizes this inconsistency and rejects the request.
 
 ### Solution
 
@@ -712,5 +712,7 @@ for( var i = 0; i < 10; ++i ) {
 
 The code above solves the issue explained above by doing the following:
 
-1. We are pre-fetching the CSRF token once and then re-using it across all threads. That way, the SAP Cloud SDK won't run a _pre-flight_ request and the CSRF token is going to be consistent.
-2. We are fetching the HTTP client just once and then re-use it across all threads. This avoids an edge-case issue where the HTTP client cache expires while we are still running requests.
+1. We are pre-fetching the CSRF token once and then re-using it across all threads. 
+  That way, the SAP Cloud SDK won't run a _pre-flight_ request and the CSRF token is going to be consistent.
+2. We are fetching the HTTP client just once and then re-use it across all threads. 
+  This avoids an edge-case issue where the HTTP client cache expires while we are still running requests.
