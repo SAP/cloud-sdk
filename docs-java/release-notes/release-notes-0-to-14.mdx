@@ -1,3 +1,20 @@
+## 5.6.0 - March 19, 2024
+
+[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.6.0)
+
+### ✨ New Functionality
+
+- Support service bindings to the [SAP BTP AI Core Service](https://api.sap.com/api/AI_CORE_API) by default in the `ServiceBindingDestinationLoader` API.
+- Failed OData v4 Batch requests now return the specific failed request from the exception: `ODataResponseException.getRequest()`.
+
+### 🐛 Fixed Issues
+
+- Fix an issue where the same `HttpClient` would be used for different users when using `PrincipalPropagation` and thus could potentially share the same (session) cookies.
+- Fix an issue where destinations for the Business Logging service that are created from a service binding (using the `ServiceBindingDestinationLoader` API) contained the concrete API path.
+  This behavior caused problems when using such a destination in a client generated with the SAP Cloud SDK's OpenApi generator.
+- [DwC] Fix an issue where the `AuthTokenAccessor` would not recognize JWT tokens passed in via the `dwc-jwt` header.
+- [DwC] Fix an issue where the current tenant would not be resolved if the `dwc-subdomain` header was missing.
+
 ## 5.5.0 - February 28, 2024
 
 [All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.5.0)
