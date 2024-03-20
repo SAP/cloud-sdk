@@ -90,56 +90,6 @@ Default service base-path, user-agent and request headers can be assigned.
 When using `Destination` these parameters are extracted automatically from the provided destination.
 Alternatively, the `RestTemplate` based constructor can be used for fully customized requests.
 
-## Customize Java Class and Method Names with OpenAPI Vendor Extensions
-
-The OpenAPI generator uses the `tag` field to determine the Java service class name and the `operationId` to determine the Java method for each service operation.
-You can influence the service class name and the method names by adding extension fields to the OpenAPI specification.
-Thereby you can leave the `tag` and `operationId` fields untouched if they need to stay stable.
-
-### Java Class Name
-
-The Java class name can be influenced with the extension field `x-sap-cloud-sdk-api-name`.
-The OpenAPI generator takes the value of `x-sap-cloud-sdk-api-name` and adds an `Api` suffix (if not already present) to determine the class name.
-
-In the following example the custom value `CustomOperations` takes precedence over the `tag` value `Operations`
-
-```yml
-/operation/path:
-  get:
-    summary: My operation
-    operationId: myOperation
-    x-sap-cloud-sdk-api-name: CustomOperations
-    tags:
-      - Operations
-```
-
-The Java class for this service operation will be named `CustomOperationsApi`.
-
-You can use the extension field `x-sap-cloud-sdk-api-name` on an operation, on a path or on the root level of the OpenAPI specification.
-All subordinated objects inherit its value automatically.
-For instance, if you assign the field `x-sap-cloud-sdk-api-name` to one path, all operations under that path inherit this field automatically.
-
-### Java Method Name
-
-The Java method name can be overwritten with the extension field `x-sap-cloud-sdk-operation-name`.
-
-In the following example the custom value `performMyOperation` takes precedence over the `operationId` value `myOperation`.
-
-```yml
-/operation/path:
-  get:
-    summary: My Operation
-    x-sap-cloud-sdk-operation-name: performMyOperation
-    operationId: myOperation
-```
-
-The Java method for this service operation will be named `peformMyOperation`.
-
-:::tip Field Order
-The order of fields in the OpenAPI specification does not matter.
-Only the right nesting is necessary, that is, the two fields `x-sap-cloud-sdk-operation-name` and `x-sap-cloud-sdk-api-name` should be assigned to an operation (get, post, etc).
-:::
-
 ## Using the OpenAPI Generator Maven Plugin
 
 To use the Maven plugin following XML snippet should be added to the POM file of your project:
@@ -270,6 +220,56 @@ The complete list of available parameters with their description is as follows:
 | `<sapCopyrightHeader>`         |  `False`   |    No    | Add the SAP copyright header (overrides `copyrightHeader`)                                                                                                                                                                                                                                                                                                                      |
 | `<enableOneOfAnyOfGeneration>` |  `False`   |    No    | Defines whether to enable processing of anyOf/oneOf keywords during client generation                                                                                                                                                                                                                                                                                           |
 | `<additionalProperties>`       |    `[]`    |    No    | Defines a map of key-value pairs that will be passed to the Java generator. E.g. `<param>value</param>`                                                                                                                                                                                                                                                                         |
+
+## Customize Java Class and Method Names with OpenAPI Vendor Extensions
+
+The OpenAPI generator uses the `tag` field to determine the Java service class name and the `operationId` to determine the Java method for each service operation.
+You can influence the service class name and the method names by adding extension fields to the OpenAPI specification.
+Thereby you can leave the `tag` and `operationId` fields untouched if they need to stay stable.
+
+### Java Class Name
+
+The Java class name can be influenced with the extension field `x-sap-cloud-sdk-api-name`.
+The OpenAPI generator takes the value of `x-sap-cloud-sdk-api-name` and adds an `Api` suffix (if not already present) to determine the class name.
+
+In the following example the custom value `CustomOperations` takes precedence over the `tag` value `Operations`
+
+```yml
+/operation/path:
+  get:
+    summary: My operation
+    operationId: myOperation
+    x-sap-cloud-sdk-api-name: CustomOperations
+    tags:
+      - Operations
+```
+
+The Java class for this service operation will be named `CustomOperationsApi`.
+
+You can use the extension field `x-sap-cloud-sdk-api-name` on an operation, on a path or on the root level of the OpenAPI specification.
+All subordinated objects inherit its value automatically.
+For instance, if you assign the field `x-sap-cloud-sdk-api-name` to one path, all operations under that path inherit this field automatically.
+
+### Java Method Name
+
+The Java method name can be overwritten with the extension field `x-sap-cloud-sdk-operation-name`.
+
+In the following example the custom value `performMyOperation` takes precedence over the `operationId` value `myOperation`.
+
+```yml
+/operation/path:
+  get:
+    summary: My Operation
+    x-sap-cloud-sdk-operation-name: performMyOperation
+    operationId: myOperation
+```
+
+The Java method for this service operation will be named `peformMyOperation`.
+
+:::tip Field Order
+The order of fields in the OpenAPI specification does not matter.
+Only the right nesting is necessary, that is, the two fields `x-sap-cloud-sdk-operation-name` and `x-sap-cloud-sdk-api-name` should be assigned to an operation (get, post, etc).
+:::
 
 ## Support for `anyOf/oneOf` keywords
 
