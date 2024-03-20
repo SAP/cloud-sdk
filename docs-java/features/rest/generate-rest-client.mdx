@@ -41,6 +41,56 @@ The generated Java classes need the following dependency to be present in your p
 
 To use the generated client library, either the SAP Cloud SDK BOM should be part of your project's `<dependencyManagement>` section, or the version for the `openapi-core` artifact must be mentioned explicitly here.
 
+
+## Generated Java Classes and Usage
+
+In this section, we will explain how to use the OpenAPI Generator Maven Plugin.
+A sample result can be seen in our [open-source public repository](https://github.com/SAP/cloud-sdk-java/tree/main/datamodel/openapi/openapi-api-sample) with the _SodaStore_ OpenAPI.
+Given the `sodastore.json` as input the following service classes get generated:
+
+```
+openapi-api-sample/
+├── src/main/
+│   ├── java/com/sap/cloud/sdk/datamodel/openapi/sample/
+│   |   ├── api/
+│   |   |   ├── OrdersApi.java
+│   |   |   └── SodasApi.java
+│   |   └── model/
+│   |       └── ...
+│   └── resources/
+│       └── sodastore.json
+└── pom.xml
+```
+
+The generated API can be used like the following:
+
+```java
+Destination destination;
+
+// create the service with a destination
+SodasApi service = new SodasApi(destination);
+
+// create an entity object
+SodaWithId soda = new SodaWithId().id(0L).name("Cola").brand("SAP-Cola").quantity(100).price(1.5f);
+
+// execute request for entity update
+service.sodasPut(soda);
+```
+
+Services can be instantiated in different ways:
+
+```java
+new SodasApi( Destination )
+new SodasApi( new ApiClient() )
+new SodasApi( new ApiClient(RestTemplate) )
+new SodasApi( new ApiClient(Destination) )
+```
+
+The [`ApiClient`](https://sap.github.io/cloud-sdk/java-api/v5/com/sap/cloud/sdk/services/openapi/apiclient/ApiClient.html) allows for versatile customization.
+Default service base-path, user-agent and request headers can be assigned.
+When using `Destination` these parameters are extracted automatically from the provided destination.
+Alternatively, the `RestTemplate` based constructor can be used for fully customized requests.
+
 ## Using the OpenAPI Generator Maven Plugin
 
 To use the Maven plugin following XML snippet should be added to the POM file of your project:

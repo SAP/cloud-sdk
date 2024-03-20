@@ -19,8 +19,8 @@ keywords:
 ### How Often Do You Release a New SAP Cloud SDK Version?
 
 We release a [minor version](release-policy.mdx#minor-release-schedule) every two weeks.
-All the features that are _Generally Available_ or _Beta_ get into the next [release](https://search.maven.org/artifact/com.sap.cloud.sdk/sdk-bom).
-You can find the latest SAP Cloud SDK version and the list of previous releases [here](release-notes.mdx) or on [Maven Central](https://search.maven.org/artifact/com.sap.cloud.sdk/sdk-bom).
+All the features that are _Generally Available_ or _Beta_ get into the next [release](https://central.sonatype.com/artifact/com.sap.cloud.sdk/sdk-bom).
+You can find the latest SAP Cloud SDK version and the list of previous releases [here](release-notes.mdx) or on [Maven Central](https://central.sonatype.com/artifact/com.sap.cloud.sdk/sdk-bom).
 Find more details in our [release policy](release-policy.mdx).
 
 ### Should I Update With Every Release?
@@ -51,10 +51,10 @@ In case you found a bug or opportunity for improvement you can directly open an 
 
 Use these CF CLI instructions to activate debugging for your App.
 
-**TomEE (when using SAP Java Buildpack)**
+**Tomcat (when using SAP Java Buildpack Jakarta)**
 
 ```bash
-cf ssh application -c "app/META-INF/.sap_java_buildpack/sapjvm/bin/jvmmon <<< 'start debugging'"
+cf ssh application -c 'export JAVA_PID=`ps -C java -o pid=` && /home/vcap/app/META-INF/.sap_java_buildpack/sap_machine_jre/bin/jcmd $JAVA_PID VM.start_java_debugging'
 cf ssh application -N -T -L 8000:localhost:8000
 ```
 
@@ -138,7 +138,7 @@ Our SAP BTP CF Archetype uses logback as the logging implementation.
 
 For further reading on this vulnerability have a look at the following (external) links:
 
-- <https://www.lunasec.io/docs/blog/log4j-zero-day-mitigation-guide/>
-- <http://slf4j.org/log4shell.html>
-- <https://support.sap.com/content/dam/support/en_us/library/ssp/my-support/trust-center/sap-tc-01-5025.pdf>
-- <https://nvd.nist.gov/vuln/detail/CVE-2021-44228>
+- https://www.lunasec.io/docs/blog/log4j-zero-day-mitigation-guide
+- http://slf4j.org/log4shell.html
+- https://support.sap.com/content/dam/support/en_us/library/ssp/my-support/trust-center/sap-tc-01-5025.pdf
+- https://nvd.nist.gov/vuln/detail/CVE-2021-44228

@@ -1,10 +1,45 @@
+## 5.6.0 - March 19, 2024
+
+[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.6.0)
+
+### ✨ New Functionality
+
+- Support service bindings to the [SAP BTP AI Core Service](https://api.sap.com/api/AI_CORE_API) by default in the `ServiceBindingDestinationLoader` API.
+- Failed OData v4 Batch requests now return the specific failed request from the exception: `ODataResponseException.getRequest()`.
+
+### 🐛 Fixed Issues
+
+- Fix an issue where the same `HttpClient` would be used for different users when using `PrincipalPropagation` and thus could potentially share the same (session) cookies.
+- Fix an issue where destinations for the Business Logging service that are created from a service binding (using the `ServiceBindingDestinationLoader` API) contained the concrete API path.
+  This behavior caused problems when using such a destination in a client generated with the SAP Cloud SDK's OpenApi generator.
+- [DwC] Fix an issue where the `AuthTokenAccessor` would not recognize JWT tokens passed in via the `dwc-jwt` header.
+- [DwC] Fix an issue where the current tenant would not be resolved if the `dwc-subdomain` header was missing.
+
+## 5.5.0 - February 28, 2024
+
+[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.5.0)
+
+### 🔧 Compatibility Notes
+
+- Deprecated `RfcDestination` and all associated usages, the replacement is `Destination`.
+
+### ✨ New Functionality
+
+- `war` deployment in combination with the `SAP Java Buildpack` 2.2.0 is supported again.
+  Our `RFC` artifact is now released, and `JCo` functionalities are supported again.
+  Please follow our [guide to update to version 5](../guides/5.0-upgrade-steps.mdx).
+
+### 📈 Improvements
+
+- Improve the `DefaultHttpDestination` builder API: For destinations with proxy type `ON_PREMISE` the proxy URL can now be customized by using the `proxy` method of the builder.
+
+### 🐛 Fixed Issues
+
+- Fixed an issue where adding header providers to a destination after it had already been used to obtain an Apache `HttpClient` 5 would not work as expected.
+
 ## 5.4.0 - February 15, 2024
 
-[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.X.0)
-
-### 🚧 Known Issues
-
--
+[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.4.0)
 
 ### 📈 Improvements
 
@@ -25,7 +60,8 @@
 
 <!-- vale off -->
 
-<details><summary>Dependency Updates</summary>
+<details>
+<summary>Dependency Updates</summary>
 
 | Dependency                                                                                                                                                             | From       | To         |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ---------- |
@@ -43,10 +79,6 @@
 </details>
 
 <!-- vale on -->
-
-### 🐛 Fixed Issues
-
--
 
 ## 5.3.0 - February 1, 2024
 
@@ -85,21 +117,23 @@
 
   - In case you are using custom facade implementations for accessors (e.g. `TenantAccessor`) this might have additional implications.
 
-    <details><summary>Details: Impact on custom facades</summary>
+        <details>
 
-    First, check if all the following conditions apply for your use case:
+    <summary>Details: Impact on custom facades</summary>
 
-    - You are providing a custom implementation of a facade interface (e.g. the `TenantFacade` registered to the `TenantAccessor`).
-    - Your custom facade implementation uses `ThreadLocal` variables which are not configured to be passed on by the `ThreadContextExecutor`.
-    - Before version `5.2.0` the `resilience4j` module was not in the dependency tree and no alternative implementation was provided.
-    - You are implicitly or explicitly using a resilience configuration with a `TimeLimiter` defined.
-      - This means that the `TimeLimiter` was not taking effect before `5.2.0` and respective warnings have been logged about this.
-    - The code inside the resilient execution is implicitly or explicitly using the facade implementation.
+        First, check if all the following conditions apply for your use case:
 
-    If all the above conditions apply, you might need to ensure that the `ThreadLocal` variables you are using for your custom facades are passed on by the `ThreadContextExecutor`.
-    Please follow [this documentation](https://sap.github.io/cloud-sdk/docs/java/features/multi-tenancy/thread-context#passing-on-other-threadlocals) on how to achieve this.
+        - You are providing a custom implementation of a facade interface (e.g. the `TenantFacade` registered to the `TenantAccessor`).
+        - Your custom facade implementation uses `ThreadLocal` variables which are not configured to be passed on by the `ThreadContextExecutor`.
+        - Before version `5.2.0` the `resilience4j` module was not in the dependency tree and no alternative implementation was provided.
+        - You are implicitly or explicitly using a resilience configuration with a `TimeLimiter` defined.
+          - This means that the `TimeLimiter` was not taking effect before `5.2.0` and respective warnings have been logged about this.
+        - The code inside the resilient execution is implicitly or explicitly using the facade implementation.
 
-    </details>
+        If all the above conditions apply, you might need to ensure that the `ThreadLocal` variables you are using for your custom facades are passed on by the `ThreadContextExecutor`.
+        Please follow [this documentation](https://sap.github.io/cloud-sdk/docs/java/features/multi-tenancy/thread-context#passing-on-other-threadlocals) on how to achieve this.
+
+        </details>
 
 - `com.sap.cloud.sdk.cloudplatform.connectivity.DestinationService.Cache` now enables change detection by default, but can be disabled via `DestinationService.Cache.disableChangeDetection()`.
   - `DestinationService.Cache.enableChangeDetection()` has been deprecated.
@@ -147,11 +181,11 @@
 - Deprecate the strategies `LOOKUP_ONLY` and `LOOKUP_THEN_EXCHANGE` of `DestinationServiceTokenExchangeStrategy`.
   They are replaced by the `FORWARD_USER_TOKEN` strategy.
   If there are any issues when using `FORWARD_USER_TOKEN` for destinations that require user tokens, please report them and use `EXCHANGE_ONLY` for such cases.
-- `DestinationService.getAllDestinationProperties()` and `DestinationService.getAllDestinationProperties(DestinationOptions opts)` have been deprecated in favor of `DestinationService.getAllDestinationProperties()`.
+- `DestinationService.tryGetAllDestinations()` and `DestinationService.tryGetAllDestinations(DestinationOptions opts)` have been deprecated in favor of `DestinationService.getAllDestinationProperties()`.
 
 ### ✨ New Functionality
 
-- Added new API to retrieve destination properties only from the BTP Destination Service.
+- Added new API to retrieve destination properties only from the SAP BTP Destination Service.
   `DestinationService` now offers `getDestinationProperties(String destinationName)` and `getAllDestinationProperties()`.
 
 ### 📈 Improvements
@@ -160,13 +194,13 @@
 - SAP dependency updates:
   - Update the [SAP Security Library](https://github.com/SAP/cloud-security-services-integration-library) from `3.3.0` to `3.3.1`
 - Other dependency updates:
-  - Update [Apache HttpClient 5](https://search.maven.org/artifact/org.apache.httpcomponents.client5/httpclient5) from `5.2.1` to `5.3`
+  - Update [Apache HttpClient 5](https://central.sonatype.com/artifact/org.apache.httpcomponents.client5/httpclient5) from `5.2.1` to `5.3`
   - Update [Apache HttpCore 5](https://search.maven.org/search?q=a:httpcore5) from `5.2.3` to `5.2.4`
 
 ### 🐛 Fixed Issues
 
 - Fix an issue where an invalid hostname in a destination would lead to an empty hostname. The hostname is now accepted.
-- Fix an issue where errors from token flows of destinations retrieved from the BTP destination service were not handled consistently.
+- Fix an issue where errors from token flows of destinations retrieved from the SAP BTP destination service were not handled consistently.
   For the non-default strategy `LOOKUP_ONLY` errors were handled too late and results would get cached unintentionally.
 
 ## Major Version Update: 5.0.0
@@ -191,7 +225,7 @@ Please take note of the following changes introduced with version 5:
 - The minimum required versions for Spring and the SAP BTP Security Libraries increased:
   - **Spring 6** and **SAP BTP Security Libraries version 3** are now the minimum required versions.
 - The compatibility with the SAP Java Buildpack changed:
-  - Deployments to SAP BTP Cloud Foundry with packaging type `war` require version 2 of the SAP Java Buildpack (not yet available at the time of writing).
+  - Deployments to SAP BTP Cloud Foundry with packaging type `war` require version 2 of the SAP Java Buildpack.
 - The SAP BTP Neo Environment is no longer supported.
 - A significant number of modules have been renamed, moved or been removed.
   Please refer to the [Upgrade Guide](../guides/5.0-upgrade-steps.mdx) for the full list of module changes.
@@ -200,7 +234,7 @@ Please take note of the following changes introduced with version 5:
 
 #### Changes to the overall Destination API:
 
-- Both `HttpDestination` as well as `HttpDestinationProperties` are now sub-types of `Destination` for improved compatibility with the Cloud SDK APIs.
+- Both `HttpDestination` as well as `HttpDestinationProperties` are now sub-types of `Destination` for improved compatibility with the SAP Cloud SDK APIs.
 - The `Destination#decorate` method has been removed without replacement.
 - The public constructor of `DefaultHttpDestination` has been replaced with a static factory method `DefaultHttpDestination#fromProperties`.
   - We also added some extra static factory methods (`DefaultHttpDestination#fromMap` and `DefaultHttpDestination#fromDestination`) for convenience.
@@ -221,7 +255,7 @@ Please take note of the following changes introduced with version 5:
 - The `BearerCredentials` behavior has been adjusted slightly: The `getToken()` method no longer just returns the value passed in via the constructor but instead is now guaranteed to **NOT** contain the prefix `"Bearer "`.
   To compensate this change, the `#getHttpHeaderValue()` method has been added, which is guaranteed to contain the `"Bearer "` prefix.
 
-#### Changes related to the BTP Destination Service:
+#### Changes related to the SAP BTP Destination Service:
 
 - The `ScpCfDestination` and `ScpCfHttpDestination` classes are replaced by the baseline `Destination` and `DefaultHttpDestination` implementations.
 - The `ScpCfDestinationLoader` has been renamed to `DestinationService`.
@@ -247,9 +281,9 @@ Please take note of the following changes introduced with version 5:
 - The `ODataRequestResult` no longer splits header values.
 - The `AuthTokenFacade` of the `AuthTokenAccessor` will default to `DefaultAuthTokenFacade`
 - The `TenantFacade` of the `TenantAccessor` will default to `DefaultTenantFacade`
-- The `TenantWithSubdomain#getSubdomain` is now nullable.
+- The `TenantWithSubdomain#getSubdomain` is now `@Nullable`.
 
-#### Changes to the Cloud Platform API:
+#### Changes to the SAP Cloud Platform API:
 
 - The `CloudPlatform` interface and all related classes have been removed.
   In particular, the following classes have been removed:
@@ -293,14 +327,14 @@ Please take note of the following changes introduced with version 5:
 
 - The `Destination#asHttp()` and `Destination#asRfc()` methods no longer always return a new instance of `HttpDestination` and `RfcDestination` if the current objects is already a `HttpDestination` or `RfcDestination` respectively.
 - The OData, OpenAPI and SOAP APIs are generalised to accept instances of `Destination`, making invocations to `.asHttp()` superfluous when executing OData or REST requests.
-  - OData V2 and OpenAPI clients need to be re-generated to adjust for this change.
+  - OData v2 and OpenAPI clients need to be re-generated to adjust for this change.
 - `Destination#asHttp()` no longer throws an exception in case the `Destination` originates from the Destination service and the attached auth token contains an error.
   Instead, an exception will be thrown upon invoking the `getHeaders()` method, for example, during request execution.
-- Loading a `Destination` from the BTP Destination service will now:
+- Loading a `Destination` from the SAP BTP Destination service will now:
   - No longer eagerly evaluate authentication tokens or On-Premise related headers (if applicable).
     Instead, those will be evaluated lazily upon request execution.
     As a consequence, the `getHeaders` method might now throw an exception if resolving (on-premise) authentication information fails.
-  - Throw an exception if the tenant changed in between loading and using the destination to execute requests.
+  - Throw an exception if the tenant changed between loading and using the destination to execute requests.
   - Throw an exception if any of the attached certificates isn't valid.
 - Removed the `javax.inject.Named` annotation from code generated with any of the OData generators (v2, v4).
 

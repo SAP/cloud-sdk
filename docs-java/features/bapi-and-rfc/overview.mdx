@@ -20,7 +20,8 @@ import TabItem from '@theme/TabItem';
 :::danger Warning
 `RFC` and `SOAP` modules are **deprecated**.
 These modules will be kept for version 5 as well, but will be removed in the future.
-Please consider searching for an OData based service (e.g., via SAP Business Accelerator Hub) as possible replacement, and SDK offers OData type safe clients (both OData v2 and v4).
+Please consider searching for an OData based service (e.g., via SAP Business Accelerator Hub) as possible replacement.
+The SAP Cloud SDK also offers OData type safe clients (both OData v2 and v4).
 If you have to use `JCo` or `RFC`, here is the [documentation](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/invoking-abap-function-modules-via-rfc) about how to consume ABAP functions via RFC, using JCo.
 :::
 
@@ -62,7 +63,7 @@ There are other edge cases that we'll cover later.
 ## Call a BAPI in an SAP ABAP system
 
 :::tip Generate a SAP Cloud SDK project
-If you're starting from scratch, generate a `Spring Boot` project following the steps in the [Getting started](https://sap.github.io/cloud-sdk/docs/java/getting-started#generating-a-project-from-a-maven-archetype) guide.
+If you're starting from scratch, generate a `Spring Boot` project following the steps in the [Getting started](../../getting-started#generating-a-project-from-a-maven-archetype) guide.
 :::
 
 ### Implement an Example BAPI Call
@@ -425,7 +426,7 @@ Possible reasons and resolutions:
 - name: testapp
 ---
 buildpacks:
-  - sap_java_buildpack
+  - sap_java_buildpack_jakarta
 ---
 env:
   USE_JCO: true

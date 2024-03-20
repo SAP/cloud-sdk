@@ -41,8 +41,8 @@ module.exports = {
     },
     prism: {
       additionalLanguages: ['powershell', 'java', 'groovy'],
-      theme: require('prism-react-renderer/themes/github'),
-      darkTheme: require('prism-react-renderer/themes/dracula')
+      theme: require('prism-react-renderer').themes.github,
+      darkTheme: require('prism-react-renderer').themes.dracula
     },
     algolia: {
       apiKey: '441c57554e5a0ca9338cc9f047fb10c8',
@@ -104,7 +104,7 @@ module.exports = {
             },
             {
               label: 'Maven',
-              href: 'https://search.maven.org/search?q=g:com.sap.cloud.sdk*'
+              href: 'https://central.sonatype.com/search?q=g:com.sap.cloud.sdk*&smo=true'
             },
             {
               label: 'Support',
