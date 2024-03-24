@@ -17,63 +17,85 @@ keywords:
   - btp
 ---
 
-[_Service Bindings_](https://github.com/SAP/btp-environment-variable-access/wiki/Fundamentals#service-binding) are a fundamental concept of application deployment on the SAP Business Technology Platform.
-A _Service Binding_, in essence, is a set of configurations that applications can use to establish a connection to a (remote) service.
-As such, both _Service Bindings_ as well as [_Destination_](destination-service#accessing-destinations) resemble the same concept.
+The SAP Cloud SDK supports connecting to arbitrary services that are bound to an application via a service binding.
+[_Service Bindings_](https://github.com/SAP/btp-environment-variable-access/wiki/Fundamentals#service-binding) provide an application with the necessary credentials to connect to a service when deployed on the SAP Business Technology Platform (BTP).
 
-The SAP Cloud SDK, therefore, provides a way to convert [`ServiceBinding`](https://github.com/SAP/btp-environment-variable-access/blob/main/api-parent/core-api/src/main/java/com/sap/cloud/environment/servicebinding/api/ServiceBinding.java) instances into `HttpDestination` instances. <br />
-The code below, for example, demonstrates how to transform a `ServiceBinding` for the [Workflow REST API](https://api.sap.com/api/SAP_CP_Workflow_CF/overview) into an `HttpDestination`:
+## Connecting to a Service
+
+You can obtain a `Destination` to connect to a service by using the `ServiceBindingDestinationLoader` API:
 
 ```java
-import com.sap.cloud.environment.servicebinding.api.ServiceIdentifier;
-import com.sap.cloud.sdk.cloudplatform.connectivity.BtpServiceOptions;
+var options = ServiceBindingDestinationOptions
+        .forService(ServiceIdentifier.<MY_SERVICE>)
+        .build();
 
-var options =
-    ServiceBindingDestinationOptions
+HttpDestination destination = ServiceBindingDestinationLoader.defaultLoaderChain()
+        .getDestination(options);
+```
+
+Choose from the available `ServiceIdentifier` constants to specify the service you want to connect to.
+
+For example, for connecting to the [Workflow REST API](https://api.sap.com/api/SAP_CP_Workflow_CF/overview) use:
+
+```java {2-3}
+var options = ServiceBindingDestinationOptions
         .forService(ServiceIdentifier.WORKFLOW)
         .withOption(BtpServiceOptions.WorkflowOptions.REST_API)
         .build();
-HttpDestination destination = ServiceBindingDestinationLoader.defaultLoaderChain().getDestination(options);
+
+HttpDestination destination = ServiceBindingDestinationLoader.defaultLoaderChain()
+        .getDestination(options);
 ```
 
-## Out Of The Box Support
+Note the additional option `BtpServiceOptions.WorkflowOptions.REST_API` that is specific to the [Workflow API (REST)](https://api.sap.com/api/SAP_CP_Workflow_CF/overview).
+Explore the `BtpServiceOptions` class to find any options relevant for your service.
 
-:::caution Prerequisites
+### List of Supported Services
 
-For the following to work, the application needs to add the [**`connectivity-oauth` artifact**](https://central.sonatype.com/artifact/com.sap.cloud.sdk.cloudplatform/connectivity-oauth) to its dependencies.
+The SAP Cloud SDK supports a variety of services out of the box.
+For example, the AI Core service or the Business Rules service.
+You'll find a full list below.
 
-:::
+<details>
+<summary>Full List of Supported Services</summary>
 
-The SAP Cloud SDK is able to deal with `ServiceBinding`s for the following BTP services:
+The following services are supported out of the box:
 
-- [The BTP Destination Service on Cloud Foundry](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview)
-- [The BTP Connectivity Service on Cloud Foundry](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/what-is-sap-btp-connectivity)
-- [The SAP Workflow Service on Cloud Foundry](https://api.sap.com/package/SAPCPWorkflowAPIs/all)
+- The [SAP AI Core Service](https://api.sap.com/api/AI_CORE_API)
+- The [SAP Identity and Authentication Service (IAS)](https://help.sap.com/docs/identity-authentication)
+  - For IAS please see the [dedicated section below](#using).//TODO
+- The [SAP Workflow Service on Cloud Foundry](https://api.sap.com/package/SAPCPWorkflowAPIs/all)
   - [Inbox API (OData)](https://api.sap.com/api/SAP_CP_Workflow_TCM_CF/overview)
   - [Workflow API (REST)](https://api.sap.com/api/SAP_CP_Workflow_CF/overview)
-- [The SAP Business Rules Service on Cloud Foundry](https://api.sap.com/package/SAPCPBusinessRulesAPIs/all)
+- The [SAP Business Rules Service on Cloud Foundry](https://api.sap.com/package/SAPCPBusinessRulesAPIs/all)
   - [Rule Authoring API](https://api.sap.com/api/SAP_CF_BusinessRules_Repository/overview)
   - [Rule Execution API (v2)](https://api.sap.com/api/SAP_CF_BusinessRules_Runtime_V2/overview)
-- [The SAP AI Core Service](https://api.sap.com/api/AI_CORE_API)
 - The _SAP Business Logging on Cloud Foundry_ (SAP internal)
   - Configuration API
   - Text API
   - Reading API
   - Writing API
+- The [BTP Destination Service on Cloud Foundry](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview)
+- The [BTP Connectivity Service on Cloud Foundry](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/what-is-sap-btp-connectivity)
 
-For BTP services that offer different APIs (such as the Workflow service), make sure to define which API the converted `HttpDestination` should point to using the corresponding `BtpServiceOptions`. <br />
-For example:
 
-```java
-import com.sap.cloud.sdk.cloudplatform.connectivity.BtpServiceOptions;
+</details>
 
-ServiceBindingDestinationOptions
-        .forService(ServiceIdentifier.WORKFLOW)
-        .withOption(BtpServiceOptions.WorkflowOptions.REST_API)
-        .build();
-```
+:::tip Your service is not in the list?
 
-### Multitenancy
+In case the service you want to connect to is not yet recognized by the SAP Cloud SDK by default, you can still use the API by providing some additional information.
+
+For services backed by the SAP Identity and Authentication Service (IAS), please see the [dedicated section below](#using).//TODO
+For other services, please refer to the section on [customization](#customization). //TODO
+
+:::
+
+In case you are a service provider and want to make your service compatible with the SAP Cloud SDK: Please consider contributing!
+
+* For IAS-based services it is sufficient to conform to the [dedicated service binding format](#services). //TODO
+* For XSUAA-based services please refer to the section on [customization](#customization) and consider adding your implementation [here](https://github.com/SAP/cloud-sdk-java/blob/main/cloudplatform/connectivity-oauth/src/main/java/com/sap/cloud/sdk/cloudplatform/connectivity/BtpServicePropertySuppliers.java) by raising a pull request.
+
+## Multitenancy
 
 `HttpDestination` instances created by the `ServiceBindingDestinationLoader` API are, by default, **tenant-aware**.
 This means that communication with the target system will happen according to the specified [`OnBehalfOf`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.Builder.html#onBehalfOf(com.sap.cloud.sdk.cloudplatform.connectivity.OnBehalfOf)>).
@@ -87,6 +109,61 @@ ServiceBindingDestinationOptions
     .onBehalfOf(OnBehalfOf.NAMED_USER_CURRENT_TENANT)
     .build();
 ```
+
+## Using the Identity and Authentication Service (IAS)
+
+In case your application is bound to an instance of the SAP Identity and Authentication Service (IAS) you can use the SAP Cloud SDK to connect to other applications and services that are secured using IAS.
+
+### Connecting to Services
+
+If your service is secured using IAS and is using the [dedicated service binding format](#using) //TODO supported by the SAP Cloud SDK, you can obtain a destination by passing the service label as the `ServiceIdentifier`:
+
+```java {2-3}
+var options = ServiceBindingDestinationOptions
+        .forService(ServiceIdentifier.of("your-service-label"))
+        .build();
+```
+
+In case your service is not using the default format you can still use the `IasOptions` to provide the necessary information:
+
+```java {3}
+var options = ServiceBindingDestinationOptions
+        .forService(ServiceIdentifier.IDENTITY_AUTHENTICATION)
+        .withOption(IasOptions.withTargetUri("https://foo.com"))
+        .build();
+```
+
+Obtain the URL from the service binding of the service you want to connect to.
+
+### Connecting to Applications
+
+In case you want to connect to a system that is registered as an application within IAS use the `IasOptions.withApplicationName` to provide the application name:
+
+```java {3-4}
+var options = ServiceBindingDestinationOptions
+        .forService(ServiceIdentifier.IDENTITY_AUTHENTICATION)
+        .withOption(IasOptions.withApplicationName("application-name"))
+        .withOption(IasOptions.withTargetUri("https://foo.com"))
+        .build();
+```
+
+### Calling Back Applications
+
+If you received an incoming request from an application using IAS you can use the following options to create a destination for calling back the application:
+
+```java {3-4}
+var options = ServiceBindingDestinationOptions
+        .forService(ServiceIdentifier.IDENTITY_AUTHENTICATION)
+        .withOption(IasOptions.withConsumerClient("client-id", "tenant-id"))
+        .withOption(IasOptions.withTargetUri("https://foo.com"))
+        .build();
+```
+
+Use the client and tenant IDs you received in the JWT of the incoming request.
+
+### Further Options
+
+### IAS Service Binding Format
 
 ## How It Works
 
