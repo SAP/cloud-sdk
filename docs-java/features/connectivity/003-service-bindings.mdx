@@ -63,7 +63,7 @@ The following services are supported out of the box:
 
 - The [SAP AI Core Service](https://api.sap.com/api/AI_CORE_API)
 - The [SAP Identity and Authentication Service (IAS)](https://help.sap.com/docs/identity-authentication)
-  - For IAS please see the [dedicated section below](#using).//TODO
+  - For IAS please see the [dedicated section below](#using-the-identity-and-authentication-service-ias).
 - The [SAP Workflow Service on Cloud Foundry](https://api.sap.com/package/SAPCPWorkflowAPIs/all)
   - [Inbox API (OData)](https://api.sap.com/api/SAP_CP_Workflow_TCM_CF/overview)
   - [Workflow API (REST)](https://api.sap.com/api/SAP_CP_Workflow_CF/overview)
@@ -78,29 +78,47 @@ The following services are supported out of the box:
 - The [BTP Destination Service on Cloud Foundry](https://api.sap.com/api/SAP_CP_CF_Connectivity_Destination/overview)
 - The [BTP Connectivity Service on Cloud Foundry](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/what-is-sap-btp-connectivity)
 
-
 </details>
 
 :::tip Your service is not in the list?
 
 In case the service you want to connect to is not yet recognized by the SAP Cloud SDK by default, you can still use the API by providing some additional information.
 
-For services backed by the SAP Identity and Authentication Service (IAS), please see the [dedicated section below](#using).//TODO
-For other services, please refer to the section on [customization](#customization). //TODO
+For services backed by the SAP Identity and Authentication Service (IAS), please see the [section on IAS](#using-the-identity-and-authentication-service-ias) below.
+For other services, please refer to the section on [adding support for more services](#adding-support-for-more-services).
 
 :::
 
 In case you are a service provider and want to make your service compatible with the SAP Cloud SDK: Please consider contributing!
 
-* For IAS-based services it is sufficient to conform to the [dedicated service binding format](#services). //TODO
-* For XSUAA-based services please refer to the section on [customization](#customization) and consider adding your implementation [here](https://github.com/SAP/cloud-sdk-java/blob/main/cloudplatform/connectivity-oauth/src/main/java/com/sap/cloud/sdk/cloudplatform/connectivity/BtpServicePropertySuppliers.java) by raising a pull request.
+- For IAS-based services it is sufficient to conform to the [dedicated service binding format](#ias-service-binding-format) for IAS.
+- For XSUAA-based services please refer to the section on [adding support for more services](#adding-support-for-more-services) and consider adding your implementation [here](https://github.com/SAP/cloud-sdk-java/blob/main/cloudplatform/connectivity-oauth/src/main/java/com/sap/cloud/sdk/cloudplatform/connectivity/BtpServicePropertySuppliers.java) by raising a pull request.
 
-## Multitenancy
+### Working with Multiple Service Bindings
 
-`HttpDestination` instances created by the `ServiceBindingDestinationLoader` API are, by default, **tenant-aware**.
-This means that communication with the target system will happen according to the specified [`OnBehalfOf`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.Builder.html#onBehalfOf(com.sap.cloud.sdk.cloudplatform.connectivity.OnBehalfOf)>).
+In case your application is bound to multiple instances of the same service passing the `ServiceIdentifier` is not sufficient.
+Instead, you need to provide the `ServiceBinding` instance directly.
 
-The default value, `OnBehalfOf.TECHNICAL_USER_CURRENT_TENANT`, can be overwritten when assembling the `ServiceBindingDestinationOptions` instance:
+```java
+var bindingList = DefaultServiceBindingAccessor.getInstance()
+                .getServiceBindings();
+
+// select the desired binding from the list of all available bindings
+ServiceBinding binding = bindingList.get(0);
+
+ServiceBindingDestinationOptions
+        .forService(binding)
+        .build()
+```
+
+## Multitenancy and Principal Propagation
+
+Destinations created via the `ServiceBindingDestinationLoader` API are tenant-aware by default.
+That means authorization to the target system will by default be performed on behalf of the **current tenant at the time of request execution**.
+
+This can be customized by passing a different value for [`OnBehalfOf`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.Builder.html#onBehalfOf(com.sap.cloud.sdk.cloudplatform.connectivity.OnBehalfOf)>).
+
+For example, to propagate the current user to the target system use:
 
 ```java {4}
 ServiceBindingDestinationOptions
@@ -114,11 +132,21 @@ ServiceBindingDestinationOptions
 
 In case your application is bound to an instance of the SAP Identity and Authentication Service (IAS) you can use the SAP Cloud SDK to connect to other applications and services that are secured using IAS.
 
+:::info Supported Credential Types
+
+The SAP Cloud SDK supports the credential types `binding-secret` as well as `X509_GENERATED` and `X509_ATTESTED` for IAS service bindings.
+
+If you want to use the `X509_ATTESTED` credential type, you need to add the `connectivity-ztis` dependency to your project.
+Read more about how to confiugre your app for this credential type on the documentation for [using certificates from the Zero Trust Identity Service (ZTIS)](/docs/java/features/connectivity/mtls#using-automated-certificate-rotation-using-the-zero-trust-identity-service-sap-internal).
+
+The type `X509_PROVIDED` is currently not supported.
+:::
+
 ### Connecting to Services
 
-If your service is secured using IAS and is using the [dedicated service binding format](#using) //TODO supported by the SAP Cloud SDK, you can obtain a destination by passing the service label as the `ServiceIdentifier`:
+If your service is secured using IAS and is using the [dedicated service binding format](#ias-service-binding-format) supported by the SAP Cloud SDK, you can obtain a destination by passing the service label as the `ServiceIdentifier`:
 
-```java {2-3}
+```java
 var options = ServiceBindingDestinationOptions
         .forService(ServiceIdentifier.of("your-service-label"))
         .build();
@@ -126,7 +154,7 @@ var options = ServiceBindingDestinationOptions
 
 In case your service is not using the default format you can still use the `IasOptions` to provide the necessary information:
 
-```java {3}
+```java
 var options = ServiceBindingDestinationOptions
         .forService(ServiceIdentifier.IDENTITY_AUTHENTICATION)
         .withOption(IasOptions.withTargetUri("https://foo.com"))
@@ -135,11 +163,18 @@ var options = ServiceBindingDestinationOptions
 
 Obtain the URL from the service binding of the service you want to connect to.
 
+:::info Mutual TLS Only Authentication
+
+In case the service does not require a JWT token (e.g. the Event Broker service) you can pass the additional option `IasOptions.withoutTokenForTechnicalProviderUser()`.
+Together with setting `OnBehalfOf.TECHNICAL_USER_PROVIDER` this will skip retrieving a token from IAS and only sending the X.509 certificate, saving a bit of performance.
+
+:::
+
 ### Connecting to Applications
 
 In case you want to connect to a system that is registered as an application within IAS use the `IasOptions.withApplicationName` to provide the application name:
 
-```java {3-4}
+```java {3}
 var options = ServiceBindingDestinationOptions
         .forService(ServiceIdentifier.IDENTITY_AUTHENTICATION)
         .withOption(IasOptions.withApplicationName("application-name"))
@@ -151,7 +186,7 @@ var options = ServiceBindingDestinationOptions
 
 If you received an incoming request from an application using IAS you can use the following options to create a destination for calling back the application:
 
-```java {3-4}
+```java {3}
 var options = ServiceBindingDestinationOptions
         .forService(ServiceIdentifier.IDENTITY_AUTHENTICATION)
         .withOption(IasOptions.withConsumerClient("client-id", "tenant-id"))
@@ -161,18 +196,184 @@ var options = ServiceBindingDestinationOptions
 
 Use the client and tenant IDs you received in the JWT of the incoming request.
 
-### Further Options
-
 ### IAS Service Binding Format
 
-## How It Works
+The SAP Cloud SDK expects services backed by IAS to have the following service binding format:
+
+- The `credentials` section must contain an object `authentication-service` with at least one field `service-label` set to `identity`.
+- The `credentials` section must contain an object `endpoints` which must contain at least one entry.
+  - Each entry under `endpoints` must be an object containting a `uri` field set to a string.
+- Further fields under `authentication-service` and `endpoints` are optional as shown below
+- Aside from these requirements the service binding may contain any other fields as needed.
+
+For example, the following binding would be recognized:
+
+```json
+{
+  "label": "eventmesh-sap2sap-internal",
+  "credentials": {
+    "authentication-service": {
+      "service_label": "identity"
+    },
+    "endpoints": {
+      "eventing-endpoint": {
+        "uri": "https://http-gateway.eu11.beb.em.services.cloud.sap",
+        "always-requires-token": false
+      }
+    }
+  }
+}
+```
+
+<details>
+<summary>Full format with optional fields</summary>
+
+```json
+{
+  // the usual binding metadata fields here
+  // ...
+  "credentials": {
+    "authentication-service": {
+      "service-label": "identity",
+      "app-name": "app" // optional
+    },
+    "endpoints": {
+      "my-endpoint": {
+        "uri": "https://cert.service.com",
+        // the following fields are optional and shown here with their assumed default values
+        "protocol": "http",
+        "always-requires-token": true,
+        "requires-mtls": true
+      },
+      // multiple endpoints can be defined in addition
+      "my-other-endpoint": {
+        "uri": "https://service.com",
+        "requires-mtls": false
+      },
+      "my-ftp-endpoint": {
+        "uri": "ftp://service.com",
+        "protocol": "ftp"
+      }
+    }
+  }
+}
+```
+
+</details>
+
+:::note Multiple Endpoints
+
+Currently, the SAP Cloud SDK only supports service bindings with a single entry under `endpoints`.
+
+:::
+
+## Adding Support for More Services
+
+In case you want to connect to a service that is not supported out of the box, you can still use the `ServiceBindingDestinationLoader` API by providing some additional information.
+
+In most cases it's sufficient to provide an implementation of `OAuth2PropertySupplier` that can extract the required information from the specific service binding.
+Services backed by XSUAA typically have very similar service binding formats that differ only slightly.
+For services backed by IAS please refer to the sections above instead.
+
+In most cases overriding the `DefaultOAuth2PropertySupplier` and implementing the `getServiceUri()` method is already sufficient.
+
+For example, assume the following binding structure:
+
+```jsonc
+{
+  "label": "my-service",
+  "credentials": {
+    "some": {
+      "json": {
+        "path": "https://my-service.com/"
+      }
+    },
+    "clientid": "my-client-id"
+    // ...
+  }
+}
+```
+
+This could be handled by the following implementation:
+
+```java {5,12,17}
+class MyServicePropertySupplier extends DefaultOAuth2PropertySupplier
+{
+    MyServicePropertySupplier( @Nonnull final ServiceBindingDestinationOptions options )
+    {
+        super(options, Collections.emptyList());
+    }
+
+    @Nonnull
+    @Override
+    public URI getServiceUri()
+    {
+        return getCredentialOrThrow(URI.class, "some", "json", "path");
+    }
+}
+
+OAuth2ServiceBindingDestinationLoader.registerPropertySupplier(
+    ServiceIdentifier.of("my-service"), MyServicePropertySupplier::new);
+```
+
+Note that:
+
+- Line 5 indicates that the OAuth credentials are stored directly in the `credentials` object.
+- Line 12 extracts the service URI from the `credentials.some.json.path` field.
+- Line 17 registers the implementation for any binding with the label `my-service`.
+
+For more details refer to the more extensive guidance given in the [advanced section below](#customization).
+Also consider the [existing implementations](https://github.com/SAP/cloud-sdk-java/blob/main/cloudplatform/connectivity-oauth/src/main/java/com/sap/cloud/sdk/cloudplatform/connectivity/BtpServicePropertySuppliers.java) and [tests](https://github.com/SAP/cloud-sdk-java/blob/main/cloudplatform/connectivity-oauth/src/test/java/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultOAuth2PropertySupplierTest.java#L60).
+
+## Local Development
+
+When developing locally you have various options to provide the necessary service binding information:
+
+- When using CAP you can use the [Hybrid Testing](https://cap.cloud.sap/docs/advanced/hybrid-testing#bind-to-cloud-services) feature.
+- You can manually copy the `VCAP_SERVICES` environment variable and set it locally (e.g. in your terminal or IDE or using an IDE plugin that loads a `.env` file)
+- You can define a binding programmatically in your application (e.g. in a test setup or a local development profile)
+
+### Programmatically Defining a Service Binding
+
+You can create a `ServiceBinding` instance programmatically and use it to create a destination:
+
+```java
+var binding = new DefaultServiceBindingBuilder()
+    .withServiceIdentifier(ZTIS_IDENTIFIER)
+    .withCredentials(Map.of(
+         "clientid", "id",
+         "url", "https://foo.com"))
+    .build();
+```
+
+You can pass the binding explicitly via the options as described in the section on [working with multiple bindings](#working-with-multiple-service-bindings).
+
+However, in some cases the SAP Cloud SDK or other frameworks may implcitly access service bindings.
+For such cases one can modify the global `ServiceBindingAccessor`.
+
+The SAP Cloud SDK will use the default instance whenever looking for service bindings.
+You can override this instance:
+
+```java
+DefaultServiceBindingAccessor.setInstance(() -> List.of(binding));
+```
+
+In case you want to keep all existing bindings and just add your own you can use the following code:
+
+```java
+final ServiceBindingAccessor accessor = DefaultServiceBindingAccessor.getInstance();
+var newAccessor = new ServiceBindingMerger(List.of(accessor, () -> binding), ServiceBindingMerger.KEEP_EVERYTHING);
+DefaultServiceBindingAccessor.setInstance(newAccessor);
+```
+
+## (Advanced) Background Information
 
 In general, the [`ServiceBindingDestinationLoader` API](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationLoader.html) can be used to convert `ServiceBinding` instances into `HttpDestination` instances.
 It comes as part of the [`cloudplatform-connectivity` artifact](https://central.sonatype.com/artifact/com.sap.cloud.sdk.cloudplatform/cloudplatform-connectivity).
 
 The API is designed for easy extensibility and customization.
-Hereby, each `ServiceBindingDestinationLoader` implementation is supposed to provide the transformation logic for one specific "type" of `ServiceBinding`. <br />
-The SAP Cloud SDK provides, for example, [an implementation that is capable of dealing with service bindings that use OAuth2 authentication](#about-the-oauth2loader).
+Hereby, each `ServiceBindingDestinationLoader` implementation is supposed to provide the transformation logic for one specific "type" of `ServiceBinding`.
+The SAP Cloud SDK provides, for example, an implementation for service bindings that contain [OAuth2 credentials](#about-the-oauth2loader).
 
 As an input, the API requires [the `ServiceBindingDestinationOptions`](#about-the-options) instance.
 This class is designed to hold all information that is required to transform a `ServiceBinding` into an `HttpDestination` - this, first and foremost, includes the `ServiceBinding` itself.
@@ -181,7 +382,7 @@ Furthermore, there is also a [_chain_ implementation](#about-the-chain-implement
 The chain will try to load a destination using the given `ServiceBindingDestinationLoader` delegates until the first of them succeeds - much like a fallback mechanism.
 This concept is also reflected in the example from above, where the `defaultLoaderChain` is used to load a destination.
 
-## About the _Options_
+### About the _Options_
 
 The [`ServiceBindingDestinationOptions`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.html) is an **extensible and type-safe** collection of parameters that can be used to configure the `ServiceBinding` to `HttpDestination` transformation process.
 Hereby, the least information that is needed is the `ServiceBinding` itself, which can be provided using the [`forService(ServiceBinding)`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.html#forService(com.sap.cloud.environment.servicebinding.api.ServiceBinding)>) method.
@@ -301,14 +502,14 @@ class MyCustomServiceBindingLoader implements ServiceBindingDestinationLoader
 
 </details>
 
-## About the _OAuth2Loader_
+### About the _OAuth2Loader_
 
 The [`OAuth2ServiceBindingDestinationLoader`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/OAuth2ServiceBindingDestinationLoader.html) comes as part of the [`connectivity-oauth` artifact](https://central.sonatype.com/artifact/com.sap.cloud.sdk.cloudplatform/connectivity-oauth) and provides a customizable implementation for converting `ServiceBinding`s that use OAuth2 authentication into `HttpDestination` instances. <br />
-More precisely, it supports the **OAuth2 Client Credentials** and **OAuth2 Client Certificate** grant types.
+More precisely, it supports the **OAuth2 Client Credentials** and **OAuth2 JWT Bearer** grant types.
 
 Internally, the implementation performs the following steps:
 
-1. Check whether the given `ServiceBindingDestinationOptions` can be transformed (e.g. whether the `ServiceBinding` uses a supported grant type).
+1. Check whether the given `ServiceBindingDestinationOptions` can be transformed (e.g. whether the `ServiceBinding` has a `clientid`).
 2. Extract the required information from the `ServiceBinding` (i.e. the service URL, the token URL, and the client identity).
 3. Assemble an `HttpDestination` that uses the extracted information for the **target authentication** (i.e. HTTP header `Authorization`).
 
@@ -324,7 +525,7 @@ Whenever the `OAuth2ServiceBindingDestinationLoader` is asked to load a destinat
 1. the given `ServiceBindingDestinationOptions` can be transformed into an `HttpDestination` using the current `OAuth2PropertySupplier` instance, and, if so
 2. extract the required information from the given `ServiceBindingDestinationOptions` using the current `OAuth2PropertySupplier`.
 
-By default, there are `OAuth2PropertySupplier` for the services [mentioned above](#out-of-the-box-support) in place.
+By default, there are `OAuth2PropertySupplier` for the services [mentioned above](#list-of-supported-services) in place.
 
 ### Customization
 
@@ -472,7 +673,7 @@ We are then using method references to register our implementation with the `OAu
 
 </details>
 
-## About the Chain Implementation
+### About the Chain Implementation
 
 As mentioned [above](#how-it-works), the `ServiceBindingDestinationLoader` comes with a private _chain_ implementation.
 
@@ -489,7 +690,7 @@ Implementations provided by the SAP Cloud SDK follow this rule.
 
 :::
 
-### Custom Chain Instances
+#### Custom Chain Instances
 
 If the default chain implementation does not meet your needs, you can create your own chain instance:
 

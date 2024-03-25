@@ -166,11 +166,11 @@ This guide covers how you can configure and use the SAP Cloud SDK to use certifi
 
 The following prerequisites are required to use ZTIS:
 
-* You are deploying an application on Cloud Foundry
-* You have assigned the required entitlement for using ZTIS to your subaccount
-* You have created a service instance of `zero-trust-identity` in your Cloud Foundry space
-* You have bound the ZTIS service instance to your application
-* You have added the `zero_trust_sidecar_buildpack` as an additional buildpack for your application
+- You are deploying an application on Cloud Foundry
+- You have assigned the required entitlement for using ZTIS to your subaccount
+- You have created a service instance of `zero-trust-identity` in your Cloud Foundry space
+- You have bound the ZTIS service instance to your application
+- You have added the `zero_trust_sidecar_buildpack` as an additional buildpack for your application
 
 Head over to the [official documentation](https://pages.github.tools.sap/pse/pse-docs/docs/identity/) and [sample code](https://github.tools.sap/pse/blueprints/tree/main/examples/cf/java/ztis-identity/cf-manifest) to learn more about how to use ZTIS.
 
@@ -224,13 +224,17 @@ You then need to provide the paths to the certificate and key with a service bin
 For example, you can locally create the `VCAP_SERVICES` environment variable with the following content:
 
 ```json
-{ "zero-trust-identity": [{
-	"label": "zero-trust-identity",
-	"credentials": {
-		"certPath": "/path/to/certificate.pem",
-		"keyPath": "/path/to/key.key"
- 		}
-}]}
+{
+  "zero-trust-identity": [
+    {
+      "label": "zero-trust-identity",
+      "credentials": {
+        "certPath": "/path/to/certificate.pem",
+        "keyPath": "/path/to/key.key"
+      }
+    }
+  ]
+}
 ```
 
 Alternatively, you can set the service binding programmatically:
@@ -246,4 +250,3 @@ new DefaultServiceBindingBuilder()
 // in case you only need this one service binding the following code is fine:
 DefaultServiceBindingAccessor.setInstance(() -> List.of(binding));
 ```
-
