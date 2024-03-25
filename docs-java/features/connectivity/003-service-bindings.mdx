@@ -371,7 +371,7 @@ In case you want to keep all existing bindings and just add your own you can use
 
 ```java
 final ServiceBindingAccessor accessor = DefaultServiceBindingAccessor.getInstance();
-var newAccessor = new ServiceBindingMerger(List.of(accessor, () -> binding), ServiceBindingMerger.KEEP_EVERYTHING);
+var newAccessor = new ServiceBindingMerger(List.of(accessor, () -> List.of(binding)), ServiceBindingMerger.KEEP_EVERYTHING);
 DefaultServiceBindingAccessor.setInstance(newAccessor);
 ```
 
