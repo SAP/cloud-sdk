@@ -278,7 +278,7 @@ Currently, the SAP Cloud SDK only supports service bindings with a single entry 
 In case you want to connect to a service that is not supported out of the box, you can still use the `ServiceBindingDestinationLoader` API by providing some additional information.
 
 In most cases it's sufficient to provide an implementation of `OAuth2PropertySupplier` that can extract the required information from the specific service binding.
-Services backed by XSUAA typically have very similar service binding formats that differ only slightly.
+Services backed by XSUAA typically have rather similar service binding formats that differ only slightly.
 For services backed by IAS please refer to the sections above instead.
 
 In most cases overriding the `DefaultOAuth2PropertySupplier` and implementing the `getServiceUri()` method is already sufficient.
@@ -411,7 +411,7 @@ Hereby, an [`OptionsEnhancer`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudpl
 
 :::tip Advanced Usage
 
-The following example demonstrates a very advanced usage of our `ServiceBindingDestinationLoader` API.
+The following example demonstrates rather advanced usage of our `ServiceBindingDestinationLoader` API.
 
 A vast majority of use cases do not require a custom `ServiceBindingDestinationLoader` implementation. <br />
 Instead, customizing the existing `OAuth2ServiceBindingDestinationLoader` as [described below](#customization) is most probably sufficient.
@@ -553,7 +553,7 @@ In other words: Using the `registerPropertySupplier` method will make your `OAut
 <details>
 <summary>Full Example</summary>
 
-To make things a bit more concrete, let's assume we wanted to implement support for an other service, which uses its very own `ServiceBinding` structure.
+To make things a bit more concrete, let's assume we wanted to implement support for an other service, which uses its own `ServiceBinding` structure.
 
 Our hypothetical service binding could look like this:
 
@@ -654,7 +654,7 @@ In contrast to that, using just `getCredential(String.class, "id")` would try to
 `getOAuthCredential` is therefore just a neat shortcut that can help to reduce repetitive code.
 
 Please note how we are handling our `MyApiEndpoint` option in the `getServiceUri` method (lines 14 - 20). <br />
-We are reading the option by simply providing the `MyApiEndpoint.class` as the parameter to the `getOption` method.
+We are reading the option by providing the `MyApiEndpoint.class` as the parameter to the `getOption` method.
 That way, we can decide which service URI to use, depending on the user input.
 
 Lastly, we need to register our `OAuth2PropertySupplier` implementation with the `OAuth2ServiceBindingDestinationLoader`:
