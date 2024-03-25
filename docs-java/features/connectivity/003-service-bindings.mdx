@@ -18,7 +18,7 @@ keywords:
 ---
 
 The SAP Cloud SDK supports connecting to arbitrary services that are bound to an application via a service binding.
-[_Service Bindings_](https://github.com/SAP/btp-environment-variable-access/wiki/Fundamentals#service-binding) provide an application with the necessary credentials to connect to a service when deployed on the SAP Business Technology Platform (BTP).
+[_Service Bindings_](https://github.com/SAP/btp-environment-variable-access/wiki/Fundamentals#service-binding) provide an application with the necessary credentials to connect to a service when deployed on the SAP Business Technology Platform.
 
 ## Connecting to a Service
 
@@ -130,6 +130,12 @@ ServiceBindingDestinationOptions
 
 ## Using the Identity and Authentication Service (IAS)
 
+:::warning Beta API
+
+The API for connecting to services secured by the SAP Identity and Authentication Service (IAS) is currently in beta and subject to change.
+
+:::
+
 In case your application is bound to an instance of the SAP Identity and Authentication Service (IAS) you can use the SAP Cloud SDK to connect to other applications and services that are secured using IAS.
 
 :::info Supported Credential Types
@@ -137,7 +143,7 @@ In case your application is bound to an instance of the SAP Identity and Authent
 The SAP Cloud SDK supports the credential types `binding-secret` as well as `X509_GENERATED` and `X509_ATTESTED` for IAS service bindings.
 
 If you want to use the `X509_ATTESTED` credential type, you need to add the `connectivity-ztis` dependency to your project.
-Read more about how to confiugre your app for this credential type on the documentation for [using certificates from the Zero Trust Identity Service (ZTIS)](/docs/java/features/connectivity/mtls#using-automated-certificate-rotation-using-the-zero-trust-identity-service-sap-internal).
+Read more about how to configure your app for this credential type on the documentation for [using certificates from the Zero Trust Identity Service (ZTIS)](/docs/java/features/connectivity/mtls#using-automated-certificate-rotation-using-the-zero-trust-identity-service-sap-internal).
 
 The type `X509_PROVIDED` is currently not supported.
 :::
@@ -202,7 +208,7 @@ The SAP Cloud SDK expects services backed by IAS to have the following service b
 
 - The `credentials` section must contain an object `authentication-service` with at least one field `service-label` set to `identity`.
 - The `credentials` section must contain an object `endpoints` which must contain at least one entry.
-  - Each entry under `endpoints` must be an object containting a `uri` field set to a string.
+  - Each entry under `endpoints` must be an object containing a `uri` field set to a string.
 - Further fields under `authentication-service` and `endpoints` are optional as shown below
 - Aside from these requirements the service binding may contain any other fields as needed.
 
@@ -348,7 +354,7 @@ var binding = new DefaultServiceBindingBuilder()
 
 You can pass the binding explicitly via the options as described in the section on [working with multiple bindings](#working-with-multiple-service-bindings).
 
-However, in some cases the SAP Cloud SDK or other frameworks may implcitly access service bindings.
+However, in some cases the SAP Cloud SDK or other frameworks may implicitly access service bindings.
 For such cases one can modify the global `ServiceBindingAccessor`.
 
 The SAP Cloud SDK will use the default instance whenever looking for service bindings.
@@ -641,7 +647,7 @@ Converting the _credentials_ portion of the `ServiceBinding` into a `TypedMapVie
 Therefore, it is a good idea to do the conversion (i.e. `TypeMapView.ofCredentials(ServiceBinding)`) just once as it performs an expensive deep-copy.
 Hereby, the `DefaultOAuth2PropertySupplier` takes care of doing the conversion upon initialization and caching the result for later use.
 
-Further down in our code (i.e. within the overriden methods), we can then use the [`getCredential/OrThrow`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultOAuth2PropertySupplier.html#getCredential(java.lang.Class,java.lang.String...)>) and [`getOAuthCredential/OrThrow`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultOAuth2PropertySupplier.html#getOAuthCredential(java.lang.Class,java.lang.String...)>) methods to extract the required information from the cached _credentials_. <br />
+Further down in our code (i.e. within the overridden methods), we can then use the [`getCredential/OrThrow`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultOAuth2PropertySupplier.html#getCredential(java.lang.Class,java.lang.String...)>) and [`getOAuthCredential/OrThrow`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultOAuth2PropertySupplier.html#getOAuthCredential(java.lang.Class,java.lang.String...)>) methods to extract the required information from the cached _credentials_. <br />
 The main difference between `getCredential` and `getOAuthCredential` is that the latter will **prepend** the _default oauth2 properties path_ to the one given in the method invocation before trying to extract the information. <br />
 In our example (line 9), this means that `getOAuthCredential(String.class, "id")` will try to extract a `String` value from `credentials.get("oauth").get("id")` (_pseudo code_). <br />
 In contrast to that, using just `getCredential(String.class, "id")` would try to extract a `String` value from `credentials.get("id")` (_pseudo code_). <br />
