@@ -48,7 +48,7 @@ HttpDestination destination = ServiceBindingDestinationLoader.defaultLoaderChain
 ```
 
 Note the additional option `BtpServiceOptions.WorkflowOptions.REST_API` that is specific to the [Workflow API (REST)](https://api.sap.com/api/SAP_CP_Workflow_CF/overview).
-Explore the `BtpServiceOptions` class to find any options relevant for your service.
+Explore the [BtpServiceOptions](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/BtpServiceOptions.html) class to find any options relevant for your service.
 
 ### List of Supported Services
 
@@ -91,7 +91,7 @@ For other services, please refer to the section on [adding support for more serv
 
 In case you are a service provider and want to make your service compatible with the SAP Cloud SDK: Please consider contributing!
 
-- For IAS-based services it is sufficient to conform to the [dedicated service binding format](#ias-service-binding-format) for IAS.
+- For IAS-based services it is sufficient to conform to the dedicated [service binding format](#service-binding-format) for IAS.
 - For XSUAA-based services please refer to the section on [adding support for more services](#adding-support-for-more-services) and consider adding your implementation [here](https://github.com/SAP/cloud-sdk-java/blob/main/cloudplatform/connectivity-oauth/src/main/java/com/sap/cloud/sdk/cloudplatform/connectivity/BtpServicePropertySuppliers.java) by raising a pull request.
 
 ### Working with Multiple Service Bindings
@@ -137,6 +137,7 @@ The API for connecting to services secured by the SAP Identity and Authenticatio
 :::
 
 In case your application is bound to an instance of the SAP Identity and Authentication Service (IAS) you can use the SAP Cloud SDK to connect to other applications and services that are secured using IAS.
+Effectively, the SAP Cloud SDK implements the OAuth flows described [here](https://help.sap.com/docs/identity-authentication/identity-authentication/consume-apis-from-other-applications).
 
 :::info Supported Credential Types
 
@@ -150,7 +151,7 @@ The type `X509_PROVIDED` is currently not supported.
 
 ### Connecting to Services
 
-If your service is secured using IAS and is using the [dedicated service binding format](#ias-service-binding-format) supported by the SAP Cloud SDK, you can obtain a destination by passing the service label as the `ServiceIdentifier`:
+If your service is secured using IAS and is using the dedicated [service binding format](#service-binding-format) supported by the SAP Cloud SDK, you can obtain a destination by passing the service label as the `ServiceIdentifier`:
 
 ```java
 var options = ServiceBindingDestinationOptions
@@ -202,7 +203,7 @@ var options = ServiceBindingDestinationOptions
 
 Use the client and tenant IDs you received in the JWT of the incoming request.
 
-### IAS Service Binding Format
+### Service Binding Format
 
 The SAP Cloud SDK expects services backed by IAS to have the following service binding format:
 
@@ -234,7 +235,7 @@ For example, the following binding would be recognized:
 <details>
 <summary>Full format with optional fields</summary>
 
-```json
+```jsonc
 {
   // the usual binding metadata fields here
   // ...
