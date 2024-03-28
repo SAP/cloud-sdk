@@ -153,3 +153,102 @@ If you prefer to continue using **clientSecret** instead of **Certificate-based 
   "credential-types": ["instance-secret"]
 }
 ```
+
+## Using Automated Certificate Rotation using the Zero Trust Identity Service (SAP-internal)
+
+For SAP-internal development teams the Zero Trust Identity Service (ZTIS) provides a way to automate the certificate rotation process.
+
+### Configuring your Application to use ZTIS
+
+This guide covers how you can configure and use the SAP Cloud SDK to use certificates provided by ZTIS for certificate-based authentication.
+
+:::note Prerequisites for using ZTIS
+
+The following prerequisites are required to use ZTIS:
+
+- You are deploying an application on Cloud Foundry
+- You have assigned the required entitlement for using ZTIS to your subaccount
+- You have created a service instance of `zero-trust-identity` in your Cloud Foundry space
+- You have bound the ZTIS service instance to your application
+- You have added the `zero_trust_sidecar_buildpack` as an additional buildpack for your application
+
+Head over to the [official documentation](https://pages.github.tools.sap/pse/pse-docs/docs/identity/), the [reference manual](https://github.tools.sap/pse/blueprints/blob/main/examples/cf/ZTIS_Reference.md) and [sample code](https://github.tools.sap/pse/blueprints/tree/main/examples/cf/java/ztis-identity/cf-manifest) to learn more about how to use ZTIS.
+
+:::
+
+To enable support by SAP Cloud SDK for certificates provided by ZTIS in your application, you need to add the following dependency to your `pom.xml`:
+
+```xml
+<dependency>
+	<groupId>com.sap.cloud.sdk.cloudplatform</groupId>
+	<artifactId>connectivity-ztis</artifactId>
+</dependency>
+```
+
+With this dependency you can create a new or modify an existing `HttpDestination` to use the certificate provided by ZTIS.
+
+```java
+var ks = ZeroTrustIdentityService.getInstance().getOrCreateKeyStore();
+
+var newDestination = DefaultHttpDestination.builder("https://foo.com")
+	.keyStore(ks)
+	.build();
+var enhancedDestination = DefaultHttpDestination.fromDestination(DestinationAccessor.getDestination("myDestination"))
+	.keyStore(ks)
+	.build();
+```
+
+### Integration with Identity Authentication Service (IAS)
+
+The SAP Cloud SDK also supports using certificates provided by ZTIS to authenticate to the Identity Authentication Service (IAS).
+
+This works fully out of the box if you have an instance of IAS with the corresponding credential type `X509_ATTESTED` configured.
+For more details please refer to the documentation on [connecting to services](/docs/java/features/connectivity/service-bindings).
+
+### Developing Locally
+
+On Cloud Foundry the `zero_trust_sidecar_buildpack` adds a sidecar to your application that fetches the certificates from ZTIS.
+When developing locally this sidecar is usually not available.
+
+To develop locally you can instead store the certificate and key on your local file system.
+Download the certificate and key from a running instance of your application on Cloud Foundry via `cf ssh`:
+
+```shell
+cf ssh <app-name> -c "/home/vcap/deps/0/bin/spire-agent api fetch -socketPath /tmp/spire-agent/public/api.sock -write /tmp/"
+cf ssh <app-name> -c "cat /tmp/svid.0.pem" > /path/to/certificate.pem
+cf ssh <app-name> -c "cat /tmp/svid.0.key" > /path/to/key.key
+```
+
+You then need to provide the paths to the certificate and key with a service binding locally.
+
+For example, you can locally create the `VCAP_SERVICES` environment variable with the following content:
+
+```json
+{
+  "zero-trust-identity": [
+    {
+      "label": "zero-trust-identity",
+      "credentials": {
+        "certPath": "/path/to/certificate.pem",
+        "keyPath": "/path/to/key.key"
+      }
+    }
+  ]
+}
+```
+
+Alternatively, you can set the service binding programmatically:
+
+```java
+new DefaultServiceBindingBuilder()
+	.withServiceIdentifier(ZTIS_IDENTIFIER)
+	.withCredentials(Map.of(
+            "certPath", "/path/to/certificate.pem",
+            "keyPath", "/path/to/key.key"))
+	.build();
+
+// in case you only need this one service binding the following code is fine:
+DefaultServiceBindingAccessor.setInstance(() -> List.of(binding));
+```
+
+You can read more about how to create service bindings for local development [here](/docs/java/features/connectivity/service-bindings#local-development).
