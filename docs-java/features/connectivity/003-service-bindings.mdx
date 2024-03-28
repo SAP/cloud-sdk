@@ -33,7 +33,7 @@ HttpDestination destination = ServiceBindingDestinationLoader.defaultLoaderChain
         .getDestination(options);
 ```
 
-Choose from the available `ServiceIdentifier` constants to specify the service you want to connect to.
+Choose from the available `ServiceIdentifier` [constants](https://github.com/SAP/btp-environment-variable-access/blob/main/api-parent/core-api/src/main/java/com/sap/cloud/environment/servicebinding/api/ServiceIdentifier.java) to specify the service you want to connect to.
 
 For example, for connecting to the [Workflow REST API](https://api.sap.com/api/SAP_CP_Workflow_CF/overview) use:
 
@@ -48,7 +48,9 @@ HttpDestination destination = ServiceBindingDestinationLoader.defaultLoaderChain
 ```
 
 Note the additional option `BtpServiceOptions.WorkflowOptions.REST_API` that is specific to the [Workflow API (REST)](https://api.sap.com/api/SAP_CP_Workflow_CF/overview).
-Explore the [BtpServiceOptions](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/BtpServiceOptions.html) class to find any options relevant for your service.
+For BTP services that offer different APIs (such as the Workflow service) you should also additionally define which API the resulting `HttpDestination` should point to using `BtpServiceOptions`.
+
+Explore the [BtpServiceOptions](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/BtpServiceOptions.html) class to find the options relevant for your service and your use-case.
 
 ### List of Supported Services
 
@@ -96,7 +98,7 @@ In case you are a service provider and want to make your service compatible with
 
 ### Working with Multiple Service Bindings
 
-In case your application is bound to multiple instances of the same service passing the `ServiceIdentifier` is not sufficient.
+In case your application is bound to multiple instances of the same service, passing the `ServiceIdentifier` is not sufficient.
 Instead, you need to provide the `ServiceBinding` instance directly.
 
 ```java
