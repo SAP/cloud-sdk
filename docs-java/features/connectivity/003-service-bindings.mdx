@@ -48,7 +48,7 @@ HttpDestination destination = ServiceBindingDestinationLoader.defaultLoaderChain
 ```
 
 Note the additional option `BtpServiceOptions.WorkflowOptions.REST_API` that is specific to the [Workflow API (REST)](https://api.sap.com/api/SAP_CP_Workflow_CF/overview).
-For BTP services that offer different APIs (such as the Workflow service) you should also additionally define which API the resulting `HttpDestination` should point to using `BtpServiceOptions`.
+This is an example where the service offers multiple API endpoints and you need to define which endpoint the resulting `HttpDestination` should point to.
 
 Explore the [BtpServiceOptions](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/BtpServiceOptions.html) class to find the options relevant for your service and your use-case.
 
@@ -176,8 +176,21 @@ Obtain the URL from the service binding of the service you want to connect to.
 
 :::info Mutual TLS Only Authentication
 
-In case the service does not require a JWT token (e.g. the Event Broker service) you can pass the additional option `IasOptions.withoutTokenForTechnicalProviderUser()`.
-Together with setting `OnBehalfOf.TECHNICAL_USER_PROVIDER` this will skip retrieving a token from IAS and only sending the X.509 certificate, saving a bit of performance.
+In case the service does not require a JWT token (e.g. the Event Broker service) you can pass an additional option to skip the JWT token flow:
+
+```java {4,5}
+var options = ServiceBindingDestinationOptions
+        .forService(ServiceIdentifier.IDENTITY_AUTHENTICATION)
+        .withOption(IasOptions.withTargetUri("https://foo.com"))
+        .withOption(IasOptions.withoutTokenForTechnicalProviderUser())
+        .onBehalfOf(OnBehalfOf.TECHNICAL_USER_PROVIDER)
+        .build();
+```
+
+This is a moderate performance improvement, but not substantial, since tokens are of course cached.
+
+Please note that this only applies when authenticating on behalf of the provider tenant using an X.509 Certificate.
+For authenticating on behalf of a subscriber tenant or a when propagating user information, a JWT is always required to carry the additional tenant/user information.
 
 :::
 
