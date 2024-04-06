@@ -166,7 +166,7 @@ In case your service is not using the default format you can still use the `IasO
 ```java
 var options = ServiceBindingDestinationOptions
         .forService(ServiceIdentifier.IDENTITY_AUTHENTICATION)
-        .withOption(IasOptions.withTargetUri("https://foo.com"))
+        .withOption(BtpServiceOptions.IasOptions.withTargetUri("https://foo.com"))
         .build();
 ```
 
@@ -179,8 +179,8 @@ In case the service does not require a JWT token (e.g. the Event Broker service)
 ```java {4,5}
 var options = ServiceBindingDestinationOptions
         .forService(ServiceIdentifier.IDENTITY_AUTHENTICATION)
-        .withOption(IasOptions.withTargetUri("https://foo.com"))
-        .withOption(IasOptions.withoutTokenForTechnicalProviderUser())
+        .withOption(BtpServiceOptions.IasOptions.withTargetUri("https://foo.com"))
+        .withOption(BtpServiceOptions.IasOptions.withoutTokenForTechnicalProviderUser())
         .onBehalfOf(OnBehalfOf.TECHNICAL_USER_PROVIDER)
         .build();
 ```
@@ -199,8 +199,8 @@ In case you want to connect to a system that is registered as an application wit
 ```java {3}
 var options = ServiceBindingDestinationOptions
         .forService(ServiceIdentifier.IDENTITY_AUTHENTICATION)
-        .withOption(IasOptions.withApplicationName("application-name"))
-        .withOption(IasOptions.withTargetUri("https://foo.com"))
+        .withOption(BtpServiceOptions.IasOptions.withApplicationName("application-name"))
+        .withOption(BtpServiceOptions.IasOptions.withTargetUri("https://foo.com"))
         .build();
 ```
 
@@ -211,8 +211,8 @@ If you received an incoming request from an application using IAS you can use th
 ```java {3}
 var options = ServiceBindingDestinationOptions
         .forService(ServiceIdentifier.IDENTITY_AUTHENTICATION)
-        .withOption(IasOptions.withConsumerClient("client-id", "tenant-id"))
-        .withOption(IasOptions.withTargetUri("https://foo.com"))
+        .withOption(BtpServiceOptions.IasOptions.withConsumerClient("client-id", "tenant-id"))
+        .withOption(BtpServiceOptions.IasOptions.withTargetUri("https://foo.com"))
         .build();
 ```
 
