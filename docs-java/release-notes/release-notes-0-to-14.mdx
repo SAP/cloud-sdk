@@ -1,9 +1,46 @@
+## 5.8.0 - April 22, 2024
+
+[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.8.0)
+
+### 📈 Improvements
+
+- Improve the efficiency of HTTP clients: The default cache duration for HTTP clients have been increased to expire one hour after last access (was 5 minutes after creation).
+  Aside from a performance improvement, this improves the handling of cookies, as they are retained for much longer.
+- Improve connecting to IAS-based applications and services.
+  Scenarios where an IAS tenant is connected to multiple subaccounts of an application are now supported.
+  - Note that when mocking an IAS binding for testing the binding entry `app_tid` is now required.
+
+### 🐛 Fixed Issues
+
+- Fix an issue that would cause a NPE when using bound services backed by IAS via the [dedicated service binding format](/docs/java/features/connectivity/service-bindings#service-binding-format).
+- Fix an issue that would cause a NPE when using the OData `applyAction` method with a `null` parameter value.
+
+## 5.7.0 - April 05, 2024
+
+[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.7.0)
+
+### ✨ New Functionality
+
+- (Beta) Add support for the SAP-internal Zero Trust Identity Service
+  - Add a new module `connectivity-ztis`.
+  - Add support for the credential-type `X509_ATTESTED` for all OAuth2 flows.
+
+### 🐛 Fixed Issues
+
+- Stop unnecessarily throwing and catching `NullPointerException` when interacting with `DefaultHttpDestination#equals(...)` and `#hashCode()`.
+
 ## 5.6.0 - March 19, 2024
 
 [All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.6.0)
 
 ### ✨ New Functionality
 
+- Add support for connecting to applications and services backed by the [SAP Identity Authentication Service (IAS)](https://help.sap.com/docs/identity-authentication).
+  - The `ServiceBindingDestinationLoader` API now supports service bindings to the IAS service.
+  - The `BtpServiceOptions` class has now offers `IasOptions` to pass additional options depending on the use case.
+  - A standardised service binding format for IAS-backed services is introduced.
+  - Support connecting to arbitrary services as long as their service binding conforms to the standardised format.
+  - Head over to [the documentation](/docs/java/features/connectivity/service-bindings#using-the-identity-and-authentication-service-ias) for more information on the new features.
 - Support service bindings to the [SAP BTP AI Core Service](https://api.sap.com/api/AI_CORE_API) by default in the `ServiceBindingDestinationLoader` API.
 - Failed OData v4 Batch requests now return the specific failed request from the exception: `ODataResponseException.getRequest()`.
 

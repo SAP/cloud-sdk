@@ -21,6 +21,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: Vale Linter
+        # vale fails if the PR is too large, e.g. when updating API docs
+        if: ${{ github.event.pull_request.changed_files < 100 }}
         # You may pin to the exact commit or the version.
         # uses: errata-ai/vale-action@0da98680790f89b8d5b685de9c264f55addc971b
         uses: errata-ai/vale-action@reviewdog
@@ -81,7 +83,7 @@ jobs:
     steps:
       - name: Dependabot metadata
         id: metadata
-        uses: dependabot/fetch-metadata@v2.0.0
+        uses: dependabot/fetch-metadata@v2.1.0
         with:
           github-token: '${{ secrets.GITHUB_TOKEN }}'
       - name: Approve a PR
