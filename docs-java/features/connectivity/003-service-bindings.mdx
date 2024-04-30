@@ -64,6 +64,7 @@ You'll find a full list below.
 The following services are supported out of the box:
 
 - The [SAP AI Core Service](https://api.sap.com/api/AI_CORE_API)
+- The [SAP Extended Service for User and Account Authentication (XSUAA)](https://help.sap.com/docs/btp/sap-business-technology-platform/what-is-sap-authorization-and-trust-management-service)
 - The [SAP Identity and Authentication Service (IAS)](https://help.sap.com/docs/identity-authentication)
   - For IAS please see the [dedicated section below](#using-the-identity-and-authentication-service-ias).
 - The [SAP Workflow Service on Cloud Foundry](https://api.sap.com/package/SAPCPWorkflowAPIs/all)
@@ -130,6 +131,29 @@ ServiceBindingDestinationOptions
     .build();
 ```
 
+## Using the Extended Service for User and Account Authentication (XSUAA)
+
+Communicating with SAP provided services secured by the SAP XSUAA service usually requires explicit support by the SAP Cloud SDK (see [list of supported services](#list-of-supported-services)).
+This is because those services are secured by their own instance of XSUAA and, therefore, have their own authentication configuration.
+The configuration is contained in the service binding of the respective service.
+
+In scenarios where services are secured by a shared instance of the SAP XSUAA service, however, the SAP Cloud SDK can be used without explicit support:
+
+```java {2-3} showLineNumbers
+ServiceBindingDestinationOptions
+    .forService(ServiceIdentifier.XSUAA)
+    .withOption(BtpServiceOptions.AuthenticationServiceOptions.withTargetUri("https://foo.com"))
+    .build();
+```
+
+The code above instructs the SAP Cloud SDK to 
+
+- (Line 2) create a destination towards the XSUAA instance, which the application itself is bound to and
+- (Line 3) use the manually provided URI (`https://foo.com`) as the system to communicate with.
+
+This configuration results in a destination that uses the XSUAA instance of your application to authenticate against, but communicates with the system reachable under the provided URI.
+Without the option specified in line 3, the destination would target the XSUAA instance itself.
+
 ## Using the Identity and Authentication Service (IAS)
 
 :::warning Beta API
@@ -161,12 +185,12 @@ var options = ServiceBindingDestinationOptions
         .build();
 ```
 
-In case your service is not using the default format you can still use the `IasOptions` to provide the necessary information:
+In case your service is not using the default format you can still use the `IasOptions` and `AuthenticationServiceOptions` to provide the necessary information:
 
 ```java
 var options = ServiceBindingDestinationOptions
         .forService(ServiceIdentifier.IDENTITY_AUTHENTICATION)
-        .withOption(BtpServiceOptions.IasOptions.withTargetUri("https://foo.com"))
+        .withOption(BtpServiceOptions.AuthenticationServiceOptions.withTargetUri("https://foo.com"))
         .build();
 ```
 
@@ -179,7 +203,7 @@ In case the service does not require a JWT token (e.g. the Event Broker service)
 ```java {4,5}
 var options = ServiceBindingDestinationOptions
         .forService(ServiceIdentifier.IDENTITY_AUTHENTICATION)
-        .withOption(BtpServiceOptions.IasOptions.withTargetUri("https://foo.com"))
+        .withOption(BtpServiceOptions.AuthenticationServiceOptions.withTargetUri("https://foo.com"))
         .withOption(BtpServiceOptions.IasOptions.withoutTokenForTechnicalProviderUser())
         .onBehalfOf(OnBehalfOf.TECHNICAL_USER_PROVIDER)
         .build();
@@ -200,7 +224,7 @@ In case you want to connect to a system that is registered as an application wit
 var options = ServiceBindingDestinationOptions
         .forService(ServiceIdentifier.IDENTITY_AUTHENTICATION)
         .withOption(BtpServiceOptions.IasOptions.withApplicationName("application-name"))
-        .withOption(BtpServiceOptions.IasOptions.withTargetUri("https://foo.com"))
+        .withOption(BtpServiceOptions.AuthenticationServiceOptions.withTargetUri("https://foo.com"))
         .build();
 ```
 
@@ -212,7 +236,7 @@ If you received an incoming request from an application using IAS you can use th
 var options = ServiceBindingDestinationOptions
         .forService(ServiceIdentifier.IDENTITY_AUTHENTICATION)
         .withOption(BtpServiceOptions.IasOptions.withConsumerClient("client-id", "tenant-id"))
-        .withOption(BtpServiceOptions.IasOptions.withTargetUri("https://foo.com"))
+        .withOption(BtpServiceOptions.AuthenticationServiceOptions.withTargetUri("https://foo.com"))
         .build();
 ```
 
