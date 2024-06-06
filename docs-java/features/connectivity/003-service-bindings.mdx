@@ -243,12 +243,12 @@ If you received an incoming request from an application using IAS you can use th
 ```java {3}
 var options = ServiceBindingDestinationOptions
         .forService(ServiceIdentifier.IDENTITY_AUTHENTICATION)
-        .withOption(BtpServiceOptions.IasOptions.withConsumerClient("client-id", "tenant-id"))
+        .withOption(BtpServiceOptions.IasOptions.withConsumerClient("client-id"))
         .withOption(BtpServiceOptions.AuthenticationServiceOptions.withTargetUri("https://foo.com"))
         .build();
 ```
 
-Use the client and tenant IDs you received in the JWT of the incoming request.
+Use the client ID you received in the JWT of the incoming request.
 
 ### Service Binding Format
 
