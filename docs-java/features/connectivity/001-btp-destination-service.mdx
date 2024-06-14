@@ -89,6 +89,27 @@ Don't worry, there is [caching](#default-caching-behavior) in place to prevent e
 
 :::
 
+#### OAuth Refresh Token Authentication
+
+For retrieving destinations with authentication type [OAuth Refresh Token Authentication](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/oauth-refresh-token-authentication?version=Cloud) the client has to provide the refresh token as part of the `DestinationOptions`:
+
+```java {9}
+DestinationLoader loader;
+
+DestinationOptions options =
+    DestinationOptions
+        .builder()
+        .augmentBuilder(
+            DestinationServiceOptionsAugmenter
+                .augmenter()
+                .refreshToken("<my-refresh-token>"))
+        .build();
+
+Try<Destination> maybeDestination = loader.tryGetDestination("my-destination", options);
+```
+
+Please make sure that the refresh token matches the current tenant (and user, if applicable) set in the current [`ThreadContext`](/docs/java/features/multi-tenancy/thread-context).
+
 ### If Authentication Is Not Required
 
 Sometimes, applications might be interested in reading the destination configuration without actually performing any HTTP calls.
