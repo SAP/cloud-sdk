@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.4.0">
 <title data-rh="true">Generate an OData client for JavaScript | SAP Cloud SDK</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://sap.github.io/cloud-sdk/docs/js/features/odata/generate-client"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-docs-js-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-docs-js-current"><meta data-rh="true" property="og:title" content="Generate an OData client for JavaScript | SAP Cloud SDK"><meta data-rh="true" name="description" content="The OData client generator allows you to generate custom OData client libraries for OData services."><meta data-rh="true" property="og:description" content="The OData client generator allows you to generate custom OData client libraries for OData services."><meta data-rh="true" name="keywords" content="sap,cloud,sdk,odata,JavaScript,TypeScript,generate"><link data-rh="true" rel="icon" href="/cloud-sdk/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://sap.github.io/cloud-sdk/docs/js/features/odata/generate-client"><link data-rh="true" rel="alternate" href="https://sap.github.io/cloud-sdk/docs/js/features/odata/generate-client" hreflang="en"><link data-rh="true" rel="alternate" href="https://sap.github.io/cloud-sdk/docs/js/features/odata/generate-client" hreflang="x-default"><link data-rh="true" rel="preconnect" href="https://E4A268JVO0-dsn.algolia.net" crossorigin="anonymous"><link rel="search" type="application/opensearchdescription+xml" title="SAP Cloud SDK" href="/cloud-sdk/opensearch.xml"><link rel="stylesheet" href="/cloud-sdk/assets/css/styles.df917a8e.css">
-<script src="/cloud-sdk/assets/js/runtime~main.d14979ff.js" defer="defer"></script>
+<script src="/cloud-sdk/assets/js/runtime~main.b1acc96e.js" defer="defer"></script>
 <script src="/cloud-sdk/assets/js/main.bd9900df.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -38,14 +38,9 @@ This will generate OData clients for all your service specifications.</p>
 <li><code>packageName</code>: the name of the npm package, if a <code>package.json</code> file is generated.
 This information is optional.</li>
 <li><code>basePath</code>: the URL path to be prepended before every request (e.g. <code>&#x27;/sap/opu/odata/sap/&#x27;</code> for SAP S/4HANA services).
-The SDK will try to determine this value from either the EDMX or Swagger file.
-However, if automatic determination fails, client generation will also fail.
-In that case, to generate a client successfully, you can do either of the following:<!-- -->
-<ul>
-<li>Manually specify the <code>basePath</code> in the <code>options-per-service.json</code> file and re-generate the client, or</li>
-<li>Set the <code>--skipValidation</code> option to true, in which case, the SDK will set the <code>basePath</code> value to <code>/</code> and log a warning message.</li>
-</ul>
-</li>
+SAP Cloud SDK will try to determine this value from either the EDMX or Swagger file.
+However, if automatic determination fails, it will set the <code>basePath</code> value to <code>/</code> and log a warning message.
+You can also manually specify the <code>basePath</code> in the <code>options-per-service.json</code> file and re-generate the client.</li>
 </ul>
 <p>This information can be adjusted manually and ensure that every run of the generator produces the same names for the generation.</p>
 <p>Example:</p>
