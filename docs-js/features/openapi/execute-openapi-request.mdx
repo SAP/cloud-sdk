@@ -59,11 +59,25 @@ Their names are always camel case and the order is determined by their occurrenc
 #### Query Parameters
 
 Query parameters can be both mandatory and optional.
-If query parameters for a certain API function exist, they are always the last argument of the function.
 Query parameters are provided as an object, e.g. if you can set a `limit` parameter, `MyApi.getMyResource(resourceId, { limit: 10 })`.
 The types of the parameters depend on the specification.
 By default, the parameter names and values are URI encoded.
 Their names are as specified in the original OpenAPI document.
+
+#### Header Parameters
+
+Header parameters can be both mandatory and optional.
+If header parameters for a certain API function exist, they are always the last argument of the function.
+Header parameters are also provided as an object, e.g. extending the example above, `MyApi.getMyResource(resourceId, { limit: 10 }, { Authorization: 'my-auth-key' })`.
+The types of the parameters depend on the specification.
+
+:::info
+
+If there are optional query parameters and required header parameters in the spec, you must pass an empty object {} for the query parameters if you do not intend to provide any.
+This is because optional parameters cannot precede required parameters.
+For example: `MyApi.getMyResource(resourceId, {}, { Authorization: 'my-auth-key' })`.
+
+:::
 
 #### Request Bodies
 
