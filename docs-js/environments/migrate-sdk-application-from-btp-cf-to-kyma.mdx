@@ -56,8 +56,8 @@ We will also deploy an approuter so that only authenticated users can access the
   :::info
   This guide assumes you have installed the [Helm](https://helm.sh/docs/intro/install/) client and know how to configure and use [Helm Charts](https://helm.sh/docs/topics/charts/).
 
-  If you are using the [example application](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/helm-sample-application/application) from the SDK Samples respository, you can use the existing [Helm package](https://github.com/SAP-samples/cloud-sdk-js/blob/main/samples/helm-sample-application/helm-chart/k8s-e2e-app-helm-0.1.5.tgz) and don't need to create all the files again.
-  Otherwise, use the code snippets given in this guide as reference and adjust the values accoridng to your application.
+  If you are using the [example application](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/helm-sample-application/application) from the SDK Samples repository, you can use the existing [Helm package](https://github.com/SAP-samples/cloud-sdk-js/blob/main/samples/helm-sample-application/helm-chart/k8s-e2e-app-helm-0.1.5.tgz) and don't need to create all the files again.
+  Otherwise, use the code snippets given in this guide as reference and adjust the values according to your application.
   :::
 
 - A Node.js application using the SAP Cloud SDK and an approuter
@@ -217,3 +217,201 @@ Verify the resources and choose the host link to open the application in your br
 ![API Rule](../img/kyma-api-rule.png)
 
 You should be redirected to the login page of your Idp, if you have configured an approuter.
+
+## On-Premise Connectivity
+
+### Prerequisites
+
+This guide assumes you have both the **Transparent Proxy** (version `>= 1.4.0`) and **Connectivity Proxy** (version `>= 2.11.0`) installed in your cluster.
+For Kyma the Transparent Proxy is available as a module that can be enabled as described [here](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/transparent-proxy-in-kyma-environment).
+The Connectivity Proxy can be installed as described [here](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/operations-via-helm).
+
+### Background Information
+
+When using the Transparent Proxy your app performs requests against the Transparent Proxy without explicit authentication, relying on the secure network communication provided by Kyma via Istio.
+The Transparent Proxy will obtain the relevant destination from the destination service and use it to forward the request via the Connectivity Proxy to the On-Premise system.
+Consequently, your app itself does not interact with destination or connectivity service at all and thus your application pods do not require bindings to these two services.
+
+Please note that the current implementation of the Transparent Proxy does not yet cover all use cases.
+
+<details>
+  <summary>Constraints when using the Transparent Proxy</summary>
+
+- Private Link not yet supported
+
+</details>
+
+:::tip
+This approach is conceptually different from what you may be used to from a Cloud Foundry environment.
+The official [documentation of the Transparent Proxy](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/e661713ef7d14373b57e3e26b0b03b86.html) gives more information on the architecture.
+:::
+
+### Create a Kubernetes Resource
+
+You can either configure connectivity to individual destinations, or for arbitrary destinations in your destination service instance or subaccount (dynamic destinations).
+
+<Tabs 
+  groupId="dynamic-dest"
+  defaultValue="single"
+  values={[
+    {label: "Individual Destination", value: "single"},
+    {label: "Dynamic Destinations", value: "dynamic"}
+  ]}>
+<TabItem value="single">
+
+Given you have created a destination with the name `my-destination` in the SAP BTP Cockpit, create the following YAML file:
+
+```yaml title:"my-destination.yaml"
+apiVersion: destination.connectivity.api.sap/v1
+kind: Destination
+metadata:
+  name: my-destination
+spec:
+  destinationRef:
+    name: 'my-destination'
+  destinationServiceInstanceName: dest-service-instance-example # can be ommited if config.destinationService.defaultInstanceName was provided to the helm chart of the transparent proxy upon installation
+```
+
+This will create a Kubernetes resource in your cluster, pointing to the destination `my-destination` you created in the SAP BTP cockpit.
+
+:::note Security Considerations
+
+With the configuration above you are exposing a specific target system defined as a destination.
+Therefore, allowing communication to it from any pod within the namespace.
+
+Keep in mind that this includes the destination configuration of any **subscribed tenants**, if they have defined a destination with the same name.
+
+Make sure to secure your cluster accordingly to avoid any potential security risks.
+For more information on how to restrict access to the destinations refer to [this document](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/destination-custom-resource-scope).
+
+:::
+
+</TabItem>
+<TabItem value="dynamic">
+
+Create the following YAML file:
+
+```yaml title:"example-dest.yaml"
+apiVersion: destination.connectivity.api.sap/v1
+kind: Destination
+metadata:
+  name: dynamic-destination
+spec:
+  destinationRef:
+    name: '*'
+  destinationServiceInstanceName: dest-service-instance-example # can be ommited if config.destinationService.defaultInstanceName was provided to the helm chart of the transparent proxy upon installation
+```
+
+This will create a Kubernetes resource in your cluster, allowing you to create requests against arbitrary destinations.
+
+:::note Security Considerations
+
+With the configuration above you are exposing all destinations from the configured Destination service instance.
+Therefore, allowing communication to it from any pod within the namespace.
+
+Keep in mind that this includes all destinations of all **subscribed tenants**.
+
+Make sure to secure your cluster accordingly to avoid any potential security risks.
+For more information on how to restrict access to the destinations refer to [this document](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/destination-custom-resource-scope).
+
+:::
+
+</TabItem>
+</Tabs>
+
+Apply the YAML with `kubectl apply -n` into the namespace of your application pods to take effect.
+
+### Executing Requests
+
+In your application you can now configure a destination to execute requests:
+
+<Tabs 
+  groupId="dynamic-dest"
+  defaultValue="single"
+  values={[
+    {label: "Individual Destination", value: "single"},
+    {label: "Dynamic Desitnations", value: "dynamic"}
+  ]}>
+<TabItem value="single">
+
+```ts
+import { registerDestination, getTenantId } from '@sap-cloud-sdk/connectivity';
+
+const destination = {
+  name: 'registered-destination',
+  url: 'http://my-destination.namespace/',
+  // for principal propagation make sure to set the auth type to set the forwardAuthToken flag to true:
+  // forwardAuthToken: true
+};
+await registerDestination(destination, options);
+
+const result = await myEntityApi
+  .requestBuilder()
+  .getAll()
+  // for a subscriber tenant make sure to send the tenant header:
+  // .addCustomHeaders({ 'X-Tenant-Id': getTenantId(<USER-JWT>) })
+  .execute('registered-destination')
+```
+
+</TabItem>
+<TabItem value="dynamic">
+
+```ts
+import { registerDestination, getTenantId } from '@sap-cloud-sdk/connectivity';
+
+const destination = {
+  name: 'registered-destination',
+  url: 'http://dynamic-destination.namespace/',
+  // for principal propagation make sure to set the auth type to set the forwardAuthToken flag to true:
+  // forwardAuthToken: true
+};
+await registerDestination(destination, options);
+
+const result = await myEntityApi
+  .requestBuilder()
+  .getAll()
+  .addCustomHeaders({ X-Destination-Name: '<CF-DESTINATION-NAME>' })
+  // for a subscriber tenant make sure to send the tenant header:
+  // .addCustomHeaders({ 'X-Tenant-Id': getTenantId(<USER-JWT>) })
+  .execute('registered-destination')
+```
+
+</TabItem>
+</Tabs>
+
+- Replace `namespace` in the URL with the namespace you installed the Transparent Proxy into.
+
+The code above shows an example how you can then use the `destination` object to perform an OData request against the system.
+
+:::tip Connecting to Cloud systems
+The above approach is not limited to destinations of proxy type `ON_PREMISE`, `INTERNET` destinations are supported as well.
+:::
+
+### Troubleshooting
+
+When using proxy servers it can be difficult to troubleshoot issues as it is often not obvious where exactly the error occurred.
+For example, with the Transparent Proxy errors might occur on the target system (e.g. OData service), the Destination Service or the Transparent Proxy itself.
+
+To make troubleshooting easier the Transparent Proxy adds additional response headers to provide more information about where an error occurred.
+For the above example of executing OData requests you can access the response headers as follows:
+
+```ts
+const result = await myEntityApi
+  .requestBuilder()
+  .getAll()
+  .execute('registered-destination')
+  .catch(err => {
+    console.error('Error Headers:', err.rootCause?.response?.headers);
+  });
+```
+
+<details>
+  <summary>List of headers added by the Transparent Proxy</summary>
+
+- `X-Error-Origin` - the source of the error
+- `X-Proxy-Server` - the proxy server (Transparent Proxy)
+- `X-Error-Message` - thorough error message
+- `X-Error-Internal-Code` - set only when the source of the error is the XSUAA or Destination service. The value is the HTTP code returned from one of these services.
+- `X-Request-Id` is sent with the response in all requests, both successful and failed
+
+</details>
