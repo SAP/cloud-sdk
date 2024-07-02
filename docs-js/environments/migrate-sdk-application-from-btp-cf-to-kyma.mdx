@@ -341,7 +341,7 @@ import { registerDestination, getTenantId } from '@sap-cloud-sdk/connectivity';
 
 const destination = {
   name: 'registered-destination',
-  url: 'http://my-destination.namespace/',
+  url: 'http://my-destination.namespace/'
   // for principal propagation make sure to set the auth type to set the forwardAuthToken flag to true:
   // forwardAuthToken: true
 };
@@ -352,7 +352,7 @@ const result = await myEntityApi
   .getAll()
   // for a subscriber tenant make sure to send the tenant header:
   // .addCustomHeaders({ 'X-Tenant-Id': getTenantId(<USER-JWT>) })
-  .execute('registered-destination')
+  .execute('registered-destination');
 ```
 
 </TabItem>
@@ -363,7 +363,7 @@ import { registerDestination, getTenantId } from '@sap-cloud-sdk/connectivity';
 
 const destination = {
   name: 'registered-destination',
-  url: 'http://dynamic-destination.namespace/',
+  url: 'http://dynamic-destination.namespace/'
   // for principal propagation make sure to set the auth type to set the forwardAuthToken flag to true:
   // forwardAuthToken: true
 };
@@ -375,7 +375,7 @@ const result = await myEntityApi
   .addCustomHeaders({ 'X-Destination-Name': '<CF-DESTINATION-NAME>' })
   // for a subscriber tenant make sure to send the tenant header:
   // .addCustomHeaders({ 'X-Tenant-Id': getTenantId(<USER-JWT>) })
-  .execute('registered-destination')
+  .execute('registered-destination');
 ```
 
 </TabItem>
