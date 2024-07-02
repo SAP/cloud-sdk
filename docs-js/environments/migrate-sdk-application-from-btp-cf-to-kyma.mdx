@@ -14,6 +14,8 @@ keywords:
   - kyma
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 import {
   DockerFile,
   KymaApprouterTabs,
@@ -370,7 +372,7 @@ await registerDestination(destination, options);
 const result = await myEntityApi
   .requestBuilder()
   .getAll()
-  .addCustomHeaders({ X-Destination-Name: '<CF-DESTINATION-NAME>' })
+  .addCustomHeaders({ 'X-Destination-Name': '<CF-DESTINATION-NAME>' })
   // for a subscriber tenant make sure to send the tenant header:
   // .addCustomHeaders({ 'X-Tenant-Id': getTenantId(<USER-JWT>) })
   .execute('registered-destination')
