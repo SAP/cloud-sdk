@@ -24,6 +24,6 @@ export function KymaAppTabs() {
   return <KymaAppTabsContent />;
 }
 
-export function KubernetesOnPremise() {
+export function KubernetesTransparentProxy() {
   return <KubernetesOnPremiseContent />;
 }
