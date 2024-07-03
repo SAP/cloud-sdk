@@ -46,19 +46,20 @@ We will also deploy an approuter so that only authenticated users can access the
   :::
 
 - An SAP BTP Kyma instance created in your subaccount
+<!-- vale off -->
   :::info
   If you do not have an existing Kyma instance, follow the [documentation](https://help.sap.com/docs/btp/sap-business-technology-platform/create-kyma-environment-instance) to create one.
-
   Once your Kyma environment is created, download the [Kubeconfig](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/) file directly from the SAP BTP cockpit.
   ![Kubeconfig file download](../img/btp-cockpit-kubeconfig-url.png)
   :::
+<!-- vale on -->
 
 - [`kubectl`](https://kubernetes.io/docs/tasks/tools/) configured to work with your SAP BTP, Kyma runtime instance
 - [`helm`](https://helm.sh/docs/intro/install/), a package manager for Kubernetes
   :::info
   This guide assumes you have installed the [Helm](https://helm.sh/docs/intro/install/) client and know how to configure and use [Helm Charts](https://helm.sh/docs/topics/charts/).
 
-  If you are using the [example application](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/helm-sample-application/application) from the SDK Samples repository, you can use the existing [Helm package](https://github.com/SAP-samples/cloud-sdk-js/blob/main/samples/helm-sample-application/helm-chart/k8s-e2e-app-helm-0.1.5.tgz) and don't need to create all the files again.
+  If you are using the [example application](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/helm-sample-application/application) from the SAP Cloud SDK Samples repository, you can use the existing [Helm package](https://github.com/SAP-samples/cloud-sdk-js/blob/main/samples/helm-sample-application/helm-chart/k8s-e2e-app-helm-0.1.5.tgz) and don't need to create all the files again.
   Otherwise, use the code snippets given in this guide as reference and adjust the values according to your application.
   :::
 
@@ -152,7 +153,7 @@ Create the following files inside the `app-chart` folder:
 
 <KymaAppTabs />
 
-### Configure Approuter
+### Configure AppRouter
 
 Package the application router as a docker image so that it can run in Kubernetes, refer to the [documentation](https://blogs.sap.com/2020/04/03/sap-application-router/) for configuration details.
 
@@ -164,7 +165,7 @@ Create the same files as described in the section [above](#application) in the `
 
 <KymaApprouterTabs />
 
-### Expose the Approuter with an API Rule
+### Expose the AppRouter with an API Rule
 
 To make the approuter accessible outside of the Kyma cluster, you must expose it using an API Gateway.
 This can be done by creating an [API Rule](https://kyma-project.io/docs/kyma/latest/05-technical-reference/00-custom-resources/apix-01-apirule).
@@ -250,78 +251,7 @@ The official [documentation of the Transparent Proxy](https://help.sap.com/docs/
 
 ### Create a Kubernetes Resource
 
-You can either configure connectivity to individual destinations, or for arbitrary destinations in your destination service instance or subaccount (dynamic destinations).
-
-<Tabs 
-  groupId="dynamic-dest"
-  defaultValue="single"
-  values={[
-    {label: "Individual Destination", value: "single"},
-    {label: "Dynamic Destinations", value: "dynamic"}
-  ]}>
-<TabItem value="single">
-
-Given you have created a destination with the name `my-destination` in the SAP BTP Cockpit, create the following YAML file:
-
-```yaml title:"my-destination.yaml"
-apiVersion: destination.connectivity.api.sap/v1
-kind: Destination
-metadata:
-  name: my-destination
-spec:
-  destinationRef:
-    name: 'my-destination'
-  destinationServiceInstanceName: dest-service-instance-example # can be ommited if config.destinationService.defaultInstanceName was provided to the helm chart of the transparent proxy upon installation
-```
-
-This will create a Kubernetes resource in your cluster, pointing to the destination `my-destination` you created in the SAP BTP cockpit.
-
-:::note Security Considerations
-
-With the configuration above you are exposing a specific target system defined as a destination.
-Therefore, allowing communication to it from any pod within the namespace.
-
-Keep in mind that this includes the destination configuration of any **subscribed tenants**, if they have defined a destination with the same name.
-
-Make sure to secure your cluster accordingly to avoid any potential security risks.
-For more information on how to restrict access to the destinations refer to [this document](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/destination-custom-resource-scope).
-
-:::
-
-</TabItem>
-<TabItem value="dynamic">
-
-Create the following YAML file:
-
-```yaml title:"example-dest.yaml"
-apiVersion: destination.connectivity.api.sap/v1
-kind: Destination
-metadata:
-  name: dynamic-destination
-spec:
-  destinationRef:
-    name: '*'
-  destinationServiceInstanceName: dest-service-instance-example # can be ommited if config.destinationService.defaultInstanceName was provided to the helm chart of the transparent proxy upon installation
-```
-
-This will create a Kubernetes resource in your cluster, allowing you to create requests against arbitrary destinations.
-
-:::note Security Considerations
-
-With the configuration above you are exposing all destinations from the configured Destination service instance.
-Therefore, allowing communication to it from any pod within the namespace.
-
-Keep in mind that this includes all destinations of all **subscribed tenants**.
-
-Make sure to secure your cluster accordingly to avoid any potential security risks.
-For more information on how to restrict access to the destinations refer to [this document](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/destination-custom-resource-scope).
-
-:::
-
-</TabItem>
-</Tabs>
-
-Apply the YAML with `kubectl apply -n` into the namespace of your application pods to take effect.
+For the creation of the necessary Kubernetes Resources, please refer to our [Java documentation](/docs/java/environments/kubernetes-kyma#create-a-kubernetes-resource).
 
 ### Executing Requests
 
@@ -337,12 +267,12 @@ In your application you can now configure a destination to execute requests:
 <TabItem value="single">
 
 ```ts
-import { registerDestination, getTenantId } from '@sap-cloud-sdk/connectivity';
+import { registerDestination, getTenantId, retrieveJwt } from '@sap-cloud-sdk/connectivity';
 
 const destination = {
   name: 'registered-destination',
   url: 'http://my-destination.namespace/'
-  // for principal propagation make sure to set the auth type to set the forwardAuthToken flag to true:
+  // for principal propagation make sure to set the forwardAuthToken flag to true:
   // forwardAuthToken: true
 };
 await registerDestination(destination, options);
@@ -351,8 +281,10 @@ const result = await myEntityApi
   .requestBuilder()
   .getAll()
   // for a subscriber tenant make sure to send the tenant header:
-  // .addCustomHeaders({ 'X-Tenant-Id': getTenantId(<USER-JWT>) })
-  .execute('registered-destination');
+  // .addCustomHeaders({ 'X-Tenant-Id': getTenantId(retrieveJwt(request)) })
+  .execute({ destinationName: 'registered-destination' });
+  // for principal propagation make sure the send the auth token:
+  // .execute({ destinationName: 'registered-destination', jwt: retrieveJwt(request) });
 ```
 
 </TabItem>
@@ -364,7 +296,7 @@ import { registerDestination, getTenantId } from '@sap-cloud-sdk/connectivity';
 const destination = {
   name: 'registered-destination',
   url: 'http://dynamic-destination.namespace/'
-  // for principal propagation make sure to set the auth type to set the forwardAuthToken flag to true:
+  // for principal propagation make sure to set the forwardAuthToken flag to true:
   // forwardAuthToken: true
 };
 await registerDestination(destination, options);
@@ -374,8 +306,10 @@ const result = await myEntityApi
   .getAll()
   .addCustomHeaders({ 'X-Destination-Name': '<CF-DESTINATION-NAME>' })
   // for a subscriber tenant make sure to send the tenant header:
-  // .addCustomHeaders({ 'X-Tenant-Id': getTenantId(<USER-JWT>) })
-  .execute('registered-destination');
+  // .addCustomHeaders({ 'X-Tenant-Id': getTenantId(retrieveJwt(request)) })
+  .execute({ destinationName: 'registered-destination'});
+  // for principal propagation make sure the send the auth token:
+  // .execute({ destinationName: 'registered-destination', jwt: retrieveJwt(request) });
 ```
 
 </TabItem>
@@ -413,7 +347,8 @@ const result = await myEntityApi
 - `X-Error-Origin` - the source of the error
 - `X-Proxy-Server` - the proxy server (Transparent Proxy)
 - `X-Error-Message` - thorough error message
-- `X-Error-Internal-Code` - set only when the source of the error is the XSUAA or Destination service. The value is the HTTP code returned from one of these services.
+- `X-Error-Internal-Code` - set only when the source of the error is the XSUAA or Destination service.
+  The value is the HTTP code returned from one of these services.
 - `X-Request-Id` is sent with the response in all requests, both successful and failed
 
 </details>
