@@ -729,8 +729,54 @@ Many OData server (especially SAP S/4HANA services) require proper CSRF-token ha
 The SAP Cloud SDK for Java supports this requirement by sending a _pre-flight_ request to obtain a valid CSRF token for the subsequent, actual request.
 
 By default, this _pre-flight_ request is sent automatically **and every time** before running a modification request.
-In single-threaded workloads, this approach works without causing issues.
-In multi-threaded scenarios, however, this behavior can lead to situations where the OData service rejects the request with a `CSRF token validation failed` response.
+
+<details>
+    <summary>CSRF Token missing</summary>
+
+Some SAP S/4HANA OnPremise systems require an additional `/`.
+
+You can define this `CustomCsrfTokenRetriever` which will add a trailing `/` on the service path:
+
+```java
+class CustomCsrfTokenRetriever implements CsrfTokenRetriever
+{
+    DefaultCsrfTokenRetriever defaultCsrfTokenRetriever = new DefaultCsrfTokenRetriever();
+
+    @Nonnull
+    @Override
+    public CsrfToken retrieveCsrfToken( @Nonnull HttpClient httpClient, @Nonnull String servicePath )
+    {
+        return defaultCsrfTokenRetriever.retrieveCsrfToken(httpClient, servicePath + "/");
+    }
+
+    @Nonnull
+    @Override
+    public CsrfToken retrieveCsrfToken(
+            @Nonnull HttpClient httpClient,
+            @Nonnull String servicePath, @Nonnull Map<String, Collection<String>> headers )
+    {
+        return defaultCsrfTokenRetriever.retrieveCsrfToken(httpClient, servicePath + "/", headers);
+    }
+}
+```
+
+And then set the `CustomCsrfTokenRetriever` on your request like so:
+
+```java
+var request = xxx.toRequest();
+request.setCsrfTokenRetriever(new CustomCsrfTokenRetriever());
+var client = HttpClientAccessor.getHttpClient(httpDest);
+return request.execute(client);
+```
+
+Let me know if this works.
+
+</details>
+
+<details>
+    <summary>Multi-threaded OData requests not working</summary>
+
+In multi-threaded scenarios the OData service can reject the request with a `CSRF token validation failed` response.
 
 This is related to how [HTTP Client Caching](/docs/java/features/connectivity/http-client#configuring-the-cache) works in the SAP Cloud SDK.
 Assume we are sending multiple OData requests in parallel:
@@ -786,3 +832,4 @@ The code above solves the issue explained above by doing the following:
    That way, the SAP Cloud SDK won't run a _pre-flight_ request and the CSRF token is going to be consistent.
 2. We are fetching the HTTP client just once and then re-use it across all threads.
    This avoids an edge-case issue where the HTTP client cache expires while we are still running requests.
+   </details>
