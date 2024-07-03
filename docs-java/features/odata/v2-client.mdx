@@ -670,24 +670,15 @@ For example. some S/4HANA services may require an additional trailing slash `/` 
 You can customize the behavior by registering a `CustomCsrfTokenRetriever` that implements the desired behavior:
 
 ```java
-class CustomCsrfTokenRetriever implements CsrfTokenRetriever
+class CustomCsrfTokenRetriever extends DefaultCsrfTokenRetriever
 {
-    DefaultCsrfTokenRetriever defaultCsrfTokenRetriever = new DefaultCsrfTokenRetriever();
-
-    @Nonnull
-    @Override
-    public CsrfToken retrieveCsrfToken( @Nonnull HttpClient httpClient, @Nonnull String servicePath )
-    {
-        return defaultCsrfTokenRetriever.retrieveCsrfToken(httpClient, servicePath + "/");
-    }
-
     @Nonnull
     @Override
     public CsrfToken retrieveCsrfToken(
             @Nonnull HttpClient httpClient,
             @Nonnull String servicePath, @Nonnull Map<String, Collection<String>> headers )
     {
-        return defaultCsrfTokenRetriever.retrieveCsrfToken(httpClient, servicePath + "/", headers);
+        return super.retrieveCsrfToken(httpClient, servicePath + "/", headers);
     }
 }
 ```
