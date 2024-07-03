@@ -662,11 +662,12 @@ By default, this _pre-flight_ request is sent automatically **and every time** b
 
 <details>
 
-    <summary>CSRF Token missing</summary>
+    <summary>Customizing the CSRF Token Request</summary>
 
-Some SAP S/4HANA On-Premise systems require an additional `/`.
+Some OData services may have special requirements for the CSRF token request.
+For example. some S/4HANA services may require an additional trailing slash `/` with the CSRF request.
 
-You can define this `CustomCsrfTokenRetriever` which will add a trailing `/` on the service path:
+You can customize the behavior by registering a `CustomCsrfTokenRetriever` that implements the desired behavior:
 
 ```java
 class CustomCsrfTokenRetriever implements CsrfTokenRetriever
