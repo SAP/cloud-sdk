@@ -731,6 +731,7 @@ The SAP Cloud SDK for Java supports this requirement by sending a _pre-flight_ r
 By default, this _pre-flight_ request is sent automatically **and every time** before running a modification request.
 
 <details>
+
     <summary>CSRF Token missing</summary>
 
 Some SAP S/4HANA On-Premise systems require an additional `/`.
@@ -774,6 +775,7 @@ Let me know if this works.
 </details>
 
 <details>
+
     <summary>Multi-threaded OData requests not working</summary>
 
 In multi-threaded scenarios the OData service can reject the request with a `CSRF token validation failed` response.
@@ -832,4 +834,5 @@ The code above solves the issue explained above by doing the following:
    That way, the SAP Cloud SDK won't run a _pre-flight_ request and the CSRF token is going to be consistent.
 2. We are fetching the HTTP client just once and then re-use it across all threads.
    This avoids an edge-case issue where the HTTP client cache expires while we are still running requests.
-   </details>
+
+</details>
