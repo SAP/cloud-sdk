@@ -138,8 +138,8 @@ For a deeper overview of Helm Charts, refer to the [development guide](https://h
 In this section, we'll look into the chart configurations for the following:
 
 - application,
-- app router,
-- and the api gateway
+- approuter,
+- and the API gateway
 
 ### Application
 
@@ -147,13 +147,14 @@ Create the following files inside the `app-chart` folder:
 
 - `Chart.yaml`: information about the chart
 - `values.yaml`: the default configuration values for this chart
-- `templates\configmap.yaml`: store `data` in key-value pairs. Will be consumed as environment variables in `deployment.yaml`
+- `templates\configmap.yaml`: store `data` in key-value pairs.
+  Will be consumed as environment variables in `deployment.yaml`
 - `templates\deployment.yaml`: deployment configuration
 - `templates\service.yaml`: a [Service](https://kubernetes.io/docs/concepts/services-networking/service/) to expose the approuter
 
 <KymaAppTabs />
 
-### Configure AppRouter
+### Configure approuter
 
 Package the application router as a docker image so that it can run in Kubernetes, refer to the [documentation](https://blogs.sap.com/2020/04/03/sap-application-router/) for configuration details.
 
@@ -165,7 +166,7 @@ Create the same files as described in the section [above](#application) in the `
 
 <KymaApprouterTabs />
 
-### Expose the AppRouter with an API Rule
+### Expose the approuter with an API Rule
 
 To make the approuter accessible outside of the Kyma cluster, you must expose it using an API Gateway.
 This can be done by creating an [API Rule](https://kyma-project.io/docs/kyma/latest/05-technical-reference/00-custom-resources/apix-01-apirule).
@@ -214,12 +215,12 @@ helm install e2e-app <PATH_TO_PACKAGED_HELM_CHART>
 
 ### Access your Application
 
-You can view the created resources (application, api rule, etc) by navigating to the Kyma dashboard, using the **Link to dashboard** link in the subaccount.
+You can view the created resources (application, API rule, etc) by navigating to the Kyma dashboard, using the **Link to dashboard** link in the subaccount.
 Verify the resources and choose the host link to open the application in your browser.
 
 ![API Rule](../img/kyma-api-rule.png)
 
-You should be redirected to the login page of your Idp, if you have configured an approuter.
+You should be redirected to the login page of your IdP, if you have configured an approuter.
 
 ## On-Premise Connectivity
 
