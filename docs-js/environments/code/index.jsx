@@ -4,6 +4,7 @@ import KymaAppTabsContent from './kyma-app-tabs.mdx';
 import DockerFileContent from './Dockerfile.mdx';
 import OperatorDestinationServiceContent from './operator-destination-service.mdx';
 import OperatorXsuaaServiceContent from './operator-xsuaa-service.mdx';
+import KubernetesOnPremiseContent from './kubernetes-on-premise.mdx';
 
 export function DockerFile() {
   return <DockerFileContent />;
@@ -21,4 +22,8 @@ export function KymaApprouterTabs() {
 }
 export function KymaAppTabs() {
   return <KymaAppTabsContent />;
+}
+
+export function KubernetesTransparentProxy() {
+  return <KubernetesOnPremiseContent />;
 }
