@@ -1,0 +1,137 @@
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+### Prerequisites
+
+This guide assumes you have both the **Transparent Proxy** (version `>= 1.4.0`) and **Connectivity Proxy** (version `>= 2.11.0`) installed in your cluster.
+For Kyma the Transparent Proxy is available as a module that can be enabled as described [here](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/transparent-proxy-in-kyma-environment).
+The Connectivity Proxy can be installed as described [here](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/operations-via-helm).
+
+### Background Information
+
+When using the Transparent Proxy your app performs requests against the Transparent Proxy without explicit authentication, relying on the secure network communication provided by Kyma via Istio.
+The Transparent Proxy will obtain the relevant destination from the destination service and use it to forward the request via the Connectivity Proxy to the On-Premise system.
+Consequently, your app itself does not interact with destination or connectivity service at all and thus your application pods do not require bindings to these two services.
+
+Please note that the current implementation of the Transparent Proxy does not yet cover all use cases.
+
+<details>
+  <summary>Constraints when using the Transparent Proxy</summary>
+
+- Private Link not yet supported
+
+</details>
+
+:::tip
+This approach is conceptually different from what you may be used to from a Cloud Foundry environment.
+The official [documentation of the Transparent Proxy](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/e661713ef7d14373b57e3e26b0b03b86.html) gives more information on the architecture.
+:::
+
+### Create a Kubernetes Resource
+
+For the creation of the necessary Kubernetes Resources, please refer to our [Java documentation](/docs/java/environments/kubernetes-kyma#create-a-kubernetes-resource).
+
+### Executing Requests
+
+In your application you can now configure a destination to execute requests:
+
+<Tabs 
+  groupId="dynamic-dest"
+  defaultValue="single"
+  values={[
+    {label: "Individual Destination", value: "single"},
+    {label: "Dynamic Desitnations", value: "dynamic"}
+  ]}>
+<TabItem value="single">
+
+```ts
+import {
+  registerDestination,
+  getTenantId,
+  retrieveJwt
+} from '@sap-cloud-sdk/connectivity';
+
+const destination = {
+  name: 'registered-destination',
+  url: 'http://my-destination.namespace/'
+  // for principal propagation make sure to set the forwardAuthToken flag to true:
+  // forwardAuthToken: true
+};
+await registerDestination(destination, options);
+
+const result = await myEntityApi
+  .requestBuilder()
+  .getAll()
+  // for a subscriber tenant make sure to send the tenant header:
+  // .addCustomHeaders({ 'X-Tenant-Id': getTenantId(retrieveJwt(request)) })
+  .execute({ destinationName: 'registered-destination' });
+// for principal propagation make sure the send the auth token:
+// .execute({ destinationName: 'registered-destination', jwt: retrieveJwt(request) });
+```
+
+</TabItem>
+<TabItem value="dynamic">
+
+```ts
+import { registerDestination, getTenantId } from '@sap-cloud-sdk/connectivity';
+
+const destination = {
+  name: 'registered-destination',
+  url: 'http://dynamic-destination.namespace/'
+  // for principal propagation make sure to set the forwardAuthToken flag to true:
+  // forwardAuthToken: true
+};
+await registerDestination(destination, options);
+
+const result = await myEntityApi
+  .requestBuilder()
+  .getAll()
+  .addCustomHeaders({ 'X-Destination-Name': '<CF-DESTINATION-NAME>' })
+  // for a subscriber tenant make sure to send the tenant header:
+  // .addCustomHeaders({ 'X-Tenant-Id': getTenantId(retrieveJwt(request)) })
+  .execute({ destinationName: 'registered-destination' });
+// for principal propagation make sure the send the auth token:
+// .execute({ destinationName: 'registered-destination', jwt: retrieveJwt(request) });
+```
+
+</TabItem>
+</Tabs>
+
+- Replace `namespace` in the URL with the namespace you installed the Transparent Proxy into.
+
+The code above shows an example how you can then use the `destination` object to perform an OData request against the system.
+
+:::tip Connecting to Cloud systems
+The above approach is not limited to destinations of proxy type `ON_PREMISE`, `INTERNET` destinations are supported as well.
+:::
+
+### Troubleshooting
+
+When using proxy servers it can be difficult to troubleshoot issues as it is often not obvious where exactly the error occurred.
+For example, with the Transparent Proxy errors might occur on the target system (e.g. OData service), the Destination Service or the Transparent Proxy itself.
+
+To make troubleshooting easier the Transparent Proxy adds additional response headers to provide more information about where an error occurred.
+For the above example of executing OData requests you can access the response headers as follows:
+
+```ts
+const result = await myEntityApi
+  .requestBuilder()
+  .getAll()
+  .execute('registered-destination')
+  .catch(err => {
+    console.error('Error Headers:', err.rootCause?.response?.headers);
+  });
+```
+
+<details>
+  <summary>List of headers added by the Transparent Proxy</summary>
+
+- `X-Error-Origin` - the source of the error
+- `X-Proxy-Server` - the proxy server (Transparent Proxy)
+- `X-Error-Message` - thorough error message
+- `X-Error-Internal-Code` - set only when the source of the error is the XSUAA or Destination service.
+  The value is the HTTP code returned from one of these services.
+- `X-Request-Id` is sent with the response in all requests, both successful and failed
+
+</details>
