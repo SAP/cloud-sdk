@@ -240,7 +240,7 @@ After this little definition detour, let's go back to the destination service an
 For simplicity, an optional argument of the destination lookup has been neglected in the beginning:
 
 ```ts
-.execute({ destinationName: 'myDestination', jwt: 'yourJWT',})
+.execute({ destinationName: 'myDestination', jwt: '<JWT>',})
 ```
 
 The `jwt` argument takes the JSON web token (JWT) issued by an XSUAA as input.
@@ -259,7 +259,7 @@ If no token is given or the destination is not found in the subscriber account, 
 To control this fallback behavior, a selection strategy can be passed to the destination lookup:
 
 ```ts
-.execute({ destinationName: 'myDestination', jwt: 'yourJWT' }, { selectionStrategy:'alwaysSubscriber' })
+.execute({ destinationName: 'myDestination', jwt: '<JWT>' }, { selectionStrategy:'alwaysSubscriber' })
 ```
 
 There are three selection strategies defined in the SAP Cloud SDK: `alwaysSubscriber`, `alwaysProvider`, and `subscriberFirst`.

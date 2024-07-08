@@ -172,3 +172,17 @@ For some on-premise e-mail servers, including the test server, the parallelizati
 You can disable the parallelization by passing `parallel: false` as mentioned above.
 
 :::
+
+### Multi-Tenancy
+
+If you are setting up a multi-tenant application where subscriber tenants access a mail destination through their SAP Cloud Connector (SCC), you must include the user's JSON Web Token (JWT) in your call.
+
+An example in which the incoming request contains the user's JWT looks like this:
+
+```ts
+import { retrieveJwt } from '@sap-cloud-sdk/connectivity';
+sendMail(
+  { destinationName: 'my-mail-destination', jwt: retrieveJwt(request) },
+  [mailConfig]
+);
+```
