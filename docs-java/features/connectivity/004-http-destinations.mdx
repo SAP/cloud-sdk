@@ -88,6 +88,21 @@ Such a proxy configuration must contain a proxy URI, which is either taken from 
 The [`DefaultHttpDestination.Builder`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/DefaultHttpDestination.Builder.html) allows applications to either create a `DefaultHttpDestination` instance from scratch or to "modify" an existing one.
 It offers APIs to set any desired property, header, header provider, or any other value that is supported by the `DefaultHttpDestination` implementation.
 
+### Provide Query Parameters for Destinations
+
+You can add query parameters to a specific destination using properties.
+They will always be included in the query string when calling the target system.
+
+Here is an example implementation which adds `key1=value1` to the query string when calling the destination:
+
+```java
+destination =
+            DefaultHttpDestination
+                .builder(server.baseUrl())
+                .property("URL.queries.key1", "value1")
+                .build();
+```
+
 ### Building on Top of an Existing Destination
 
 Sometimes, it is needed to slightly adjust an existing `Destination` instance.
