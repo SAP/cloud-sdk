@@ -137,7 +137,7 @@ String uri = destination.get(DestinationProperty.URI).getOrElse("");
 
 ### Destination Fragments (Experimental)
 
-You can obtain desitnations with additional data from [Destination Fragments](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/extending-destinations-with-fragments).
+You can obtain destinations with additional data from [Destination Fragments](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/extending-destinations-with-fragments).
 
 ```java
 var service = new DestinationService();
@@ -145,7 +145,7 @@ var opts = DestinationOptions.builder()
                 .augmentBuilder(DestinationServiceOptionsAugmenter.augmenter()
                         .fragmentName("my-fragment")
                 ).build();
-var destination = service.tryGetDestination("", opts).get();
+var destination = service.tryGetDestination("my-destination", opts).get();
 ```
 
 The obtained destination will be cached based on the provided fragment name.
@@ -154,7 +154,7 @@ The obtained destination will be cached based on the provided fragment name.
 In general, it is recommended to disable the [change detection mode](#change-detection-mode) when using destinations with fragments.
 Leaving change detection enabled would effectively disable the cache for any fragment-based destinations.
 
-However, if your use case benefits significantly from change detection (e.g. when using many destinations frequently), but fragments are rarely used, it may be worthwhile keeping change detection enabled.
+However, if your use case benefits significantly from change detection (e.g. when using many destinations frequently), but fragments are seldomly used, it may be worthwhile keeping change detection enabled.
 :::
 
 Since currently destination fragments can only be created via REST API calls, here is an example of how one can create a fragment using the SAP Cloud SDK:
