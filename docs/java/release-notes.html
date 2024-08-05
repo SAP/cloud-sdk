@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.4.0">
 <title data-rh="true">Release Notes | SAP Cloud SDK</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://sap.github.io/cloud-sdk/docs/java/release-notes"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-docs-java-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-docs-java-current"><meta data-rh="true" property="og:title" content="Release Notes | SAP Cloud SDK"><meta data-rh="true" name="description" content="Release notes of SAP Cloud SDK for Java, stay up to date with the recent features, fixes, dependency updates and recommendedations."><meta data-rh="true" property="og:description" content="Release notes of SAP Cloud SDK for Java, stay up to date with the recent features, fixes, dependency updates and recommendedations."><meta data-rh="true" name="keywords" content="sap,cloud,sdk,cloud native,cloud sdk,sap cloud sdk"><link data-rh="true" rel="icon" href="/cloud-sdk/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://sap.github.io/cloud-sdk/docs/java/release-notes"><link data-rh="true" rel="alternate" href="https://sap.github.io/cloud-sdk/docs/java/release-notes" hreflang="en"><link data-rh="true" rel="alternate" href="https://sap.github.io/cloud-sdk/docs/java/release-notes" hreflang="x-default"><link data-rh="true" rel="preconnect" href="https://E4A268JVO0-dsn.algolia.net" crossorigin="anonymous"><link rel="search" type="application/opensearchdescription+xml" title="SAP Cloud SDK" href="/cloud-sdk/opensearch.xml"><link rel="stylesheet" href="/cloud-sdk/assets/css/styles.df917a8e.css">
-<script src="/cloud-sdk/assets/js/runtime~main.ede91039.js" defer="defer"></script>
+<script src="/cloud-sdk/assets/js/runtime~main.02951759.js" defer="defer"></script>
 <script src="/cloud-sdk/assets/js/main.745aebd0.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -23,25 +23,44 @@ It will help you:</p>
 <li>Update client libraries giving access to latest SAP services on SAP Cloud Platform and SAP S/4HANA</li>
 <li>Protect yourself from bugs and breaking changes in the future</li>
 </ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="5110---august-01-2024">5.11.0 - August 01, 2024<a class="hash-link" aria-label="Direct link to 5.11.0 - August 01, 2024" title="Direct link to 5.11.0 - August 01, 2024" href="/cloud-sdk/docs/java/release-notes#5110---august-01-2024">​</a></h2>
+<p><a href="https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.11.0" target="_blank" rel="noopener noreferrer">All Release Changes</a></p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-compatibility-notes">🔧 Compatibility Notes<a class="hash-link" aria-label="Direct link to 🔧 Compatibility Notes" title="Direct link to 🔧 Compatibility Notes" href="/cloud-sdk/docs/java/release-notes#-compatibility-notes">​</a></h3>
+<ul>
+<li>The OpenAPI generator doesn&#x27;t add <code>//NOPMD</code> after imports anymore.</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-new-functionality">✨ New Functionality<a class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" href="/cloud-sdk/docs/java/release-notes#-new-functionality">​</a></h3>
+<ul>
+<li>Add experimental support for <a href="https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/extending-destinations-with-fragments" target="_blank" rel="noopener noreferrer"><em>Destination Fragments</em></a>.
+Fragment names can be passed upon requesting destinations via <code>DestinationServiceOptionsAugmenter.fragmentName(&quot;my-fragment-name&quot;)</code>.</li>
+<li>Allow removing properties when using a destination builder.</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues">🐛 Fixed Issues<a class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues" href="/cloud-sdk/docs/java/release-notes#-fixed-issues">​</a></h3>
+<ul>
+<li>The OpenAPI Generator correctly declares <code>@Nonnull</code> and <code>@Nullable</code> annotations on generated endpoint methods.</li>
+<li>The OpenAPI Generator uses correct camelCase again, when creating methods to <em>add items</em> to a collections.
+Version <code>5.10.0</code> used incorrect <code>addfooItems(Foo)</code> instead of <code>addFooItems(Foo)</code>.
+This is fixed now.</li>
+</ul>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="5100---june-12-2024">5.10.0 - June 12, 2024<a class="hash-link" aria-label="Direct link to 5.10.0 - June 12, 2024" title="Direct link to 5.10.0 - June 12, 2024" href="/cloud-sdk/docs/java/release-notes#5100---june-12-2024">​</a></h2>
 <p><a href="https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.10.0" target="_blank" rel="noopener noreferrer">All Release Changes</a></p>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-compatibility-notes">🔧 Compatibility Notes<a class="hash-link" aria-label="Direct link to 🔧 Compatibility Notes" title="Direct link to 🔧 Compatibility Notes" href="/cloud-sdk/docs/java/release-notes#-compatibility-notes">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-compatibility-notes-1">🔧 Compatibility Notes<a class="hash-link" aria-label="Direct link to 🔧 Compatibility Notes" title="Direct link to 🔧 Compatibility Notes" href="/cloud-sdk/docs/java/release-notes#-compatibility-notes-1">​</a></h3>
 <ul>
 <li>Using the <code>X509_ATTESTED</code> credential type now requires a version &gt;= <code>3.4.0</code> of the <a href="https://github.com/SAP/cloud-security-services-integration-library" target="_blank" rel="noopener noreferrer">SAP BTP Security Library</a>.</li>
 <li>Deprecate the IAS communication option <code>withConsumerClient(clientid, tenantid)</code>.
 The option is non-functional. Use <code>withConsumerClientId(clientid)</code> instead, the tenant will automatically be inferred from the context upon execution.</li>
 </ul>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-new-functionality">✨ New Functionality<a class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" href="/cloud-sdk/docs/java/release-notes#-new-functionality">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-new-functionality-1">✨ New Functionality<a class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" href="/cloud-sdk/docs/java/release-notes#-new-functionality-1">​</a></h3>
 <ul>
 <li>Support the <code>X509_ATTESTED</code> credential type for XSUAA service bindings.</li>
 </ul>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues">🐛 Fixed Issues<a class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues" href="/cloud-sdk/docs/java/release-notes#-fixed-issues">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues-1">🐛 Fixed Issues<a class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues" href="/cloud-sdk/docs/java/release-notes#-fixed-issues-1">​</a></h3>
 <ul>
 <li>Fix an issue that prevented OAuth flows from working correctly for subscriber tenants when using IAS with credential type <code>X509_ATTESTED</code></li>
 </ul>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="590---may-13-2024">5.9.0 - May 13, 2024<a class="hash-link" aria-label="Direct link to 5.9.0 - May 13, 2024" title="Direct link to 5.9.0 - May 13, 2024" href="/cloud-sdk/docs/java/release-notes#590---may-13-2024">​</a></h2>
 <p><a href="https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.9.0" target="_blank" rel="noopener noreferrer">All Release Changes</a></p>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-compatibility-notes-1">🔧 Compatibility Notes<a class="hash-link" aria-label="Direct link to 🔧 Compatibility Notes" title="Direct link to 🔧 Compatibility Notes" href="/cloud-sdk/docs/java/release-notes#-compatibility-notes-1">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-compatibility-notes-2">🔧 Compatibility Notes<a class="hash-link" aria-label="Direct link to 🔧 Compatibility Notes" title="Direct link to 🔧 Compatibility Notes" href="/cloud-sdk/docs/java/release-notes#-compatibility-notes-2">​</a></h3>
 <ul>
 <li>
 <p>Deprecate the <code>BtpServiceOptions.IasOptions.withTargetUri</code> method overloads.
@@ -54,14 +73,14 @@ The deprecated methods will stay functioning (with the mentioned behavior change
 Nevertheless, we are planning to <strong>remove</strong> the deprecated methods and the class <strong>still within version 5 of the SAP Cloud SDK</strong>.</p>
 </li>
 </ul>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-new-functionality-1">✨ New Functionality<a class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" href="/cloud-sdk/docs/java/release-notes#-new-functionality-1">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-new-functionality-2">✨ New Functionality<a class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" href="/cloud-sdk/docs/java/release-notes#-new-functionality-2">​</a></h3>
 <ul>
 <li>Support the <a href="https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/oauth-refresh-token-authentication" target="_blank" rel="noopener noreferrer">OAuth Refresh Token</a> authentication type of the Destination Service.
 Find more details on how to use the functionality in the <a href="https://sap.github.io/cloud-sdk/docs/java/features/connectivity/btp-destination-service#about-the-destinationservice" target="_blank" rel="noopener noreferrer">documentation</a>.</li>
 <li>Service Bindings for the SAP XSUAA service (Service Identifier <code>xsuaa</code>) can now be converted into destinations just as any other supported service.
 This is most useful when combined with the newly introduced <code>BtpServiceOptions.AuthenticationServiceOptions.withTargetUri</code> methods, which allows for communication between services that are backed by the same XSUAA instance.</li>
 </ul>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues-1">🐛 Fixed Issues<a class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues" href="/cloud-sdk/docs/java/release-notes#-fixed-issues-1">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues-2">🐛 Fixed Issues<a class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues" href="/cloud-sdk/docs/java/release-notes#-fixed-issues-2">​</a></h3>
 <ul>
 <li>Fix a regression that was introduced with the SAP Cloud SDK 5.0 release where the principal would no longer be derived from a <code>Basic</code> authorization header, in cases where neither a JWT nor an OIDC token was present.</li>
 <li>Fix a regression that was introduced with the SAP Cloud SDK 5.0 release where auth tokens sent by the Destination service would no longer be stored in the <code>cloudsdk.authTokens</code> destination property for non-HTTP destinations.</li>
@@ -79,14 +98,14 @@ Scenarios where an IAS tenant is connected to multiple subaccounts of an applica
 </ul>
 </li>
 </ul>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues-2">🐛 Fixed Issues<a class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues" href="/cloud-sdk/docs/java/release-notes#-fixed-issues-2">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues-3">🐛 Fixed Issues<a class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues" href="/cloud-sdk/docs/java/release-notes#-fixed-issues-3">​</a></h3>
 <ul>
 <li>Fix an issue that would cause a NPE when using bound services backed by IAS via the <a href="/cloud-sdk/docs/java/features/connectivity/service-bindings#service-binding-format">dedicated service binding format</a>.</li>
 <li>Fix an issue that would cause a NPE when using the OData <code>applyAction</code> method with a <code>null</code> parameter value.</li>
 </ul>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="570---april-05-2024">5.7.0 - April 05, 2024<a class="hash-link" aria-label="Direct link to 5.7.0 - April 05, 2024" title="Direct link to 5.7.0 - April 05, 2024" href="/cloud-sdk/docs/java/release-notes#570---april-05-2024">​</a></h2>
 <p><a href="https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.7.0" target="_blank" rel="noopener noreferrer">All Release Changes</a></p>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-new-functionality-2">✨ New Functionality<a class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" href="/cloud-sdk/docs/java/release-notes#-new-functionality-2">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-new-functionality-3">✨ New Functionality<a class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" href="/cloud-sdk/docs/java/release-notes#-new-functionality-3">​</a></h3>
 <ul>
 <li>(Beta) Add support for the SAP-internal Zero Trust Identity Service<!-- -->
 <ul>
@@ -95,13 +114,13 @@ Scenarios where an IAS tenant is connected to multiple subaccounts of an applica
 </ul>
 </li>
 </ul>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues-3">🐛 Fixed Issues<a class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues" href="/cloud-sdk/docs/java/release-notes#-fixed-issues-3">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues-4">🐛 Fixed Issues<a class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues" href="/cloud-sdk/docs/java/release-notes#-fixed-issues-4">​</a></h3>
 <ul>
 <li>Stop unnecessarily throwing and catching <code>NullPointerException</code> when interacting with <code>DefaultHttpDestination#equals(...)</code> and <code>#hashCode()</code>.</li>
 </ul>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="560---march-19-2024">5.6.0 - March 19, 2024<a class="hash-link" aria-label="Direct link to 5.6.0 - March 19, 2024" title="Direct link to 5.6.0 - March 19, 2024" href="/cloud-sdk/docs/java/release-notes#560---march-19-2024">​</a></h2>
 <p><a href="https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.6.0" target="_blank" rel="noopener noreferrer">All Release Changes</a></p>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-new-functionality-3">✨ New Functionality<a class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" href="/cloud-sdk/docs/java/release-notes#-new-functionality-3">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-new-functionality-4">✨ New Functionality<a class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" href="/cloud-sdk/docs/java/release-notes#-new-functionality-4">​</a></h3>
 <ul>
 <li>Add support for connecting to applications and services backed by the <a href="https://help.sap.com/docs/identity-authentication" target="_blank" rel="noopener noreferrer">SAP Identity Authentication Service (IAS)</a>.<!-- -->
 <ul>
@@ -115,7 +134,7 @@ Scenarios where an IAS tenant is connected to multiple subaccounts of an applica
 <li>Support service bindings to the <a href="https://api.sap.com/api/AI_CORE_API" target="_blank" rel="noopener noreferrer">SAP BTP AI Core Service</a> by default in the <code>ServiceBindingDestinationLoader</code> API.</li>
 <li>Failed OData v4 Batch requests now return the specific failed request from the exception: <code>ODataResponseException.getRequest()</code>.</li>
 </ul>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues-4">🐛 Fixed Issues<a class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues" href="/cloud-sdk/docs/java/release-notes#-fixed-issues-4">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues-5">🐛 Fixed Issues<a class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues" href="/cloud-sdk/docs/java/release-notes#-fixed-issues-5">​</a></h3>
 <ul>
 <li>Fix an issue where the same <code>HttpClient</code> would be used for different users when using <code>PrincipalPropagation</code> and thus could potentially share the same (session) cookies.</li>
 <li>Fix an issue where destinations for the Business Logging service that are created from a service binding (using the <code>ServiceBindingDestinationLoader</code> API) contained the concrete API path.
@@ -125,11 +144,11 @@ This behavior caused problems when using such a destination in a client generate
 </ul>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="550---february-28-2024">5.5.0 - February 28, 2024<a class="hash-link" aria-label="Direct link to 5.5.0 - February 28, 2024" title="Direct link to 5.5.0 - February 28, 2024" href="/cloud-sdk/docs/java/release-notes#550---february-28-2024">​</a></h2>
 <p><a href="https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.5.0" target="_blank" rel="noopener noreferrer">All Release Changes</a></p>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-compatibility-notes-2">🔧 Compatibility Notes<a class="hash-link" aria-label="Direct link to 🔧 Compatibility Notes" title="Direct link to 🔧 Compatibility Notes" href="/cloud-sdk/docs/java/release-notes#-compatibility-notes-2">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-compatibility-notes-3">🔧 Compatibility Notes<a class="hash-link" aria-label="Direct link to 🔧 Compatibility Notes" title="Direct link to 🔧 Compatibility Notes" href="/cloud-sdk/docs/java/release-notes#-compatibility-notes-3">​</a></h3>
 <ul>
 <li>Deprecated <code>RfcDestination</code> and all associated usages, the replacement is <code>Destination</code>.</li>
 </ul>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-new-functionality-4">✨ New Functionality<a class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" href="/cloud-sdk/docs/java/release-notes#-new-functionality-4">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-new-functionality-5">✨ New Functionality<a class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" href="/cloud-sdk/docs/java/release-notes#-new-functionality-5">​</a></h3>
 <ul>
 <li><code>war</code> deployment in combination with the <code>SAP Java Buildpack</code> 2.2.0 is supported again.
 Our <code>RFC</code> artifact is now released, and <code>JCo</code> functionalities are supported again.
@@ -139,7 +158,7 @@ Please follow our <a href="/cloud-sdk/docs/java/guides/5.0-upgrade-steps">guide 
 <ul>
 <li>Improve the <code>DefaultHttpDestination</code> builder API: For destinations with proxy type <code>ON_PREMISE</code> the proxy URL can now be customized by using the <code>proxy</code> method of the builder.</li>
 </ul>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues-5">🐛 Fixed Issues<a class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues" href="/cloud-sdk/docs/java/release-notes#-fixed-issues-5">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues-6">🐛 Fixed Issues<a class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues" href="/cloud-sdk/docs/java/release-notes#-fixed-issues-6">​</a></h3>
 <ul>
 <li>Fixed an issue where adding header providers to a destination after it had already been used to obtain an Apache <code>HttpClient</code> 5 would not work as expected.</li>
 </ul>
@@ -193,7 +212,7 @@ The contained tests are now part of the test suite of the <code>application</cod
 </ul>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="520---january-22-2024">5.2.0 - January 22, 2024<a class="hash-link" aria-label="Direct link to 5.2.0 - January 22, 2024" title="Direct link to 5.2.0 - January 22, 2024" href="/cloud-sdk/docs/java/release-notes#520---january-22-2024">​</a></h2>
 <p><a href="https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.2.0" target="_blank" rel="noopener noreferrer">All Release Changes</a></p>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-compatibility-notes-3">🔧 Compatibility Notes<a class="hash-link" aria-label="Direct link to 🔧 Compatibility Notes" title="Direct link to 🔧 Compatibility Notes" href="/cloud-sdk/docs/java/release-notes#-compatibility-notes-3">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-compatibility-notes-4">🔧 Compatibility Notes<a class="hash-link" aria-label="Direct link to 🔧 Compatibility Notes" title="Direct link to 🔧 Compatibility Notes" href="/cloud-sdk/docs/java/release-notes#-compatibility-notes-4">​</a></h3>
 <ul>
 <li>
 <p>The de-facto standard <code>resilience4j</code> implementation for the resilience API is now included by default.
@@ -224,7 +243,7 @@ Please follow <a href="https://sap.github.io/cloud-sdk/docs/java/features/multi-
 </ul>
 </li>
 </ul>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-new-functionality-5">✨ New Functionality<a class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" href="/cloud-sdk/docs/java/release-notes#-new-functionality-5">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-new-functionality-6">✨ New Functionality<a class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" href="/cloud-sdk/docs/java/release-notes#-new-functionality-6">​</a></h3>
 <ul>
 <li><code>OpenAPI</code> generated objects can now write custom fields which are not part of the object&#x27;s schema:<!-- -->
 <ul>
@@ -262,13 +281,13 @@ Stateful resilience patterns (e.g. circuit breaker) will now be applied per <cod
 </li>
 <li>Destinations retrieved from the SAP BTP Destination Service now correctly evaluate the <code>forwardAuthToken</code> property if it has the authentication type <code>NoAuthentication</code>.</li>
 </ul>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues-6">🐛 Fixed Issues<a class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues" href="/cloud-sdk/docs/java/release-notes#-fixed-issues-6">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues-7">🐛 Fixed Issues<a class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues" href="/cloud-sdk/docs/java/release-notes#-fixed-issues-7">​</a></h3>
 <ul>
 <li>Fixed an issue where adding header providers to a destination after it had already been used to obtain an <code>HttpClient</code> would not work as expected.</li>
 </ul>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="510---december-27-2023">5.1.0 - December 27, 2023<a class="hash-link" aria-label="Direct link to 5.1.0 - December 27, 2023" title="Direct link to 5.1.0 - December 27, 2023" href="/cloud-sdk/docs/java/release-notes#510---december-27-2023">​</a></h2>
 <p><a href="https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.1.0" target="_blank" rel="noopener noreferrer">All Release Changes</a></p>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-compatibility-notes-4">🔧 Compatibility Notes<a class="hash-link" aria-label="Direct link to 🔧 Compatibility Notes" title="Direct link to 🔧 Compatibility Notes" href="/cloud-sdk/docs/java/release-notes#-compatibility-notes-4">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-compatibility-notes-5">🔧 Compatibility Notes<a class="hash-link" aria-label="Direct link to 🔧 Compatibility Notes" title="Direct link to 🔧 Compatibility Notes" href="/cloud-sdk/docs/java/release-notes#-compatibility-notes-5">​</a></h3>
 <ul>
 <li>An earlier version of the <a href="https://sap.github.io/cloud-sdk/docs/java/guides/5.0-upgrade-steps" target="_blank" rel="noopener noreferrer">V5 Upgrade Guide</a> contained an instruction to move handling of <code>DestinationAccessExceptions</code> from <code>DestinationAccessor.getDestination()</code> to <code>destination.getHeaders()</code>.
 This instruction was incorrect and has been removed.
@@ -279,7 +298,7 @@ They are replaced by the <code>FORWARD_USER_TOKEN</code> strategy.
 If there are any issues when using <code>FORWARD_USER_TOKEN</code> for destinations that require user tokens, please report them and use <code>EXCHANGE_ONLY</code> for such cases.</li>
 <li><code>DestinationService.tryGetAllDestinations()</code> and <code>DestinationService.tryGetAllDestinations(DestinationOptions opts)</code> have been deprecated in favor of <code>DestinationService.getAllDestinationProperties()</code>.</li>
 </ul>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-new-functionality-6">✨ New Functionality<a class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" href="/cloud-sdk/docs/java/release-notes#-new-functionality-6">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-new-functionality-7">✨ New Functionality<a class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" href="/cloud-sdk/docs/java/release-notes#-new-functionality-7">​</a></h3>
 <ul>
 <li>Added new API to retrieve destination properties only from the SAP BTP Destination Service.
 <code>DestinationService</code> now offers <code>getDestinationProperties(String destinationName)</code> and <code>getAllDestinationProperties()</code>.</li>
@@ -299,7 +318,7 @@ If there are any issues when using <code>FORWARD_USER_TOKEN</code> for destinati
 </ul>
 </li>
 </ul>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues-7">🐛 Fixed Issues<a class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues" href="/cloud-sdk/docs/java/release-notes#-fixed-issues-7">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues-8">🐛 Fixed Issues<a class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues" href="/cloud-sdk/docs/java/release-notes#-fixed-issues-8">​</a></h3>
 <ul>
 <li>Fix an issue where an invalid hostname in a destination would lead to an empty hostname. The hostname is now accepted.</li>
 <li>Fix an issue where errors from token flows of destinations retrieved from the SAP BTP destination service were not handled consistently.
