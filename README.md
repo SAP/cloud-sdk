@@ -4,8 +4,8 @@
 
 This repository contains:
 
-- Sources for the [SAP Cloud SDK Documentation](https://sap.github.io/cloud-sdk/)
-- SAP Cloud SDK for Java [Support Issues](https://github.com/SAP/cloud-sdk/issues)
+- Sources for the [SAP Cloud SDK Documentation](https://sap.github.io/cloud-sdk/).
+- SAP Cloud SDK for Java [Support Issues](https://github.com/SAP/cloud-sdk/issues).
 
 For the [Support](https://github.com/SAP/cloud-sdk-js/issues) on SAP Cloud SDK for JavaScript us this [repository](https://github.com/SAP/cloud-sdk-js).
 
