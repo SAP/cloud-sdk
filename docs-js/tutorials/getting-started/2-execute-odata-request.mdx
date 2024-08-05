@@ -265,25 +265,26 @@ In `Node.js` applications, it is common to use a `.env` file to maintain such en
 Create a `.env` file in the root directory of your project and define the destinations environment variable as follows:
 
 ```ts
-destinations = [
+destinations = '[
   {
-    name: '<DESTINATIONNAME>',
-    url: '<URL to your system>',
-    username: '<USERNAME>',
-    password: '<PASSWORD>'
+    "name": "<DESTINATIONNAME>",
+    "url": "<URL to your system>",
+    "username": "<USERNAME>",
+    "password": "<PASSWORD>"
   }
-];
+]'
 ```
 
 :::note
 Every environment variable in the `.env` file has to be defined on one line.
 You can add more destinations to the array.
+For more information on local destinations, check out our [destination documentation](../../features/connectivity/destinations#local-environment-variable).
 :::
 
 This is what it would look like for the mock server:
 
 ```ts
-destinations = [{ name: 'MockServer', url: 'http://localhost:3000' }];
+destinations = '[{ "name": "MockServer", "url": "http://localhost:3000" }]';
 ```
 
 :::caution
