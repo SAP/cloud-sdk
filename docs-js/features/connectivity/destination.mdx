@@ -253,6 +253,24 @@ const destination = getDestinationFromServiceBinding({
 });
 ```
 
+In addition to the default internal transformations, the SAP Cloud SDK provides the `getServiceBinding` function to retrieve a service type from a string input and a public convenience function `transformServiceBindingToDestination` that simplifies the process of transforming a service binding to a destination.
+
+#### Example Usage
+
+```ts
+import {
+  getServiceBinding,
+  transformServiceBindingToDestination
+} from '@sap-cloud-sdk/connectivity';
+
+const service = getServiceBinding('aicore');
+
+await transformServiceBindingToDestination(service);
+```
+
+The function supports the [default service types](#service-binding-environment-variables) as listed above.
+If the provided service binding is not supported, an error will be thrown indicating the unsupported service type.
+
 ### Destination Service
 
 In a productive environment, in most cases you will use the [destination service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html) to retrieve destinations.
