@@ -253,6 +253,34 @@ const destination = getDestinationFromServiceBinding({
 });
 ```
 
+:::info Creating destinations from service bindings
+
+The SAP Cloud SDK provides the `getServiceBinding()` function to retrieve the first service binding from `VCAP_SERVICES` for a given service type.
+It also provides the `transformServiceBindingToDestination()` function to transform known service bindings to destinations.
+
+<details>
+<summary>Example Usage</summary>
+
+```ts
+import {
+  getServiceBinding,
+  transformServiceBindingToDestination
+} from '@sap-cloud-sdk/connectivity';
+
+const service = getServiceBinding('aicore');
+
+await transformServiceBindingToDestination(service);
+```
+
+</details>
+
+`transformServiceBindingToDestination()` supports the [default service types](#service-binding-environment-variables) as listed above.
+
+The transformation includes auth token flows for destinations with type `OAuth2ClientCredentials` and adds retrieved tokens to the destination.
+If the provided service binding is not supported, an error is thrown.
+
+:::
+
 ### Destination Service
 
 In a productive environment, in most cases you will use the [destination service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html) to retrieve destinations.
