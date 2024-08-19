@@ -454,18 +454,6 @@ If not explicitly specified, `OnBehalfOf.TECHNICAL_USER_CURRENT_TENANT` is used.
 Adding custom parameters to the `ServiceBindingDestinationOptions` can be done using the [`withOption(OptionsEnhancer)`](<pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.Builder.html#withOption(com.sap.cloud.sdk.cloudplatform.connectivity.ServiceBindingDestinationOptions.OptionsEnhancer)>) method.
 Hereby, an [`OptionsEnhancer`](pathname:///java-api/v5/com/sap/cloud/sdk/cloudplatform/connectivity/ServiceBindingDestinationOptions.OptionsEnhancer.html) is a type-safe representation of arbitrary parameters.
 
-For OAuth2 based service bindings, the `OAuth2Options.TokenRetrievalTimeout` can be used to customize the timeout for token requests.
-The below example sets a timeout of 100 seconds:
-
-```java
-ServiceBindingDestinationOptions
-            .forService(ServiceIdentifier.of("my-service"))
-            .withOption(
-                OAuth2Options.TokenRetrievalTimeout.of(
-                  TimeLimiterConfiguration.of(Duration.ofSeconds(100))))
-            .build();
-```
-
 <details>
 <summary>Example: Custom Service Binding Transformation</summary>
 
