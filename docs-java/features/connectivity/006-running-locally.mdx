@@ -151,11 +151,12 @@ cf restart app-name
 
   - `credentials.onpremise_proxy_port` (we will refer to the value as _proxy-port_ hereafter)
   - `credentials.onpremise_proxy_host` (we will refer to the value as _proxy-host_ hereafter)
+  - `credentials.onpremise_proxy_http_port` (we will refer to the value as _proxy_http_port_ hereafter)
 
 - Create an SSH session to your app container with the following command and let the session opened:
 
 ```bash
-cf ssh app-name -L proxy-port:proxy-host:proxy-port
+cf ssh app-name -L proxy-port:proxy-host:proxy_http_port
 ```
 
 - Copy over the `VCAP_SERVICES` of your actually deployed app to your local machine so that the app can access it.
