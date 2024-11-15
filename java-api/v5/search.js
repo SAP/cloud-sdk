@@ -1,1 +1,354 @@
-var noResult={l:"No results found"},loading={l:"Loading search index..."},catModules="Modules",catPackages="Packages",catTypes="Classes and Interfaces",catMembers="Members",catSearchTags="Search Tags",highlight='<span class="result-highlight">$&</span>',searchPattern="",fallbackPattern="",RANKING_THRESHOLD=2,NO_MATCH=65535,MIN_RESULTS=3,MAX_RESULTS=500,UNNAMED="<Unnamed>";function escapeHtml(e){return e.replace(/</g,"&lt;").replace(/>/g,"&gt;")}function getHighlightedText(e,t,a){var r=escapeHtml(e),c=r.replace(t,highlight);return c===r&&(c=r.replace(a,highlight)),c}function getURLPrefix(e){var t="",a="/";return e.item.category===catModules?e.item.l+a:e.item.category===catPackages&&e.item.m?e.item.m+a:(e.item.category!==catTypes&&e.item.category!==catMembers||(e.item.m?t=e.item.m+a:$.each(packageSearchIndex,(function(r,c){c.m&&e.item.p===c.l&&(t=c.m+a)}))),t)}function createSearchPattern(e){var t="",a=!1;return e.replace(/,\s*/g,", ").trim().split(/\s+/).forEach((function(e,r){r>0&&(t+=a&&/^\w/.test(e)?"\\s+":"\\s*");for(var c=e.split(/(?=[A-Z,.()<>[\/])/),n=0;n<c.length;n++){var i=c[n];""!==i&&(t+=$.ui.autocomplete.escapeRegex(i),(a=/\w$/.test(i))&&(t+="([a-z0-9_$<>\\[\\]]*?)"))}})),t}function createMatcher(e,t){var a=/[A-Z]/.test(e);return new RegExp(e,t+(a?"":"i"))}var watermark="Search";function rankMatch(e,t){if(!e)return NO_MATCH;var a=e.index,r=e.input,c=2,n=0;0===a||/\W/.test(r[a-1])||"_"===r[a]?c=0:("_"===r[a-1]||r[a]===r[a].toUpperCase()&&!/^[A-Z0-9_$]+$/.test(r))&&(c=1);var i=a+e[0].length,s=r.indexOf("("),l=s>-1?s:r.length;if(t!==catModules&&t!==catSearchTags){var o=t===catPackages?"/":".";(s>-1&&s<a||r.lastIndexOf(o,l)>=i)&&(n+=2)}for(var u=e[0].length===l?0:1,g=1;g<e.length;g++)e[g]&&(u+=e[g].length);return t===catTypes&&(/[A-Z]/.test(r.substring(i))&&(u+=5),/[A-Z]/.test(r.substring(0,a))&&(u+=5)),c+n+u/200}function doSearch(e,t){var a=[];if(searchPattern=createSearchPattern(e.term),fallbackPattern=createSearchPattern(e.term.toLowerCase()),""===searchPattern)return this.close();var r=createMatcher(searchPattern,""),c=new RegExp(fallbackPattern,"i");function n(e,t,a,r){if(e){var c=[];return $.each(e,(function(e,n){n.category=a;var i=rankMatch(t.exec(r(n)),a);return i<RANKING_THRESHOLD&&c.push({ranking:i,item:n}),c.length<=MAX_RESULTS})),c.sort((function(e,t){return e.ranking-t.ranking})).map((function(e){return e.item}))}return[]}function i(e,t,i){var s=n(e,r,t,i);if(a=a.concat(s),s.length<=MIN_RESULTS&&!r.ignoreCase){var l=n(e,c,t,i);a=a.concat(l.filter((function(e){return-1===s.indexOf(e)})))}}i(moduleSearchIndex,catModules,(function(e){return e.l})),i(packageSearchIndex,catPackages,(function(t){return t.m&&e.term.indexOf("/")>-1?t.m+"/"+t.l:t.l})),i(typeSearchIndex,catTypes,(function(t){return e.term.indexOf(".")>-1?t.p+"."+t.l:t.l})),i(memberSearchIndex,catMembers,(function(t){return e.term.indexOf(".")>-1?t.p+"."+t.c+"."+t.l:t.l})),i(tagSearchIndex,catSearchTags,(function(e){return e.l})),indexFilesLoaded()?updateSearchResults=function(){}:(updateSearchResults=function(){doSearch(e,t)},a.unshift(loading)),t(a)}$((function(){var e=$("#search-input"),t=$("#reset-button");e.val(""),e.prop("disabled",!1),t.prop("disabled",!1),e.val(watermark).addClass("watermark"),e.blur((function(){0===$(this).val().length&&$(this).val(watermark).addClass("watermark")})),e.on("click keydown paste",(function(){$(this).val()===watermark&&$(this).val("").removeClass("watermark")})),t.click((function(){e.val("").focus()})),e.focus()[0].setSelectionRange(0,0)})),$.widget("custom.catcomplete",$.ui.autocomplete,{_create:function(){this._super(),this.widget().menu("option","items","> :not(.ui-autocomplete-category)")},_renderMenu:function(e,t){var a=this,r="";a.menu.bindings=$(),$.each(t,(function(t,c){var n;c.category&&c.category!==r&&(e.append('<li class="ui-autocomplete-category">'+c.category+"</li>"),r=c.category),n=a._renderItemData(e,c),c.category?(n.attr("aria-label",c.category+" : "+c.l),n.attr("class","result-item")):(n.attr("aria-label",c.l),n.attr("class","result-item"))}))},_renderItem:function(e,t){var a="",r=createMatcher(escapeHtml(searchPattern),"g"),c=new RegExp(fallbackPattern,"gi");a=t.category===catModules||t.category===catPackages?getHighlightedText(t.l,r,c):t.category===catTypes?t.p&&t.p!==UNNAMED?getHighlightedText(t.p+"."+t.l,r,c):getHighlightedText(t.l,r,c):t.category===catMembers?t.p&&t.p!==UNNAMED?getHighlightedText(t.p+"."+t.c+"."+t.l,r,c):getHighlightedText(t.c+"."+t.l,r,c):t.category===catSearchTags?getHighlightedText(t.l,r,c):t.l;var n=$("<li/>").appendTo(e),i=$("<div/>").appendTo(n);return t.category===catSearchTags&&t.h?t.d?i.html(a+'<span class="search-tag-holder-result"> ('+t.h+')</span><br><span class="search-tag-desc-result">'+t.d+"</span><br>"):i.html(a+'<span class="search-tag-holder-result"> ('+t.h+")</span>"):t.m?i.html(t.m+"/"+a):i.html(a),n}}),$((function(){$("#search-input").catcomplete({minLength:1,delay:300,source:doSearch,response:function(e,t){t.content.length?$("#search-input").empty():t.content.push(noResult)},autoFocus:!0,focus:function(e,t){return!1},position:{collision:"flip"},select:function(e,t){if(t.item.category){var a=getURLPrefix(t);t.item.category===catModules?a+="module-summary.html":t.item.category===catPackages?t.item.u?a=t.item.u:a+=t.item.l.replace(/\./g,"/")+"/package-summary.html":t.item.category===catTypes?t.item.u?a=t.item.u:t.item.p===UNNAMED?a+=t.item.l+".html":a+=t.item.p.replace(/\./g,"/")+"/"+t.item.l+".html":t.item.category===catMembers?(t.item.p===UNNAMED?a+=t.item.c+".html#":a+=t.item.p.replace(/\./g,"/")+"/"+t.item.c+".html#",t.item.u?a+=t.item.u:a+=t.item.l):t.item.category===catSearchTags&&(a+=t.item.u),top!==window?parent.classFrame.location=pathtoroot+a:window.location.href=pathtoroot+a,$("#search-input").focus()}}})}));
+/*
+ * Copyright (c) 2015, 2020, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
+
+var noResult = {l: "No results found"};
+var loading = {l: "Loading search index..."};
+var catModules = "Modules";
+var catPackages = "Packages";
+var catTypes = "Classes and Interfaces";
+var catMembers = "Members";
+var catSearchTags = "Search Tags";
+var highlight = "<span class=\"result-highlight\">$&</span>";
+var searchPattern = "";
+var fallbackPattern = "";
+var RANKING_THRESHOLD = 2;
+var NO_MATCH = 0xffff;
+var MIN_RESULTS = 3;
+var MAX_RESULTS = 500;
+var UNNAMED = "<Unnamed>";
+function escapeHtml(str) {
+    return str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+function getHighlightedText(item, matcher, fallbackMatcher) {
+    var escapedItem = escapeHtml(item);
+    var highlighted = escapedItem.replace(matcher, highlight);
+    if (highlighted === escapedItem) {
+        highlighted = escapedItem.replace(fallbackMatcher, highlight)
+    }
+    return highlighted;
+}
+function getURLPrefix(ui) {
+    var urlPrefix="";
+    var slash = "/";
+    if (ui.item.category === catModules) {
+        return ui.item.l + slash;
+    } else if (ui.item.category === catPackages && ui.item.m) {
+        return ui.item.m + slash;
+    } else if (ui.item.category === catTypes || ui.item.category === catMembers) {
+        if (ui.item.m) {
+            urlPrefix = ui.item.m + slash;
+        } else {
+            $.each(packageSearchIndex, function(index, item) {
+                if (item.m && ui.item.p === item.l) {
+                    urlPrefix = item.m + slash;
+                }
+            });
+        }
+    }
+    return urlPrefix;
+}
+function createSearchPattern(term) {
+    var pattern = "";
+    var isWordToken = false;
+    term.replace(/,\s*/g, ", ").trim().split(/\s+/).forEach(function(w, index) {
+        if (index > 0) {
+            // whitespace between identifiers is significant
+            pattern += (isWordToken && /^\w/.test(w)) ? "\\s+" : "\\s*";
+        }
+        var tokens = w.split(/(?=[A-Z,.()<>[\/])/);
+        for (var i = 0; i < tokens.length; i++) {
+            var s = tokens[i];
+            if (s === "") {
+                continue;
+            }
+            pattern += $.ui.autocomplete.escapeRegex(s);
+            isWordToken =  /\w$/.test(s);
+            if (isWordToken) {
+                pattern += "([a-z0-9_$<>\\[\\]]*?)";
+            }
+        }
+    });
+    return pattern;
+}
+function createMatcher(pattern, flags) {
+    var isCamelCase = /[A-Z]/.test(pattern);
+    return new RegExp(pattern, flags + (isCamelCase ? "" : "i"));
+}
+var watermark = 'Search';
+$(function() {
+    var search = $("#search-input");
+    var reset = $("#reset-button");
+    search.val('');
+    search.prop("disabled", false);
+    reset.prop("disabled", false);
+    search.val(watermark).addClass('watermark');
+    search.blur(function() {
+        if ($(this).val().length === 0) {
+            $(this).val(watermark).addClass('watermark');
+        }
+    });
+    search.on('click keydown paste', function() {
+        if ($(this).val() === watermark) {
+            $(this).val('').removeClass('watermark');
+        }
+    });
+    reset.click(function() {
+        search.val('').focus();
+    });
+    search.focus()[0].setSelectionRange(0, 0);
+});
+$.widget("custom.catcomplete", $.ui.autocomplete, {
+    _create: function() {
+        this._super();
+        this.widget().menu("option", "items", "> :not(.ui-autocomplete-category)");
+    },
+    _renderMenu: function(ul, items) {
+        var rMenu = this;
+        var currentCategory = "";
+        rMenu.menu.bindings = $();
+        $.each(items, function(index, item) {
+            var li;
+            if (item.category && item.category !== currentCategory) {
+                ul.append("<li class=\"ui-autocomplete-category\">" + item.category + "</li>");
+                currentCategory = item.category;
+            }
+            li = rMenu._renderItemData(ul, item);
+            if (item.category) {
+                li.attr("aria-label", item.category + " : " + item.l);
+                li.attr("class", "result-item");
+            } else {
+                li.attr("aria-label", item.l);
+                li.attr("class", "result-item");
+            }
+        });
+    },
+    _renderItem: function(ul, item) {
+        var label = "";
+        var matcher = createMatcher(escapeHtml(searchPattern), "g");
+        var fallbackMatcher = new RegExp(fallbackPattern, "gi")
+        if (item.category === catModules) {
+            label = getHighlightedText(item.l, matcher, fallbackMatcher);
+        } else if (item.category === catPackages) {
+            label = getHighlightedText(item.l, matcher, fallbackMatcher);
+        } else if (item.category === catTypes) {
+            label = (item.p && item.p !== UNNAMED)
+                    ? getHighlightedText(item.p + "." + item.l, matcher, fallbackMatcher)
+                    : getHighlightedText(item.l, matcher, fallbackMatcher);
+        } else if (item.category === catMembers) {
+            label = (item.p && item.p !== UNNAMED)
+                    ? getHighlightedText(item.p + "." + item.c + "." + item.l, matcher, fallbackMatcher)
+                    : getHighlightedText(item.c + "." + item.l, matcher, fallbackMatcher);
+        } else if (item.category === catSearchTags) {
+            label = getHighlightedText(item.l, matcher, fallbackMatcher);
+        } else {
+            label = item.l;
+        }
+        var li = $("<li/>").appendTo(ul);
+        var div = $("<div/>").appendTo(li);
+        if (item.category === catSearchTags && item.h) {
+            if (item.d) {
+                div.html(label + "<span class=\"search-tag-holder-result\"> (" + item.h + ")</span><br><span class=\"search-tag-desc-result\">"
+                                + item.d + "</span><br>");
+            } else {
+                div.html(label + "<span class=\"search-tag-holder-result\"> (" + item.h + ")</span>");
+            }
+        } else {
+            if (item.m) {
+                div.html(item.m + "/" + label);
+            } else {
+                div.html(label);
+            }
+        }
+        return li;
+    }
+});
+function rankMatch(match, category) {
+    if (!match) {
+        return NO_MATCH;
+    }
+    var index = match.index;
+    var input = match.input;
+    var leftBoundaryMatch = 2;
+    var periferalMatch = 0;
+    // make sure match is anchored on a left word boundary
+    if (index === 0 || /\W/.test(input[index - 1]) || "_" === input[index]) {
+        leftBoundaryMatch = 0;
+    } else if ("_" === input[index - 1] || (input[index] === input[index].toUpperCase() && !/^[A-Z0-9_$]+$/.test(input))) {
+        leftBoundaryMatch = 1;
+    }
+    var matchEnd = index + match[0].length;
+    var leftParen = input.indexOf("(");
+    var endOfName = leftParen > -1 ? leftParen : input.length;
+    // exclude peripheral matches
+    if (category !== catModules && category !== catSearchTags) {
+        var delim = category === catPackages ? "/" : ".";
+        if (leftParen > -1 && leftParen < index) {
+            periferalMatch += 2;
+        } else if (input.lastIndexOf(delim, endOfName) >= matchEnd) {
+            periferalMatch += 2;
+        }
+    }
+    var delta = match[0].length === endOfName ? 0 : 1; // rank full match higher than partial match
+    for (var i = 1; i < match.length; i++) {
+        // lower ranking if parts of the name are missing
+        if (match[i])
+            delta += match[i].length;
+    }
+    if (category === catTypes) {
+        // lower ranking if a type name contains unmatched camel-case parts
+        if (/[A-Z]/.test(input.substring(matchEnd)))
+            delta += 5;
+        if (/[A-Z]/.test(input.substring(0, index)))
+            delta += 5;
+    }
+    return leftBoundaryMatch + periferalMatch + (delta / 200);
+
+}
+function doSearch(request, response) {
+    var result = [];
+    searchPattern = createSearchPattern(request.term);
+    fallbackPattern = createSearchPattern(request.term.toLowerCase());
+    if (searchPattern === "") {
+        return this.close();
+    }
+    var camelCaseMatcher = createMatcher(searchPattern, "");
+    var fallbackMatcher = new RegExp(fallbackPattern, "i");
+
+    function searchIndexWithMatcher(indexArray, matcher, category, nameFunc) {
+        if (indexArray) {
+            var newResults = [];
+            $.each(indexArray, function (i, item) {
+                item.category = category;
+                var ranking = rankMatch(matcher.exec(nameFunc(item)), category);
+                if (ranking < RANKING_THRESHOLD) {
+                    newResults.push({ranking: ranking, item: item});
+                }
+                return newResults.length <= MAX_RESULTS;
+            });
+            return newResults.sort(function(e1, e2) {
+                return e1.ranking - e2.ranking;
+            }).map(function(e) {
+                return e.item;
+            });
+        }
+        return [];
+    }
+    function searchIndex(indexArray, category, nameFunc) {
+        var primaryResults = searchIndexWithMatcher(indexArray, camelCaseMatcher, category, nameFunc);
+        result = result.concat(primaryResults);
+        if (primaryResults.length <= MIN_RESULTS && !camelCaseMatcher.ignoreCase) {
+            var secondaryResults = searchIndexWithMatcher(indexArray, fallbackMatcher, category, nameFunc);
+            result = result.concat(secondaryResults.filter(function (item) {
+                return primaryResults.indexOf(item) === -1;
+            }));
+        }
+    }
+
+    searchIndex(moduleSearchIndex, catModules, function(item) { return item.l; });
+    searchIndex(packageSearchIndex, catPackages, function(item) {
+        return (item.m && request.term.indexOf("/") > -1)
+            ? (item.m + "/" + item.l) : item.l;
+    });
+    searchIndex(typeSearchIndex, catTypes, function(item) {
+        return request.term.indexOf(".") > -1 ? item.p + "." + item.l : item.l;
+    });
+    searchIndex(memberSearchIndex, catMembers, function(item) {
+        return request.term.indexOf(".") > -1
+            ? item.p + "." + item.c + "." + item.l : item.l;
+    });
+    searchIndex(tagSearchIndex, catSearchTags, function(item) { return item.l; });
+
+    if (!indexFilesLoaded()) {
+        updateSearchResults = function() {
+            doSearch(request, response);
+        }
+        result.unshift(loading);
+    } else {
+        updateSearchResults = function() {};
+    }
+    response(result);
+}
+$(function() {
+    $("#search-input").catcomplete({
+        minLength: 1,
+        delay: 300,
+        source: doSearch,
+        response: function(event, ui) {
+            if (!ui.content.length) {
+                ui.content.push(noResult);
+            } else {
+                $("#search-input").empty();
+            }
+        },
+        autoFocus: true,
+        focus: function(event, ui) {
+            return false;
+        },
+        position: {
+            collision: "flip"
+        },
+        select: function(event, ui) {
+            if (ui.item.category) {
+                var url = getURLPrefix(ui);
+                if (ui.item.category === catModules) {
+                    url += "module-summary.html";
+                } else if (ui.item.category === catPackages) {
+                    if (ui.item.u) {
+                        url = ui.item.u;
+                    } else {
+                        url += ui.item.l.replace(/\./g, '/') + "/package-summary.html";
+                    }
+                } else if (ui.item.category === catTypes) {
+                    if (ui.item.u) {
+                        url = ui.item.u;
+                    } else if (ui.item.p === UNNAMED) {
+                        url += ui.item.l + ".html";
+                    } else {
+                        url += ui.item.p.replace(/\./g, '/') + "/" + ui.item.l + ".html";
+                    }
+                } else if (ui.item.category === catMembers) {
+                    if (ui.item.p === UNNAMED) {
+                        url += ui.item.c + ".html" + "#";
+                    } else {
+                        url += ui.item.p.replace(/\./g, '/') + "/" + ui.item.c + ".html" + "#";
+                    }
+                    if (ui.item.u) {
+                        url += ui.item.u;
+                    } else {
+                        url += ui.item.l;
+                    }
+                } else if (ui.item.category === catSearchTags) {
+                    url += ui.item.u;
+                }
+                if (top !== window) {
+                    parent.classFrame.location = pathtoroot + url;
+                } else {
+                    window.location.href = pathtoroot + url;
+                }
+                $("#search-input").focus();
+            }
+        }
+    });
+});

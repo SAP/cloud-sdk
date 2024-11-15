@@ -1,1 +1,1 @@
-moduleSearchIndex=[],updateSearchResults();
+moduleSearchIndex = [];updateSearchResults();
