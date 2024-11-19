@@ -4,6 +4,8 @@ This guide is based on [Google's style guide](https://developers.google.com/styl
 
 ## Table of Contents
 
+- [Style Guide](#style-guide)
+  - [Table of Contents](#table-of-contents)
 - [Formatting](#formatting)
   - [Inline Code](#inline-code)
     - [Use Code Font](#use-code-font)
@@ -21,7 +23,7 @@ This guide is based on [Google's style guide](https://developers.google.com/styl
     - [Use Ordinary Font for URLs that Reader Should Follow in a Browser](#use-ordinary-font-for-urls-that-reader-should-follow-in-a-browser)
   - [Use `example.com` for Example Domain](#use-examplecom-for-example-domain)
   - [Filenames and File Paths](#filenames-and-file-paths)
-    - [Use Code Font](#use-code-font)
+    - [Use Code Font](#use-code-font-1)
     - [Include the Word File After the Filename](#include-the-word-file-after-the-filename)
     - [Prefer Hyphens, Not Underscores, To Separate Words in File Paths](#prefer-hyphens-not-underscores-to-separate-words-in-file-paths)
     - [Use Linux File Paths and Separators by Default](#use-linux-file-paths-and-separators-by-default)
@@ -70,9 +72,14 @@ This guide is based on [Google's style guide](https://developers.google.com/styl
     - [Use Numbered List for Steps To Be Performed in Order](#use-numbered-list-for-steps-to-be-performed-in-order)
     - [Use Description List With Headings for Describing Terms](#use-description-list-with-headings-for-describing-terms)
       - [Exception: Capital Letter](#exception-capital-letter)
-- [SEO](#search-engine-optimization)
-  - [Slugs](#Slugs)
-- [Common Mistakes](#common-mistakes)
+- [Search Engine Optimization](#search-engine-optimization)
+  - [Slugs](#slugs)
+    - [Do not include base path in the slug](#do-not-include-base-path-in-the-slug)
+    - [Include Keywords](#include-keywords)
+    - [Use Function Words](#use-function-words)
+    - [Keep It Short](#keep-it-short)
+    - [Use Lowercase Letters](#use-lowercase-letters)
+    - [Reference Files By Their Path, Not Their Slug](#reference-files-by-their-path-not-their-slug)
 
 # Formatting
 

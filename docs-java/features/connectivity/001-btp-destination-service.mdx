@@ -94,18 +94,14 @@ Don't worry, there is [caching](#default-caching-behavior) in place to prevent e
 For retrieving destinations with authentication type [OAuth Refresh Token Authentication](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/oauth-refresh-token-authentication?version=Cloud) the client has to provide the refresh token as part of the `DestinationOptions`:
 
 ```java {9}
-DestinationLoader loader;
+var service = new DestinationService();
 
-DestinationOptions options =
-    DestinationOptions
-        .builder()
-        .augmentBuilder(
-            DestinationServiceOptionsAugmenter
-                .augmenter()
-                .refreshToken("<my-refresh-token>"))
-        .build();
+var opts = DestinationOptions.builder()
+                .augmentBuilder(DestinationServiceOptionsAugmenter.augmenter()
+                        .refreshToken("<my-refresh-token>")
+                ).build();
 
-Try<Destination> maybeDestination = loader.tryGetDestination("my-destination", options);
+Try<Destination> maybeDestination = service.tryGetDestination("my-destination", options);
 ```
 
 Please make sure that the refresh token matches the current tenant (and user, if applicable) set in the current [`ThreadContext`](/docs/java/features/multi-tenancy/thread-context).
@@ -134,6 +130,50 @@ For example, to access the `URI` property, you can use the following code:
 Destination destination;
 String uri = destination.get(DestinationProperty.URI).getOrElse("");
 ```
+
+### Destination Fragments (Experimental)
+
+You can obtain destinations with additional data from [Destination Fragments](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/extending-destinations-with-fragments).
+
+```java
+var service = new DestinationService();
+var opts = DestinationOptions.builder()
+                .augmentBuilder(DestinationServiceOptionsAugmenter.augmenter()
+                        .fragmentName("my-fragment")
+                ).build();
+Destination destination = service.tryGetDestination("my-destination", opts).get();
+```
+
+The obtained destination will be cached based on the provided fragment name.
+
+:::caution Caching Strategy
+In general, it is recommended to disable the [change detection mode](#change-detection-mode) when using destinations with fragments.
+Leaving change detection enabled would effectively disable the cache for any fragment-based destinations.
+
+However, if your use case benefits significantly from change detection (e.g. when using many destinations frequently), but fragments are seldomly used, it may be worthwhile keeping change detection enabled.
+:::
+
+Since currently destination fragments can only be created via REST API calls, below is an example of how one can create a fragment using the SAP Cloud SDK.
+
+<details>
+<summary>Create a Fragment</summary>
+
+```java
+var opts = ServiceBindingDestinationOptions.forService(ServiceIdentifier.DESTINATION).build();
+var client = ApacheHttpClient5Accessor.getHttpClient(ServiceBindingDestinationLoader.defaultLoaderChain()
+        .getDestination(opts));
+
+var post = new HttpPost("/subaccountDestinationFragments")
+post.setEntity(new StringEntity("""
+        {
+          "FragmentName": "my-fragment",
+          "URL": https://my.fragment.com
+        }
+        """, ContentType.APPLICATION_JSON));
+client.execute(post);
+```
+
+</details>
 
 ### Multitenancy
 
