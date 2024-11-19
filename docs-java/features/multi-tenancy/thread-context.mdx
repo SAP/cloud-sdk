@@ -221,7 +221,7 @@ By contrast, to pass on the current context, but modifying the tenant (and only 
 
 ```java
 Tenant myTenant = new DefaultTenant("foo");
-Callable myTaskWithTenant = () -> TenantAccessor.executeWithTenant(myTask, myTenant);
+Callable myTaskWithTenant = () -> TenantAccessor.executeWithTenant(myTenant, myTask);
 
 ThreadContextExecutors.submit(myTaskWithTenant);
 ```
