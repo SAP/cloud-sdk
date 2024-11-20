@@ -200,6 +200,44 @@ The SAP Cloud SDK provides a default implementation for the transformation of se
 
 The default implementation also retrieves a service token, if needed.
 
+Additionally, we provide a default implementation for the transformation of service bindings to OAuth2ClientCredentials destinations.
+
+It assumes that your service binding is of the following structure:
+
+```json
+{
+  "VCAP_SERVICES": {
+    "custom-service": [
+      {
+        "name": "my-custom-service",
+        "label": "custom-service",
+        "tags": ["custom-service"],
+        "url": "https://example.com",
+        "credentials": {
+          "clientid": "CLIENT_ID",
+          "clientsecret": "CLIENT_SECRET",
+        }
+      }
+    ] 
+  }
+}
+```
+
+If your service url is not in the `url` property, you can alternatively provide a `url` property as part of the `options` object.
+
+The following is a multi-tenant example, where the user's jwt is used for tenant-isolation in the cache together with a custom url as target.
+
+```ts
+const serviceBinding = getServiceBinding('custom-service');
+const userJwt = retrieveJwt(request);
+const destination = getDestinationFromServiceBinding({
+  destinationName: 'custom-service',
+  jwt: userJwt,
+  useCache: true,
+  transformServiceBindingToClientCredentialsDestination(serviceBinding, { url: 'custom-url', jwt: userJwt })
+})
+```
+
 For other types of service bindings or if you want to overwrite the default behavior, provide a callback function (`serviceBindingTransformFn()`) in the request execution.
 
 For example, if you have a binding for a custom service:
@@ -210,8 +248,8 @@ For example, if you have a binding for a custom service:
     "custom-service": [
       // This object is passed to `serviceBindingTransformFn()`
       {
-        "label": "custom-service",
         "name": "my-custom-service",
+        "label": "custom-service",
         "credentials": {
           "url": "https://example.com",
           "usr": "USERNAME",
