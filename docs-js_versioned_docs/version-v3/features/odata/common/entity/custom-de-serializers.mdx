@@ -1,0 +1,63 @@
+Since version 2 of the SAP Cloud SDK you can customize how the data you get from a service is _deserialized_ and _serialize_ when sending it back to the service.
+
+To influence (de-)serialization you have to provide your custom (de-)serializers to a service.
+
+A (de-)serializer is an object of type `DeSerializer` that defines the following callback functions:
+
+- `deserialize()`: Takes a value as given by the service and returns a deserialized value, i.e. its represenation in code.
+- `serialize()`: Takes a deserialized value and transforms it to the format and type expected by the service.
+- `serializeToUri()` (optional): For some EDM types the serialized format differs between values in a payload and URI.
+  This function takes a deserialized value and transforms it to a string with the format expected by the service for URIs.
+  The second parameter of this callback function references the `serialize()` function, which can optionally be used as a basis for URI serialization.
+  If this function is not specified, the URI serialization defaults to the `serialize()` function.
+
+The type `DeSerializer` has one generic parameter, that represents the deserialized type.
+
+Example:
+
+```ts
+const doubleDeSerializer: DeSerializer<number> = {
+  deserialize: (val: string) => Number(val),
+  serialize: (val: number) => val.toString(),
+  serializeToUri: (value, serialize) => `${serialize(value)}D`
+};
+```
+
+The example above shows a simplified version of the SAP Cloud SDK default (de-)serializer for the EDM type `Edm.Double`:
+
+- The `deserialize()` function converts the raw value to a number.
+- The `serialize()` function converts the deserialized value to a string.
+- The `serializeToUri()` function makes use of the `serialize()` function and appends a `D` at the end of the string.
+
+To specify custom (de-)serializers for a service, you have to pass an object to the service function, that maps from EDM type(s) to your custom (de-)serializer.
+All unspecified EDM types are still (de-)serialized using the SAP Cloud SDK defaults.
+
+Example, using the above `doubleDeSerializer` for the business partner service:
+
+```ts
+const customDeSerializers = { 'Edm.Double': doubleDeSerializer };
+const { businessPartnerApi } = businessPartnerService(customDeSerializers);
+```
+
+All requests against the `businessPartnerApi` will now use the custom (de-)serializers for `Edm.Double` and the default (de-)serializers for all other EDM types.
+
+#### Using (De-)Serializers for Temporal
+
+[Temporal](https://tc39.es/proposal-temporal/docs/) is a stage 3 proposal for a date/time API in ECMAScript.
+At the time, there is polyfill available, but it is not recommended for productive use.
+Once it is recommended for productive use, the SAP Cloud SDK will adapt it as the default over Moment.js.
+Temporal-based (de-)serializers for the SAP Cloud SDK are available as a separate npm package, `@sap-cloud-sdk/temporal-de-serializers`.
+
+Adapt your code to use this package, for example:
+
+```ts
+import { temporalDeSerializersV2 } from '@sap-cloud-sdk/temporal-de-serializers';
+const { businessPartnerApi } = businessPartnerService(temporalDeSerializersV2);
+
+businessPartnerApi
+  .entityBuilder()
+  .organizationFoundationDate(
+    Temporal.PlainDateTime.from('1995-12-07T03:24:30')
+  )
+  .build();
+```

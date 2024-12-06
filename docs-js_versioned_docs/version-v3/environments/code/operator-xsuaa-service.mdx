@@ -1,0 +1,48 @@
+```yaml title="operator-xsuaa-service.yml"
+apiVersion: services.cloud.sap.com/v1alpha1
+kind: ServiceInstance
+metadata:
+  name: operator-xsuaa-service
+spec:
+  serviceOfferingName: xsuaa
+  servicePlanName: application
+  parameters:
+    xsappname: kubernetes-xsuaa
+    tenant-mode: shared
+    scopes:
+      - name: '$XSAPPNAME.Callback'
+        description: 'With this scope set, the callbacks for tenant onboarding, offboarding and getDependencies can be called.'
+        grant-as-authority-to-apps:
+          - $XSAPPNAME(application,sap-provisioning,tenant-onboarding)
+    role-templates:
+      - name: TOKEN_EXCHANGE
+        description: Token exchange
+        scope-references:
+          - uaa.user
+      - name: 'MultitenancyCallbackRoleTemplate'
+        description: 'Call callback-services of applications'
+        scope-references:
+          - '$XSAPPNAME.Callback'
+    oauth2-configuration:
+      grant-types:
+        - authorization_code
+        - client_credentials
+        - password
+        - refresh_token
+        - urn:ietf:params:oauth:grant-type:saml2-bearer
+        - user_token
+        - client_x509
+        - urn:ietf:params:oauth:grant-type:jwt-bearer
+      # Allowed redirect URIs in case you want to use an approuter behind an ingress for user login
+      redirect-uris:
+        - https://*/**
+```
+
+```yaml title="operator-xsuaa-binding.yml"
+apiVersion: services.cloud.sap.com/v1alpha1
+kind: ServiceBinding
+metadata:
+  name: operator-xsuaa-service
+spec:
+  serviceInstanceName: operator-xsuaa-service
+```

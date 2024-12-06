@@ -1,0 +1,9 @@
+OData batch requests combine multiple operations into one `POST` operation, allowing you to execute multiple requests with just one network call.
+This can significantly reduce the network overhead you have to deal with when you want to execute many requests.
+
+Every SAP Cloud SDK client provides a `batch()` function that takes [retrieve requests](#retrieve-request) and [changesets](#changeset).
+You can combine those arbitrarily.
+To execute batch requests, use the `execute()` method - it works the same way as for single requests.
+
+The response of a `batch` request is a list of `BatchResponse` instances.
+Each of the items in the response is either a `ReadResponse`, `WriteResponses` or an `ErrorResponse`, see [Responses](#responses).

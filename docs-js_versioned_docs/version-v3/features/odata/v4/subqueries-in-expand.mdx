@@ -1,0 +1,28 @@
+Note that you can create very complex queries within the expand scope:
+
+```ts
+const { peopleApi } = peopleService();
+peopleApi
+  .requestBuilder()
+  .getAll()
+  .expand(
+    peopleApi.schema.FRIENDS.select(
+      peopleApi.schema.FIRST_NAME,
+      peopleApi.schema.ADDRESS_INFO
+    )
+      .filter(peopleApi.schema.LAST_NAME.equals('Miller'))
+      .orderBy(asc(peopleApi.schema.GENDER))
+      .top(1)
+      .skip(1)
+  );
+```
+
+In this example, the filter will reduce the number of friends to be shown.
+The effect of a filter depends on whether it is used inside or outside an `expand()` method.
+The different cases are explained in [filters in expand](#filterParentChildren).
+
+The URL for the query will be:
+
+```sql
+/People?$expand=Friends($select=FirstName,AddressInfo;$filter=(LastName eq 'Miller');$skip=1;$top=1;$orderby=Gender asc)
+```

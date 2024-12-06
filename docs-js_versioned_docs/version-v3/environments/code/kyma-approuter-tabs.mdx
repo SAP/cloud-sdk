@@ -1,0 +1,162 @@
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs defaultValue="deployment"
+values={
+  [{ label: 'values.yaml', value: 'values'},
+  { label: 'Chart.yaml', value: 'Chart'},
+  { label: 'configmap.yaml', value: 'configmap'},
+  { label: 'deployment.yaml', value: 'deployment'},
+  { label: 'service.yaml', value: 'service'}]
+}>
+<TabItem value="values">
+
+```yaml
+xsuaaBinding:
+  config:
+    idp:
+    pattern:
+  image:
+    repository: <YOUR_REPO>/k8s-approuter:latest # replace <YOUR_REPO> with your Docker repository
+    tag: latest
+  resources:
+    requests:
+      memory: '256Mi'
+      cpu: '500m'
+    limits:
+      memory: '512Mi'
+      cpu: '1000m'
+```
+
+</TabItem>
+
+<TabItem value="Chart">
+
+```yaml
+apiVersion: v2
+name: approuter-chart
+description: A Helm chart for Kubernetes
+
+# A chart can be either an 'application' or a 'library' chart.
+#
+# Application charts are a collection of templates that can be packaged into versioned archives
+# to be deployed.
+#
+# Library charts provide useful utilities or functions for the chart developer. They're included as
+# a dependency of application charts to inject those utilities and functions into the rendering
+# pipeline. Library charts do not define any templates and therefore cannot be deployed.
+type: application
+
+# This is the chart version. This version number should be incremented each time you make changes
+# to the chart and its templates, including the app version.
+# Versions are expected to follow Semantic Versioning (https://semver.org/)
+version: 0.1.0
+
+# This is the version number of the application being deployed. This version number should be
+# incremented each time you make changes to the application. Versions are not expected to
+# follow Semantic Versioning. They should reflect the version the application is using.
+# It is recommended to use it with quotes.
+appVersion: '1.0.0'
+```
+
+</TabItem>
+
+<TabItem value="configmap">
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "approuter-chart.fullname" . }}-config
+data:
+  {{- if .Values.config.idp }}
+  xs-app.json: {{ printf "{\"welcomeFile\":\"/web-pages/index.html\",\"routes\":[{\"source\":\"/backend-app/(.*)\",\"target\":\"$1\",\"destination\":\"backend\",\"identityProvider\":\"%s\"},{\"source\":\"/web-pages/(.*)\",\"target\":\"$1\",\"localDir\":\"static-resources\",\"identityProvider\":\"%s\"}]}" .Values.config.idp .Values.config.idp | toPrettyJson }}
+  {{- else }}
+  xs-app.json: {{ .Values.config.json | toPrettyJson | quote }}
+  {{ end -}}
+```
+
+</TabItem>
+
+<TabItem value="service">
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "approuter-chart.fullname" . }}-svc
+  labels:
+    {{- include "approuter-chart.labels" . | nindent 4 }}
+spec:
+  ports:
+    - port: 8080
+      targetPort: 5000
+  selector:
+    {{- include "approuter-chart.selectorLabels" . | nindent 4 }}
+```
+
+</TabItem>
+
+<TabItem value="deployment" className="code-block-height-js thin-scrollbar">
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "approuter-chart.fullname" . }}
+  labels:
+    {{- include "approuter-chart.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "approuter-chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "approuter-chart.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "approuter-chart.serviceAccountName" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: 5000
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: PORT
+              value: "5000"
+            - name: destinations
+              value: '[{"name":"backend", "url":"http://{{ printf "%s-%s" .Release.Name "app-chart" | trunc 63 | trimSuffix "-" }}-svc:8080/", "forwardAuthToken": true}]'
+            - name: TENANT_HOST_PATTERN
+              value: {{ .Values.config.pattern | quote }}
+          volumeMounts:
+            - name: xsuaa-volume
+              mountPath: {{ printf "/etc/secrets/sapcp/xsuaa/%s" .Values.xsuaaBinding | quote}}
+              readOnly: true
+            - name: approuter-volume
+              mountPath: "/usr/src/app/xs-app.json"
+              subPath: "xs-app.json"
+              readOnly: true
+      volumes:
+        - name: xsuaa-volume
+          secret:
+            secretName: {{ .Values.xsuaaBinding | quote}}
+        - name: approuter-volume
+          configMap:
+            name: {{ include "approuter-chart.fullname" . }}-config
+            items:
+              - key: xs-app.json
+                path: xs-app.json
+
+
+```
+
+</TabItem>
+
+</Tabs>

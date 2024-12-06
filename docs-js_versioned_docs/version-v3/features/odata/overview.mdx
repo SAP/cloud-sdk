@@ -1,0 +1,48 @@
+---
+id: overview
+title: OData
+sidebar_label: Overview
+description: This article provides an overview of how the SAP Cloud SDK for JavaScript supports connecting to OData services.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - odata
+  - JavaScript
+  - TypeScript
+  - client
+  - generate
+---
+
+## What OData Protocol Versions Are Supported?
+
+| OData protocol version          | SAP Cloud SDK for JavaScript |
+| ------------------------------- | ---------------------------- |
+| [OData v2](odata-v2-client.mdx) | &#10003;                     |
+| [OData v4](odata-v4-client.mdx) | &#10003;                     |
+
+## What Is OData?
+
+[OData](https://www.odata.org/) is an open standard for building and consuming RESTful APIs.
+It defines a query language to send and retrieve data via HTTP and to perform operations on data.
+
+There are two widely used versions of the protocol: OData v2 and OData v4.
+The latter comes with more and improved functionality.
+Full details on the standards are to be found in the [documentation](https://www.odata.org/documentation/).
+
+### Entity Data Model (EDM)
+
+OData uses the Entity Data Model (EDM) to represent values such as strings, numbers, dates, and times.
+Normally when using the SAP Cloud SDK for JavaScript, you won't need to care about the details of EDM.
+When executing a request using the OData client, the SAP Cloud SDK will [automatically convert EDM data types to JavaScript/TypeScript values](./execute-odata-request.mdx#conversion-of-odata-types).
+
+## Code Generator
+
+You can use the SAP Cloud SDK [generator](generate-odata-client.mdx) to generate a typed API client for any OData service.
+The necessary service definitions use the `.edmx` file format and contain metadata of OData service.
+If you have access to the service, you can obtain them by navigating to the `http(s)://<service-path>/$metadata` endpoint.
+The generator can be called via a command-line interface or programmatically.
+
+## Connectivity
+
+The SAP Cloud SDK simplifies connectivity to SAP-enabled OData services via type-safe abstractions over [destinations](../connectivity/destination.mdx), authentication, and related concepts.

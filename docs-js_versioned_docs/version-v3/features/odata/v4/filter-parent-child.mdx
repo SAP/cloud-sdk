@@ -1,0 +1,43 @@
+Depending on the context of the filter it will either filter the parent or the children.
+In the example, a `PERSON` entity relates to zero to N `FRIENDS` entities which are both of type people.
+
+If you want to get all people with first name `John` the query is:
+
+```ts
+const { peopleApi } = peopleService();
+peopleApi
+  .requestBuilder()
+  .getAll()
+  .filter(peopleApi.schema.FIRST_NAME.equals('John'));
+```
+
+If you want to get all people who have at least one friend with first name `John`, the query is:
+
+```ts
+const { peopleApi } = peopleService();
+peopleApi
+  .requestBuilder()
+  .getAll()
+  .filter(
+    peopleApi.schema.FRIENDS.filter(
+      any(peopleApi.schema.FIRST_NAME.equals('John'))
+    )
+  );
+```
+
+The lambda `all()` would enforce that all friends must have the first name `John`.
+The two queries above filter the parent entity person.
+
+In case you want to get all people but reduce the friends in the response, the filter has to be inside the expand:
+
+```ts
+const { peopleApi } = peopleService();
+peopleApi
+  .requestBuilder()
+  .getAll()
+  .expand(
+    peopleApi.schema.FRIENDS.filter(peopleApi.schema.FIRST_NAME.equals('John'))
+  );
+```
+
+This will return all people but only the friends with the first name `John` will be included in the response.

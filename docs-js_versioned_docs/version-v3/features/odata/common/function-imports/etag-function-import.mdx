@@ -1,0 +1,10 @@
+Operations do not support ETag handling automatically.
+If your service requires the version identifier of an entity to be present, you can pass it to the request on your own using the `addCustomHeaders()` method (see example below).
+With this approach, you have to retrieve the required entity with a `GET` request, before executing the function import.
+Note, that if the function import execution succeeds, the version identifier of your entity will be outdated.
+
+```ts
+myFunction()
+  .addCustomHeaders({ 'if-match': entity.versionIdentifier })
+  .execute(destination);
+```
