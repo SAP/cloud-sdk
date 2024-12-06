@@ -1,0 +1,138 @@
+---
+id: retrieve-jwt
+title: How to retrieve JSON Web Tokens (JWT)
+sidebar_label: How to retrieve JWTs
+description: You'll learn how to retrieve a JWT in your application code as well as locally using tools like Postman.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+  - JSON web token
+  - JWT
+---
+
+## Overview
+
+A JSON Web Token (JWT) is a standardized object containing some structured information.
+A JWT contains three parts:
+
+- Header: Containing meta information like hashing algorithm and verification certificates
+- Payload: The actual data
+- Signature: Signature of the Header and Payload for verification
+
+Given a JWT, you can use the information from the header and signature to check if the JWT is valid.
+Therefore, JWTs are used to exchange authorization and authentication information between applications.
+
+## JWT on SAP BTP
+
+The retrieval of a JWT is done by the approuter together with the XSUAA.
+[This guide](https://sap.github.io/cloud-sdk/docs/js/guides/how-to-use-the-approuter) explains these concepts.
+Find a complete setup in the sample applications for [Cloud Foundry](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/cf-sample-application) and [k8s](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/k8s-sample-application).
+The flow is as follows:
+
+- user requests a resource and is not yet authenticated
+- approuter redirects the request to the identity provider (IdP)
+- XSUAA issues a JWT - see [here](#obtain-jwt-programmatically) for details
+- approuter adds the JWT to the request headers and redirects the request to the initially requested resource
+
+A JWT issued this way contains a `JKU` header property.
+This property points to the URL where you can obtain the certificate to verify the JWT.
+The URL must be from the XSUAA domain so that it is trusted and the JWT validation does not fail.
+
+Sometimes you want to use a JWT which is not issued by the XSUAA and approuter.
+Such tokens do not contain a `JKU` at all or a value with a different domain.
+In this case the SAP Cloud SDK does not validate the token, but the destination service does.
+You have to set the [destination properties](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/283cd2d1c72147a18c69daf681650f07.html) `x_user_token.jwks` or `x_user_token.jwks_uri` to provide the information to verify the custom JWT.
+
+If you use a custom JWT without the approuter and XSUAA service, it is your responsibility to do the access control in the application.
+
+:::caution
+A JWT has a limited lifetime but is nevertheless a sensitive security object.
+Do not log complete JWTs in the application, share them with others, or use online tools to decode them.
+:::
+
+## Use JWT in Application
+
+After the JWT was issued, it is added to the request headers by the approuter:
+
+```json
+{
+  "headers": {
+    "authorization": "Bearer yourJwtTokenBase64Encoded"
+  }
+}
+```
+
+The SAP Cloud SDK has a convenience function to extract the JWT from the request object.
+For [NestJS](https://nestjs.com/), the code would look like:
+
+```ts
+import { Controller, Get, Req } from '@nestjs/common';
+import { Request } from 'express';
+import { retrieveJwt } from '@sap-cloud-sdk/connectivity';
+
+@Controller()
+export class AppController {
+  constructor() {}
+
+  @Get('some-sample-endpoint')
+  getSomeSampleEndpoint(@Req() request: Request): Promise<void> {
+    const myJwt = retrieveJwt(request);
+    //Do something with the JWT e.g. fetch some data using a destination
+  }
+}
+```
+
+Note, that the SAP Cloud SDK uses the `IncomingMessage` object from node, which is compatible to the request object of common frameworks like [express](https://expressjs.com/) or [NestJs](https://nestjs.com/).
+In case you use a different framework, the [implementation](https://github.com/SAP/cloud-sdk-js/blob/6e3453e50a061d3ea2dbd9ac6a40232e624f348f/packages/connectivity/src/scp-cf/jwt.ts#L45-L63) in the `retrieveJwt()` is simple.
+Effectively it takes `authorization` header value and extracts the token value.
+
+You can use the JWT to call the destination service or make a request against a destination directly.
+Note, that the destination service performs token exchange flows for you, if configured accordingly.
+This means the initial JWT is transformed to a `SAMLBearerAssertion` or `ClientCredentials` grant.
+
+## Obtain JWT With Postman
+
+For a faster feedback cycle, it is convenient to test things locally without deployment to the SAP BTP.
+In some cases, applications rely on a JWT to set scopes or propagate a user to external systems.
+In such a case, you can obtain the JWT using Postman:
+
+1. Create a new request
+2. Go to the **Authorization** tab of the request
+3. Select **OAuth 2.0** as a type
+4. Fill the following values in the user interface:
+   - `Callback URL`: Path to the application protected by the XSUAA
+   - `Auth URL`: Path to the authentication endpoint using your subdomain and the values for the callback URL e.g. `https://<subdomain>.authentication.sap.hana.ondemand.com/oauth/authorize?redirect_uri=<callbackUrl>`
+   - `Token URL`: Path to the token endpoint using your subdomain, e.g., `https://<subdomain>.authentication.sap.hana.ondemand.com/oauth/token`
+   - `Client ID` and `Client secret` for the XSUAA service (either VCAP variables or service keys)
+   - Uncheck **Authorize using browser**
+5. Press **Get new access token** to retrieve a token
+6. Postman will open a window showing the IdP login form
+7. Enter username and password
+8. Postman shows the retrieved token that you can copy
+
+Cookies will remember the entered username and password.
+This makes re-fetching a token faster when your old token expires.
+Remove the cookies in case you want to start fresh.
+
+![](../img/postman-oauth-token.png)
+
+## Obtain JWT Programmatically
+
+In some situations, it is necessary to retrieve a JWT programmatically:
+
+1. Retrieve a `code` from the XSUAA
+2. Initial `GET` request on XSUAA: `https://<xsuaaUrl>/oauth/authorize?client_id=<clientId>&redirect_uri=<redirectUri>&response_type=code`
+3. This will provide cookies for all upcoming XSUAA requests.
+4. Retrieve a SAML request from the XSUAA: `https://<xsuaaUrl>/saml/login/alias/<subdomain>.<host>`
+5. Transform the SAML request into a SAML response via the IdP.
+   This involves multiple redirected requests with a lot of cookies and request parameters passed around.
+   In the browser redirects with the `set-cookie` and `location` headers work well.
+   In node, most HTTP clients do not handle the redirects correctly and a manual redirect on 302 response needs to be implemented.
+6. Once you have the SAML response, call the XSUAA to retrieve the `code` in the location header.
+7. Use the `code` with clientId and clientSecret to get a JWT token from the XSUAA service.
+
+In case you also need an implementation, investigate the steps in the debug console of your browser when you login.

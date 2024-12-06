@@ -1,0 +1,53 @@
+When reading entities, the API offers `select( ... )` on the builders.
+Through it, the query parameters `$select` and `$expand` are set.
+It restricts the response to the given selection of properties in the request.
+
+The properties that can be selected or expanded are represented via fields on the `schema` property of the entity API class.
+There will be a field for each property, e.g. the `businessPartnerApi` has `schema.FIRST_NAME` as a representation of a property and `schema.TO_BUSINESS_PARTNER_ADDRESS` as a representation of a navigation property.
+
+A navigation property means that there is a relation between a business partner and their addresses.
+In this case, one business partner can have multiple addresses.
+In SAP S/4HANA, navigation properties typically start with `TO_`.
+
+```ts
+const { businessPartnerApi } = businessPartnerService();
+businessPartnerApi
+  .requestBuilder()
+  .getAll()
+  .select(
+    businessPartnerApi.schema.FIRST_NAME,
+    businessPartnerApi.schema.LAST_NAME,
+    businessPartnerApi.schema.TO_BUSINESS_PARTNER_ADDRESS
+  )
+  .execute(destination);
+```
+
+The above translates to the following query parameters:
+
+```sql
+$select=FirstName,LastName,to_BusinessPartnerAddress/*&$expand=to_BusinessPartnerAddress
+```
+
+One can also select properties of the expanded navigation property:
+
+```ts
+const { businessPartnerApi, businessPartnerAddressApi } =
+  businessPartnerService();
+businessPartnerApi
+  .requestBuilder()
+  .getAll()
+  .select(
+    businessPartnerApi.schema.FIRST_NAME,
+    businessPartnerApi.schema.TO_BUSINESS_PARTNER_ADDRESS.select(
+      businessPartnerAddressApi.schema.ADDRESS_ID,
+      businessPartnerAddressApi.schema.CITY_CODE
+    )
+  )
+  .execute(destination);
+```
+
+The above translates to the following query parameters:
+
+```sql
+$select=FirstName,to_BusinessPartnerAddress/AddressID,to_BusinessPartnerAddress/CityCode&$expand=to_BusinessPartnerAddress
+```

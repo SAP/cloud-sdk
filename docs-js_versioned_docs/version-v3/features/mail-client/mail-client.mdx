@@ -1,0 +1,193 @@
+---
+id: mail-client
+title: Send e-mails
+sidebar_label: Send e-mails
+description: How to send emails from application deployed on the SAP BTP
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - mail
+  - email
+  - e-mail
+  - BTP
+  - on-premise
+  - JavaScript
+  - TypeScript
+---
+
+:::caution
+This package has been deprecated and is no longer maintained.
+Use at your own risk.
+:::
+
+This documentation describes how you can send e-mails from applications deployed on the SAP BTP to your e-mail servers.
+When defining e-mail servers by using the destination service on the SAP BTP, both `Internet` and `OnPremise` destinations are supported.
+
+:::caution Caution
+
+Only basic auth is supported for the time being, and OAuth based authentication types are not fully tested.
+
+:::
+
+## Installation
+
+Run this command in your root directory of your project to install the `mail-client` dependency and add it to your dependency list:
+
+```
+npm install @sap-cloud-sdk/mail-client
+```
+
+## Examples
+
+In this section you find minimal examples illustrating how to send e-mails using the SAP Cloud SDK.
+
+### Send an E-Mail
+
+First, create a `mailConfig` object that contains all the essential information of an e-mail:
+
+<!-- vale off -->
+
+```ts
+import { sendMail, MailConfig } from '@sap-cloud-sdk/mail-client';
+
+const mailConfig: MailConfig = {
+  from: 'from@example.com',
+  to: 'to@example.com',
+  subject: 'e-mail subject',
+  text: 'e-mail text'
+};
+```
+
+<!-- vale on -->
+
+Send the e-mail by calling the `sendMail()` function with `mailConfig` as argument:
+
+```ts
+sendMail({ destinationName: 'my-mail-destination' }, [mailConfig]);
+```
+
+The first parameter is either a [destination](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.Destination) object or [DestinationFetchOptions](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions).
+For productive environment, you should use the destination service on the SAP BTP and reference the destination by name, just like in the example above.
+`{ destinationName: 'my-mail-destination' }` is the minimal object that is typed as `DestinationFetchOptions`.
+For test environment, instead of using the `DestinationFetchOptions`, you can also pass a complete `destination` object.
+
+:::caution Caution
+
+As the destination object might contain credentials, using it in production should be avoided.
+
+:::
+
+You can read more about the abstraction of the `destination` in the documentation [here](../connectivity/destination.mdx).
+
+### Send Multiple E-Mails
+
+The code snippets below show how to send two e-mails with the `mailConfig` created in the previous example.
+The e-mails are sent in parallel by default.
+
+```ts
+sendMail({ destinationName: 'my-mail-destination' }, [mailConfig, mailConfig]);
+```
+
+#### Send E-Mails Sequentially
+
+Sometimes you prefer sending e-mails sequentially instead of parallelly due to, e.g., the rate limit of your e-mail server.
+To send e-mails in a sequence, set the `parallel` option to `false`.
+
+```ts
+sendMail({ destinationName: 'my-mail-destination' }, [mailConfig, mailConfig], {
+  sdkOptions: {
+    parallel: false
+  }
+});
+```
+
+:::tip
+
+As parallelization is the default behaviour, you don't have to set `parallel: true` explicitly.
+
+:::
+
+### Configure Nodemailer
+
+The SAP Cloud SDK uses the node package Nodemailer under the hood.
+Nodemailer supports creating a transport based on options listed in their [documentation](https://nodemailer.com/smtp/).
+The SAP Cloud SDK exposes these options (as `SmtpTransportOptions`) and will transfer them based on user input.
+For example, you can provide the TLS option like below to circumvent issues with self-signed certificates:
+
+```ts
+sendMail({ destinationName: 'my-mail-destination' }, [mailConfig], {
+  tls: {
+    rejectUnauthorized: false
+  }
+});
+```
+
+The SAP Cloud SDK API documentation of the complete `SmtpTransportOptions` can be found in the API doc [here](pathname:///api/v3/interfaces/sap_cloud_sdk_mail_client.SmtpTransportOptions).
+
+:::tip DEBUGGING OPTIONS
+
+Set `debug` and `logger` options to true to log all the data that is passed to the server in the console.
+The debug option logs SMTP traffic when true, otherwise only transaction events are logged.
+If `logger` is not set or set to false, nothing gets logged.
+
+:::
+
+#### Proxy
+
+Nodemailer also supports defining proxy option as mentioned [here](https://nodemailer.com/smtp/proxies/).
+Similar to other Nodemailer options, the `proxy` key is also part of the `SmtpTransportOptions`.
+You can find a minimal example below for defining an HTTP proxy:
+
+```ts
+sendMail({ destinationName: 'my-mail-destination' }, [mailConfig], {
+  proxy: 'http://my-proxy-host:1234'
+});
+```
+
+Using socks proxy is not supported for the time being.
+For on-premise connectivity via the connectivity service on the SAP BTP, please check the next section.
+
+:::caution
+
+The SAP Cloud SDK will pass the proxy option directly to the Nodemailer, but the proxy feature is not end-to-end tested.
+
+:::
+
+## On-Premise Destination
+
+The SAP Cloud SDK supports using on-premise destinations as well.
+From the SAP Cloud SDK API perspective, the code looks similar, no matter whether you use `OnPremise` destinations or `Internet` destinations.
+The only difference is that you have to reference the name of the on-premise destination, which is obvious.
+
+### What's the Difference
+
+First, for applications deployed on the SAP BTP, you need a connectivity service for connecting to an on-premise destination.
+Second, a cloud connector is used as a proxy for accessing the on-premise system.
+Please make sure the mail destination is configured correctly as discussed in the [documentation](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/create-mail-destinations).
+
+### SOCKS5 Proxy Implementation
+
+Using a SOCKS5 proxy for accessing on-premise systems from applications on SAP BTP requires the SOCKS5 authentication flow as explained [here](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/cd1583775afa43f0bb9ec69d9dbcc880.html?locale=en-US).
+The SAP Cloud SDK handles the SOCKS5 proxy implementation automatically when detecting an on-premise mail destination.
+
+:::tip
+
+For some on-premise e-mail servers, including the test server, the parallelization of sending e-mail might be a challenge.
+You can disable the parallelization by passing `parallel: false` as mentioned above.
+
+:::
+
+### Multi-Tenancy
+
+If you are setting up a multi-tenant application where subscriber tenants access a mail destination through their SAP Cloud Connector (SCC), you must include the user's JSON Web Token (JWT) in your call.
+
+An example in which the incoming request contains the user's JWT looks like this:
+
+```ts
+import { retrieveJwt } from '@sap-cloud-sdk/connectivity';
+sendMail(
+  { destinationName: 'my-mail-destination', jwt: retrieveJwt(request) },
+  [mailConfig]
+);
+```
