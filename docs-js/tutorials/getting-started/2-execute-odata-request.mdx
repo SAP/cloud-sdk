@@ -214,6 +214,7 @@ async getAllBusinessPartners(): Promise<BusinessPartner[]> {
   return await businessPartnerApi
     .requestBuilder()
     .getAll()
+    .top(1)
     .addCustomHeaders({ APIKey: '<YOUR-API-KEY>' })
     .execute({
       url: 'https://sandbox.api.sap.com/s4hanacloud'
