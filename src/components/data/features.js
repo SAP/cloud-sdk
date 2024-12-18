@@ -252,9 +252,9 @@ export const features = [
     name: '[BTP Neo Environment](https://help.sap.com/viewer/ea72206b834e4ace9cd834feed6c0e09/Cloud/en-US)',
     category: 'Environment',
     java: {
-      status: DEPRECATED,
+      status: NO,
       docsLink: ``,
-      note: 'Deprecated since 4.17.0'
+      note: 'Out of scope. Deprecated since 4.17.0'
     },
     js: {
       status: NO,
