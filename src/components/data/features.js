@@ -259,7 +259,7 @@ export const features = [
     js: {
       status: NO,
       docsLink: ``,
-      note: 'Not recommended for new projects'
+      note: 'Out of scope.'
     }
   },
   {
