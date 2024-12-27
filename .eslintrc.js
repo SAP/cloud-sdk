@@ -24,5 +24,5 @@ module.exports = {
   rules: {
     'react/prop-types': 'off'
   },
-  ignorePatterns: ['build/**', 'node_modules/**']
+  ignorePatterns: ['build/**', 'node_modules/**', 'static/**']
 };
