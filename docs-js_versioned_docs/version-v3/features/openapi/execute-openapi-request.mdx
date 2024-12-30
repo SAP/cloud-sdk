@@ -114,6 +114,18 @@ MyEntity.requestBuilder()
 
 <CustomRequestConfigNote />
 
+### Setting a Custom Service Path
+
+A custom service path can be manually set in the `options-per-service.json` by providing a `basePath` property during client generation.
+It can also be adjusted per request by using the `setBasePath()` method:
+
+```ts
+MyApi.myFunction().setBasePath('/base/path/to/service').execute(destination);
+```
+
+This will change the base path of the request.
+Executing the example request above against a destination with the URL `https://my.some-system.com` will result in a request against the target like this: `https://my.some-system.com/base/path/to/service/myFunctionPath`, where `/myFunctionPath` is the API path parameter.
+
 ### Setting Middlewares
 
 You can specify middlewares for a request via the `middleware()` method on the request builder:
