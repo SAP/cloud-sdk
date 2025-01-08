@@ -1,0 +1,200 @@
+---
+id: set-up-dev-environment
+title: Set up Development Environment
+sidebar_label: Set up Development Environment
+description: Set up your environment to use the SAP Cloud SDK for JavaScript.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+  - tutorial
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+## Overview
+
+You will start with installing the tools necessary to get started.
+Once your development environment is set up, you can begin with scaffolding an initial application with the NestJS CLI.
+Throughout this tutorial, you'll modify and extend this starter application to use the SAP Cloud SDK for JavaScript.
+
+In this part of the tutorial, you will do the following:
+
+- Install Node.js and npm.
+- Install the Nest CLI.
+- Install the Cloud Foundry CLI, cf.
+- Scaffold your NestJS application and learn about the project's structure.
+- Run the application locally.
+
+## Node.js and npm
+
+If you have Node.js and npm installed, skip ahead to the next step.
+To check the Node.js and npm versions you have installed, run the following commands:
+
+```shell
+node -v
+npm -v
+```
+
+If one of those commands fails, you will have to install Node.js.
+It is recommended to use the [latest LTS version](https://nodejs.org/en/about/releases/).
+
+## Install Nest CLI
+
+You need to have the Nest CLI installed to create a new project.
+You can install it globally by executing the following command:
+
+```shell
+npm i -g @nestjs/cli
+```
+
+## Cloud Foundry Command Line Interface
+
+You will need the Cloud Foundry CLI (cf) to later deploy your application to the SAP Business Technology Platform.
+To see whether it is already installed, run the following:
+
+```shell
+cf -v
+```
+
+If the command fails, you will need to install cf.
+
+You can find installation instructions for all common platforms in the [Cloud Foundry documentation](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html).
+Using a package manager for that is recommended.
+If you are using Chocolatey on Windows, please find the instructions [here](https://community.chocolatey.org/packages/cloudfoundry-cli).
+
+## Scaffold an Application
+
+You can now create a new project using the command below:
+
+```shell
+nest new <project-name>
+```
+
+This will create an application that already contains all the files and configuration you need to use the SAP Cloud SDK for JavaScript.
+The CLI will ask you to select a package manager.
+Select "npm".
+The CLI will then install all the necessary dependencies for the project, so this might take a minute.
+If everything worked correctly, you should see an output like this:
+
+```shell
+
+🚀  Successfully created project <project-name>
+👉  Get started with the following commands:
+
+$ cd <project-name>
+$ npm run start
+
+```
+
+## Get Familiar With the Project
+
+The project contains the following files and folders:
+
+#### npm / Project
+
+- **`package.json`**: Specifies dependencies, metadata, and user-defined scripts.
+  The application comes with some predefined scripts and dependencies.
+
+#### TypeScript
+
+- **`tsconfig.json`**: Configuration file for TypeScript.
+  This is not needed in the plain JavaScript version.
+
+#### Local Development
+
+- **`src/`**: Source code for the initial application.
+
+## Run the Project
+
+To run the application locally, execute the following command:
+
+```shell
+npm run start:dev
+```
+
+This will start a local server in watch mode so that subsequent changes will automatically trigger a restart of the server.
+Go to http://localhost:3000 and you should get a "Hello World!" in response.
+Before continuing with the next part of the tutorial, open `src/main.ts` and switch the port from 3000 to 8080.
+This is required as the mock server (covered [later](./2-execute-odata-request.mdx#set-up-a-mock-server-optional)) runs on port `3000`.
+The corresponding line should then look like this:
+
+```ts
+await app.listen(process.env.PORT || 8080);
+```
+
+## Final Code Review
+
+In this tutorial, you installed the CLI tools necessary for creating and deploying your application and scaffolded an initial NestJS application.
+
+Here are the code files discussed on this page:
+
+<Tabs groupId="code-files" defaultValue="app-module" values={[ { label: 'src/main.ts', value: 'main'}, { label: 'src/app.module.ts', value: 'app-module'},{ label: 'src/app.controller.ts', value: 'app-controller'}, { label: 'src/app.service.ts', value: 'app-service'}]}>
+
+<TabItem value="main">
+
+```ts
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  await app.listen(process.env.PORT || 8080);
+}
+bootstrap();
+```
+
+</TabItem>
+<TabItem value="app-module">
+
+```ts
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+
+@Module({
+  imports: [],
+  controllers: [AppController],
+  providers: [AppService]
+})
+export class AppModule {}
+```
+
+</TabItem>
+<TabItem value="app-controller">
+
+```ts
+import { Controller, Get } from '@nestjs/common';
+import { AppService } from './app.service';
+
+@Controller()
+export class AppController {
+  constructor(private readonly appService: AppService) {}
+
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
+  }
+}
+```
+
+</TabItem>
+<TabItem value="app-service">
+
+```ts
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class AppService {
+  getHello(): string {
+    return 'Hello World!';
+  }
+}
+```
+
+</TabItem>
+</Tabs>

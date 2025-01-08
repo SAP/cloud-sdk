@@ -1,0 +1,115 @@
+---
+id: remote-debugging
+title: Remotely debug an application on SAP BTP
+sidebar_label: Remotely debug an application on SAP BTP
+description: This article describes how you can remotely debug an application on SAP Business Technology Platform
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - debug
+  - cloud-foundry
+  - JavaScript
+  - TypeScript
+---
+
+import ThemedImage from '@theme/ThemedImage';
+import useBaseUrl from '@docusaurus/useBaseUrl';
+
+This guides outlines the steps you need to follow to start a remote debugging session from your IDE for an application that is already deployed on Cloud Foundry in SAP BTP.
+
+## Assign yourself as a Space Developer
+
+:::note
+You need to have the Space Manager or Org Manager role.
+For details see [here](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/81d0b4dcfbc84016b6b3c1465d4272f4.html).
+:::
+
+- Open the [SAP Business Technology Platform Cockpit](https://account.hana.ondemand.com/) and navigate to your subaccount
+- Go to the space on Cloud Foundry where your application will be pushed to
+- Click _Member_ on the left side menu
+- Add yourself as a _Space Developer_
+
+## Deploy Your Application with Debug Mode
+
+In the package.json file, replace the `start` script to run in debug mode.
+E.g., instead of `node start.js` for node, use:
+
+```shell
+node --inspect start.js
+```
+
+And instead of `ts-node start.ts`, use:
+
+```shell
+node -r ts-node/register --inspect start.ts
+```
+
+You can do this by either changing your start script in the package.json or the command script in the `manifest.yml`.
+
+:::note
+Don't use `--inspect-brk`, this will make the `start` timeout on SAP Business Technology Platform.
+:::
+
+Deploy your application as usual by running the command:
+
+```shell
+cf deploy
+```
+
+## Open an ssh Tunnel to Your Application
+
+Open an [ssh tunnel](https://docs.cloudfoundry.org/devguide/deploy-apps/ssh-apps.html#ssh-command) to your backend application to connect your local debugger with the node inspector running on port 9229.
+Replace `<your-app-name>` with your application name and run:
+
+```shell
+$ cf ssh <your-app-name> -L 9229:127.0.0.1:9229 -T -N
+```
+
+## Attach a Local Debugger
+
+Now you can attach your local debugger.
+For this you will have to launch a debugger that attaches to the remote session.
+
+### Visual Studio Code
+
+In Visual Studio Code, you can use the below attach configuration for Node.js debugging.
+Replace `YOUR_APPLICATION_PATH` with the relative path to your application directory:
+
+```JSON
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to Remote",
+      "address": "127.0.0.1",
+      "port": 9229,
+      "localRoot": "${workspaceFolder}/YOUR_APPLICATION_PATH",
+      "remoteRoot": "/home/vcap/app",
+      "skipFiles": ["node_modules/**"]
+    }
+  ]
+}
+```
+
+### Webstorm
+
+In Webstorm you can add configure debugging by creating a config as shown below:
+
+<!-- vale off -->
+
+<ThemedImage
+  alt="Application Router flow"
+  sources={{
+    light: useBaseUrl('img/remote-debugging-config-webstorm.png'),
+    dark: useBaseUrl('img/remote-debugging-config-webstorm.png')
+  }}
+  className="center"
+  width="80%"
+/>
+
+<!-- vale on -->
+
+Start the debugger !

@@ -1,0 +1,12 @@
+```Dockerfile title="Dockerfile"
+FROM node:14-alpine
+
+WORKDIR /workdir
+
+COPY /deployment /workdir
+
+RUN ["npm", "install", "--unsafe-perm"]
+
+EXPOSE 3000
+CMD ["npm", "run", "start:prod"]
+```
