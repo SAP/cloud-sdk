@@ -182,6 +182,10 @@ It does not yet include it as a dependency in your project.
 The [SAP Java Buildpack](https://help.sap.com/products/BTP/65de2977205c403bbc107264b8eccf4b/a3f90069d6cd41da82f34a6123d82ce6.html) brings some dependencies that are also brought by the SAP Cloud SDK.
 This can lead to conflicts when using a `war` deployment.
 
+:::danger WAR Deployments are not recommend
+We strongly advise against using WAR deployments and provide no support for this scenario.
+:::
+
 To prevent any SAP Java Buildpack issues we recommend using the `cf-tomee7-bom`
 ([or Tomcat or TomEE BOMs](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/6c6936e8e4ea40c9a9a69f6783b1e978.html)) followed by our `sdk-bom`.
 
@@ -294,6 +298,8 @@ As a result the SAP Java Buildpack BOM is removed from the `dependencyManagement
 ```
 
 </details>
+
+:::
 
 ### Background: Dependency Version Conflicts
 
