@@ -14,9 +14,9 @@ export const features = [
     name: '[SOAP](https://help.sap.com/saphelp_snc700_ehp01/helpdata/en/bb/ddb33d2ae46b3be10000000a114084/content.htm?no_cache=true)',
     category: 'Legacy',
     java: {
-      status: DEPRECATED,
+      status: NO,
       docsLink: ``,
-      note: 'Deprecated since 4.13.0'
+      note: 'Out of scope. Deprecated since 4.13.0'
     },
     js: {
       status: NO,
@@ -28,9 +28,9 @@ export const features = [
     name: '[BAPI](https://help.sap.com/doc/saphelp_nw73/7.3.16/en-US/4d/c89000ebfc5a9ee10000000a42189b/frameset.htm)',
     category: 'Legacy',
     java: {
-      status: YES,
+      status: DEPRECATED,
       docsLink: `[docs](${baseUrl}/java/features/bapi-and-rfc/overview)`,
-      note: ''
+      note: 'Deprecated since 4.13.0'
     },
     js: {
       status: NO,
@@ -42,9 +42,9 @@ export const features = [
     name: '[RFC](https://help.sap.com/doc/saphelp_nw73/7.3.16/en-US/48/9f1952a81417cee10000000a421937/frameset.htm)',
     category: 'Legacy',
     java: {
-      status: YES,
+      status: DEPRECATED,
       docsLink: `[docs](${baseUrl}/java/features/bapi-and-rfc/overview)`,
-      note: ''
+      note: 'Deprecated since 4.13.0'
     },
     js: {
       status: NO,
@@ -154,14 +154,14 @@ export const features = [
     name: 'Enterprise messaging',
     category: 'Messaging',
     java: {
-      status: PLANNED,
+      status: NO,
       docsLink: ``,
-      note: 'Planned. Depends on CAP'
+      note: ''
     },
     js: {
-      status: PLANNED,
+      status: NO,
       docsLink: ``,
-      note: 'Planned. Depends on CAP'
+      note: ''
     }
   },
   {
@@ -245,7 +245,7 @@ export const features = [
     js: {
       status: NO,
       docsLink: ``,
-      note: FEATURE_REQUEST
+      note: ''
     }
   },
   {
@@ -420,14 +420,14 @@ export const features = [
     name: 'MDI',
     category: 'MDI',
     java: {
-      status: YES,
+      status: NO,
       docsLink: ``,
-      note: `Internal only or allow listed`
+      note: 'Out of scope. Deprecated since 4.23.0'
     },
     js: {
       status: NO,
       docsLink: ``,
-      note: FEATURE_REQUEST
+      note: ''
     }
   }
 ];
