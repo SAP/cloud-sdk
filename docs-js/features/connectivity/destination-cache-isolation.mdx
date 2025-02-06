@@ -33,11 +33,10 @@ The following examples will use `execute()` for brevity, but could be replaced b
 
 ## Destination Cache
 
-By default, destination caching is disabled.
-Enable it by setting the [`useCache`](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions.html#useCache) option to `true`:
+By default, destination caching is enabled. You can disable it by setting the [`useCache`](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions.html#useCache) option to `false`:
 
 ```ts
-.execute({ destinationName: 'DESTINATION', jwt: 'JWT', useCache: true })
+.execute({ destinationName: 'DESTINATION', jwt: 'JWT'})
 ```
 
 The destination cache holds destinations that potentially require HTTP requests, i.e.:
@@ -104,7 +103,7 @@ An erroneous configuration can have severe consequences like privilege escalatio
 
 ## Custom Destination Cache
 
-When caching is enabled, destinations are cached in-memory.
+By default, destinations are cached in-memory.
 If you need more control over the destination cache, e.g. to use a persistent or distributed cache, you can create a custom destination cache.
 For this, implement the [`DestinationCacheInterface`](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.DestinationCacheInterface.html):
 
