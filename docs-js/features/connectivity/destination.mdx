@@ -148,7 +148,7 @@ req.execute({
 });
 ```
 
-Note that the `registerDestination()` function is tenant-aware.
+Note that the `registerDestination()` function is tenant-aware and uses caching by default.
 The [destination cache guide](./destination-cache-isolation.mdx) describes the cache options used by the `registerDestination()` function.
 
 #### Using Mutual TLS authentication (mTLS) on Cloud Foundry
@@ -168,12 +168,12 @@ const options: RegisterDestinationOptions = {
 
 This configures HTTPS requests to automatically check for the `CF_INSTANCE_CERT` and `CF_INSTANCE_KEY` environment variables and read the certificate and key.
 
-The caching of mTLS certificates is disabled by default, but can be enabled by adding the `useCache` option:
+The caching of mTLS certificates is enabled by default, but can be disabled by adding the `useCache: false` option:
 
 ```
 const options: RegisterDestinationOptions = {
   inferMtls: true,
-  useCache: true
+  useCache: false
 };
 ```
 
@@ -492,7 +492,7 @@ A few of the options were already listed above, but this section gives a compreh
 - `cacheVerificationKeys`: Switches on caching for the verification certificates for the JWT.
   The default value is `true`.
 - `useCache`: Switches on caching for destinations received from the destination service.
-  The default value is `false`.
+  The default value is `true`. You can set it to `false` to disable caching.
 - `isolationStrategy`: Specifies how the destination cache is scoped.
   The value is automatically set but [under certain conditions](./destination-cache-isolation.mdx) you may want to optimize it.
 - `retry`: Switches on three retries for the request to the destination service.
