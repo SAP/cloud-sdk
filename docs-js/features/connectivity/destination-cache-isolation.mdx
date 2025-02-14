@@ -22,19 +22,20 @@ To reduce the number of calls to fetch destinations, the SAP Cloud SDK provides 
 This guide explains how destinations are cached and shows options for destination cache configuration.
 The general destination lookup is described in [this guide](./destination.mdx).
 
-All options discussed in the following are part of the [`DestinationFetchOptions`](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions.html).
+All options discussed in the following are part of the [`DestinationFetchOptions`](pathname:///api/v4/interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions.html).
 You use those options when:
 
 - executing requests through a generated client using `execute()`
-- executing generic HTTP requests using [`executeHttpRequest()`](pathname:///api/v3/functions/sap_cloud_sdk_http_client.executeHttpRequest.html)
-- retrieving destinations using [`getDestination()`](pathname:///api/v3/functions/sap_cloud_sdk_connectivity.getDestination.html)
+- executing generic HTTP requests using [`executeHttpRequest()`](pathname:///api/v4/functions/sap_cloud_sdk_http_client.executeHttpRequest.html)
+- retrieving destinations using [`getDestination()`](pathname:///api/v4/functions/sap_cloud_sdk_connectivity.getDestination.html)
+- retrieving all destinations using[`getAllDestinationsFromDestinationService()`](pathname:///api/v4/functions/sap_cloud_sdk_connectivity.getAllDestinationsFromDestinationService.html)
 
 The following examples will use `execute()` for brevity, but could be replaced by all of the above.
 
 ## Destination Cache
 
 By default, destination caching is enabled.
-You can disable it by setting the [`useCache`](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions.html#useCache) option to `false`:
+You can disable it by setting the [`useCache`](pathname:///api/v4/interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions.html#useCache) option to `false`:
 
 ```ts
 .execute({ destinationName: 'DESTINATION', jwt: 'JWT', useCache: false })
@@ -86,7 +87,7 @@ Assume you have a multi-tenant scenario, where you pass a JWT to obtain the dest
 The JWT contains a `user_id` but the authentication type of the destination is user-independent.
 The default isolation strategy for this case is `tenant-user`, although `tenant` would suffice.
 
-For such cases, you can manually enforce weaker isolation by passing the [`isolationStrategy`](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions.html#isolationStrategy) option:
+For such cases, you can manually enforce weaker isolation by passing the [`isolationStrategy`](pathname:///api/v4/interfaces/sap_cloud_sdk_connectivity.DestinationFetchOptions.html#isolationStrategy) option:
 
 ```ts
 .execute({
@@ -106,7 +107,7 @@ An erroneous configuration can have severe consequences like privilege escalatio
 
 By default, destinations are cached in-memory.
 If you need more control over the destination cache, e.g. to use a persistent or distributed cache, you can create a custom destination cache.
-For this, implement the [`DestinationCacheInterface`](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.DestinationCacheInterface.html):
+For this, implement the [`DestinationCacheInterface`](pathname:///api/v4/interfaces/sap_cloud_sdk_connectivity.DestinationCacheInterface.html):
 
 ```ts
 export interface DestinationCacheInterface {
@@ -133,7 +134,7 @@ export interface DestinationCacheInterface {
 }
 ```
 
-Note that each item in the cache is represented using the [`CacheEntry<T>`](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.CacheEntry.html) type, which defines two properties:
+Note that each item in the cache is represented using the [`CacheEntry<T>`](pathname:///api/v4/interfaces/sap_cloud_sdk_connectivity.CacheEntry.html) type, which defines two properties:
 
 - `entry` - The item, i.e. destination, you want to cache.
 - `expires` - The expiration time of the entry in milliseconds.
@@ -166,7 +167,7 @@ const customCache = {
 };
 ```
 
-To use your custom cache, pass your implementation to the global [`setDestinationCache()`](pathname:///api/v3/functions/sap_cloud_sdk_connectivity.setDestinationCache.html) function before fetching destinations for the first time.
+To use your custom cache, pass your implementation to the global [`setDestinationCache()`](pathname:///api/v4/functions/sap_cloud_sdk_connectivity.setDestinationCache.html) function before fetching destinations for the first time.
 All subsequent calls to fetch destinations will use the custom cache.
 
 ```ts
@@ -179,7 +180,7 @@ setDestinationCache(customCache);
 
 ## Registered Destination Cache
 
-When [registering destinations](./destination.mdx#register-destination) using the [`registerDestination()`](pathname:///api/v3/functions/sap_cloud_sdk_connectivity.registerDestination.html) function, destinations are stored in a separate cache.
+When [registering destinations](./destination.mdx#register-destination) using the [`registerDestination()`](pathname:///api/v4/functions/sap_cloud_sdk_connectivity.registerDestination.html) function, destinations are stored in a separate cache.
 This cache is always enabled and behaves similarly to the destination cache discussed above.
 It uses the same JWT-dependent defaults for the [isolation strategy](#isolation-strategy) as the destination cache.
 To change the isolation strategy pass the `isolationStrategy` option to the function.
