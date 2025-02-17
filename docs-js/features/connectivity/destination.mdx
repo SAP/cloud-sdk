@@ -168,14 +168,14 @@ const options: RegisterDestinationOptions = {
 
 This configures HTTPS requests to automatically check for the `CF_INSTANCE_CERT` and `CF_INSTANCE_KEY` environment variables and read the certificate and key.
 
-The caching of mTLS certificates is enabled by default, but can be disabled by adding the `useCache: false` option:
+The caching of mTLS certificates is disabled by default, but can be enabled by adding the `useMtlsCache` option:
 
 ```
 const options: RegisterDestinationOptions = {
   inferMtls: true,
-  useCache: false
+  useMtlsCache: true
 };
-```
+
 
 Certificates are then cached for the entire validity time of the certificate.
 Since in Cloud Foundry each deployment has their own mTLS certificate, the cache is shared among all tenants of a deployment.
