@@ -173,9 +173,9 @@ export const features = [
       note: ''
     },
     js: {
-      status: NO,
-      docsLink: ``,
-      note: FEATURE_REQUEST
+      status: YES,
+      docsLink: `[docs](${baseUrl}/js/guides/resilience)`,
+      note: ''
     }
   },
   {
@@ -187,9 +187,9 @@ export const features = [
       note: ''
     },
     js: {
-      status: NO,
-      docsLink: ``,
-      note: FEATURE_REQUEST
+      status: YES,
+      docsLink: `[docs](${baseUrl}/js/features/connectivity/destination-cache)`,
+      note: ''
     }
   },
   {
