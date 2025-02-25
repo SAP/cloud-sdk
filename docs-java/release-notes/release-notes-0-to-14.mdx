@@ -1,518 +1,89 @@
-## 5.14.0 - November 08, 2024
+## 1.3.0 - February 13, 2025
 
-[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.14.0)
-
-### 📈 Improvements
-
-- Minor improvement on OpenAPI code generator to apply Javadoc on customized model class constructors.
-- Fix a TLS compatibility issue between the latest _Apache HttpClient 5_ and on-premise connectivity (via SAP Cloud Connector).
-- Stabilize ApacheHttpClient5 related API without changes.
-  The `@Beta` annotations are removed in most places and consuming applications no longer need to suppress warnings.
-
-## 5.13.0 - September 27, 2024
-
-[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.13.0)
+[All Release Changes](https://github.com/SAP/ai-sdk-java/releases/tag/rel%2F1.3.0)
 
 ### 🔧 Compatibility Notes
 
-- Minimum required versions:
-  - SAP BTP Security Services Integration Libraries `com.sap.cloud.security` 3.4.3
-  - CAP `com.sap.cds` 2.9.3
-  - SAP Java Buildpack `com.sap.cloud.sjb` 2.10.0
-- Using IAS requires XSUAA version to be minimum `3.4.0`.
-- Change the `DefaultHttpDestination.Builder` to throw an exception when the proxy configuration can not be determined for on-premise destinations.
-  Previously, only an error was logged to give a grace period for analyzing and fixing the underlying issue.
-- Change the default implementations of `HttpClientCache` and `ApacheHttpClient5Cache` to throw an exception in cases where previously only an error was logged.
-  The previous behavior of logging an error and falling back to creating a new http client granted a grace period to fix the underlying issue.
-
-### 🐛 Fixed Issues
-
-- OpenAPI QueryParameters are now encoded
-
-### 🐛 Known Issues
-
-- Using the latest Apache HttpClient 5 to connect to on-premise systems (via SAP Cloud Connector), may result in "403 Forbidden" responses due to a TLS compatibility issue.
-  Please use older version SAP Cloud SDK `5.12.0` or use upcoming `5.14.0`.
-
-## 5.12.0 - September 03, 2024
-
-[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.12.0)
+- `Message.content()` returns a `ContentItem` now instead of a `String`. Use `((TextItem) Message.content().items().get(0)).text()` if the corresponding `ContentItem` is a `TextItem` and the string representation is needed.
 
 ### ✨ New Functionality
 
-- Timeouts for OAuth2 token retrievals can now be customized.
-  As part of `ServiceBindingDestinationOptions` the new option `OAuth2Options.TokenRetrievalTimeout` can now be passed to set a custom timeout.
-  Refer to [this documentation](https://sap.github.io/cloud-sdk/docs/java/features/connectivity/service-bindings#about-the-options) for more details.
-- In `DestinationService` class allow for optional argument `DestinationServiceRetrievalStrategy` in method `getAllDestinationProperties`.
-  This additional API allows for ensuring tenant-specific destination lookups.
-  Available values are: `CURRENT_TENANT` (default), `ALWAYS_PROVIDER` and `ONLY_SUBSCRIBER`.
+- Upgrade to release 2502a of AI Core.
+- Orchestration:
+  - [Add `LlamaGuardFilter`](guides/orchestration-chat-completion#chat-completion-filter).
+  - [Convenient methods to create messages containing images and multiple text inputs](guides/orchestration-chat-completion#add-images-and-multiple-text-inputs-to-a-message)
+  - [Enable setting the response format](guides/orchestration-chat-completion#set-a-response-format)
 
-### 📈 Improvements
 
-- \[OpenAPI Generator\] Setting the Maven plugin configuration property `openapi.generate.deleteOutputDirectory` to `true` will no longer result in deletion of all files from the `outputDirectory` prior to generation.
-  Instead, only the `apiPackage`- and `apiPackage`-related directories will be cleaned.
-  This reduces the risk of deleting files unexpectedly and allows for reusing the same `outputDirectory` for multiple generator plugin invocations.
-- \[OpenAPI Generator\] The property accessors of generated model classes now have consistent `@Nullable` and `@Nonnull` annotation.
-- \[OpenAPI Generator\] Enable the option `<enumUnknownDefaultCase>` that allows for lenient handling of unknown enum values coming from a server.
-- Upgrade to version `1.66.0` of `gRPC` dependencies coming in transitively when using `connectivity-ztis`
-- Improve the error handling for OData batch requests.
-  In case an OData error is given within a batch response it will now be parsed and returned as `ODataServiceErrorException`.
-- Reduce the amount of DwC headers sent when communicating via megaclite.
-  This reduces the risk of exceeding the maximum header size limit of the Cloud Foundry infrastructure.
-- Improve the error handling for requests to the destination service.
-  In case of an error a potential response body will now be logged with the error message.
+## 1.2.0 - January 30, 2025
 
-### 🐛 Fixed Issues
-
-- fix: issue [#557](https://github.com/SAP/cloud-sdk-java/issues/557): DwC Auth Token not available (DwC + IAS) by @jingweiz2017 in #568
-- Fix an issue where proxy headers are applied multiple times for On-Premise destinations.
-
-## 5.11.0 - August 01, 2024
-
-[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.11.0)
+[All Release Changes](https://github.com/SAP/ai-sdk-java/releases/tag/rel%2F1.2.0)
 
 ### 🔧 Compatibility Notes
 
-- The OpenAPI generator doesn't add `//NOPMD` after imports anymore.
+- `SingleChatMessage`, as well as new `MultiChatMessage`, are now subtypes of new interface `ChatMessage`.
+  Most variables or methods previously typed as `ChatMessage` in `model` package are now typed as `SingleChatMessage`. 
+- Add missing `@Beta` annotations to all `com.sap.ai.sdk.core.client` and `com.sap.ai.sdk.core.model` classes.
 
 ### ✨ New Functionality
 
-- Add experimental support for [_Destination Fragments_](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/extending-destinations-with-fragments).
-  Fragment names can be passed upon requesting destinations via `DestinationServiceOptionsAugmenter.fragmentName("my-fragment-name")`.
-- Allow removing properties when using a destination builder.
+- New Orchestration features:
+  - [Spring AI integration](guides/spring-ai-integration)
+  - [Add Grounding configuration convenience](guides/orchestration-chat-completion#grounding)
+  - Images are now supported as input in newly introduced `MultiChatMessage`.
+  - `MultiChatMessage` also allows for multiple content items (text or image) in one object.
+  - Grounding input can be masked with `DPIConfig`.
+  - LLama Guard can now be used for content filtering.
+  - Support for tool calling and response format
+  - Updated the list for supported models (e.g., added amazon nova models).
 
-### 🐛 Fixed Issues
+### 📈 Improvements
 
-- The OpenAPI Generator correctly declares `@Nonnull` and `@Nullable` annotations on generated endpoint methods.
-- The OpenAPI Generator uses correct camelCase again, when creating methods to _add items_ to a collections.
-  Version `5.10.0` used incorrect `addfooItems(Foo)` instead of `addFooItems(Foo)`.
-  This is fixed now.
+- Update Orchestration client to version 0.48.2 (2501a)
 
-## 5.10.0 - June 12, 2024
 
-[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.10.0)
+## 1.1.0 - January 07, 2025
+
+[All Release Changes](https://github.com/SAP/ai-sdk-java/releases/tag/rel%2F1.1.0)
 
 ### 🔧 Compatibility Notes
 
-- Using the `X509_ATTESTED` credential type now requires a version >= `3.4.0` of the [SAP BTP Security Library](https://github.com/SAP/cloud-security-services-integration-library).
-- Deprecate the IAS communication option `withConsumerClient(clientid, tenantid)`.
-  The option is non-functional. Use `withConsumerClientId(clientid)` instead, the tenant will automatically be inferred from the context upon execution.
+- Changed return type of `List<Double> getEmbedding()` from experimental API `OpenAiEmbeddingData` to `float[]` to match recent Spring AI change.
 
 ### ✨ New Functionality
 
-- Support the `X509_ATTESTED` credential type for XSUAA service bindings.
-
-### 🐛 Fixed Issues
-
-- Fix an issue that prevented OAuth flows from working correctly for subscriber tenants when using IAS with credential type `X509_ATTESTED`
-
-## 5.9.0 - May 13, 2024
-
-[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.9.0)
-
-### 🔧 Compatibility Notes
-
-- Deprecate the `BtpServiceOptions.IasOptions.withTargetUri` method overloads.
-  As a replacement, users should use the corresponding `BtpServiceOptions.AuthenticationServiceOptions.withTargetUri` method.
-  Additionally, the existing behavior of the deprecated methods has been changed:
-  They are no longer returning an instance of `BtpServiceOptions.IasOptions.IasTargetUri` but instead return now an instance of `BtpServiceOptions.AuthenticationServiceOptions.TargetUri`.
-  The `BtpServiceOptions.IasOptions.IasTargetUri` class is also deprecated.
-
-  **Please Note**:
-  The deprecated methods will stay functioning (with the mentioned behavior changes) for a while to give users time to migrate to the new methods.
-  Nevertheless, we are planning to **remove** the deprecated methods and the class **still within version 5 of the SAP Cloud SDK**.
-
-### ✨ New Functionality
-
-- Support the [OAuth Refresh Token](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/oauth-refresh-token-authentication) authentication type of the Destination Service.
-  Find more details on how to use the functionality in the [documentation](https://sap.github.io/cloud-sdk/docs/java/features/connectivity/btp-destination-service#about-the-destinationservice).
-- Service Bindings for the SAP XSUAA service (Service Identifier `xsuaa`) can now be converted into destinations just as any other supported service.
-  This is most useful when combined with the newly introduced `BtpServiceOptions.AuthenticationServiceOptions.withTargetUri` methods, which allows for communication between services that are backed by the same XSUAA instance.
-
-### 🐛 Fixed Issues
-
-- Fix a regression that was introduced with the SAP Cloud SDK 5.0 release where the principal would no longer be derived from a `Basic` authorization header, in cases where neither a JWT nor an OIDC token was present.
-- Fix a regression that was introduced with the SAP Cloud SDK 5.0 release where auth tokens sent by the Destination service would no longer be stored in the `cloudsdk.authTokens` destination property for non-HTTP destinations.
-
-## 5.8.0 - April 22, 2024
-
-[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.8.0)
+- Added `streamChatCompletion()` and `streamChatCompletionDeltas()` to the `OrchestrationClient`.
 
 ### 📈 Improvements
 
-- Improve the efficiency of HTTP clients: The default cache duration for HTTP clients have been increased to expire one hour after last access (was 5 minutes after creation).
-  Aside from a performance improvement, this improves the handling of cookies, as they are retained for much longer.
-- Improve connecting to IAS-based applications and services.
-  Scenarios where an IAS tenant is connected to multiple subaccounts of an application are now supported.
-  - Note that when mocking an IAS binding for testing the binding entry `app_tid` is now required.
+- Update AI Core client to 2.37.0
 
-### 🐛 Fixed Issues
 
-- Fix an issue that would cause a NPE when using bound services backed by IAS via the [dedicated service binding format](/docs/java/features/connectivity/service-bindings#service-binding-format).
-- Fix an issue that would cause a NPE when using the OData `applyAction` method with a `null` parameter value.
+## 1.0.0 - December 03, 2024
 
-## 5.7.0 - April 05, 2024
-
-[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.7.0)
+[All Release Changes](https://github.com/SAP/ai-sdk-java/releases/tag/rel%2F1.0.0)
 
 ### ✨ New Functionality
 
-- (Beta) Add support for the SAP-internal Zero Trust Identity Service
-  - Add a new module `connectivity-ztis`.
-  - Add support for the credential-type `X509_ATTESTED` for all OAuth2 flows.
-
-### 🐛 Fixed Issues
-
-- Stop unnecessarily throwing and catching `NullPointerException` when interacting with `DefaultHttpDestination#equals(...)` and `#hashCode()`.
-
-## 5.6.0 - March 19, 2024
-
-[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.6.0)
-
-### ✨ New Functionality
-
-- Add support for connecting to applications and services backed by the [SAP Identity Authentication Service (IAS)](https://help.sap.com/docs/identity-authentication).
-  - The `ServiceBindingDestinationLoader` API now supports service bindings to the IAS service.
-  - The `BtpServiceOptions` class has now offers `IasOptions` to pass additional options depending on the use case.
-  - A standardised service binding format for IAS-backed services is introduced.
-  - Support connecting to arbitrary services as long as their service binding conforms to the standardised format.
-  - Head over to [the documentation](/docs/java/features/connectivity/service-bindings#using-the-identity-and-authentication-service-ias) for more information on the new features.
-- Support service bindings to the [SAP BTP AI Core Service](https://api.sap.com/api/AI_CORE_API) by default in the `ServiceBindingDestinationLoader` API.
-- Failed OData v4 Batch requests now return the specific failed request from the exception: `ODataResponseException.getRequest()`.
-
-### 🐛 Fixed Issues
-
-- Fix an issue where the same `HttpClient` would be used for different users when using `PrincipalPropagation` and thus could potentially share the same (session) cookies.
-- Fix an issue where destinations for the Business Logging service that are created from a service binding (using the `ServiceBindingDestinationLoader` API) contained the concrete API path.
-  This behavior caused problems when using such a destination in a client generated with the SAP Cloud SDK's OpenApi generator.
-- [DwC] Fix an issue where the `AuthTokenAccessor` would not recognize JWT tokens passed in via the `dwc-jwt` header.
-- [DwC] Fix an issue where the current tenant would not be resolved if the `dwc-subdomain` header was missing.
-
-## 5.5.0 - February 28, 2024
-
-[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.5.0)
-
-### 🔧 Compatibility Notes
-
-- Deprecated `RfcDestination` and all associated usages, the replacement is `Destination`.
-
-### ✨ New Functionality
-
-- `war` deployment in combination with the `SAP Java Buildpack` 2.2.0 is supported again.
-  Our `RFC` artifact is now released, and `JCo` functionalities are supported again.
-  Please follow our [guide to update to version 5](../guides/5.0-upgrade-steps.mdx).
-
-### 📈 Improvements
-
-- Improve the `DefaultHttpDestination` builder API: For destinations with proxy type `ON_PREMISE` the proxy URL can now be customized by using the `proxy` method of the builder.
-
-### 🐛 Fixed Issues
-
-- Fixed an issue where adding header providers to a destination after it had already been used to obtain an Apache `HttpClient` 5 would not work as expected.
-
-## 5.4.0 - February 15, 2024
-
-[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.4.0)
-
-### 📈 Improvements
-
-- Destination key-stores of type _PKCS #12_ with empty (or no) password will be correctly loaded, including their certificates.
-- OpenAPI clients can now be generated with specifications with `oneOf` and `anyOf` keywords by enabling their processing by using `<enableOneofAnyofGeneration>` in `openapi-generator-maven-plugin`(This option is turned off by default):
-  ```xml
-  <plugin>
-      <groupId>com.sap.cloud.sdk.datamodel</groupId>
-      <artifactId>openapi-generator-maven-plugin</artifactId>
-      ...
-      <configuration>
-         ...
-        <enableOneofAnyofGeneration>true</enableOneofAnyofGeneration>
-      </configuration>
-  </plugin>
-  ```
-  But,the generated client may not be feature complete and work as expected for all cases involving `anyOf/oneOf`.
-
-<!-- vale off -->
-
-<details>
-<summary>Dependency Updates</summary>
-
-| Dependency                                                                                                                                                             | From       | To         |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ---------- |
-| [commons-codec](https://search.maven.org/search?q=g%3Acommons-codec%2Ba%3Acommons-codec) (`commons-codec`)                                                             | `1.16.0`   | `1.16.1`   |
-| [java-modules-bom](https://search.maven.org/search?q=g%3Acom.sap.cloud.environment.servicebinding%2Ba%3Ajava-modules-bom) (`com.sap.cloud.environment.servicebinding`) | `0.10.2`   | `0.10.3`   |
-| [jcl-over-slf4j](https://search.maven.org/search?q=g%3Aorg.slf4j%2Ba%3Ajcl-over-slf4j) (`org.slf4j`)                                                                   | `2.0.11`   | `2.0.12`   |
-| [joda-time](https://search.maven.org/search?q=g%3Ajoda-time%2Ba%3Ajoda-time) (`joda-time`)                                                                             | `2.12.6`   | `2.12.7`   |
-| [neo-java-web-api](https://search.maven.org/search?q=g%3Acom.sap.cloud%2Ba%3Aneo-java-web-api) (`com.sap.cloud`)                                                       | `4.68.9`   | `4.69.7`   |
-| [openapi-generator](https://search.maven.org/search?q=g%3Aorg.openapitools%2Ba%3Aopenapi-generator) (`org.openapitools`)                                               | `7.2.0`    | `7.3.0`    |
-| [slf4j-api](https://search.maven.org/search?q=g%3Aorg.slf4j%2Ba%3Aslf4j-api) (`org.slf4j`)                                                                             | `2.0.11`   | `2.0.12`   |
-| [slf4j-ext](https://search.maven.org/search?q=g%3Aorg.slf4j%2Ba%3Aslf4j-ext) (`org.slf4j`)                                                                             | `2.0.11`   | `2.0.12`   |
-| [json](https://search.maven.org/search?q=g%3Aorg.json%2Ba%3Ajson) (`org.json`)                                                                                         | `20231013` | `20240205` |
-| [java-modules-bom](https://search.maven.org/search?q=g%3Acom.sap.cloud.environment.servicebinding%2Ba%3Ajava-modules-bom) (`com.sap.cloud.environment.servicebinding`) | `0.10.1`   | `0.10.2`   |
-
-</details>
-
-<!-- vale on -->
-
-## 5.3.0 - February 1, 2024
-
-[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.3.0)
-
-### 📈 Improvements
-
-- The destination property `HTML5.ForwardAuthToken` is now evaluated and forwards the current AuthToken to the target system.
-- Improve how certificates are evaluated for the authentication types `SAMLAssertion` and `OAUTH2_SAML_BEARER_ASSERTION`.
-  The certificates are no longer unnecessarily parsed when obtaining the destination.
-- The `spring-boot3` archetype no longer contains the `integration-tests` module.
-  The contained tests are now part of the test suite of the `application` module.
-- Dependency Updates:
-  - SAP dependency updates:
-    - Update [`com.sap.cloud.security`](https://github.com/SAP/cloud-security-xsuaa-integration) from `3.3.3` to `3.3.4`
-    - Update [`com.sap.cloud.environment.servicebinding`](https://github.com/SAP/btp-environment-variable-access) from `0.10.1` to `0.10.2`
-    - Update `com.sap.cloud:neo-java-web-api` from `4.67.12` to `4.68.9`
-  - Other dependency updates:
-    - Major version updates:
-      - Update [`org.apache.olingo`](https://github.com/apache/olingo-odata4) from `4.10.0` to `5.0.0`
-      - Update [`io.github.resilience4j`](https://github.com/resilience4j/resilience4j) from `1.7.1` to `2.2.0`
-    - Minor/Patch version updates:
-      - Update [`org.slf4j:slf4j-api`](https://github.com/qos-ch/slf4j) from `2.0.9` to `2.0.11`
-      - Update [`commons-io:commons-io`](https://github.com/apache/commons-io) from `2.15.0` to `2.15.1`
-      - Update [`org.apache.httpcomponents.client5:httpclient5`](https://github.com/apache/httpcomponents-client) from `5.3` to `5.3.1`
-
-## 5.2.0 - January 22, 2024
-
-[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.2.0)
-
-### 🔧 Compatibility Notes
-
-- The de-facto standard `resilience4j` implementation for the resilience API is now included by default.
-  In case you are loading a different implementation of the `Resilience4jDecorationStrategy` via the Java Service Provider Interface (SPI), you should use `resilience-api` and ensure `resilience4j` is not loaded transitively.
-  Alternatively, you can invoke `ResilienceDecorator.setDecorationStrategy` explicitly in your code.
-
-  - In case you are using custom facade implementations for accessors (e.g. `TenantAccessor`) this might have additional implications.
-
-        <details>
-
-    <summary>Details: Impact on custom facades</summary>
-
-        First, check if all the following conditions apply for your use case:
-
-        - You are providing a custom implementation of a facade interface (e.g. the `TenantFacade` registered to the `TenantAccessor`).
-        - Your custom facade implementation uses `ThreadLocal` variables which are not configured to be passed on by the `ThreadContextExecutor`.
-        - Before version `5.2.0` the `resilience4j` module was not in the dependency tree and no alternative implementation was provided.
-        - You are implicitly or explicitly using a resilience configuration with a `TimeLimiter` defined.
-          - This means that the `TimeLimiter` was not taking effect before `5.2.0` and respective warnings have been logged about this.
-        - The code inside the resilient execution is implicitly or explicitly using the facade implementation.
-
-        If all the above conditions apply, you might need to ensure that the `ThreadLocal` variables you are using for your custom facades are passed on by the `ThreadContextExecutor`.
-        Please follow [this documentation](https://sap.github.io/cloud-sdk/docs/java/features/multi-tenancy/thread-context#passing-on-other-threadlocals) on how to achieve this.
-
-        </details>
-
-- `com.sap.cloud.sdk.cloudplatform.connectivity.DestinationService.Cache` now enables change detection by default, but can be disabled via `DestinationService.Cache.disableChangeDetection()`.
-  - `DestinationService.Cache.enableChangeDetection()` has been deprecated.
-
-### ✨ New Functionality
-
-- `OpenAPI` generated objects can now write custom fields which are not part of the object's schema:
-  - `setCustomField("nameOfField", "valueOfField")`
-- Destinations from _SAP BTP Destination Service_ with `AuthenticationType=ClientCertificateAuthentication` now support _PEM_ file format for provided key-stores.
-
-### 📈 Improvements
-
-- Improved the resilience module structure.
-  The de-facto standard `resilience4j` implementation is now included by default.
-  It is no longer necessary to explicitly reference this module in the `pom.xml`, if `resilience` is already referenced or is present transitively.
-- Improved the upgrade path from SAP Cloud SDK version 4 by handling older implementations of `Resilience4jDecorationStrategy` in a graceful manner.
-  In the previous releases, any occurrence of the `com.sap.cloud.sdk.frameworks:resilience4j` maven module needed to be excluded (in case it came in transitively) to not conflict with `com.sap.cloud.sdk.cloudplatform:resilience4j`.
-  This is no longer required, as the SAP Cloud SDK 4 strategy will be ignored now, if there is exactly one alternative.
-- Improved the application of resilience patterns for OAuth authorization flows.
-  Stateful resilience patterns (e.g. circuit breaker) will now be applied per `client_id` of the OAuth client (was per instance of the OAuth service / destination).
-- Improved the `ApacheHttpClient5CacheBuilder` API, it would return a non-public class in the previous releases.
-- Dependency Updates:
-  - SAP dependency updates:
-    - Update the [SAP Security Library](https://github.com/SAP/cloud-security-services-integration-library) from `3.3.1` to `3.3.3`
-  - Other dependency updates:
-    - Update [Guava](https://central.sonatype.com/artifact/com.google.guava/guava/33.0.0-jre) from `32.1.3-jre` to `33.0.0-jre`
-    - Update [Jackson](https://central.sonatype.com/artifact/com.fasterxml.jackson.core/jackson-core/2.16.1) from `2.15.3` to `2.16.1`
-    - Update [Commons Lang](https://central.sonatype.com/artifact/org.apache.commons/commons-lang3/3.14.0) from `3.13.0` to `3.14.0`
-- Destinations retrieved from the SAP BTP Destination Service now correctly evaluate the `forwardAuthToken` property if it has the authentication type `NoAuthentication`.
-
-### 🐛 Fixed Issues
-
-- Fixed an issue where adding header providers to a destination after it had already been used to obtain an `HttpClient` would not work as expected.
-
-## 5.1.0 - December 27, 2023
-
-[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.1.0)
-
-### 🔧 Compatibility Notes
-
-- An earlier version of the [V5 Upgrade Guide](https://sap.github.io/cloud-sdk/docs/java/guides/5.0-upgrade-steps) contained an instruction to move handling of `DestinationAccessExceptions` from `DestinationAccessor.getDestination()` to `destination.getHeaders()`.
-  This instruction was incorrect and has been removed.
-  In case you have followed this instruction, please revert the change.
-- `UriBuilder.build(scheme, userInfo, host, port, path, query, fragment)` has been deprecated in favor of `UriBuilder.build(scheme, authority, path, query, fragment)`.
-- Deprecate the strategies `LOOKUP_ONLY` and `LOOKUP_THEN_EXCHANGE` of `DestinationServiceTokenExchangeStrategy`.
-  They are replaced by the `FORWARD_USER_TOKEN` strategy.
-  If there are any issues when using `FORWARD_USER_TOKEN` for destinations that require user tokens, please report them and use `EXCHANGE_ONLY` for such cases.
-- `DestinationService.tryGetAllDestinations()` and `DestinationService.tryGetAllDestinations(DestinationOptions opts)` have been deprecated in favor of `DestinationService.getAllDestinationProperties()`.
-
-### ✨ New Functionality
-
-- Added new API to retrieve destination properties only from the SAP BTP Destination Service.
-  `DestinationService` now offers `getDestinationProperties(String destinationName)` and `getAllDestinationProperties()`.
-
-### 📈 Improvements
-
-- A warning is now logged when destinations with expired authentication tokens are used for requests.
-- SAP dependency updates:
-  - Update the [SAP Security Library](https://github.com/SAP/cloud-security-services-integration-library) from `3.3.0` to `3.3.1`
-- Other dependency updates:
-  - Update [Apache HttpClient 5](https://central.sonatype.com/artifact/org.apache.httpcomponents.client5/httpclient5) from `5.2.1` to `5.3`
-  - Update [Apache HttpCore 5](https://search.maven.org/search?q=a:httpcore5) from `5.2.3` to `5.2.4`
-
-### 🐛 Fixed Issues
-
-- Fix an issue where an invalid hostname in a destination would lead to an empty hostname. The hostname is now accepted.
-- Fix an issue where errors from token flows of destinations retrieved from the SAP BTP destination service were not handled consistently.
-  For the non-default strategy `LOOKUP_ONLY` errors were handled too late and results would get cached unintentionally.
-
-## Major Version Update: 5.0.0
-
-This is the first release of the SAP Cloud SDK as an **open source** project.
-As this is a new major version, this release contains a lot of (under the hood) improvements, refactoring, and other changes.
-
-These release notes list the most relevant API changes.
-Please refer to the [Upgrade Guide](../guides/5.0-upgrade-steps.mdx) for detailed instructions on how to upgrade your project to version 5 and for a detailed list of changes.
-
-### Important Compatibility Changes with Version 5
-
-Please take note of the following changes introduced with version 5:
-
-- The SAP Cloud SDK is now **open source** on [github.com/SAP/cloud-sdk-java](https://github.com/SAP/cloud-sdk-java).
-  - As of version 5 the SAP Cloud SDK is now under the [**Apache Software License**, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt).
-  - Releases of version 4 remain under the [SAP DEVELOPER LICENSE AGREEMENT](https://tools.hana.ondemand.com/developer-license-3_1.txt).
-- The minimum required Java version increased:
-  - **Java 17** is now the minimum required version to build and use the SAP Cloud SDK.
-- The integration with JavaEE servlets changed:
-  - The **Jakarta** servlet namespace is now used for servlet integration.
-- The minimum required versions for Spring and the SAP BTP Security Libraries increased:
-  - **Spring 6** and **SAP BTP Security Libraries version 3** are now the minimum required versions.
-- The compatibility with the SAP Java Buildpack changed:
-  - Deployments to SAP BTP Cloud Foundry with packaging type `war` require version 2 of the SAP Java Buildpack.
-- The SAP BTP Neo Environment is no longer supported.
-- A significant number of modules have been renamed, moved or been removed.
-  Please refer to the [Upgrade Guide](../guides/5.0-upgrade-steps.mdx) for the full list of module changes.
-
-### API Changes
-
-#### Changes to the overall Destination API:
-
-- Both `HttpDestination` as well as `HttpDestinationProperties` are now sub-types of `Destination` for improved compatibility with the SAP Cloud SDK APIs.
-- The `Destination#decorate` method has been removed without replacement.
-- The public constructor of `DefaultHttpDestination` has been replaced with a static factory method `DefaultHttpDestination#fromProperties`.
-  - We also added some extra static factory methods (`DefaultHttpDestination#fromMap` and `DefaultHttpDestination#fromDestination`) for convenience.
-- The public constructor of `DefaultDestination` has been replaced with a static factory method `DefaultHttpDestination#fromMap`.
-  - We also added an extra static factory method `DefaultHttpDestination#fromProperties` for convenience.
-- The `DefaultHttpDestination.Builder` has been modified in the following ways:
-  - The `user(String)` and `password(String)` methods have been replaced with `basicCredentials(String, String)`.
-  - Using any overload of `basicCredentials` will now automatically set the `AuthenticationType` to `BASIC_AUTHENTICATION`.
-  - Using `proxyConfiguration(ProxyConfiguration)` will now throw an `IllegalArgumentException` in case the contained `Credentials` are not supported. Supported types are `BearerCredentials` and `NoCredentials`.
-- Changed the following `DestinationPropertyKey` instances:
-  - `AUTH_TYPE`: `authentication` -> `Authentication`
-  - `CERTIFICATES`: `certificates` -> `cloudsdk.certificates`
-  - `AUTH_TOKENS`: `authTokens` -> `cloudsdk.authTokens`
-  - These changes are most relevant for users who are **not** already using these constant `DestinationPropertyKey` instances but instead retrieved properties from `DestinationProperties` (and sub-types) using the `get(String, Function)` method.
-- The deprecated `ClientCredentialsHttpDestination` has been removed in favor of the improved `OAuth2DestinationBuilder`.
-  - The `OAuth2DestinationBuilder` has been changed to allow for setting arbitrary destination properties after the OAuth2 configuration has been set.
-  - The `.withProperties(..)` aspect of the builder has been replaced with `.withProperty(..)`.
-- The `BearerCredentials` behavior has been adjusted slightly: The `getToken()` method no longer just returns the value passed in via the constructor but instead is now guaranteed to **NOT** contain the prefix `"Bearer "`.
-  To compensate this change, the `#getHttpHeaderValue()` method has been added, which is guaranteed to contain the `"Bearer "` prefix.
-
-#### Changes related to the SAP BTP Destination Service:
-
-- The `ScpCfDestination` and `ScpCfHttpDestination` classes are replaced by the baseline `Destination` and `DefaultHttpDestination` implementations.
-- The `ScpCfDestinationLoader` has been renamed to `DestinationService`.
-  All related classes have been renamed similarly:
-  - `ScpCfDestinationRetrievalStrategy` -> `DestinationServiceRetrievalStrategy`
-    - The deprecated `CURRENT_TENANT_THEN_PROVIDER` has been removed.
-  - `ScpCfDestinationTokenExchangeStrategy` -> `DestinationServiceTokenExchangeStrategy`
-  - `ScpCfDestinationServiceV1Response` -> `DestinationServiceV1Response`
-- Removed the following elements from enum `com.sap.cloud.sdk.cloudplatform.connectivity.AuthenticationType`:
-  - `APP_TO_APP_SSO`
-  - `INTERNAL_SYSTEM_AUTHENTICATION`
-
-#### Changes to HTTP clients:
-
-- The `HttpClientAccessor` and `ApacheHttpClient5Accessor` classes are generalised to accept `Destination` instances, making invocations to `.asHttp()` superfluous when obtaining HTTP clients.
-- The `getSslContext()` method was removed from the `CloudPlatform` interface and the implementation was moved to the modules `connectivity-apache-httpclient4` and `connectivity-apache-httpclient5`.
-
-#### Changes to Multi-Tenancy APIs:
-
-- The public constructor of `DefaultPrincipal` now only accepts a String argument for `principalId`.
-- The `PrincipalFacade` of the `PrincipalAccessor` will default to `DefaultPrincipalFacade` in the case that a facade cannot be found.
-- The `RequestHeaderContainer` no longer splits header values.
-- The `ODataRequestResult` no longer splits header values.
-- The `AuthTokenFacade` of the `AuthTokenAccessor` will default to `DefaultAuthTokenFacade`
-- The `TenantFacade` of the `TenantAccessor` will default to `DefaultTenantFacade`
-- The `TenantWithSubdomain#getSubdomain` is now `@Nullable`.
-
-#### Changes to the SAP Cloud Platform API:
-
-- The `CloudPlatform` interface and all related classes have been removed.
-  In particular, the following classes have been removed:
-  - `ScpCfCloudPlatform` and `ScpNeoCloudPlatform`
-  - `CloudPlatformAccessor` and `CloudPlatformFacade`
-
-### Maven Module Changes
-
-- `com.sap.cloud.sdk.cloudplatform:scp-cf` has been deprecated. Please use `com.sap.cloud.sdk:sdk-core` instead.
-- All classes related to the Apache Http Client 4 have been moved from `com.sap.cloud.sdk.cloudplatform:cloudplatform-connectivity` to a new module `com.sap.cloud.sdk.cloudplatform:connectivity-apache-httpclient4`.
-- All classes related to the Apache Http Client 5 have been moved from `com.sap.cloud.sdk.frameworks:apache-httpclient5` to `com.sap.cloud.sdk.cloudplatform:connectivity-apache-httpclient5`.
-- All classes related to Resilience4j have been moved from `com.sap.cloud.sdk.frameworks:resilience4j` to `com.sap.cloud.sdk.cloudplatform:resilience4j`.
-- All classes related to OAuth authorization flows have been moved into a new module `com.sap.cloud.sdk.cloudplatform:connectivity-oauth2`.
-- The `cloudplatform-connectivity-scp-cf` module got renamed to `connectivity-destination-service`.
-  - To prevent breaking changes with the renamed module the `cloudplatform-connectivity-scp-cf` module is still available as a dependency, but it is empty and just contains a reference to the new module `connectivity-destination-service`.
-- All modules related to the SAP BTP Neo Environment have been removed.
-- All modules with suffixes `-scp-cf` have been merged into their respective baseline modules:
-  - `tenant-scp-cf` has been merged into `tenant`
-  - `security-scp-cf` has been merged into `security`
-- `com.sap.cloud.sdk.cloudplatform:servlet` and `com.sap.cloud.sdk.cloudplatform:security-servlet` have been removed.
-- All deprecated pre-generated clients for OData and OpenAPI have been removed:
-  - `com.sap.cloud.sdk.s4hana:s4hana-all`
-  - `com.sap.cloud.sdk.s4hana:s4hana-api-odata`
-  - `com.sap.cloud.sdk.s4hana:s4hana-api-odata-onpremise`
-  - `com.sap.cloud.sdk.s4hana:s4hana-api-odata-v4`
-  - `com.sap.cloud.sdk.s4hana:s4hana-api-odata-v4-onpremise`
-  - `com.sap.cloud.sdk.services:scp-workflow-cf`
-  - `com.sap.cloud.sdk.services:btp-business-rules`
-
-### Major Dependency Changes
-
-- Upgrade the [SAP BTP Security Libraries](https://github.com/SAP/cloud-security-services-integration-library) (`com.sap.cloud.security`) from `2.14.2` to `3.3.0`.
-- Upgrade [Spring](https://spring.io) (`org.springframework`) from `5.3.29` to `6.1.1`.
-- Upgrade [SLF4J](https://www.slf4j.org) (`org.slf4j`) from `1.7.36` to `2.0.9`.
-- Upgrade [Caffeine](https://github.com/ben-manes/caffeine) (`com.github.ben-manes.caffeine`) from `2.9.3` to `3.1.8`.
-- Change the servlet integration to the [Jakarta](https://jakarta.ee) namespace (`jakarta.servlet`).
-- The overall dependency footprint of the SAP Cloud SDK has been reduced significantly.
-  - This also means that some dependencies have been removed from the `sdk-bom`.
-
-### Other Improvements
-
-- The `Destination#asHttp()` and `Destination#asRfc()` methods no longer always return a new instance of `HttpDestination` and `RfcDestination` if the current objects is already a `HttpDestination` or `RfcDestination` respectively.
-- The OData, OpenAPI and SOAP APIs are generalised to accept instances of `Destination`, making invocations to `.asHttp()` superfluous when executing OData or REST requests.
-  - OData v2 and OpenAPI clients need to be re-generated to adjust for this change.
-- `Destination#asHttp()` no longer throws an exception in case the `Destination` originates from the Destination service and the attached auth token contains an error.
-  Instead, an exception will be thrown upon invoking the `getHeaders()` method, for example, during request execution.
-- Loading a `Destination` from the SAP BTP Destination service will now:
-  - No longer eagerly evaluate authentication tokens or On-Premise related headers (if applicable).
-    Instead, those will be evaluated lazily upon request execution.
-    As a consequence, the `getHeaders` method might now throw an exception if resolving (on-premise) authentication information fails.
-  - Throw an exception if the tenant changed between loading and using the destination to execute requests.
-  - Throw an exception if any of the attached certificates isn't valid.
-- Removed the `javax.inject.Named` annotation from code generated with any of the OData generators (v2, v4).
-
-### Fixed Issues
-
-- Fixed a bug where an `Authorization` header was attached multiple times to outgoing HTTP requests under some circumstances
-- Fixed an issue where the `DestinationType` of an `DefaultHttpDestination` could be changed to anything but `DestinationType.HTTP`
-- Fixed an issue with custom GSON serialization of OpenAPI generated classes having unexpected `customFieldNames` properties in JSON payload.
+- Introduce AI Core client to consume the [AI Core Rest APIs](https://api.sap.com/api/AI_CORE_API/overview).
+  Here are a few features:
+  - Artifact management: register and organize datasets and model artifacts.
+  - Configuration management: set up configurations for various models and use cases.
+  - Deployment management: deploy AI models and manage their lifecycle within SAP AI Core.
+- Introduce Orchestration client for consuming the following features of the orchestration service:
+  - Harmonized LLM access via orchestration
+  - Prompt templates
+  - Content filtering
+  - Masking
+- Introduce the OpenAI client to consume the following features:
+  - Chat completion and streaming chat completion
+    - Text
+    - Images
+    - Tools
+  - Generate embeddings for input text.
+
+:::warning
+All classes under any of the `...model` packages are generated from an OpenAPI specification and marked as `@Beta`.
+This means that these model classes are not guaranteed to be stable and may change with future releases.
+They are safe to use, but may require updates even in minor releases.
+:::

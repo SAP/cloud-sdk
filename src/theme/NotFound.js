@@ -22,7 +22,7 @@ export default function NotFound() {
                 version. Our search can also help.
               </p>
               <p>
-                If you were looking for the API reference of the SAP Cloud SDK
+                If you were looking for the API reference of the SAP Cloud SDK for AI
                 for JavaScript, you can find the latest version{' '}
                 <a href="https://sap.github.io/cloud-sdk/api/latest/">here</a>.
               </p>

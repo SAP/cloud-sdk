@@ -1,27 +1,27 @@
-# SAP Cloud SDK documentation and support portal
+# SAP Cloud SDK for AI documentation and support portal
 
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP/cloud-sdk)](https://api.reuse.software/info/github.com/SAP/cloud-sdk)
 
 This repository contains:
 
-- Sources for the [SAP Cloud SDK Documentation](https://sap.github.io/cloud-sdk/).
-- SAP Cloud SDK for Java [Support Issues](https://github.com/SAP/cloud-sdk/issues).
+- Sources for the [SAP Cloud SDK for AI Documentation](https://sap.github.io/cloud-sdk/).
+- SAP Cloud SDK for AI Java [Support Issues](https://github.com/SAP/ai-sdk/issues).
 
-For the [Support](https://github.com/SAP/cloud-sdk-js/issues) on SAP Cloud SDK for JavaScript us this [repository](https://github.com/SAP/cloud-sdk-js).
+For the [Support](https://github.com/SAP/ai-sdk-js/issues) on SAP Cloud SDK for AI JavaScript us this [repository](https://github.com/SAP/ai-sdk-js).
 
-## Looking for the repository of the SAP Cloud SDK for JavaScript / TypeScript?
+## Looking for the repository of the SAP Cloud SDK for AI JavaScript / TypeScript?
 
-Find it here [here](https://github.com/SAP/cloud-sdk-js).
+Find it here [here](https://github.com/SAP/ai-sdk-js).
 
 ## Getting Support
 
-- [SAP Cloud SDK for Java](https://github.com/SAP/cloud-sdk/issues)
-- [SAP Cloud SDK for JavaScript / TypeScript](https://github.com/SAP/cloud-sdk-js/issues/new/choose)
+- [SAP Cloud SDK for AI Java](https://github.com/SAP/ai-sdk/issues)
+- [SAP Cloud SDK for AI JavaScript / TypeScript](https://github.com/SAP/ai-sdk-js/issues/new/choose)
 - [Documentation portal](https://sap.github.io/cloud-sdk/)
 
 ## Contributing
 
-Feel free to contribute to the SAP Cloud SDK documentation.
+Feel free to contribute to the SAP Cloud SDK for AI documentation.
 Check out our [contribution guide](./CONTRIBUTING.md) and follow our [code of conduct](./CODE_OF_CONDUCT.md).
 
 ## License

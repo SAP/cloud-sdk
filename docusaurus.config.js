@@ -15,14 +15,14 @@ class ESMPolyfillWrapper {
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
-  title: 'SAP Cloud SDK',
+  title: 'SAP Cloud SDK for AI',
   tagline:
-    'The one-stop shop for developing and extending SAP applications in the cloud.',
+    'The one-stop shop for integrating AI into SAP Cloud applications.',
   url: 'https://sap.github.io',
   baseUrl: '/cloud-sdk/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'throw',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/AI-SDK-Logo.svg',
   organizationName: 'SAP',
   projectName: 'cloud-sdk',
   trailingSlash: false,
@@ -38,15 +38,15 @@ module.exports = {
     },
     algolia: {
       apiKey: '441c57554e5a0ca9338cc9f047fb10c8',
-      indexName: 'sap_cloud-sdk',
+      indexName: 'sap_cloud-sdk',// should be dynamic based on the URL, contextualSearch?, searchParameters?
       appId: 'E4A268JVO0',
       algoliaOptions: {} // Optional, if provided by Algolia
     },
     navbar: {
-      title: 'SAP Cloud SDK',
+      title: 'SAP Cloud SDK for AI',
       logo: {
-        alt: 'SAP Cloud SDK',
-        src: 'img/logo.svg',
+        alt: 'SAP Cloud SDK for AI',
+        src: 'img/AI-SDK-Logo.svg',
         srcDark: 'img/logo-dark.svg'
       },
       items: [
@@ -88,7 +88,7 @@ module.exports = {
       style: 'dark',
       links: [
         {
-          title: 'SAP Cloud SDK for Java',
+          title: 'SAP Cloud SDK for AI Java',
           items: [
             {
               label: 'Tutorials',
@@ -105,7 +105,7 @@ module.exports = {
           ]
         },
         {
-          title: 'SAP Cloud SDK for JavaScript',
+          title: 'SAP Cloud SDK for AI JavaScript',
           items: [
             {
               label: 'Tutorials',
@@ -117,7 +117,7 @@ module.exports = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/SAP/cloud-sdk-js'
+              href: 'https://github.com/SAP/ai-sdk-js'
             },
             {
               label: 'Sample repository',
@@ -137,15 +137,15 @@ module.exports = {
               href: 'https://stackoverflow.com/questions/tagged/sap-cloud-sdk'
             },
             {
-              label: 'SAP Cloud SDK Community Page',
+              label: 'SAP Cloud SDK for AI Community Page',
               href: 'https://community.sap.com/topics/cloud-sdk'
             },
             {
-              label: 'SAP Cloud SDK on SAP Answers',
+              label: 'SAP Cloud SDK for AI on SAP Answers',
               href: 'https://answers.sap.com/tags/73555000100800000895'
             },
             {
-              label: 'SAP Cloud SDK on SAP Help',
+              label: 'SAP Cloud SDK for AI on SAP Help',
               href: 'https://help.sap.com/viewer/product/SAP_CLOUD_SDK/1.0/en-US?task=discover_task'
             },
             {
@@ -164,7 +164,7 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve('./sidebarsDocsCommon.js'),
-          editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
+          editUrl: 'https://github.com/SAP/ai-sdk/edit/main',
           routeBasePath: 'docs/overview',
           path: 'docs'
         },
@@ -197,24 +197,13 @@ module.exports = {
       {
         id: 'docs-java',
         path: 'docs-java',
-        editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
+        editUrl: 'https://github.com/SAP/ai-sdk/edit/main',
         routeBasePath: 'docs/java',
         sidebarPath: require.resolve('./sidebarsDocsJava.js'),
         lastVersion: 'current',
         versions: {
           current: {
-            label: 'v5',
-            badge: false
-          },
-          v3: {
-            label: 'v3',
-            path: 'v3',
-            banner: 'unmaintained',
-            badge: false
-          },
-          v4: {
-            label: 'v4',
-            path: 'v4',
+            label: 'v1',
             badge: false
           }
         }
@@ -225,224 +214,16 @@ module.exports = {
       {
         id: 'docs-js',
         path: 'docs-js',
-        editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
+        editUrl: 'https://github.com/SAP/ai-sdk/edit/main',
         routeBasePath: 'docs/js',
         sidebarPath: require.resolve('./sidebarsDocsJs.js'),
-        lastVersion: 'v3',
+        lastVersion: 'current',
         versions: {
           current: {
-            label: 'v4',
-            path: 'v4',
-            banner: 'unreleased',
-            badge: false
-          },
-          v3: {
-            label: 'v3',
-            badge: false
-          },
-          v2: {
-            label: 'v2',
-            path: 'v2',
-            banner: 'unmaintained',
-            badge: false
-          },
-          v1: {
             label: 'v1',
-            path: 'v1',
-            banner: 'unmaintained',
             badge: false
           }
         }
-      }
-    ],
-    [
-      '@docusaurus/plugin-client-redirects',
-      {
-        redirects: [
-          {
-            from: '/docs/js/guides/kubernetes',
-            to: '/docs/js/environments/kubernetes'
-          },
-          {
-            from: [
-              '/docs/js/frequently-asked-questions',
-              '/docs/js/guides/migrate-to-open-source-version-of-cloud-sdk-for-javascript-typescript'
-            ],
-            to: '/docs/js/overview'
-          },
-          {
-            from: ['/docs/community', '/docs/related-projects'],
-            to: '/docs/overview/overview-cloud-sdk'
-          },
-          {
-            from: '/docs/js/support-js',
-            to: '/docs/js/support'
-          },
-          {
-            from: '/docs/js/release-notes-sap-cloud-sdk-for-javascript-and-typescript',
-            to: '/docs/js/release-notes'
-          },
-          {
-            from: '/docs/js/overview-cloud-sdk-for-javascript',
-            to: '/docs/js/overview'
-          },
-          {
-            from: '/docs/js/video/demo-of-cloud-sdk-for-javascript-with-calm-and-cap',
-            to: '/docs/js/video/calm'
-          },
-          {
-            from: '/docs/js/guides/migrate-sdk-application-from-btp-cf-to-kubernetes',
-            to: '/docs/js/environments/kubernetes'
-          },
-          {
-            from: '/docs/js/guides/bas-external-system',
-            to: '/docs/js/guides/bas'
-          },
-          {
-            from: '/docs/js/guides/how-to-use-the-approuter',
-            to: '/docs/js/guides/approuter'
-          },
-          {
-            from: '/docs/js/guides/how-to-add-resilience',
-            to: '/docs/js/guides/resilience'
-          },
-          {
-            from: '/docs/js/guides/how-to-retrieve-jwt',
-            to: '/docs/js/guides/retrieve-jwt'
-          },
-          {
-            from: '/docs/js/features/connectivity/destination',
-            to: '/docs/js/features/connectivity/destinations'
-          },
-          {
-            from: '/docs/js/features/odata/use-odata-v2-type-safe-client-for-javascript-typescript',
-            to: '/docs/js/features/odata/v2-client'
-          },
-          {
-            from: '/docs/js/features/odata/use-odata-v4-type-safe-client-for-javascript-typescript',
-            to: '/docs/js/features/odata/v4-client'
-          },
-          {
-            from: '/docs/js/features/connectivity/destination-cache-isolation',
-            to: '/docs/js/features/connectivity/destination-cache'
-          },
-          {
-            from: '/docs/js/guides/sdk-in-browser',
-            to: '/docs/js/guides/browser'
-          },
-          {
-            from: '/docs/js/guides/trust-and-key-stores',
-            to: '/docs/js/guides/trust-and-keystores'
-          },
-          {
-            from: '/docs/js/features/connectivity/generic-http-client',
-            to: '/docs/js/features/connectivity/http-client'
-          },
-          {
-            from: '/docs/js/guides/debug-remote-app',
-            to: '/docs/js/guides/remote-debugging'
-          },
-          {
-            from: '/docs/js/features/connectivity/proxy',
-            to: '/docs/js/features/connectivity/proxies'
-          },
-          {
-            from: '/docs/js/tutorials/address-manager/read-addresses',
-            to: '/docs/js/tutorials/address-manager/read'
-          },
-          {
-            from: '/docs/js/tutorials/address-manager/change-addresses',
-            to: '/docs/js/tutorials/address-manager/change'
-          },
-          {
-            from: '/docs/js/features/odata/generate-odata-client',
-            to: '/docs/js/features/odata/generate-client'
-          },
-          {
-            from: '/docs/js/features/odata/execute-odata-request',
-            to: '/docs/js/features/odata/execute-request'
-          },
-          {
-            from: '/docs/js/features/openapi/execute-openapi-request',
-            to: '/docs/js/features/openapi/execute-request'
-          },
-          {
-            from: '/docs/js/features/openapi/generate-openapi-client',
-            to: '/docs/js/features/openapi/generate-client'
-          },
-          {
-            from: '/docs/js/troubleshooting-js',
-            to: '/docs/js/troubleshooting'
-          },
-          {
-            from: '/docs/java/environments/sap-btp-environments-overview',
-            to: '/docs/java/environments/overview'
-          },
-          {
-            from: '/docs/java/environments/sap-btp-cloud-foundry-environment',
-            to: '/docs/java/environments/cloud-foundry'
-          },
-          {
-            from: '/docs/java/environments/sap-btp-kubernetes-environment-with-sap-gardener',
-            to: '/docs/java/environments/kubernetes-gardener'
-          },
-          {
-            from: '/docs/java/environments/sap-btp-kyma-environment',
-            to: '/docs/java/environments/kubernetes-kyma'
-          },
-          {
-            from: '/docs/java/features/odata/use-typed-odata-v2-client-in-sap-cloud-sdk-for-java',
-            to: '/docs/java/features/odata/v2-vdm-client'
-          },
-          {
-            from: '/docs/java/features/odata/use-typed-odata-v4-client-in-sap-cloud-sdk-for-java',
-            to: '/docs/java/features/odata/v4-vdm-client'
-          },
-          {
-            from: '/docs/java/features/odata/generate-typed-odata-v2-and-v4-client-for-java',
-            to: '/docs/java/features/odata/vdm-generator'
-          },
-          {
-            from: '/docs/java/features/multi-tenancy/multi-tenancy-thread-context',
-            to: '/docs/java/features/multi-tenancy/thread-context'
-          },
-          {
-            from: '/docs/java/features/connectivity/sdk-connectivity-destination-service',
-            to: '/docs/java/features/connectivity/destination-service'
-          },
-          {
-            from: '/docs/java/features/connectivity/sdk-connectivity-http-client',
-            to: '/docs/java/features/connectivity/http-client'
-          },
-          {
-            from: '/docs/java/features/connectivity/sdk-connectivity-mtls',
-            to: '/docs/java/features/connectivity/mtls'
-          },
-          {
-            from: '/docs/java/features/bapi-and-rfc/bapi-and-rfc-overview',
-            to: '/docs/java/features/bapi-and-rfc/overview'
-          },
-          {
-            from: '/docs/java/sdk-java-troubleshooting-frequent-problems',
-            to: '/docs/java/troubleshooting-frequent-problems'
-          },
-          {
-            from: '/docs/java/release-notes-sap-cloud-sdk-for-java',
-            to: '/docs/java/release-notes'
-          },
-          {
-            from: '/docs/java/support-java',
-            to: '/docs/java/support'
-          },
-          {
-            from: '/docs/java/features/rest/clients/btp-business-rules-rest-api',
-            to: '/docs/java/v4/features/rest/clients/btp-business-rules-rest-api'
-          },
-          {
-            from: '/docs/java/features/rest/clients/scp-workflow-rest-api',
-            to: '/docs/java/v4/features/rest/clients/scp-workflow-rest-api'
-          }
-        ]
       }
     ],
     function nodeWebpackPolyfillPlugin(context, options) {

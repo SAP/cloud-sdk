@@ -24,7 +24,7 @@ const NotImplemented = () => (
       <p>
         Please,{' '}
         <a
-          href="https://github.com/SAP/cloud-sdk/issues/new?assignees=&amp;labels=feature+request&amp;template=feature_request.md&amp;title="
+          href="https://github.com/SAP/ai-sdk/issues/new?assignees=&amp;labels=feature+request&amp;template=feature_request.md&amp;title="
           target="_blank"
           rel="noopener noreferrer"
         >

@@ -3,7 +3,6 @@ id: getting-started
 title: Getting Started
 hide_title: false
 hide_table_of_contents: false
-sidebar_label: Getting Started
 description: Get up to speed with SAP Cloud SDK for Java in no time
 keywords:
   - sap
@@ -14,210 +13,74 @@ keywords:
   - sap cloud sdk
 ---
 
-import MvnBadge from '@site/src/sap/sdk-java/MvnBadge';
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+### What You'll Build
 
-<MvnBadge />
+In this quickstart, you'll use the OpenAI GPT-4o model through the [Orchestration Service of AI Core](https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/orchestration) for generating text.
+The application will send a prompt to the AI model and display the generated response.
 
-## Introduction
+### Prerequisites
 
-To get started with the SAP Cloud SDK for Java you can either create a new project or integrate the SAP Cloud SDK into your existing one.
-You will need an installation of Java and Maven.
+This quickstart assumes you have a **deployment of the Orchestration service available** in the `default` resource group of your AI Core instance.
+If you don't have a deployment yet, please refer to [this guide](https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/create-deployment-for-orchestration) on how to create one.
 
-:::note Java version compatibility
-The SAP Cloud SDK is compatible with Java 17 Long-Term-Support (LTS).
-Newer Java versions may work as well depending on your setup but are not yet tested by us.
-Note that the SAP Business Technology Platform Cloud Foundry environment can be configured to run with Java 17.
-:::
+### Add the SDK as a Dependency
 
-To start with a clean, new project you can use the Spring Boot Archetye as described below.
-Alternatively, you can follow [these instructions](#integrate-the-cloud-sdk-for-java-into-your-project) to integrate the SAP Cloud SDK into your existing setup.
-
-## Generating a Project from a Maven Archetype
-
-The SAP Cloud SDK provides an archetype based on [Spring 6](https://spring.io/).
-
-Run:
-
-```bash
-mvn archetype:generate "-DarchetypeGroupId=com.sap.cloud.sdk.archetypes" \
-    "-DarchetypeArtifactId=spring-boot3" \
-    "-DarchetypeVersion=RELEASE"
-```
-
-Maven will ask you to provide the following:
-
-- `groupId` - usually serves as your organization identifier, i.e. `foo.bar.cloud.app`
-- `artifactId` - it's your application's name, i.e. `mydreamapp`
-- `version` - we recommend keeping `1.0-SNAPSHOT` if you're just starting
-- `package` - by default this equals to `groupId`. Change it only if you know what you're doing
-
-After providing all the interactive values to the CLI it will generate your first SAP Cloud SDK based application:
-
-```bash
-[INFO] Scanning for projects...
-[INFO]
-[INFO] ------------------< org.apache.maven:standalone-pom >-------------------
-[INFO] Building Maven Stub Project (No POM) 1
-[INFO] --------------------------------[ pom ]---------------------------------
-[INFO]
-[INFO] >>> archetype:3.2.1:generate (default-cli) > generate-sources @ standalone-pom >>>
-[INFO]
-[INFO] <<< archetype:3.2.1:generate (default-cli) < generate-sources @ standalone-pom <<<
-[INFO]
-[INFO]
-[INFO] --- archetype:3.2.1:generate (default-cli) @ standalone-pom ---
-[INFO] Generating project in Interactive mode
-[INFO] ....
-[INFO] ....
-Define value for property 'artifactId' (should match expression '[^_]+'): mydreamapp
-[INFO] Using property: gitignore = .gitignore
-Define value for property 'groupId': foo.bar.cloud.app
-[INFO] Using property: artifactId = mydreamapp
-Define value for property 'version' 1.0-SNAPSHOT: :
-Define value for property 'package' foo.bar.cloud.app: :
-Confirm properties configuration:
-artifactId: mydreamapp
-gitignore: .gitignore
-groupId: foo.bar.cloud.app
-artifactId: mydreamapp
-version: 1.0-SNAPSHOT
-package: foo.bar.cloud.app
- Y: :
-[INFO] ----------------------------------------------------------------------------
-[INFO] Using following parameters for creating project from Archetype: scp-cf-spring-jakarta:RELEASE
-[INFO] ----------------------------------------------------------------------------
-[INFO] Parameter: groupId, Value: foo.bar.cloud.app
-[INFO] Parameter: artifactId, Value: mydreamapp
-[INFO] Parameter: version, Value: 1.0-SNAPSHOT
-[INFO] Parameter: package, Value: foo.bar.cloud.app
-[INFO] Parameter: packageInPathFormat, Value: foo/bar/cloud/app
-[INFO] Parameter: package, Value: foo.bar.cloud.app
-[INFO] Parameter: gitignore, Value: .gitignore
-[INFO] Parameter: groupId, Value: foo.bar.cloud.app
-[INFO] Parameter: artifactId, Value: mydreamapp
-[INFO] Parameter: version, Value: 1.0-SNAPSHOT
-[INFO] Project created from Archetype in dir: /home/user/dev/temp/mydreamapp
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time:  20.616 s
-[INFO] Finished at: 2023-09-07T13:12:09+02:00
-[INFO] ------------------------------------------------------------------------
-```
-
-**Congratulations! You've just set up a brand-new application with the SAP Cloud SDK for Java.**
-
-:::tip
-To change the Java version modify the `<java.version>` property in the root `pom.xml`.
-:::
-
-### Run App Locally
-
-Applications created with our SAP Cloud SDK Archetypes give you the possibility to run locally on your development machine.
-
-```bash
-mvn clean install
-cd application/
-mvn spring-boot:run -D"spring-boot.run.profiles"=local
-```
-
-### Deploy to Cloud Foundry
-
-Assuming you have installed the [Cloud Foundry CLI](https://docs.cloudfoundry.org/cf-cli/) and are logged into your BTP account you can deploy the app via:
-
-```bash
-cf push
-```
-
-:::tip Authentication & Authorization
-Please note that the starter project does not come with any authentication or authorization checks enabled by default.
-This enables you to get started quickly and run locally without further configuration.
-
-However, we recommend securing your application as early as possible in the development process.
-The archetypes already come preconfigured for typical authorization scenarios.
-Following [this guide](https://developers.sap.com/tutorials/s4sdk-secure-cloudfoundry.html) you can secure your newly created application in just a few steps.
-:::
-
-## Integrate the SAP Cloud SDK for Java Into Your Project
-
-### Adding Dependencies
-
-:::tip
-The SAP Cloud SDK [integrates with CAP projects](/docs/overview/overview-cloud-sdk#sap-cloud-application-programming-model)!
-Follow the steps below or check out the dedicated [tutorial on SAP Developers](https://developers.sap.com/tutorials/cloudsdk-integrate-cap.html).
-:::
-
-To get started with an existing project include the _SAP Cloud SDK BOM_ in the _dependency management_ section of your project:
-
-```xml
-<dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>com.sap.cloud.sdk</groupId>
-            <artifactId>sdk-bom</artifactId>
-            <version>use-latest-version-here</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-    </dependencies>
-</dependencyManagement>
-```
-
-Include the essential Cloud SDK dependencies in the _dependencies_ section of your project:
+Add the following dependency to your `pom.xml` file:
 
 ```xml
 <dependency>
-    <groupId>com.sap.cloud.sdk</groupId>
-    <artifactId>sdk-core</artifactId>
+    <groupId>com.sap.ai.sdk</groupId>
+    <artifactId>orchestration</artifactId>
+    <!-- Use the latest version here -->
+    <version>${ai-sdk.version}</version>
 </dependency>
 ```
 
-If you want to connect to an **SAP S/4HANA** system via the **OData** protocol, you should checkout our convenient [OData code generator](features/odata/vdm-generator).
-By downloading the OData service specifications for either type of **SAP S/4HANA** system ([**SAP S/4HANA Cloud**](https://api.sap.com/package/SAPS4HANACloud?section=Artifacts) or [**SAP S/4HANA On-premise**](https://api.sap.com/package/S4HANAOPAPI?section=Artifacts)) you can generate your own set of classes.
-Similarly the SAP Cloud SDK offers a [code generator for Open API](features/rest/generate-rest-client) protocol.
+### Use the Orchestration API
 
-In case you have a **CAP application** which uses **multitenancy** features and/or a **protected backend** your service will need the following dependency:
-
-```xml
-<dependency>
-  <groupId>com.sap.cds</groupId>
-  <artifactId>cds-integration-cloud-sdk</artifactId>
-</dependency>
-```
-
-### Framework Integration
-
-In general, the SAP Cloud SDK for Java integrates natively into the [Spring Boot](https://spring.io/projects/spring-boot) framework.
-
-In particular the [SAP Cloud SDK provides listeners](features/multi-tenancy/thread-context.mdx) that can extract tenant and principal information from an incoming request.
-To ensure these listeners are present, please configure your project accordingly.
-
-Please ensure that the application is annotated to scan for components of the SAP Cloud SDK:
+We'll use a `client` to interact with the Orchestration service:
 
 ```java
-@ComponentScan({"com.sap.cloud.sdk", <your.own.package>})
-@ServletComponentScan({"com.sap.cloud.sdk", <your.own.package>})
+var client = new OrchestrationClient();
 ```
 
-Also, please check [the Spring version](https://mvnrepository.com/artifact/com.sap.cloud.sdk/sdk-bom/latest) declared in the SAP Cloud SDK BOM doesn't clash with your version of Spring.
+Next, we'll specify the model we want to use:
 
-:::note SAP Cloud SDK Modules Bill-of-Material
+```java
+var config = new OrchestrationModuleConfig()
+        .withLlmConfig(OrchestrationAiModel.GPT_4O);
+```
 
-By default, the SAP Cloud SDK archetypes reference the SAP Cloud SDK Bill-of-Material `sdk-bom`, which manages dependency versions for all SAP Cloud SDK modules and transitive dependencies.
-If you face dependency conflicts, you can instead try using the SAP Cloud SDK Modules Bill-of-Material `sdk-modules-bom` in the `dependencyManagement` section of your Maven POM file.
+Now we can create our first prompt:
 
-:::
+```java
+var prompt = new OrchestrationPrompt("Hello world! Why is this phrase so famous?");
 
-## Next Steps
+var result = client.chatCompletion(prompt, config).getContent();
+```
 
-- [Deploy your application to BTP Cloud Foundry](https://developers.sap.com/tutorials/s4sdk-cloud-foundry-sample-application.html)
-- [Call an OData Service on S/4HANA Cloud or On-Premise](https://developers.sap.com/tutorials/s4sdk-odata-service-cloud-foundry.html)
-- [Add resilience to your application](https://developers.sap.com/tutorials/s4sdk-resilience.html)
-- [Secure your application to prevent unauthorized access](https://developers.sap.com/tutorials/s4sdk-secure-cloudfoundry.html)
+The result will be the text generated by the AI model.
 
-## Further Resources
+### Run the Application Locally
 
-- Check our latest [release notes](release-notes.mdx)
-- Get [support](https://github.com/SAP/cloud-sdk-java/issues/new/choose) if you have questions or experience any issues
+In order to run the application locally, you need to provide credentials for your AI Core service instance.
+
+For this example we'll use a **service key** and pass it as an **environment variable** to the application.
+
+```shell
+cd your-spring-app/
+
+# assuming a bash, for other shells (e.g. PowerShell) see the below documentation
+export AICORE_SERVICE_KEY='{ "clientid": "...", "clientsecret": "...", "url": "...", "serviceurls": { "AI_API_URL": "..." } }'
+
+# assuming Maven and a Spring Boot application
+mvn spring-boot:run
+```
+
+Please find **detailed instructions** and more examples [in this documentation](guides/connecting-to-ai-core#using-the-aicore_service_key-environment-variable).
+
+### Explore Further Capabilities
+
+Check out the options available for the `OrchestrationPrompt` and `OrchestrationModuleConfig` classes.
+You can use templating, content filtering, data masking and more.
+Please refer to [this documentation](guides/orchestration-chat-completion) for more information.
