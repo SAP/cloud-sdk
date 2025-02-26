@@ -40,7 +40,8 @@ module.exports = {
       apiKey: '441c57554e5a0ca9338cc9f047fb10c8',
       indexName: 'sap_cloud-sdk',
       appId: 'E4A268JVO0',
-      algoliaOptions: {} // Optional, if provided by Algolia
+      algoliaOptions: {},
+      contextualSearch: true,
     },
     navbar: {
       title: 'SAP Cloud SDK',
