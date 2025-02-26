@@ -256,6 +256,26 @@ module.exports = {
       }
     ],
     [
+      '@docusaurus/plugin-sitemap',
+      {
+        id: 'sitemap-js',
+        filename: 'sitemap-js.xml',
+        changefreq: 'weekly',
+        priority: 0.5,
+        ignorePatterns: ['**/docs/java/**'],
+      },
+    ],
+    [
+      '@docusaurus/plugin-sitemap',
+      {
+        id: 'sitemap-java',
+        filename: 'sitemap-java.xml',
+        changefreq: 'weekly',
+        priority: 0.5,
+        ignorePatterns: ['**/docs/js/**'],
+      },
+    ],
+    [
       '@docusaurus/plugin-client-redirects',
       {
         redirects: [
