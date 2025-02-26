@@ -48,7 +48,7 @@ const FeatureList = [
 function Feature({ Svg, link, badge, title, description }) {
   return (
     <div className={clsx('col')}>
-      <div className="text--center">
+      <div className="text--center" style={{ height: '300px', overflow: 'hidden' }}>
         <a href={link} style={{ textDecoration: 'none' }}>
           <Svg alt={title} />
         </a>

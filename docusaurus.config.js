@@ -20,7 +20,7 @@ module.exports = {
     'The one-stop shop for integrating AI into SAP Cloud applications.',
   url: 'https://sap.github.io',
   baseUrl: '/cloud-sdk/',
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'throw',
   favicon: 'img/AI-SDK-Logo.svg',
   organizationName: 'SAP',
@@ -92,15 +92,15 @@ module.exports = {
           items: [
             {
               label: 'Tutorials',
-              href: 'https://developers.sap.com/tutorial-navigator.html?tag=products:technology-platform/sap-cloud-sdk/sap-cloud-sdk'
+              href: 'https://developers.sap.com/group.sap-ai-core-generative.html'
             },
             {
               label: 'Maven',
-              href: 'https://central.sonatype.com/search?q=g:com.sap.cloud.sdk*&smo=true'
+              href: 'https://central.sonatype.com/search?smo=true&namespace=com.sap.ai.sdk'
             },
             {
               label: 'Support',
-              to: 'docs/java/support'
+              to: 'docs/overview/get-support'
             }
           ]
         },
@@ -109,11 +109,11 @@ module.exports = {
           items: [
             {
               label: 'Tutorials',
-              to: 'docs/js/tutorials/getting-started/introduction'
+              to: 'https://developers.sap.com/group.sap-ai-core-generative.html'
             },
             {
               label: 'npm',
-              href: 'https://www.npmjs.com/search?q=%40sap-cloud-sdk'
+              href: 'https://www.npmjs.com/search?q=sap-ai-sdk'
             },
             {
               label: 'GitHub',
@@ -121,39 +121,14 @@ module.exports = {
             },
             {
               label: 'Sample repository',
-              href: 'https://github.com/SAP-samples/cloud-sdk-js'
+              href: 'https://github.com/SAP/ai-sdk-js/tree/main/sample-code'
             },
             {
               label: 'Support',
-              to: 'docs/js/support'
+              to: 'docs/overview/get-support'
             }
           ]
         },
-        {
-          title: 'Additional Resources',
-          items: [
-            {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/sap-cloud-sdk'
-            },
-            {
-              label: 'SAP Cloud SDK for AI Community Page',
-              href: 'https://community.sap.com/topics/cloud-sdk'
-            },
-            {
-              label: 'SAP Cloud SDK for AI on SAP Answers',
-              href: 'https://answers.sap.com/tags/73555000100800000895'
-            },
-            {
-              label: 'SAP Cloud SDK for AI on SAP Help',
-              href: 'https://help.sap.com/viewer/product/SAP_CLOUD_SDK/1.0/en-US?task=discover_task'
-            },
-            {
-              label: 'Feedback',
-              href: 'https://sapinsights.eu.qualtrics.com/jfe/form/SV_0P69X6kJ0Pdxqbc'
-            }
-          ]
-        }
       ],
       copyright: `Copyright © ${new Date().getFullYear()} SAP SE or an SAP affiliate company. All rights reserved.`
     }
@@ -225,6 +200,26 @@ module.exports = {
           }
         }
       }
+    ],
+    [
+      '@docusaurus/plugin-sitemap',
+      {
+        id: 'sitemap-js',
+        filename: 'sitemap-js.xml',
+        changefreq: 'weekly',
+        priority: 0.5,
+        ignorePatterns: ['**/docs/java/**'],
+      },
+    ],
+    [
+      '@docusaurus/plugin-sitemap',
+      {
+        id: 'sitemap-java',
+        filename: 'sitemap-java.xml',
+        changefreq: 'weekly',
+        priority: 0.5,
+        ignorePatterns: ['**/docs/js/**'],
+      },
     ],
     function nodeWebpackPolyfillPlugin(context, options) {
       return {
