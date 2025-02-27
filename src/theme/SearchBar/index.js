@@ -138,17 +138,11 @@ function useTransformItems(props) {
       useAlgoliaContextualFacetFilters();
 
     const urlPath = useLocation().pathname;
-    // check if path contains '/docs/js/v[0-9]+' and set facet filter accordingly with the number
-    if(urlPath.includes('/docs/js/v')) {
-      const version = urlPath.match(/\/docs\/js\/v([0-9]+)/)[1];
-      contextualSearchFacetFilters[1] = [`docusaurus_tag:docs-docs-js-v${version}`];
-    } else if (urlPath.includes('/docs/java/v')) {
-      const version = urlPath.match(/\/docs\/java\/v([0-9]+)/)[1];
-      contextualSearchFacetFilters[1] = [`docusaurus_tag:docs-docs-java-v${version}`];
-    } else if (urlPath.includes('/docs/js/')) {
-      contextualSearchFacetFilters[1] = ['docusaurus_tag:docs-docs-js-current'];
-    } else if (urlPath.includes('/docs/java/')) {
-      contextualSearchFacetFilters[1] = ['docusaurus_tag:docs-docs-java-current'];
+    const match = urlPath.match(/\/docs\/(js|java)\/(v[0-9]+)?/);
+    if (match) {
+      const language = match[1];
+      const version = match[2] || 'current';
+      contextualSearchFacetFilters[1] = [`docusaurus_tag:docs-docs-${language}-${version}`];
     }
   
     const configFacetFilters =
