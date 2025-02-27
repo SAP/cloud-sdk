@@ -138,7 +138,6 @@ function useSearchParameters({ contextualSearch, ...props }) {
       mergeFacetFilters(contextualSearchFacetFilters, configFacetFilters)
     : // ... or use config facetFilters
       configFacetFilters;
-  console.log(facetFilters);
 
   // We let users override default searchParameters if they want to
   return {
