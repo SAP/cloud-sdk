@@ -63,78 +63,36 @@ import React, {
     return navigator;
   }
 
-  function transformSearchClient (searchClient) {
-    const location = useLocation()
-    const urlPath = location.pathname;
-    let tag = 'docs-default-current';
-    if (urlPath.includes('/docs/js/')) {
-      tag = 'docs-docs-js-current';
-    } else if (urlPath.includes('/docs/java/')) {
-      tag = 'docs-docs-java-current';
-    }
-
-    /*
-    type SearchForFacetsOptions = {
-    facet: string;
-    indexName: string;
-    facetQuery?: string;
-    maxFacetHits?: number;
-    type: SearchTypeFacet;
+function useTransformSearchClient() {
+  const {
+    siteMetadata: {docusaurusVersion},
+  } = useDocusaurusContext();
+  return useCallback(
+    (searchClient) => {
+      searchClient.addAlgoliaAgent('docusaurus', docusaurusVersion);
+      return searchClient;
+    },
+    [docusaurusVersion],
+  );
 }
-    */
 
-    return {
-      ...searchClient,
-      search: ({requests, strategy}, options) => {
-        return searchClient.search({
-            requests: requests.map((request) => {
-              if(requests.params) {
-                console.log("GANG GANG", JSON.stringify(...request.params))
-              }
-              return {
-              ...request,
-              ...(request.params && {
-                ...request.params,
-                facet: `docusaurus_tag:${tag}`,
-              }),
-            }}),
-            strategy
-        }, options)
-      }
-    }
-  }
-  
-  function useTransformSearchClient() {
-    const {
-      siteMetadata: {docusaurusVersion},
-    } = useDocusaurusContext();
-    return useCallback(
-      (searchClient) => {
-        
-        searchClient.addAlgoliaAgent('docusaurus', docusaurusVersion);
-        return transformSearchClient(searchClient);
-      },
-      [docusaurusVersion],
-    );
-  }
-  
-  function useTransformItems(props) {
-    const processSearchResultUrl = useSearchResultUrlProcessor();
-    const [transformItems] = useState(
-      () => {
-        return (items) =>
-          props.transformItems
-            ? // Custom transformItems
-              props.transformItems(items)
-            : // Default transformItems
-              items.map((item) => ({
-                ...item,
-                url: processSearchResultUrl(item.url),
-              }));
-      },
-    );
-    return transformItems;
-  }
+function useTransformItems(props) {
+  const processSearchResultUrl = useSearchResultUrlProcessor();
+  const [transformItems] = useState(
+    () => {
+      return (items) =>
+        props.transformItems
+          ? // Custom transformItems
+            props.transformItems(items)
+          : // Default transformItems
+            items.map((item) => ({
+              ...item,
+              url: processSearchResultUrl(item.url),
+            }));
+    },
+  );
+  return transformItems;
+}
 
   function useResultsFooterComponent({
     closeModal,
@@ -178,6 +136,20 @@ import React, {
   
     const contextualSearchFacetFilters =
       useAlgoliaContextualFacetFilters();
+
+    const urlPath = useLocation().pathname;
+    // check if path contains '/docs/js/v[0-9]+' and set facet filter accordingly with the number
+    if(urlPath.includes('/docs/js/v')) {
+      const version = urlPath.match(/\/docs\/js\/v([0-9]+)/)[1];
+      contextualSearchFacetFilters[1] = [`docusaurus_tag:docs-docs-js-v${version}`];
+    } else if (urlPath.includes('/docs/java/v')) {
+      const version = urlPath.match(/\/docs\/java\/v([0-9]+)/)[1];
+      contextualSearchFacetFilters[1] = [`docusaurus_tag:docs-docs-java-v${version}`];
+    } else if (urlPath.includes('/docs/js/')) {
+      contextualSearchFacetFilters[1] = ['docusaurus_tag:docs-docs-js-current'];
+    } else if (urlPath.includes('/docs/java/')) {
+      contextualSearchFacetFilters[1] = ['docusaurus_tag:docs-docs-java-current'];
+    }
   
     const configFacetFilters =
       props.searchParameters?.facetFilters ?? [];
@@ -187,6 +159,7 @@ import React, {
         mergeFacetFilters(contextualSearchFacetFilters, configFacetFilters)
       : // ... or use config facetFilters
         configFacetFilters;
+    console.log(facetFilters);
   
     // We let users override default searchParameters if they want to
     return {
