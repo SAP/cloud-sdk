@@ -41,7 +41,7 @@ module.exports = {
       indexName: 'sap_cloud-sdk',
       appId: 'E4A268JVO0',
       algoliaOptions: {},
-      contextualSearch: true,
+      contextualSearch: true
     },
     navbar: {
       title: 'SAP Cloud SDK',
