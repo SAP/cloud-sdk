@@ -10,7 +10,7 @@ import { createPortal } from 'react-dom';
 import { DocSearchButton, useDocSearchKeyboardEvents } from '@docsearch/react';
 import Head from '@docusaurus/Head';
 import Link from '@docusaurus/Link';
-import { useHistory, useLocation } from '@docusaurus/router';
+import { useHistory } from '@docusaurus/router';
 import {
   isRegexpStringMatch,
   useSearchLinkCreator
@@ -121,14 +121,9 @@ function useSearchParameters({ contextualSearch, ...props }) {
 
   const contextualSearchFacetFilters = useAlgoliaContextualFacetFilters();
 
-  const urlPath = useLocation().pathname;
-  const match = urlPath.match(/\/docs\/(js|java)\/(v[0-9]+)?/);
-  if (match) {
-    const language = match[1];
-    const version = match[2] || 'current';
-    contextualSearchFacetFilters[1] = [
-      `docusaurus_tag:docs-docs-${language}-${version}`
-    ];
+  const tag = document.querySelector('meta[name="docusaurus_tag"]')?.content;
+  if (tag && tag.startsWith('docs-docs-j')) {
+    contextualSearchFacetFilters[1] = [`docusaurus_tag:${tag}`];
   }
 
   const configFacetFilters = props.searchParameters?.facetFilters ?? [];
