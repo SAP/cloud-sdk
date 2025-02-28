@@ -121,9 +121,11 @@ function useSearchParameters({ contextualSearch, ...props }) {
 
   const contextualSearchFacetFilters = useAlgoliaContextualFacetFilters();
 
-  const tag = document.querySelector('meta[name="docusaurus_tag"]')?.content;
-  if (tag && tag.startsWith('docs-docs-j')) {
-    contextualSearchFacetFilters[1] = [`docusaurus_tag:${tag}`];
+  if (typeof document !== 'undefined') {
+    const tag = document.querySelector('meta[name="docusaurus_tag"]')?.content;
+    if (tag && tag.startsWith('docs-docs-j')) {
+      contextualSearchFacetFilters[1] = [`docusaurus_tag:${tag}`];
+    }
   }
 
   const configFacetFilters = props.searchParameters?.facetFilters ?? [];
