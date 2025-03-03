@@ -38,11 +38,6 @@ module.exports = {
             'features/openapi/execute-request'
           ]
         },
-        {
-          type: 'category',
-          label: 'Mail Client',
-          items: ['features/mail-client/mail-client']
-        },
         'features/middleware',
         'features/error-handling',
         'features/logging',

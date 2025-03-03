@@ -11,7 +11,7 @@ For the [Support](https://github.com/SAP/cloud-sdk-js/issues) on SAP Cloud SDK f
 
 ## Looking for the repository of the SAP Cloud SDK for JavaScript / TypeScript?
 
-Find it here [here](https://github.com/SAP/cloud-sdk-js).
+Find it [here](https://github.com/SAP/cloud-sdk-js).
 
 ## Getting Support
 

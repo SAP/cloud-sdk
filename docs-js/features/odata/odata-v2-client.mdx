@@ -14,7 +14,7 @@ keywords:
 ---
 
 import { SkipCsrf, Csrf } from '../common';
-import { Select, ChangeSetExample, RequestBuilder } from './v2';
+import { Select, ChangeSetExample } from './v2';
 import { SkipCsrfExample, CustomCsrf, ETag } from './common';
 import {
   CustomFields,
@@ -48,9 +48,11 @@ import {
   FilterFunctions
 } from './common/query-parameter';
 import {
+  RequestBuilder,
+  DataAccessor,
   EtagFunctionImport,
   EntityReturnType
-} from './common/function-imports';
+} from './common/operation-imports';
 import {
   BatchIntro,
   RetrieveRequests,
@@ -199,11 +201,11 @@ If you need to adjust the way CSRF tokens are fetched, you can do so by using [m
 
 <FilterFunctions />
 
-## Function Imports
-
-### Request Builder
+## Operation Request Builder
 
 <RequestBuilder />
+
+<DataAccessor />
 
 <EntityReturnType />
 
@@ -218,7 +220,7 @@ If you need to adjust the way CSRF tokens are fetched, you can do so by using [m
 ### Retrieve Request
 
 A retrieve request represents an HTTP `GET` request.
-In terms of the SAP Cloud SDK this includes all requests built by [`GetAllRequestBuilder`](#getall-request-builder), [`GetByKeyRequestBuilder`](#getbykey-request-builder), and [`FunctionImportRequestBuilder`](#function-imports) using `GET` requests.
+In terms of the SAP Cloud SDK this includes all requests built by [`GetAllRequestBuilder`](#getall-request-builder), [`GetByKeyRequestBuilder`](#getbykey-request-builder), and [`OperationRequestBuilder`](#operation-request-builder) using `GET` requests.
 If you use TypeScript, a type error will appear when including a function import changing the data.
 
 <RetrieveRequests />
@@ -226,7 +228,7 @@ If you use TypeScript, a type error will appear when including a function import
 ### Changeset
 
 A changeset is a collection of HTTP `POST`, `PUT`, `PATCH` and `DELETE` operations.
-Such operations are built by the [`CreateRequestBuilder`](#create-request-builder), [`UpdateRequestBuilder`](#update-request-builder), [`DeleteRequestBuilder`](#delete-request-builder), or [`FunctionImportRequestBuilder`](#function-imports).
+Such operations are built by the [`CreateRequestBuilder`](#create-request-builder), [`UpdateRequestBuilder`](#update-request-builder), [`DeleteRequestBuilder`](#delete-request-builder), or [`OperationRequestBuilder`](#operation-request-builder).
 If you use TypeScript, a type error will appear when including a function import reading the data.
 
 <ChangeSet />
