@@ -22,8 +22,13 @@ import LicenseBadge from '@site/src/sap/sdk-js/LicenseBadge';
 
 ## 4.0.0 [Core Modules] - March 04, 2025
 
+### Improvements
+
+- [connectivity] Enable destination caching by default when retrieving destinations via the destination service. Change affects behavior of `getDestination()` method, `getAllDestinationsFromDestinationService()` method, generated client's `execute()` method and generic HTTP requests execution using `executeHttpRequest()`. (d69325a)
+
 ### Compatibility Notes
 
+- [connectivity] Disable `iasToXsuaaTokenExchange` by default if not defined. (25c9dd8)
 - [connectivity] The following deprecated content has been removed from the package:
   - The behaviour of `getAgentConfig()` function is changed to be asynchronous. The temporary asynchronous function `getAgentConfigAsync()` has been removed.
   - The `destinationForServiceBinding()` function has been removed. Use `getDestinationFromServiceBinding()` instead.
@@ -31,8 +36,6 @@ import LicenseBadge from '@site/src/sap/sdk-js/LicenseBadge';
   - The `serviceToken()` function no longer takes `xsuaaCredentials` as part of the `options` parameter.
   - The `parseDestination()` function is no longer a public API.
   - The `DestinationForServiceBindingOptions` interface has been renamed to `DestinationFromServiceBindingOptions`. (7d92a1b)
-- [connectivity] Enable destination caching by default when retrieving destinations via the destination service. Change affects behavior of `getDestination()` method, `getAllDestinationsFromDestinationService()` method, generated client's `execute()` method and generic HTTP requests execution using `executeHttpRequest()`. (d69325a)
-- [connectivity] Disable `iasToXsuaaTokenExchange` by default if not defined. (25c9dd8)
 - [odata-common] The following deprecated content has been removed from the package:
   - The `FunctionImportParameters` type has been removed. Use `OperationParameters` instead.
   - The `ODataFunctionImportRequestConfig` constant has been removed. Use `ODataFunctionRequestConfig` instead.
