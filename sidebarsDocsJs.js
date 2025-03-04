@@ -53,7 +53,7 @@ module.exports = {
       type: 'category',
       label: 'Guides',
       items: [
-        'guides/upgrade-to-version-3',
+        'guides/upgrade-to-version-4',
         'guides/bas',
         'guides/browser',
         'guides/trust-and-keystores',
@@ -102,7 +102,7 @@ module.exports = {
     {
       type: 'link',
       label: 'API Reference',
-      href: 'pathname:///api/v3/index.html'
+      href: 'pathname:///api/v4/index.html'
     },
     'release-notes',
     'support',
