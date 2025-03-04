@@ -232,7 +232,7 @@ module.exports = {
         versions: {
           current: {
             label: 'v4',
-            badge: false,
+            badge: false
           },
           v3: {
             label: 'v3',
