@@ -228,29 +228,32 @@ module.exports = {
         editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
         routeBasePath: 'docs/js',
         sidebarPath: require.resolve('./sidebarsDocsJs.js'),
-        lastVersion: 'v3',
+        lastVersion: 'current',
         versions: {
           current: {
             label: 'v4',
-            path: 'v4',
-            banner: 'unreleased',
-            badge: false
+            badge: false,
           },
           v3: {
             label: 'v3',
-            badge: false
+            path: 'v3',
+            banner: 'none',
+            badge: false,
+            noIndex: true
           },
           v2: {
             label: 'v2',
             path: 'v2',
             banner: 'unmaintained',
-            badge: false
+            badge: false,
+            noIndex: true
           },
           v1: {
             label: 'v1',
             path: 'v1',
             banner: 'unmaintained',
-            badge: false
+            badge: false,
+            noIndex: true
           }
         }
       }
