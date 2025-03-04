@@ -33,9 +33,9 @@ Some reasons to separate destinations and the application are:
 - Different customers may want to configure different systems.
 - Multiple applications might want to access the same systems.
 
-Use [destinations](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.Destination.html) to execute [arbitrary requests](./generic-http-client.mdx), [OData requests](../odata/overview.mdx), and [OpenAPI requests](../openapi/overview.mdx) as well as to [send e-mails](../mail-client/mail-client.mdx).
+Use [destinations](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.Destination.html) to execute [arbitrary requests](./generic-http-client.mdx), [OData requests](../odata/overview.mdx), and [OpenAPI requests](../openapi/overview.mdx).
 The following examples use `req.execute()`, assuming req is an OData or OpenAPI request, to demonstrate options for the destination lookup.
-The same options apply to `executeHttpRequest()` and `sendMail()`.
+The same options apply to `executeHttpRequest()`.
 
 ## Referencing Destinations by Name
 
@@ -168,14 +168,14 @@ const options: RegisterDestinationOptions = {
 
 This configures HTTPS requests to automatically check for the `CF_INSTANCE_CERT` and `CF_INSTANCE_KEY` environment variables and read the certificate and key.
 
-The caching of mTLS certificates is disabled by default, but can be enabled by adding the `useCache` option:
+The caching of mTLS certificates is disabled by default, but can be enabled by adding the `useMtlsCache` option:
 
-```
+````
 const options: RegisterDestinationOptions = {
   inferMtls: true,
-  useCache: true
+  useMtlsCache: true
 };
-```
+
 
 Certificates are then cached for the entire validity time of the certificate.
 Since in Cloud Foundry each deployment has their own mTLS certificate, the cache is shared among all tenants of a deployment.
@@ -200,7 +200,7 @@ The SAP Cloud SDK provides a default implementation for the transformation of se
 
 The default implementation also retrieves a service token, if needed.
 
-Additionally, we provide a function to transform service bindings into OAuth2ClientCredentials destinations, assuming the service binding follows the structure outlined below:
+Additionally, if the service binding follows the structure, we provide a transform function `transformServiceBindingToClientCredentialsDestination()` to transform the service binding to an `OAuth2ClientCredentials` destination.
 
 ```json
 {
@@ -219,32 +219,35 @@ Additionally, we provide a function to transform service bindings into OAuth2Cli
     ]
   }
 }
-```
+````
 
-If the service URL is not specified in the `url` property, it can alternatively be provided as part of the `options` parameter.
-
-The following is a multi-tenant example, where the user's JWT is used for tenant-isolation in the cache together with a custom URL as target.
+The following example shows how to retrieve an `OAuth2ClientCredentials` destination from a service binding with retrieved JWT from the incoming request, and a custom URL:
 
 ```ts
-const serviceBinding = getServiceBinding('custom-service');
 const userJwt = retrieveJwt(request);
 const destination = getDestinationFromServiceBinding({
-  destinationName: 'custom-service',
+  destinationName: 'my-custom-service',
   jwt: userJwt,
   useCache: true,
-  transformServiceBindingToClientCredentialsDestination(serviceBinding, { url: 'custom-url', jwt: userJwt })
+  serviceBindingTransformFn: async (service, options) => transformServiceBindingToClientCredentialsDestination({
+    service,
+    {
+      ...options,
+      url: 'https://example.com'
+    }
+  })
 })
 ```
 
-For other types of service bindings or if you want to overwrite the default behavior, provide a callback function (`serviceBindingTransformFn()`) in the request execution.
+For a different service binding structure, write your own transform function of type `ServiceBindingTransformFunction`.
 
-For example, if you have a binding for a custom service:
+For example, if you have the following binding for a custom service:
 
 ```json
 {
   "VCAP_SERVICES": {
     "custom-service": [
-      // This object is passed to `serviceBindingTransformFn()`
+      // This is the `service` object passed to `serviceBindingTransformFn()` function.
       {
         "name": "my-custom-service",
         "label": "custom-service",
@@ -259,8 +262,7 @@ For example, if you have a binding for a custom service:
 }
 ```
 
-To transform this custom service binding you need to provide the `serviceBindingTransformFn()` function.
-In the example below, we access the `service.credentials` to create a destination with authentiction type "BasicAuthentication".
+You can write the following `serviceBindingTransformFn()` to create a destination with authentication type "BasicAuthentication".
 
 ```ts
 await req.execute({
@@ -326,7 +328,7 @@ In a productive environment, in most cases you will use the [destination service
 To access the destination service, the SAP Cloud SDK will first fetch an access token from the XSUAA service.
 The token retrieved from the XSUAA service is used to make a call to the destination service and receive the destinations.
 The destination service returns a destination with all relevant authentication information depending on the used authentication flow.
-Listed below are the SDK-supported authentication flows, categorized based on whether a user JWT (`jwt` property in [destination fetch options](#destination-fetch-options)) is required to retrieve a destination.
+Listed below are the supported authentication flows in SAP Cloud SDK, categorized based on whether a user JWT (`jwt` property in [destination fetch options](#destination-fetch-options)) is required to retrieve a destination.
 
 - No user JWT required
 
@@ -488,11 +490,11 @@ A few of the options were already listed above, but this section gives a compreh
   Default is `subscriberFirst`.
   Alternative values are `alwaysProvider` and `alwaysSubscriber`.
 - `iasToXsuaaTokenExchange`: Switches on token exchange from IAS format tokens to XSUAA if needed using the `@sap/xssec` library.
-  The default value is `true`.
+  The default value is `false`.
 - `cacheVerificationKeys`: Switches on caching for the verification certificates for the JWT.
   The default value is `true`.
 - `useCache`: Switches on caching for destinations received from the destination service.
-  The default value is `false`.
+  The default value is `true`. You can set it to `false` to disable caching.
 - `isolationStrategy`: Specifies how the destination cache is scoped.
   The value is automatically set but [under certain conditions](./destination-cache-isolation.mdx) you may want to optimize it.
 - `retry`: Switches on three retries for the request to the destination service.
@@ -567,7 +569,7 @@ The SAP Cloud SDK adds those additional headers and query parameters for every c
 
 ### Forwarding Auth Tokens
 
-The SDK provides the option of configuring a destination to directly forward the given JWT to the target system.
+SAP Cloud SDK provides the option of configuring a destination to directly forward the given JWT to the target system.
 This behavior can be enabled by setting the `forwardAuthToken` property on the destination to `true`, as shown in the code snippet below:
 
 ```ts

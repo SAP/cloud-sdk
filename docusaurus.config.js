@@ -31,14 +31,6 @@ module.exports = {
       respectPrefersColorScheme: true,
       disableSwitch: true
     },
-    announcementBar: {
-      id: 'feedback_survey',
-      content:
-        'How do you like the SAP Cloud SDK? Share your <a href="https://sapinsights.eu.qualtrics.com/jfe/form/SV_0P69X6kJ0Pdxqbc" style="color: var(--ifm-link-color);text-decoration: var(--ifm-link-decoration);transition: color var(--ifm-transition-fast) var(--ifm-transition-timing-default)">feedback</a>.',
-      backgroundColor: 'var(--ifm-color-primary-contrast-background)',
-      textColor: 'var(--ifm-color-primary-contrast-foreground)',
-      isCloseable: false
-    },
     prism: {
       additionalLanguages: ['powershell', 'java', 'groovy'],
       theme: require('prism-react-renderer').themes.github,
@@ -236,29 +228,32 @@ module.exports = {
         editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
         routeBasePath: 'docs/js',
         sidebarPath: require.resolve('./sidebarsDocsJs.js'),
-        lastVersion: 'v3',
+        lastVersion: 'current',
         versions: {
           current: {
             label: 'v4',
-            path: 'v4',
-            banner: 'unreleased',
             badge: false
           },
           v3: {
             label: 'v3',
-            badge: false
+            path: 'v3',
+            banner: 'none',
+            badge: false,
+            noIndex: true
           },
           v2: {
             label: 'v2',
             path: 'v2',
             banner: 'unmaintained',
-            badge: false
+            badge: false,
+            noIndex: true
           },
           v1: {
             label: 'v1',
             path: 'v1',
             banner: 'unmaintained',
-            badge: false
+            badge: false,
+            noIndex: true
           }
         }
       }
