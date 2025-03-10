@@ -9,7 +9,10 @@ const FeatureList = [
     Svg: () => <span style={{ fontSize: '200px' }}>☕️</span>,
     badge: (
       <a href="https://central.sonatype.com/search?smo=true&namespace=com.sap.ai.sdk">
-        <img alt="Maven Central Version" src="https://img.shields.io/maven-central/v/com.sap.ai.sdk/core?color=dark-green" />
+        <img
+          alt="Maven Central Version"
+          src="https://img.shields.io/maven-central/v/com.sap.ai.sdk/core?color=dark-green"
+        />
       </a>
     ),
     description: (
@@ -29,7 +32,10 @@ const FeatureList = [
     link: 'docs/js/getting-started',
     Svg: () => <span style={{ fontSize: '200px' }}>🚀</span>,
     badge: (
-      <img alt="NPM Version" src="https://img.shields.io/npm/v/%40sap-ai-sdk%2Fai-api?color=dark-green"/>
+      <img
+        alt="NPM Version"
+        src="https://img.shields.io/npm/v/%40sap-ai-sdk%2Fai-api?color=dark-green"
+      />
     ),
     description: (
       <div data-nosnippet>
@@ -48,7 +54,10 @@ const FeatureList = [
 function Feature({ Svg, link, badge, title, description }) {
   return (
     <div className={clsx('col')}>
-      <div className="text--center" style={{ height: '300px', overflow: 'hidden' }}>
+      <div
+        className="text--center"
+        style={{ height: '300px', overflow: 'hidden' }}
+      >
         <a href={link} style={{ textDecoration: 'none' }}>
           <Svg alt={title} />
         </a>

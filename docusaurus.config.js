@@ -16,8 +16,7 @@ class ESMPolyfillWrapper {
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
   title: 'SAP Cloud SDK for AI',
-  tagline:
-    'The one-stop shop for integrating AI into SAP Cloud applications.',
+  tagline: 'The one-stop shop for integrating AI into SAP Cloud applications.',
   url: 'https://sap.github.io',
   baseUrl: '/cloud-sdk/',
   onBrokenLinks: 'ignore',
@@ -38,7 +37,7 @@ module.exports = {
     },
     algolia: {
       apiKey: '441c57554e5a0ca9338cc9f047fb10c8',
-      indexName: 'sap_cloud-sdk',// should be dynamic based on the URL, contextualSearch?, searchParameters?
+      indexName: 'sap_cloud-sdk', // should be dynamic based on the URL, contextualSearch?, searchParameters?
       appId: 'E4A268JVO0',
       algoliaOptions: {} // Optional, if provided by Algolia
     },
@@ -128,7 +127,7 @@ module.exports = {
               to: 'docs/overview/get-support'
             }
           ]
-        },
+        }
       ],
       copyright: `Copyright © ${new Date().getFullYear()} SAP SE or an SAP affiliate company. All rights reserved.`
     }
@@ -208,8 +207,8 @@ module.exports = {
         filename: 'sitemap-js.xml',
         changefreq: 'weekly',
         priority: 0.5,
-        ignorePatterns: ['**/docs/java/**'],
-      },
+        ignorePatterns: ['**/docs/java/**']
+      }
     ],
     [
       '@docusaurus/plugin-sitemap',
@@ -218,8 +217,8 @@ module.exports = {
         filename: 'sitemap-java.xml',
         changefreq: 'weekly',
         priority: 0.5,
-        ignorePatterns: ['**/docs/js/**'],
-      },
+        ignorePatterns: ['**/docs/js/**']
+      }
     ],
     function nodeWebpackPolyfillPlugin(context, options) {
       return {

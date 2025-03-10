@@ -17,10 +17,10 @@ keywords:
 
 - [Introduction](#introduction)
 - [Prerequisites](#prerequisites)
-    - [Maven Dependencies](#maven-dependencies)
+  - [Maven Dependencies](#maven-dependencies)
 - [Usage](#usage)
-    - [Create a Deployment](#create-a-deployment)
-    - [Delete a Deployment](#delete-a-deployment)
+  - [Create a Deployment](#create-a-deployment)
+  - [Delete a Deployment](#delete-a-deployment)
 
 ## Introduction
 
@@ -56,30 +56,32 @@ See [an example pom in our Spring Boot application](https://github.com/SAP/ai-sd
 In addition to the prerequisites above, we assume you have already set up the following to carry out the examples in this guide:
 
 - **An AI Core Configuration** created in SAP AI Core.
-    - <details>
-      <summary>Example configuration from the AI Core <code>/configuration</code> endpoint</summary>
 
-      ```json
-      {
-        "createdAt": "2024-07-03T12:44:08Z",
-        "executableId": "azure-openai",
-        "id": "12345-123-123-123-123456abcdefg",
-        "inputArtifactBindings": [],
-        "name": "gpt-35-turbo",
-        "parameterBindings": [
-          {
-            "key": "modelName",
-            "value": "gpt-35-turbo"
-          },
-          {
-            "key": "modelVersion",
-            "value": "latest"
-          }
-        ],
-        "scenarioId": "foundation-models"
-      }
-      ```
-      </details>
+  - <details>
+<summary>Example configuration from the AI Core <code>/configuration</code> endpoint</summary>
+
+    ```json
+    {
+      "createdAt": "2024-07-03T12:44:08Z",
+      "executableId": "azure-openai",
+      "id": "12345-123-123-123-123456abcdefg",
+      "inputArtifactBindings": [],
+      "name": "gpt-35-turbo",
+      "parameterBindings": [
+        {
+          "key": "modelName",
+          "value": "gpt-35-turbo"
+        },
+        {
+          "key": "modelVersion",
+          "value": "latest"
+        }
+      ],
+      "scenarioId": "foundation-models"
+    }
+    ```
+
+    </details>
 
 ## Create a Deployment
 
@@ -104,10 +106,10 @@ Refer to the [DeploymentController.java](https://github.com/SAP/ai-sdk-java/tree
 ```java
 AiDeploymentCreationResponse deployment; // provided
 String deploymentId = deployment.getId();
-  
+
 var api = new DeploymentApi();
 var resourceGroupId = "default";
-  
+
 if (deployment.getStatus() == AiExecutionStatus.RUNNING) {
   // Only RUNNING deployments can be STOPPED
   api.modify(

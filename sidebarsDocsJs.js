@@ -1,6 +1,3 @@
 module.exports = {
-  docsJsSidebar: [
-    'overview',
-    'getting-started'
-  ]
+  docsJsSidebar: ['overview', 'getting-started']
 };

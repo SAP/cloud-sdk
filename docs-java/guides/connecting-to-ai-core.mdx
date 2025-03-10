@@ -16,11 +16,10 @@ keywords:
 ## Table of Contents
 
 - [Using a Service Binding](#using-a-service-binding)
-    - [Providing a Service Binding Locally](#providing-a-service-binding-locally)
-    - [Using the `AICORE_SERVICE_KEY` Environment Variable](#using-the-aicore_service_key-environment-variable)
+  - [Providing a Service Binding Locally](#providing-a-service-binding-locally)
+  - [Using the `AICORE_SERVICE_KEY` Environment Variable](#using-the-aicore_service_key-environment-variable)
 - [Using a Destination from the BTP Destination Service](#using-a-destination-from-the-btp-destination-service)
 - [Creating a Custom Destination](#creating-a-custom-destination)
- 
 
 The AI SDK uses the [`Destination` concept of the SAP Cloud SDK](https://sap.github.io/cloud-sdk/docs/java/features/connectivity/destination-service) to connect to AI Core.
 This allows for a seamless integration in BTP and offers a wide variety of managing the credentials for the connection.
@@ -63,58 +62,58 @@ How exactly to set this depends on how you run your code (e.g. via IDE, command 
 Here are three examples of how this can be done:
 
 1. <details>
-    <summary>Using a `.env` file</summary>
-   
-    Create a `.env` file in the **working directory** from which you run your code.
-    Add the following line:
-   
-    ```txt
-    AICORE_SERVICE_KEY={ "clientid": "...", "clientsecret": "...", "url": "...", "serviceurls": { "AI_API_URL": "..." } }
-    ```
+ <summary>Using a `.env` file</summary>
 
-    :::info
-    The value of `AICORE_SERVICE_KEY` must be a single line, so remove any line breaks from the service key JSON.
-    :::
+   Create a `.env` file in the **working directory** from which you run your code.
+   Add the following line:
+
+   ```txt
+   AICORE_SERVICE_KEY={ "clientid": "...", "clientsecret": "...", "url": "...", "serviceurls": { "AI_API_URL": "..." } }
+   ```
+
+   :::info
+   The value of `AICORE_SERVICE_KEY` must be a single line, so remove any line breaks from the service key JSON.
+   :::
 
    </details>
 
 2. <details> 
-   <summary>Using the command line on Mac OS</summary>
-   
-    Run your code with the following command:
-    
-    ```bash
-    export AICORE_SERVICE_KEY='{ "clientid": "...", "clientsecret": "...", "url": "...", "serviceurls": { "AI_API_URL": "..." } }'
-    mvn ...
-    ```
+<summary>Using the command line on Mac OS</summary>
+
+   Run your code with the following command:
+
+   ```bash
+   export AICORE_SERVICE_KEY='{ "clientid": "...", "clientsecret": "...", "url": "...", "serviceurls": { "AI_API_URL": "..." } }'
+   mvn ...
+   ```
 
     </details>
 
 3. <details> 
-   <summary>Using PowerShell on Windows</summary>
+<summary>Using PowerShell on Windows</summary>
 
    Run your code with the following command:
 
-    ```shell
-    $env:AICORE_SERVICE_KEY='{ "clientid": "...", "clientsecret": "...", "url": "...", "serviceurls": { "AI_API_URL": "..." } }'
-    mvn ...
-    ```
+   ```shell
+   $env:AICORE_SERVICE_KEY='{ "clientid": "...", "clientsecret": "...", "url": "...", "serviceurls": { "AI_API_URL": "..." } }'
+   mvn ...
+   ```
 
     </details>
 
 4. <details>
-    <summary>Using an IntelliJ run configuration</summary>
-   
-    In IntelliJ, go to `Run` > `Edit Configurations...` > `Environment variables`.
-    Add a new environment variable with the name `AICORE_SERVICE_KEY` and paste the service key as value.
-   
-    For more information, see the [official IntelliJ documentation](https://www.jetbrains.com/help/idea/run-debug-configuration-application.html#configure-environment-variables). 
-    
+ <summary>Using an IntelliJ run configuration</summary>
+
+   In IntelliJ, go to `Run` > `Edit Configurations...` > `Environment variables`.
+   Add a new environment variable with the name `AICORE_SERVICE_KEY` and paste the service key as value.
+
+   For more information, see the [official IntelliJ documentation](https://www.jetbrains.com/help/idea/run-debug-configuration-application.html#configure-environment-variables).
+
    </details>
 
 ## Using a Destination from the BTP Destination Service
 
-You can define a destination in the BTP Destination Service and use that to connect to AI Core. 
+You can define a destination in the BTP Destination Service and use that to connect to AI Core.
 
 <details>
 <summary>How to create a Destination in the SAP BTP Cockpit</summary>
@@ -123,18 +122,18 @@ You can define a destination in the BTP Destination Service and use that to conn
 
 2. Create a new Destination in the SAP BTP Cockpit with the following properties:
 
-  - **Name**: `my-aicore`
-  - **Type**: `HTTP`
-  - **URL**: `[serviceurls.AI_API_URL]`
-  - **Proxy Type**: `Internet`
-  - **Authentication**: `OAuth2ClientCredentials`
-  - **Client ID**: `[clientid]`
-  - **Client Secret**: `[clientsecret]`
-  - **Token Service URL Type**: `Dedicated`
-  - **Token Service URL**: `[url]/oauth/token`
-  
-    Fill in the values for URL, client ID, client secret, and token service URL from the service key JSON.
-    Make sure to add `/oauth/token` in the token service URL.
+- **Name**: `my-aicore`
+- **Type**: `HTTP`
+- **URL**: `[serviceurls.AI_API_URL]`
+- **Proxy Type**: `Internet`
+- **Authentication**: `OAuth2ClientCredentials`
+- **Client ID**: `[clientid]`
+- **Client Secret**: `[clientsecret]`
+- **Token Service URL Type**: `Dedicated`
+- **Token Service URL**: `[url]/oauth/token`
+
+  Fill in the values for URL, client ID, client secret, and token service URL from the service key JSON.
+  Make sure to add `/oauth/token` in the token service URL.
 
 </details>
 

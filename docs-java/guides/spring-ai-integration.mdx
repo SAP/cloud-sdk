@@ -107,7 +107,7 @@ Prompt prompt =
 Flux<ChatResponse> flux = client.stream(prompt);
 
 // also possible to keep only the chat completion text
-Flux<String> responseFlux = 
+Flux<String> responseFlux =
     flux.map(chatResponse -> chatResponse.getResult().getOutput().getContent());
 ```
 
@@ -150,4 +150,3 @@ ChatResponse response = client.call(prompt);
 ```
 
 Please find [an example in our Spring Boot application](https://github.com/SAP/ai-sdk-java/tree/main/sample-code/spring-app/src/main/java/com/sap/ai/sdk/app/services/SpringAiOrchestrationService.java).
-

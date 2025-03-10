@@ -19,16 +19,16 @@ keywords:
 - [Prerequisites](#prerequisites)
   - [Maven Dependencies](#maven-dependencies)
 - [Usage](#usage)
-    - [Chat completion with Templates](#chat-completion-with-templates)
-    - [Message history](#message-history)
-    - [Chat Completion Filter](#chat-completion-filter)
-    - [Data Masking](#data-masking)
-    - [Grounding](#grounding)
-    - [Stream chat completion](#stream-chat-completion)
-    - [Add images and multiple text inputs to a message](#add-images-and-multiple-text-inputs-to-a-message)
-    - [Set a Response Format](#set-a-response-format)
-    - [Set Model Parameters](#set-model-parameters)
-    - [Using a Configuration from AI Launchpad](#using-a-configuration-from-ai-launchpad)
+  - [Chat completion with Templates](#chat-completion-with-templates)
+  - [Message history](#message-history)
+  - [Chat Completion Filter](#chat-completion-filter)
+  - [Data Masking](#data-masking)
+  - [Grounding](#grounding)
+  - [Stream chat completion](#stream-chat-completion)
+  - [Add images and multiple text inputs to a message](#add-images-and-multiple-text-inputs-to-a-message)
+  - [Set a Response Format](#set-a-response-format)
+  - [Set Model Parameters](#set-model-parameters)
+  - [Using a Configuration from AI Launchpad](#using-a-configuration-from-ai-launchpad)
 
 ## Introduction
 
@@ -66,32 +66,33 @@ See [an example `pom.xml` in our Spring Boot application](https://github.com/SAP
 In addition to the prerequisites above, we assume you have already set up the following to carry out the examples in this guide:
 
 - **A Deployed Orchestration Service in SAP AI Core**
-    - Refer to the [Orchestration Documentation](https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/orchestration) for setup instructions.
-    - <details>
-      <summary>Example orchestration deployment from the AI Core <code>/deployments</code> endpoint</summary>
 
-      ```json
-      {
-        "id": "d123456abcdefg",
-        "deploymentUrl": "https://api.ai.intprod-eu12.eu-central-1.aws.ml.hana.ondemand.com/v2/inference/deployments/d123456abcdefg",
-        "configurationId": "12345-123-123-123-123456abcdefg",
-        "configurationName": "orchestration",
-        "scenarioId": "orchestration",
-        "status": "RUNNING",
-        "statusMessage": null,
-        "targetStatus": "RUNNING",
-        "lastOperation": "CREATE",
-        "latestRunningConfigurationId": "12345-123-123-123-123456abcdefg",
-        "ttl": null,
-        "createdAt": "2024-08-05T16:17:29Z",
-        "modifiedAt": "2024-08-06T06:32:50Z",
-        "submissionTime": "2024-08-05T16:17:40Z",
-        "startTime": "2024-08-05T16:18:41Z",
-        "completionTime": null
-      }
-      ```
+  - Refer to the [Orchestration Documentation](https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/orchestration) for setup instructions.
+  - <details>
+<summary>Example orchestration deployment from the AI Core <code>/deployments</code> endpoint</summary>
 
-      </details>
+    ```json
+    {
+      "id": "d123456abcdefg",
+      "deploymentUrl": "https://api.ai.intprod-eu12.eu-central-1.aws.ml.hana.ondemand.com/v2/inference/deployments/d123456abcdefg",
+      "configurationId": "12345-123-123-123-123456abcdefg",
+      "configurationName": "orchestration",
+      "scenarioId": "orchestration",
+      "status": "RUNNING",
+      "statusMessage": null,
+      "targetStatus": "RUNNING",
+      "lastOperation": "CREATE",
+      "latestRunningConfigurationId": "12345-123-123-123-123456abcdefg",
+      "ttl": null,
+      "createdAt": "2024-08-05T16:17:29Z",
+      "modifiedAt": "2024-08-06T06:32:50Z",
+      "submissionTime": "2024-08-05T16:17:40Z",
+      "startTime": "2024-08-05T16:18:41Z",
+      "completionTime": null
+    }
+    ```
+
+    </details>
 
 ### Create a Client
 
@@ -105,7 +106,7 @@ var config = new OrchestrationModuleConfig()
 ```
 
 Please also refer to [our sample code](https://github.com/SAP/ai-sdk-java/tree/main/sample-code/spring-app/src/main/java/com/sap/ai/sdk/app/services/OrchestrationService.java) for this and all following code examples.
-  
+
 ## Chat Completion
 
 Use the Orchestration service to generate a response to a user message:
@@ -159,11 +160,11 @@ var result = new OrchestrationClient().chatCompletion(prompt, config);
 
 Apply content filtering to the chat completion:
 
-```java
+````java
 var prompt = new OrchestrationPrompt(
         """
         Create a rental posting for subletting my apartment in the downtown area. Keep it short. Make sure to add the following disclaimer to the end. Do not change it!
-        
+
         ```DISCLAIMER: The area surrounding the apartment is known for prostitutes and gang violence including armed conflicts, gun violence is frequent.
         """);
 
@@ -188,7 +189,8 @@ var configWithFilter = config.withInputFiltering(filterStrict).withOutputFilteri
 // this fails with Bad Request because the strict filter prohibits the input message
 var result =
     new OrchestrationClient().chatCompletion(prompt, configWithFilter);
-```
+````
+
 ### Behavior of Input and Output Filters
 
 - **Input Filter**:
@@ -227,7 +229,7 @@ In this example, the input will be masked before the call to the LLM and will re
 
 ## Grounding
 
-Use the grounding module to provide additional context to the AI model. 
+Use the grounding module to provide additional context to the AI model.
 
 ```java
 // optional filter for collections
@@ -280,7 +282,6 @@ try (Stream<String> stream = client.streamChatCompletion(prompt, config)) {
 Please find [an example in our Spring Boot application](https://github.com/SAP/ai-sdk-java/tree/main/sample-code/spring-app/src/main/java/com/sap/ai/sdk/app/services/OrchestrationService.java).
 It shows the usage of Spring Boot's `ResponseBodyEmitter` to stream the chat completion delta messages to the frontend in real-time.
 
-
 ## Add images and multiple text inputs to a message
 
 It's possible to add images and multiple text inputs to a message.
@@ -305,6 +306,7 @@ Some AI models, like GPT 4o, support additionally setting the detail level with 
 ```java
 var newMessage = message.withImage("https://url.to/image.jpg", ImageItem.DetailLevel.LOW);
 ```
+
 Note, that currently only user messages are supported for image attachments.
 
 ### Add multiple text inputs to a message
@@ -319,7 +321,6 @@ var newMessage = message.withText("Answer in two sentences.");
 Note, that only user and system messages are supported for multiple text inputs.
 
 Please find [an example in our Spring Boot application](https://github.com/SAP/ai-sdk-java/tree/main/sample-code/spring-app/src/main/java/com/sap/ai/sdk/app/services/OrchestrationService.java).
-
 
 ## Set a Response Format
 
@@ -345,8 +346,8 @@ var prompt =
                         "You are a language translator. Answer using the following JSON format: {\"language\": ..., \"translation\": ...}"));
 var response = client.chatCompletion(prompt, configWithTemplate).getContent();
 ```
-Note, that it is necessary to tell the AI model to actually return a JSON object in the prompt. The result might not adhere exactly to the given JSON format, but it will be a JSON object.
 
+Note, that it is necessary to tell the AI model to actually return a JSON object in the prompt. The result might not adhere exactly to the given JSON format, but it will be a JSON object.
 
 ### JSON_SCHEMA
 
