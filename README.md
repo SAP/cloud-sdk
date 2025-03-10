@@ -11,7 +11,7 @@ For the [Support](https://github.com/SAP/ai-sdk-js/issues) on SAP Cloud SDK for 
 
 ## Looking for the repository of the SAP Cloud SDK for AI JavaScript / TypeScript?
 
-Find it here [here](https://github.com/SAP/ai-sdk-js).
+Find it [here](https://github.com/SAP/ai-sdk-js).
 
 ## Getting Support
 
