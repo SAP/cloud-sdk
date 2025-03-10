@@ -389,11 +389,11 @@ Using newlines after each sentence make it easier to restructure text and to vie
 [AsciiDoc Recommended Practices](https://asciidoctor.org/docs/asciidoc-recommended-practices/#one-sentence-per-line) gives an elaborate reasoning of the advantages of this practice.
 
 ```
-❌ The SAP Cloud SDK enables an exception logger once you create a logger instance somewhere in your project. The exception logger logs unhandled exceptions as if you would log the error manually.
+❌ The SAP Cloud SDK for AI enables an exception logger once you create a logger instance somewhere in your project. The exception logger logs unhandled exceptions as if you would log the error manually.
 ```
 
 ```
-✅ The SAP Cloud SDK enables an exception logger once you create a logger instance somewhere in your project.
+✅ The SAP Cloud SDK for AI enables an exception logger once you create a logger instance somewhere in your project.
 The exception logger logs unhandled exceptions as if you would log the error manually.
 ```
 
@@ -423,7 +423,7 @@ In general, use second person rather than first person — you instead of we.
 
 ❌ We do not guarantee any API compatibility for future updates
 
-✅ The SAP Cloud SDK does not guarantee any API compatibility for future updates
+✅ The SAP Cloud SDK for AI does not guarantee any API compatibility for future updates
 
 ❌ We need to add resilience to our application to protect us.
 
@@ -543,7 +543,7 @@ Use serial (Oxford) comma before the final **and**/**or** in a series of three o
 
 Avoid exclamation point and ellipses (except in rare exciting moments)
 
-❌ Enjoy the hands-on experience delivered by SAP Cloud SDK developers!
+❌ Enjoy the hands-on experience delivered by SAP Cloud SDK for AI developers!
 
 ## Lists
 

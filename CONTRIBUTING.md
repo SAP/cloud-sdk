@@ -1,4 +1,4 @@
-# Contributing to the SAP Cloud SDK Documentation Portal
+# Contributing to the SAP Cloud SDK for AI Documentation Portal
 
 ## Prerequisites
 
@@ -11,7 +11,7 @@
 
 - Run `npm install`
 - Run `npm start`
-- The SAP Cloud SDK documentation portal should open in a new browser window
+- The SAP Cloud SDK for AI documentation portal should open in a new browser window
 
 ### How To Document
 

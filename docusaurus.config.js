@@ -15,14 +15,13 @@ class ESMPolyfillWrapper {
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
-  title: 'SAP Cloud SDK',
-  tagline:
-    'The one-stop shop for developing and extending SAP applications in the cloud.',
+  title: 'SAP Cloud SDK for AI',
+  tagline: 'The one-stop shop for integrating AI into SAP Cloud applications.',
   url: 'https://sap.github.io',
   baseUrl: '/cloud-sdk/',
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'throw',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/AI-SDK-Logo.svg',
   organizationName: 'SAP',
   projectName: 'cloud-sdk',
   trailingSlash: false,
@@ -38,15 +37,15 @@ module.exports = {
     },
     algolia: {
       apiKey: '441c57554e5a0ca9338cc9f047fb10c8',
-      indexName: 'sap_cloud-sdk',
+      indexName: 'sap_cloud-sdk', // should be dynamic based on the URL, contextualSearch?, searchParameters?
       appId: 'E4A268JVO0',
       algoliaOptions: {} // Optional, if provided by Algolia
     },
     navbar: {
-      title: 'SAP Cloud SDK',
+      title: 'SAP Cloud SDK for AI',
       logo: {
-        alt: 'SAP Cloud SDK',
-        src: 'img/logo.svg',
+        alt: 'SAP Cloud SDK for AI',
+        src: 'img/AI-SDK-Logo.svg',
         srcDark: 'img/logo-dark.svg'
       },
       items: [
@@ -88,69 +87,44 @@ module.exports = {
       style: 'dark',
       links: [
         {
-          title: 'SAP Cloud SDK for Java',
+          title: 'SAP Cloud SDK for AI Java',
           items: [
             {
               label: 'Tutorials',
-              href: 'https://developers.sap.com/tutorial-navigator.html?tag=products:technology-platform/sap-cloud-sdk/sap-cloud-sdk'
+              href: 'https://developers.sap.com/group.sap-ai-core-generative.html'
             },
             {
               label: 'Maven',
-              href: 'https://central.sonatype.com/search?q=g:com.sap.cloud.sdk*&smo=true'
+              href: 'https://central.sonatype.com/search?smo=true&namespace=com.sap.ai.sdk'
             },
             {
               label: 'Support',
-              to: 'docs/java/support'
+              to: 'docs/overview/get-support'
             }
           ]
         },
         {
-          title: 'SAP Cloud SDK for JavaScript',
+          title: 'SAP Cloud SDK for AI JavaScript',
           items: [
             {
               label: 'Tutorials',
-              to: 'docs/js/tutorials/getting-started/introduction'
+              to: 'https://developers.sap.com/group.sap-ai-core-generative.html'
             },
             {
               label: 'npm',
-              href: 'https://www.npmjs.com/search?q=%40sap-cloud-sdk'
+              href: 'https://www.npmjs.com/search?q=sap-ai-sdk'
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/SAP/cloud-sdk-js'
+              href: 'https://github.com/SAP/ai-sdk-js'
             },
             {
               label: 'Sample repository',
-              href: 'https://github.com/SAP-samples/cloud-sdk-js'
+              href: 'https://github.com/SAP/ai-sdk-js/tree/main/sample-code'
             },
             {
               label: 'Support',
-              to: 'docs/js/support'
-            }
-          ]
-        },
-        {
-          title: 'Additional Resources',
-          items: [
-            {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/sap-cloud-sdk'
-            },
-            {
-              label: 'SAP Cloud SDK Community Page',
-              href: 'https://community.sap.com/topics/cloud-sdk'
-            },
-            {
-              label: 'SAP Cloud SDK on SAP Answers',
-              href: 'https://answers.sap.com/tags/73555000100800000895'
-            },
-            {
-              label: 'SAP Cloud SDK on SAP Help',
-              href: 'https://help.sap.com/viewer/product/SAP_CLOUD_SDK/1.0/en-US?task=discover_task'
-            },
-            {
-              label: 'Feedback',
-              href: 'https://sapinsights.eu.qualtrics.com/jfe/form/SV_0P69X6kJ0Pdxqbc'
+              to: 'docs/overview/get-support'
             }
           ]
         }
@@ -164,7 +138,7 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve('./sidebarsDocsCommon.js'),
-          editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
+          editUrl: 'https://github.com/SAP/ai-sdk/edit/main',
           routeBasePath: 'docs/overview',
           path: 'docs'
         },
@@ -197,24 +171,13 @@ module.exports = {
       {
         id: 'docs-java',
         path: 'docs-java',
-        editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
+        editUrl: 'https://github.com/SAP/ai-sdk/edit/main',
         routeBasePath: 'docs/java',
         sidebarPath: require.resolve('./sidebarsDocsJava.js'),
         lastVersion: 'current',
         versions: {
           current: {
-            label: 'v5',
-            badge: false
-          },
-          v3: {
-            label: 'v3',
-            path: 'v3',
-            banner: 'unmaintained',
-            badge: false
-          },
-          v4: {
-            label: 'v4',
-            path: 'v4',
+            label: 'v1',
             badge: false
           }
         }
@@ -225,56 +188,36 @@ module.exports = {
       {
         id: 'docs-js',
         path: 'docs-js',
-        editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
+        editUrl: 'https://github.com/SAP/ai-sdk/edit/main',
         routeBasePath: 'docs/js',
         sidebarPath: require.resolve('./sidebarsDocsJs.js'),
         lastVersion: 'current',
         versions: {
           current: {
-            label: 'v4',
-            badge: false
-          },
-          v3: {
-            label: 'v3',
-            path: 'v3',
-            banner: 'none',
-            badge: false,
-            noIndex: true
-          },
-          v2: {
-            label: 'v2',
-            path: 'v2',
-            banner: 'unmaintained',
-            badge: false,
-            noIndex: true
-          },
-          v1: {
             label: 'v1',
-            path: 'v1',
-            banner: 'unmaintained',
-            badge: false,
-            noIndex: true
+            badge: false
           }
         }
       }
     ],
     [
-      '@docusaurus/plugin-client-redirects',
+      '@docusaurus/plugin-sitemap',
       {
-        redirects: [
-          {
-            from: ['/docs/community', '/docs/related-projects'],
-            to: '/docs/overview/overview-cloud-sdk'
-          },
-          {
-            from: '/docs/java/features/rest/clients/btp-business-rules-rest-api',
-            to: '/docs/java/v4/features/rest/clients/btp-business-rules-rest-api'
-          },
-          {
-            from: '/docs/java/features/rest/clients/scp-workflow-rest-api',
-            to: '/docs/java/v4/features/rest/clients/scp-workflow-rest-api'
-          }
-        ]
+        id: 'sitemap-js',
+        filename: 'sitemap-js.xml',
+        changefreq: 'weekly',
+        priority: 0.5,
+        ignorePatterns: ['**/docs/java/**']
+      }
+    ],
+    [
+      '@docusaurus/plugin-sitemap',
+      {
+        id: 'sitemap-java',
+        filename: 'sitemap-java.xml',
+        changefreq: 'weekly',
+        priority: 0.5,
+        ignorePatterns: ['**/docs/js/**']
       }
     ],
     function nodeWebpackPolyfillPlugin(context, options) {

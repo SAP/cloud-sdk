@@ -5,7 +5,7 @@ const PLANNED = ':date:';
 const DEPRECATED = ':warning:';
 const BETA = ':gear:';
 const FEATURE_REQUEST =
-  '[Request this feature](https://github.com/SAP/cloud-sdk/issues/new?assignees=&labels=feature+request&template=feature_request.md&title=)';
+  '[Request this feature](https://github.com/SAP/ai-sdk/issues/new?assignees=&labels=feature+request&template=feature_request.md&title=)';
 /**
  * Global SDK feature list.
  */

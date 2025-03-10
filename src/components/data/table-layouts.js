@@ -9,7 +9,7 @@ export const mainFeatureTableLayout = [
     ]
   },
   {
-    Header: 'SAP Cloud SDK Java',
+    Header: 'SAP Cloud SDK for AI Java',
     columns: [
       {
         Header: 'Status',
@@ -26,7 +26,7 @@ export const mainFeatureTableLayout = [
     ]
   },
   {
-    Header: 'SAP Cloud SDK JavaScript',
+    Header: 'SAP Cloud SDK for AI JavaScript',
     columns: [
       {
         Header: 'Status',
@@ -59,7 +59,7 @@ export const javaFeatureTableLayout = [
     ]
   },
   {
-    Header: 'SAP Cloud SDK Java',
+    Header: 'SAP Cloud SDK for AI Java',
     columns: [
       {
         Header: 'Status',
@@ -92,7 +92,7 @@ export const jsFeatureTableLayout = [
     ]
   },
   {
-    Header: 'SAP Cloud SDK JavaScript',
+    Header: 'SAP Cloud SDK for AI JavaScript',
     columns: [
       {
         Header: 'Status',
@@ -133,7 +133,7 @@ export const ODataFeatureTableLayout = [
     ]
   },
   {
-    Header: 'SAP Cloud SDK Java',
+    Header: 'SAP Cloud SDK for AI Java',
     columns: [
       {
         Header: 'Status',
@@ -150,7 +150,7 @@ export const ODataFeatureTableLayout = [
     ]
   },
   {
-    Header: 'SAP Cloud SDK JavaScript',
+    Header: 'SAP Cloud SDK for AI JavaScript',
     columns: [
       {
         Header: 'Status',
@@ -179,7 +179,7 @@ export const BTPEnvironmentsJava = [
     ]
   },
   {
-    Header: 'SAP Cloud SDK Java',
+    Header: 'SAP Cloud SDK for AI Java',
     columns: [
       {
         Header: 'Status',
