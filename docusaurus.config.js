@@ -1,5 +1,4 @@
 const { ProvidePlugin } = require('webpack');
-import 'dotenv/config';
 
 // We have to polyfill some Node APIs because Docusaurus migrated to Webpack 5
 // This is mainly required because of remark related modules which don't load otherwise
@@ -38,7 +37,7 @@ module.exports = {
       darkTheme: require('prism-react-renderer').themes.dracula
     },
     algolia: {
-      apiKey: process.env.ALGOLIA_API_KEY || 'fake_key',
+      apiKey: '441c57554e5a0ca9338cc9f047fb10c8',
       indexName: 'sap_cloud-sdk',
       appId: 'E4A268JVO0',
       algoliaOptions: {} // Optional, if provided by Algolia
