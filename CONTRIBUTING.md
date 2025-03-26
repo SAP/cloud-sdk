@@ -9,8 +9,6 @@
 
 ## Hosting the Documentation Locally
 
-- _Optional: Create a `.env` file and write `ALGOLIA_API_KEY='<insert_key_here>'`._
-  _The key can be found in the team KeePassXC._
 - Run `npm install`
 - Run `npm start`
 - The SAP Cloud SDK documentation portal should open in a new browser window
