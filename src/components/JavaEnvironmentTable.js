@@ -18,7 +18,7 @@ export default function JavaEnvironmentTable() {
 
   return (
     <>
-      <ReactMarkdown plugins={[gfm, emoji]}>
+      <ReactMarkdown remarkPlugins={[gfm, emoji]}>
         **Legend:** :heavy_check_mark: - Generally Available, :x: - Not
         Available, :gear: - Beta, :date: - Planned
       </ReactMarkdown>
