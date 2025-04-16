@@ -286,7 +286,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/connectivity/destination)`,
+      docsLink: `[docs](${baseUrl}/js/features/connectivity/destinations)`,
       note: ''
     }
   },
@@ -300,7 +300,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/connectivity/destination)`,
+      docsLink: `[docs](${baseUrl}/js/features/connectivity/destinations)`,
       note: ''
     }
   },
@@ -314,7 +314,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/connectivity/destination)`,
+      docsLink: `[docs](${baseUrl}/js/features/connectivity/destinations)`,
       note: ''
     }
   },
@@ -342,7 +342,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/connectivity/destination#authentication-and-json-web-token-retrievjal)`,
+      docsLink: `[docs](${baseUrl}/js/features/connectivity/destinations#authentication-and-json-web-token-retrievjal)`,
       note: ''
     }
   },
@@ -356,7 +356,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/connectivity/destination#multi-tenancy)`,
+      docsLink: `[docs](${baseUrl}/js/features/connectivity/destinations#multi-tenancy)`,
       note: ''
     }
   },
@@ -370,7 +370,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/connectivity/destination#multi-tenancy)`,
+      docsLink: `[docs](${baseUrl}/js/features/connectivity/destinations#multi-tenancy)`,
       note: ''
     }
   },
