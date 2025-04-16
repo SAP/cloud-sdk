@@ -33,7 +33,7 @@ Some reasons to separate destinations and the application are:
 - Different customers may want to configure different systems.
 - Multiple applications might want to access the same systems.
 
-Use [destinations](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.Destination.html) to execute [arbitrary requests](./generic-http-client.mdx), [OData requests](../odata/overview.mdx), and [OpenAPI requests](../openapi/overview.mdx).
+Use [destinations](pathname:///api/v4/interfaces/sap-cloud-sdk_connectivity.Destination.html) to execute [arbitrary requests](./generic-http-client.mdx), [OData requests](../odata/overview.mdx), and [OpenAPI requests](../openapi/overview.mdx).
 The following examples use `req.execute()`, assuming req is an OData or OpenAPI request, to demonstrate options for the destination lookup.
 The same options apply to `executeHttpRequest()`.
 
@@ -64,7 +64,7 @@ If you want to cache destinations in production, use [`registerDestination()`](#
 :::
 
 You can provide destinations in the `destinations` environment variable.
-The value of the environment variable is expected to be a stringified JSON array, where the items adhere to the [Destination interface](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.Destination.html).
+The value of the environment variable is expected to be a stringified JSON array, where the items adhere to the [Destination interface](pathname:///api/v4/interfaces/sap-cloud-sdk_connectivity.Destination.html).
 
 Example:
 
@@ -84,7 +84,7 @@ Note that this approach is **not suitable for multi-tenant scenarios**.
 #### Testing with Local Environment Variables
 
 The SAP Cloud SDK provides a `setTestDestination()` function to add a destination to the environment variable for the current process programmatically.
-It takes a [destination object](pathname:///api/v3/interfaces/sap_cloud_sdk_connectivity.Destination.html), transforms it to a JSON object, and adds it to `process.env.destinations`.
+It takes a [destination object](pathname:///api/v4/interfaces/sap-cloud-sdk_connectivity.Destination.html), transforms it to a JSON object, and adds it to `process.env.destinations`.
 
 ```ts
 import { setTestDestination } from '@sap-cloud-sdk/test-util';
@@ -280,7 +280,7 @@ Note, that if your `serviceBindingTransformFn()` function does not provide a nam
 
 More advanced examples with service token fetching can be found in [service-binding-to-destination.ts](https://github.com/SAP/cloud-sdk-js/blob/main/packages/connectivity/src/scp-cf/destination/service-binding-to-destination.ts).
 
-If you want to skip the destination lookup and consider only the service bindings, call the [getDestinationFromServiceBinding()](pathname:///api/v3/functions/sap_cloud_sdk_connectivity.getDestinationFromServiceBinding.html) function with the service name and options.
+If you want to skip the destination lookup and consider only the service bindings, call the [getDestinationFromServiceBinding()](pathname:///api/v4/functions/sap-cloud-sdk_connectivity.getDestinationFromServiceBinding.html) function with the service name and options.
 
 ```ts
 const destination = getDestinationFromServiceBinding({
