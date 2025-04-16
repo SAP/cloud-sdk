@@ -62,7 +62,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/odata/use-odata-v2-type-safe-client-for-javascript-typescript)`,
+      docsLink: `[docs](${baseUrl}/js/features/odata/v2-client)`,
       note: ''
     }
   },
@@ -76,7 +76,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/odata/use-odata-v4-type-safe-client-for-javascript-typescript)`,
+      docsLink: `[docs](${baseUrl}/js/features/odata/v4-client)`,
       note: ''
     }
   },
@@ -91,7 +91,7 @@ export const features = [
     js: {
       status: NO,
       docsLink: ``,
-      note: `We expose [generic HTTP client](${baseUrl}/js/features/connectivity/generic-http-client) aware of connectivity abstractions`
+      note: `We expose [generic HTTP client](${baseUrl}/js/features/connectivity/http-client) aware of connectivity abstractions`
     }
   },
   {
@@ -104,7 +104,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/odata/generate-odata-client)`,
+      docsLink: `[docs](${baseUrl}/js/features/odata/generate-client)`,
       note: ''
     }
   },
@@ -118,7 +118,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/openapi/execute-openapi-request)`,
+      docsLink: `[docs](${baseUrl}/js/features/openapi/execute-request)`,
       note: ''
     }
   },
@@ -132,7 +132,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/openapi/execute-openapi-request)`,
+      docsLink: `[docs](${baseUrl}/js/features/openapi/execute-request)`,
       note: ''
     }
   },
@@ -146,7 +146,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/openapi/generate-openapi-client)`,
+      docsLink: `[docs](${baseUrl}/js/features/openapi/generate-client)`,
       note: ''
     }
   },
@@ -216,7 +216,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/guides/migrate-sdk-application-from-btp-cf-to-kubernetes)`,
+      docsLink: `[docs](${baseUrl}/js/environments/kubernetes)`,
       note: ''
     }
   },
@@ -384,7 +384,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/features/connectivity/generic-http-client)`,
+      docsLink: `[docs](${baseUrl}/js/features/connectivity/http-client)`,
       note: ''
     }
   },
