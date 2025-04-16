@@ -1,6 +1,10 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import { useTable } from 'react-table';
+import {
+  useReactTable,
+  flexRender,
+  getCoreRowModel
+} from '@tanstack/react-table';
 import gfm from 'remark-gfm';
 import emoji from 'remark-emoji';
 
@@ -9,36 +13,39 @@ import emoji from 'remark-emoji';
  */
 export default function Table({ columns, data }) {
   // Use the state and functions returned from useTable to build UI
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({
-      columns,
-      data
-    });
+  const { getHeaderGroups, getRowModel } = useReactTable({
+    columns,
+    data,
+    getCoreRowModel: getCoreRowModel()
+  });
 
   // Render the UI for your table
   return (
-    <table {...getTableProps()}>
+    <table>
       <thead>
-        {headerGroups.map(headerGroup => (
-          <tr key={headerGroup.key} {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th key={column.key} {...column.getHeaderProps()}>
-                {column.render('Header')}
+        {getHeaderGroups().map(headerGroup => (
+          <tr key={headerGroup.id}>
+            {headerGroup.headers.map(header => (
+              <th key={header.id} colSpan={header.colSpan}>
+                {flexRender(
+                  header.column.columnDef.Header,
+                  header.getContext()
+                )}
               </th>
             ))}
           </tr>
         ))}
       </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row, i) => {
-          prepareRow(row);
+      <tbody>
+        {getRowModel().rows.map(row => {
+          // prepareRow(row);
           return (
-            <tr key={row.key} {...row.getRowProps()}>
-              {row.cells.map(cell => {
+            <tr key={row.id}>
+              {row.getAllCells().map(cell => {
                 return (
-                  <td key={cell.key} {...cell.getCellProps()}>
+                  <td key={cell.id}>
                     <ReactMarkdown remarkPlugins={[gfm, emoji]}>
-                      {cell.value}
+                      {cell.getValue()}
                     </ReactMarkdown>
                   </td>
                 );

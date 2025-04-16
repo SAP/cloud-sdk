@@ -1,44 +1,54 @@
 export const mainFeatureTableLayout = [
   {
     Header: 'Feature',
+    id: 'feature',
     columns: [
       {
+        id: 'feature-name',
         Header: 'Name',
-        accessor: 'name'
+        accessorKey:'name'
       }
     ]
   },
   {
     Header: 'SAP Cloud SDK Java',
+    id: 'java',
     columns: [
       {
+        id: 'java-status',
         Header: 'Status',
-        accessor: 'java.status'
+        accessorKey:'java.status'
       },
       {
+        id: 'java-docs',
         Header: 'Docs',
-        accessor: 'java.docsLink'
+        accessorKey:'java.docsLink'
       },
       {
+        id: 'java-notes',
         Header: 'Notes',
-        accessor: 'java.note'
+        accessorKey:'java.note'
       }
     ]
   },
   {
     Header: 'SAP Cloud SDK JavaScript',
+    id: 'js',
     columns: [
       {
+        id: 'js-status',
         Header: 'Status',
-        accessor: 'js.status'
+        accessorKey:'js.status'
       },
       {
+        id: 'js-docs',
         Header: 'Docs',
-        accessor: 'js.docsLink'
+        accessorKey:'js.docsLink'
       },
       {
+        id: 'js-notes',
         Header: 'Notes',
-        accessor: 'js.note'
+        accessorKey:'js.note'
       }
     ]
   }
@@ -47,31 +57,38 @@ export const mainFeatureTableLayout = [
 export const javaFeatureTableLayout = [
   {
     Header: 'Feature',
+    id: 'feature',
     columns: [
       {
+        id: 'feature-category',
         Header: 'Category',
-        accessor: 'category'
+        accessorKey:'category'
       },
       {
+        id: 'feature-name',
         Header: 'Name',
-        accessor: 'name'
+        accessorKey:'name'
       }
     ]
   },
   {
     Header: 'SAP Cloud SDK Java',
+    id: 'java',
     columns: [
       {
+        id: 'java-status',
         Header: 'Status',
-        accessor: 'java.status'
+        accessorKey:'java.status'
       },
       {
+        id: 'java-docs',
         Header: 'Docs',
-        accessor: 'java.docsLink'
+        accessorKey:'java.docsLink'
       },
       {
+        id: 'java-notes',
         Header: 'Notes',
-        accessor: 'java.note'
+        accessorKey:'java.note'
       }
     ]
   }
@@ -80,31 +97,38 @@ export const javaFeatureTableLayout = [
 export const jsFeatureTableLayout = [
   {
     Header: 'Feature',
+    id: 'feature',
     columns: [
       {
+        id: 'feature-category',
         Header: 'Category',
-        accessor: 'category'
+        accessorKey:'category'
       },
       {
+        id: 'feature-name',
         Header: 'Name',
-        accessor: 'name'
+        accessorKey:'name'
       }
     ]
   },
   {
+    id: 'sap-cloud-sdk-js',
     Header: 'SAP Cloud SDK JavaScript',
     columns: [
       {
+        id: 'js-status',
         Header: 'Status',
-        accessor: 'js.status'
+        accessorKey:'js.status'
       },
       {
+        id: 'js-docs',
         Header: 'Docs',
-        accessor: 'js.docsLink'
+        accessorKey:'js.docsLink'
       },
       {
+        id: 'js-notes',
         Header: 'Notes',
-        accessor: 'js.note'
+        accessorKey:'js.note'
       }
     ]
   }
@@ -112,57 +136,70 @@ export const jsFeatureTableLayout = [
 export const ODataFeatureTableLayout = [
   {
     Header: 'Feature',
+    id: 'feature',
     columns: [
       {
+        id: 'feature-type',
         Header: 'Type',
-        accessor: 'type'
+        accessorKey:'type'
       },
       {
+        id: 'feature-name',
         Header: 'Name',
-        accessor: 'name'
+        accessorKey:'name'
       },
 
       {
+        id: 'feature-v2',
         Header: 'v2',
-        accessor: 'v2'
+        accessorKey:'v2'
       },
       {
-        Header: 'v2',
-        accessor: 'v4'
+        id: 'feature-v4',
+        Header: 'v4',
+        accessorKey:'v4'
       }
     ]
   },
   {
     Header: 'SAP Cloud SDK Java',
+    id: 'java',
     columns: [
       {
+        id: 'java-status',
         Header: 'Status',
-        accessor: 'java.status'
+        accessorKey:'java.status'
       },
       {
+        id: 'java-docs',
         Header: 'Docs',
-        accessor: 'java.docsLink'
+        accessorKey:'java.docsLink'
       },
       {
+        id: 'java-notes',
         Header: 'Notes',
-        accessor: 'java.note'
+        accessorKey:'java.note'
       }
     ]
   },
   {
     Header: 'SAP Cloud SDK JavaScript',
+    id: 'sap-cloud-sdk-js',
     columns: [
       {
+        id: 'js-status',
         Header: 'Status',
-        accessor: 'js.status'
+        accessorKey:'js.status'
       },
       {
+        id: 'js-docs',
         Header: 'Docs',
-        accessor: 'js.docsLink'
+        accessorKey:'js.docsLink'
       },
       {
+        id: 'js-notes',
         Header: 'Notes',
-        accessor: 'js.note'
+        accessorKey:'js.note'
       }
     ]
   }
@@ -171,27 +208,33 @@ export const ODataFeatureTableLayout = [
 export const BTPEnvironmentsJava = [
   {
     Header: 'Environment',
+    id: 'environment',
     columns: [
       {
+        id: 'environment-name',
         Header: 'Name',
-        accessor: 'name'
+        accessorKey:'name'
       }
     ]
   },
   {
     Header: 'SAP Cloud SDK Java',
+    id: 'java',
     columns: [
       {
+        id: 'java-status',
         Header: 'Status',
-        accessor: 'java.status'
+        accessorKey:'java.status'
       },
       {
+        id: 'java-docs',
         Header: 'Docs',
-        accessor: 'java.docsLink'
+        accessorKey:'java.docsLink'
       },
       {
+        id: 'java-notes',
         Header: 'Notes',
-        accessor: 'java.note'
+        accessorKey:'java.note'
       }
     ]
   }
