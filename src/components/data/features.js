@@ -202,7 +202,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/getting-started#deploy-the-project-on-sap-btp-cloud-foundry)`,
+      docsLink: `[docs](${baseUrl}/js/getting-started)`,
       note: ''
     }
   },
@@ -230,7 +230,7 @@ export const features = [
     },
     js: {
       status: YES,
-      docsLink: `[docs](${baseUrl}/js/getting-started#deploy-the-project-on-sap-btp-cloud-foundry)`,
+      docsLink: `[docs](${baseUrl}/js/environments/kyma)`,
       note: ''
     }
   },
