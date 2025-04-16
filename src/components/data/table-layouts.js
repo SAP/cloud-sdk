@@ -6,7 +6,7 @@ export const mainFeatureTableLayout = [
       {
         id: 'feature-name',
         Header: 'Name',
-        accessorKey:'name'
+        accessorKey: 'name'
       }
     ]
   },
@@ -17,17 +17,17 @@ export const mainFeatureTableLayout = [
       {
         id: 'java-status',
         Header: 'Status',
-        accessorKey:'java.status'
+        accessorKey: 'java.status'
       },
       {
         id: 'java-docs',
         Header: 'Docs',
-        accessorKey:'java.docsLink'
+        accessorKey: 'java.docsLink'
       },
       {
         id: 'java-notes',
         Header: 'Notes',
-        accessorKey:'java.note'
+        accessorKey: 'java.note'
       }
     ]
   },
@@ -38,17 +38,17 @@ export const mainFeatureTableLayout = [
       {
         id: 'js-status',
         Header: 'Status',
-        accessorKey:'js.status'
+        accessorKey: 'js.status'
       },
       {
         id: 'js-docs',
         Header: 'Docs',
-        accessorKey:'js.docsLink'
+        accessorKey: 'js.docsLink'
       },
       {
         id: 'js-notes',
         Header: 'Notes',
-        accessorKey:'js.note'
+        accessorKey: 'js.note'
       }
     ]
   }
@@ -62,12 +62,12 @@ export const javaFeatureTableLayout = [
       {
         id: 'feature-category',
         Header: 'Category',
-        accessorKey:'category'
+        accessorKey: 'category'
       },
       {
         id: 'feature-name',
         Header: 'Name',
-        accessorKey:'name'
+        accessorKey: 'name'
       }
     ]
   },
@@ -78,17 +78,17 @@ export const javaFeatureTableLayout = [
       {
         id: 'java-status',
         Header: 'Status',
-        accessorKey:'java.status'
+        accessorKey: 'java.status'
       },
       {
         id: 'java-docs',
         Header: 'Docs',
-        accessorKey:'java.docsLink'
+        accessorKey: 'java.docsLink'
       },
       {
         id: 'java-notes',
         Header: 'Notes',
-        accessorKey:'java.note'
+        accessorKey: 'java.note'
       }
     ]
   }
@@ -102,12 +102,12 @@ export const jsFeatureTableLayout = [
       {
         id: 'feature-category',
         Header: 'Category',
-        accessorKey:'category'
+        accessorKey: 'category'
       },
       {
         id: 'feature-name',
         Header: 'Name',
-        accessorKey:'name'
+        accessorKey: 'name'
       }
     ]
   },
@@ -118,17 +118,17 @@ export const jsFeatureTableLayout = [
       {
         id: 'js-status',
         Header: 'Status',
-        accessorKey:'js.status'
+        accessorKey: 'js.status'
       },
       {
         id: 'js-docs',
         Header: 'Docs',
-        accessorKey:'js.docsLink'
+        accessorKey: 'js.docsLink'
       },
       {
         id: 'js-notes',
         Header: 'Notes',
-        accessorKey:'js.note'
+        accessorKey: 'js.note'
       }
     ]
   }
@@ -141,23 +141,23 @@ export const ODataFeatureTableLayout = [
       {
         id: 'feature-type',
         Header: 'Type',
-        accessorKey:'type'
+        accessorKey: 'type'
       },
       {
         id: 'feature-name',
         Header: 'Name',
-        accessorKey:'name'
+        accessorKey: 'name'
       },
 
       {
         id: 'feature-v2',
         Header: 'v2',
-        accessorKey:'v2'
+        accessorKey: 'v2'
       },
       {
         id: 'feature-v4',
         Header: 'v4',
-        accessorKey:'v4'
+        accessorKey: 'v4'
       }
     ]
   },
@@ -168,17 +168,17 @@ export const ODataFeatureTableLayout = [
       {
         id: 'java-status',
         Header: 'Status',
-        accessorKey:'java.status'
+        accessorKey: 'java.status'
       },
       {
         id: 'java-docs',
         Header: 'Docs',
-        accessorKey:'java.docsLink'
+        accessorKey: 'java.docsLink'
       },
       {
         id: 'java-notes',
         Header: 'Notes',
-        accessorKey:'java.note'
+        accessorKey: 'java.note'
       }
     ]
   },
@@ -189,17 +189,17 @@ export const ODataFeatureTableLayout = [
       {
         id: 'js-status',
         Header: 'Status',
-        accessorKey:'js.status'
+        accessorKey: 'js.status'
       },
       {
         id: 'js-docs',
         Header: 'Docs',
-        accessorKey:'js.docsLink'
+        accessorKey: 'js.docsLink'
       },
       {
         id: 'js-notes',
         Header: 'Notes',
-        accessorKey:'js.note'
+        accessorKey: 'js.note'
       }
     ]
   }
@@ -213,7 +213,7 @@ export const BTPEnvironmentsJava = [
       {
         id: 'environment-name',
         Header: 'Name',
-        accessorKey:'name'
+        accessorKey: 'name'
       }
     ]
   },
@@ -224,17 +224,17 @@ export const BTPEnvironmentsJava = [
       {
         id: 'java-status',
         Header: 'Status',
-        accessorKey:'java.status'
+        accessorKey: 'java.status'
       },
       {
         id: 'java-docs',
         Header: 'Docs',
-        accessorKey:'java.docsLink'
+        accessorKey: 'java.docsLink'
       },
       {
         id: 'java-notes',
         Header: 'Notes',
-        accessorKey:'java.note'
+        accessorKey: 'java.note'
       }
     ]
   }
