@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.7.0">
 <title data-rh="true">Release Notes | SAP Cloud SDK</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://sap.github.io/cloud-sdk/docs/java/release-notes"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-docs-java-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-docs-java-current"><meta data-rh="true" property="og:title" content="Release Notes | SAP Cloud SDK"><meta data-rh="true" name="description" content="Release notes of SAP Cloud SDK for Java, stay up to date with the recent features, fixes, dependency updates and recommendedations."><meta data-rh="true" property="og:description" content="Release notes of SAP Cloud SDK for Java, stay up to date with the recent features, fixes, dependency updates and recommendedations."><meta data-rh="true" name="keywords" content="sap,cloud,sdk,cloud native,cloud sdk,sap cloud sdk"><link data-rh="true" rel="icon" href="/cloud-sdk/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://sap.github.io/cloud-sdk/docs/java/release-notes"><link data-rh="true" rel="alternate" href="https://sap.github.io/cloud-sdk/docs/java/release-notes" hreflang="en"><link data-rh="true" rel="alternate" href="https://sap.github.io/cloud-sdk/docs/java/release-notes" hreflang="x-default"><link data-rh="true" rel="preconnect" href="https://E4A268JVO0-dsn.algolia.net" crossorigin="anonymous"><link rel="search" type="application/opensearchdescription+xml" title="SAP Cloud SDK" href="/cloud-sdk/opensearch.xml"><link rel="stylesheet" href="/cloud-sdk/assets/css/styles.4f38bef3.css">
-<script src="/cloud-sdk/assets/js/runtime~main.070468e4.js" defer="defer"></script>
+<script src="/cloud-sdk/assets/js/runtime~main.43255d9e.js" defer="defer"></script>
 <script src="/cloud-sdk/assets/js/main.f03b4125.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -23,9 +23,20 @@ It will help you:</p>
 <li>Update client libraries giving access to latest SAP services on SAP Cloud Platform and SAP S/4HANA</li>
 <li>Protect yourself from bugs and breaking changes in the future</li>
 </ul>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="5180---april-16-2025">5.18.0 - April 16, 2025<a href="#5180---april-16-2025" class="hash-link" aria-label="Direct link to 5.18.0 - April 16, 2025" title="Direct link to 5.18.0 - April 16, 2025">​</a></h2>
+<p><a href="https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.18.0" target="_blank" rel="noopener noreferrer">All Release Changes</a></p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-compatibility-notes">🔧 Compatibility Notes<a href="#-compatibility-notes" class="hash-link" aria-label="Direct link to 🔧 Compatibility Notes" title="Direct link to 🔧 Compatibility Notes">​</a></h3>
+<ul>
+<li>Changed a behavior details when obtaining tokens from IAS with the default strategy <code>CURRENT_TENANT</code>.
+In case the current tenant is the provider tenant, and <code>TenantAccessor.getCurrentTenant()</code> is returning a <code>Tenant</code> object, this object is now required to have a subdomain != null.</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues">🐛 Fixed Issues<a href="#-fixed-issues" class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues">​</a></h3>
+<ul>
+<li>OpenAPI: When <code>apiMaturity</code> is set to <code>beta</code>, generated enums will now be <code>@Beta</code> annotated.</li>
+</ul>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="5170---february-20-2025">5.17.0 - February 20, 2025<a href="#5170---february-20-2025" class="hash-link" aria-label="Direct link to 5.17.0 - February 20, 2025" title="Direct link to 5.17.0 - February 20, 2025">​</a></h2>
 <p><a href="https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.17.0" target="_blank" rel="noopener noreferrer">All Release Changes</a></p>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-compatibility-notes">🔧 Compatibility Notes<a href="#-compatibility-notes" class="hash-link" aria-label="Direct link to 🔧 Compatibility Notes" title="Direct link to 🔧 Compatibility Notes">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-compatibility-notes-1">🔧 Compatibility Notes<a href="#-compatibility-notes-1" class="hash-link" aria-label="Direct link to 🔧 Compatibility Notes" title="Direct link to 🔧 Compatibility Notes">​</a></h3>
 <ul>
 <li>Changes regarding the TLS <code>Upgrade</code> header thanks to <a href="https://github.com/apache/httpcomponents-client/commit/5ab09ea39fed1c39ea35905532ba1567c785330a" target="_blank" rel="noopener noreferrer">Apache httpclient5 5.4.2</a>
 <ul>
@@ -57,7 +68,7 @@ It will help you:</p>
 <ul>
 <li>Improve the OData v4 class <code>BatchRequestBuilder</code> to now also implement the <code>ModificationRequestBuilder</code> interface.</li>
 </ul>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues">🐛 Fixed Issues<a href="#-fixed-issues" class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues-1">🐛 Fixed Issues<a href="#-fixed-issues-1" class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues">​</a></h3>
 <ul>
 <li>Fix non-compilable code using OpenAPI generator with schema definitions having <code>additionalProperties: true</code>.
 Previously they would result in model classes extending <code>HashMap</code>, which disabled proper deserialization and serialization.</li>
@@ -80,7 +91,7 @@ disable the generation of APIs and models respectively.</li>
 </li>
 <li>OData v2 and v4 generators now use <code>LinkedHashMap</code> for the properties of the generated classes to maintain the order of the properties.</li>
 </ul>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues-1">🐛 Fixed Issues<a href="#-fixed-issues-1" class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-fixed-issues-2">🐛 Fixed Issues<a href="#-fixed-issues-2" class="hash-link" aria-label="Direct link to 🐛 Fixed Issues" title="Direct link to 🐛 Fixed Issues">​</a></h3>
 <ul>
 <li>Fix ApacheHttpClient5Wrapper to propagate the configuration to Spring RestTemplate.</li>
 <li>Fix OData v2 and v4 generators to work when property name is <code>value</code> or <code>values</code> and is of collection type.<!-- -->
