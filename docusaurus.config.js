@@ -75,7 +75,7 @@ module.exports = {
         {
           label: 'SAP Cloud SDK for AI',
           href: 'https://sap.github.io/ai-sdk',
-          position: 'right',
+          position: 'right'
         },
         {
           type: 'docsVersionDropdown',
