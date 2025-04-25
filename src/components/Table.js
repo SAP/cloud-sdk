@@ -38,7 +38,6 @@ export default function Table({ columns, data }) {
       </thead>
       <tbody>
         {getRowModel().rows.map(row => {
-          // prepareRow(row);
           return (
             <tr key={row.id}>
               {row.getAllCells().map(cell => {
