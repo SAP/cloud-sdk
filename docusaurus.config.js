@@ -73,6 +73,11 @@ module.exports = {
           sdkSwitch: true
         },
         {
+          label: 'SAP Cloud SDK for AI',
+          href: 'https://sap.github.io/ai-sdk',
+          position: 'right'
+        },
+        {
           type: 'docsVersionDropdown',
           position: 'right',
           docsPluginId: 'docs-js'
@@ -151,6 +156,10 @@ module.exports = {
             {
               label: 'Feedback',
               href: 'https://sapinsights.eu.qualtrics.com/jfe/form/SV_0P69X6kJ0Pdxqbc'
+            },
+            {
+              label: 'SAP Cloud SDK for AI',
+              href: 'https://sap.github.io/ai-sdk'
             }
           ]
         }
