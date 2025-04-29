@@ -41,7 +41,7 @@ Check out our [contribution guide](./CONTRIBUTING.md) and follow our [code of co
 
 ## Security / Disclosure
 
-If you find any bug that may be a security problem, please follow our instructions at [in our security policy](https://github.com/SAP/cloud-sdk/security/policy) on how to report it.
+If you find any bug that may be a security problem, please follow the instructions [in our security policy](https://github.com/SAP/cloud-sdk/security/policy) on how to report it.
 Please do not create GitHub issues for security-related doubts or problems.
 
 ## Code of Conduct
