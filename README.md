@@ -11,7 +11,7 @@ Find it here:
 - [JavaScript/TypeScript](https://github.com/SAP/cloud-sdk-js).
 - [Java](https://github.com/SAP/cloud-sdk-java).
 
-Aslo find here the documentation portal for the [Cloud SDK for AI](https://sap.github.io/ai-sdk/).
+Also find here the documentation portal for the [SAP Cloud SDK for AI](https://sap.github.io/ai-sdk/).
 
 ## Requirements and Setup
 
