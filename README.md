@@ -1,22 +1,37 @@
-# SAP Cloud SDK documentation and support portal
+# SAP Cloud SDK documentation portal
 
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP/cloud-sdk)](https://api.reuse.software/info/github.com/SAP/cloud-sdk)
 
-This repository contains:
+This repository contains sources for the [SAP Cloud SDK Documentation](https://sap.github.io/cloud-sdk/).
 
-- Sources for the [SAP Cloud SDK Documentation](https://sap.github.io/cloud-sdk/).
-- SAP Cloud SDK for Java [Support Issues](https://github.com/SAP/cloud-sdk/issues).
+## Looking for the repository of the SAP Cloud SDK?
 
-For the [Support](https://github.com/SAP/cloud-sdk-js/issues) on SAP Cloud SDK for JavaScript us this [repository](https://github.com/SAP/cloud-sdk-js).
+Find it here:
 
-## Looking for the repository of the SAP Cloud SDK for JavaScript / TypeScript?
+- [JavaScript/TypeScript](https://github.com/SAP/cloud-sdk-js).
+- [Java](https://github.com/SAP/cloud-sdk-java).
 
-Find it [here](https://github.com/SAP/cloud-sdk-js).
+🆕 Documentation portal for the [SAP Cloud SDK for AI](https://sap.github.io/ai-sdk/).
+
+## Requirements and Setup
+
+- [Node.js](https://nodejs.org/en/download/).
+  We recommend the latest LTS version of node.js.
+  Check your version with `node -v`.
+  You can use [`nvm`](https://github.com/nvm-sh/nvm) for managing multiple Node versions on a single machine.
+- Run `npm install`
+- Run `npm start`
+- The SAP Cloud SDK documentation portal should open in a new browser window
+
+### How To Document
+
+The markdown files for the documentation are in the `docs` directory.
+Add or change an article and create a pull request.
 
 ## Getting Support
 
-- [SAP Cloud SDK for Java](https://github.com/SAP/cloud-sdk/issues)
-- [SAP Cloud SDK for JavaScript / TypeScript](https://github.com/SAP/cloud-sdk-js/issues/new/choose)
+- [SAP Cloud SDK Java](https://github.com/SAP/cloud-sdk/issues)
+- [SAP Cloud SDK JavaScript / TypeScript](https://github.com/SAP/cloud-sdk-js/issues)
 - [Documentation portal](https://sap.github.io/cloud-sdk/)
 
 ## Contributing
@@ -24,6 +39,18 @@ Find it [here](https://github.com/SAP/cloud-sdk-js).
 Feel free to contribute to the SAP Cloud SDK documentation.
 Check out our [contribution guide](./CONTRIBUTING.md) and follow our [code of conduct](./CODE_OF_CONDUCT.md).
 
-## License
+## Security / Disclosure
 
-This project is licensed under Apache 2.0 except as noted otherwise in the [license file](./LICENSES/Apache-2.0.txt).
+If you find any bug that may be a security problem, please follow the instructions [in our security policy](https://github.com/SAP/cloud-sdk/security/policy) on how to report it.
+Please do not create GitHub issues for security-related doubts or problems.
+
+## Code of Conduct
+
+We as members, contributors, and leaders pledge to make participation in our community a harassment-free experience for everyone.
+By participating in this project, you agree to abide by its [Code of Conduct](https://github.com/SAP/.github/blob/main/CODE_OF_CONDUCT.md) at all times.
+
+## Licensing
+
+Copyright 2025 SAP SE or an SAP affiliate company and cloud-sdk contributors.
+Please see our [LICENSE](LICENSE) for copyright and license information.
+Detailed information including third-party components and their licensing/copyright information is available [via the REUSE tool](https://api.reuse.software/info/github.com/SAP/cloud-sdk).
