@@ -6,10 +6,6 @@ labels: feature request
 assignees: ''
 ---
 
-**[OPTIONAL] Survey**
-Please, help us making the SAP Cloud SDK better by taking our [survey](https://sapinsights.eu.qualtrics.com/jfe/form/SV_0P69X6kJ0Pdxqbc).
-It takes less than 3 minutes :)
-
 **Is your feature request related to a problem? Please describe.**
 A clear and concise description of what the problem is.
 
