@@ -168,7 +168,7 @@ While generating a type-safe API client for an OData service, you encounter the 
 
 - The service specification (`EDMX` file) contains an entity that is named `Type`, `Type_`, or just `_`.
 
-  By default, both the OData V2 and V4 VDM generators use the `S4HanaNamingStrategy` to generate valid Java names from the given service specification.
+  By default, both the OData v2 and v4 VDM generators use the `S4HanaNamingStrategy` to generate valid Java names from the given service specification.
   Hereby, it removes pre- and suffixes that are commonly used in SAP service specifications, such as the suffixes `Type` and `_` for entities.
   In special cases, where an entity name consist of those suffixes only, that logic leads to the generation of an empty class name, which, in turn, then results in the observed exception.
 
@@ -224,7 +224,7 @@ java.util.ServiceConfigurationError: com.sap.cloud.security.client.HttpClientFac
 ## Incoming Requests Fail Because a Request Header is Too Large
 
 :::info **Symptoms**
-your app is responding with 400 codes and you see a log entry `Request header is too large`
+Your app is responding with 400 codes and you see a log entry `Request header is too large`.
 :::
 
 **Possible causes:**
@@ -232,3 +232,16 @@ your app is responding with 400 codes and you see a log entry `Request header is
 - In some cases you may need to configure your app/server to accept larger request headers.
   Refer to [this guide](https://www.baeldung.com/spring-boot-max-http-header-size#overview-1) on how to achieve this for Spring based applications.
   In case you are deploying a WAR file with the SAP Java Buildpack refer to [this documentation](https://help.sap.com/docs/BTP/65de2977205c403bbc107264b8eccf4b/79c039ab43b946a7b50c5d0326a3b40b.html#customizing-the-sap-java-buildpack-defaults).
+
+## Token Retrieval Fails with `401 - Bad Credentials`
+
+:::info **Symptoms**
+While requesting authentication tokens for destination or connectivity, an error message containing `Http status code 401` and `Bad credentials` is thrown.
+:::
+
+**Possible Causes**
+
+- You might have not configured your SaaS dependencies correctly.
+  Most likely, one of your dependencies is missing.
+  For more information on how to configure your SaaS dependencies, please refer to [this guide](https://pages.github.tools.sap/deploy-with-confidence/solar-system/configuration/landscape-configuration/orbits-directory/?_highlight=saas#saas-registry-configuration).
+- If your SaaS dependencies are set up correctly and you still get the above error, make sure that your service binding credentials are valid.
