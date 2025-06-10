@@ -168,7 +168,7 @@ While generating a type-safe API client for an OData service, you encounter the 
 
 - The service specification (`EDMX` file) contains an entity that is named `Type`, `Type_`, or just `_`.
 
-  By default, both the OData V2 and V4 VDM generators use the `S4HanaNamingStrategy` to generate valid Java names from the given service specification.
+  By default, both the OData v2 and v4 VDM generators use the `S4HanaNamingStrategy` to generate valid Java names from the given service specification.
   Hereby, it removes pre- and suffixes that are commonly used in SAP service specifications, such as the suffixes `Type` and `_` for entities.
   In special cases, where an entity name consist of those suffixes only, that logic leads to the generation of an empty class name, which, in turn, then results in the observed exception.
 
@@ -224,7 +224,7 @@ java.util.ServiceConfigurationError: com.sap.cloud.security.client.HttpClientFac
 ## Incoming Requests Fail Because a Request Header is Too Large
 
 :::info **Symptoms**
-your app is responding with 400 codes and you see a log entry `Request header is too large`
+Your app is responding with 400 codes and you see a log entry `Request header is too large`.
 :::
 
 **Possible causes:**
@@ -245,3 +245,16 @@ When your application tries to fetch a destination, for some of the users you se
   If the token is too large, it can exceed the platform’s header size limit and trigger an HTTP 431 error.
 
   You may try out other strategies, such as the now-deprecated `LOOKUP_THEN_EXCHANGE` which can appropriately exchange the token for a more compact one at the cost of performance overhead.
+
+## Token Retrieval Fails with `401`
+
+:::info **Symptoms**
+While requesting authentication tokens for destination or connectivity, an error message containing `Http status code 401` and/or `Bad Credentials` is thrown.
+:::
+
+**Possible Causes**
+
+- You might have not configured your SaaS dependencies correctly.
+  Most likely, one of your dependencies is missing.
+  For more information on how to configure your SaaS registry, please refer to [this guide](https://pages.github.tools.sap/deploy-with-confidence/solar-system/configuration/landscape-configuration/orbits-directory/?_highlight=saas#saas-registry-configuration).
+- If your SaaS dependencies are set up correctly and you still get the above error, make sure that your service binding credentials are valid.
