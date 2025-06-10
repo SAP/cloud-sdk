@@ -241,7 +241,7 @@ When your application tries to fetch a destination, for some of the users you se
 
 **Possible causes:**
 
-- The SAP Cloud SDK’s default `FORWARD_USER_TOKEN` strategy forwards the _entire_ token, including all group claims, in the `Authorization` header when performing a destination lookup. 
+- The SAP Cloud SDK’s default `FORWARD_USER_TOKEN` strategy forwards the _entire_ token, including all group claims, in the `Authorization` header when performing a destination lookup.
   If the token is too large, it can exceed the platform’s header size limit and trigger an HTTP 431 error.
 
   You may try out other strategies, such as the now-deprecated `LOOKUP_THEN_EXCHANGE` which can appropriately exchange the token for a more compact one at the cost of performance overhead.
