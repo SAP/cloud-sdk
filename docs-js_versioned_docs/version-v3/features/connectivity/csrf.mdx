@@ -19,7 +19,7 @@ keywords:
 
 ## Default Behaviour
 
-The SAP Cloud SDK fetches a CSRF token for non `GET` requests per default.
+The SAP Cloud SDK fetches a CSRF token for non `GET` requests by default.
 This is done for all clients that the SAP Cloud SDK provides:
 
 - [generic http-client](./http-client#csrf-token-fetching)
@@ -60,12 +60,6 @@ If performance is relevant you should check:
 
 - Does the system need a CSRF token? If not disable the fetching.
 - Does the system fail to return a CSRF with a `/`? Adjust the token fetching via a middleware.
-
-:::note
-The SAP Cloud SDK will discontinue fetching CSRF tokens per default.
-From version 4 on you will need to add the `csrf()` middleware to enable fetching.
-Also, a failure in token fetching will stop the request execution and not silently be ignored.
-:::
 
 ## Changing the Default
 
