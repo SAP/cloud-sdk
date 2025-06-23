@@ -170,12 +170,12 @@ This configures HTTPS requests to automatically check for the `CF_INSTANCE_CERT`
 
 The caching of mTLS certificates is disabled by default, but can be enabled by adding the `useMtlsCache` option:
 
-````
+```ts
 const options: RegisterDestinationOptions = {
   inferMtls: true,
   useMtlsCache: true
 };
-
+```
 
 Certificates are then cached for the entire validity time of the certificate.
 Since in Cloud Foundry each deployment has their own mTLS certificate, the cache is shared among all tenants of a deployment.
@@ -219,7 +219,7 @@ Additionally, if the service binding follows the structure, we provide a transfo
     ]
   }
 }
-````
+```
 
 The following example shows how to retrieve an `OAuth2ClientCredentials` destination from a service binding with retrieved JWT from the incoming request, and a custom URL:
 
