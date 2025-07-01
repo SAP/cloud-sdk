@@ -111,10 +111,7 @@ This is particularly helpful for service-to-service communication, where authent
 import { registerDestination } from '@sap-cloud-sdk/connectivity';
 
 await registerDestination(
-  {
-    name: 'DESTINATION',
-    url: 'https://example.com'
-  },
+  { name: 'DESTINATION', url: 'https://example.com' },
   options
 );
 
@@ -142,10 +139,7 @@ const destination = {
 
 registerDestination(destination, options);
 
-req.execute({
-  destinationName: 'FORWARD-DESTINATION',
-  jwt: 'forwardedJwt'
-});
+req.execute({ destinationName: 'FORWARD-DESTINATION', jwt: 'forwardedJwt' });
 ```
 
 Note that the `registerDestination()` function is tenant-aware.
@@ -534,7 +528,7 @@ Please use the `TrustAll` with **great caution** since it opens the gate to man-
 
 ### JWT Validation
 
-From `v4.0.3` onwards, the SAP Cloud SDK no longer verifies the JWT issued by the XSUAA service.
+Since `v4.0.3`, the SAP Cloud SDK no longer verifies the JWT issued by the XSUAA service.
 If you use JWTs not issued by the XSUAA service, you can configure validation by the destination service using the `x_user_token.jwks` or `x_user_token.jwks_uri` property.
 For more details on JWTs, have a look at the more detailed [guide](../../guides/how-to-retrieve-jwt.mdx).
 
