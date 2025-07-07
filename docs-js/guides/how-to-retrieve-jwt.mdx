@@ -41,7 +41,10 @@ The flow is as follows:
 A JWT issued this way contains a `JKU` header property.
 This property points to the URL where you can obtain the certificate to verify the JWT.
 The URL must be from the XSUAA domain so that it is trusted and the JWT validation does not fail.
+
+:::caution
 Since `v4.0.3` SAP Cloud SDK no longer verifies the JWT issued by XSUAA.
+:::
 
 Sometimes you want to use a JWT which is not issued by the XSUAA and approuter.
 Such tokens do not contain a `JKU` at all or a value with a different domain.
