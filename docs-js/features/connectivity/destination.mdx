@@ -485,6 +485,7 @@ A few of the options were already listed above, but this section gives a compreh
   Alternative values are `alwaysProvider` and `alwaysSubscriber`.
 - `iasToXsuaaTokenExchange`: Switches on token exchange from IAS format tokens to XSUAA if needed using the `@sap/xssec` library.
   The default value is `false`.
+  <!-- TODO: Remove `cacheVerificationKeys` property when releasing v5 -->
 - `cacheVerificationKeys`: This property is deprecated since `v4.0.3` and has no effect as the incoming JWT is no longer verified when fetching a destination.
 - `useCache`: Switches on caching for destinations received from the destination service.
   The default value is `true`. You can set it to `false` to disable caching.
@@ -528,7 +529,12 @@ Please use the `TrustAll` with **great caution** since it opens the gate to man-
 
 ### JWT Validation
 
+<!-- TODO: Remove the warning when releasing v5 -->
+
+:::warning
 Since `v4.0.3`, the SAP Cloud SDK no longer verifies the JWT issued by the XSUAA service.
+:::
+
 If you use JWTs not issued by the XSUAA service, you can configure validation by the destination service using the `x_user_token.jwks` or `x_user_token.jwks_uri` property.
 For more details on JWTs, have a look at the more detailed [guide](../../guides/how-to-retrieve-jwt.mdx).
 
