@@ -7,6 +7,23 @@
 - Fix `CVE-2025-48734` by transitive dependency update in `connectivity-ztis`.
 - For OData Generic Client: Fix `disableBufferingHttpResponse()` in `ODataRequestResultGeneric`.
 
+### 🐛 Known Issues
+
+- For OData clients: This release changed the default HTTP response lifecycle for OData request-execution results.
+  
+  Until `5.19.0` the underlying _OData Generic Client_ was eagerly consuming the HTTP response.
+  With `5.20.0` it changed to lazily consuming the HTTP response while buffering the content.
+  While this is considered a fix and accpetable change for the expert _OData Generic Client_, we unintentionally changed the behavior in the convenience classes for OData v2 and OData v4 as well.
+  This behavior change in convenience API will be reverted with next `5.21.0`.
+  
+  Affected users may observe the following exception message due to HTTP responses not being consumed and HTTP connections not being closed automatically:
+  
+  ```
+  ConnectionPoolTimeoutException: Timeout waiting for connection from pool
+  ```
+  
+  Please use `5.19.0` until this is fixed in `5.21.0`.
+
 ## 5.19.0 - May 26, 2025
 
 [All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.19.0)
