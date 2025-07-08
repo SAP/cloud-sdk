@@ -253,3 +253,39 @@ It provides the following headers:
 - The `sap-language` header.
   - If the `DefaultHttpDestination` contains a property called `cloudsdk.dynamicSapLanguage` with value `true`, the `LocaleAccessor` will be used to determine the current locale.
   - Otherwise, if there is a `sap-language` property, its value will be used.
+
+## About Registering Destinations at Runtime
+
+Any destination built at runtime can be registered such that it will be available via `DestinationAccessor.getDestination()`.
+This is especially useful when [working in a local environment](running-locally).
+
+You can create a destination manually and prepare a loader for it as follows:
+
+```java
+customHttpDestination = DefaultHttpDestination.builder("http://url")
+        .name("custom-destination")
+        .build();
+
+customLoader = new DefaultDestinationLoader()
+        .registerDestination(customHttpDestination);
+
+DestinationAccessor.prependDestinationLoader(loader);
+
+// This will now return the custom destination
+DestinationAccessor.getDestination("custom-destination").asHttp();
+```
+
+By default, the `DestinationAccessor` is using a `DestinationLoaderChain` that comprises multiple loaders.
+These are e.g. a loader to get destinations from the destination service and a loader that reads destinations from environment variables.
+
+The above `prependDestinationLoader()` will add the provided loader at the start of such a chain.
+That means the new loader will take precedence over destinations in the destination service, in case both hold a destination with the same name.
+If instead a fallback behavior is desired, use `appendDestinationLoader()`.
+Note that this comes with a performance overhead, since the destination service will be queried first.
+
+:::note Multitenancy
+
+Please note that registering destinations is **not** tenant-aware.
+A registered destination will be available to all tenants.
+
+:::
