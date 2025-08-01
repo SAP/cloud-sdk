@@ -1,0 +1,299 @@
+---
+id: transparent-proxy
+title: Transparent Proxy Destinations
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Transparent Proxy
+description: This article explains how to use Transparent Proxy Destinations to connect to systems through the SAP BTP Transparent Proxy.
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - destination
+  - transparent
+  - proxy
+  - java
+  - connectivity
+  - btp
+  - kubernetes
+  - kyma
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+The SAP Cloud SDK supports connecting to systems through the **Transparent Proxy**, which provides enhanced connectivity features and simplified on-premise access in Kubernetes-based environments like Kyma. The `TransparentProxyDestination` class enables applications to leverage these capabilities seamlessly.
+
+## What is Transparent Proxy?
+
+The **Transparent Proxy** is a connectivity component provided by SAP BTP that acts as an intermediary between your application and target systems.
+It offers several advantages:
+
+- **Simplified connectivity**: Eliminates the need for complex proxy configurations
+- **Enhanced security**: Provides secure tunneling for on-premise connections
+- **Multi-tenancy support**: Handles tenant-specific routing automatically
+- **Protocol flexibility**: Supports various authentication and communication protocols
+
+The Transparent Proxy is particularly useful in Kubernetes environments where traditional connectivity patterns may be more complex to implement.
+
+## Key Features
+
+- **Automatic tenant handling**: Dynamically includes tenant information in requests
+- **Flexible authentication**: Supports various authentication flows through custom headers
+- **On-premise connectivity**: Simplified access to on-premise systems
+- **Custom header support**: Allows adding application-specific headers
+- **Integration with existing APIs**: Works seamlessly with SAP Cloud SDK HTTP client patterns
+
+## Creating Transparent Proxy Destinations
+
+The `TransparentProxyDestination` class provides two types of builders for different use cases:
+
+### 1. Static Destinations
+
+Static destinations connect directly to a specified URL and do not use the destination-gateway.
+They allow setting generic headers but do not support gateway-specific properties like destination name or fragments.
+
+```java
+TransparentProxyDestination destination = TransparentProxyDestination
+    .staticDestination("https://my-service.com")
+    .header("X-Custom-Header", "custom-value")
+    .property("timeout", "30000")
+    .build();
+```
+
+### 2. Dynamic Destinations
+
+Dynamic destinations are resolved via the destination-gateway and require a destination name.
+They support all gateway-specific properties like fragments, tenant context, and authentication flows.
+
+```java
+TransparentProxyDestination destination = TransparentProxyDestination
+    .dynamicDestination("my-destination", "https://proxy-gateway.com")
+    .fragmentName("my-fragment")
+    .tenantId("my-tenant-id")
+    .build();
+```
+
+## Authentication and Header Options
+
+The `TransparentProxyDestination` supports various authentication mechanisms through custom headers:
+
+### Tenant Configuration
+
+```java
+// Using tenant ID (automatically set by SDK if not specified)
+TransparentProxyDestination destination = TransparentProxyDestination
+    .dynamicDestination("my-destination", "https://proxy-gateway.com")
+    .tenantId("my-tenant-id")
+    .build();
+
+// Using tenant subdomain
+TransparentProxyDestination destination = TransparentProxyDestination
+    .dynamicDestination("my-destination", "https://proxy-gateway.com")
+    .tenantSubdomain("my-tenant-subdomain")
+    .build();
+```
+
+**Note**: Tenant ID and tenant subdomain cannot be set at the same time.
+
+### OAuth2 and Token Configuration
+
+```java
+// Authorization header (automatically set by SDK if not specified)
+TransparentProxyDestination destination = TransparentProxyDestination
+    .dynamicDestination("oauth-destination", "https://proxy-gateway.com")
+    .authorization("Bearer my-token")
+    .subjectTokenType("urn:ietf:params:oauth:token-type:jwt")
+    .build();
+
+// Token exchange authentication
+TransparentProxyDestination destination = TransparentProxyDestination
+    .dynamicDestination("token-exchange-dest", "https://proxy-gateway.com")
+    .actorToken("actor-token")
+    .actorTokenType("urn:ietf:params:oauth:token-type:jwt")
+    .build();
+```
+
+### Client Assertion Authentication
+
+```java
+TransparentProxyDestination destination = TransparentProxyDestination
+    .dynamicDestination("client-assertion-dest", "https://proxy-gateway.com")
+    .clientAssertion("my-client-assertion")
+    .clientAssertionType("urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
+    .clientAssertionDestinationName("assertion-provider")
+    .build();
+```
+
+### OAuth Authorization Code Flow
+
+```java
+TransparentProxyDestination destination = TransparentProxyDestination
+    .dynamicDestination("auth-code-dest", "https://proxy-gateway.com")
+    .redirectUri("https://my-app.com/callback")
+    .codeVerifier("my-code-verifier")
+    .build();
+```
+
+### Chain Authentication (IAS SAML)
+
+```java
+TransparentProxyDestination destination = TransparentProxyDestination
+    .dynamicDestination("saml-dest", "https://proxy-gateway.com")
+    .chainName("my-chain")
+    .chainVarSubjectToken("subject-token")
+    .chainVarSubjectTokenType("urn:ietf:params:oauth:token-type:jwt")
+    .chainVarSamlProviderDestinationName("saml-provider")
+    .build();
+```
+
+### Token Service Configuration
+
+```java
+TransparentProxyDestination destination = TransparentProxyDestination
+    .dynamicDestination("token-service-dest", "https://proxy-gateway.com")
+    .tokenServiceTenant("token-service-tenant-id")
+    .build();
+```
+
+## Fragment Support (Dynamic Destinations Only)
+
+Dynamic destinations support fragments for extending destination configurations:
+
+```java
+TransparentProxyDestination destination = TransparentProxyDestination
+    .dynamicDestination("my-destination", "https://proxy-gateway.com")
+    .fragmentName("my-fragment")
+    .fragmentOptional(true)  // Fragment is optional
+    .build();
+```
+
+## Using Transparent Proxy Destinations
+
+### With HTTP Client
+
+Once created, use the destination with the standard SAP Cloud SDK HTTP client patterns:
+
+```java
+// Static destination example
+TransparentProxyDestination destination = TransparentProxyDestination
+    .staticDestination("https://my-api.com")
+    .build();
+
+HttpClient client = ApacheHttpClient5Accessor.getHttpClient(destination);
+
+// Make requests as usual
+HttpGet request = new HttpGet("/api/data");
+HttpResponse response = client.execute(request);
+```
+
+### With Generated Clients
+
+Transparent Proxy destinations work seamlessly with generated OData and OpenAPI clients:
+
+<Tabs defaultValue="odatav4" values={[ { label: "OData V4 Example", value: "odatav4" }, { label: "OpenApi Example", value: "openapi" }]}>
+
+<TabItem value="odatav4">
+
+```java
+TransparentProxyDestination destination = TransparentProxyDestination
+    .dynamicDestination("s4hana-system", "https://proxy-gateway.com")
+    .build();
+
+// Use with generated OData client
+var result = new DefaultBusinessPartnerService()
+    .getAllBusinessPartner()
+    .execute(destination);
+```
+
+</TabItem>
+
+<TabItem value="openapi">
+
+```java
+TransparentProxyDestination destination = TransparentProxyDestination
+    .staticDestination("https://rest-api.com")
+    .build();
+
+// Use with generated OpenAPI client
+var apiClient = new MyApiService(destination);
+var response = apiClient.getData();
+```
+
+</TabItem>
+
+</Tabs>
+
+## Multi-Tenancy Support
+
+The `TransparentProxyDestination` automatically handles multi-tenancy by:
+
+1. **Detecting current tenant**: Uses `TenantAccessor` to determine the current tenant context
+2. **Adding tenant headers**: Includes tenant-specific headers in requests automatically if not explicitly set
+3. **Dynamic routing**: Routes requests to tenant-specific endpoints when needed
+
+```java
+// Tenant information is automatically included if not explicitly set
+TransparentProxyDestination destination = TransparentProxyDestination
+    .dynamicDestination("multi-tenant-service", "https://proxy-gateway.com")
+    .build();
+
+// The destination will automatically include tenant context in requests
+// No additional configuration needed unless you want to override
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Missing destination name for dynamic destinations**: Ensure the destination name is provided as the first parameter to `.dynamicDestination("destination-name", "gateway-url")`
+2. **Tenant context not available**: Verify tenant information is properly set in the request context
+3. **Authentication failures**: Check that authentication headers and parameters are correctly configured
+4. **Network connectivity**: Verify that the Transparent Proxy is accessible from your environment
+
+## Migration from Traditional Destinations
+
+When migrating from traditional destination configurations:
+
+### Before (Traditional Destination)
+
+```java
+Destination destination = DestinationAccessor.getDestination("my-destination");
+HttpClient client = ApacheHttpClient5Accessor.getHttpClient(destination);
+```
+
+### After (Transparent Proxy - Dynamic)
+
+```java
+TransparentProxyDestination destination = TransparentProxyDestination
+    .dynamicDestination("my-destination", "https://proxy-gateway.com")
+    .build();
+HttpClient client = ApacheHttpClient5Accessor.getHttpClient(destination);
+```
+
+### After (Transparent Proxy - Static)
+
+```java
+TransparentProxyDestination destination = TransparentProxyDestination
+    .staticDestination("https://my-service.com")
+    .build();
+HttpClient client = ApacheHttpClient5Accessor.getHttpClient(destination);
+```
+
+The main differences:
+
+- **Explicit creation**: Transparent Proxy destinations are created programmatically
+- **Two builder types**: Static for direct connections, Dynamic for gateway-routed connections
+- **Enhanced authentication**: Support for various OAuth2 flows and token types
+- **Automatic context handling**: Automatic tenant and token injection when not explicitly set
+- **Fragment support**: Dynamic destinations support destination fragments
+- **Simplified configuration**: Less complex proxy setup required for Kubernetes environments
+
+## Related Documentation
+
+- [Kubernetes Connectivity](/docs/java/environments/kubernetes-kyma#executing-requests)
+- [HTTP Destinations](http-destinations)
+- [On-Premise Connectivity](on-premise)
+- [SAP BTP Destination Service](btp-destination-service)
+
+For more information about the Transparent Proxy itself, refer to the [official SAP documentation](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/transparent-proxy-for-kubernetes).
