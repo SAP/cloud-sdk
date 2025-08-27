@@ -19,6 +19,11 @@
 - Generic OData Client: Revert behavior change introduced in `5.20.0` that let to HTTP responses not being consumed by default.
   If you want to use `disableBufferingHttpResponse()` on `ODataRequestRead` or `ODataRequestReadByKey` please switch to `withoutResponseBuffering()` instead.
 
+### 🐛 Known Issues
+
+- Using the `openapi-generator-plugin` in combination with a _Swagger v2_ specification file, will likely lead to dependency convergence issue.
+  If you have a `MethodNotFoundException` please use `5.20.0` or `5.22.0` (or later).
+
 ## 5.20.0 - June 20, 2025
 
 [All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.20.0)
