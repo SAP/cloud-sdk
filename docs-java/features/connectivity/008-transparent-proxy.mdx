@@ -54,27 +54,27 @@ This means your application pods do not require bindings to these two services.
 
 The `TransparentProxyDestination` class provides two types of builders for different use cases:
 
-### 1. Static Destinations
+### 1. Destination
 
-Static destinations connect directly to a specified URL.
-They allow setting generic headers but do not support dynamic properties like destination name or fragments.
+Destination connects directly to a specified URL.
+It allows setting generic headers but does not support dynamic properties like destination name or fragments.
 
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
-    .staticDestination("https://my-service.com")
+    .destination("https://my-service.com")
     .header("X-Custom-Header", "custom-value")
     .property("some-property-key", "some-value")
     .build();
 ```
 
-### 2. Dynamic Destinations
+### 2. Gateway
 
-Dynamic destinations require both URL and destination name.
-They support dynamic properties like fragments.
+Gateway requires both URL and destination name.
+It supports dynamic properties like fragments.
 
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
-    .dynamicDestination("my-destination", "https://proxy-gateway.com")
+    .gateway("my-destination", "https://proxy-gateway.com")
     .fragmentName("my-fragment")
     .build();
 ```
@@ -89,7 +89,7 @@ In case a fixed tenant should be used, you can manually set it as follows:
 // Using a fixed tenant ID (automatically set by SDK if not specified)
 // alternatively, .tenantSubdomain("..") can be used, but only one of the two options may be set
 TransparentProxyDestination destination = TransparentProxyDestination
-    .dynamicDestination("my-destination", "https://proxy-gateway.com")
+    .gateway("my-destination", "https://proxy-gateway.com")
     .tenantId("my-tenant-id")
     .build();
 ```
@@ -101,15 +101,15 @@ The SAP Cloud SDK will automatically set the current user's authorization token 
 In case a fixed authorization token should be used, you can manually set it as follows:
 
 ```java
-// Dynamic destination with authorization method
+// Gateway with authorization method
 TransparentProxyDestination destination = TransparentProxyDestination
-    .dynamicDestination("my-destination", "https://proxy-gateway.com")
+    .gateway("my-destination", "https://proxy-gateway.com")
     .authorization("Bearer my-fixed-token")
     .build();
 
-// Static destination with authorization method
+// Destination with authorization method
 TransparentProxyDestination destination = TransparentProxyDestination
-    .staticDestination("https://my-service.com")
+    .destination("https://my-service.com")
     .authorization("Bearer my-fixed-token")
     .build();
 ```
@@ -127,20 +127,20 @@ Destination destination = DestinationAccessor.getDestination("my-destination");
 HttpClient client = ApacheHttpClient5Accessor.getHttpClient(destination);
 ```
 
-### After (Transparent Proxy - Dynamic)
+### After (Transparent Proxy - Gateway)
 
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
-    .dynamicDestination("my-destination", "https://proxy-gateway.com")
+    .gateway("my-destination", "https://proxy-gateway.com")
     .build();
 HttpClient client = ApacheHttpClient5Accessor.getHttpClient(destination);
 ```
 
-### After (Transparent Proxy - Static)
+### After (Transparent Proxy - Destination)
 
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
-    .staticDestination("https://my-service.com")
+    .destination("https://my-service.com")
     .build();
 HttpClient client = ApacheHttpClient5Accessor.getHttpClient(destination);
 ```
@@ -149,7 +149,7 @@ HttpClient client = ApacheHttpClient5Accessor.getHttpClient(destination);
 
 ### Common Issues
 
-1. **Missing destination name for dynamic destinations**: Ensure the destination name is provided as the first parameter to `.dynamicDestination("destination-name", "gateway-url")`
+1. **Missing destination name for gateway**: Ensure the destination name is provided as the first parameter to `.gateway("destination-name", "gateway-url")`
 2. **Tenant context not available**: Verify tenant information is properly set in the request context
 3. **Authentication failures**: Check that authentication headers and parameters are correctly configured
 4. **Network connectivity**: Verify that the Transparent Proxy is accessible from your environment
