@@ -37,7 +37,8 @@ module.exports = {
             'features/connectivity/http-destinations',
             'features/connectivity/http-client',
             'features/connectivity/running-locally',
-            'features/connectivity/mtls'
+            'features/connectivity/mtls',
+            'features/connectivity/transparent-proxy'
           ]
         },
         {
