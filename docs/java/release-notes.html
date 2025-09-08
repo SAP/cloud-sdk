@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.8.1">
 <title data-rh="true">Release Notes | SAP Cloud SDK</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://sap.github.io/cloud-sdk/docs/java/release-notes"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-docs-java-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-docs-java-current"><meta data-rh="true" property="og:title" content="Release Notes | SAP Cloud SDK"><meta data-rh="true" name="description" content="Release notes of SAP Cloud SDK for Java, stay up to date with the recent features, fixes, dependency updates and recommendedations."><meta data-rh="true" property="og:description" content="Release notes of SAP Cloud SDK for Java, stay up to date with the recent features, fixes, dependency updates and recommendedations."><meta data-rh="true" name="keywords" content="sap,cloud,sdk,cloud native,cloud sdk,sap cloud sdk"><link data-rh="true" rel="icon" href="/cloud-sdk/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://sap.github.io/cloud-sdk/docs/java/release-notes"><link data-rh="true" rel="alternate" href="https://sap.github.io/cloud-sdk/docs/java/release-notes" hreflang="en"><link data-rh="true" rel="alternate" href="https://sap.github.io/cloud-sdk/docs/java/release-notes" hreflang="x-default"><link data-rh="true" rel="preconnect" href="https://E4A268JVO0-dsn.algolia.net" crossorigin="anonymous"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Release Notes","item":"https://sap.github.io/cloud-sdk/docs/java/release-notes"}]}</script><link rel="search" type="application/opensearchdescription+xml" title="SAP Cloud SDK" href="/cloud-sdk/opensearch.xml"><link rel="stylesheet" href="/cloud-sdk/assets/css/styles.fa9056a1.css">
-<script src="/cloud-sdk/assets/js/runtime~main.ee78cd3a.js" defer="defer"></script>
+<script src="/cloud-sdk/assets/js/runtime~main.aa77a26a.js" defer="defer"></script>
 <script src="/cloud-sdk/assets/js/main.0cc55fa1.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -63,6 +63,11 @@ This acts as a workaround for a limitation of IAS, where obtaining a refresh tok
 Previous change of <code>5.20.0</code> may have resulted in the HTTP connection being left open after the request was executed.</li>
 <li>Generic OData Client: Revert behavior change introduced in <code>5.20.0</code> that let to HTTP responses not being consumed by default.
 If you want to use <code>disableBufferingHttpResponse()</code> on <code>ODataRequestRead</code> or <code>ODataRequestReadByKey</code> please switch to <code>withoutResponseBuffering()</code> instead.</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="-known-issues">🐛 Known Issues<a href="#-known-issues" class="hash-link" aria-label="Direct link to 🐛 Known Issues" title="Direct link to 🐛 Known Issues">​</a></h3>
+<ul>
+<li>Using the <code>openapi-generator-plugin</code> in combination with a <em>Swagger v2</em> specification file will likely lead to dependency convergence issue.
+If you have a <code>MethodNotFoundException</code> please use <code>5.20.0</code> or <code>5.22.0</code> (or later).</li>
 </ul>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="5200---june-20-2025">5.20.0 - June 20, 2025<a href="#5200---june-20-2025" class="hash-link" aria-label="Direct link to 5.20.0 - June 20, 2025" title="Direct link to 5.20.0 - June 20, 2025">​</a></h2>
 <p><a href="https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.20.0" target="_blank" rel="noopener noreferrer">All Release Changes</a></p>
