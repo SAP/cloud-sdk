@@ -121,8 +121,9 @@ public class AsynchronousConfiguration implements AsyncConfigurer {
 
 You can read more about the `@Async` functionality [here](https://www.baeldung.com/spring-async).
 
-:::tip Security Context
-The Spring `SecurityContext` can be propagated to `@Async` calls.
+<details>
+  <summary>The Spring <code>SecurityContext</code> can be propagated to <code>@Async</code> calls.</summary>
+
 Replace the above executor with this one:
 
 ```java
@@ -138,7 +139,32 @@ And add this dependency:
 </dependency>
 ```
 
-:::
+</details>
+
+<details>
+  <summary>The Spring <code>TaskDecorator</code> instances can be invoked when migrating <code>ThreadContext</code>.</summary>
+
+Let's assume you have a `CustomTaskDecorator` that implements Springs `TaskDecorator` API.
+You want to invoke an `ResultT customOperation()` via the `ResilienceDecorator` API.
+This internally requires handling of additional threads and their contexts.
+You can use the `AtomicReference` container to store information between threads.
+
+```java
+@Autowired
+CustomTaskDecorator decorator;
+
+// ...
+
+AtomicReference<ResultT> result = new AtomicReference<>();
+Runnable decorated = decorator.decorate(() -> result.set(customOperation()));
+
+ResultT resilientResult = ResilienceDecorator.executeSupplier(() -> {
+  decorated.run();
+  return result.get();
+}, customResilienceConfiguration);
+```
+
+</details>
 
 ### Passing on Other ThreadLocals
 
