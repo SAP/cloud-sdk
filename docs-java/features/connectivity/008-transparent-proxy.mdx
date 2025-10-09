@@ -37,18 +37,21 @@ The Transparent Proxy is currently **only available for Kubernetes-based environ
 
 Before using `TransparentProxyDestination`, ensure that the **Transparent Proxy is installed and configured** in your Kubernetes cluster.
 Refer to the [official installation guide](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/installation-47b8844e90be440881838a5d5d9f8a68) for setup instructions.
-The Transparent Proxy is available in Kyma environment as a dedicated module. Refer to [Transparent Proxy in Kyma environment](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/transparent-proxy-in-kyma-environment) for instructions how to add the module.
+The Transparent Proxy is available in Kyma environment as a dedicated module.
+Refer to [Transparent Proxy in Kyma environment](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/transparent-proxy-in-kyma-environment) for instructions how to add the module.
 
 :::
 
 ## Background Information
 
 The **Transparent Proxy** is a SAP BTP Connectivity component that acts as an intermediary between your application and target systems.
-The Transparent Proxy simplifies and unifies how your Kubernetes workloads connect to remote systems using BTP destinations. It provides authentication, principal propagation, SOCKS5 handshake, and easy access to the destination target systems by exposing them as [Kubernetes Services](https://kubernetes.io/docs/concepts/services-networking/service).
+The Transparent Proxy simplifies and unifies how your Kubernetes workloads connect to remote systems using SAP BTP destinations.
+It provides authentication, principal propagation, SOCKS5 handshake, and easy access to the destination target systems by exposing them as [Kubernetes Services](https://kubernetes.io/docs/concepts/services-networking/service).
 
 The Transparent Proxy obtains relevant destination configuration from the SAP Destination service.
 It uses this destination to forward the request to the target system or to the Connectivity Proxy for On-Premise destinations.
-Consequently, your app does not interact with SAP Destination service or Connectivity service. This means your application do not require bindings to these two services, everything is handled by the Transparent Proxy.
+Consequently, your app does not interact with SAP Destination service or Connectivity service.
+This means your application do not require bindings to these two services, everything is handled by the Transparent Proxy.
 
 ## Creating Transparent Proxy Destinations
 
@@ -58,7 +61,8 @@ The `TransparentProxyDestination` class provides two types of builders for diffe
 
 Allows you to connect to a concrete SAP destination.
 Setting generic headers is allowed but dynamic properties like destination name or fragments is not.
-As a prerequisite, you have to create a Destination Custom Resource inside the Kubernetes cluster. For more information how to use the Transparent Proxy, refer to [Using the Transparent Proxy](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/using-transparent-proxy).
+As a prerequisite, you have to create a Destination Custom Resource inside the Kubernetes cluster.
+For more information how to use the Transparent Proxy, refer to [Using the Transparent Proxy](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/using-transparent-proxy).
 
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
@@ -69,13 +73,14 @@ TransparentProxyDestination destination = TransparentProxyDestination
 ```
 
 :::info Destination Custom Resource access
-
-<destination-cr-namespace> can be omitted if the destination custom resource is created in the same namespace as the application workload.
+`<destination-custom-resource-namespace>` can be omitted if the destination custom resource is created in the same namespace as the application workload.
+:::
 
 ### 2. Gateway
 
 Allows you to connect to arbitrary SAP destinations you have access to.
-As a prerequisite, you have to create a Gateway Destination Custom Resource inside the Kubernetes cluster. For more information how to use the Transparent Proxy for this concrete scenario, refer to [Destination Gateway](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/dynamic-lookup-of-destinations).
+As a prerequisite, you have to create a Gateway Destination Custom Resource inside the Kubernetes cluster.
+For more information how to use the Transparent Proxy for this concrete scenario, refer to [Destination Gateway](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/dynamic-lookup-of-destinations).
 
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
@@ -92,7 +97,7 @@ In case a fixed tenant should be used, you can manually set it as follows:
 
 ### Destination
 
-// Using a fixed tenant ID (automatically set by SDK if not specified)
+// Using a fixed tenant ID (automatically set by SAP Cloud SDK if not specified)
 // alternatively, .tenantSubdomain("..") can be used, but only one of the two options may be set
 
 ```java
@@ -105,7 +110,7 @@ TransparentProxyDestination destination = TransparentProxyDestination
 ### Gateway
 
 ```java
-// Using a fixed tenant ID (automatically set by SDK if not specified)
+// Using a fixed tenant ID (automatically set by SAP Cloud SDK if not specified)
 // alternatively, .tenantSubdomain("..") can be used, but only one of the two options may be set
 TransparentProxyDestination destination = TransparentProxyDestination
     .gateway("my-destination", <destination-custom-resource-name>.<destination-custom-resource-namespace>)
@@ -200,7 +205,8 @@ try {
 - `X-Error-Origin` - the source of the error
 - `X-Proxy-Server` - the proxy server (Transparent Proxy)
 - `X-Error-Message` - thorough error message
-- `X-Error-Internal-Code` - set only when the source of the error is the XSUAA or Destination service. The value is the HTTP code returned from one of these services.
+- `X-Error-Internal-Code` - set only when the source of the error is the XSUAA or Destination service.
+  The value is the HTTP code returned from one of these services.
 - `X-Request-Id` is sent with the response in all requests, both successful and failed
 
 For more information, see [Troubleshooting](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/transparent-proxy-troubleshooting)
