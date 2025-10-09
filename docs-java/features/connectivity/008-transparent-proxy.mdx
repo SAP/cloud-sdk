@@ -1,10 +1,10 @@
 ---
 id: transparent-proxy
-title: Transparent Proxy Destinations
+title: Transparent Proxy
 hide_title: false
 hide_table_of_contents: false
 sidebar_label: Transparent Proxy
-description: This article explains how to use Transparent Proxy Destinations to connect to systems through the SAP BTP Transparent Proxy.
+description: This article explains how to use Transparent Proxy to connect to systems through defined as SAP Destinations.
 keywords:
   - sap
   - cloud
@@ -22,14 +22,14 @@ keywords:
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-The SAP Cloud SDK supports connecting to systems through the [**Transparent Proxy**](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/transparent-proxy-for-kubernetes), which provides enhanced connectivity features and simplified on-premise access in Kubernetes-based environments like Kyma.
+The SAP Cloud SDK supports connecting to systems through the [**Transparent Proxy**](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/transparent-proxy-for-kubernetes), which provides enhanced connectivity features and simplified on-premise access in Kubernetes-based environments.
 The `TransparentProxyDestination` class enables applications to leverage these capabilities seamlessly.
 
 ## Prerequisites
 
 :::info Kubernetes Only
 
-The Transparent Proxy is currently **only available for Kubernetes-based environments** such as Kyma and Gardener.
+The Transparent Proxy is currently **only available for Kubernetes-based environments**.
 
 :::
 
@@ -37,80 +37,108 @@ The Transparent Proxy is currently **only available for Kubernetes-based environ
 
 Before using `TransparentProxyDestination`, ensure that the **Transparent Proxy is installed and configured** in your Kubernetes cluster.
 Refer to the [official installation guide](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/installation-47b8844e90be440881838a5d5d9f8a68) for setup instructions.
+The Transparent Proxy is available in Kyma environment as a dedicated module.
+Refer to [Transparent Proxy in Kyma environment](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/transparent-proxy-in-kyma-environment) for instructions how to add the module.
 
 :::
 
 ## Background Information
 
-The **Transparent Proxy** is a connectivity component provided by SAP BTP that acts as an intermediary between your application and target systems.
-When using the Transparent Proxy your app performs requests against the Transparent Proxy without explicit authentication.
-This relies on the secure network communication provided by Kyma via Istio.
-The Transparent Proxy will obtain the relevant destination from the destination service.
-It will then use this destination to forward the request to the target system or to the Connectivity Proxy for On-Premise destinations.
-Consequently, your app itself does not interact with destination or connectivity service at all.
-This means your application pods do not require bindings to these two services.
+The **Transparent Proxy** is a SAP BTP Connectivity component that acts as an intermediary between your application and target systems.
+The Transparent Proxy simplifies and unifies how your Kubernetes workloads connect to remote systems using SAP BTP destinations.
+It provides authentication, principal propagation, SOCKS5 handshake, and easy access to the destination target systems by exposing them as [Kubernetes Services](https://kubernetes.io/docs/concepts/services-networking/service).
+
+The Transparent Proxy obtains relevant destination configuration from the SAP Destination service.
+It uses this destination to forward the request to the target system or to the Connectivity Proxy for On-Premise destinations.
+Consequently, your app does not interact with SAP Destination service or Connectivity service.
+This means your application do not require bindings to these two services, everything is handled by the Transparent Proxy.
 
 ## Creating Transparent Proxy Destinations
 
 The `TransparentProxyDestination` class provides two types of builders for different use cases:
 
-### 1. Static Destinations
+### 1. Destination
 
-Static destinations connect directly to a specified URL.
-They allow setting generic headers but do not support dynamic properties like destination name or fragments.
+Allows you to connect to a concrete SAP destination.
+Setting generic headers is allowed but dynamic properties like destination name or fragments is not.
+As a prerequisite, you have to create a Destination Custom Resource inside the Kubernetes cluster.
+For more information how to use the Transparent Proxy, refer to [Using the Transparent Proxy](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/using-transparent-proxy).
 
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
-    .staticDestination("https://my-service.com")
+    .destination(<destination-custom-resource-name>.<destination-custom-resource-namespace>)
     .header("X-Custom-Header", "custom-value")
     .property("some-property-key", "some-value")
     .build();
 ```
 
-### 2. Dynamic Destinations
+:::info Destination Custom Resource access
+`<destination-custom-resource-namespace>` can be omitted if the destination custom resource is created in the same namespace as the application workload.
+:::
 
-Dynamic destinations require both URL and destination name.
-They support dynamic properties like fragments.
+### 2. Gateway
+
+Allows you to connect to arbitrary SAP destinations you have access to.
+As a prerequisite, you have to create a Gateway Destination Custom Resource inside the Kubernetes cluster.
+For more information how to use the Transparent Proxy for this concrete scenario, refer to [Destination Gateway](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/dynamic-lookup-of-destinations).
 
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
-    .dynamicDestination("my-destination", "https://proxy-gateway.com")
+    .gateway("my-destination", <destination-custom-resource-name>.<destination-custom-resource-namespace>)
     .fragmentName("my-fragment")
     .build();
 ```
 
 ## Tenant Configuration
 
-The SAP Cloud SDK will automatically set the current tenant as tenant ID on a **per-request** basis.
+The SAP Cloud SDK automatically sets the current tenant as tenant ID on a **per-request** basis.
 
 In case a fixed tenant should be used, you can manually set it as follows:
 
+### Destination
+
+// Using a fixed tenant ID (automatically set by SAP Cloud SDK if not specified)
+// alternatively, .tenantSubdomain("..") can be used, but only one of the two options may be set
+
 ```java
-// Using a fixed tenant ID (automatically set by SDK if not specified)
+TransparentProxyDestination destination = TransparentProxyDestination
+    .destination(<destination-custom-resource-name>.<destination-custom-resource-namespace>)
+    .tenantId("my-tenant-id")
+    .build();
+```
+
+### Gateway
+
+```java
+// Using a fixed tenant ID (automatically set by SAP Cloud SDK if not specified)
 // alternatively, .tenantSubdomain("..") can be used, but only one of the two options may be set
 TransparentProxyDestination destination = TransparentProxyDestination
-    .dynamicDestination("my-destination", "https://proxy-gateway.com")
+    .gateway("my-destination", <destination-custom-resource-name>.<destination-custom-resource-namespace>)
     .tenantId("my-tenant-id")
     .build();
 ```
 
 ## Authorization Header Configuration
 
-The SAP Cloud SDK will automatically set the current user's authorization token in the `Authorization` header on a **per-request** basis.
+The SAP Cloud SDK automatically sets the current user's authorization token in the `Authorization` header on a **per-request** basis.
 
 In case a fixed authorization token should be used, you can manually set it as follows:
 
-```java
-// Dynamic destination with authorization method
-TransparentProxyDestination destination = TransparentProxyDestination
-    .dynamicDestination("my-destination", "https://proxy-gateway.com")
-    .authorization("Bearer my-fixed-token")
-    .build();
+### Destination
 
-// Static destination with authorization method
+```java
 TransparentProxyDestination destination = TransparentProxyDestination
-    .staticDestination("https://my-service.com")
-    .authorization("Bearer my-fixed-token")
+    .destination(<destination-custom-resource-name>.<destination-custom-resource-namespace>)
+    .authorization("Bearer my-token")
+    .build();
+```
+
+### Gateway
+
+```java
+TransparentProxyDestination destination = TransparentProxyDestination
+    .gateway("my-destination", <destination-custom-resource-name>.<destination-custom-resource-namespace>)
+    .authorization("Bearer my-token")
     .build();
 ```
 
@@ -118,7 +146,7 @@ TransparentProxyDestination destination = TransparentProxyDestination
 
 ## Migration from Traditional Destinations
 
-When migrating from traditional destination configurations:
+Migrating from traditional destination configurations:
 
 ### Before (Traditional Destination)
 
@@ -127,20 +155,20 @@ Destination destination = DestinationAccessor.getDestination("my-destination");
 HttpClient client = ApacheHttpClient5Accessor.getHttpClient(destination);
 ```
 
-### After (Transparent Proxy - Dynamic)
+### After (Transparent Proxy - Gateway)
 
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
-    .dynamicDestination("my-destination", "https://proxy-gateway.com")
+    .gateway("my-destination", <destination-custom-resource-name>.<destination-custom-resource-namespace>)
     .build();
 HttpClient client = ApacheHttpClient5Accessor.getHttpClient(destination);
 ```
 
-### After (Transparent Proxy - Static)
+### After (Transparent Proxy - Destination)
 
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
-    .staticDestination("https://my-service.com")
+    .destination(<destination-custom-resource-name>.<destination-custom-resource-namespace>)
     .build();
 HttpClient client = ApacheHttpClient5Accessor.getHttpClient(destination);
 ```
@@ -149,7 +177,7 @@ HttpClient client = ApacheHttpClient5Accessor.getHttpClient(destination);
 
 ### Common Issues
 
-1. **Missing destination name for dynamic destinations**: Ensure the destination name is provided as the first parameter to `.dynamicDestination("destination-name", "gateway-url")`
+1. **Missing destination name for gateway**: Ensure the destination name is provided as the first parameter to `.gateway(<destination-name>, <destination-custom-resource-name>.<destination-custom-resource-namespace>)`
 2. **Tenant context not available**: Verify tenant information is properly set in the request context
 3. **Authentication failures**: Check that authentication headers and parameters are correctly configured
 4. **Network connectivity**: Verify that the Transparent Proxy is accessible from your environment
@@ -177,8 +205,11 @@ try {
 - `X-Error-Origin` - the source of the error
 - `X-Proxy-Server` - the proxy server (Transparent Proxy)
 - `X-Error-Message` - thorough error message
-- `X-Error-Internal-Code` - set only when the source of the error is the XSUAA or Destination service. The value is the HTTP code returned from one of these services.
+- `X-Error-Internal-Code` - set only when the source of the error is the XSUAA or Destination service.
+  The value is the HTTP code returned from one of these services.
 - `X-Request-Id` is sent with the response in all requests, both successful and failed
+
+For more information, see [Troubleshooting](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/transparent-proxy-troubleshooting)
 
 ## Related Documentation
 
