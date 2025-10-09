@@ -67,6 +67,7 @@ TransparentProxyDestination destination = TransparentProxyDestination
     .property("some-property-key", "some-value")
     .build();
 ```
+
 :::info Destination Custom Resource access
 
 <destination-cr-namespace> can be omitted if the destination custom resource is created in the same namespace as the application workload.
@@ -90,8 +91,10 @@ The SAP Cloud SDK automatically sets the current tenant as tenant ID on a **per-
 In case a fixed tenant should be used, you can manually set it as follows:
 
 ### Destination
+
 // Using a fixed tenant ID (automatically set by SDK if not specified)
 // alternatively, .tenantSubdomain("..") can be used, but only one of the two options may be set
+
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
     .destination(<destination-custom-resource-name>.<destination-custom-resource-namespace>)
@@ -100,6 +103,7 @@ TransparentProxyDestination destination = TransparentProxyDestination
 ```
 
 ### Gateway
+
 ```java
 // Using a fixed tenant ID (automatically set by SDK if not specified)
 // alternatively, .tenantSubdomain("..") can be used, but only one of the two options may be set
@@ -109,7 +113,6 @@ TransparentProxyDestination destination = TransparentProxyDestination
     .build();
 ```
 
-
 ## Authorization Header Configuration
 
 The SAP Cloud SDK automatically sets the current user's authorization token in the `Authorization` header on a **per-request** basis.
@@ -117,6 +120,7 @@ The SAP Cloud SDK automatically sets the current user's authorization token in t
 In case a fixed authorization token should be used, you can manually set it as follows:
 
 ### Destination
+
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
     .destination(<destination-custom-resource-name>.<destination-custom-resource-namespace>)
@@ -125,6 +129,7 @@ TransparentProxyDestination destination = TransparentProxyDestination
 ```
 
 ### Gateway
+
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
     .gateway("my-destination", <destination-custom-resource-name>.<destination-custom-resource-namespace>)
