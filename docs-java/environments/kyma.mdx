@@ -546,8 +546,9 @@ But, this would mean that access to your application would not be authenticated 
 ### Prerequisites
 
 This guide assumes you have both the **Transparent Proxy** (version `>= 1.4.0`) and **Connectivity Proxy** (version `>= 2.11.0`) installed in your cluster.
-For Kyma the Transparent Proxy is available as a module that can be enabled as described [here](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/transparent-proxy-in-kyma-environment).
-The Connectivity Proxy can be installed as described [here](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/operations-via-helm).
+For Kyma, the Transparent Proxy is available as a module that can be added as described [here](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/transparent-proxy-in-kyma-environment).
+For Kyma, the Conectivity Proxy is available as a module that can be added as described [here](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/connectivity-proxy-in-kyma-environment).
+The Connectivity Proxy can be installed in *untrusted mode* as described [here](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/operations-via-helm).
 
 :::note Kyma Compatibility
 On Kyma, two scenarios are supported by the SAP Cloud SDK:
@@ -555,16 +556,16 @@ On Kyma, two scenarios are supported by the SAP Cloud SDK:
 1. Using the Connecitivty Proxy together with the Transparent Proxy
 2. Using a custom Connecitivty Proxy instance in "untrusted mode" without the Transparent Proxy
 
-The Connecitivty Proxy managed by Kyma is coming in "trusted mode", thus this guide covers scenario (1).
+The Connecitivty Proxy module in Kyma is coming in "trusted mode", thus this guide covers scenario (1).
 In case you want to run scenario (2) refer to [this guide](./kubernetes-gardener#2-using-the-connectivity-proxy) for using the Connectivity Proxy without Transparent Proxy.
 Other scenarios are currently not supported.
 :::
 
 ### Background Information
 
-When using the Transparent Proxy your app performs requests against the Transparent Proxy without explicit authentication, relying on the secure network communication provided by Kyma via Istio.
-The Transparent Proxy will obtain the relevant destination from the destination service and use it to forward the request via the Connectivity Proxy to the On-Premise system.
-Consequently, your app itself does not interact with destination or connectivity service at all and thus your application pods do not require bindings to these two services.
+When using the Transparent Proxy, your app performs requests against the Transparent Proxy without explicit authentication, relying on the secure network communication provided by Kyma via Istio.
+The Transparent Proxy will obtain the relevant destination from the SAP Destination service and use it to forward the request via the Connectivity Proxy to the On-Premise system.
+Consequently, your app itself does not interact with Destination or Connectivity services at all and thus your application pods do not require bindings to these two services.
 
 Please note that the current implementation of the Transparent Proxy does not yet cover all use cases.
 
@@ -578,18 +579,19 @@ Please note that the current implementation of the Transparent Proxy does not ye
 :::tip
 This approach is conceptually different from what you may be used to from a CloufdFoundry environment.
 The official [documentation of the Transparent Proxy](https://help.sap.com/docs/CP_CONNECTIVITY/cca91383641e40ffbe03bdc78f00f681/e661713ef7d14373b57e3e26b0b03b86.html) gives more information on the architecture.
+
 :::
 
 ### Create a Kubernetes Resource
 
-You can either configure connectivity to individual destinations, or for arbitrary destinations in your destination service instance or subaccount (dynamic destinations).
+You can either configure connectivity to individual destinations, or for arbitrary destinations in your destination service instance or subaccount (via Destination Gateway).
 
 <Tabs 
   groupId="dynamic-dest"
   defaultValue="single"
   values={[
     {label: "Individual Destination", value: "single"},
-    {label: "Dynamic Destinations", value: "dynamic"}
+    {label: "Destination Gateway", value: "gateway"}
   ]}>
 <TabItem value="single">
 
@@ -621,7 +623,7 @@ For more information on how to restrict access to the destinations refer to [thi
 :::
 
 </TabItem>
-<TabItem value="dynamic">
+<TabItem value="gateway">
 
 Create the following YAML file:
 
@@ -629,7 +631,7 @@ Create the following YAML file:
 apiVersion: destination.connectivity.api.sap/v1
 kind: Destination
 metadata:
-  name: dynamic-destination
+  name: gateway
 spec:
   destinationRef:
     name: '*'
@@ -664,36 +666,29 @@ In your application you can now configure a destination to execute requests:
   defaultValue="single"
   values={[
     {label: "Individual Destination", value: "single"},
-    {label: "Dynamic Desitnations", value: "dynamic"}
+    {label: "Destination Gateway", value: "gateway"}
   ]}>
 <TabItem value="single">
 
 ```java
-DefaultHttpDestination destination = DefaultHttpDestination
-        .builder("http://my-destination.namespace/")
-        // for a subscriber tenant make sure to send the tenant header:
-        // .header(new Header("X-Tenant-Id", TenantAccessor.getCurrentTenant().getTenantId()))
-        // for principal propagation make sure to set the auth type to "TOKEN_FORWARDING":
-        // .authenticationType(AuthenticationType.TOKEN_FORWARDING)
-        .build();
+TransparentProxyDestination destination = TransparentProxyDestination
+    .destination(<destination-custom-resource-name>.<destination-custom-resource-namespace>)
+    .header("X-Custom-Header", "custom-value")
+    .property("some-property-key", "some-value")
+    .build();
 
 List<SalesArea> execute = new DefaultSalesAreaService().getAllSalesArea() // example OData request
         .execute(destination);
 ```
 
 </TabItem>
-<TabItem value="dynamic">
+<TabItem value="gateway">
 
 ```java
-DefaultHttpDestination destination = DefaultHttpDestination
-        .builder("http://dynamic-destination.namespace/")
-        // use the name of the desitnation you configured in the BTP Cockpit
-         .header(new Header("X-Destination-Name", "my-destination"))
-        // for a subscriber tenant make sure to send the tenant header:
-        // .header(new Header("X-Tenant-Id", TenantAccessor.getCurrentTenant().getTenantId()))
-        // for principal propagation make sure to set the auth type to "TOKEN_FORWARDING":
-        // .authenticationType(AuthenticationType.TOKEN_FORWARDING)
-        .build();
+TransparentProxyDestination destination = TransparentProxyDestination
+    .gateway("my-destination", <destination-custom-resource-name>.<destination-custom-resource-namespace>)
+    .fragmentName("my-fragment")
+    .build();
 
 List<SalesArea> execute = new DefaultSalesAreaService().getAllSalesArea() // example OData request
         .execute(destination);
@@ -702,7 +697,9 @@ List<SalesArea> execute = new DefaultSalesAreaService().getAllSalesArea() // exa
 </TabItem>
 </Tabs>
 
-- Replace `namespace` in the URL with the namespace you installed the Transparent Proxy into.
+:::info Destination Custom Resource access
+`<destination-custom-resource-namespace>` can be omitted if the destination custom resource is created in the same namespace as the application workload.
+:::
 
 The code above shows an example how you can then use the `destination` object to perform an OData request against the system.
 
@@ -739,3 +736,6 @@ try {
 - `X-Request-Id` is sent with the response in all requests, both successful and failed
 
 </details>
+
+## Related Documentation
+[Transparent Proxy Integration with SAP Cloud SDK](/docs/java/features/connectivity/transparent-proxy)
