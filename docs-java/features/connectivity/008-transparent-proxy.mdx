@@ -211,6 +211,48 @@ try {
 
 For more information, see [Troubleshooting](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/transparent-proxy-troubleshooting)
 
+## Transparent Proxy Loader
+
+The `TransparentProxy` class is a `DestinationLoader` that enables routing all destination traffic through a single registered gateway host.
+This provides a centralized approach to proxy configuration where all destination requests are automatically routed through the configured gateway.
+
+### Registration Methods
+
+#### Register with Default Port
+
+Register a transparent proxy gateway using the default port 80:
+
+```java
+// Register with default port 80
+// Note: <destination-gateway-host> - the host is a combination of the Gateway Destination Custom Resource name and namespace
+TransparentProxy.register("<destination-gateway-host>");
+```
+
+The host will be verified if it is reachable and must not contain any path components.
+If no scheme is provided, HTTP will be used by default.
+
+#### Register with Custom Port
+
+Register a transparent proxy gateway with a specified port:
+
+```java
+// Register with custom port when using a non-default port defined in the Destination CR's .service.port field
+TransparentProxy.register("http://<destination-gateway-host>", <port>);
+```
+
+The final URI will be constructed as: `<normalized-host>:<port>`
+
+### Usage Example
+
+```java
+// Register the transparent proxy during application initialization
+TransparentProxy.register("<destination-gateway-host>", 8080);
+
+// All subsequent destination requests will be routed through the registered gateway
+// Note: returns TransparentProxyDestination which implements Destination
+Destination destination = DestinationAccessor.getDestination("my-destination");
+```
+
 ## Related Documentation
 
 - [HTTP Client](http-client) - For using destinations with HTTP clients
