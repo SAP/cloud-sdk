@@ -166,11 +166,14 @@ This guide covers how you can configure and use the SAP Cloud SDK to use certifi
 
 The following prerequisites are required to use ZTIS:
 
-- You are deploying an application on Cloud Foundry
-- You have assigned the required entitlement for using ZTIS to your subaccount
-- You have created a service instance of `zero-trust-identity` in your Cloud Foundry space
-- You have bound the ZTIS service instance to your application
-- You have added the `zero_trust_sidecar_buildpack` as an additional buildpack for your application
+- You have assigned the required entitlement for using ZTIS to your subaccount.
+- You have created a service instance of `zero-trust-identity`.
+- You have bound the ZTIS service instance to your application.
+- For Cloud Foundry: You have added the `zero_trust_sidecar_buildpack` as an additional buildpack for your application.
+- For Kubernetes (Kyma, Gardener): 
+    - You have installed the [ZTIS Operator](https://github.tools.sap/pse/ztis-operator?tab=readme-ov-file) in your cluster.
+       - On Kyma, this is available as the [ZTIS Agent Kyma Module](https://pages.github.tools.sap/pse/pse-docs/docs/identity-k8s/references/ztis-agent-kyma-module).
+    - Your application has the [`SPIFFE_ENDPOINT_SOCKET` environment variable](https://github.com/spiffe/spiffe/blob/main/standards/SPIFFE_Workload_Endpoint.md#4-locating-the-endpoint) set, pointing to the workload attestation API of the ZTIS agent.
 
 Head over to the [official documentation](https://pages.github.tools.sap/pse/pse-docs/docs/identity/), the [reference manual](https://github.tools.sap/pse/blueprints/blob/main/examples/cf/ZTIS_Reference.md) and [sample code](https://github.tools.sap/pse/blueprints/tree/main/examples/cf/java/ztis-identity/cf-manifest) to learn more about how to use ZTIS.
 
@@ -185,25 +188,38 @@ To enable support by SAP Cloud SDK for certificates provided by ZTIS in your app
 </dependency>
 ```
 
-With this dependency you can create a new or modify an existing `HttpDestination` to use the certificate provided by ZTIS.
+### Integration with BTP Services
+
+The SAP Cloud SDK supports using certificates provided by ZTIS to authenticate to BTP services.
+For example:
+
+- Identity Authentication Service (IAS)
+- Authorization and Trust Management Service (XSUAA)
+- Destination Service, Connectivity Service, ...
+
+
+The SAP Cloud SDK automatically recognizes the credential type `X509_ATTESTED` and uses the certificates provided by ZTIS in that case.
+Consequently, any BTP service supporting this credential type can be accessed using ZTIS.
+For more details please refer to the documentation on [connecting to services](/docs/java/features/connectivity/service-bindings).
+
+### Connecting to other Systems using Destinations
+
+Aside from connecting to BTP services, you can also obtain or enhance any `HttpDestination` to use the certificate provided by ZTIS.
 
 ```java
 var ks = ZeroTrustIdentityService.getInstance().getOrCreateKeyStore();
 
+// create a new destination
 var newDestination = DefaultHttpDestination.builder("https://foo.com")
 	.keyStore(ks)
 	.build();
-var enhancedDestination = DefaultHttpDestination.fromDestination(DestinationAccessor.getDestination("myDestination"))
+
+// enhance an existing destination, e.g. from BTP destination service
+var existingDestination = DestinationAccessor.getDestination("myDestination");
+var enhancedDestination = DefaultHttpDestination.fromDestination(existingDestination)
 	.keyStore(ks)
 	.build();
 ```
-
-### Integration with Identity Authentication Service (IAS)
-
-The SAP Cloud SDK also supports using certificates provided by ZTIS to authenticate to the Identity Authentication Service (IAS).
-
-This works fully out of the box if you have an instance of IAS with the corresponding credential type `X509_ATTESTED` configured.
-For more details please refer to the documentation on [connecting to services](/docs/java/features/connectivity/service-bindings).
 
 ### Developing Locally
 
