@@ -170,10 +170,10 @@ The following prerequisites are required to use ZTIS:
 - You have created a service instance of `zero-trust-identity`.
 - You have bound the ZTIS service instance to your application.
 - For Cloud Foundry: You have added the `zero_trust_sidecar_buildpack` as an additional buildpack for your application.
-- For Kubernetes (Kyma, Gardener): 
-    - You have installed the [ZTIS Operator](https://github.tools.sap/pse/ztis-operator?tab=readme-ov-file) in your cluster.
-       - On Kyma, this is available as the [ZTIS Agent Kyma Module](https://pages.github.tools.sap/pse/pse-docs/docs/identity-k8s/references/ztis-agent-kyma-module).
-    - Your application has the [`SPIFFE_ENDPOINT_SOCKET` environment variable](https://github.com/spiffe/spiffe/blob/main/standards/SPIFFE_Workload_Endpoint.md#4-locating-the-endpoint) set, pointing to the workload attestation API of the ZTIS agent.
+- For Kubernetes (Kyma, Gardener):
+  - You have installed the [ZTIS Operator](https://github.tools.sap/pse/ztis-operator?tab=readme-ov-file) in your cluster.
+    - On Kyma, this is available as the [ZTIS Agent Kyma Module](https://pages.github.tools.sap/pse/pse-docs/docs/identity-k8s/references/ztis-agent-kyma-module).
+  - Your application has the [`SPIFFE_ENDPOINT_SOCKET` environment variable](https://github.com/spiffe/spiffe/blob/main/standards/SPIFFE_Workload_Endpoint.md#4-locating-the-endpoint) set, pointing to the workload attestation API of the ZTIS agent.
 
 Head over to the [official documentation](https://pages.github.tools.sap/pse/pse-docs/docs/identity/), the [reference manual](https://github.tools.sap/pse/blueprints/blob/main/examples/cf/ZTIS_Reference.md) and [sample code](https://github.tools.sap/pse/blueprints/tree/main/examples/cf/java/ztis-identity/cf-manifest) to learn more about how to use ZTIS.
 
@@ -196,7 +196,6 @@ For example:
 - Identity Authentication Service (IAS)
 - Authorization and Trust Management Service (XSUAA)
 - Destination Service, Connectivity Service, etc.
-
 
 The SAP Cloud SDK automatically recognizes the credential type `X509_ATTESTED` and uses the certificates provided by ZTIS in that case.
 Consequently, any SAP BTP service supporting this credential type can be accessed using ZTIS.
