@@ -239,11 +239,11 @@ var options = ServiceBindingDestinationOptions
         .build();
 ```
 
-In case the application URL, dependency name or other properties are dynamic or tenant-specific, you may want to use a BTP destination to hold this information.
-Check the example below for how to combine BTP destinations with an IAS App2App flow.
+In case the application URL, dependency name or other properties are dynamic or tenant-specific, you may want to use a SAP BTP destination to hold this information.
+Check the example below for how to combine SAP BTP destinations with an IAS App2App flow.
 
 <details>
-<summary>Example for an IAS-based App2App Flow using BTP Destinations</summary>
+<summary>Example for an IAS-based App2App Flow using SAP BTP Destinations</summary>
 
 Define a destination in BTP cockpit and set the target system URL, a property to hold the App2App dependency name, as well as any further properties you might need for your use case (e.g. additional headers, query parameters, etc.).
 
@@ -269,7 +269,7 @@ var opts = ServiceBindingDestinationOptions.forService(ServiceIdentifier.IDENTIT
 var destination = ServiceBindingDestinationLoader.defaultLoaderChain().getDestination(opts);
 ```
 
-Effectively, the destination from BTP destination service serves as a config map and has to be merged with the destination created locally for the App2App flow.
+Effectively, the destination from SAP BTP destination service serves as a config map and has to be merged with the destination created locally for the App2App flow.
 
 </details>
 
