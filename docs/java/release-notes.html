@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.9.2">
 <title data-rh="true">Release Notes | SAP Cloud SDK</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://sap.github.io/cloud-sdk/docs/java/release-notes"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-docs-java-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-docs-java-current"><meta data-rh="true" property="og:title" content="Release Notes | SAP Cloud SDK"><meta data-rh="true" name="description" content="Release notes of SAP Cloud SDK for Java, stay up to date with the recent features, fixes, dependency updates and recommendedations."><meta data-rh="true" property="og:description" content="Release notes of SAP Cloud SDK for Java, stay up to date with the recent features, fixes, dependency updates and recommendedations."><meta data-rh="true" name="keywords" content="sap,cloud,sdk,cloud native,cloud sdk,sap cloud sdk"><link data-rh="true" rel="icon" href="/cloud-sdk/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://sap.github.io/cloud-sdk/docs/java/release-notes"><link data-rh="true" rel="alternate" href="https://sap.github.io/cloud-sdk/docs/java/release-notes" hreflang="en"><link data-rh="true" rel="alternate" href="https://sap.github.io/cloud-sdk/docs/java/release-notes" hreflang="x-default"><link data-rh="true" rel="preconnect" href="https://E4A268JVO0-dsn.algolia.net" crossorigin="anonymous"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Release Notes","item":"https://sap.github.io/cloud-sdk/docs/java/release-notes"}]}</script><link rel="search" type="application/opensearchdescription+xml" title="SAP Cloud SDK" href="/cloud-sdk/opensearch.xml"><link rel="stylesheet" href="/cloud-sdk/assets/css/styles.c8db7810.css">
-<script src="/cloud-sdk/assets/js/runtime~main.39483e28.js" defer="defer"></script>
+<script src="/cloud-sdk/assets/js/runtime~main.e1f182de.js" defer="defer"></script>
 <script src="/cloud-sdk/assets/js/main.a0515415.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -26,6 +26,18 @@ It will help you:</p>
 <li class="">Update client libraries giving access to latest SAP services on SAP Cloud Platform and SAP S/4HANA</li>
 <li class="">Protect yourself from bugs and breaking changes in the future</li>
 </ul>
+<h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="5240---october-30-2025">5.24.0 - October 30, 2025<a href="#5240---october-30-2025" class="hash-link" aria-label="Direct link to 5.24.0 - October 30, 2025" title="Direct link to 5.24.0 - October 30, 2025" translate="no">​</a></h2>
+<p><a href="https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.24.0" target="_blank" rel="noopener noreferrer" class="">All Release Changes</a></p>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-new-functionality">✨ New Functionality<a href="#-new-functionality" class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" translate="no">​</a></h3>
+<ul>
+<li class="">Add support for using the Zero Trust Identity Service (ZTIS) on Kyma by detecting the <a href="https://github.com/spiffe/spiffe/blob/main/standards/SPIFFE_Workload_Endpoint.md#4-locating-the-endpoint" target="_blank" rel="noopener noreferrer" class="">well-known environment variable <code>SPIFFE_ENDPOINT_SOCKET</code></a>.</li>
+<li class="">Add support for explicitly passing the <code>clientid</code> of the target system when using the IAS App2App authentication flow.
+Use the new methods <code>withProviderClient(clientid)</code> and <code>withProviderClient(clientid, apptid)</code> under <code>BtpServiceOptions.IasOptions</code>.</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-improvements">📈 Improvements<a href="#-improvements" class="hash-link" aria-label="Direct link to 📈 Improvements" title="Direct link to 📈 Improvements" translate="no">​</a></h3>
+<ul>
+<li class="">When the circuit breaker opens, the resulting <code>ResilienceRuntimeException</code> will have the original <code>CallNotPermittedException</code> from the circuit breaker stored as a suppressed exception.</li>
+</ul>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="5230---october-08-2025">5.23.0 - October 08, 2025<a href="#5230---october-08-2025" class="hash-link" aria-label="Direct link to 5.23.0 - October 08, 2025" title="Direct link to 5.23.0 - October 08, 2025" translate="no">​</a></h2>
 <p><a href="https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.23.0" target="_blank" rel="noopener noreferrer" class="">All Release Changes</a></p>
 <h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-compatibility-notes">🔧 Compatibility Notes<a href="#-compatibility-notes" class="hash-link" aria-label="Direct link to 🔧 Compatibility Notes" title="Direct link to 🔧 Compatibility Notes" translate="no">​</a></h3>
@@ -37,13 +49,13 @@ It will help you:</p>
 </ul>
 </li>
 </ul>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-improvements">📈 Improvements<a href="#-improvements" class="hash-link" aria-label="Direct link to 📈 Improvements" title="Direct link to 📈 Improvements" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-improvements-1">📈 Improvements<a href="#-improvements-1" class="hash-link" aria-label="Direct link to 📈 Improvements" title="Direct link to 📈 Improvements" translate="no">​</a></h3>
 <ul>
 <li class="">Circuit breaker exceptions <code>CallNotPermittedException</code> have been replaced in favor of the previously thrown exception to provide more context on the failure.</li>
 </ul>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="5220---august-29-2025">5.22.0 - August 29, 2025<a href="#5220---august-29-2025" class="hash-link" aria-label="Direct link to 5.22.0 - August 29, 2025" title="Direct link to 5.22.0 - August 29, 2025" translate="no">​</a></h2>
 <p><a href="https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.22.0" target="_blank" rel="noopener noreferrer" class="">All Release Changes</a></p>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-new-functionality">✨ New Functionality<a href="#-new-functionality" class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-new-functionality-1">✨ New Functionality<a href="#-new-functionality-1" class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" translate="no">​</a></h3>
 <ul>
 <li class="">Add built-in support for the <a href="https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/transparent-proxy-for-kubernetes" target="_blank" rel="noopener noreferrer" class="">Transparent Proxy</a> via a new <code>TransparentProxyDestination</code>.
 For more information, refer to the <a href="https://sap.github.io/cloud-sdk/docs/java/features/connectivity/transparent-proxy" target="_blank" rel="noopener noreferrer" class="">documentation</a>.</li>
@@ -62,11 +74,11 @@ For more information, refer to the <a href="https://sap.github.io/cloud-sdk/docs
 </ul>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="5210---august-01-2025">5.21.0 - August 01, 2025<a href="#5210---august-01-2025" class="hash-link" aria-label="Direct link to 5.21.0 - August 01, 2025" title="Direct link to 5.21.0 - August 01, 2025" translate="no">​</a></h2>
 <p><a href="https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.21.0" target="_blank" rel="noopener noreferrer" class="">All Release Changes</a></p>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-new-functionality-1">✨ New Functionality<a href="#-new-functionality-1" class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-new-functionality-2">✨ New Functionality<a href="#-new-functionality-2" class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" translate="no">​</a></h3>
 <ul>
 <li class="">Add <code>TokenCacheParameters</code> to <code>OAuth2Options</code> to configurate token cache duration, expiration delta and cache size.</li>
 </ul>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-improvements-1">📈 Improvements<a href="#-improvements-1" class="hash-link" aria-label="Direct link to 📈 Improvements" title="Direct link to 📈 Improvements" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-improvements-2">📈 Improvements<a href="#-improvements-2" class="hash-link" aria-label="Direct link to 📈 Improvements" title="Direct link to 📈 Improvements" translate="no">​</a></h3>
 <ul>
 <li class="">Relax OAuth2 token cache duration to 1hr to avoid unnecessary token refreshes.</li>
 <li class="">Disable refresh tokens when obtaining user tokens from IAS.
@@ -106,7 +118,7 @@ This behavior change in convenience API will be reverted with next <code>5.21.0<
 </ul>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="5190---may-26-2025">5.19.0 - May 26, 2025<a href="#5190---may-26-2025" class="hash-link" aria-label="Direct link to 5.19.0 - May 26, 2025" title="Direct link to 5.19.0 - May 26, 2025" translate="no">​</a></h2>
 <p><a href="https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.19.0" target="_blank" rel="noopener noreferrer" class="">All Release Changes</a></p>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-improvements-2">📈 Improvements<a href="#-improvements-2" class="hash-link" aria-label="Direct link to 📈 Improvements" title="Direct link to 📈 Improvements" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-improvements-3">📈 Improvements<a href="#-improvements-3" class="hash-link" aria-label="Direct link to 📈 Improvements" title="Direct link to 📈 Improvements" translate="no">​</a></h3>
 <ul>
 <li class="">Improve the detection and masking of secrets when logging data to debug.</li>
 </ul>
@@ -142,13 +154,13 @@ In case the current tenant is the provider tenant, and <code>TenantAccessor.getC
 </ul>
 </li>
 </ul>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-new-functionality-2">✨ New Functionality<a href="#-new-functionality-2" class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-new-functionality-3">✨ New Functionality<a href="#-new-functionality-3" class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" translate="no">​</a></h3>
 <ul>
 <li class="">OpenAPI: Add <code>toMap()</code> and deprecate <code>getCustomField(String)</code> on generated model classes.</li>
 </ul>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="5160---january-29-2025">5.16.0 - January 29, 2025<a href="#5160---january-29-2025" class="hash-link" aria-label="Direct link to 5.16.0 - January 29, 2025" title="Direct link to 5.16.0 - January 29, 2025" translate="no">​</a></h2>
 <p><a href="https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.16.0" target="_blank" rel="noopener noreferrer" class="">All Release Changes</a></p>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-new-functionality-3">✨ New Functionality<a href="#-new-functionality-3" class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-new-functionality-4">✨ New Functionality<a href="#-new-functionality-4" class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" translate="no">​</a></h3>
 <ul>
 <li class="">Add experimental support for updating nested fields in OData v2 complex types via PATCH requests<!-- -->
 <ul>
@@ -156,7 +168,7 @@ In case the current tenant is the provider tenant, and <code>TenantAccessor.getC
 </ul>
 </li>
 </ul>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-improvements-3">📈 Improvements<a href="#-improvements-3" class="hash-link" aria-label="Direct link to 📈 Improvements" title="Direct link to 📈 Improvements" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-improvements-4">📈 Improvements<a href="#-improvements-4" class="hash-link" aria-label="Direct link to 📈 Improvements" title="Direct link to 📈 Improvements" translate="no">​</a></h3>
 <ul>
 <li class="">Improve the OData v4 class <code>BatchRequestBuilder</code> to now also implement the <code>ModificationRequestBuilder</code> interface.</li>
 </ul>
@@ -167,13 +179,13 @@ Previously they would result in model classes extending <code>HashMap</code>, wh
 </ul>
 <h2 class="anchor anchorTargetStickyNavbar_Vzrq" id="5150---december-19-2024">5.15.0 - December 19, 2024<a href="#5150---december-19-2024" class="hash-link" aria-label="Direct link to 5.15.0 - December 19, 2024" title="Direct link to 5.15.0 - December 19, 2024" translate="no">​</a></h2>
 <p><a href="https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.15.0" target="_blank" rel="noopener noreferrer" class="">All Release Changes</a></p>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-new-functionality-4">✨ New Functionality<a href="#-new-functionality-4" class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-new-functionality-5">✨ New Functionality<a href="#-new-functionality-5" class="hash-link" aria-label="Direct link to ✨ New Functionality" title="Direct link to ✨ New Functionality" translate="no">​</a></h3>
 <ul>
 <li class="">Add support for <code>TypeDefinition</code> entries in OData V4 EDMX files.</li>
 <li class="">Add <code>generateApis</code> and <code>generateModels</code> options to the <code>openapi-generator-maven-plugin</code> to
 disable the generation of APIs and models respectively.</li>
 </ul>
-<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-improvements-4">📈 Improvements<a href="#-improvements-4" class="hash-link" aria-label="Direct link to 📈 Improvements" title="Direct link to 📈 Improvements" translate="no">​</a></h3>
+<h3 class="anchor anchorTargetStickyNavbar_Vzrq" id="-improvements-5">📈 Improvements<a href="#-improvements-5" class="hash-link" aria-label="Direct link to 📈 Improvements" title="Direct link to 📈 Improvements" translate="no">​</a></h3>
 <ul>
 <li class="">Stabilize most of the remaining experimental APIs without changes, e.g.<!-- -->
 <ul>
