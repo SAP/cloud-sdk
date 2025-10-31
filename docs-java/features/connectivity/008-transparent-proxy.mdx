@@ -53,11 +53,14 @@ It uses this destination to forward the request to the target system or to the C
 Consequently, your app does not interact with SAP Destination service or Connectivity service.
 This means your application do not require bindings to these two services, everything is handled by the Transparent Proxy.
 
-## Creating Transparent Proxy Destinations
+## TransparentProxyDestination Builder
 
-The `TransparentProxyDestination` class provides two types of builders for different use cases:
+The `TransparentProxyDestination` class provides explicit destination builders for direct control over transparent proxy connections.
+This approach gives you fine-grained control over individual destination configurations.
 
-### 1. Destination
+### Creating Destinations
+
+#### Concrete SAP Destination
 
 Allows you to connect to a concrete SAP destination.
 Setting generic headers is allowed but dynamic properties like destination name or fragments is not.
@@ -76,7 +79,7 @@ TransparentProxyDestination destination = TransparentProxyDestination
 `<destination-custom-resource-namespace>` can be omitted if the destination custom resource is created in the same namespace as the application workload.
 :::
 
-### 2. Gateway
+#### Gateway
 
 Allows you to connect to arbitrary SAP destinations you have access to.
 As a prerequisite, you have to create a Gateway Destination Custom Resource inside the Kubernetes cluster.
@@ -89,25 +92,26 @@ TransparentProxyDestination destination = TransparentProxyDestination
     .build();
 ```
 
-## Tenant Configuration
+### Configuration Options
+
+#### Tenant Settings
 
 The SAP Cloud SDK automatically sets the current tenant as tenant ID on a **per-request** basis.
 
 In case a fixed tenant should be used, you can manually set it as follows:
 
-### Destination
-
-// Using a fixed tenant ID (automatically set by SAP Cloud SDK if not specified)
-// alternatively, .tenantSubdomain("..") can be used, but only one of the two options may be set
+**For Concrete Destinations:**
 
 ```java
+// Using a fixed tenant ID (automatically set by SAP Cloud SDK if not specified)
+// alternatively, .tenantSubdomain("..") can be used, but only one of the two options may be set
 TransparentProxyDestination destination = TransparentProxyDestination
     .destination(<destination-custom-resource-name>.<destination-custom-resource-namespace>)
     .tenantId("my-tenant-id")
     .build();
 ```
 
-### Gateway
+**For Gateway Destinations:**
 
 ```java
 // Using a fixed tenant ID (automatically set by SAP Cloud SDK if not specified)
@@ -118,13 +122,13 @@ TransparentProxyDestination destination = TransparentProxyDestination
     .build();
 ```
 
-## Authorization Header Configuration
+#### Authorization Header Configuration
 
 The SAP Cloud SDK automatically sets the current user's authorization token in the `Authorization` header on a **per-request** basis.
 
 In case a fixed authorization token should be used, you can manually set it as follows:
 
-### Destination
+**For Concrete Destinations:**
 
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
@@ -133,7 +137,7 @@ TransparentProxyDestination destination = TransparentProxyDestination
     .build();
 ```
 
-### Gateway
+**For Gateway Destinations:**
 
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
@@ -144,18 +148,18 @@ TransparentProxyDestination destination = TransparentProxyDestination
 
 **Note**: When you manually set authorization, it will override the SAP Cloud SDK automatic token handling.
 
-## Migration from Traditional Destinations
+### Migration from Traditional Destinations
 
 Migrating from traditional destination configurations:
 
-### Before (Traditional Destination)
+#### Before (Traditional Destination)
 
 ```java
 Destination destination = DestinationAccessor.getDestination("my-destination");
 HttpClient client = ApacheHttpClient5Accessor.getHttpClient(destination);
 ```
 
-### After (Transparent Proxy - Gateway)
+#### After (Transparent Proxy - Gateway)
 
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
@@ -164,7 +168,7 @@ TransparentProxyDestination destination = TransparentProxyDestination
 HttpClient client = ApacheHttpClient5Accessor.getHttpClient(destination);
 ```
 
-### After (Transparent Proxy - Destination)
+#### After (Transparent Proxy - Concrete Destination)
 
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
@@ -173,48 +177,19 @@ TransparentProxyDestination destination = TransparentProxyDestination
 HttpClient client = ApacheHttpClient5Accessor.getHttpClient(destination);
 ```
 
-## Troubleshooting
+## Register Transparent Proxy for destination access
 
-### Common Issues
+The `TransparentProxy` class provides a `DestinationLoader` that enables routing **destination traffic via the DestinationAccessor** through a single registered gateway host.
+This approach provides centralized proxy configuration where all destination requests are automatically routed through the configured gateway without requiring explicit destination builders.
+It works only for SAP Cloud SDK`DestinationAccessor` approach.
 
-1. **Missing destination name for gateway**: Ensure the destination name is provided as the first parameter to `.gateway(<destination-name>, <destination-custom-resource-name>.<destination-custom-resource-namespace>)`
-2. **Tenant context not available**: Verify tenant information is properly set in the request context
-3. **Authentication failures**: Check that authentication headers and parameters are correctly configured
-4. **Network connectivity**: Verify that the Transparent Proxy is accessible from your environment
+### When to Use This Approach
 
-### Evaluating Transparent Proxy Headers
-
-When using proxy servers it can be difficult to troubleshoot issues as it is often not obvious where exactly the error occurred.
-For example, with the Transparent Proxy errors might occur on the target system (e.g. OData service), the Destination Service or the Transparent Proxy itself.
-
-To make troubleshooting easier the Transparent Proxy adds additional response headers to provide more information about where an error occurred.
-For the above example of executing OData requests you can access the response headers as follows:
-
-```java
-try {
-    // execute OData request
-} catch (ODataResponseException e) {
-    System.out.println(e.getHttpCode());
-    // the Transparent Proxy will attach additional response headers in case an error occurred
-    System.out.println(e.getHttpHeaders());
-}
-```
-
-#### List of headers added by the Transparent Proxy
-
-- `X-Error-Origin` - the source of the error
-- `X-Proxy-Server` - the proxy server (Transparent Proxy)
-- `X-Error-Message` - thorough error message
-- `X-Error-Internal-Code` - set only when the source of the error is the XSUAA or Destination service.
-  The value is the HTTP code returned from one of these services.
-- `X-Request-Id` is sent with the response in all requests, both successful and failed
-
-For more information, see [Troubleshooting](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/transparent-proxy-troubleshooting)
-
-## Transparent Proxy Loader
-
-The `TransparentProxy` class is a `DestinationLoader` that enables routing all destination traffic through a single registered gateway host.
-This provides a centralized approach to proxy configuration where all destination requests are automatically routed through the configured gateway.
+- You want all destinations to automatically route through a single [Dynamic Destination Custom Resource](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/dynamic-lookup-of-destinations)
+- You prefer a centralized, "set-it-and-forget-it" configuration approach
+- You have many destinations that should all use the same proxy configuration
+- You want to minimize code changes when migrating from traditional destination access
+- For CAP applications as CAP uses DestinationAccessor under the hood
 
 ### Registration Methods
 
@@ -242,6 +217,22 @@ TransparentProxy.register("http://<destination-gateway-host>", <port>);
 
 The final URI will be constructed as: `<normalized-host>:<port>`
 
+#### Register with Provider Tenant Identifier
+
+In scenarios where tenant information may not be readily available during destination requests, you can register a transparent proxy with a provider tenant ID that serves as a fallback:
+
+```java
+// Register with default port 80 and provider tenant ID
+TransparentProxy.register("<destination-gateway-host>", "provider-tenant-id");
+
+// Or register with custom port and provider tenant ID
+TransparentProxy.register("http://<destination-gateway-host>", 8080, "provider-tenant-id");
+```
+
+::note Transparent Proxy requires an explicit tenant ID
+The provider tenant identifier is required for requests where no tenant is explicitly available in the [ThreadContext](/docs/java/features/multi-tenancy/thread-context).
+Typically this is the case when testing locally without authentication or when running scheduled tasks.
+
 ### Usage Example
 
 ```java
@@ -252,6 +243,228 @@ TransparentProxy.register("<destination-gateway-host>", 8080);
 // Note: returns TransparentProxyDestination which implements Destination
 Destination destination = DestinationAccessor.getDestination("my-destination");
 ```
+
+### Advanced Usage with DestinationOptions
+
+The Transparent Proxy Loader supports advanced configuration through `DestinationOptions`, allowing you to customize various aspects of the destination lookup and authentication.
+This is especially useful when you need to:
+
+- Configure fragments for destination configurations
+- Override tenant information
+- Provide custom authentication tokens or assertions
+- Configure OAuth flows
+- Set up destination chains
+- Control destination and fragment lookup levels
+
+#### Basic Usage with Options
+
+```java
+// Register the transparent proxy
+TransparentProxy.register("<destination-gateway-host>", 8080);
+
+// Create options and retrieve destination
+DestinationOptions options = DestinationServiceOptionsAugmenter.augmenter()
+    .fragmentName("my-fragment")
+    .build();
+
+Destination destination = DestinationAccessor.getDestination("my-destination", options);
+```
+
+#### Available DestinationOptions Parameters
+
+The following parameters can be used with `DestinationServiceOptionsAugmenter.augmenter()
+                                               .customHeaders(new Header(key, value))`:
+
+##### Fragment Configuration
+
+- **`x-fragment-name`**: Specifies the name of a fragment to apply to the destination configuration
+
+  ```java
+  .fragmentName("my-fragment")
+  ```
+
+- **`x-fragment-optional`**: Controls whether the fragment is optional (default: false).
+  Set to "true" or "false"
+  ```java
+  .customHeaders(new Header("x-fragment-optional", "true"))
+  ```
+
+##### Authentication Configuration
+
+- **`x-client-assertion`**: Provides a client assertion for OAuth flows
+
+  ```java
+  .customHeaders(new Header("x-client-assertion", "eyJhbGciOiJSUzI1NiIs..."))
+  ```
+
+- **`x-client-assertion-type`**: Specifies the client assertion type
+
+  ```java
+  .customHeaders(new Header("x-client-assertion-type",
+             "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"))
+  ```
+
+- **`x-client-assertion-destination-name`**: References another destination for client assertion
+  ```java
+  .customHeaders(new Header("x-client-assertion-destination-name",
+             "assertion-destination"))
+  ```
+
+##### Token Exchange Configuration
+
+- **`x-subject-token-type`**: Specifies the subject token type for token exchange
+
+  ```java
+  .customHeaders(new Header("x-subject-token-type",
+             "urn:ietf:params:oauth:token-type:jwt"))
+  ```
+
+- **`x-actor-token`**: Provides an actor token for token exchange flows
+
+  ```java
+  .customHeaders(new Header("x-actor-token", "actor-token-value"))
+  ```
+
+- **`x-actor-token-type`**: Specifies the actor token type
+  ```java
+  .customHeaders(new Header("x-actor-token-type",
+             "urn:ietf:params:oauth:token-type:jwt"))
+  ```
+
+##### OAuth Flow Configuration
+
+- **`x-redirect-uri`**: Specifies the redirect URI for OAuth flows
+
+  ```java
+  .customHeaders(new Header("x-redirect-uri",
+             "https://my-app.com/callback"))
+  ```
+
+- **`x-code-verifier`**: Provides the PKCE code verifier for OAuth flows
+  ```java
+  .customHeaders(new Header("x-code-verifier", "code-verifier-123"))
+  ```
+
+##### Destination Chain Configuration
+
+- **`x-chain-name`**: Specifies the name of a destination chain
+
+  ```java
+  .customHeaders(new Header("x-chain-name", "my-chain"))
+  ```
+
+- **`x-chain-var-subjectToken`**: Provides a subject token variable for chains
+
+  ```java
+  .customHeaders(new Header("x-chain-var-subjectToken",
+             "chain-subject-token"))
+  ```
+
+- **`x-chain-var-subjectTokenType`**: Specifies the subject token type for chains
+
+  ```java
+  .customHeaders(new Header("x-chain-var-subjectTokenType",
+             "urn:ietf:params:oauth:token-type:jwt"))
+  ```
+
+- **`x-chain-var-samlProviderDestinationName`**: References a SAML provider destination in chains
+  ```java
+  .customHeaders(new Header("x-chain-var-samlProviderDestinationName",
+             "saml-provider-dest"))
+  ```
+
+##### Level Configuration
+
+- **`x-destination-level`**: Specifies the lookup level for the destination (e.g., "subaccount", "INSTANCE")
+
+  ```java
+  .customHeaders(new Header("x-destination-level", "subaccount"))
+  ```
+
+- **`x-fragment-level`**: Specifies the lookup level for the fragment (e.g., "subaccount", "INSTANCE")
+  ```java
+  .customHeaders(new Header("x-fragment-level", "INSTANCE"))
+  ```
+
+#### Complete Example with Multiple Options
+
+```java
+// Register the transparent proxy
+TransparentProxy.register("<destination-gateway-host>", 8080);
+
+// Configure comprehensive options
+DestinationOptions options = DestinationOptions.builder()
+    // Fragment configuration
+    .customHeaders(new Header("x-fragment-name", "production-fragment"))
+    .customHeaders(new Header("x-fragment-optional", "false"))
+
+    // Tenant configuration
+    .customHeaders(new Header("x-tenant-id", "tenant-123"))
+    .customHeaders(new Header("x-token-service-tenant", "service-tenant"))
+
+    // Authentication
+    .customHeaders(new Header("authorization", "Bearer custom-token"))
+
+    // Level configuration
+
+    .customHeaders(new Header("x-fragment-level", "INSTANCE"))
+
+
+// Retrieve destination with options
+Destination destination = DestinationAccessor.getDestination("my-destination", options);
+
+// Use the destination for your requests
+HttpClient client = ApacheHttpClient5Accessor.getHttpClient(destination);
+```
+
+:::tip Parameter Priority
+When using DestinationOptions parameters:
+
+1. Parameters in DestinationOptions take precedence over provider tenant ID set during registration
+2. Parameters in DestinationOptions override automatic tenant resolution from context
+3. The SAP Cloud SDK automatically handles current user tokens unless overridden via `AUTHORIZATION_HEADER_KEY`
+   :::
+
+:::caution Tenant Configuration
+You cannot use both `TENANT_ID_HEADER_KEY` and `TENANT_SUBDOMAIN_HEADER_KEY` simultaneously.
+Choose one based on your requirements.
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Missing destination name for gateway**: Ensure the destination name is provided as the first parameter to `.gateway(<destination-name>, <destination-custom-resource-name>.<destination-custom-resource-namespace>)`
+2. **Tenant context not available**: Verify tenant information is properly set in the request context
+3. **Authentication failures**: Check that authentication headers and parameters are correctly configured
+4. **Network connectivity**: Verify that the Transparent Proxy is accessible from your environment
+
+### Evaluating Transparent Proxy Headers
+
+When using proxy servers it can be difficult to troubleshoot issues as it is often not obvious where exactly the error occurred.
+
+To make troubleshooting easier the Transparent Proxy adds additional response headers to provide more information about where an error occurred.
+For the above example of executing OData requests you can access the response headers as follows:
+
+```java
+try {
+    // execute OData request
+} catch (ODataResponseException e) {
+    System.out.println(e.getHttpCode());
+    // the Transparent Proxy will attach additional response headers in case an error occurred
+    System.out.println(e.getHttpHeaders());
+}
+```
+
+#### List of headers added by the Transparent Proxy
+
+- `X-Error-Origin` - the source of the error
+- `X-Proxy-Server` - the proxy server (Transparent Proxy)
+- `X-Error-Message` - thorough error message
+- `X-Error-Internal-Code` - set only when the source of the error is the XSUAA or Destination service.
+  The value is the HTTP code returned from one of these services.
+- `X-Request-Id` is sent with the response in all requests, both successful and failed
+
+For more information, see [Troubleshooting](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/transparent-proxy-troubleshooting)
 
 ## Related Documentation
 
