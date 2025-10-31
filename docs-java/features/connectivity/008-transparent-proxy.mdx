@@ -46,6 +46,7 @@ Refer to [Transparent Proxy in Kyma environment](https://help.sap.com/docs/conne
 
 The **Transparent Proxy** is a SAP BTP Connectivity component that acts as an intermediary between your application and target systems.
 The Transparent Proxy simplifies and unifies how your Kubernetes workloads connect to remote systems using SAP BTP destinations.
+The Transparent Proxy handles the protocols HTTP(s), LDAP(s), MAIL (SMTP(s), IMAP(s), POP3(s)), and TCP.
 It provides authentication, principal propagation, SOCKS5 handshake, and easy access to the destination target systems by exposing them as [Kubernetes Services](https://kubernetes.io/docs/concepts/services-networking/service).
 
 The Transparent Proxy obtains relevant destination configuration from the SAP Destination service.
@@ -53,11 +54,14 @@ It uses this destination to forward the request to the target system or to the C
 Consequently, your app does not interact with SAP Destination service or Connectivity service.
 This means your application do not require bindings to these two services, everything is handled by the Transparent Proxy.
 
-## Creating Transparent Proxy Destinations
+## Approach 1: TransparentProxyDestination Builder
 
-The `TransparentProxyDestination` class provides two types of builders for different use cases:
+The `TransparentProxyDestination` class provides explicit destination builders for direct control over transparent proxy connections.
+This approach gives you fine-grained control over individual destination configurations and is recommended for most use cases.
 
-### 1. Destination
+### Creating Destinations
+
+#### Concrete SAP Destination
 
 Allows you to connect to a concrete SAP destination.
 Setting generic headers is allowed but dynamic properties like destination name or fragments is not.
@@ -76,7 +80,7 @@ TransparentProxyDestination destination = TransparentProxyDestination
 `<destination-custom-resource-namespace>` can be omitted if the destination custom resource is created in the same namespace as the application workload.
 :::
 
-### 2. Gateway
+#### Gateway
 
 Allows you to connect to arbitrary SAP destinations you have access to.
 As a prerequisite, you have to create a Gateway Destination Custom Resource inside the Kubernetes cluster.
@@ -89,25 +93,26 @@ TransparentProxyDestination destination = TransparentProxyDestination
     .build();
 ```
 
-## Tenant Configuration
+### Configuration Options
+
+#### Tenant Configuration
 
 The SAP Cloud SDK automatically sets the current tenant as tenant ID on a **per-request** basis.
 
 In case a fixed tenant should be used, you can manually set it as follows:
 
-### Destination
-
-// Using a fixed tenant ID (automatically set by SAP Cloud SDK if not specified)
-// alternatively, .tenantSubdomain("..") can be used, but only one of the two options may be set
+**For Concrete Destinations:**
 
 ```java
+// Using a fixed tenant ID (automatically set by SAP Cloud SDK if not specified)
+// alternatively, .tenantSubdomain("..") can be used, but only one of the two options may be set
 TransparentProxyDestination destination = TransparentProxyDestination
     .destination(<destination-custom-resource-name>.<destination-custom-resource-namespace>)
     .tenantId("my-tenant-id")
     .build();
 ```
 
-### Gateway
+**For Gateway Destinations:**
 
 ```java
 // Using a fixed tenant ID (automatically set by SAP Cloud SDK if not specified)
@@ -118,13 +123,13 @@ TransparentProxyDestination destination = TransparentProxyDestination
     .build();
 ```
 
-## Authorization Header Configuration
+#### Authorization Header Configuration
 
 The SAP Cloud SDK automatically sets the current user's authorization token in the `Authorization` header on a **per-request** basis.
 
 In case a fixed authorization token should be used, you can manually set it as follows:
 
-### Destination
+**For Concrete Destinations:**
 
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
@@ -133,7 +138,7 @@ TransparentProxyDestination destination = TransparentProxyDestination
     .build();
 ```
 
-### Gateway
+**For Gateway Destinations:**
 
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
@@ -144,18 +149,18 @@ TransparentProxyDestination destination = TransparentProxyDestination
 
 **Note**: When you manually set authorization, it will override the SAP Cloud SDK automatic token handling.
 
-## Migration from Traditional Destinations
+### Migration from Traditional Destinations
 
 Migrating from traditional destination configurations:
 
-### Before (Traditional Destination)
+#### Before (Traditional Destination)
 
 ```java
 Destination destination = DestinationAccessor.getDestination("my-destination");
 HttpClient client = ApacheHttpClient5Accessor.getHttpClient(destination);
 ```
 
-### After (Transparent Proxy - Gateway)
+#### After (Transparent Proxy - Gateway)
 
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
@@ -164,13 +169,62 @@ TransparentProxyDestination destination = TransparentProxyDestination
 HttpClient client = ApacheHttpClient5Accessor.getHttpClient(destination);
 ```
 
-### After (Transparent Proxy - Destination)
+#### After (Transparent Proxy - Concrete Destination)
 
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
     .destination(<destination-custom-resource-name>.<destination-custom-resource-namespace>)
     .build();
 HttpClient client = ApacheHttpClient5Accessor.getHttpClient(destination);
+```
+
+## Approach 2: Transparent Proxy Loader
+
+The `TransparentProxy` class provides a `DestinationLoader` that enables routing **all destination traffic** through a single registered gateway host.
+This approach provides centralized proxy configuration where all destination requests are automatically routed through the configured gateway without requiring explicit destination builders.
+
+### When to Use This Approach
+
+Use the Transparent Proxy Loader when:
+
+- You want all destinations to automatically route through a single transparent proxy gateway
+- You prefer a centralized configuration approach
+
+### Registration Methods
+
+#### Register with Default Port
+
+Register a transparent proxy gateway using the default port 80:
+
+```java
+// Register with default port 80
+// Note: <destination-gateway-host> - the host is a combination of the Gateway Destination Custom Resource name and namespace
+TransparentProxy.register("<destination-gateway-host>");
+```
+
+The host will be verified if it is reachable and must not contain any path components.
+If no scheme is provided, HTTP will be used by default.
+
+#### Register with Custom Port
+
+Register a transparent proxy gateway with a specified port:
+
+```java
+// Register with custom port when using a non-default port defined in the Destination CR's .service.port field
+TransparentProxy.register("http://<destination-gateway-host>", <port>);
+```
+
+The final URI will be constructed as: `<normalized-host>:<port>`
+
+### Usage Example
+
+```java
+// Register the transparent proxy during application initialization
+TransparentProxy.register("<destination-gateway-host>", 8080);
+
+// All subsequent destination requests will be routed through the registered gateway
+// Note: returns TransparentProxyDestination which implements Destination
+Destination destination = DestinationAccessor.getDestination("my-destination");
 ```
 
 ## Troubleshooting
