@@ -181,6 +181,11 @@ destinations="[{
 }]"
 ```
 
+Please keep in mind: A `.env` file has to represent environment-variables (like `destinations` in the example above) within 1 line. So, to get represented within your `process.env.destinations` variable, save the `.env` file as one-liner:
+```
+destinations="[{"name": "<destinationName>","url": "http://<destinationName>.dest","proxyConfiguration":{"host": "127.0.0.1","port": 8887,"protocol":"http"}}]"
+```
+
 Fill in the `name` and `url` of the destination you [configured on SAP BTP](#prerequisite-2-cloud-connector-and-destination-setup).
 You can use the same pattern `<name>.dest` that you have used for [testing the connection](#checking-the-connection).
 The proxy host and port are from the `http_proxy` environment variables BAS creates for you.
