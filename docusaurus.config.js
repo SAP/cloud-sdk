@@ -22,7 +22,7 @@ module.exports = {
   baseUrl: '/cloud-sdk/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'throw',
-  favicon: 'img/favicon.ico',
+  favicon: 'favicon.ico',
   organizationName: 'SAP',
   projectName: 'cloud-sdk',
   trailingSlash: false,
