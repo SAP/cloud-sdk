@@ -301,3 +301,17 @@ If that behavior is not desired, you may disable the change detection mode:
 ```java
 DestinationService.Cache.disableChangeDetection();
 ```
+
+### Pre-Lookup Check
+
+In order to decrease the amount of unnecessary calls to non-existent destinations, the `DestinationService` performs a pre-lookup check when calling a single destination through `tryGetDestination()` by default.
+This check first searches for the desired destination in the list of all available destinations and fails the `tryGetDestination` call if the destination is not present without actually trying to call it directly.
+
+:::info Regarding Fragments
+This check does not account for fragments. A non-existing fragment will still lead to an HTTP call and subsequent `DestinationNotFoundException` unless the additional header `{@code X-fragment-optional: true}` is set via `DestinationOptions`.
+:::
+
+If that behavior is not desired it can disabled via
+```java
+DestinationService.Cache.disablePreLookupCheck();
+```
