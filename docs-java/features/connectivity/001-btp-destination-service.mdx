@@ -305,7 +305,8 @@ DestinationService.Cache.disableChangeDetection();
 ### Destination PreLookup Check
 
 In order to decrease the amount of unnecessary calls to non-existent destinations, the `DestinationService` performs a pre-lookup check when calling a single destination through `tryGetDestination()` by default.
-This check first searches for the desired destination in the list of all available destinations and fails the `tryGetDestination` call if the destination is not present without actually trying to call it directly.
+This check first searches for the desired destination in the list of all available destinations (via a call to `DestinationService.getAllDestinationProperties`).
+It will fail the `tryGetDestination` call without actually calling the destination directly if the destination is not present in the response of `DestinationService.getAllDestinationProperties`.
 
 :::info Regarding Fragments
 This check does not account for fragments.
