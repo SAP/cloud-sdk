@@ -198,3 +198,31 @@ The destination includes `mtlsKeyPair` with x509 credentials from the IAS servic
 Use these credentials for mTLS communication with the provider system.
 
 :::
+
+### Token Caching
+
+IAS tokens are cached automatically to improve performance and reduce load on the IAS broker.
+The cache is resource-aware, meaning tokens for different provider dependencies are cached separately.
+
+The cache key includes the tenant ID, client ID, and the normalized resource parameter.
+This prevents incorrect token reuse across different provider dependencies.
+
+```typescript
+const token1 = await serviceToken('my-identity-service', {
+  iasOptions: { resource: { name: 'backend-api' } }
+});
+
+const token2 = await serviceToken('my-identity-service', {
+  iasOptions: { resource: { name: 'backend-api' } }
+});
+```
+
+In the example above, the second call returns the cached token from the first call.
+A call with a different resource would fetch a new token from the IAS broker.
+
+Tokens are cached until they expire.
+To bypass the cache, set `useCache: false` in the options.
+Multiple resources in an array create a single cache entry, regardless of order.
+
+In multi-tenant scenarios, each tenant gets separate cache entries.
+The `appTid` parameter affects the cache key.
