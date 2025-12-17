@@ -52,13 +52,14 @@ The [`IasResource`](pathname:///api/v4/types/sap-cloud-sdk_connectivity.IasResou
 It can be specified by dependency name or provider client ID:
 
 ```typescript
-type IasResource = {
-  name: string;
-}
-| {
-  clientId: string;
-  tenantId?: string;
-}
+type IasResource =
+  | {
+      name: string;
+    }
+  | {
+      clientId: string;
+      tenantId?: string;
+    };
 ```
 
 You can specify a single resource or an array of resources for multiple provider dependencies.
@@ -108,10 +109,7 @@ For multiple provider dependencies, pass an array:
 ```typescript
 const token = await serviceToken('my-identity-service', {
   iasOptions: {
-    resource: [
-      { name: 'backend-api' },
-      { name: 'payment-service' }
-    ]
+    resource: [{ name: 'backend-api' }, { name: 'payment-service' }]
   }
 });
 ```
