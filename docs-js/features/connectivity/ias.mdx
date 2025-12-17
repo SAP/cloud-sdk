@@ -46,6 +46,28 @@ Consumer applications create a service binding to IAS with dependencies on the r
 
 The dependency name configured in IAS is used as `resource.name` in the SAP Cloud SDK.
 
+```mermaid
+sequenceDiagram
+    participant Consumer as Consumer App
+    participant SDK as SAP Cloud SDK
+    participant IAS as IAS Broker
+    participant Provider as Provider App
+
+    Note over Consumer,Provider: Configuration Phase (Setup)
+    Provider->>IAS: Register "provides" configuration
+    Consumer->>IAS: Configure dependency on provider
+
+    Note over Consumer,Provider: Runtime Phase (Token Exchange)
+    Consumer->>SDK: Request token with resource parameter
+    SDK->>IAS: Token request (client credentials + resource)
+    IAS->>IAS: Validate dependency relationship
+    IAS->>SDK: Issue scoped token
+    SDK->>Consumer: Return token
+    Consumer->>Provider: API call with scoped token
+    Provider->>Provider: Validate token
+    Provider->>Consumer: API response
+```
+
 ### IasResource
 
 The [`IasResource`](pathname:///api/v4/types/sap-cloud-sdk_connectivity.IasResource.html) type identifies provider dependencies configured in IAS.
