@@ -84,17 +84,10 @@ type IasResource =
     };
 ```
 
-You can specify a single resource or an array of resources for multiple provider dependencies.
-
-Examples:
-
-```typescript
-{ name: 'backend-api' }
-
-{ clientId: 'client-123', tenantId: 'tenant-456' }
-
-[{ name: 'backend-api' }, { clientId: 'client-123' }]
-```
+The `name` property refers to the dependency name configured in IAS, and is the recommended way to identify resources.
+Alternatively, the `clientId` property can be used to specify the provider application's client ID.
+This may be necessary if there are multiple dependencies on the same provider application with different permissions, providing `clientId` will grant access to all dependencies associated with that provider.
+The `tenantId` property is optional and can be used in multi-tenant scenarios to specify the provider tenant.
 
 ### IasOptions
 
@@ -102,7 +95,7 @@ The [`IasOptions`](pathname:///api/v4/interfaces/sap-cloud-sdk_connectivity.IasO
 
 ```typescript
 interface IasOptions {
-  resource: IasResource | IasResource[];
+  resource: IasResource;
   targetUrl?: string;
   appTid?: string;
   authenticationType?: 'OAuth2ClientCredentials' | 'OAuth2JWTBearer';
@@ -110,7 +103,8 @@ interface IasOptions {
 }
 ```
 
-The `targetUrl` property is required when creating destinations, as IAS service bindings do not include the provider's URL.
+The `targetUrl` property is required when creating destinations, as service bindings for the identity service broker do not include the service provider's URL.
+If `OAuth2JWTBearer` is used as `authenticationType`, the `assertion` property must contain the user JWT for token exchange.
 
 ### Technical User Authentication
 
@@ -126,17 +120,7 @@ const token = await serviceToken('my-identity-service', {
 });
 ```
 
-For multiple provider dependencies, pass an array:
-
-```typescript
-const token = await serviceToken('my-identity-service', {
-  iasOptions: {
-    resource: [{ name: 'backend-api' }, { name: 'payment-service' }]
-  }
-});
-```
-
-In multi-tenant scenarios, specify the consumer tenant ID:
+In multi-tenant scenarios, you may have to specify the consumer tenant ID:
 
 ```typescript
 const token = await serviceToken('my-identity-service', {
@@ -149,7 +133,8 @@ const token = await serviceToken('my-identity-service', {
 
 ### Business User Authentication
 
-Use [`jwtBearerToken()`](pathname:///api/v4/functions/sap-cloud-sdk_connectivity.jwtBearerToken.html) for user context propagation:
+Use [`jwtBearerToken()`](pathname:///api/v4/functions/sap-cloud-sdk_connectivity.jwtBearerToken.html) for user context propagation.
+The `appTid` option is derived from the provided user JWT:
 
 ```typescript
 import { jwtBearerToken } from '@sap-cloud-sdk/connectivity';
@@ -164,7 +149,7 @@ const token = await jwtBearerToken(userJwt, 'my-identity-service', {
 ### Creating Destinations
 
 Use [`getDestinationFromServiceBinding()`](pathname:///api/v4/functions/sap-cloud-sdk_connectivity.getDestinationFromServiceBinding.html) to create destinations with IAS authentication.
-The `targetUrl` property is required, as IAS service bindings do not include the provider's URL:
+The `targetUrl` property is required when creating destinations, as service bindings for the identity service broker do not include the service provider's URL.
 
 ```typescript
 import { getDestinationFromServiceBinding } from '@sap-cloud-sdk/connectivity';
@@ -178,7 +163,8 @@ const destination = await getDestinationFromServiceBinding({
 });
 ```
 
-For business user authentication, provide the JWT and set the authentication type:
+For business user authentication, provide the JWT and set the authentication type.
+The provided JWT is used as an assertion for token exchange:
 
 ```typescript
 const destination = await getDestinationFromServiceBinding({
@@ -195,7 +181,7 @@ const destination = await getDestinationFromServiceBinding({
 :::note
 
 The destination includes `mtlsKeyPair` with x509 credentials from the IAS service binding, if present.
-Use these credentials for mTLS communication with the provider system.
+These credentials will be used for mTLS communication with the provider system.
 
 :::
 
@@ -203,9 +189,6 @@ Use these credentials for mTLS communication with the provider system.
 
 IAS tokens are cached automatically to improve performance and reduce load on the IAS broker.
 The cache is resource-aware, meaning tokens for different provider dependencies are cached separately.
-
-The cache key includes the tenant ID, client ID, and the normalized resource parameter.
-This prevents incorrect token reuse across different provider dependencies.
 
 ```typescript
 const token1 = await serviceToken('my-identity-service', {
@@ -222,6 +205,3 @@ A call with a different resource would fetch a new token from the IAS broker.
 
 Tokens are cached until they expire.
 To bypass the cache, set `useCache: false` in the options.
-Multiple resources in an array create a single cache entry, regardless of order.
-
-In multi-tenant scenarios, each tenant gets separate cache entries.
