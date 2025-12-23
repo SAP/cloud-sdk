@@ -28,17 +28,17 @@ Therefore, JWTs are used to exchange authorization and authentication informatio
 
 ## JWT on SAP BTP
 
-The retrieval of a JWT is done by the approuter together with the XSUAA.
+The retrieval of a JWT is done by the approuter together with XSUAA or IAS.
 [This guide](./how-to-use-the-approuter.mdx) explains these concepts.
 Find a complete setup in the sample applications for [Cloud Foundry](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/cf-sample-application) and [k8s](https://github.com/SAP-samples/cloud-sdk-js/tree/main/samples/k8s-sample-application).
 The flow is as follows:
 
 - user requests a resource and is not yet authenticated
 - approuter redirects the request to the identity provider (IdP)
-- XSUAA issues a JWT - see [here](#obtain-jwt-programmatically) for details
+- XSUAA or IAS issues a JWT - see [here](#obtain-jwt-programmatically) for details
 - approuter adds the JWT to the request headers and redirects the request to the initially requested resource
 
-A JWT issued this way contains a `JKU` header property.
+A JWT issued by XSUAA contains a `JKU` header property.
 This property points to the URL where you can obtain the certificate to verify the JWT.
 The URL must be from the XSUAA domain so that it is trusted and the JWT validation does not fail.
 
@@ -46,6 +46,10 @@ The URL must be from the XSUAA domain so that it is trusted and the JWT validati
 
 :::warning
 Since `v4.1.0` SAP Cloud SDK no longer verifies the JWT issued by XSUAA.
+:::
+
+:::info IAS App-to-App Authentication
+For app-to-app authentication scenarios using the Identity Authentication Service (IAS), see the [Identity Authentication Service documentation](../features/connectivity/ias.mdx).
 :::
 
 Sometimes you want to use a JWT which is not issued by the XSUAA and approuter.
