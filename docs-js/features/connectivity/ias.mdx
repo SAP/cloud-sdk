@@ -79,32 +79,47 @@ type IasResource =
       name: string;
     }
   | {
-      clientId: string;
-      tenantId?: string;
+      providerClientId: string;
+      providerTenantId?: string;
     };
 ```
 
 The `name` property refers to the dependency name configured in IAS, and is the recommended way to identify resources.
-Alternatively, the `clientId` property can be used to specify the provider application's client ID.
-This may be necessary if there are multiple dependencies on the same provider application with different permissions, providing `clientId` will grant access to all dependencies associated with that provider.
-The `tenantId` property is optional and can be used in multi-tenant scenarios to specify the provider tenant.
+Alternatively, the `providerClientId` property can be used to specify the provider application's client ID.
+This may be necessary if there are multiple dependencies on the same provider application with different permissions, providing `providerClientId` will grant access to all dependencies associated with that provider.
+The `providerTenantId` property is optional and can be used in multi-tenant scenarios to specify the provider tenant.
 
 ### IasOptions
 
-The [`IasOptions`](pathname:///api/v4/interfaces/sap-cloud-sdk_connectivity.IasOptions.html) type configures IAS token retrieval:
+The [`IasOptions`](pathname:///api/v4/interfaces/sap-cloud-sdk_connectivity.IasOptions.html) type configures IAS token retrieval.
+It uses a type-safe union to enforce the relationship between `authenticationType` and `assertion`:
 
 ```typescript
-interface IasOptions {
-  resource: IasResource;
+// For technical user authentication (default)
+interface IasOptionsTechnical {
+  resource?: IasResource;
   targetUrl?: string;
   appTid?: string;
-  authenticationType?: 'OAuth2ClientCredentials' | 'OAuth2JWTBearer';
-  assertion?: string;
+  authenticationType?: 'OAuth2ClientCredentials';
+  extraParams?: Record<string, string>;
 }
+
+// For business user authentication
+interface IasOptionsBusinessUser {
+  resource?: IasResource;
+  targetUrl?: string;
+  appTid?: string;
+  authenticationType: 'OAuth2JWTBearer';
+  assertion: string; // Required for user authentication
+  extraParams?: Record<string, string>;
+}
+
+type IasOptions = IasOptionsTechnical | IasOptionsBusinessUser;
 ```
 
 The `targetUrl` property is required when creating destinations, as service bindings for the identity service broker do not include the service provider's URL.
 If `OAuth2JWTBearer` is used as `authenticationType`, the `assertion` property must contain the user JWT for token exchange.
+The `extraParams` property allows you to pass additional OAuth2 parameters with the token request.
 
 ### Technical User Authentication
 
@@ -164,7 +179,7 @@ const destination = await getDestinationFromServiceBinding({
 ```
 
 For business user authentication, provide the JWT and set the authentication type.
-The provided JWT is used as an assertion for token exchange:
+When you provide a JWT to the function, it automatically uses it as the assertion for token exchange if no explicit `assertion` is provided in `iasOptions`:
 
 ```typescript
 const destination = await getDestinationFromServiceBinding({
@@ -174,6 +189,7 @@ const destination = await getDestinationFromServiceBinding({
     authenticationType: 'OAuth2JWTBearer',
     targetUrl: 'https://backend-provider.example.com',
     resource: { name: 'backend-api' }
+    // assertion is automatically set to userToken
   }
 });
 ```
@@ -185,10 +201,40 @@ These credentials will be used for mTLS communication with the provider system.
 
 :::
 
+### Multi-Tenant Subscriber Routing
+
+In multi-tenant scenarios, the SAP Cloud SDK automatically handles routing to the correct IAS tenant based on the JWT assertion.
+When using JWT bearer authentication (`OAuth2JWTBearer`), the SAP Cloud SDK extracts the subdomain from the JWT issuer and creates a tenant-specific IAS service instance.
+
+This ensures that token requests are routed to the subscriber's IAS tenant, not the provider's tenant.
+The SAP Cloud SDK validates the issuer URL from the JWT and adjusts the IAS service URL accordingly while maintaining security by not fully delegating trust to the JWT assertion.
+
+```typescript
+// The SAP Cloud SDK automatically extracts the subscriber tenant from the JWT
+const token = await jwtBearerToken(subscriberUserJwt, 'my-identity-service', {
+  iasOptions: {
+    resource: { name: 'backend-api' }
+  }
+});
+// Token request is automatically routed to the subscriber's IAS tenant
+```
+
+For client credentials flows in multi-tenant scenarios, you can explicitly specify the tenant:
+
+```typescript
+const token = await serviceToken('my-identity-service', {
+  iasOptions: {
+    resource: { name: 'backend-api' },
+    appTid: 'subscriber-tenant-id'
+  }
+});
+```
+
 ### Token Caching
 
 IAS tokens are cached automatically to improve performance and reduce load on the IAS broker.
 The cache is resource-aware, meaning tokens for different provider dependencies are cached separately.
+In multi-tenant scenarios, tokens are also cached per tenant subdomain.
 
 ```typescript
 const token1 = await serviceToken('my-identity-service', {
