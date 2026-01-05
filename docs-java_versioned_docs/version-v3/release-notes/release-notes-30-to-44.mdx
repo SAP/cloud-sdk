@@ -214,7 +214,6 @@ The collection of released SAP S/4HANA Cloud client libraries from the SAP Cloud
 - The OData v4 type-safe client (VDM) generator now generates static fields for accessible properties on `VdmComplex` types, which can be used exactly like their counterparts on `VdmEntity` when building OData queries.
 - You can clear the cache for remote functions with the new experimental APIs `RemoteFunctionCache.clearCache(Destination)`
   and `RemoteFunctionCache.clearCache(Destination, functionName)`.
-
   - Example usages:
 
   ```java
@@ -262,7 +261,6 @@ The collection of released SAP S/4HANA Cloud client libraries from the SAP Cloud
 As part of the update of the pregenerated type-safe client for SAP S/4HANA On-premise, we encountered the following changes:
 
 - The following methods of the OData v4 service `ContractAccountingBusinessPartnerPaymentService` have been renamed:
-
   - `getAllBusPartPaymentParameters` has been renamed to `getAllBusPartPayment`
   - `countBusPartPaymentParameters` has been renamed to `countBusPartPayment`
   - `getBusPartPaymentParametersByKey` has been renamed to `getBusPartPaymentByKey`
@@ -271,7 +269,6 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
   - `getBusPartPaymentItemParametersByKey` has been renamed to `getBusPartPaymentItemByKey`
 
 - The following classes of the OData v4 VDM have been renamed:
-
   - `ProtocolQueryReadSingle` has been renamed to `ProtocolQueryRead`
   - `StructuredPropertyCollection` has been renamed to `NavigationPropertyCollection`
   - `StructuredPropertyCollectionQuery` has been renamed to `NavigationPropertyCollectionQuery`
@@ -360,7 +357,6 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
 - As part of the update of the OData VDM to SAP S/4HANA Cloud 2102 a few operations were removed.
   The operations were never supported by the SAP S/4HANA system (like CRUD support for some entities), so no existing functionality is affected.
   The following services are affected:
-
   - _Nota Fiscal – Create, Update_ - `API_LOGBR_NOTAFISCAL_SRV`
 
   - _Purchase Contracts_ - `API_PURCHASECONTRACT_PROCESS_SRV`
@@ -555,7 +551,6 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
 ### Compatibility Notes
 
 - We removed the following dependencies from the SAP Cloud SDK Bill-of-Material (BOM):
-
   - Netty
   - Protobuf
   - Spring Security OAuth
@@ -658,7 +653,6 @@ As part of the update of the pregenerated type-safe client for SAP S/4HANA On-pr
   However, outgoing requests will always use the notation that is compatible with Version `4.0.0` of the standard for now to ensure server compatibility.
 - The Workflow API client library in module `scp-workflow-cf` was enhanced with the latest Workflow API features.
 - The CSRF token retrieval of OData v2 type-safe function imports has been improved:
-
   - Function imports using the HTTP method GET no longer issue the unnecessary CSRF token request
   - Function imports using the HTTP method POST can be processed even if the CSRF token retrieval fails (for example, if the server does not support CSRF tokens)
 
@@ -779,7 +773,6 @@ Iterable<List<EntityT>> lazyPages = request.iteratingPages().execute( destinatio
 - The method [`withHeader()`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/com/sap/cloud/sdk/datamodel/odatav4/core/RequestBuilder.html#withHeader-java.lang.String-java.lang.String-) of OData V4 request builders is no longer experimental.
 
 - Improve the class hierarchy of [`ODataException`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odata/client/exception/ODataException.html):
-
   - Declare all subclasses as stable API
   - Merge `ODataResponseErrorException` into [`ODataServiceErrorException`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odata/client/exception/ODataServiceErrorException.html)
   - Rename `ODataServiceErrorRoot` to [`ODataServiceError`](https://help.sap.com/doc/f8a1835a26b848f69536b34bf46eeb93/1.0/en-US/index.html?com/sap/cloud/sdk/datamodel/odata/client/exception/ODataServiceError.html)

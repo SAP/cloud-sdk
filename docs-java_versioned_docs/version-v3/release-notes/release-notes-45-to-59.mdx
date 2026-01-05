@@ -18,7 +18,6 @@
 - Update of the OData VDM to the [newest release 2021 of SAP S/4HANA On-Premise](https://help.sap.com/viewer/product/SAP_S4HANA_ON-PREMISE/2021/en-US).
   The SAP Cloud SDK supports all OData services listed in the [SAP Business Accelerator Hub for SAP S/4HANA On-Premise](https://api.sap.com/products/SAPS4HANA/overview)
   This includes completely new services, new operations in previously existing services, and new entity types in the following new Maven artifacts:
-
   - [`s4hana-api-odata-v4-onpremise`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata-v4-onpremise) manages classes in package `com.sap.cloud.sdk.s4hana.onpremise.datamodel.odatav4.services`
   - [`s4hana-api-odata-onpremise`](https://search.maven.org/artifact/com.sap.cloud.sdk.s4hana/s4hana-api-odata-onpremise) manages classes in package `com.sap.cloud.sdk.s4hana.onpremise.datamodel.odata.services`
 
@@ -84,7 +83,6 @@ Support for `oneOf`, `anyOf` might be added in the future but the timeline for t
 - The `ALWAYS_SUBSCRIBER` strategy of the default `ScpCfDestinationRetrievalStrategy` in the `ScpCfDestinationLoader` did not behave as its name implied.
   It was taking the current tenant, which might also be a Provider Tenant due to misconfiguration.
   We fixed it by:
-
   - Renaming `ALWAYS_SUBSCRIBER` to `CURRENT_TENANT` and making it a new default strategy.
   - Deprecation the confusingly named `ALWAYS_SUBSCRIBER` strategy
   - Adding a new `ONLY_SUBSCRIBER` strategy that actively enforces that a current tenant is not a provider tenant
@@ -176,7 +174,6 @@ Support for `oneOf`, `anyOf` might be added in the future but the timeline for t
 
   This utility interface consists of just a single method (`load`), which returns all service bindings for the current application.
   We also provide the following implementations:
-
   - The `EnvironmentVariableServiceBindingLoader` is capable of parsing environment variables (such as the `VCAP_SERVICES`) on SAP BTP Cloud Foundry
   - The `FileSystemServiceBindingLoader` is capable of parsing service bindings, which are mounted to the file system (for example, when running in a K8s environment).
   - The `ServiceBindingMerger` is capable of combining the results of an arbitrary amount of other `ServiceBindingLoader` instances based on a configurable service binding property (e.g. the `name` of the bindings).
@@ -187,7 +184,6 @@ Support for `oneOf`, `anyOf` might be added in the future but the timeline for t
   It allows to seamlessly load service bindings from a file system in K8s-based environments like SAP Gardener.
 
   We search and load the `Service bindings` with the following priority, highest to lowest:
-
   - From the file system, as provided by the SAP Service Operator K8s service with the `SecretKey` layout
   - From the file system, as provided by the SAP Service Operator K8s service with the `Data` (default) layout
   - From the `VCAP_SERVICES` environment variable
@@ -275,7 +271,6 @@ Support for `oneOf`, `anyOf` might be added in the future but the timeline for t
 ### New Functionality
 
 - We added convenience methods for `null` comparison in our _OData_ API to avoid unnecessary null-casting:
-
   - `Entity.FIELD_NAME.equalToNull()` - _OData V4 VDM_ / _Generic OData Client_
   - `Entity.FIELD_NAME.notEqualToNull()` - _OData V4 VDM_ / _Generic OData Client_
   - `Entity.FIELD_NAME.eqNull()` - _OData V2 VDM_
@@ -303,7 +298,6 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/v3
 
 - [**Beta**] Reading destinations from environment variables now allows you to configure authorization token forwarding to the target system.
   You can activate this feature in the following ways
-
   1. Setting the `authentication` property directly:
 
      ```
@@ -370,7 +364,6 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/v3
 
 - We enabled support for certificate-based authentication for services on Cloud Foundry which allows services to use Mutual Transport Layer Security or mTLS instead of providing client credentials.
   In the future, this will become the default authentication method on the SAP BTP Cloud Foundry.
-
   - If the service binding has a property `credentials: { credential-type: x509 }` then this is an indicator for the new authentication method.
   - Please note: you might see `WARN` messages in the logs.
     These are produced by the Java Security Library that we use as a dependency.
@@ -421,7 +414,6 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/v3
 ### New Functionality
 
 - The SAP Cloud SDK now provides out-of-the-box support for the [Identity Authentication Service](https://help.sap.com/viewer/6d6d63354d1242d185ab4830fc04feb1/Cloud/en-US/27882717f44b445fa287936c6f43dc1f.html) (IAS). Here's the list of accessors that are currently able to handle JWTs authored by the IAS service:
-
   - AuthTokenAccessor
   - TenantAccessor
   - PrincipalAccessor
@@ -549,13 +541,11 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/v3
   This refactoring aims to grant more power over what names are to be used in the VDM to implementations of the `NamingStrategy` interface.
 
   Hereby, we changed the following interfaces and classes in an incompatible way:
-
   - The `NamingStrategy` interface has been redesigned entirely, leading to compilation errors for existing implementations.
   - The `DefaultNamingStrategy` has been renamed to `S4HanaNamingStrategy`. It stays the default value for the generator, though.
   - The `DefaultNamingStrategy.NameSource` enumeration has been moved to the package rather than being nested inside a class.
 
   Additionally, the entire logic, which consists of the items listed below, has been moved to the `com.sap.cloud.sdk.datamodel.odata.utility` package:
-
   - `NameSource`
   - `NamingStrategy`
   - `AbstractNamingStrategy`
@@ -695,7 +685,6 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/v3
   This mitigates potential deployment errors due to the latest extensions in the VDM modules.
 
 - Dependency Updates:
-
   - Update Fabric SDK Java from `2.2.5` to `2.2.6`
   - Update JUnit Jupiter from `5.7.1` to `5.7.2`
   - Update Netty from `4.1.63.Final` to `4.1.64.Final`
@@ -755,7 +744,6 @@ Please refer to [our documentation](https://sap.github.io/cloud-sdk/docs/java/v3
   ```
 
 - Add new module `btp-business-rules` for out-of-the-box support of
-
   - the [SAP Business Rules Authoring](https://api.sap.com/api/SAP_CF_BusinessRules_Repository/resource) service,
 
   ```java

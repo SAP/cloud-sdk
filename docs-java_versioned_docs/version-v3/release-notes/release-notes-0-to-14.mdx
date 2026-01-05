@@ -88,7 +88,6 @@
 ### New Functionality
 
 - Introduce a new [`BasicAuthenticationAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html) to read the username and password from the Basic Authentication header of the currently incoming request on Cloud Foundry.
-
   - Use it like the other `*Accessor` classes:
 
     ```
@@ -112,7 +111,6 @@
   A valid JWT takes precedence over a Basic Authentication header.
 
   The order of resolution is
-
   1. If a principal is given in the current context (e.g. via [`PrincipalAccessor.executeWithPrincipal()`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/com/sap/cloud/sdk/cloudplatform/security/principal/PrincipalAccessor.html#executeWithPrincipal-com.sap.cloud.sdk.cloudplatform.security.principal.Principal-java.util.concurrent.Callable-)), this will we be used.
   2. Otherwise, if a JWT is given in the current context (e.g. via an incoming request or manually set via the [`AuthTokenAccessor.executeWithAuthToken()`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/com/sap/cloud/sdk/cloudplatform/security/AuthTokenAccessor.html#executeWithAuthToken-com.sap.cloud.sdk.cloudplatform.security.AuthToken-java.util.concurrent.Callable-) methods) the principal is read from there.
   3. Otherwise, If there is no JWT or the resolution fails the user retrieved via the [`BasicAuthenticationAccessor`](https://help.sap.com/doc/4cc23f4c3bf147fe834fbd0e3413e5d5/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/BasicAuthenticationAccessor.html) used (if existent).
@@ -123,7 +121,6 @@
 ### Improvements
 
 - The connectivity to On-Premise systems from SCP Cloud Foundry is updated, so that the [authentication](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/39f538ad62e144c58c056ebc34bb6890.html) now follows the [recommended](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/39f538ad62e144c58c056ebc34bb6890.html) protocol for principal propagation.
-
   - Instead of populating two headers `SAP-Connectivity-Authentication` and `Proxy-Authorization` for On-Premise requests, the SAP Cloud SDK now takes the recommended approach of just using `Proxy-Authorization` with a dynamically resolved _User Exchange Access Token_.
   - Introduce `PrincipalPropagationStrategy` for configuring that the previous behavior should be used.
 
@@ -401,7 +398,6 @@
 - _OData VDM Generator_: add deprecation information contained in the provided Swagger file of a service to generated service classes.
 
 - Update dependencies:
-
   - Java libraries of [SAP Cloud Application Programming Model](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/00823f91779d4d42aa29a498e0535cdf.html) (`com.sap.cloud.servicesdk.*`) from version 1.32.0 to 1.32.5
   - Caffeine from 2.7.0 to 2.8.0
   - Commons Codec from 1.12.0 to 1.13.0
@@ -469,7 +465,6 @@ Either update to version `3.1.0` or manually add the following properties to the
   - Removed the PLATFORM_DEFAULT value from all destination retrieval strategy enums.
     - Use null values instead, or do not set the parameter at all.
 - Removed the destination retrieval strategy configuration from the DestinationAccessor. It is no longer a global configuration by destination name.
-
   - Destination retrieval strategy configuration is now stored in instances of the new DestinationOptions class.
   - To set the destination retrieval strategy, use the ScpCfDestinationOptionsHelper or ScpNeoDestinationOptionsHelper with the builder of DestinationOptions.
   - e.g. on Cloud Foundry:
