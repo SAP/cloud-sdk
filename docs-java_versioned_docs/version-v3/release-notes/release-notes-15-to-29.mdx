@@ -19,7 +19,6 @@
 - The improved OData v2 type-safe client is now Generally Available.
   From now on we recommend it for OData API consumption.
   Refer to the [documentation on how to switch](https://sap.github.io/cloud-sdk/docs/java/v3/features/odata/type-safe-client-odata-v2.mdx#switch-to-improved-odata-v2-type-safe-client) for more details on the new OData 2 client.
-
   - The methods `executeRequest` are no longer marked as Beta and ready for use in production code.
   - The new methods `matchAnyVersionIdentifier()` and `disableVersionIdentifier()` allow for better control over [ETag handling](https://sap.github.io/cloud-sdk/docs/java/v3/features/odata/type-safe-client-odata-v2.mdx#handling-of-etags).
 
@@ -243,7 +242,6 @@ final DefaultHttpDestination defaultHttpDestination =
   - Update [SAP Cloud Application Programming Model](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/00823f91779d4d42aa29a498e0535cdf.html) from version `1.40.2` to `1.40.6`
   - Update [SAP Cloud Security Client](https://github.com/SAP/cloud-security-xsuaa-integration) from `2.7.3` to `2.7.5`
 - Update Maven plugins in Maven archetypes:
-
   - Archetype `scp-cf-tomee`:
     - Update `tomee-maven-plugin` from `8.0.1` to `8.0.3`
   - Archetype `scp-cf-tomee` and `neo-javaee7`:
@@ -286,7 +284,6 @@ Release date: July 16, 2020
 - Improved the error messages shown when JWT validation fails.
 - Improved the [`AuthTokenBuilder`](https://help.sap.com/doc/e95b7f89bb45412b943760333df7a016/1.0/en-US/index.html?com/sap/cloud/sdk/cloudplatform/security/AuthTokenBuilder.html) so that public keys used for verification of authorization tokens created by it are now being cached.
 - Client Library for SCP Workflow:
-
   - Method names improved to better reflect the Workflow domain
   - Methods return strong return types, the previous version had generic return types
   - Parameter names improved to better reflect their semantics
@@ -324,9 +321,7 @@ Release date: July 16, 2020
 - A new, experimental API to run generic OData batch requests via `ODataRequestBatch` in version agnostic module `odata-client`.
   It allows for batching entity read and modification requests. Modifications are grouped within changesets and, depending on the service implementation, they are expected to rollback if one change in the set was unsuccessful. Multiple changesets and read requests can be attached.
   The class supports entity request handling for _create_, _read_, _update_ and _delete_, as well as service specific _functions_ and _actions_.
-
   - Notes
-
     - The API is not considered final yet. The class is `@Beta` annotated. Please refrain from using it in productive application code.
     - There are no helper methods on the result object yet to conveniently parse the multipart response. However the `HttpResponse` object can be accessed already.
     - The order of method invocations matters. It defines how the individual requests are serialized, when constructing the multipart batch request.
@@ -398,9 +393,7 @@ Release date: July 16, 2020
 
 - New builder pattern for type `Resilience4jDecorationStrategy` to enable custom function decoration properties.
 - A new, experimental interface `ServiceWithNavigableEntities` for OData v4 VDM, to allow for recursive traversal of navigation properties in entity sets. This generic type offers type-safe methods to create a request along chained entities with their navigation properties. By delegating to the existing request builder classes, the interface supports all basic CRUD operations, plus count. You can use all existing request modifiers, e.g. _filter_ or _select_ statements in _Read_. The interface type is `@Beta` annotated to declare methods and sub-types are still open for changes in the future.
-
   - Example
-
     - Create a new Trip in Vacation (id 2020) of Person (username "John")
     - HTTP request: `POST /ODataService/People('John')/Vacations(2020)/Trips`
     - Sample code:
@@ -448,7 +441,6 @@ Release date: July 16, 2020
 ### New Functionality
 
 - Introducing the client library for the Workflow API on SAP Cloud Platform, Cloud Foundry
-
   - Example usage:
 
   ```
@@ -468,7 +460,6 @@ Release date: July 16, 2020
   ```
 
 - New VDM request builder for OData v4 to fetch the count of entries in an entity collection endpoint. The result is a non-null Long, the number of matching entries according to optional filter and search expressions.
-
   - Example for the VDM usage:
 
     ```
@@ -492,7 +483,6 @@ Release date: July 16, 2020
   - Note: Regenerate the VDM to enable these features on your classes.
 - The VDM request builders for OData v4 to delete and update entities `DeleteRequestBuilder` and `UpdateRequestBuilder`
   allow to influence the submission of the version identifier (ETag) of the respective entity in the remote system.
-
   - The method `disableVersionIdentifier` allows to avoid that the request header `If-Match` is sent at all.
   - The method `matchAnyVersionIdentifier` allows to control that the request header `If-Match` is sent with the value `*`.
   - Note that if both methods are invoked on the same request builder, the latest invocation takes precedence.
@@ -631,7 +621,6 @@ Release date: July 16, 2020
   ```
 
 - Update Dependencies
-
   - Update Java JWT from `3.10.0` to `3.10.1`
   - Update Mockito from `3.3.0` to `3.3.1`
   - Update Wiremock from `2.26.2` to `2.26.3`
@@ -700,7 +689,6 @@ Release date: July 16, 2020
 ### Compatibility Notes
 
 - Use the library [XSUAA Token Client and Token Flow API](https://github.com/SAP/cloud-security-xsuaa-integration/tree/master/token-client) for handling communication with [XSUAA](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/ea0281368f11472b8d2b145a2a28666c.html) service instances.
-
   - If you mock XSUAA service requests in your tests, some assertions might need to be updated. When using the new library, XSUAA request parameters should be passed as _HTTP body content_ instead of query arguments.
   - The internally used types `SubdomainReplacer` and `DefaultSubdomainReplacer` became obsolete and were removed. The usage of this classes was replaced by the new library.
   - The behavior of following methods in the utility class `XsuaaService` has been changed.
