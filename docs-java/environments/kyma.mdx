@@ -585,7 +585,7 @@ The official [documentation of the Transparent Proxy](https://help.sap.com/docs/
 
 You can either configure connectivity to individual destinations, or for arbitrary destinations in your destination service instance or subaccount (via Destination Gateway).
 
-<Tabs 
+<Tabs
   groupId="dynamic-dest"
   defaultValue="single"
   values={[
@@ -658,9 +658,22 @@ Apply the YAML with `kubectl apply -n` into the namespace of your application po
 
 ### Executing Requests
 
-In your application you can now configure a destination to execute requests:
+The SAP Cloud SDK offers two distinct approaches for executing requests through the Transparent Proxy in Kyma. Choose the approach that best fits your application's architecture and requirements.
 
-<Tabs 
+## TransparentProxyDestination Builder
+
+The **TransparentProxyDestination Builder** approach provides explicit, fine-grained control over individual destination configurations.
+
+### When to Use This Approach
+
+- You need specific control over individual destination configurations
+- You want to set custom headers or properties per destination
+- You prefer explicit destination management
+- You want to consume a destination with fragment or chain
+
+### Implementation Examples
+
+<Tabs
   groupId="dynamic-dest"
   defaultValue="single"
   values={[
@@ -668,6 +681,10 @@ In your application you can now configure a destination to execute requests:
     {label: "Destination Gateway", value: "gateway"}
   ]}>
 <TabItem value="single">
+
+**For Concrete SAP Destinations:**
+
+Use this when connecting to a specific, pre-configured destination with a dedicated Destination Custom Resource.
 
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
@@ -682,6 +699,10 @@ List<SalesArea> execute = new DefaultSalesAreaService().getAllSalesArea() // exa
 
 </TabItem>
 <TabItem value="gateway">
+
+**For Gateway:**
+
+Use this when you need to connect to arbitrary destinations dynamically using a [Gateway Destination Custom Resource](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/dynamic-lookup-of-destinations).
 
 ```java
 TransparentProxyDestination destination = TransparentProxyDestination
@@ -700,11 +721,57 @@ List<SalesArea> execute = new DefaultSalesAreaService().getAllSalesArea() // exa
 `<destination-custom-resource-namespace>` can be omitted if the destination custom resource is created in the same namespace as the application workload.
 :::
 
-The code above shows an example how you can then use the `destination` object to perform an OData request against the system.
+## Register Transparent Proxy for destination access
+
+This approach provides centralized proxy configuration where **all destination requests** are automatically routed through a single registered gateway without requiring explicit destination builders.
+It works only for SAP Cloud SDK`DestinationAccessor` approach.
+
+### When to Use This Approach
+
+- You want all destinations to automatically route through a single [Dynamic Destination Custom Resource](https://help.sap.com/docs/connectivity/sap-btp-connectivity-cf/dynamic-lookup-of-destinations)
+- You prefer a centralized, "set-it-and-forget-it" configuration approach
+- You have many destinations that should all use the same proxy configuration
+- You want to minimize code changes when migrating from traditional destination access
+- For CAP applications as CAP uses DestinationAccessor under the hood
+
+### Implementation Examples
+
+**Step 1: Register the Transparent Proxy (typically during application startup):**
+
+```java
+// Register with default port 80
+TransparentProxy.register("<destination-gateway-host>");
+
+// OR register with custom port
+TransparentProxy.register("http://<destination-gateway-host>", 8080);
+
+// OR register with provider tenant ID (default port 80)
+TransparentProxy.register("<destination-gateway-host>", "provider-tenant-id");
+
+// OR register with custom port and provider tenant ID
+TransparentProxy.register("http://<destination-gateway-host>", 8080, "provider-tenant-id");
+```
+
+:::note Provider Tenant ID
+The provider tenant ID serves as a fallback when the current tenant cannot be accessed during destination preparation. This is particularly useful in scenarios where tenant information is not readily available, providing a default tenant for authentication and authorization purposes.
+
+The SAP Cloud SDK automatically sets the current tenant ID during requests. The provider tenant ID is only used as a fallback when the current tenant cannot be accessed.
+For more information how the SAP Cloud SDK determines the current tenant, please refer [here](/docs/java/features/multi-tenancy/thread-context).
+:::
+
+**Step 2: For SAP Cloud SDK`DestinationAccessor` approach only - use destinations normally - they will automatically route through the registered proxy:**
+
+```java
+// All subsequent destination requests will be routed through the registered gateway
+// No explicit TransparentProxyDestination creation needed
+Destination destination = DestinationAccessor.getDestination("my-destination");
+
+List<SalesArea> execute = new DefaultSalesAreaService().getAllSalesArea() // example OData request
+        .execute(destination);
+```
 
 :::tip Connecting to Cloud systems
-The above approach is not limited to destinations of proxy type `ON_PREMISE`.
-`INTERNET` destinations are equally supported.
+Both approaches support destinations of any proxy type including `ON_PREMISE` and `INTERNET` destinations.
 :::
 
 ### Troubleshooting
