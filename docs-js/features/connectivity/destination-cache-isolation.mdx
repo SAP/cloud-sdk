@@ -73,8 +73,8 @@ The default cache isolation strategy depends on the provided JWT:
   The value for the tenant is the provider account tenant.
 - JWT without `user_id`: Isolation is set to `tenant`.
   The value for the tenant is the `zid` property of the JWT.
-- JWT with `user_id`: Isolation is set to `tenant-user`.
-  The and values are taken from `zid` and `user_id`.
+- JWT with `user_uuid` or `user_id`: Isolation is set to `tenant-user`.
+  The tenant and user values are taken from `zid` and `user_uuid` (preferred) or `user_id`.
 
 The first two cases (no JWT and JWT wihout `user_id`) are typical for user-independent authentication types, like `BasicAuthentication`, `ClientCertificateAuthentication` or `OAuth2ClientCredentials`.
 This is a safe choice which prevents privilege escalation due to caching.
