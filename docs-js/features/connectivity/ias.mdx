@@ -41,6 +41,18 @@ The IAS broker validates the relationship and issues a scoped token that only wo
 
 ### Configuration
 
+:::note
+
+The destination includes `mtlsKeyPair` with x509 credentials from the IAS service binding, if present.
+The SAP Cloud SDK uses these credentials for mTLS communication with the provider system.
+
+The SAP Cloud SDK supports IAS service bindings with the following credential types:
+
+- **`X509_GENERATED`**: automatically generated X.509 certificates.
+- **`SECRET`**: client secret credentials.
+
+:::
+
 Provider applications register a "provides" configuration on the IAS broker service, defining which APIs are exposed.
 Consumer applications create a service binding to IAS with dependencies on the required provider resources.
 
@@ -171,10 +183,31 @@ const destination = await getDestinationFromServiceBinding({
 });
 ```
 
+Technical user token requests will be cached by default.
+To disable caching, set the `useCache` option to `false` in the destination request:
+
+```typescript
+const destination = await getDestinationFromServiceBinding({
+  destinationName: 'my-identity-service',
+  useCache: false,
+  iasOptions: {
+    targetUrl: 'https://backend-provider.example.com',
+    resource: { name: 'backend-api' }
+  }
+});
+```
+
 #### Business User Authentication
 
+:::warning
+
+When using business user authentication, token requests are not cached.
+
+:::
+
 For user context propagation, provide the JWT and set the authentication type.
-When you provide a JWT to the function, it automatically uses it as the assertion for token exchange if no explicit `assertion` is provided in `iasOptions`:
+When you provide a JWT to the function, it automatically uses it as the assertion for token exchange.
+This happens when no explicit `assertion` is provided in `iasOptions`:
 
 ```typescript
 const destination = await getDestinationFromServiceBinding({
@@ -188,13 +221,6 @@ const destination = await getDestinationFromServiceBinding({
   }
 });
 ```
-
-:::note
-
-The destination includes `mtlsKeyPair` with x509 credentials from the IAS service binding, if present.
-These credentials will be used for mTLS communication with the provider system.
-
-:::
 
 ### Multi-Tenant Support
 
