@@ -101,19 +101,7 @@ const destination = await getDestinationFromServiceBinding({
 });
 ```
 
-In multi-tenant scenarios, specify the request context using [`requestAs`](#current-tenant-and-provider-tenant-options) (defaults to `'current-tenant'`).
-For scenarios requiring explicit tenant identifiers, see the [Multi-Tenant Support](#multi-tenant-support) section:
-
-```typescript
-const destination = await getDestinationFromServiceBinding({
-  destinationName: 'my-identity-service',
-  iasOptions: {
-    targetUrl: 'https://backend-provider.example.com',
-    resource: { name: 'backend-api' },
-    requestAs: 'current-tenant' // or 'provider-tenant'
-  }
-});
-```
+For multi-tenant scenarios, see the [Multi-Tenant Support](#multi-tenant-support) section.
 
 Technical user token requests will be cached by default.
 To disable caching, set the `useCache` option to `false` in the destination request:
@@ -241,7 +229,7 @@ const destination = await getDestinationFromServiceBinding({
 
 #### JWT-Based Tenant Extraction
 
-When using JWT bearer authentication (`OAuth2JWTBearer`), the SAP Cloud SDK automatically extracts the tenant information from the JWT assertion and routes token requests to the correct IAS tenant:
+When a JWT is supplied in the `options`, the SAP Cloud SDK automatically extracts the tenant information from the JWT assertion and routes token requests to the correct IAS tenant:
 
 ```typescript
 const destination = await getDestinationFromServiceBinding({
