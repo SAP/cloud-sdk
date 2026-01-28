@@ -27,7 +27,7 @@ Other scenarios such as App2Service are not fully supported yet.
 
 :::
 
-The SAP Cloud SDK supports the Identity Authentication Service (IAS) for app-to-app authentication scenarios.
+The SAP Cloud SDK supports the Identity Authentication Service (IAS) for App2App authentication scenarios.
 In this scenario, a consumer application requests tokens scoped to specific provider applications through pre-configured dependencies in IAS.
 
 ## App2App Authentication
@@ -97,8 +97,7 @@ type IasResource =
 
 The `name` property refers to the dependency name configured in IAS and is the recommended way to identify resources.
 Alternatively, the `providerClientId` property can be used to specify the provider application's client identifier.
-Providing `providerClientId` grants access to all dependencies associated with that provider, which may be necessary when there are multiple dependencies on the same provider application with different permissions.
-The `providerTenantId` property is optional and specifies the provider tenant in multi-tenant scenarios.
+Providing `providerClientId` grants access to all dependencies associated with that provider.
 
 ### IasOptions
 
@@ -137,8 +136,9 @@ The `extraParams` property allows you to pass additional OAuth2 parameters with 
 
 ### Creating Destinations
 
-Use [`getDestinationFromServiceBinding()`](pathname:///api/v4/functions/sap-cloud-sdk_connectivity.getDestinationFromServiceBinding.html) to create destinations with IAS authentication.
-The `targetUrl` property is required, as service bindings for the identity service broker do not include the service provider's URL.
+Use [`getDestinationFromServiceBinding()`](pathname:///api/v4/functions/sap-cloud-sdk_connectivity.getDestinationFromServiceBinding.html) to connect to a system that is registered as an application within IAS.
+The `targetUrl` is the URL of the system where the target application resides.
+The `resource` specifies the dependency name configured in IAS, for further details please refer to `IasResource` (link to the sub-section)
 
 #### Technical User Authentication
 
