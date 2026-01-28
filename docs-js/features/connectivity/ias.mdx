@@ -35,7 +35,7 @@ In this scenario, a consumer application requests tokens scoped to specific prov
 App2App authentication allows secure service-to-service communication where tokens are scoped to specific provider applications.
 The consumer and provider applications must have a pre-configured dependency relationship in IAS.
 
-At runtime, the consumer requests a token using the `resource` parameter, which references the provider dependency.
+At runtime, the consumer requests a token using the [`resource` parameter](#app2app-resources), which references the provider dependency.
 The IAS broker validates the relationship and issues a scoped token that only works for the specified provider.
 
 ### Configuration
@@ -79,66 +79,11 @@ sequenceDiagram
     Provider->>Consumer: API response
 ```
 
-### IasResource
-
-The [`IasResource`](pathname:///api/v4/types/sap-cloud-sdk_connectivity.IasResource.html) type identifies provider dependencies configured in IAS.
-It can be specified by dependency name or provider client identifier:
-
-```typescript
-type IasResource =
-  | {
-      name: string;
-    }
-  | {
-      providerClientId: string;
-      providerTenantId?: string;
-    };
-```
-
-The `name` property refers to the dependency name configured in IAS and is the recommended way to identify resources.
-Alternatively, the `providerClientId` property can be used to specify the provider application's client identifier.
-Providing `providerClientId` grants access to all dependencies associated with that provider.
-
-### IasOptions
-
-The [`IasOptions`](pathname:///api/v4/interfaces/sap-cloud-sdk_connectivity.IasOptions.html) type configures IAS token retrieval.
-It uses a type-safe union to enforce the relationship between `authenticationType` and `assertion`:
-
-```typescript
-// Base options shared by all authentication modes
-interface IasOptionsBase {
-  resource?: IasResource;
-  targetUrl?: string;
-  appTid?: string;
-  requestAs?: 'current-tenant' | 'provider-tenant';
-  extraParams?: Record<string, string>;
-}
-
-// For technical user authentication (default)
-interface IasOptionsTechnicalUser extends IasOptionsBase {
-  authenticationType?: 'OAuth2ClientCredentials';
-  assertion?: never;
-}
-
-// For business user authentication
-interface IasOptionsBusinessUser extends IasOptionsBase {
-  authenticationType: 'OAuth2JWTBearer';
-  assertion: string; // Required for user authentication
-}
-
-type IasOptions = IasOptionsTechnicalUser | IasOptionsBusinessUser;
-```
-
-The `targetUrl` property is required when creating destinations, as service bindings for the identity service broker do not include the service provider's URL.
-If `OAuth2JWTBearer` is used as `authenticationType`, the `assertion` property must contain the user JWT for token exchange.
-The `requestAs` property specifies whether the token request is made in the context of the current tenant (`'current-tenant'`, default) or the provider tenant (`'provider-tenant'`).
-The `extraParams` property allows you to pass additional OAuth2 parameters with the token request.
-
 ### Creating Destinations
 
 Use [`getDestinationFromServiceBinding()`](pathname:///api/v4/functions/sap-cloud-sdk_connectivity.getDestinationFromServiceBinding.html) to connect to a system that is registered as an application within IAS.
 The `targetUrl` is the URL of the system where the target application resides.
-The `resource` specifies the dependency name configured in IAS, for further details please refer to `IasResource` (link to the sub-section)
+The `resource` specifies the dependency identified by its name or identifier configured in IAS, for details please refer to the [App2App Resources](#app2app-resources) section.
 
 #### Technical User Authentication
 
@@ -156,7 +101,8 @@ const destination = await getDestinationFromServiceBinding({
 });
 ```
 
-In multi-tenant scenarios, specify the request context using `requestAs` (defaults to `'current-tenant'`):
+In multi-tenant scenarios, specify the request context using [`requestAs`](#current-tenant-and-provider-tenant-options) (defaults to `'current-tenant'`).
+For scenarios requiring explicit tenant identifiers, see the [Multi-Tenant Support](#multi-tenant-support) section:
 
 ```typescript
 const destination = await getDestinationFromServiceBinding({
@@ -165,19 +111,6 @@ const destination = await getDestinationFromServiceBinding({
     targetUrl: 'https://backend-provider.example.com',
     resource: { name: 'backend-api' },
     requestAs: 'current-tenant' // or 'provider-tenant'
-  }
-});
-```
-
-Alternatively, explicitly set the consumer tenant identifier with `appTid`:
-
-```typescript
-const destination = await getDestinationFromServiceBinding({
-  destinationName: 'my-identity-service',
-  iasOptions: {
-    targetUrl: 'https://backend-provider.example.com',
-    resource: { name: 'backend-api' },
-    appTid: 'consumer-tenant-id'
   }
 });
 ```
@@ -203,10 +136,15 @@ const destination = await getDestinationFromServiceBinding({
 When using business user authentication, token requests are not cached.
 
 :::
+:::info
+
+Setting `authenticationType` to `OAuth2JWTBearer` is required to trigger Business User authentication.
+
+:::
 
 For user context propagation, provide the JWT and set the authentication type.
 When you provide a JWT to the function, it automatically uses it as the assertion for token exchange.
-This happens when no explicit `assertion` is provided in `iasOptions`:
+This will happen when no explicit `assertion` is provided in `iasOptions`:
 
 ```typescript
 const destination = await getDestinationFromServiceBinding({
@@ -220,6 +158,28 @@ const destination = await getDestinationFromServiceBinding({
   }
 });
 ```
+
+Multi-tenant scenarios are supported as well, refer to the [JWT-Based Tenant Extraction](#jwt-based-tenant-extraction) section for more details.
+
+### App2App Resources
+
+The [`IasResource`](pathname:///api/v4/types/sap-cloud-sdk_connectivity.IasResource.html) type identifies provider dependencies configured in IAS.
+It can be specified by dependency name or provider client identifier:
+
+```typescript
+type IasResource =
+  | {
+      name: string;
+    }
+  | {
+      providerClientId: string;
+      providerTenantId?: string;
+    };
+```
+
+The `name` property refers to the dependency name configured in IAS and is the recommended way to identify resources.
+Alternatively, the `providerClientId` property can be used to specify the provider application's client identifier.
+Providing `providerClientId` grants access to all dependencies associated with that provider.
 
 ### Multi-Tenant Support
 
