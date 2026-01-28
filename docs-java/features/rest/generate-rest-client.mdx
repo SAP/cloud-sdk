@@ -30,8 +30,31 @@ However, languages that use non-latin characters, specifically languages that re
 
 :::
 
+Starting from version 5.26.0, the OpenAPI generator supports two HTTP client libraries: **Spring RestTemplate (default)** and **Apache HttpClient 5**.
+To use Apache HttpClient, checkout [Declaring Dependencies](#declaring-dependencies) and plugin configuration in section [Choosing the HTTP Client Library](#choosing-the-http-client-library).
+
+## Declaring Dependencies
+
 The generated Java classes need the following dependency to be present in your project:
 
+<Tabs groupId="http-client" defaultValue="apache" values={[
+{ label: 'Apache HttpClient', value: 'apache' },
+{ label: 'Spring RestTemplate', value: 'spring' }
+]}>
+
+<TabItem value="apache">
+```xml
+<dependency>
+	<groupId>com.sap.cloud.sdk.datamodel</groupId>
+	<artifactId>openapi-core-apache</artifactId>
+</dependency>
+```
+
+To use the generated client library, either the SAP Cloud SDK BOM should be part of your project's `<dependencyManagement>` section, or the version for the `openapi-core-apache` artifact must be mentioned explicitly here.
+
+</TabItem>
+
+<TabItem value="spring">
 ```xml
 <dependency>
 	<groupId>com.sap.cloud.sdk.datamodel</groupId>
@@ -41,10 +64,17 @@ The generated Java classes need the following dependency to be present in your p
 
 To use the generated client library, either the SAP Cloud SDK BOM should be part of your project's `<dependencyManagement>` section, or the version for the `openapi-core` artifact must be mentioned explicitly here.
 
+</TabItem>
+</Tabs>
+
 ## Generated Java Classes and Usage
 
 In this section, we will explain how to use the OpenAPI Generator Maven Plugin.
-A sample result can be seen in our [open-source public repository](https://github.com/SAP/cloud-sdk-java/tree/main/datamodel/openapi/openapi-api-sample) with the _SodaStore_ OpenAPI.
+A sample result can be seen in our [open-source public repository](https://github.com/SAP/cloud-sdk-java/tree/main/datamodel/openapi/openapi-api-sample) with the _SodaStore_ OpenAPI:
+
+- [Apache HttpClient sample](https://github.com/SAP/cloud-sdk-java/tree/main/datamodel/openapi/openapi-api-apache-sample)
+- [Spring RestTemplate sample](https://github.com/SAP/cloud-sdk-java/tree/main/datamodel/openapi/openapi-api-sample)
+
 Given the `sodastore.json` as input the following service classes get generated:
 
 ```
@@ -63,7 +93,50 @@ openapi-api-sample/
 
 The generated API can be used like the following:
 
+<Tabs groupId="http-client" defaultValue="apache" values={[
+{ label: 'Apache HttpClient', value: 'apache' },
+{ label: 'Spring RestTemplate', value: 'spring' }
+]}>
+
+<TabItem value="apache">
+
 ```java
+import com.sap.cloud.sdk.services.openapi.apache.apiclient.ApiClient;
+
+Destination destination;
+
+// create the service with a destination
+SodasApi service = new SodasApi(destination);
+
+// create an entity object
+SodaWithId soda = new SodaWithId().id(0L).name("Cola").brand("SAP-Cola").quantity(100).price(1.5f);
+
+// execute request for entity update
+service.sodasPut(soda);
+```
+
+Services can be instantiated in different ways:
+
+```java
+new SodasApi( )
+new SodasApi( Destination )
+new SodasApi( new ApiClient() )
+new SodasApi( new ApiClient(Destination) )
+new SodasApi( new ApiClient(ClosableHttpClient) )
+```
+
+The [`ApiClient`](https://sap.github.io/cloud-sdk/java-api/v5/com/sap/cloud/sdk/services/openapi/apache/apiclient/ApiClient.html) allows for versatile customization.
+Default service base-path, object mapper and file download location can be assigned.
+When using `Destination`, the base-path is extracted automatically from the provided destination.
+Alternatively, the `ClosableHttpClient` based constructor can be used for fully customized requests.
+
+</TabItem>
+
+<TabItem value="spring">
+
+```java
+import com.sap.cloud.sdk.services.openapi.apiclient.ApiClient;
+
 Destination destination;
 
 // create the service with a destination
@@ -89,6 +162,9 @@ The [`ApiClient`](https://sap.github.io/cloud-sdk/java-api/v5/com/sap/cloud/sdk/
 Default service base-path, user-agent and request headers can be assigned.
 When using `Destination` these parameters are extracted automatically from the provided destination.
 Alternatively, the `RestTemplate` based constructor can be used for fully customized requests.
+
+</TabItem>
+</Tabs>
 
 ## Using the OpenAPI Generator Maven Plugin
 
@@ -148,6 +224,18 @@ Please note that the version of the above plugin must be specified at least once
 Also, the version of the plugin should be the same as of the SAP Cloud SDK.
 We recommend using a Maven property for defining the version of both the Maven plugin and the SAP Cloud SDK BOM.
 
+### Choosing the HTTP Client Library
+
+To use Apache HttpClient instead of the Spring RestTemplate, you need to add the following configuration within plugin `<configuration>` tag:
+
+```xml
+<additionalProperties>
+    <library>apache-httpclient</library>
+<additionalProperties>
+```
+
+By leaving out the above configuration, the generator defaults to using Spring RestTemplate as the HTTP client library.
+
 ### Using the Plugin from the Command Line
 
 The maven plugin can also be invoked without a project from the command line using `-D` parameter flags, for example:
@@ -206,22 +294,23 @@ You can pass arbitrary additional configuration properties to the underlying [op
 
 The complete list of available parameters with their description is as follows:
 
-| Parameter                      |  Default   | Required | Description                                                                                                                                                                                                                                                                                                                                                                     |
-| :----------------------------- | :--------: | :------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `<inputSpec>`                  |     -      |   Yes    | Location of the OpenAPI specification file                                                                                                                                                                                                                                                                                                                                      |
-| `<outputDirectory>`            |     -      |   Yes    | Output directory for generated sources                                                                                                                                                                                                                                                                                                                                          |
-| `<apiPackage>`                 |     -      |   Yes    | Package name for the generated API classes                                                                                                                                                                                                                                                                                                                                      |
-| `<modelPackage>`               |     -      |   Yes    | Package name for the generated Model classes                                                                                                                                                                                                                                                                                                                                    |
-| `<generateApis>`               |   `True`   |    No    | Determines whether to generate API classes                                                                                                                                                                                                                                                                                                                                      |
-| `<generateModels>`             |   `True`   |    No    | Determines whether to generate Model classes                                                                                                                                                                                                                                                                                                                                    |
-| `<deleteOutputDirectory>`      |  `False`   |    No    | Determines whether to delete the output directory before running the generator                                                                                                                                                                                                                                                                                                  |
-| `<apiMaturity>`                | `released` |    No    | Defines the maturity of the OpenAPI for which Java classes are generated. Possible values are `released` and `beta`. Please note if you define it as `beta` then [@Beta annotations](https://www.javadoc.io/doc/com.google.guava/guava/latest/com/google/common/annotations/Beta.html) are added to the generated classes which indicate that they are in an experimental state |
-| `<compileScope>`               |   `NONE`   |    No    | Adds the generated sources to the compilation or test phase. Respective values are `COMPILE` and `TEST_COMPILE`                                                                                                                                                                                                                                                                 |
-| `<copyrightHeader>`            |   `null`   |    No    | Copyright header to be added at the top of generated files                                                                                                                                                                                                                                                                                                                      |
-| `<verbose>`                    |  `False`   |    No    | Run the generator with verbose output                                                                                                                                                                                                                                                                                                                                           |
-| `<sapCopyrightHeader>`         |  `False`   |    No    | Add the SAP copyright header (overrides `copyrightHeader`)                                                                                                                                                                                                                                                                                                                      |
-| `<enableOneOfAnyOfGeneration>` |  `False`   |    No    | Defines whether to enable processing of anyOf/oneOf keywords during client generation                                                                                                                                                                                                                                                                                           |
-| `<additionalProperties>`       |    `[]`    |    No    | Defines a map of key-value pairs that will be passed to the Java generator. E.g. `<param>value</param>`                                                                                                                                                                                                                                                                         |
+| Parameter                      |    Default     | Required | Description                                                                                                                                                                                                                                                                                                                                                                     |
+| :----------------------------- | :------------: | :------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `<inputSpec>`                  |       -        |   Yes    | Location of the OpenAPI specification file                                                                                                                                                                                                                                                                                                                                      |
+| `<outputDirectory>`            |       -        |   Yes    | Output directory for generated sources                                                                                                                                                                                                                                                                                                                                          |
+| `<apiPackage>`                 |       -        |   Yes    | Package name for the generated API classes                                                                                                                                                                                                                                                                                                                                      |
+| `<modelPackage>`               |       -        |   Yes    | Package name for the generated Model classes                                                                                                                                                                                                                                                                                                                                    |
+| `<generateApis>`               |     `True`     |    No    | Determines whether to generate API classes                                                                                                                                                                                                                                                                                                                                      |
+| `<generateModels>`             |     `True`     |    No    | Determines whether to generate Model classes                                                                                                                                                                                                                                                                                                                                    |
+| `<deleteOutputDirectory>`      |    `False`     |    No    | Determines whether to delete the output directory before running the generator                                                                                                                                                                                                                                                                                                  |
+| `<apiMaturity>`                |   `released`   |    No    | Defines the maturity of the OpenAPI for which Java classes are generated. Possible values are `released` and `beta`. Please note if you define it as `beta` then [@Beta annotations](https://www.javadoc.io/doc/com.google.guava/guava/latest/com/google/common/annotations/Beta.html) are added to the generated classes which indicate that they are in an experimental state |
+| `<compileScope>`               |     `NONE`     |    No    | Adds the generated sources to the compilation or test phase. Respective values are `COMPILE` and `TEST_COMPILE`                                                                                                                                                                                                                                                                 |
+| `<copyrightHeader>`            |     `null`     |    No    | Copyright header to be added at the top of generated files                                                                                                                                                                                                                                                                                                                      |
+| `<verbose>`                    |    `False`     |    No    | Run the generator with verbose output                                                                                                                                                                                                                                                                                                                                           |
+| `<sapCopyrightHeader>`         |    `False`     |    No    | Add the SAP copyright header (overrides `copyrightHeader`)                                                                                                                                                                                                                                                                                                                      |
+| `<enableOneOfAnyOfGeneration>` |    `False`     |    No    | Defines whether to enable processing of anyOf/oneOf keywords during client generation                                                                                                                                                                                                                                                                                           |
+| `<additionalProperties>`       |      `[]`      |    No    | Defines a map of key-value pairs that will be passed to the Java generator. E.g. `<param>value</param>`                                                                                                                                                                                                                                                                         |
+| `<library>`                    | `resttemplate` |    No    | Defines the http client library to use and lives within `<additionalProperties>`. Only valid values are `resttemplate` and `apache-httpclient`.                                                                                                                                                                                                                                 |
 
 ## Customize Java Class and Method Names with OpenAPI Vendor Extensions
 
