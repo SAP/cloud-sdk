@@ -26,7 +26,8 @@ module.exports = {
             'features/connectivity/proxies',
             'features/connectivity/http-client',
             'features/connectivity/csrf',
-            'features/connectivity/on-premise'
+            'features/connectivity/on-premise',
+            'features/connectivity/identity-authentication-service'
           ]
         },
         {

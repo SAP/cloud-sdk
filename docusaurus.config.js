@@ -26,6 +26,10 @@ module.exports = {
   organizationName: 'SAP',
   projectName: 'cloud-sdk',
   trailingSlash: false,
+  markdown: {
+    mermaid: true
+  },
+  themes: ['@docusaurus/theme-mermaid'],
   themeConfig: {
     colorMode: {
       respectPrefersColorScheme: true,
