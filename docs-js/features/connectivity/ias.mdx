@@ -231,7 +231,8 @@ const destination = await getDestinationFromServiceBinding({
 
 #### JWT-Based Tenant Extraction
 
-When a JWT is supplied in the `options`, the SAP Cloud SDK automatically extracts the tenant information from the JWT assertion and routes token requests to the correct IAS tenant:
+When a JWT is supplied in the `options`, the SAP Cloud SDK automatically extracts the tenant information from the JWT assertion and routes token requests to the correct IAS tenant.
+JWT-Based tenant extraction is enabled for technical user authentication (`OAuth2ClientCredentials`) as the current tenant (default) and business user authentication (`OAuth2JWTBearer`):
 
 ```typescript
 const destination = await getDestinationFromServiceBinding({
