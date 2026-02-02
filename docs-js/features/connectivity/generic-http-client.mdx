@@ -221,6 +221,77 @@ const response = await executeHttpRequest(
 );
 ```
 
+### Request Compression
+
+:::caution
+
+Not all servers support decompressing request payloads with every supported algorithm - or any algorithm at all.
+Verify your target server supports decompression of compressed requests before enabling this middleware.
+
+:::
+
+:::info
+
+Place compression middleware at the beginning of your middleware array.
+This ensures the payload is compressed once and reused across retry attempts.
+
+:::
+
+The SAP Cloud SDK provides a [`compressRequest()`](pathname:///api/v4/functions/sap-cloud-sdk_http-client.compressRequest.html) middleware to compress HTTP request payloads using a selected compression algorithm.
+This can reduce bandwidth usage and improve performance when sending large payloads to remote APIs.
+For details on supported algorithms and options, see the [API documentation](pathname:///api/v4/interfaces/sap-cloud-sdk_http-client.RequestCompressionMiddlewareOptions.html).
+
+To enable automatic compression with `gzip` based on payload size:
+
+```ts
+import { compressRequest } from '@sap-cloud-sdk/http-client';
+
+const response = await executeHttpRequest(
+  {
+    url: 'https://example.com'
+  },
+  {
+    method: 'post',
+    data: largePayload,
+    middleware: [compressRequest()]
+  }
+);
+```
+
+The [`compressRequest()`](pathname:///api/v4/functions/sap-cloud-sdk_http-client.compressRequest.html) middleware supports [four modes of operation](pathname:///api/v4/interfaces/sap-cloud-sdk_http-client.RequestCompressionMiddlewareOptions.html#mode):
+
+**Auto mode (recommended, default):** Compresses payloads only if they exceed a size threshold.
+
+```ts
+// Use default threshold of 1024 bytes
+middleware: [compressRequest()];
+```
+
+```ts
+// Use custom threshold
+middleware: [compressRequest({ mode: 'auto', autoCompressMinSize: 5000 })];
+```
+
+**Always compress:** Forces compression regardless of payload size.
+
+```ts
+middleware: [compressRequest({ mode: true, compressOptions: { level: 1 } })];
+```
+
+**Pass-through mode:** Sets the `Content-Encoding` header without compressing.
+Use this mode when the payload is already compressed with the selected algorithm.
+
+```ts
+middleware: [compressRequest({ algorithm: 'zstd', mode: 'passthrough' })];
+```
+
+**No compression:** Disables compression even if the middleware is included.
+This mode is useful for conditional logic.
+
+```ts
+middleware: [compressRequest({ mode: false })];
+```
+
 ## `executeHttpRequestWithOrigin()`
 
 The `executeHttpRequestWithOrigin()` function is a variation of `executeHttpRequest()` which allows more fine-grained control over configuration precedence.
