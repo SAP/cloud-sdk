@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunksap_cloud_sdk_documentation=self.webpackChunksap_cloud_sdk_documentation||[]).push([[86366],{86366:(e,c,s)=>{s.d(c,{createArchitectureServices:()=>t.S});var t=s(38980);s(87960)}}]);
