@@ -237,14 +237,19 @@ This ensures the payload is compressed once and reused across retry attempts.
 
 :::
 
-The SAP Cloud SDK provides a [`compressRequest()`](pathname:///api/v4/functions/sap-cloud-sdk_http-client.compressRequest.html) middleware to compress HTTP request payloads using a selected compression algorithm.
+The SAP Cloud SDK provides a [`compress()`](pathname:///api/v4/functions/sap-cloud-sdk_http-client.compress.html) middleware to compress HTTP request payloads using a selected compression algorithm.
 This can reduce bandwidth usage and improve performance when sending large payloads to remote APIs.
+
+Compression requires additional computational resources to encode the payload, and the compressed payload could be slightly larger than the original if the payload is not suited for compression (e.g., too small or already compressed).
+For small payloads or in a high-bandwidth environment, the overhead may outweigh potential bandwidth savings.
+The default "auto" mode addresses this by only compressing payloads above a size threshold.
+
 For details on supported algorithms and options, see the [API documentation](pathname:///api/v4/interfaces/sap-cloud-sdk_http-client.RequestCompressionMiddlewareOptions.html).
 
 To enable automatic compression with `gzip` based on payload size:
 
 ```ts
-import { compressRequest } from '@sap-cloud-sdk/http-client';
+import { compress } from '@sap-cloud-sdk/http-client';
 
 const response = await executeHttpRequest(
   {
@@ -253,30 +258,30 @@ const response = await executeHttpRequest(
   {
     method: 'post',
     data: largePayload,
-    middleware: [compressRequest()]
+    middleware: [compress()]
   }
 );
 ```
 
-The [`compressRequest()`](pathname:///api/v4/functions/sap-cloud-sdk_http-client.compressRequest.html) middleware supports [four modes of operation](pathname:///api/v4/interfaces/sap-cloud-sdk_http-client.RequestCompressionMiddlewareOptions.html#mode):
+The [`compress()`](pathname:///api/v4/functions/sap-cloud-sdk_http-client.compress.html) middleware supports [four modes of operation](pathname:///api/v4/interfaces/sap-cloud-sdk_http-client.RequestCompressionMiddlewareOptions.html#mode):
 
 **Auto mode (recommended, default):** Compresses payloads only if they exceed a size threshold.
 
 ```ts
 // Use default threshold of 1024 bytes
-middleware: [compressRequest()];
+middleware: [compress()];
 ```
 
 ```ts
 // Use custom threshold
-middleware: [compressRequest({ mode: 'auto', autoCompressMinSize: 5000 })];
+middleware: [compress({ mode: 'auto', autoCompressMinSize: 5000 })];
 ```
 
 **Always compress:** Forces compression regardless of payload size.
 
 ```ts
 middleware: [
-  compressRequest({ mode: 'always', compressOptions: { level: 1 } })
+  compress({ mode: 'always', compressOptions: { level: 1 } })
 ];
 ```
 
@@ -284,14 +289,14 @@ middleware: [
 Use this mode when the payload is already compressed with the selected algorithm.
 
 ```ts
-middleware: [compressRequest({ algorithm: 'zstd', mode: 'header-only' })];
+middleware: [compress({ algorithm: 'zstd', mode: 'header-only' })];
 ```
 
 **No compression:** Disables compression even if the middleware is included.
 This mode is useful for conditional logic.
 
 ```ts
-middleware: [compressRequest({ mode: 'never' })];
+middleware: [compress({ mode: 'never' })];
 ```
 
 ## `executeHttpRequestWithOrigin()`
