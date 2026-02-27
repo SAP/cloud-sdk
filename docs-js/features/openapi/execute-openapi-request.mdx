@@ -152,6 +152,51 @@ const httpResponse: HttpResponse = MyEntity.requestBuilder()
 
 <ExecuteRawUseCases />
 
+### Sending Multipart Requests
+
+The OpenAPI generator supports APIs that use multipart (`multipart/form-data`) for file uploads and mixed content types.
+The SAP Cloud SDK automatically encodes your request body as multipart form-data based on the content types specified in your OpenAPI document:
+
+```ts
+const response = await MyApi.uploadDocument({
+  title: 'My Document', // text/plain
+  file: new Blob([]), // application/octet-stream
+  metadata: { pages: 10 } // application/json
+}).execute(destination);
+```
+
+#### File Uploads with Blob or File
+
+For binary content like files or images, provide `Blob` or `File` instances.
+Use `File` instead of `Blob` when you need to specify a filename, which may be required by the API.
+
+```ts
+import { openAsBlob } from 'node:fs';
+
+const pdf = await openAsBlob('path/to/file.pdf', { type: 'application/pdf' });
+const response = await MyApi.uploadDocument({
+  file: pdf,
+  description: 'My PDF file'
+}).execute(destination);
+```
+
+Using `Blob` or `File` instances bypasses automatic property encoding for that field and preserves the binary data.
+The SAP Cloud SDK makes a best-effort attempt to warn about content type-mismatches and apply character encoding (e.g. `utf-8`, `latin1`) based on your OpenAPI specification.
+
+#### Full Control with FormData
+
+For complete control over the multipart request, provide a `FormData` instance directly.
+
+```ts
+const formData = new FormData();
+formData.append('file', blob, 'document.pdf', { type: 'application/pdf' });
+formData.append('metadata', JSON.stringify({ title: 'My Document' }));
+
+const response = await MyApi.uploadDocument(formData).execute(destination);
+```
+
+When using raw `FormData`, you are responsible for properly formatting all parts according to your API's requirements.
+
 ## Handling of Cross-Site Request Forgery Tokens
 
 <Csrf />
