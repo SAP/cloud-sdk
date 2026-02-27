@@ -314,6 +314,55 @@ If the provided service binding is not supported, an error is thrown.
 
 :::
 
+#### Passing a Service Binding Directly
+
+If you already have a service binding object and want to bypass the lookup from `VCAP_SERVICES`, you can pass it directly using the `service` option.
+This is useful when you want to use a service binding that is not part of the environment variables.
+You can also use this when you need to construct a destination from a dynamically retrieved service binding.
+
+:::caution
+
+This option should **only be used in specific scenarios** where you need to work with service bindings that are not available through standard environment variables.
+Examples include electron applications or when you have a custom service binding management.
+In most cases, you should rely on the standard service binding lookup from `VCAP_SERVICES` by using `destinationName` instead.
+
+:::
+
+The `service` option accepts a service binding either as a `Service` object or a stringified JSON representation of a service binding:
+
+```ts
+import type { Service } from '@sap-cloud-sdk/connectivity';
+
+// Example service binding object
+const myServiceBinding: Service = {
+  name: 'my-custom-service',
+  label: 'custom-service',
+  tags: ['custom-service'],
+  credentials: {
+    url: 'https://example.com',
+    clientid: 'CLIENT_ID',
+    clientsecret: 'CLIENT_SECRET'
+  }
+};
+
+// Pass the service binding directly
+const destination = await getDestinationFromServiceBinding({
+  service: myServiceBinding,
+  jwt: userJwt,
+  useCache: true
+});
+
+// Or pass it as a stringified JSON
+const destination = await getDestinationFromServiceBinding({
+  service: process.env.MY_SERVICE_BINDING, // Must contain stringified JSON of the service binding
+  jwt: userJwt,
+  useCache: true
+});
+```
+
+When the `service` option is provided, the `destinationName` option is ignored for the service binding lookup, but it may still be used as a fallback name for the resulting destination.
+You can still provide a custom `serviceBindingTransformFn` to control how the service binding is transformed into a destination.
+
 ### Destination Service
 
 In a productive environment, in most cases you will use the [destination service](https://help.sap.com/viewer/cca91383641e40ffbe03bdc78f00f681/Cloud/en-US/7e306250e08340f89d6c103e28840f30.html) to retrieve destinations.
