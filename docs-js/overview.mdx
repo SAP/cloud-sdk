@@ -50,15 +50,47 @@ The image below shows the relationship between the individual core libraries.
 
 <!-- vale off -->
 
-<ThemedImage
-  alt="Core packages"
-  sources={{
-    light: useBaseUrl('img/packages_light.svg'),
-    dark: useBaseUrl('img/packages_dark.svg')
-  }}
-  className="center"
-  width="80%"
-/>
+```mermaid
+flowchart TB
+    subgraph openapiClientsGroup["OpenAPI Clients"]
+        openapiClients["OpenAPI clients"]
+    end
+
+    subgraph odataClientsGroup["OData Clients"]
+        odataV2Clients["OData v2 clients"]
+        odataV4Clients["OData v4 clients"]
+    end
+
+    subgraph generators["Generators"]
+        openapiGen["openapi-generator"]
+        generator["generator"]
+    end
+
+    subgraph core["Core Libraries"]
+        openapi["openapi"]
+        odataV4["odata-v4"]
+        odataV2["odata-v2"]
+    end
+
+    subgraph foundation["Foundation"]
+        httpClient["http-client"]
+        connectivity["connectivity"]
+    end
+
+    openapiGen -.-> |generates| openapiClients
+    generator -.-> |generates| odataV2Clients
+    generator -.-> |generates| odataV4Clients
+
+    openapi --> httpClient
+    odataV4 --> httpClient
+    odataV2 --> httpClient
+
+    httpClient --> connectivity
+
+    openapiClients --> openapi
+    odataV2Clients --> odataV2
+    odataV4Clients --> odataV4
+```
 
 <!-- vale on -->
 
