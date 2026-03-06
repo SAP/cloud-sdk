@@ -51,6 +51,10 @@ The image below shows the relationship between the individual core libraries.
 <!-- vale off -->
 
 ```mermaid
+---
+config:
+  layout: elk
+---
 flowchart TB
     subgraph openapiClientsGroup["OpenAPI Clients"]
         openapiClients["OpenAPI clients"]
@@ -61,23 +65,7 @@ flowchart TB
         odataV4Clients["OData v4 clients"]
     end
 
-    subgraph generators["Generators"]
-        openapiGen["openapi-generator"]
-        generator["generator"]
-    end
-
-    subgraph core["Core Libraries"]
-        openapi["openapi"]
-        odataV4["odata-v4"]
-        odataV2["odata-v2"]
-    end
-
-    subgraph foundation["Foundation"]
-        httpClient["http-client"]
-        connectivity["connectivity"]
-    end
-
-    openapiGen -.-> |generates| openapiClients
+    openapiGenerator -.-> |generates| openapiClients
     generator -.-> |generates| odataV2Clients
     generator -.-> |generates| odataV4Clients
 
@@ -90,6 +78,14 @@ flowchart TB
     openapiClients --> openapi
     odataV2Clients --> odataV2
     odataV4Clients --> odataV4
+
+    click openapi "https://www.npmjs.com/package/@sap-cloud-sdk/openapi" "@sap-cloud-sdk/openapi"
+    click odataV4 "https://www.npmjs.com/package/@sap-cloud-sdk/odata-v4" "@sap-cloud-sdk/odata-v4"
+    click odataV2 "https://www.npmjs.com/package/@sap-cloud-sdk/odata-v2" "@sap-cloud-sdk/odata-v2"
+    click httpClient "https://www.npmjs.com/package/@sap-cloud-sdk/http-client" "@sap-cloud-sdk/http-client"
+    click connectivity "https://www.npmjs.com/package/@sap-cloud-sdk/connectivity" "@sap-cloud-sdk/connectivity"
+    click openapiGenerator "https://www.npmjs.com/package/@sap-cloud-sdk/openapi-generator" "@sap-cloud-sdk/openapi-generator"
+    click generator "https://www.npmjs.com/package/@sap-cloud-sdk/generator" "@sap-cloud-sdk/generator"
 ```
 
 <!-- vale on -->
