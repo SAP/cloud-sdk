@@ -65,19 +65,20 @@ flowchart TB
         odataV4Clients["OData v4 clients"]
     end
 
+    openapiClients --- openapi
+    odataV2Clients --- odataV2
+    odataV4Clients --- odataV4
+
+
+    openapi --- httpClient
+    odataV4 --- httpClient
+    odataV2 --- httpClient
+
     openapiGenerator -.-> |generates| openapiClients
-    generator -.-> |generates| odataV2Clients
-    generator -.-> |generates| odataV4Clients
+    odataGenerator -.-> |generates| odataV2Clients
+    odataGenerator -.-> |generates| odataV4Clients
 
-    openapi --> httpClient
-    odataV4 --> httpClient
-    odataV2 --> httpClient
-
-    httpClient --> connectivity
-
-    openapiClients --> openapi
-    odataV2Clients --> odataV2
-    odataV4Clients --> odataV4
+    httpClient --- connectivity
 
     click openapi "https://www.npmjs.com/package/@sap-cloud-sdk/openapi" "@sap-cloud-sdk/openapi"
     click odataV4 "https://www.npmjs.com/package/@sap-cloud-sdk/odata-v4" "@sap-cloud-sdk/odata-v4"
@@ -85,7 +86,7 @@ flowchart TB
     click httpClient "https://www.npmjs.com/package/@sap-cloud-sdk/http-client" "@sap-cloud-sdk/http-client"
     click connectivity "https://www.npmjs.com/package/@sap-cloud-sdk/connectivity" "@sap-cloud-sdk/connectivity"
     click openapiGenerator "https://www.npmjs.com/package/@sap-cloud-sdk/openapi-generator" "@sap-cloud-sdk/openapi-generator"
-    click generator "https://www.npmjs.com/package/@sap-cloud-sdk/generator" "@sap-cloud-sdk/generator"
+    click odataGenerator "https://www.npmjs.com/package/@sap-cloud-sdk/generator" "@sap-cloud-sdk/generator"
 ```
 
 <!-- vale on -->
