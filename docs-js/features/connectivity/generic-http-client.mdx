@@ -263,9 +263,9 @@ const response = await executeHttpRequest(
 );
 ```
 
-The [`compress()`](pathname:///api/v4/functions/sap-cloud-sdk_http-client.compress.html) middleware supports [four modes of operation](pathname:///api/v4/interfaces/sap-cloud-sdk_http-client.RequestCompressionMiddlewareOptions.html#mode):
+The [`compress()`](pathname:///api/v4/functions/sap-cloud-sdk_http-client.compress.html) middleware supports four [modes](pathname:///api/v4/interfaces/sap-cloud-sdk_http-client.RequestCompressionMiddlewareOptions.html#mode):
 
-**Auto mode (recommended, default):** Compresses payloads only if they exceed a size threshold.
+**`auto`** (recommended, default): Compresses payloads only if they exceed a size threshold.
 
 ```ts
 // Use default threshold of 1024 bytes
@@ -277,20 +277,20 @@ middleware: [compress()];
 middleware: [compress({ mode: 'auto', autoCompressMinSize: 5000 })];
 ```
 
-**Always compress:** Forces compression regardless of payload size.
+**`always`**: Forces compression regardless of payload size.
 
 ```ts
 middleware: [compress({ mode: 'always', compressOptions: { level: 1 } })];
 ```
 
-**Header-only mode:** Sets the `Content-Encoding` header without compressing.
+**`header-only`**: Sets the `Content-Encoding` header without compressing.
 Use this mode when the payload is already compressed with the selected algorithm.
 
 ```ts
 middleware: [compress({ algorithm: 'zstd', mode: 'header-only' })];
 ```
 
-**No compression:** Disables compression even if the middleware is included.
+**`never`**: Disables compression even if the middleware is included.
 This mode is useful for conditional logic.
 
 ```ts
