@@ -31,6 +31,9 @@ module.exports = {
   },
   themes: ['@docusaurus/theme-mermaid'],
   themeConfig: {
+    mermaid: {
+      theme: { light: 'neutral', dark: 'dark' }
+    },
     colorMode: {
       respectPrefersColorScheme: true,
       disableSwitch: true
