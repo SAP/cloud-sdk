@@ -125,7 +125,7 @@ new SodasApi( new ApiClient(Destination) )
 new SodasApi( new ApiClient(ClosableHttpClient) )
 ```
 
-The [`ApiClient`](https://sap.github.io/cloud-sdk/java-api/v5/com/sap/cloud/sdk/services/openapi/apache/apiclient/ApiClient.html) allows for versatile customization.
+The [`ApiClient`](https://sap.github.io/cloud-sdk/java-api/v5/com/sap/cloud/sdk/services/openapi/apache/ApiClient.html) allows for versatile customization.
 Default service base-path, object mapper and file download location can be assigned.
 When using `Destination`, the base-path is extracted automatically from the provided destination.
 Alternatively, the `ClosableHttpClient` based constructor can be used for fully customized requests.
@@ -176,7 +176,7 @@ To use the Maven plugin following XML snippet should be added to the POM file of
 	<artifactId>openapi-generator-maven-plugin</artifactId>
 	<!-- Maintain Maven property sap-cloud-sdk.version in your POM with the latest SAP Cloud SDK version -->
 	<version>${sap-cloud-sdk.version}</version>
-    <executions>
+	<executions>
 		<execution>
 			<goals>
 				<goal>generate</goal>
@@ -187,7 +187,7 @@ To use the Maven plugin following XML snippet should be added to the POM file of
 	<configuration>
    		<inputSpec>${project.basedir}/sample.yaml</inputSpec>
 		<outputDirectory>${project.basedir}/openapi</outputDirectory>
-        <apiPackage>com.mycompany.openapi.sample.api</apiPackage>
+		<apiPackage>com.mycompany.openapi.sample.api</apiPackage>
 		<modelPackage>com.mycompany.openapi.sample.model</modelPackage>
 		<apiMaturity>released</apiMaturity>
 		<!-- (Optional) You can add a custom copyright header:
