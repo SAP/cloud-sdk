@@ -97,6 +97,18 @@ These errors are not always caused by flaws in the SAP Cloud SDK as we often see
 Some of them even have known flaws for which we have workarounds.
 If you can't solve your issue via debugging and experimenting, please report your incident as a [GitHub Issue](https://github.com/SAP/cloud-sdk-java/issues).
 
+### What are your plans regarding the Olingo dependency?
+
+Olingo is expected to stop receiving updates, as the project is [heading for the Apache Attic](https://lists.apache.org/thread/wvkzjoctzqh3hpc03csjwdvx0g6c4bw7).
+
+The SAP Cloud SDK uses Olingo as part of the OData generator.
+Olingo classes are used to parse OData specification files in order to derive entity sets,
+navigation properties, actions, and functions.
+The generated code itself does not depend on any Olingo classes.
+The generator can be used via Maven plugin, CLI, or direct code invocation.
+
+As long as the generated code remains unaffected, we do not plan to replace Olingo in the short term.
+
 ## Open API Related Questions
 
 ### Do You Support RESTful Services?
