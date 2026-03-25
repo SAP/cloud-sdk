@@ -251,7 +251,13 @@ const destination = await getDestinationFromServiceBinding({
 The SAP Cloud SDK provides two convenience functions for working with IAS tokens directly.
 These are useful when you need access to the IAS token or destination, for example outside SAP BTP environments with pre-populated `VCAP_SERVICES` or when constructing a destination manually.
 
-Both functions accept a service as `Service | string | ServiceCredentials`, unlike `getDestinationFromServiceBinding()` they also accept bare `ServiceCredentials` (e.g., just `clientid`, `clientsecret`, and `url`).
+Both functions accept either the string `'identity'` (preferred, resolves the binding from `VCAP_SERVICES`) or bare `ServiceCredentials` (e.g., just `clientid`, `clientsecret`, and `url`).
+
+:::tip
+
+Pass `'identity'` whenever possible to let the SAP Cloud SDK resolve the IAS service binding from the environment, avoiding manual handling of credentials.
+
+:::
 
 - **[`getIasDestination()`](pathname:///api/v4/functions/sap-cloud-sdk_connectivity.getIasDestination.html)** fetches an IAS token and builds a ready-to-use [`Destination`](pathname:///api/v4/interfaces/sap-cloud-sdk_connectivity.Destination.html) with the token, the target URL, and the mTLS key pair from the service binding credentials (if present).
 - **[`getIasToken()`](pathname:///api/v4/functions/sap-cloud-sdk_connectivity.getIasToken.html)** fetches an IAS token and returns an [`IasTokenResult`](pathname:///api/v4/interfaces/sap-cloud-sdk_connectivity.IasTokenResult.html) with the access token string, its expiration, and an optional refresh token.
@@ -272,32 +278,29 @@ The `targetUrl` is ignored if `getIasToken()` is used.
 import { getIasDestination, getIasToken } from '@sap-cloud-sdk/connectivity';
 
 // Use getIasDestination() to build a destination (technical user)
-const destination = await getIasDestination(
-  {
-    clientid: 'CLIENT_ID',
-    clientsecret: 'CLIENT_SECRET',
-    url: 'https://my-ias.accounts.ondemand.com'
-  },
-  {
-    targetUrl: 'https://backend-provider.example.com',
-    jwt: JWT_PAYLOAD,
-    requestAs: 'current-tenant',
-    resource: { name: 'backend-api' }
-  }
-);
+// Preferred: pass 'identity' to resolve the binding from VCAP_SERVICES
+const destination = await getIasDestination('identity', {
+  targetUrl: 'https://backend-provider.example.com',
+  jwt: JWT_PAYLOAD,
+  requestAs: 'current-tenant',
+  resource: { name: 'backend-api' }
+});
 
 // Use getIasToken() to retrieve an IAS token (business user)
-const token = await getIasToken(
-  {
-    clientid: 'CLIENT_ID',
-    clientsecret: 'CLIENT_SECRET',
-    url: 'https://my-ias.accounts.ondemand.com'
-  },
-  {
-    authenticationType: 'OAuth2JWTBearer',
-    assertion: JWT_ASSERTION,
-    resource: { name: 'backend-api' }
-  }
+// Preferred: pass 'identity' to resolve the binding from VCAP_SERVICES
+const token = await getIasToken('identity', {
+  authenticationType: 'OAuth2JWTBearer',
+  assertion: JWT_ASSERTION,
+  resource: { name: 'backend-api' }
+});
+```
+
+If `VCAP_SERVICES` is not available (e.g. outside SAP BTP), pass `ServiceCredentials` directly instead:
+
+```typescript
+const destination = await getIasDestination(
+  { clientid: 'CLIENT_ID', clientsecret: 'CLIENT_SECRET', url: 'https://my-ias.accounts.ondemand.com' },
+  { targetUrl: 'https://backend-provider.example.com', resource: { name: 'backend-api' } }
 );
 ```
 
