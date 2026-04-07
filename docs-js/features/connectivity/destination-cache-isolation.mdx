@@ -48,6 +48,11 @@ The destination cache holds destinations that potentially require HTTP requests,
 
 Registered destinations and destinations from environment variables are not held in the destination cache.
 
+:::note
+Destinations with authentication type "SAMLAssertion" are never cached.
+SAML assertions are only valid once and therefore should never be cached.
+:::
+
 ### Cache Expiration
 
 Destinations include authorization information and therefore should not be cached limitlessly.
