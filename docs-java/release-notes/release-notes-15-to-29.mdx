@@ -1,3 +1,23 @@
+## 5.28.0 - April 14, 2026
+
+[All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.28.0)
+
+### 🔧 Compatibility Notes
+
+- [OpenAPI Apache Generator] Remove no args constructor in generated API clients.
+
+### ✨ New Functionality
+
+- Added support for SAP Cloud Identity Services (SCI) `sap_id_type` and `sub` claims in OIDC principal extraction. When `sap_id_type=user`, the `sub` claim is now used as the [Subject Name Identifier](https://help.sap.com/docs/SAP_DATASPHERE/9f804b8efa8043539289f42f372c4862/fac3155d77154775b919ceba36ffc325.html) (User ID, Email, or Custom Attribute as configured in SCI).
+
+### 📈 Improvements
+
+- Improved the support for the credential type `X509_ATTESTED`. `HttpDestination` objects created via `ServiceBindingDestinationLoader` no longer need to be re-created for the rotation of certificates to take effect.
+
+### 🐛 Fixed Issues
+
+- Fixed stateful OData request path construction caused by shared `ODataResourcePath` instances being mutated when building count, read-by-key, and function requests.
+- `ODataRequestRead`, `ODataRequestCount`, `ODataRequesReadByKey`, `ODataRequestFunction` and `ServiceWithNavigableEntitiesImpl` now create a defensive copy of the `ODataResourcePath` to prevent unintended side effects from shared mutable state.
 ## 5.27.0 - March 13, 2026
 
 [All Release Changes](https://github.com/SAP/cloud-sdk-java/releases/tag/rel%2F5.27.0)
