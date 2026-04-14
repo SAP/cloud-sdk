@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunksap_cloud_sdk_documentation=globalThis.webpackChunksap_cloud_sdk_documentation||[]).push([[67472],{55513(s){s.exports=JSON.parse('{"title":"Recent posts","items":[]}')}}]);
