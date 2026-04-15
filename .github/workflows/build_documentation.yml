@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Determine Changed Files
         id: changed-files
         run: |
@@ -23,13 +23,11 @@ jobs:
       - name: Vale Linter
         # vale fails if the PR is too large, e.g. when updating API docs
         if: ${{ github.event.pull_request.changed_files < 100 }}
-        # You may pin to the exact commit or the version.
-        # uses: errata-ai/vale-action@0da98680790f89b8d5b685de9c264f55addc971b
-        uses: errata-ai/vale-action@reviewdog
+        uses: vale-cli/vale-action@0135b9fe2b3107365569cc3142b9a1c85221ea2f # reviewdog
         with:
           # version of 'vale' to use
           # see https://github.com/errata-ai/vale for all releases
-          version: 3.0.5
+          version: 3.14.1
           # changed files. computed in the step above
           files: ${{ steps.changed-files.outputs.CHANGED_FILES }}
           # the separator for the file list. we are using a comma (see step above)
@@ -40,10 +38,10 @@ jobs:
           # Required
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: 20
-      - uses: actions/cache@v5
+      - uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         id: cache
         with:
           path: node_modules
@@ -58,12 +56,12 @@ jobs:
     needs: [checks]
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: 20
-      - uses: actions/cache@v5
+      - uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         id: cache
         with:
           path: node_modules
@@ -83,7 +81,7 @@ jobs:
     steps:
       - name: Dependabot metadata
         id: metadata
-        uses: dependabot/fetch-metadata@v3.0.0
+        uses: dependabot/fetch-metadata@ffa630c65fa7e0ecfa0625b5ceda64399aea1b36 # v3.0.0
         with:
           github-token: '${{ secrets.GITHUB_TOKEN }}'
       - name: Approve a PR
