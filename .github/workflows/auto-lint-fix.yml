@@ -5,18 +5,26 @@ on:
     branches:
       - main
 
-
 jobs:
   fix-lint:
     if: github.actor != 'dependabot[bot]' && !github.event.pull_request.head.repo.fork
     runs-on: ubuntu-latest
     steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.SAP_CLOUD_SDK_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.SAP_CLOUD_SDK_BOT_PRIVATE_KEY }}
+          owner: SAP
+          repositories: cloud-sdk
+          permission-contents: write
       - name: Checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.ref }}
-          token: ${{ secrets.GH_CLOUD_SDK_JS_ADMIN_WRITE_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
@@ -24,12 +32,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - run: npm run lint:fix
-      - name: Commit Changes if needed
+      - name: Commit changes if needed
+        env:
+          BOT_EMAIL: ${{ vars.SAP_CLOUD_SDK_BOT_EMAIL }}
+          BOT_NAME: ${{ vars.SAP_CLOUD_SDK_BOT_NAME }}
         run: |
           diff=`git diff`
           if [ ! -z "$diff" ]; then
-            git config --global user.email "cloud-sdk-js@github.com"
-            git config --global user.name "cloud-sdk-js"
+            git config --global user.email "$BOT_EMAIL"
+            git config --global user.name "$BOT_NAME"
             git commit -m "fix: Changes from lint" -a
             git push
           fi
