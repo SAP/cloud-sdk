@@ -39,8 +39,8 @@ jobs:
         run: |
           diff=`git diff`
           if [ ! -z "$diff" ]; then
-            git config user.email "$BOT_EMAIL"
-            git config user.name "$BOT_NAME"
+            git config --global user.email "$BOT_EMAIL"
+            git config --global user.name "$BOT_NAME"
             git commit -m "fix: Changes from lint" -a
             git push
           fi
