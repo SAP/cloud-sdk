@@ -34,8 +34,8 @@ jobs:
       - run: npm run lint:fix
       - name: Commit changes if needed
         env:
-          BOT_EMAIL: ${{ secrets.SAP_CLOUD_SDK_BOT_EMAIL }}
-          BOT_NAME: ${{ secrets.SAP_CLOUD_SDK_BOT_NAME }}
+          BOT_EMAIL: ${{ vars.SAP_CLOUD_SDK_BOT_EMAIL }}
+          BOT_NAME: ${{ vars.SAP_CLOUD_SDK_BOT_NAME }}
         run: |
           diff=`git diff`
           if [ ! -z "$diff" ]; then
