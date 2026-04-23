@@ -480,7 +480,7 @@ Don't use please when explaining a procedure, even when explaining a difficult t
 
 Use 'please' only when what you're asking for:
 
-- benefits us
+- something that benefits us
 - inconveniences a reader
 - or suggests a potential issue with a product
 
