@@ -263,7 +263,6 @@ Pass the string `'identity'` as the first argument whenever possible to let the 
 
 :::
 
-
 :::note
 
 The `getTokenFromIasService()` function returns the access token as a raw string rather than a decoded JWT, as IAS tokens may not always be in JWT format.
@@ -277,7 +276,10 @@ The `targetUrl` property is ignored if the `getTokenFromIasService()` function i
 :::
 
 ```typescript
-import { createDestinationFromIasService, getTokenFromIasService } from '@sap-cloud-sdk/connectivity';
+import {
+  createDestinationFromIasService,
+  getTokenFromIasService
+} from '@sap-cloud-sdk/connectivity';
 
 // Use createDestinationFromIasService() to build a destination (technical user)
 const destination = await createDestinationFromIasService('identity', {
@@ -312,5 +314,3 @@ const destination = await createDestinationFromIasService(
 ```
 
 The `Destination` value returned from the `createDestinationFromIasService()` function can be passed directly to any SAP Cloud SDK request builder or HTTP client.
-
-
