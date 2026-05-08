@@ -248,7 +248,7 @@ const destination = await getDestinationFromServiceBinding({
 
 The SAP Cloud SDK provides the following convenience functions for working with IAS tokens directly:
 
-- [`getTokenFromIasService()`](pathname:///api/v4/functions/sap-cloud-sdk_connectivity.getTokenFromIasService.html) fetches an IAS token.
+- [`getIasToken()`](pathname:///api/v4/functions/sap-cloud-sdk_connectivity.getIasToken.html) fetches an IAS token.
 - [`createDestinationFromIasService()`](pathname:///api/v4/functions/sap-cloud-sdk_connectivity.createDestinationFromIasService.html) creates a destination with an IAS token.
 
 These are useful when you need access to the IAS token or service, for example outside SAP BTP environments with pre-populated `VCAP_SERVICES` environment variable or when constructing a destination manually.
@@ -265,21 +265,18 @@ Pass the string `'identity'` as the first argument whenever possible to let the 
 
 :::note
 
-The `getTokenFromIasService()` function returns the access token as a raw string rather than a decoded JWT, as IAS tokens may not always be in JWT format.
+The `getIasToken()` function returns the access token as a raw string rather than a decoded JWT, as IAS tokens may not always be in JWT format.
 
 :::
 
 :::note
 
-The `targetUrl` property is ignored if the `getTokenFromIasService()` function is used.
+The `targetUrl` property is ignored if the `getIasToken()` function is used.
 
 :::
 
 ```typescript
-import {
-  createDestinationFromIasService,
-  getTokenFromIasService
-} from '@sap-cloud-sdk/connectivity';
+import { createDestinationFromIasService, getIasToken } from '@sap-cloud-sdk/connectivity';
 
 // Use createDestinationFromIasService() to build a destination (technical user)
 const destination = await createDestinationFromIasService('identity', {
@@ -289,8 +286,8 @@ const destination = await createDestinationFromIasService('identity', {
   resource: { name: 'backend-api' }
 });
 
-// Use getTokenFromIasService() to retrieve an IAS token (business user)
-const token = await getTokenFromIasService('identity', {
+// Use getIasToken() to retrieve an IAS token (business user)
+const token = await getIasToken('identity', {
   authenticationType: 'OAuth2JWTBearer',
   assertion: JWT_ASSERTION,
   resource: { name: 'backend-api' }
