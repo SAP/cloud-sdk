@@ -35,7 +35,7 @@ If the fix requires a new major version (e.g. `1.x` → `2.x`), it is outside th
 
 ### Updating a Transitive Dependency
 
-If the fixed version falls within the SDK's declared semver range (i.e., no major version bump), you can update the vulnerable package in your own project:
+If the fixed version falls within the SDK's declared semver range (i.e., no major version bump), update the vulnerable package:
 
 ```
 # Update a specific transitive dependency to the latest compatible version
@@ -45,7 +45,7 @@ npm update PACKAGE_NAME
 npm audit fix
 ```
 
-After running these commands, verify your `package-lock.json` now resolves the package to the patched version:
+After running these commands, verify that the `package-lock.json` file now resolves the package to the patched version:
 
 ```
 npm ls PACKAGE_NAME
@@ -56,19 +56,19 @@ npm ls PACKAGE_NAME
 If the security fix was released in a new **major** version of the dependency (e.g., `1.x` → `2.x`), the fix is outside the SAP Cloud SDK's declared semver range.
 `npm audit fix` will not apply it automatically because the major version bump may contain breaking changes that affect the SDK.
 
-In this case you can use [npm overrides](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#overrides) (npm ≥ v8.3) to force a specific version of the transitive dependency in your `package.json`:
+In this case, use [npm overrides](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#overrides) (npm ≥ v8.3) to force a specific version of the transitive dependency in the `package.json` file:
 
 ```json
 {
   "overrides": {
-    "<package-name>": "<patched-version>"
+    "PACKAGE_NAME": "PATCHED_VERSION"
   }
 }
 ```
 
 :::caution
 Forcing a major version upgrade through overrides bypasses the compatibility guarantee that the semver range provides.
-Test your application thoroughly after applying an override, as the SDK may not have been tested against the forced version.
+Test the application thoroughly after applying an override, as the SDK may not have been tested against the forced version.
 :::
 
 ### SAP Cloud SDK Updates
