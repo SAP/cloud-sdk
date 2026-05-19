@@ -38,7 +38,7 @@ If the fix requires a new major version (e.g. `1.x` → `2.x`), it is outside th
 If the fixed version falls within the SDK's declared semver range (i.e., no major version bump), update the vulnerable package:
 
 ```
-npm update PACKAGE_NAME
+npm update --min-release-age=0 PACKAGE_NAME
 ```
 
 After running this command, verify that the `package-lock.json` file now resolves the package to the patched version:
@@ -47,14 +47,10 @@ After running this command, verify that the `package-lock.json` file now resolve
 npm ls PACKAGE_NAME
 ```
 
-Alternatively, use `npm audit fix` to apply all compatible fixes at once:
-
-```
-npm audit fix
-```
+Alternatively, use `npm audit --min-release-age=0 fix` to apply all compatible fixes at once.
 
 :::note
-Be aware of the [`min-release-age`](https://docs.npmjs.com/cli/v10/using-npm/config#min-release-age) setting in both directions:
+Be aware of the [`min-release-age`](https://docs.npmjs.com/cli/v11/using-npm/config#min-release-age) setting in both directions:
 
 - **If `min-release-age` is set**: npm may refuse to install a recently published patch because it has not yet reached the required age. In that case, either wait for the package to age out, or target the specific version explicitly with `npm update PACKAGE_NAME`.
 - **If `min-release-age` is not set**: npm installs the latest matching version immediately, including packages published seconds ago. This is a supply-chain risk — a compromised package could be installed before the community detects it. Consider setting a minimum age.
