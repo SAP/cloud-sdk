@@ -19,6 +19,73 @@ keywords:
 import useBaseUrl from '@docusaurus/useBaseUrl';
 import ThemedImage from '@theme/ThemedImage';
 
+## Transitive Dependency Vulnerabilities (CVE)
+
+Security scanners may flag a vulnerability in a transitive dependency of the SAP Cloud SDK.
+This section explains what options you have and what to expect from the SDK team.
+
+### Can You Fix It Without Waiting for an SDK Update?
+
+Whether you can resolve the CVE yourself depends on the [semver](https://semver.org/) range the SAP Cloud SDK declares for that dependency.
+A caret prefix (`^1.2.3`) allows npm to resolve any compatible version `>=1.2.3 <2.0.0`, so if the patched version is in that range, npm can pick it up automatically.
+A tilde prefix (`~1.2.3`) is narrower and only allows patch updates (`>=1.2.3 <1.3.0`).
+
+If the patched version falls within the declared range, you can resolve the CVE yourself without any SDK changes — see [Updating a Transitive Dependency](#updating-a-transitive-dependency) below.
+If the fix requires a new major version (e.g. `1.x` → `2.x`), it is outside the range — see [Overriding a Transitive Dependency Version](#overriding-a-transitive-dependency-version).
+
+### Updating a Transitive Dependency
+
+If the fixed version falls within the SDK's declared semver range (i.e., no major version bump), update the vulnerable package:
+
+```
+npm update --min-release-age=0 PACKAGE_NAME
+```
+
+After running this command, verify that the `package-lock.json` file now resolves the package to the patched version:
+
+```
+npm ls PACKAGE_NAME
+```
+
+Alternatively, use `npm audit --min-release-age=0 fix` to apply all compatible fixes at once.
+
+:::note
+Be aware of the [`min-release-age`](https://docs.npmjs.com/cli/v11/using-npm/config#min-release-age) setting in both directions:
+
+- **If `min-release-age` is set**: npm may refuse to install a recently published patch because it has not yet reached the required age. In that case, either wait for the package to age out, or target the specific version explicitly with `npm update --min-release-age=0 PACKAGE_NAME`.
+- **If `min-release-age` is not set**: npm installs the latest matching version immediately, including packages published seconds ago. This is a supply-chain risk — a compromised package could be installed before the community detects it. Consider setting a minimum age.
+  :::
+
+### Overriding a Transitive Dependency Version
+
+If the security fix was released in a new **major** version of the dependency (e.g., `1.x` → `2.x`), the fix is outside the SAP Cloud SDK's declared semver range.
+`npm audit fix` will not apply it automatically because the major version bump may contain breaking changes that affect the SDK.
+
+In this case, use [npm overrides](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#overrides) (npm ≥ v8.3) to force a specific version of the transitive dependency in the `package.json` file:
+
+```json
+{
+  "overrides": {
+    "PACKAGE_NAME": "PATCHED_VERSION"
+  }
+}
+```
+
+:::caution
+Forcing a major version upgrade through overrides bypasses the compatibility guarantee that the semver range provides.
+Test the application thoroughly after applying an override, as the SDK may not have been tested against the forced version.
+:::
+
+### SAP Cloud SDK Updates
+
+In most cases you do not need to wait for an SAP Cloud SDK release — the approaches described above are sufficient to resolve a CVE in your project.
+The SAP Cloud SDK team monitors security advisories and updates dependencies to the minimal safe version as part of regular releases.
+If the fix requires a major version upgrade of the dependency, the SDK team will handle the migration and ship a new SAP Cloud SDK release that is compatible with the updated dependency.
+
+If you are blocked by a CVE and the steps above are not sufficient, [open a GitHub issue](https://github.com/SAP/cloud-sdk-js/issues/new/choose).
+Include the CVE identifier, the affected package, and the resolved version you need.
+This helps the team prioritize the update.
+
 ## Cannot find module '@sap-cloud-sdk/http-client'
 
 The [SAP Cloud Application Programming Mode (CAP)](https://cap.cloud.sap/docs/) uses the SAP Cloud SDK to execute HTTP requests towards [external services](https://cap.cloud.sap/docs/guides/using-services?q=http-client).
