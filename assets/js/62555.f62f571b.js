@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunksap_cloud_sdk_documentation=globalThis.webpackChunksap_cloud_sdk_documentation||[]).push([[62555],{62555(a,e,s){s.d(e,{createWardleyServices:()=>c.J});var c=s(54837);s(69302)}}]);
