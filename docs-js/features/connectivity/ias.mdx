@@ -81,11 +81,13 @@ sequenceDiagram
 
 ### Creating Destinations
 
-Use [`getDestinationFromServiceBinding()`](pathname:///api/v4/functions/sap-cloud-sdk_connectivity.getDestinationFromServiceBinding.html) to connect to a system that is registered as an application within IAS.
+Use [`getDestinationFromServiceBinding()`](pathname:///api/v4/functions/sap-cloud-sdk_connectivity.getDestinationFromServiceBinding.html) or [`transformServiceBindingToDestination()`](pathname:///api/v4/functions/sap-cloud-sdk_connectivity.transformServiceBindingToDestination.html) to create a destination for a system that is registered as an application within IAS.
 The parameter `iasOptions` contains:
 
 - `targetUrl`: The URL of the system where the target application resides.
 - `resource`: The dependency identified by its name or identifier configured in IAS (see [App2App Resources](#app2app-resources)) section.
+
+For IAS-specific convenience functions, see [Convenience Functions](#convenience-functions).
 
 #### Technical User Authentication
 
@@ -121,11 +123,6 @@ const destination = await getDestinationFromServiceBinding({
 
 #### Business User Authentication
 
-:::warning
-
-When using business user authentication, token requests are not cached.
-
-:::
 :::info
 
 Setting `authenticationType` to `OAuth2JWTBearer` is required to trigger Business User authentication.
@@ -246,3 +243,74 @@ const destination = await getDestinationFromServiceBinding({
 });
 // Token request is automatically routed to the subscriber's IAS tenant
 ```
+
+## Convenience Functions
+
+The SAP Cloud SDK provides the following convenience functions for working with IAS tokens directly:
+
+- [`getIasToken()`](pathname:///api/v4/functions/sap-cloud-sdk_connectivity.getIasToken.html) fetches an IAS token.
+- [`createDestinationFromIasService()`](pathname:///api/v4/functions/sap-cloud-sdk_connectivity.createDestinationFromIasService.html) creates a destination with an IAS token.
+
+These are useful when you need access to the IAS token or service, for example outside SAP BTP environments with pre-populated `VCAP_SERVICES` environment variable or when constructing a destination manually.
+
+Both functions accept either the string `'identity'` (preferred, resolves the binding from `VCAP_SERVICES`) or bare service credentials, for example `clientid`, `clientsecret`, and `url`.
+
+The `targetUrl` option is only relevant for the `createDestinationFromIasService()` function.
+
+:::tip
+
+Pass the string `'identity'` as the first argument whenever possible to let the SAP Cloud SDK resolve the IAS service binding from the environment, avoiding manual handling of credentials.
+
+:::
+
+:::note
+
+The `getIasToken()` function returns the access token as a raw string rather than a decoded JWT, as IAS tokens may not always be in JWT format.
+
+:::
+
+:::note
+
+The `targetUrl` property is ignored if the `getIasToken()` function is used.
+
+:::
+
+```typescript
+import {
+  createDestinationFromIasService,
+  getIasToken
+} from '@sap-cloud-sdk/connectivity';
+
+// Use createDestinationFromIasService() to build a destination (technical user)
+const destination = await createDestinationFromIasService('identity', {
+  targetUrl: 'https://backend-provider.example.com',
+  jwt: JWT_PAYLOAD,
+  requestAs: 'current-tenant',
+  resource: { name: 'backend-api' }
+});
+
+// Use getIasToken() to retrieve an IAS token (business user)
+const token = await getIasToken('identity', {
+  authenticationType: 'OAuth2JWTBearer',
+  assertion: JWT_ASSERTION,
+  resource: { name: 'backend-api' }
+});
+```
+
+If the `VCAP_SERVICES` environment variable is not available (e.g. outside SAP BTP), pass service credentials directly instead:
+
+```typescript
+const destination = await createDestinationFromIasService(
+  {
+    clientid: 'CLIENT_ID',
+    clientsecret: 'CLIENT_SECRET',
+    url: 'https://my-ias.accounts.ondemand.com'
+  },
+  {
+    targetUrl: 'https://backend-provider.example.com',
+    resource: { name: 'backend-api' }
+  }
+);
+```
+
+The `Destination` value returned from the `createDestinationFromIasService()` function can be passed directly to any SAP Cloud SDK request builder or HTTP client.
