@@ -20,6 +20,32 @@ import LicenseBadge from '@site/src/sap/sdk-js/LicenseBadge';
 <!-- vale off -->
 <!-- This line is used for our release notes automation -->
 
+## 4.8.0 [Core Modules] - July 21, 2026
+
+### Compatibility Notes
+
+- [generator, openapi-generator] Transpilation now includes inherited compiler options. ([82a6d2d](https://github.com/SAP/cloud-sdk-js/commit/82a6d2d84bf81f7865d7724eea9371a4fe4393f1))
+- [generator, generator-common, openapi-generator] The project has been updated to `typescript` version 6.
+  Some options are deprecated in TypeScript 6, reference the [breaking changes page](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-6-0.html#breaking-changes-and-deprecations-in-typescript-60) for more details. ([b7cfc1b](https://github.com/SAP/cloud-sdk-js/commit/b7cfc1be92c7c73dc1f7299f1fb9e6bcdae423cb))
+
+### New Features
+
+- [connectivity, http-client] A new `agentOptions` property on `Destination` allows configuring the underlying HTTP(S) agent (e.g. `keepAlive`, `timeout`) without constructing an agent manually. ([32aab37](https://github.com/SAP/cloud-sdk-js/commit/32aab37ade1393c06529a919ea0ab0b4eeba4eac))
+
+### Fixed Issues
+
+- [connectivity] HTTP(S) agents are now cached per destination instead of per protocol and options, preventing unintended agent reuse across different destinations. ([34da40e](https://github.com/SAP/cloud-sdk-js/commit/34da40e20b107deeb287f8dc388a2c59feb0f565))
+- [connectivity] Refactor HTTP agent cache for better runtime compatibility. ([a42a3a2](https://github.com/SAP/cloud-sdk-js/commit/a42a3a258a7c4da5671bb7489cdc3083a7957712))
+- [connectivity,util] Fix `DestinationOrFetchOptions` and `HttpDestinationOrFetchOptions` so the `service` key surfaces at the type level. ([24fe0c5](https://github.com/SAP/cloud-sdk-js/commit/24fe0c50349ba33f1d1bdf3d1cef0782cef03975))
+- [generator, openapi-generator] Transpilation now resolves `extends` inheritance in tsconfig files, merging base config options with child options taking precedence. ([82a6d2d](https://github.com/SAP/cloud-sdk-js/commit/82a6d2d84bf81f7865d7724eea9371a4fe4393f1))
+- [openapi] Wrap `Buffer` responses in `Blob` when executing OpenAPI requests that return binary data. ([e568017](https://github.com/SAP/cloud-sdk-js/commit/e5680174e14472129c9719ba368cd9b5fbd16f1d))
+
+### Improvements
+
+- [generator-common] Extend script target mapper to handle ES2023, ES2024, and ES2025 targets.
+  Extend module kind mapper to handle UMD, System, ES2022, Node18, Node20, and Preserve module kinds.
+  Extend module resolution mapping to handle Bundler. ([9df742e](https://github.com/SAP/cloud-sdk-js/commit/9df742eb426585a6f20ab0cf83f7fbbfa1810efb))
+
 ## 4.7.0 [Core Modules] - May 22, 2026
 
 ### Compatibility Notes
