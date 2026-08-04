@@ -7,7 +7,7 @@ on:
 
 jobs:
   fix-lint:
-    if: github.actor != 'dependabot[bot]' && !github.event.pull_request.head.repo.fork
+    if: github.event.pull_request.user.type != 'Bot' && !github.event.pull_request.head.repo.fork
     runs-on: ubuntu-latest
     steps:
       - name: Generate GitHub App token
