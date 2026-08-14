@@ -16,15 +16,92 @@ keywords:
 <!-- vale off -->
 <!-- This line is used for our release notes automation -->
 
-## 1.0.0 - August 12, 2026
+:::info v1.0.0 Release Candidate Coming Soon
+We are working toward the first stable release of the SAP Cloud SDK for Python.
+A **v1.0.0 release candidate** will be published in the near future, marking the stabilization of the public APIs.
+If you are evaluating the SDK, we encourage you to test the latest pre-release version and share feedback via [GitHub Issues](https://github.com/SAP/cloud-sdk-python/issues).
+:::
 
-### New Features
+## 0.43.2 - August 12, 2026
 
-- Initial release of the SAP Cloud SDK for Python.
-- Connectivity abstractions for SAP BTP: handling destinations, proxies, and authentication for cloud and on-premise systems.
-- Support for OData v2 and v4 client generation.
-- Support for OpenAPI client generation.
+### Improvements
+
+- Renamed OpenTelemetry resource attribute `sap.cld.subaccount_id` to `sap.cloud.provider.subaccount_id` to align with SAP cloud naming conventions.
+
+## 0.43.1 - August 12, 2026
 
 ### Fixed Issues
 
-- None.
+- `AuthToken` now surfaces error messages returned by the Destination Service when the service response contains non-empty error fields.
+- Improved token validation handling for error-carrying tokens with empty `type` or `value` fields.
+
+## 0.43.0 - August 10, 2026
+
+### Compatibility Notes
+
+- The `APPFND_UMS_DESTINATION_NAME` environment variable has been removed. Use `ExtensibilityConfig(destination_name="...")` instead.
+- The UMS destination name prefix changed from `sap-managed-runtime-ums-` to `sap-managed-runtime-ias-`.
+- `APPFND_CONHOS_UMS_URL` is now required; the UMS base URL is no longer read from the destination's URL field.
+
+### Improvements
+
+- Deferred destination-name resolution failure to fetch time for clearer error reporting.
+- Enhanced error messaging for misconfigured extensibility settings.
+
+## 0.42.0 - August 7, 2026
+
+### New Features
+
+- `bootstrap(app)` now automatically sets up telemetry as part of SDK runtime initialization — no separate telemetry configuration call needed.
+
+## 0.41.0 - August 7, 2026
+
+### New Features
+
+- `list_mcp_tools()` on the Agent Gateway client now accepts an optional `MCPToolFilter` parameter to narrow discovered tools by name and/or ORD ID.
+
+## 0.40.1 - August 7, 2026
+
+### Improvements
+
+- Updated OpenTelemetry core from 1.42.1 to 1.43.0.
+- Updated OpenTelemetry instrumentation packages from 0.63b1 to 0.64b0.
+- Updated Protobuf minimum requirement to `>=7.0.0`.
+
+## 0.40.0 - August 4, 2026
+
+### New Features
+
+- New `sap_cloud_sdk.outputmanagement` module for integrating with the SAP Output Management Service.
+  Available operations: `send_email`, `send_email_with_mcp`, `create_output_request`, `send_output_request`.
+- `DestinationCredentialConfig` now supports `PROVIDER_ONLY` and `SUBSCRIBER_ONLY` access strategies.
+- Full OpenTelemetry telemetry support for the Output Management client.
+
+## 0.39.1 - August 3, 2026
+
+### Fixed Issues
+
+- Agent Gateway: `get_mcp_tools_customer` now returns an empty list instead of raising an error when `integrationDependencies` is empty.
+- Improved MCP server error logging to include HTTP status codes and response bodies.
+- Improved tool invocation error logging.
+- Fixed `streamable_http_client` unpacking compatibility.
+
+## 0.39.0 - July 24, 2026
+
+### New Features
+
+- New `bootstrap(app)` entry point for SDK runtime initialization — replaces manual per-feature setup.
+- New `sap_cloud_sdk.core.runtime_context` module with provider-agnostic context handling.
+  Supported context providers: `IASContextProvider`, `SAPTriggerContextProvider`, `DWCContextProvider`.
+- `auto_instrument()` now automatically instruments supported HTTP clients, frameworks, and libraries including: httpx, requests, grpcio, Starlette, FastAPI, aiohttp, Django, Flask, SQLAlchemy, Redis, and logging.
+
+## 0.38.0 - July 22, 2026
+
+### New Features
+
+- `AuditClient.send()` now auto-injects tenant and user context into audit log events.
+- New `ias/_context.py` module exposing `set_auth_context` and `get_auth_context` APIs for IAS token propagation.
+
+### Improvements
+
+- `StarletteIASTelemetryMiddleware` refactored for improved token parsing reliability.
