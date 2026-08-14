@@ -39,7 +39,7 @@ module.exports = {
       disableSwitch: true
     },
     prism: {
-      additionalLanguages: ['powershell', 'java', 'groovy'],
+      additionalLanguages: ['powershell', 'java', 'groovy', 'python'],
       theme: require('prism-react-renderer').themes.github,
       darkTheme: require('prism-react-renderer').themes.dracula
     },
@@ -77,6 +77,14 @@ module.exports = {
           position: 'left',
           docsPluginId: 'docs-js',
           activeBasePath: 'docs/js',
+          sdkSwitch: true
+        },
+        {
+          label: '🐍 Python',
+          to: 'docs/python/overview',
+          position: 'left',
+          docsPluginId: 'docs-python',
+          activeBasePath: 'docs/python',
           sdkSwitch: true
         },
         {
@@ -266,6 +274,23 @@ module.exports = {
             banner: 'unmaintained',
             badge: false,
             noIndex: true
+          }
+        }
+      }
+    ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'docs-python',
+        path: 'docs-python',
+        editUrl: 'https://github.com/SAP/cloud-sdk/edit/main',
+        routeBasePath: 'docs/python',
+        sidebarPath: require.resolve('./sidebarsDocsPython.js'),
+        lastVersion: 'current',
+        versions: {
+          current: {
+            label: 'v1',
+            badge: false
           }
         }
       }

@@ -1,0 +1,61 @@
+---
+id: troubleshooting
+title: Troubleshooting
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Troubleshooting
+description: Troubleshooting guide for the SAP Cloud SDK for Python
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - cloud native
+  - cloud sdk
+  - sap cloud sdk
+  - python
+  - troubleshooting
+  - connectivity
+---
+
+## Installation Issues
+
+### `pip install sap-cloud-sdk` Fails
+
+If the installation fails, ensure you are using a supported Python version (3.9 or higher) and that pip is up to date:
+
+```bash
+python -m pip install --upgrade pip
+pip install sap-cloud-sdk
+```
+
+If you are working in a virtual environment, make sure it is activated before running the install command.
+
+### ImportError After Installation
+
+If you see an `ImportError` after a successful installation, verify that the package was installed into the correct Python environment:
+
+```bash
+python -c "import sap.cloud.sdk; print(sap.cloud.sdk.__version__)"
+```
+
+If the import fails, the package may have been installed into a different Python environment than the one you are running. Use `python -m pip install sap-cloud-sdk` to ensure the package is installed for the active interpreter.
+
+## Connectivity Issues
+
+### Destination Not Found
+
+If a destination cannot be resolved, check the following:
+
+1. The destination name is spelled correctly (case-sensitive).
+2. The `VCAP_SERVICES` environment variable is set when running locally.
+3. The destination service binding is present and correctly configured.
+
+For more information, see the connectivity documentation.
+
+### Authentication Failures
+
+If requests fail with an authentication error:
+
+1. Verify the credentials in your destination configuration.
+2. Check that the authentication type matches what the target system expects.
+3. Ensure the service key for the Destination Service has the required permissions.
