@@ -17,45 +17,231 @@ keywords:
   - connectivity
 ---
 
-## Installation Issues
+## Solving Common Problems
+
+- Check if you are using the [latest release](./release-notes.mdx) — new fixes ship frequently.
+- Search [Stack Overflow](https://stackoverflow.com/questions/tagged/sap-cloud-sdk) with the `sap-cloud-sdk` tag for solved issues.
+- Check this page for known solutions to the most common problems.
+- If nothing helps, [open an issue on GitHub](https://github.com/SAP/cloud-sdk-python/issues).
+
+---
+
+## Installation
 
 ### `pip install sap-cloud-sdk` Fails
 
-If the installation fails, ensure you are using a supported Python version (3.9 or higher) and that pip is up to date:
+:::info Symptoms
+The installation fails with a resolver error or a Python version warning.
+:::
+
+Ensure you are using Python 3.11 or higher and that pip is up to date:
 
 ```bash
+python --version          # must be 3.11+
 python -m pip install --upgrade pip
 pip install sap-cloud-sdk
 ```
 
 If you are working in a virtual environment, make sure it is activated before running the install command.
 
-### ImportError After Installation
+### `ImportError` After Installation
 
-If you see an `ImportError` after a successful installation, verify that the package was installed into the correct Python environment:
+:::info Symptoms
+`import sap_cloud_sdk` raises `ModuleNotFoundError` even though `pip install` succeeded.
+:::
+
+The package was likely installed into a different Python interpreter than the one you are running.
+Use `python -m pip` to guarantee the active interpreter is the target:
 
 ```bash
-python -c "import sap.cloud.sdk; print(sap.cloud.sdk.__version__)"
+python -m pip install sap-cloud-sdk
+python -c "import sap_cloud_sdk; print(sap_cloud_sdk.__version__)"
 ```
 
-If the import fails, the package may have been installed into a different Python environment than the one you are running. Use `python -m pip install sap-cloud-sdk` to ensure the package is installed for the active interpreter.
+### Dependency Conflict After Upgrading
 
-## Connectivity Issues
+:::info Symptoms
+After upgrading `sap-cloud-sdk`, an `ImportError` or `AttributeError` appears at runtime, or another package such as `a2a-sdk` stops working.
+:::
+
+The SDK ships transitive dependencies at pinned versions.
+Check for conflicting requirements with:
+
+```bash
+pip check
+```
+
+If a conflict is reported, align the versions or use a fresh virtual environment.
+You can also pin a known-good SDK version while waiting for a fix:
+
+```bash
+pip install "sap-cloud-sdk==0.43.1"
+```
+
+---
+
+## Connectivity and Destinations
 
 ### Destination Not Found
 
-If a destination cannot be resolved, check the following:
+:::info Symptoms
+`DestinationService.get_destination()` raises a not-found error at runtime.
+:::
 
-1. The destination name is spelled correctly (case-sensitive).
-2. The `VCAP_SERVICES` environment variable is set when running locally.
-3. The destination service binding is present and correctly configured.
+**Possible causes:**
 
-For more information, see the connectivity documentation.
+- The destination name is misspelled — names are case-sensitive.
+- When running locally, `VCAP_SERVICES` is not set. Export the JSON from the BTP Cockpit's service key and set it as an environment variable.
+- The Destination Service binding is missing or misconfigured. Verify it is present in your `VCAP_SERVICES` or Kubernetes secret mount.
 
-### Authentication Failures
+### Authentication Failure (401 / 403)
 
-If requests fail with an authentication error:
+:::info Symptoms
+Requests to a destination fail with HTTP 401 Unauthorized or 403 Forbidden.
+:::
 
-1. Verify the credentials in your destination configuration.
-2. Check that the authentication type matches what the target system expects.
-3. Ensure the service key for the Destination Service has the required permissions.
+**Possible causes:**
+
+- The credentials in the destination configuration are expired or incorrect.
+- The authentication type configured on the destination does not match what the target system expects (for example, `BasicAuthentication` used where OAuth is required).
+- The service key for the Destination Service lacks the required scopes.
+- For OAuth destinations, verify the Token Service URL includes the full path, for example `/oauth/token`.
+
+### Client Certificates Not Applied
+
+:::info Symptoms
+Requests succeed without client certificate authentication even though the destination is configured with `ClientCertificateAuthentication`.
+:::
+
+This is a known issue tracked in [#254](https://github.com/SAP/cloud-sdk-python/issues/254).
+As a workaround, attach the certificate manually to the HTTP client until the fix is available.
+
+---
+
+## Agent Gateway Service
+
+### No MCP Tools Returned
+
+:::info Symptoms
+`list_mcp_tools()` returns an empty list unexpectedly.
+:::
+
+**Possible causes:**
+
+- The Agent Gateway formation is not yet in `READY` state for the current tenant.
+  Check the formation status in the SAP BTP Cockpit.
+- `integrationDependencies` is empty in the ORD document — the tools have no declared dependencies to discover.
+- The `user_token` passed to `list_mcp_tools()` is expired or invalid.
+  Ensure it is a callable that fetches a fresh token on each call, not a captured string:
+
+```python
+# Correct — token resolved on every invocation
+agw_client = create_client(tenant_subdomain=get_tenant_subdomain)
+tools = await agw_client.list_mcp_tools(user_token=get_user_token)  # callable
+
+# Incorrect — stale token captured at startup
+token = get_user_token()
+tools = await agw_client.list_mcp_tools(user_token=token)           # string
+```
+
+### MCP Tool Call Result Is Truncated to a String
+
+:::info Symptoms
+`call_mcp_tool()` returns a plain string instead of a structured object, losing nested data.
+:::
+
+This is a known issue tracked in [#214](https://github.com/SAP/cloud-sdk-python/issues/214) — `CallToolResult` is flattened to `str`.
+As a workaround, parse the returned string manually with `json.loads()`:
+
+```python
+import json
+
+raw = await agw_client.call_mcp_tool(tool=tool, user_token=get_user_token, **args)
+result = json.loads(raw) if isinstance(raw, str) else raw
+```
+
+### Duplicate Tool Names From Multiple MCP Servers
+
+:::info Symptoms
+Two MCP servers expose a tool with the same name, causing the wrong tool to be called.
+:::
+
+This is a known limitation tracked in [#208](https://github.com/SAP/cloud-sdk-python/issues/208).
+Until resolved, use `MCPToolFilter` to scope tool discovery to a specific ORD ID:
+
+```python
+from sap_cloud_sdk.agentgateway import AgentCardFilter
+
+tools = await agw_client.list_mcp_tools(
+    filter=MCPToolFilter(ord_ids=["sap.s4:purchaseOrder:v1"])
+)
+```
+
+### Missing Correlation ID in MCP Tool Error Logs
+
+:::info Symptoms
+An MCP tool call fails but the error log does not include a correlation ID, making it hard to trace in SAP Cloud Logging.
+:::
+
+This is a known issue tracked in [#195](https://github.com/SAP/cloud-sdk-python/issues/195).
+In the meantime, extract the correlation ID from the response headers in your error handler and log it manually.
+
+---
+
+## Agent Memory Service
+
+### `AgentMemoryConfigError` on Startup
+
+:::info Symptoms
+`create_client()` raises `AgentMemoryConfigError` immediately, before any memory operation is attempted.
+:::
+
+The HANA Agent Memory binding is not mounted.
+Verify that `hanaAgentMemoryEnabled: true` is set in `app.yaml` and that the secret is mounted at `/etc/secrets/appfnd/hana-agent-memory/default`.
+
+For local development, set the following environment variables instead:
+
+```bash
+export HC_API_URL=https://<your-hana-instance>.hanacloud.ondemand.com
+export HC_CLIENT_ID=<client-id>
+export HC_CLIENT_SECRET=<client-secret>
+export HC_AUTH_URL=https://<your-auth-url>/oauth/token
+```
+
+### `AgentMemoryValidationError`: Missing Tenant
+
+:::info Symptoms
+`create_client()` raises `AgentMemoryValidationError` with a message about a missing tenant argument.
+:::
+
+Since v0.36.0, the `tenant` argument is required for subscriber-isolated clients.
+Pass the current tenant's subdomain explicitly:
+
+```python
+# Before v0.36 (no longer valid)
+client = create_client()
+
+# v0.36+ — tenant subdomain is required
+client = create_client(tenant=tenant_subdomain)
+```
+
+---
+
+## Configuration and Breaking Changes
+
+### `APPFND_UMS_DESTINATION_NAME` No Longer Recognized (v0.43.0)
+
+:::info Symptoms
+After upgrading to v0.43.0, the extensibility module fails to resolve the UMS destination.
+:::
+
+The `APPFND_UMS_DESTINATION_NAME` environment variable was removed in v0.43.0.
+Replace it with the programmatic config:
+
+```python
+from sap_cloud_sdk.extensibility import ExtensibilityConfig
+
+config = ExtensibilityConfig(destination_name="my-ums-destination")
+```
+
+Also note that the UMS destination name prefix changed from `sap-managed-runtime-ums-` to `sap-managed-runtime-ias-`, and `APPFND_CONHOS_UMS_URL` is now required.
