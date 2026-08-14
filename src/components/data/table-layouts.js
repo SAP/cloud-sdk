@@ -51,6 +51,27 @@ export const mainFeatureTableLayout = [
         accessorKey: 'js.note'
       }
     ]
+  },
+  {
+    Header: 'SAP Cloud SDK Python',
+    id: 'python',
+    columns: [
+      {
+        id: 'python-status',
+        Header: 'Status',
+        accessorKey: 'python.status'
+      },
+      {
+        id: 'python-docs',
+        Header: 'Docs',
+        accessorKey: 'python.docsLink'
+      },
+      {
+        id: 'python-notes',
+        Header: 'Notes',
+        accessorKey: 'python.note'
+      }
+    ]
   }
 ];
 
@@ -133,6 +154,7 @@ export const jsFeatureTableLayout = [
     ]
   }
 ];
+
 export const ODataFeatureTableLayout = [
   {
     Header: 'Feature',
