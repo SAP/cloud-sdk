@@ -17,37 +17,186 @@ keywords:
 
 ## Quick Start
 
-For a quick start check out the ["Getting Started"](./getting-started.mdx) page.
+For a quick start check out the [Getting Started](./getting-started.mdx) page.
 
-## What is the SAP Cloud SDK for Python?
+## Why the SAP Cloud SDK for Python?
 
-The SAP Cloud SDK for Python is a set of libraries that reduces the effort of building applications on the SAP Business Technology Platform (SAP BTP).
-It abstracts common tasks on SAP BTP so that you can concentrate on the business logic instead of writing boilerplate code.
+The SAP Cloud SDK for Python makes it easy to build cloud-native applications on the SAP Business Technology Platform (SAP BTP).
+It provides consistent, type-safe interfaces for the foundational BTP and SAP services — destination management, identity, audit logging, storage, telemetry, and more — so you can focus on business logic instead of boilerplate integration code.
 
-### The Core Libraries
+Below, you will find main features described with examples.
 
-The core libraries are the heart of the SAP Cloud SDK for Python.
-They contain the request execution and connectivity logic as well as command line interfaces (CLIs) to generate OData and OpenAPI clients.
+## Main Features
 
-Install the core libraries via pip:
+### Destination Service
 
-```bash
-pip install sap-cloud-sdk
+The Destination Service module provides an abstraction for connecting to remote systems defined in the SAP BTP Cockpit.
+It resolves credentials, handles OAuth flows (including principal propagation and client credentials), and supports both cloud and on-premise systems via the SAP Connectivity Service.
+
+```python
+from sap.cloud.sdk.destination import DestinationService
+
+service = DestinationService()
+destination = service.get_destination("my-destination")
+```
+
+### Identity and Access (IAS)
+
+The Identity and Access Service (IAS) module handles authentication and token management for applications secured with SAP Cloud Identity Services.
+It provides utilities for token verification, user context propagation, and service-to-service authentication.
+
+### AI Core
+
+The AI Core module provides a client for [SAP AI Core](https://help.sap.com/docs/sap-ai-core), enabling you to manage AI scenarios, deployments, and executions from Python applications.
+It integrates with the SDK's credential and destination resolution to simplify connection setup.
+
+```python
+from sap.cloud.sdk.ai_core import AICoreClient
+
+client = AICoreClient()
+deployments = client.list_deployments(resource_group="default")
+```
+
+### Audit Logging
+
+The Audit Logging module provides a structured way to emit audit log events to the SAP Audit Log Service.
+Both the standard and the next-generation (NG) audit log APIs are supported.
+
+```python
+from sap.cloud.sdk.audit_log import AuditLogger
+
+logger = AuditLogger()
+logger.log_data_access(object_type="BusinessPartner", object_id="1000001", attributes=["Name", "Address"])
+```
+
+### Secret Management
+
+The Secret Management module provides a unified interface for reading credentials and secrets.
+The SDK resolves secrets from multiple sources in priority order:
+
+1. Kubernetes-mounted secrets via `SERVICE_BINDING_ROOT` (following the [servicebinding.io](https://servicebinding.io/) specification)
+2. Environment variables using the pattern `CLOUD_SDK_CFG_<MODULE>_<INSTANCE>_<FIELD>`
+
+This means the same application code works locally (using env vars) and in Kubernetes (using mounted secrets) without modification.
+
+### Telemetry
+
+The Telemetry module provides observability utilities built on top of [OpenTelemetry](https://opentelemetry.io/).
+It instruments SDK operations with traces and metrics that can be exported to any OpenTelemetry-compatible backend such as SAP Cloud Logging.
+
+### Object Storage and Document Management
+
+The Object Storage and Document Management modules provide clients for SAP BTP's storage services, allowing you to upload, download, and manage files and documents directly from your Python application.
+
+### Agent Framework
+
+The Agent module provides building blocks for creating AI-powered agents on SAP BTP.
+
+#### Decorators
+
+Annotate Python functions with `@tool` to register them as callable tools within the agent loop.
+The decorator forwards the function's type annotations as the tool's input schema and the `description` to the LLM.
+
+```python
+from sap_cloud_sdk.agent import tool
+
+@tool(description="Fetch the order status for a given order ID.")
+def get_order_status(order_id: str) -> str:
+    # your business logic here
+    return f"Order {order_id} is currently: In Transit"
+```
+
+#### Agent Gateway Service
+
+The Agent Gateway Service (AGW) is the central communication hub for SAP BTP agents.
+It discovers MCP tools exposed by connected SAP LoB systems (such as SAP S/4HANA and SAP SuccessFactors) and wraps them as LangChain-compatible tools ready for use in an agent loop.
+
+```python
+from sap_cloud_sdk.agentgateway import create_client
+from sap_cloud_sdk.agentgateway.converters import mcp_tool_to_langchain
+
+agw_client = create_client(tenant_subdomain=get_tenant_subdomain)
+mcp_tools = await agw_client.list_mcp_tools(user_token=get_user_token)
+tools = [
+    mcp_tool_to_langchain(t, agw_client.call_mcp_tool, get_user_token)
+    for t in mcp_tools
+]
+```
+
+:::note
+`get_tenant_subdomain` and `get_user_token` should be callables (for example, functions reading from contextvars) so that credentials are resolved per request and never captured at construction time.
+:::
+
+#### Agent Memory Service
+
+The Agent Memory Service provides a persistent, tenant-isolated store backed by SAP HANA Cloud.
+It exposes two APIs: a **Messages API** for short-term conversation history, and a **Memories API** for long-term semantic search across sessions.
+
+```python
+from sap_cloud_sdk.agent_memory import create_client, MessageRole
+
+client = create_client(tenant=tenant_subdomain)
+
+# Store a conversation turn
+client.add_message(
+    agent_id="my-agent", invoker_id=user_id,
+    message_group=session_id, role=MessageRole.USER, content=query
+)
+client.add_message(
+    agent_id="my-agent", invoker_id=user_id,
+    message_group=session_id, role=MessageRole.ASSISTANT, content=response
+)
+
+# Replay history for a returning session
+messages = client.list_messages(
+    agent_id="my-agent", invoker_id=user_id,
+    message_group=session_id, limit=50
+)
+```
+
+Use the Memories API to persist and retrieve facts across sessions with semantic similarity search:
+
+```python
+# Store a long-term fact
+client.add_memory(agent_id="my-agent", invoker_id=user_id,
+                  content="User prefers responses in English.")
+
+# Retrieve relevant memories before answering
+results = client.search_memories(
+    agent_id="my-agent", invoker_id=user_id,
+    query="preferred language", threshold=0.6, limit=5
+)
+for r in results:
+    print(f"[{r.similarity:.2f}] {r.content}")
 ```
 
 ## Supported Python Versions
 
+The SAP Cloud SDK for Python requires **Python 3.11 or higher**.
+
 | Python Version | Supported |
 | -------------- | --------- |
+| 3.13           | ✅        |
 | 3.12           | ✅        |
 | 3.11           | ✅        |
-| 3.10           | ✅        |
-| 3.9            | ✅        |
+| 3.10           | ❌        |
+
+## Supported Environments
+
+The SAP Cloud SDK for Python is designed to run on any environment supported by SAP BTP:
+
+1. [SAP BTP Cloud Foundry](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/9c7092c7b7ae4d49bc8ae35fdd0e0b18.html)
+2. [Kubernetes / SAP Gardener](https://gardener.cloud/)
+3. [SAP BTP Kyma](https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/468c2f3c3ca24c2c8497ef9f83154c44.html)
 
 ## Licensing
 
-The SAP Cloud SDK for Python is open-source and available under the [Apache 2.0 license](https://github.com/SAP/cloud-sdk-python/blob/main/LICENSE).
+The SAP Cloud SDK for Python is open-source and available on [PyPI](https://pypi.org/project/sap-cloud-sdk/) under the [Apache 2.0 license](https://github.com/SAP/cloud-sdk-python/blob/main/LICENSE).
 
-## Feature Matrix
+## Release Schedule
 
-For a complete overview of supported features, 
+For details on the release cadence and version support, check the [release policy](./release-policy.mdx).
+
+## Contributing
+
+For details on contributing, check the [contribution guide](https://github.com/SAP/cloud-sdk/blob/main/CONTRIBUTING.md).
