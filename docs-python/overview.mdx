@@ -34,7 +34,7 @@ The Destination Service module provides an abstraction for connecting to remote 
 It resolves credentials, handles OAuth flows (including principal propagation and client credentials), and supports both cloud and on-premise systems via the SAP Connectivity Service.
 
 ```python
-from sap.cloud.sdk.destination import DestinationService
+from sap_cloud_sdk.destination import DestinationService
 
 service = DestinationService()
 destination = service.get_destination("my-destination")
@@ -51,7 +51,7 @@ The AI Core module provides a client for [SAP AI Core](https://help.sap.com/docs
 It integrates with the SDK's credential and destination resolution to simplify connection setup.
 
 ```python
-from sap.cloud.sdk.ai_core import AICoreClient
+from sap_cloud_sdk.ai_core import AICoreClient
 
 client = AICoreClient()
 deployments = client.list_deployments(resource_group="default")
@@ -63,7 +63,7 @@ The Audit Logging module provides a structured way to emit audit log events to t
 Both the standard and the next-generation (NG) audit log APIs are supported.
 
 ```python
-from sap.cloud.sdk.audit_log import AuditLogger
+from sap_cloud_sdk.audit_log import AuditLogger
 
 logger = AuditLogger()
 logger.log_data_access(object_type="BusinessPartner", object_id="1000001", attributes=["Name", "Address"])
