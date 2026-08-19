@@ -1,0 +1,51 @@
+---
+id: btp-services
+title: RBS Services
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: RBS Services
+description: Use RBS services from Python — Document Management and Output Management
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - python
+  - document management
+  - output management
+---
+
+## Document Management Service
+
+The Document Management module provides a client for [SAP Document Management Service](https://help.sap.com/docs/document-management-service), enabling you to manage documents and folders in a repository.
+
+```python
+from sap_cloud_sdk.document_management import DocumentManagementClient
+
+client = DocumentManagementClient()
+folder = client.create_folder(repository_id="my-repo", path="/invoices/2026")
+document = client.upload_document(
+    repository_id="my-repo",
+    folder_id=folder.id,
+    file_name="invoice-001.pdf",
+    content=pdf_bytes
+)
+```
+
+---
+
+## Output Management Service
+
+The Output Management module provides a client for creating and sending output requests — including emails and print documents — via the [SAP Output Management Service](https://help.sap.com/docs/output-management).
+
+```python
+from sap_cloud_sdk.outputmanagement import OutputManagementClient
+
+client = OutputManagementClient()
+
+# Send an email
+client.send_output_request(
+    template_id="invoice-email-template",
+    recipient="customer@example.com",
+    data={"invoice_number": "INV-001", "amount": "1,500.00 EUR"}
+)
+```

@@ -1,0 +1,202 @@
+---
+id: agent-framework
+title: Agent Framework
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Agent Framework
+description: Build AI-powered agents on SAP BTP using tool decorators, the Agent Gateway Service, and the Agent Memory Service
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - python
+  - agent
+  - ai
+  - mcp
+  - langchain
+  - agent gateway
+  - agent memory
+  - ai core
+---
+
+The Agent Framework provides the building blocks to create AI-powered agents on SAP BTP.
+It consists of three main components:
+
+- **Tool Decorators** — register Python functions as callable tools within an agent loop
+- **Agent Gateway Service** — discover MCP tools from connected SAP LoB systems
+- **Agent Memory Service** — persist and retrieve conversation history and long-term memories
+
+---
+
+## Tool Decorators
+
+Annotate any Python function with `@tool` to register it as a callable tool.
+The decorator uses the function's type annotations to generate the tool's input schema and forwards the `description` to the LLM.
+
+```python
+from sap_cloud_sdk.agent import tool
+
+@tool(description="Fetch the current status for a given order ID.")
+def get_order_status(order_id: str) -> str:
+    # your business logic here
+    return f"Order {order_id} is currently: In Transit"
+
+@tool(description="List all open purchase orders for a given supplier.")
+def list_open_orders(supplier_id: str, max_results: int = 10) -> list[dict]:
+    # call your backend system here
+    return []
+```
+
+Decorated functions can be passed directly to a LangChain agent or any framework that accepts a list of tools.
+
+---
+
+## Agent Gateway Service
+
+The Agent Gateway Service (AGW) is the central communication hub for SAP BTP agents.
+It discovers MCP tools exposed by connected SAP LoB systems — such as SAP S/4HANA and SAP SuccessFactors — and wraps them as LangChain-compatible tools ready for use in an agent loop.
+
+### Discovering Tools
+
+```python
+from sap_cloud_sdk.agentgateway import create_client
+from sap_cloud_sdk.agentgateway.converters import mcp_tool_to_langchain
+
+agw_client = create_client(tenant_subdomain=get_tenant_subdomain)
+mcp_tools = await agw_client.list_mcp_tools(user_token=get_user_token)
+tools = [
+    mcp_tool_to_langchain(t, agw_client.call_mcp_tool, get_user_token)
+    for t in mcp_tools
+]
+```
+
+:::note
+`get_tenant_subdomain` and `get_user_token` must be **callables** (for example, functions reading from contextvars), not captured strings.
+This ensures that credentials are resolved per request and never become stale.
+:::
+
+### Calling a Tool Directly
+
+You can also call an MCP tool directly without converting to LangChain format:
+
+```python
+result = await agw_client.call_mcp_tool(
+    tool=mcp_tools[0],
+    user_token=get_user_token,
+    order_id="4500012345"
+)
+```
+
+### Filtering Tools by ORD ID
+
+When multiple MCP servers expose tools with overlapping names, use `MCPToolFilter` to scope discovery to a specific system:
+
+```python
+from sap_cloud_sdk.agentgateway import AgentCardFilter
+
+tools = await agw_client.list_mcp_tools(
+    filter=MCPToolFilter(ord_ids=["sap.s4:purchaseOrder:v1"])
+)
+```
+
+---
+
+## Agent Memory Service
+
+The Agent Memory Service provides a persistent, tenant-isolated store backed by SAP HANA Cloud.
+It exposes two APIs:
+
+- **Messages API** — short-term conversation history, scoped to an agent, user, and session
+- **Memories API** — long-term semantic storage with similarity search across sessions
+
+### Configuration
+
+The service is configured via a Kubernetes-mounted binding at `/etc/secrets/appfnd/hana-agent-memory/default`.
+For local development, set the following environment variables:
+
+```bash
+export HC_API_URL=https://<your-hana-instance>.hanacloud.ondemand.com
+export HC_CLIENT_ID=<client-id>
+export HC_CLIENT_SECRET=<client-secret>
+export HC_AUTH_URL=https://<your-auth-url>/oauth/token
+```
+
+### Messages API
+
+Use the Messages API to store and replay conversation turns within a session:
+
+```python
+from sap_cloud_sdk.agent_memory import create_client, MessageRole
+
+client = create_client(tenant=tenant_subdomain)
+
+# Store a conversation turn
+client.add_message(
+    agent_id="my-agent", invoker_id=user_id,
+    message_group=session_id, role=MessageRole.USER, content=query
+)
+client.add_message(
+    agent_id="my-agent", invoker_id=user_id,
+    message_group=session_id, role=MessageRole.ASSISTANT, content=response
+)
+
+# Replay history for a returning session
+messages = client.list_messages(
+    agent_id="my-agent", invoker_id=user_id,
+    message_group=session_id, limit=50
+)
+```
+
+:::note
+Since v0.36.0, the `tenant` argument is required when calling `create_client()`. Omitting it raises `AgentMemoryValidationError`.
+:::
+
+### Memories API
+
+Use the Memories API to persist facts across sessions and retrieve the most relevant ones using semantic similarity search:
+
+```python
+# Store a long-term fact about the user
+client.add_memory(
+    agent_id="my-agent", invoker_id=user_id,
+    content="User prefers responses in English."
+)
+
+# Retrieve relevant memories before generating a response
+results = client.search_memories(
+    agent_id="my-agent", invoker_id=user_id,
+    query="preferred language", threshold=0.6, limit=5
+)
+for r in results:
+    print(f"[{r.similarity:.2f}] {r.content}")
+```
+
+The `threshold` parameter (0.0–1.0) controls the minimum cosine similarity score for a memory to be returned.
+A value of `0.6` is a reasonable starting point for most use cases.
+
+---
+
+## SAP AI Core
+
+The AI Core module provides a Python client for [SAP AI Core](https://help.sap.com/docs/sap-ai-core), enabling you to manage AI scenarios, deployments, and executions from your application.
+The SDK handles credential resolution and authentication automatically via the service binding.
+
+```python
+from sap_cloud_sdk.ai_core import AICoreClient
+
+client = AICoreClient()
+deployments = client.list_deployments(resource_group="default")
+
+for d in deployments:
+    print(d.id, d.status, d.model_name)
+```
+
+### Starting an Execution
+
+```python
+execution = client.create_execution(
+    resource_group="default",
+    configuration_id="my-config-id"
+)
+print(execution.id, execution.status)
+```

@@ -1,0 +1,99 @@
+---
+id: core-modules
+title: Core Modules
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Core Modules
+description: Cross-cutting SDK modules — Audit Logging, Telemetry, and Object Storage
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - python
+  - audit log
+  - telemetry
+  - opentelemetry
+  - object storage
+---
+
+## Audit Logging
+
+The Audit Logging module provides a structured way to emit audit log events to the [SAP Audit Log Service](https://help.sap.com/docs/audit-log-service).
+Both the standard and the next-generation (NG) audit log APIs are supported.
+
+### Data Access Events
+
+```python
+from sap_cloud_sdk.audit_log import AuditLogger
+
+logger = AuditLogger()
+logger.log_data_access(
+    object_type="BusinessPartner",
+    object_id="1000001",
+    attributes=["Name", "Address"]
+)
+```
+
+### Data Modification Events
+
+```python
+logger.log_data_modification(
+    object_type="SalesOrder",
+    object_id="SO-4500012345",
+    attributes=[{"name": "Status", "old_value": "Open", "new_value": "Closed"}]
+)
+```
+
+---
+
+## Telemetry
+
+The Telemetry module provides observability utilities built on top of [OpenTelemetry](https://opentelemetry.io/).
+It auto-instruments SDK HTTP clients and common Python frameworks, exporting traces and metrics to any OpenTelemetry-compatible backend such as SAP Cloud Logging.
+
+### Setup
+
+Call `auto_instrument()` once at application startup:
+
+```python
+from sap_cloud_sdk.telemetry import auto_instrument
+
+auto_instrument()
+```
+
+This sets up trace propagation and metric collection for all SDK operations and outbound HTTP requests without any further configuration.
+
+### Custom Spans
+
+You can also create custom spans to trace your own business logic:
+
+```python
+from opentelemetry import trace
+
+tracer = trace.get_tracer("my-agent")
+
+with tracer.start_as_current_span("process-order"):
+    result = process_order(order_id)
+```
+
+---
+
+## Object Storage
+
+The Object Storage module provides a client for SAP BTP Object Store Service, allowing you to upload, download, list, and delete objects.
+
+```python
+from sap_cloud_sdk.object_storage import ObjectStorageClient
+
+client = ObjectStorageClient()
+
+# Upload a file
+with open("report.pdf", "rb") as f:
+    client.upload(bucket="my-bucket", key="reports/2026/report.pdf", body=f)
+
+# Download a file
+content = client.download(bucket="my-bucket", key="reports/2026/report.pdf")
+
+# List objects
+objects = client.list(bucket="my-bucket", prefix="reports/")
+```
