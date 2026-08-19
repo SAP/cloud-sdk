@@ -15,6 +15,9 @@ keywords:
   - python
 ---
 
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import ThemedImage from '@theme/ThemedImage';
+
 ## Quick Start
 
 For a quick start check out the [Getting Started](./getting-started.mdx) page.
@@ -39,6 +42,23 @@ This discovers MCP tools from connected SAP LoB systems (S/4HANA, SuccessFactors
 
 ## Main Features of the SAP Cloud SDK for Python
 
+<ThemedImage
+  alt="SAP Cloud SDK for Python — main components"
+  sources={{
+    light: useBaseUrl('img/python-sdk-overview.svg'),
+    dark: useBaseUrl('img/python-sdk-overview.svg')
+  }}
+  className="center"
+  width="100%"
+/>
+
+### Agent Framework
+
+The Agent Framework is the core differentiator of the Python SDK.
+It provides building blocks for AI-powered agents running on SAP BTP: a `@tool` decorator to register Python functions as agent tools, the **Agent Gateway Service** for discovering MCP tools from connected LoB systems with tenant-aware principal propagation, the **Agent Memory Service** for storing and retrieving conversation history and long-term semantic memories backed by SAP HANA Cloud, and a client for **SAP AI Core** to manage deployments and executions.
+
+For details and code examples, see the [Agent Framework](features/agent-framework) guide.
+
 ### Connectivity and Identity
 
 The SDK abstracts the details of connecting to remote systems defined in the SAP BTP Cockpit.
@@ -47,17 +67,15 @@ The Identity and Access Service (IAS) module handles token verification and user
 
 For details and code examples, see the [Connectivity and Identity](features/connectivity) guide.
 
-### Agent Framework
+### Core Modules
 
-The Agent Framework is the core differentiator of the Python SDK.
-It provides building blocks for AI-powered agents running on SAP BTP: a `@tool` decorator to register Python functions as agent tools, the **Agent Gateway Service** for discovering MCP tools from connected LoB systems with tenant-aware principal propagation, and the **Agent Memory Service** for storing and retrieving conversation history and long-term semantic memories backed by SAP HANA Cloud.
+The SDK includes cross-cutting modules that apply to any application type: **Audit Logging** for emitting structured events to the SAP Audit Log Service, **Telemetry** for auto-instrumented OpenTelemetry traces and metrics exported to SAP Cloud Logging, and **Object Storage** for managing files on SAP BTP Object Store Service.
 
-For details and code examples, see the [Agent Framework](features/agent-framework) guide.
+For details and code examples, see the [Core Modules](features/core-modules) guide.
 
-### BTP Services
+### RBS Services
 
-The SDK provides clients for a range of SAP BTP services, including SAP AI Core (deployment and execution management), the Audit Log Service, Object Storage, Document Management, and Output Management.
-It also includes a Telemetry module built on OpenTelemetry for traces and metrics that export to SAP Cloud Logging, and a Secret Management module that resolves credentials from Kubernetes-mounted bindings or environment variables using a consistent priority-based lookup.
+The SDK provides clients for SAP RBS services, including **Document Management** for managing documents and folders in a repository, and **Output Management** for creating and sending output requests such as emails and print documents.
 
 For details and code examples, see the [RBS Services](features/btp-services) guide.
 
