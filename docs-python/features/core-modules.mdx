@@ -4,7 +4,7 @@ title: Core Modules
 hide_title: false
 hide_table_of_contents: false
 sidebar_label: Core Modules
-description: Cross-cutting SDK modules — Audit Logging, Telemetry, and Object Storage
+description: Cross-cutting SDK modules — Audit Logging, Telemetry & Observability, Object Storage, and Runtime Context
 keywords:
   - sap
   - cloud
@@ -14,6 +14,7 @@ keywords:
   - telemetry
   - opentelemetry
   - object storage
+  - runtime context
 ---
 
 ## Audit Logging
@@ -46,7 +47,7 @@ logger.log_data_modification(
 
 ---
 
-## Telemetry
+## Telemetry & Observability
 
 The Telemetry module provides observability utilities built on top of [OpenTelemetry](https://opentelemetry.io/).
 It auto-instruments SDK HTTP clients and common Python frameworks, exporting traces and metrics to any OpenTelemetry-compatible backend such as SAP Cloud Logging.
@@ -96,4 +97,81 @@ content = client.download(bucket="my-bucket", key="reports/2026/report.pdf")
 
 # List objects
 objects = client.list(bucket="my-bucket", prefix="reports/")
+```
+
+---
+
+## Runtime Context
+
+The Runtime Context module propagates caller-identity information — tenant, user, and trigger type — across any invocation source (HTTP, gRPC, message queue) without coupling to a specific framework.
+It uses a `ContextVar` so context is scoped per async task or thread.
+
+### Setup
+
+Call `bootstrap()` once at application startup to wire the built-in providers into your framework (Starlette / FastAPI are supported out of the box):
+
+```python
+from sap_cloud_sdk import bootstrap
+
+bootstrap(app)
+```
+
+This automatically registers the `IASContextProvider` (tenant and user from the `Authorization` JWT), `SAPTriggerContextProvider` (trigger type from `x-sap-origin`), and `DWCContextProvider` (Deploy with Confidence headers).
+
+### Reading Context
+
+```python
+from sap_cloud_sdk.core.runtime_context import get_context, APP_TENANT_ID, USER_ID, TRIGGER_TYPE
+
+ctx = get_context()
+tenant = ctx.get(APP_TENANT_ID)   # -> "abc-123" or None
+user   = ctx.get(USER_ID)         # -> "user-uuid" or None
+```
+
+### Custom Context Keys and Providers
+
+You can extend the context with your own keys and providers:
+
+```python
+from sap_cloud_sdk.core.runtime_context import (
+    ContextKey, ContextProvider, RuntimeContext, RequestEnvelope,
+    IASContextProvider, SAPTriggerContextProvider, DWCContextProvider,
+)
+
+CORRELATION_ID = ContextKey[str]("correlation_id")
+
+class CorrelationIdProvider(ContextProvider):
+    def extract(self, envelope: RequestEnvelope) -> RuntimeContext:
+        value = envelope.headers.get("x-correlation-id")
+        return RuntimeContext({CORRELATION_ID: value} if value else {})
+
+bootstrap(app, providers=[
+    IASContextProvider(),
+    SAPTriggerContextProvider(),
+    DWCContextProvider(),
+    CorrelationIdProvider(),
+])
+```
+
+### Manual Context Management
+
+For non-HTTP use cases such as background workers or tests, set and read context directly:
+
+```python
+from sap_cloud_sdk.core.runtime_context import sdk_context, RuntimeContext, APP_TENANT_ID
+
+ctx = RuntimeContext({APP_TENANT_ID: "acme-corp"})
+
+with sdk_context(ctx):
+    # ctx is active for the duration of this block
+    process_job()
+```
+
+Use `async_sdk_context` for async code:
+
+```python
+from sap_cloud_sdk.core.runtime_context import async_sdk_context
+
+async with async_sdk_context(ctx):
+    await process_async_job()
 ```
