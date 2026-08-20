@@ -1,0 +1,63 @@
+---
+id: print-service
+title: Print Service
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Print Service
+description: Manage print queues, upload documents, and submit print tasks with the SAP Print Service
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - python
+  - print service
+  - print queue
+---
+
+The Print Service module provides a client for [SAP Print Service](https://help.sap.com/docs/print-service), enabling you to manage print queues, upload documents, and submit print tasks.
+Credentials are read from the service binding at `$SERVICE_BINDING_ROOT/print/default/` or the `CLOUD_SDK_CFG_PRINT_DEFAULT_*` environment variables.
+
+### Creating a Client
+
+```python
+from sap_cloud_sdk.print import create_client
+
+client = create_client()
+```
+
+### Uploading and Printing a Document
+
+```python
+from sap_cloud_sdk.print import PrintTask, PrintContent
+
+# Upload the document to cloud storage
+with open("invoice.pdf", "rb") as f:
+    doc_id = client.upload_document(f, filename="invoice.pdf")
+
+# Submit a print task
+client.create_print_task(PrintTask(
+    item_id=doc_id,
+    qname="my-print-queue",
+    print_contents=[PrintContent(object_key=doc_id, document_name="invoice.pdf")],
+    number_of_copies=1,
+))
+```
+
+### Managing Print Queues
+
+```python
+from sap_cloud_sdk.print import PrintQueue
+
+# List available queues
+queues = client.list_queues()
+
+# Create a new queue
+client.create_queue(PrintQueue(
+    qname="INVOICES",
+    qdescription="Invoice printing queue",
+    cleanup_prd=3,
+))
+
+# Get print profiles for a queue
+profiles = client.get_print_profiles(qname="INVOICES")
+```

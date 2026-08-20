@@ -1,0 +1,34 @@
+---
+id: tool-decorators
+title: Tool Decorators
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Tool Decorators
+description: Register Python functions as callable agent tools using the @tool decorator
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - python
+  - agent
+  - tool decorator
+---
+
+Annotate any Python function with `@tool` to register it as a callable tool.
+The decorator uses the function's type annotations to generate the tool's input schema and forwards the `description` to the LLM.
+
+```python
+from sap_cloud_sdk.agent import tool
+
+@tool(description="Fetch the current status for a given order ID.")
+def get_order_status(order_id: str) -> str:
+    # your business logic here
+    return f"Order {order_id} is currently: In Transit"
+
+@tool(description="List all open purchase orders for a given supplier.")
+def list_open_orders(supplier_id: str, max_results: int = 10) -> list[dict]:
+    # call your backend system here
+    return []
+```
+
+Decorated functions can be passed directly to a LangChain agent or any framework that accepts a list of tools.

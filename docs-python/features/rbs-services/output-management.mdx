@@ -1,0 +1,31 @@
+---
+id: output-management
+title: Output Management Service
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Output Management Service
+description: Create and send output requests — emails and print documents — via the SAP Output Management Service
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - python
+  - output management
+  - email
+  - print
+---
+
+The Output Management module provides a client for creating and sending output requests — including emails and print documents — via the [SAP Output Management Service](https://help.sap.com/docs/output-management).
+
+```python
+from sap_cloud_sdk.outputmanagement import OutputManagementClient
+
+client = OutputManagementClient()
+
+# Send an email
+client.send_output_request(
+    template_id="invoice-email-template",
+    recipient="customer@example.com",
+    data={"invoice_number": "INV-001", "amount": "1,500.00 EUR"}
+)
+```

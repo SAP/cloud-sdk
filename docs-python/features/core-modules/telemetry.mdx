@@ -1,0 +1,45 @@
+---
+id: telemetry
+title: Telemetry & Observability
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Telemetry & Observability
+description: Auto-instrument your application with OpenTelemetry traces and metrics for SAP Cloud Logging
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - python
+  - telemetry
+  - opentelemetry
+  - tracing
+  - observability
+---
+
+The Telemetry module provides observability utilities built on top of [OpenTelemetry](https://opentelemetry.io/).
+It auto-instruments SDK HTTP clients and common Python frameworks, exporting traces and metrics to any OpenTelemetry-compatible backend such as SAP Cloud Logging.
+
+### Setup
+
+Call `auto_instrument()` once at application startup:
+
+```python
+from sap_cloud_sdk.telemetry import auto_instrument
+
+auto_instrument()
+```
+
+This sets up trace propagation and metric collection for all SDK operations and outbound HTTP requests without any further configuration.
+
+### Custom Spans
+
+You can also create custom spans to trace your own business logic:
+
+```python
+from opentelemetry import trace
+
+tracer = trace.get_tracer("my-agent")
+
+with tracer.start_as_current_span("process-order"):
+    result = process_order(order_id)
+```

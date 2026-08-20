@@ -1,0 +1,30 @@
+---
+id: dms
+title: DMS
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: DMS
+description: Manage documents and folders in a repository with the SAP Document Management Service
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - python
+  - dms
+  - document management
+---
+
+The Document Management module provides a client for [SAP Document Management Service](https://help.sap.com/docs/document-management-service), enabling you to manage documents and folders in a repository.
+
+```python
+from sap_cloud_sdk.document_management import DocumentManagementClient
+
+client = DocumentManagementClient()
+folder = client.create_folder(repository_id="my-repo", path="/invoices/2026")
+document = client.upload_document(
+    repository_id="my-repo",
+    folder_id=folder.id,
+    file_name="invoice-001.pdf",
+    content=pdf_bytes
+)
+```

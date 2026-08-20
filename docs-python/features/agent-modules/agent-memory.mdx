@@ -1,0 +1,88 @@
+---
+id: agent-memory
+title: Agent Memory Service
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Agent Memory Service
+description: Persist and retrieve conversation history and long-term semantic memories with the Agent Memory Service
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - python
+  - agent memory
+  - hana cloud
+  - conversation history
+  - semantic search
+---
+
+The Agent Memory Service provides a persistent, tenant-isolated store backed by SAP HANA Cloud.
+It exposes two APIs:
+
+- **Messages API** — short-term conversation history, scoped to an agent, user, and session
+- **Memories API** — long-term semantic storage with similarity search across sessions
+
+### Configuration
+
+The service is configured via a Kubernetes-mounted binding at `/etc/secrets/appfnd/hana-agent-memory/default`.
+For local development, set the following environment variables:
+
+```bash
+export HC_API_URL=https://<your-hana-instance>.hanacloud.ondemand.com
+export HC_CLIENT_ID=<client-id>
+export HC_CLIENT_SECRET=<client-secret>
+export HC_AUTH_URL=https://<your-auth-url>/oauth/token
+```
+
+### Messages API
+
+Use the Messages API to store and replay conversation turns within a session:
+
+```python
+from sap_cloud_sdk.agent_memory import create_client, MessageRole
+
+client = create_client(tenant=tenant_subdomain)
+
+# Store a conversation turn
+client.add_message(
+    agent_id="my-agent", invoker_id=user_id,
+    message_group=session_id, role=MessageRole.USER, content=query
+)
+client.add_message(
+    agent_id="my-agent", invoker_id=user_id,
+    message_group=session_id, role=MessageRole.ASSISTANT, content=response
+)
+
+# Replay history for a returning session
+messages = client.list_messages(
+    agent_id="my-agent", invoker_id=user_id,
+    message_group=session_id, limit=50
+)
+```
+
+:::note
+Since v0.36.0, the `tenant` argument is required when calling `create_client()`. Omitting it raises `AgentMemoryValidationError`.
+:::
+
+### Memories API
+
+Use the Memories API to persist facts across sessions and retrieve the most relevant ones using semantic similarity search:
+
+```python
+# Store a long-term fact about the user
+client.add_memory(
+    agent_id="my-agent", invoker_id=user_id,
+    content="User prefers responses in English."
+)
+
+# Retrieve relevant memories before generating a response
+results = client.search_memories(
+    agent_id="my-agent", invoker_id=user_id,
+    query="preferred language", threshold=0.6, limit=5
+)
+for r in results:
+    print(f"[{r.similarity:.2f}] {r.content}")
+```
+
+The `threshold` parameter (0.0–1.0) controls the minimum cosine similarity score for a memory to be returned.
+A value of `0.6` is a reasonable starting point for most use cases.

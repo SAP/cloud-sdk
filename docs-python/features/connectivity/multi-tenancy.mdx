@@ -1,0 +1,27 @@
+---
+id: multi-tenancy
+title: Multi-Tenancy
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Multi-Tenancy
+description: Build tenant-aware applications with automatic tenant isolation across SDK calls
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - python
+  - multi-tenancy
+  - tenant isolation
+---
+
+The SDK applies tenant isolation throughout by default.
+The current tenant is resolved from the incoming request token and propagated automatically to destination lookups, memory operations, and other SDK calls.
+
+You can also provide the tenant subdomain explicitly when needed:
+
+```python
+from sap_cloud_sdk.destination import DestinationService
+
+service = DestinationService()
+destination = service.get_destination("my-destination", tenant_subdomain="acme-corp")
+```

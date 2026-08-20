@@ -1,0 +1,91 @@
+---
+id: adms
+title: ADMS
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: ADMS
+description: Interact with the SAP Advanced Document Management Service OData V4 API from Python
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - python
+  - adms
+  - advanced document management
+  - odata
+---
+
+The Advanced Document Management Service (ADMS) module provides a typed Python client for the [SAP Advanced Document Management Service](https://help.sap.com/docs/advanced-document-management) OData V4 API.
+Credentials are read from the service binding at `/etc/secrets/appfnd/adms/default/` or the `CLOUD_SDK_CFG_ADMS_DEFAULT_*` environment variables.
+
+### Creating a Client
+
+```python
+from sap_cloud_sdk.adms import create_client
+
+client = create_client()
+```
+
+For per-user policy enforcement, pass a user JWT:
+
+```python
+client = create_client(user_jwt=request_token)
+# or scope an existing client to a user:
+user_client = client.with_user_jwt(request_token)
+```
+
+### Managing Documents
+
+```python
+# List all document relations
+relations = client.relations.get_all()
+
+# Create a new document relation and generate upload URLs
+relation = client.relations.create(input=CreateDocumentRelationInput(...))
+upload_urls = client.relations.generate_upload_urls(
+    document_relation_id=relation.id,
+    file_count=1,
+    file_size_in_bytes=len(pdf_bytes)
+)
+
+# Retrieve a document
+document = client.documents.get(document_relation_id=relation.id)
+download_url = client.documents.get_download_url(
+    document_relation_id=relation.id,
+    doc_content_version_id=document.content_version_id
+)
+```
+
+### Draft Workflow
+
+```python
+from sap_cloud_sdk.adms import DraftInput, DraftActivateInput
+
+# Create and activate a draft
+draft_relations = client.relations.create_draft(draft_input=DraftInput(...))
+client.relations.validate_draft(draft_input=DraftInput(...))
+client.relations.activate_draft(input=DraftActivateInput(...))
+
+# Or discard
+client.relations.discard_draft(draft_input=DraftInput(...))
+```
+
+### Background Jobs
+
+```python
+from sap_cloud_sdk.adms import ZipDownloadJobParameters
+
+job = client.jobs.start_zip_download(params=ZipDownloadJobParameters(
+    document_relation_ids=["id-1", "id-2"]
+))
+status = client.jobs.get_status(job_id=job.job_id)
+```
+
+### Async Client
+
+```python
+from sap_cloud_sdk.adms import create_async_client
+
+async with create_async_client() as client:
+    relations = await client.relations.get_all()
+```

@@ -1,0 +1,44 @@
+---
+id: identity-ias
+title: Identity and Access Service (IAS)
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Identity (IAS)
+description: Verify JWTs and handle service-to-service authentication with SAP Cloud Identity Services
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - python
+  - ias
+  - identity
+  - jwt
+  - authentication
+---
+
+The IAS module handles authentication and token management for applications secured with [SAP Cloud Identity Services](https://help.sap.com/docs/identity-authentication).
+IAS is the primary identity provider for new Python SDK applications — XSUAA is out of scope.
+
+### Token Verification
+
+Verify incoming JWTs from SAP Cloud Identity Services:
+
+```python
+from sap_cloud_sdk.ias import IASTokenVerifier
+
+verifier = IASTokenVerifier()
+token_claims = verifier.verify(request_token)
+user_id = token_claims.subject
+tenant = token_claims.zone_uuid
+```
+
+### Service-to-Service Authentication
+
+For service-to-service calls, the SDK handles the client credentials flow automatically when the IAS binding is present:
+
+```python
+from sap_cloud_sdk.ias import IASClient
+
+ias_client = IASClient()
+token = ias_client.get_service_token(target_service="my-backend-service")
+```

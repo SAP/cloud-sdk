@@ -1,0 +1,62 @@
+---
+id: agent-gateway
+title: Agent Gateway Service
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Agent Gateway Service
+description: Discover MCP tools from connected SAP LoB systems and use them in an agent loop
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - python
+  - agent gateway
+  - mcp
+  - langchain
+---
+
+The Agent Gateway Service (AGW) is the central communication hub for SAP BTP agents.
+It discovers MCP tools exposed by connected SAP LoB systems — such as SAP S/4HANA and SAP SuccessFactors — and wraps them as LangChain-compatible tools ready for use in an agent loop.
+
+### Discovering Tools
+
+```python
+from sap_cloud_sdk.agentgateway import create_client
+from sap_cloud_sdk.agentgateway.converters import mcp_tool_to_langchain
+
+agw_client = create_client(tenant_subdomain=get_tenant_subdomain)
+mcp_tools = await agw_client.list_mcp_tools(user_token=get_user_token)
+tools = [
+    mcp_tool_to_langchain(t, agw_client.call_mcp_tool, get_user_token)
+    for t in mcp_tools
+]
+```
+
+:::note
+`get_tenant_subdomain` and `get_user_token` must be **callables** (for example, functions reading from contextvars), not captured strings.
+This ensures that credentials are resolved per request and never become stale.
+:::
+
+### Calling a Tool Directly
+
+You can also call an MCP tool directly without converting to LangChain format:
+
+```python
+result = await agw_client.call_mcp_tool(
+    tool=mcp_tools[0],
+    user_token=get_user_token,
+    order_id="4500012345"
+)
+```
+
+### Filtering Tools by ORD ID
+
+When multiple MCP servers expose tools with overlapping names, use `MCPToolFilter` to scope discovery to a specific system:
+
+```python
+from sap_cloud_sdk.agentgateway import AgentCardFilter
+
+tools = await agw_client.list_mcp_tools(
+    filter=MCPToolFilter(ord_ids=["sap.s4:purchaseOrder:v1"])
+)
+```
