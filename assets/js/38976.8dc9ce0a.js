@@ -1,1 +1,0 @@
-"use strict";(globalThis.webpackChunksap_cloud_sdk_documentation=globalThis.webpackChunksap_cloud_sdk_documentation||[]).push([[38976],{38976(a,e,s){s.d(e,{createPieServices:()=>c.f});var c=s(16019);s(51400)}}]);
