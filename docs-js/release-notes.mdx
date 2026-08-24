@@ -20,6 +20,27 @@ import LicenseBadge from '@site/src/sap/sdk-js/LicenseBadge';
 <!-- vale off -->
 <!-- This line is used for our release notes automation -->
 
+## 4.9.0 [Core Modules] - August 24, 2026
+
+### Compatibility Notes
+
+- [generator-common] Generated files now include a blank line between the copyright header and the file content. ([118131d](https://github.com/SAP/cloud-sdk-js/commit/118131db5f3390323530c1ec8af9124e60a280c0))
+- [openapi-generator] Fields with `contentMediaType: application/json` and a `contentSchema` will now be typed as the `contentSchema` type instead of `string`. Re-generate your client to pick up the new types. ([404dc92](https://github.com/SAP/cloud-sdk-js/commit/404dc92e2fb7011954c2f95eb27ec48d26b789d6))
+
+### New Features
+
+- [openapi-generator] Support `contentSchema` in OpenAPI 3.1 schemas: fields with `contentMediaType: application/json` and a `contentSchema` are now typed as the `contentSchema` type instead of `string`. Serialization to a JSON string is supported for multipart bodies via `FormDataBuilder`; non-multipart bodies are not yet handled. ([404dc92](https://github.com/SAP/cloud-sdk-js/commit/404dc92e2fb7011954c2f95eb27ec48d26b789d6))
+- [openapi-generator] OpenAPI generator now supports OAS 3.1 input. This feature is experiemental. Use with caution. ([5f6fe80](https://github.com/SAP/cloud-sdk-js/commit/5f6fe80d51484ee66c7ef62e720a5f3f8eeca78e))
+
+### Fixed Issues
+
+- [connectivity] Extend OnPremise HTTP agent cache key to scope it more strongly.
+  The cache key now includes the subaccount identity ensuring keep-alive sockets are not reused across tenants in multi-tenant technical user flows.
+  If no stable identity context can be derived from the request, a fresh agent without keep-alive is created for each request.
+  This matches the behavior of the previous implementation in SAP Cloud SDK v4.6.0 and lower, which did not cache agents in any case. ([9f55261](https://github.com/SAP/cloud-sdk-js/commit/9f55261985d669bb6cad9c74e7dbd4d8c830382d))
+- [generator-common] `readCompilerOptions` now uses the TypeScript compiler API for tsconfig parsing, fixing support for JSONC (comments, trailing commas), package-name `extends` (e.g. `@tsconfig/node18`), and circular `extends` chains. ([88c304e](https://github.com/SAP/cloud-sdk-js/commit/88c304e96ec54bc1b8d84776efb7bc711baeee14))
+- [http-client] Restore proxy authorization headers for same-origin redirects when using proxy configuration. ([05e9299](https://github.com/SAP/cloud-sdk-js/commit/05e9299fb33a5031f74918333e9e3ed739520da3))
+
 ## 4.8.0 [Core Modules] - July 21, 2026
 
 ### Compatibility Notes
