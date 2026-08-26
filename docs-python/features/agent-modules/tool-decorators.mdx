@@ -1,34 +1,65 @@
 ---
 id: tool-decorators
-title: Tool Decorators
+title: Agent Decorators
 hide_title: false
 hide_table_of_contents: false
-sidebar_label: Tool Decorators
-description: Register Python functions as callable agent tools using the @tool decorator
+sidebar_label: Agent Decorators
+description: Expose agent configuration fields to a low-code UI using Python decorators
 keywords:
   - sap
   - cloud
   - sdk
   - python
   - agent
-  - tool decorator
+  - decorator
+  - configuration
 ---
 
-Annotate any Python function with `@tool` to register it as a callable tool.
-The decorator uses the function's type annotations to generate the tool's input schema and forwards the `description` to the LLM.
+The Agent Decorators module provides a configuration-as-code system for SAP AI agents.
+Annotate Python functions with decorators to expose configuration fields — prompts, model selections, and settings — to a low-code UI.
+
+### Quick Start
 
 ```python
-from sap_cloud_sdk.agent import tool
+from sap_cloud_sdk.agent_decorators import prompt_section, agent_model
 
-@tool(description="Fetch the current status for a given order ID.")
-def get_order_status(order_id: str) -> str:
-    # your business logic here
-    return f"Order {order_id} is currently: In Transit"
 
-@tool(description="List all open purchase orders for a given supplier.")
-def list_open_orders(supplier_id: str, max_results: int = 10) -> list[dict]:
-    # call your backend system here
-    return []
+# Define a prompt with a coded default
+@prompt_section(
+    key="prompts.system",
+    label="System Prompt",
+    description="Main system prompt for the agent",
+)
+def system_prompt() -> str:
+    return "You are a helpful assistant."
+
+
+# Define the model selection
+@agent_model(key="config.model", label="LLM Model")
+def model_name() -> str:
+    return "gpt-4"
 ```
 
-Decorated functions can be passed directly to a LangChain agent or any framework that accepts a list of tools.
+### Decorators
+
+#### @prompt_section
+
+Expose a prompt section for editing.
+
+```python
+from sap_cloud_sdk.agent_decorators import prompt_section
+
+
+@prompt_section(
+    key="prompts.identity",
+    label="Agent Identity",
+    description="Core identity and role definition",
+    validation={"format": "text", "max_length": 500},
+)
+def identity_prompt() -> str:
+    return "You are an expert assistant specializing in SAP systems."
+```
+
+---
+
+For the complete API reference and more examples, see the [Agent Decorators user guide](https://github.com/SAP/cloud-sdk-python/blob/main/src/sap_cloud_sdk/agent_decorators/user-guide.md) in the `cloud-sdk-python` repository.

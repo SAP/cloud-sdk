@@ -16,75 +16,52 @@ keywords:
   - context propagation
 ---
 
-The Runtime Context module propagates caller-identity information — tenant, user, and trigger type — across any invocation source (HTTP, gRPC, message queue) without coupling to a specific framework.
-It uses a `ContextVar` so context is scoped per async task or thread.
+### How it works
 
-### Setup
+The runtime context lets SDK modules read caller-identity information (tenant, user, trigger type) for the current execution — without knowing where that information came from or what framework is running.
 
-Call `bootstrap()` once at application startup to wire the built-in providers into your framework (Starlette / FastAPI are supported out of the box):
+- **bootstrap(app)** wires the SDK into your framework once at startup.
+- **Providers** extract context from the current invocation (HTTP request, gRPC call, Kubernetes event, etc.).
+- **get_context()** lets any module read that context via typed keys.
+
+
 
 ```python
+bootstrap(app)
+  └─ registers middleware on your framework
+       └─ on each invocation: providers extract → RuntimeContext set in ContextVar
+            └─ anywhere: get_context().get(TENANT_ID)
+```
+
+### Bootstrap at app startup
+
+```python
+from starlette.applications import Starlette
 from sap_cloud_sdk import bootstrap
 
+app = Starlette(...)
 bootstrap(app)
 ```
 
-This automatically registers the `IASContextProvider` (tenant and user from the `Authorization` JWT), `SAPTriggerContextProvider` (trigger type from `x-sap-origin`), and `DWCContextProvider` (Deploy with Confidence headers).
-
-### Reading Context
-
-```python
-from sap_cloud_sdk.core.runtime_context import get_context, APP_TENANT_ID, USER_ID, TRIGGER_TYPE
-
-ctx = get_context()
-tenant = ctx.get(APP_TENANT_ID)   # -> "abc-123" or None
-user   = ctx.get(USER_ID)         # -> "user-uuid" or None
-```
-
-### Custom Context Keys and Providers
-
-You can extend the context with your own keys and providers:
+### Read context anywhere
 
 ```python
 from sap_cloud_sdk.core.runtime_context import (
-    ContextKey, ContextProvider, RuntimeContext, RequestEnvelope,
-    IASContextProvider, SAPTriggerContextProvider, DWCContextProvider,
+    get_context,
+    TENANT_ID,
+    USER_ID,
+    TRIGGER_TYPE,
 )
 
-CORRELATION_ID = ContextKey[str]("correlation_id")
-
-class CorrelationIdProvider(ContextProvider):
-    def extract(self, envelope: RequestEnvelope) -> RuntimeContext:
-        value = envelope.headers.get("x-correlation-id")
-        return RuntimeContext({CORRELATION_ID: value} if value else {})
-
-bootstrap(app, providers=[
-    IASContextProvider(),
-    SAPTriggerContextProvider(),
-    DWCContextProvider(),
-    CorrelationIdProvider(),
-])
+ctx = get_context()
+ctx.get(TENANT_ID)  # -> "abc-123" or None
+ctx.get(USER_ID)  # -> "user-uuid" or None
+ctx.get(TRIGGER_TYPE)  # -> "ui5" or None
 ```
 
-### Manual Context Management
+Pass an explicit `tenant_id` parameter on any client that exposes one to override the context-resolved value for administrative or background processing scenarios.
 
-For non-HTTP use cases such as background workers or tests, set and read context directly:
 
-```python
-from sap_cloud_sdk.core.runtime_context import sdk_context, RuntimeContext, APP_TENANT_ID
+---
 
-ctx = RuntimeContext({APP_TENANT_ID: "acme-corp"})
-
-with sdk_context(ctx):
-    # ctx is active for the duration of this block
-    process_job()
-```
-
-Use `async_sdk_context` for async code:
-
-```python
-from sap_cloud_sdk.core.runtime_context import async_sdk_context
-
-async with async_sdk_context(ctx):
-    await process_async_job()
-```
+For framework adapters, provider merging semantics, and more, see the [Runtime Context user guide](https://github.com/SAP/cloud-sdk-python/blob/main/src/sap_cloud_sdk/core/runtime_context/user-guide.md) in the `cloud-sdk-python` repository.

@@ -15,20 +15,31 @@ keywords:
   - files
 ---
 
-The Object Storage module provides a client for SAP BTP Object Store Service, allowing you to upload, download, list, and delete objects.
+The Object Storage module provides a client for SAP BTP Object Store Service with a simple, unified API for uploading, downloading, listing, and deleting objects.
+
+### Getting Started
+
+Use ```create_client()``` to get a client with automatic configuration detection:
 
 ```python
-from sap_cloud_sdk.object_storage import ObjectStorageClient
+from sap_cloud_sdk.objectstore import create_client
 
-client = ObjectStorageClient()
-
-# Upload a file
-with open("report.pdf", "rb") as f:
-    client.upload(bucket="my-bucket", key="reports/2026/report.pdf", body=f)
-
-# Download a file
-content = client.download(bucket="my-bucket", key="reports/2026/report.pdf")
-
-# List objects
-objects = client.list(bucket="my-bucket", prefix="reports/")
+# Automatically detects local vs cloud mode
+client = create_client("my-instance")
 ```
+
+You can also specify additional parameters if needed:
+
+```python
+from sap_cloud_sdk.objectstore import create_client
+
+# Custom configuration with SSL disabled
+client = create_client(
+    "my-instance",
+    disable_ssl=True,  # Disable SSL (default is False)
+)
+```
+
+---
+
+For error handling, metadata inspection, and configuration details, see the [Object Storage user guide](https://github.com/SAP/cloud-sdk-python/blob/main/src/sap_cloud_sdk/objectstore/user-guide.md) in the `cloud-sdk-python` repository.

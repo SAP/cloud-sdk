@@ -14,17 +14,38 @@ keywords:
   - document management
 ---
 
-The Document Management module provides a client for [SAP Document Management Service](https://help.sap.com/docs/document-management-service), enabling you to manage documents and folders in a repository.
+The DMS module provides a Python client for the [SAP Document Management Service](https://help.sap.com/docs/document-management-service), enabling you to manage repositories, documents, folders, versioning, and access control via the CMIS Browser Binding protocol.
+
+### Creating a Client
+
+Use ```create_client()``` to get a client with automatic configuration detection:
 
 ```python
-from sap_cloud_sdk.document_management import DocumentManagementClient
+from sap_cloud_sdk.dms import create_client
 
-client = DocumentManagementClient()
-folder = client.create_folder(repository_id="my-repo", path="/invoices/2026")
-document = client.upload_document(
-    repository_id="my-repo",
-    folder_id=folder.id,
-    file_name="invoice-001.pdf",
-    content=pdf_bytes
+# Load credentials from mounted secrets or environment variables
+client = create_client(instance="my-instance")
+```
+
+You can also provide credentials directly:
+
+```python
+from sap_cloud_sdk.dms import create_client
+from sap_cloud_sdk.dms.model import DMSCredentials
+
+creds = DMSCredentials(
+    instance_name="my-instance",
+    uri="https://api-sdm-di.cfapps.eu10.hana.ondemand.com",
+    client_id="your-client-id",
+    client_secret="your-client-secret",
+    token_url="https://your-subdomain.authentication.eu10.hana.ondemand.com/oauth/token",
+    identityzone="your-subdomain",
+)
+
+client = create_client(dms_cred=creds)
 )
 ```
+
+---
+
+For repository management, versioning, access control, and more, see the [DMS user guide](https://github.com/SAP/cloud-sdk-python/blob/main/src/sap_cloud_sdk/dms/user-guide.md) in the `cloud-sdk-python` repository.

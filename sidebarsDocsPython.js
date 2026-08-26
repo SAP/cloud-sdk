@@ -25,7 +25,6 @@ module.exports = {
           items: [
             'features/connectivity/destination-service',
             'features/connectivity/identity-ias',
-            'features/connectivity/multi-tenancy',
             'features/connectivity/secret-management',
           ]
         },

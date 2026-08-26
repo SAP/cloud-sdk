@@ -14,50 +14,35 @@ keywords:
   - print queue
 ---
 
-The Print Service module provides a client for [SAP Print Service](https://help.sap.com/docs/print-service), enabling you to manage print queues, upload documents, and submit print tasks.
-Credentials are read from the service binding at `$SERVICE_BINDING_ROOT/print/default/` or the `CLOUD_SDK_CFG_PRINT_DEFAULT_*` environment variables.
+The Print Service module provides a client for the [SAP Print Service](https://help.sap.com/docs/print-service), enabling you to manage print queues, upload documents, and submit print tasks.
 
-### Creating a Client
+### Getting Started
+Use ```create_client()``` to get a client with automatic configuration detection:
+
 
 ```python
 from sap_cloud_sdk.print import create_client
 
-client = create_client()
+# Load credentials from mounted secrets or environment variables
+client = create_client(instance="my-instance")
 ```
 
-### Uploading and Printing a Document
+You can also provide credentials directly:
 
 ```python
-from sap_cloud_sdk.print import PrintTask, PrintContent
+from sap_cloud_sdk.print import create_client
+from sap_cloud_sdk.print.config import PrintConfig
 
-# Upload the document to cloud storage
-with open("invoice.pdf", "rb") as f:
-    doc_id = client.upload_document(f, filename="invoice.pdf")
+config = PrintConfig(
+    url="https://api.eu10.print.services.sap",
+    client_id="your-client-id",
+    client_secret="your-client-secret",
+    token_url="https://your-subdomain.authentication.eu10.hana.ondemand.com/oauth/token",
+)
 
-# Submit a print task
-client.create_print_task(PrintTask(
-    item_id=doc_id,
-    qname="my-print-queue",
-    print_contents=[PrintContent(object_key=doc_id, document_name="invoice.pdf")],
-    number_of_copies=1,
-))
+client = create_client(config=config)
 ```
 
-### Managing Print Queues
+---
 
-```python
-from sap_cloud_sdk.print import PrintQueue
-
-# List available queues
-queues = client.list_queues()
-
-# Create a new queue
-client.create_queue(PrintQueue(
-    qname="INVOICES",
-    qdescription="Invoice printing queue",
-    cleanup_prd=3,
-))
-
-# Get print profiles for a queue
-profiles = client.get_print_profiles(qname="INVOICES")
-```
+For print profiles and more examples, see the [Print Service user guide](https://github.com/SAP/cloud-sdk-python/blob/main/src/sap_cloud_sdk/print/user-guide.md) in the `cloud-sdk-python` repository.

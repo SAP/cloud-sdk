@@ -4,7 +4,7 @@ title: Identity and Access Service (IAS)
 hide_title: false
 hide_table_of_contents: false
 sidebar_label: Identity (IAS)
-description: Verify JWTs and handle service-to-service authentication with SAP Cloud Identity Services
+description: Parse and inspect IAS JWTs from SAP Cloud Identity Services
 keywords:
   - sap
   - cloud
@@ -16,29 +16,42 @@ keywords:
   - authentication
 ---
 
-The IAS module handles authentication and token management for applications secured with [SAP Cloud Identity Services](https://help.sap.com/docs/identity-authentication).
-IAS is the primary identity provider for new Python SDK applications — XSUAA is out of scope.
+The IAS module provides utilities for working with SAP Identity Authentication Service (IAS) tokens.
 
-### Token Verification
+### Parsing a Token
 
-Verify incoming JWTs from SAP Cloud Identity Services:
-
-```python
-from sap_cloud_sdk.ias import IASTokenVerifier
-
-verifier = IASTokenVerifier()
-token_claims = verifier.verify(request_token)
-user_id = token_claims.subject
-tenant = token_claims.zone_uuid
-```
-
-### Service-to-Service Authentication
-
-For service-to-service calls, the SDK handles the client credentials flow automatically when the IAS binding is present:
+Use `parse_token` to decode an IAS JWT into a typed `IASClaims` dataclass.
+It accepts either a raw token string or an `Authorization: Bearer <token>` header value.
 
 ```python
-from sap_cloud_sdk.ias import IASClient
+from sap_cloud_sdk.ias import parse_token
 
-ias_client = IASClient()
-token = ias_client.get_service_token(target_service="my-backend-service")
+claims = parse_token(
+    request.headers["Authorization"]
+)  # accepts "Bearer <token>" or raw token
+
+print(claims.app_tid)   # tenant ID (multitenant scenarios)
+print(claims.scim_id)   # SCIM-based user ID in SAP Cloud Identity Services
+print(claims.sub)       # OIDC subject identifier
+print(claims.email)     # user email (when email scope was requested)
 ```
+
+:::note
+`parse_token` does **not** verify the token signature.
+Validate the token against the IAS JWKS endpoint in your framework or middleware before using the extracted claims for authorization decisions.
+:::
+
+### Combining with Telemetry
+
+```python
+from sap_cloud_sdk.ias import parse_token
+from sap_cloud_sdk.core.telemetry import set_tenant_id, add_span_attribute
+
+claims = parse_token(token)
+set_tenant_id(claims.app_tid or "")
+add_span_attribute("enduser.id", claims.scim_id or claims.sub or "")
+```
+
+---
+
+For the complete claims reference and more examples, see the [IAS user guide](https://github.com/SAP/cloud-sdk-python/blob/main/src/sap_cloud_sdk/ias/user-guide.md) in the `cloud-sdk-python` repository.

@@ -1,9 +1,9 @@
 ---
 id: ai-core
-title: AI Core
+title: SAP AI Core
 hide_title: false
 hide_table_of_contents: false
-sidebar_label: AI Core
+sidebar_label: SAP AI Core
 description: Manage AI scenarios, deployments, and executions with the SAP AI Core Python client
 keywords:
   - sap
@@ -15,25 +15,26 @@ keywords:
   - executions
 ---
 
-The AI Core module provides a Python client for [AI Core](https://help.sap.com/docs/sap-ai-core), enabling you to manage AI scenarios, deployments, and executions from your application.
+The AI Core module provides a Python client for [SAP AI Core](https://help.sap.com/docs/sap-ai-core), enabling you to manage AI scenarios, deployments, and executions from your application.
 The SDK handles credential resolution and authentication automatically via the service binding.
 
-```python
-from sap_cloud_sdk.ai_core import AICoreClient
-
-client = AICoreClient()
-deployments = client.list_deployments(resource_group="default")
-
-for d in deployments:
-    print(d.id, d.status, d.model_name)
-```
-
-### Starting an Execution
+### Basic Setup
+Use ```set_aicore_config()``` to automatically load and configure AI Core credentials:
 
 ```python
-execution = client.create_execution(
-    resource_group="default",
-    configuration_id="my-config-id"
+from sap_cloud_sdk.aicore import set_aicore_config
+
+# Load credentials and configure environment for AI Core
+set_aicore_config()
+
+# Now use LiteLLM with AI Core
+from litellm import completion
+
+response = completion(
+    model="sap/gpt-4", messages=[{"role": "user", "content": "Hello!"}]
 )
-print(execution.id, execution.status)
 ```
+
+---
+
+For the complete API reference and more examples, see the [AI Core user guide](https://github.com/SAP/cloud-sdk-python/blob/main/src/sap_cloud_sdk/aicore/user-guide.md) in the `cloud-sdk-python` repository.

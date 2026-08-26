@@ -12,30 +12,44 @@ keywords:
   - python
   - audit log
   - compliance
+  - gdpr
 ---
 
-The Audit Logging module provides a structured way to emit audit log events to the [SAP Audit Log Service](https://help.sap.com/docs/audit-log-service).
-Both the standard and the next-generation (NG) audit log APIs are supported.
+The Audit Logging module provides a unified API for logging audit events that comply with the SAP Audit Log Service OpenAPI specification.
+It uses Python dataclasses for type-safe event construction and supports six event types: Security, Data Access, Data Modification, Data Deletion, Configuration Change, and Configuration Deletion.
 
-### Data Access Events
+### Basic Setup
 
-```python
-from sap_cloud_sdk.audit_log import AuditLogger
-
-logger = AuditLogger()
-logger.log_data_access(
-    object_type="BusinessPartner",
-    object_id="1000001",
-    attributes=["Name", "Address"]
-)
-```
-
-### Data Modification Events
+Use ```create_client()``` to get a client with automatic environment detection:
 
 ```python
-logger.log_data_modification(
-    object_type="SalesOrder",
-    object_id="SO-4500012345",
-    attributes=[{"name": "Status", "old_value": "Open", "new_value": "Closed"}]
+from sap_cloud_sdk.core.auditlog import create_client, SecurityEvent
+
+client = create_client()
+
+# Create and log a security event
+security_event = SecurityEvent(
+    data="User login attempt", success=True, user="john.doe", tenant=Tenant.PROVIDER
 )
+
+client.log(security_event)
 ```
+
+### Custom Configuration
+
+```python
+from sap_cloud_sdk.core.auditlog import create_client, AuditLogConfig
+
+config = AuditLogConfig(
+    service_url="https://api.auditlog.cf.example.com/audit-log/oauth2/v2",
+    oauth_url="https://example.authentication.com/oauth/token",
+    client_id="your-client-id",
+    client_secret="your-client-secret",
+)
+
+client = create_client(config=config)
+```
+
+---
+
+For all event types, batch logging, and configuration details, see the [Audit Logging user guide](https://github.com/SAP/cloud-sdk-python/blob/main/src/sap_cloud_sdk/core/auditlog/user-guide.md) in the `cloud-sdk-python` repository.

@@ -15,77 +15,45 @@ keywords:
   - odata
 ---
 
-The Advanced Document Management Service (ADMS) module provides a typed Python client for the [SAP Advanced Document Management Service](https://help.sap.com/docs/advanced-document-management) OData V4 API.
+The ADMS module provides a typed Python client for the [SAP Advanced Document Management Service](https://help.sap.com/docs/advanced-document-management) OData V4 API.
 Credentials are read from the service binding at `/etc/secrets/appfnd/adms/default/` or the `CLOUD_SDK_CFG_ADMS_DEFAULT_*` environment variables.
 
-### Creating a Client
+### Quick Start
 
 ```python
-from sap_cloud_sdk.adms import create_client
+from sap_cloud_sdk.adms import (
+    create_client,
+    AdmsConfig,
+    BaseType,
+    CreateDocumentInput,
+    CreateDocumentRelationInput,
+    ScanStatus,
+)
 
+# Reads binding from /etc/secrets/appfnd/adms/default/ or env vars
 client = create_client()
-```
 
-For per-user policy enforcement, pass a user JWT:
-
-```python
-client = create_client(user_jwt=request_token)
-# or scope an existing client to a user:
-user_client = client.with_user_jwt(request_token)
-```
-
-### Managing Documents
-
-```python
-# List all document relations
-relations = client.relations.get_all()
-
-# Create a new document relation and generate upload URLs
-relation = client.relations.create(input=CreateDocumentRelationInput(...))
-upload_urls = client.relations.generate_upload_urls(
-    document_relation_id=relation.id,
-    file_count=1,
-    file_size_in_bytes=len(pdf_bytes)
+# Link a document to a business object (creates a draft relation + document)
+relation = client.relations.create(
+    CreateDocumentRelationInput(
+        business_object_node_type_unique_id="PurchaseOrder",
+        host_business_object_node_id="PO-4500012345",
+        document=CreateDocumentInput(
+            document_name="Invoice.pdf",
+            document_base_type=BaseType.DOCUMENT,
+            document_type_id="INVOICE",
+        ),
+        is_active_entity=False,  # start as draft
+    )
 )
 
-# Retrieve a document
-document = client.documents.get(document_relation_id=relation.id)
-download_url = client.documents.get_download_url(
-    document_relation_id=relation.id,
-    doc_content_version_id=document.content_version_id
-)
+# Upload bytes to the presigned URL (outside SDK)
+import requests
+
+upload_url = relation.document.document_content_upload_urls[0]
+requests.put(upload_url, data=open("Invoice.pdf", "rb"))
 ```
 
-### Draft Workflow
+---
 
-```python
-from sap_cloud_sdk.adms import DraftInput, DraftActivateInput
-
-# Create and activate a draft
-draft_relations = client.relations.create_draft(draft_input=DraftInput(...))
-client.relations.validate_draft(draft_input=DraftInput(...))
-client.relations.activate_draft(input=DraftActivateInput(...))
-
-# Or discard
-client.relations.discard_draft(draft_input=DraftInput(...))
-```
-
-### Background Jobs
-
-```python
-from sap_cloud_sdk.adms import ZipDownloadJobParameters
-
-job = client.jobs.start_zip_download(params=ZipDownloadJobParameters(
-    document_relation_ids=["id-1", "id-2"]
-))
-status = client.jobs.get_status(job_id=job.job_id)
-```
-
-### Async Client
-
-```python
-from sap_cloud_sdk.adms import create_async_client
-
-async with create_async_client() as client:
-    relations = await client.relations.get_all()
-```
+For draft workflows, background jobs, the async client, and more, see the [ADMS user guide](https://github.com/SAP/cloud-sdk-python/blob/main/src/sap_cloud_sdk/adms/user-guide.md) in the `cloud-sdk-python` repository.
