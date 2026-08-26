@@ -215,6 +215,29 @@ With the approach of the SAP Cloud SDK OpenAPI generator this restriction might 
 Given that you have multiple APIs, it can make sense to have the same function names in different APIs, e.g. `MyResource1Api.getAll()` and `MyResource2Api.getAll()`.
 The purpose of the `x-sap-cloud-sdk-operation-name` is to allow using duplicate names across APIs, while complying with the OpenAPI specification.
 
+## OpenAPI 3.1 Support
+
+:::caution
+
+OpenAPI 3.1 support is an experimental feature.
+Generated code may not be fully correct in all edge cases.
+Report issues in the SAP Cloud SDK [GitHub repository](https://github.com/SAP/cloud-sdk-js/issues/new/choose).
+
+:::
+
+The SAP Cloud SDK generator accepts OpenAPI 3.1 specifications.
+When you pass an OpenAPI 3.1 document, the generator emits a warning and proceeds with generation.
+OpenAPI 2.0 and OpenAPI 3.0.x documents continue to work without any changes.
+
+### Unsupported OpenAPI 3.1 Features
+
+The following OpenAPI 3.1 features are intentionally not represented in the generated client:
+
+- **Webhooks** — top-level `webhooks` are not generated as callable operations.
+- **Reusable path items** — `components/pathItems` used as webhook targets are not generated.
+
+The generator logs a warning when it encounters either of these features in the input document.
+
 ## npm Packages vs. Local clients
 
 The SAP Cloud SDK OpenAPI client generator generates TypeScript code.
