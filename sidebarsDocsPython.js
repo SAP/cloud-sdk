@@ -15,7 +15,7 @@ module.exports = {
             'features/agent-modules/tool-decorators',
             'features/agent-modules/agent-gateway',
             'features/agent-modules/agent-memory',
-            'features/agent-modules/ai-core',
+            'features/agent-modules/ai-core'
           ]
         },
         {
@@ -25,7 +25,7 @@ module.exports = {
           items: [
             'features/connectivity/destination-service',
             'features/connectivity/identity-ias',
-            'features/connectivity/secret-management',
+            'features/connectivity/secret-management'
           ]
         },
         {
@@ -36,7 +36,7 @@ module.exports = {
             'features/core-modules/audit-logging',
             'features/core-modules/telemetry',
             'features/core-modules/object-storage',
-            'features/core-modules/runtime-context',
+            'features/core-modules/runtime-context'
           ]
         },
         {
@@ -47,9 +47,9 @@ module.exports = {
             'features/rbs-services/dms',
             'features/rbs-services/adms',
             'features/rbs-services/output-management',
-            'features/rbs-services/print-service',
+            'features/rbs-services/print-service'
           ]
-        },
+        }
       ]
     },
     'release-notes',

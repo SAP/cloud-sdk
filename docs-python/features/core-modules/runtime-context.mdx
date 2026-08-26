@@ -24,8 +24,6 @@ The runtime context lets SDK modules read caller-identity information (tenant, u
 - **Providers** extract context from the current invocation (HTTP request, gRPC call, Kubernetes event, etc.).
 - **get_context()** lets any module read that context via typed keys.
 
-
-
 ```python
 bootstrap(app)
   └─ registers middleware on your framework
@@ -60,7 +58,6 @@ ctx.get(TRIGGER_TYPE)  # -> "ui5" or None
 ```
 
 Pass an explicit `tenant_id` parameter on any client that exposes one to override the context-resolved value for administrative or background processing scenarios.
-
 
 ---
 

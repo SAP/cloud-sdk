@@ -55,9 +55,7 @@ const FeatureList = [
         BTP integrations using Python, with built-in support for the Agent
         Gateway, Agent Memory, and SAP BTP services.
         <br />
-        <a href="docs/python/overview">
-          Get started with the SDK for Python
-        </a>
+        <a href="docs/python/overview">Get started with the SDK for Python</a>
       </div>
     )
   }
