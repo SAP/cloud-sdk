@@ -4,7 +4,7 @@ title: Overview
 hide_title: false
 hide_table_of_contents: false
 sidebar_label: Overview
-description: The SAP Cloud SDK for Python significantly simplifies extending and developing applications with the SAP Business Technology Platform
+description: The SAP Cloud SDK for Python provides building blocks for cloud-native AI agents and BTP integrations on SAP BTP
 keywords:
   - sap
   - cloud
@@ -20,27 +20,12 @@ import ThemedImage from '@theme/ThemedImage';
 
 ## Quick Start
 
-For a quick start check out the [Getting Started](./getting-started.mdx) page.
+For a quick start check out the ["Getting Started"](./getting-started.mdx) page.
 
-## What is the SAP Cloud SDK for Python?
+## What is the SAP Cloud SDK for JavaScript?
 
-The SAP Cloud SDK for Python makes it easy to build cloud-native AI agents and BTP integrations on the SAP Business Technology Platform (SAP BTP).
-It provides consistent, type-safe interfaces for foundational BTP services — destinations, identity, audit logging, storage, telemetry, and more — so you can focus on business logic instead of boilerplate integration code.
-
-For example, with the SAP Cloud SDK for Python you can discover MCP tools from connected SAP LoB systems and use them directly in an agent loop:
-
-```python
-from sap_cloud_sdk.agentgateway import create_client
-from sap_cloud_sdk.agentgateway.converters import mcp_tool_to_langchain
-
-agw_client = create_client(tenant_subdomain=get_tenant_subdomain)
-mcp_tools = await agw_client.list_mcp_tools(user_token=get_user_token)
-tools = [mcp_tool_to_langchain(t, agw_client.call_mcp_tool, get_user_token) for t in mcp_tools]
-```
-
-This discovers MCP tools from connected SAP LoB systems (S/4HANA, SuccessFactors) and exposes them as LangChain-compatible tools ready to drop into any agent loop.
-
-## Main Features of the SAP Cloud SDK for Python
+The SAP Cloud SDK for Python provides building blocks for cloud-native AI agents and BTP integrations — type-safe clients for destinations, identity, storage, telemetry, audit logging, and more.
+Install with `pip install sap-cloud-sdk`.
 
 <ThemedImage
   alt="SAP Cloud SDK for Python — main components"
@@ -52,64 +37,37 @@ This discovers MCP tools from connected SAP LoB systems (S/4HANA, SuccessFactors
   width="100%"
 />
 
+## Modules
+
 ### Agent Modules
 
-The Agent Modules are the core differentiator of the Python SDK.
-It provides building blocks for AI-powered agents running on SAP BTP: a `@tool` decorator to register Python functions as agent tools, the **Agent Gateway Service** for discovering MCP tools from connected LoB systems with tenant-aware principal propagation, the **Agent Memory Service** for storing and retrieving conversation history and long-term semantic memories backed by SAP HANA Cloud, and a client for **SAP AI Core** to manage deployments and executions.
+Building blocks for AI-powered agents on SAP BTP: the **Agent Decorators** expose configuration fields (prompts, model, settings) to a low-code UI; the **Agent Gateway** discovers MCP tools from connected LoB systems with tenant-aware principal propagation; the **Agent Memory** service stores conversation history and long-term semantic memories backed by SAP HANA Cloud; and the **AI Core** client manages deployments and executions.
 
-For details and code examples, see the [Agent Modules](features/agent-modules/tool-decorators) guide.
+→ [Agent Modules](features/agent-modules/tool-decorators)
 
-### Connectivity and Identity
+### Connectivity & Identity
 
-The SDK abstracts the details of connecting to remote systems defined in the SAP BTP Cockpit.
-The Destination Service module resolves credentials, handles OAuth flows (including principal propagation and client credentials), and supports both cloud and on-premise systems.
-The Identity and Access Service (IAS) module handles token verification and user context propagation for applications secured with SAP Cloud Identity Services.
+The **Destination Service** resolves credentials and handles OAuth flows (client credentials, principal propagation) for cloud and on-premise systems. The **IAS** module parses SAP Identity Authentication Service tokens into typed claims. The **Secret Resolver** loads service credentials from mounted volumes (Kubernetes) or environment variables (Cloud Foundry / local).
 
-For details and code examples, see the [Connectivity and Identity](features/connectivity/destination-service) guide.
+→ [Connectivity & Identity](features/connectivity/destination-service)
 
 ### Core Modules
 
-The SDK includes cross-cutting modules that apply to any application type: **Audit Logging** for emitting structured events to the SAP Audit Log Service, **Telemetry & Observability** for auto-instrumented OpenTelemetry traces and metrics exported to SAP Cloud Logging, **Object Storage** for managing files on SAP BTP Object Store Service, and **Runtime Context** for propagating tenant, user, and trigger-type information across async tasks without coupling to a specific framework.
+Cross-cutting utilities for any application type: **Audit Logging** emits structured events to the SAP Audit Log Service; **Telemetry** auto-instruments traces and metrics for SAP Cloud Logging via OpenTelemetry; **Object Storage** manages files on SAP BTP Object Store Service; and the **Runtime Context** propagates tenant, user, and trigger-type across async tasks without framework coupling.
 
-For details and code examples, see the [Core Modules](features/core-modules/audit-logging) guide.
+→ [Core Modules](features/core-modules/audit-logging)
 
 ### RBS Services
 
-The SDK provides clients for SAP RBS services: **DMS** for managing documents and folders in a repository, **ADMS** for the Advanced Document Management Service, **Output Management** for creating and sending output requests, and **Print Service** for managing print queues and submitting print tasks.
+Clients for SAP RBS services: **DMS** for document and folder management (CMIS), **ADMS** for the Advanced Document Management OData V4 API, **Output Management** for sending output requests, and the **Print Service** for managing queues and submitting print tasks.
 
-For details and code examples, see the [RBS Services](features/rbs-services/dms) guide.
+→ [RBS Services](features/rbs-services/dms)
 
-## Further Information
+## Requirements & Links
 
-### Supported Python Versions
-
-The SAP Cloud SDK for Python requires **Python 3.11 or higher**.
-
-| Python Version | Supported |
-| -------------- | --------- |
-| 3.13           | ✅        |
-| 3.12           | ✅        |
-| 3.11           | ✅        |
-| 3.10           | ❌        |
-
-### Supported Environments
-
-The SAP Cloud SDK for Python currently targets cloud-native deployments on SAP BTP:
-
-1. SAP BTP Cloud Foundry
-2. Kubernetes / SAP Gardener
-3. SAP BTP Kyma
-4. Deploy with Confidence (DwC) — via `DWCContextProvider` in `sap_cloud_sdk.core.runtime_context`
-
-### Licensing
-
-The SAP Cloud SDK for Python is available on [PyPI](https://pypi.org/project/sap-cloud-sdk/) under the [Apache 2.0 license](https://github.com/SAP/cloud-sdk-python/blob/main/LICENSE).
-
-### Release Schedule
-
-We release minor versions on a regular cadence.
-For details, see the [release notes](./release-notes.mdx).
-
-### Contributing
-
-For details on contributing, check the [contribution guide](https://github.com/SAP/cloud-sdk/blob/main/CONTRIBUTING.md).
+- **Python:** 3.11, 3.12, or 3.13
+- **Environments:** SAP BTP Cloud Foundry, Kubernetes / SAP Gardener, SAP BTP Kyma, Deploy with Confidence (DwC)
+- **License:** [Apache 2.0](https://github.com/SAP/cloud-sdk-python/blob/main/LICENSE)
+- **PyPI:** [sap-cloud-sdk](https://pypi.org/project/sap-cloud-sdk/)
+- **Release notes:** [Changelog](./release-notes.mdx)
+- **Contributing:** [Contribution guide](https://github.com/SAP/cloud-sdk/blob/main/CONTRIBUTING.md)
