@@ -1,22 +1,16 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import {
-  useReactTable,
-  flexRender,
-  getCoreRowModel
-} from '@tanstack/react-table';
+import { useTable, tableFeatures, flexRender } from '@tanstack/react-table';
 import gfm from 'remark-gfm';
 import emoji from 'remark-emoji';
 
-/**
- * Generates a table from columns layout and data. Binding happens via accesors defined in the columns layout.
- */
+const features = tableFeatures({});
+
 export default function Table({ columns, data }) {
-  // Use the state and functions returned from useTable to build UI
-  const { getHeaderGroups, getRowModel } = useReactTable({
+  const { getHeaderGroups, getRowModel } = useTable({
+    features,
     columns,
-    data,
-    getCoreRowModel: getCoreRowModel()
+    data
   });
 
   // Render the UI for your table
@@ -28,7 +22,7 @@ export default function Table({ columns, data }) {
             {headerGroup.headers.map(header => (
               <th key={header.id} colSpan={header.colSpan}>
                 {flexRender(
-                  header.column.columnDef.Header,
+                  header.column.columnDef.header,
                   header.getContext()
                 )}
               </th>
