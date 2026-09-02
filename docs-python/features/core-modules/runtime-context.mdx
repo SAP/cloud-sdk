@@ -1,0 +1,64 @@
+---
+id: runtime-context
+title: Runtime Context
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Runtime Context
+description: Propagate tenant, user, and trigger-type context across async tasks without framework coupling
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - python
+  - runtime context
+  - tenant
+  - multi-tenancy
+  - context propagation
+---
+
+### How it works
+
+The runtime context lets SDK modules read caller-identity information (tenant, user, trigger type) for the current execution — without knowing where that information came from or what framework is running.
+
+- **bootstrap(app)** wires the SDK into your framework once at startup.
+- **Providers** extract context from the current invocation (HTTP request, gRPC call, Kubernetes event, etc.).
+- **get_context()** lets any module read that context via typed keys.
+
+```python
+bootstrap(app)
+  └─ registers middleware on your framework
+       └─ on each invocation: providers extract → RuntimeContext set in ContextVar
+            └─ anywhere: get_context().get(TENANT_ID)
+```
+
+### Bootstrap at app startup
+
+```python
+from starlette.applications import Starlette
+from sap_cloud_sdk import bootstrap
+
+app = Starlette(...)
+bootstrap(app)
+```
+
+### Read context anywhere
+
+```python
+from sap_cloud_sdk.core.runtime_context import (
+    get_context,
+    TENANT_ID,
+    USER_ID,
+    TRIGGER_TYPE,
+)
+
+ctx = get_context()
+ctx.get(TENANT_ID)  # -> "abc-123" or None
+ctx.get(USER_ID)  # -> "user-uuid" or None
+ctx.get(TRIGGER_TYPE)  # -> "ui5" or None
+```
+
+Pass an explicit `tenant_id` parameter on any client that exposes one to override the context-resolved value for administrative or background processing scenarios.
+
+---
+
+For framework adapters, provider merging semantics, and more, see the [Runtime Context user guide](https://github.com/SAP/cloud-sdk-python/blob/main/src/sap_cloud_sdk/core/runtime_context/user-guide.md) in the `cloud-sdk-python` repository.

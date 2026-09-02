@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import emoji from 'remark-emoji';
+import gfm from 'remark-gfm';
 import { jsFeatureTableLayout } from './data/table-layouts'; // Table layour for JS feature matrix with bindings
 import { features } from './data/features';
-import gfm from 'remark-gfm';
-import emoji from 'remark-emoji';
 import Table from './Table';
 
 /**

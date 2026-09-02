@@ -1,0 +1,59 @@
+---
+id: adms
+title: ADMS
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: ADMS
+description: Interact with the SAP Advanced Document Management Service OData V4 API from Python
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - python
+  - adms
+  - advanced document management
+  - odata
+---
+
+The ADMS module provides a typed Python client for the [SAP Advanced Document Management Service](https://help.sap.com/docs/advanced-document-management) OData V4 API.
+Credentials are read from the service binding at `/etc/secrets/appfnd/adms/default/` or the `CLOUD_SDK_CFG_ADMS_DEFAULT_*` environment variables.
+
+### Quick Start
+
+```python
+from sap_cloud_sdk.adms import (
+    create_client,
+    AdmsConfig,
+    BaseType,
+    CreateDocumentInput,
+    CreateDocumentRelationInput,
+    ScanStatus,
+)
+
+# Reads binding from /etc/secrets/appfnd/adms/default/ or env vars
+client = create_client()
+
+# Link a document to a business object (creates a draft relation + document)
+relation = client.relations.create(
+    CreateDocumentRelationInput(
+        business_object_node_type_unique_id="PurchaseOrder",
+        host_business_object_node_id="PO-4500012345",
+        document=CreateDocumentInput(
+            document_name="Invoice.pdf",
+            document_base_type=BaseType.DOCUMENT,
+            document_type_id="INVOICE",
+        ),
+        is_active_entity=False,  # start as draft
+    )
+)
+
+# Upload bytes to the presigned URL (outside SDK)
+import requests
+
+upload_url = relation.document.document_content_upload_urls[0]
+requests.put(upload_url, data=open("Invoice.pdf", "rb"))
+```
+
+---
+
+For draft workflows, background jobs, the async client, and more, see the [ADMS user guide](https://github.com/SAP/cloud-sdk-python/blob/main/src/sap_cloud_sdk/adms/user-guide.md) in the `cloud-sdk-python` repository.

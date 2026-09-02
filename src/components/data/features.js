@@ -22,6 +22,11 @@ export const features = [
       status: NO,
       docsLink: ``,
       note: 'Take a look at the [node-soap](https://github.com/vpulim/node-soap) library'
+    },
+    python: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
     }
   },
   {
@@ -36,6 +41,11 @@ export const features = [
       status: NO,
       docsLink: ``,
       note: 'Take a look at the [SAP NetWeaver RFC SDK client bindings for Node.js](https://github.com/SAP/node-rfc)'
+    },
+    python: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
     }
   },
   {
@@ -50,6 +60,11 @@ export const features = [
       status: NO,
       docsLink: ``,
       note: 'Take a look at the [SAP NetWeaver RFC SDK client bindings for Node.js](https://github.com/SAP/node-rfc)'
+    },
+    python: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
     }
   },
   {
@@ -64,6 +79,11 @@ export const features = [
       status: YES,
       docsLink: `[docs](${baseUrl}/js/features/odata/v2-client)`,
       note: ''
+    },
+    python: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
     }
   },
   {
@@ -78,6 +98,11 @@ export const features = [
       status: YES,
       docsLink: `[docs](${baseUrl}/js/features/odata/v4-client)`,
       note: ''
+    },
+    python: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
     }
   },
   {
@@ -92,6 +117,11 @@ export const features = [
       status: NO,
       docsLink: ``,
       note: `We expose [generic HTTP client](${baseUrl}/js/features/connectivity/http-client) aware of connectivity abstractions`
+    },
+    python: {
+      status: NO,
+      docsLink: ``,
+      note: 'Use the HTTP Client wrapper with destination awareness instead'
     }
   },
   {
@@ -106,6 +136,11 @@ export const features = [
       status: YES,
       docsLink: `[docs](${baseUrl}/js/features/odata/generate-client)`,
       note: ''
+    },
+    python: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
     }
   },
   {
@@ -120,6 +155,11 @@ export const features = [
       status: YES,
       docsLink: `[docs](${baseUrl}/js/features/openapi/execute-request)`,
       note: ''
+    },
+    python: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
     }
   },
   {
@@ -134,6 +174,11 @@ export const features = [
       status: YES,
       docsLink: `[docs](${baseUrl}/js/features/openapi/execute-request)`,
       note: ''
+    },
+    python: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
     }
   },
   {
@@ -148,6 +193,11 @@ export const features = [
       status: YES,
       docsLink: `[docs](${baseUrl}/js/features/openapi/generate-client)`,
       note: ''
+    },
+    python: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
     }
   },
   {
@@ -159,6 +209,11 @@ export const features = [
       note: ''
     },
     js: {
+      status: NO,
+      docsLink: ``,
+      note: ''
+    },
+    python: {
       status: NO,
       docsLink: ``,
       note: ''
@@ -176,6 +231,11 @@ export const features = [
       status: YES,
       docsLink: `[docs](${baseUrl}/js/guides/resilience)`,
       note: ''
+    },
+    python: {
+      status: NO,
+      docsLink: ``,
+      note: ''
     }
   },
   {
@@ -189,6 +249,11 @@ export const features = [
     js: {
       status: YES,
       docsLink: `[docs](${baseUrl}/js/features/connectivity/destination-cache)`,
+      note: ''
+    },
+    python: {
+      status: NO,
+      docsLink: ``,
       note: ''
     }
   },
@@ -204,6 +269,11 @@ export const features = [
       status: YES,
       docsLink: `[docs](${baseUrl}/js/getting-started)`,
       note: ''
+    },
+    python: {
+      status: NO,
+      docsLink: ``,
+      note: ''
     }
   },
   {
@@ -217,6 +287,11 @@ export const features = [
     js: {
       status: YES,
       docsLink: `[docs](${baseUrl}/js/environments/kubernetes)`,
+      note: ''
+    },
+    python: {
+      status: YES,
+      docsLink: ``,
       note: ''
     }
   },
@@ -232,6 +307,11 @@ export const features = [
       status: YES,
       docsLink: `[docs](${baseUrl}/js/environments/kyma)`,
       note: ''
+    },
+    python: {
+      status: YES,
+      docsLink: ``,
+      note: ''
     }
   },
   {
@@ -246,6 +326,11 @@ export const features = [
       status: NO,
       docsLink: ``,
       note: ''
+    },
+    python: {
+      status: YES,
+      docsLink: ``,
+      note: 'Via `DWCContextProvider` in `sap_cloud_sdk.core.runtime_context`'
     }
   },
   {
@@ -260,6 +345,11 @@ export const features = [
       status: NO,
       docsLink: ``,
       note: 'Out of scope.'
+    },
+    python: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
     }
   },
   {
@@ -271,6 +361,11 @@ export const features = [
       note: 'Out of scope'
     },
     js: {
+      status: NO,
+      docsLink: '',
+      note: 'Out of scope'
+    },
+    python: {
       status: NO,
       docsLink: '',
       note: 'Out of scope'
@@ -288,6 +383,11 @@ export const features = [
       status: YES,
       docsLink: `[docs](${baseUrl}/js/features/connectivity/destinations)`,
       note: ''
+    },
+    python: {
+      status: YES,
+      docsLink: ``,
+      note: ''
     }
   },
   {
@@ -301,6 +401,11 @@ export const features = [
     js: {
       status: YES,
       docsLink: `[docs](${baseUrl}/js/features/connectivity/destinations)`,
+      note: ''
+    },
+    python: {
+      status: YES,
+      docsLink: ``,
       note: ''
     }
   },
@@ -316,6 +421,11 @@ export const features = [
       status: YES,
       docsLink: `[docs](${baseUrl}/js/features/connectivity/destinations)`,
       note: ''
+    },
+    python: {
+      status: NO,
+      docsLink: ``,
+      note: 'IAS is the primary identity provider;'
     }
   },
   {
@@ -330,6 +440,11 @@ export const features = [
       status: YES,
       docsLink: ``,
       note: ''
+    },
+    python: {
+      status: YES,
+      docsLink: ``,
+      note: 'Via [servicebinding.io](https://servicebinding.io/) spec and `SERVICE_BINDING_ROOT`'
     }
   },
   {
@@ -344,6 +459,11 @@ export const features = [
       status: YES,
       docsLink: `[docs](${baseUrl}/js/features/connectivity/destinations#authentication-and-json-web-token-retrievjal)`,
       note: ''
+    },
+    python: {
+      status: YES,
+      docsLink: ``,
+      note: 'OAuth flows handled via IAS module and Destination Service'
     }
   },
   {
@@ -358,6 +478,11 @@ export const features = [
       status: YES,
       docsLink: `[docs](${baseUrl}/js/features/connectivity/destinations#multi-tenancy)`,
       note: ''
+    },
+    python: {
+      status: YES,
+      docsLink: ``,
+      note: 'Tenant isolation applied throughout; `create_client(tenant=subdomain)` pattern'
     }
   },
   {
@@ -371,6 +496,11 @@ export const features = [
     js: {
       status: YES,
       docsLink: `[docs](${baseUrl}/js/features/connectivity/destinations#multi-tenancy)`,
+      note: ''
+    },
+    python: {
+      status: YES,
+      docsLink: ``,
       note: ''
     }
   },
@@ -386,6 +516,11 @@ export const features = [
       status: YES,
       docsLink: `[docs](${baseUrl}/js/features/connectivity/http-client)`,
       note: ''
+    },
+    python: {
+      status: YES,
+      docsLink: ``,
+      note: '`DestinationHttpClient` — destination-aware HTTP client'
     }
   },
   {
@@ -400,6 +535,11 @@ export const features = [
       status: YES,
       docsLink: `[docs](${baseUrl}/js/features/connectivity/on-premise#principal-propagation)`,
       note: ''
+    },
+    python: {
+      status: YES,
+      docsLink: ``,
+      note: 'User token exchange via IAS Destination Fragments'
     }
   },
   {
@@ -413,6 +553,11 @@ export const features = [
     js: {
       status: YES,
       docsLink: `[docs](${baseUrl}/js/features/connectivity/on-premise)`,
+      note: ''
+    },
+    python: {
+      status: NO,
+      docsLink: ``,
       note: ''
     }
   },
@@ -428,6 +573,202 @@ export const features = [
       status: NO,
       docsLink: ``,
       note: ''
+    },
+    python: {
+      status: NO,
+      docsLink: ``,
+      note: ''
+    }
+  },
+  // Python-only features
+  {
+    name: '[Identity and Access Service (IAS)](https://help.sap.com/docs/identity-authentication)',
+    category: 'Connectivity',
+    java: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
+    },
+    js: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
+    },
+    python: {
+      status: YES,
+      docsLink: ``,
+      note: 'Token verification, user context propagation, service-to-service auth'
+    }
+  },
+  {
+    name: '[Audit Logging](https://help.sap.com/docs/audit-log-service)',
+    category: 'Advanced',
+    java: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
+    },
+    js: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
+    },
+    python: {
+      status: YES,
+      docsLink: ``,
+      note: 'Standard and next-generation (NG) SAP Audit Log Service APIs supported'
+    }
+  },
+  {
+    name: 'Telemetry / OpenTelemetry',
+    category: 'Advanced',
+    java: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
+    },
+    js: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
+    },
+    python: {
+      status: YES,
+      docsLink: ``,
+      note: 'Auto-instrumentation of HTTP clients and frameworks via `auto_instrument()`; exports to SAP Cloud Logging'
+    }
+  },
+  {
+    name: 'Secret Management',
+    category: 'Advanced',
+    java: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
+    },
+    js: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
+    },
+    python: {
+      status: YES,
+      docsLink: ``,
+      note: 'Resolves secrets from Kubernetes-mounted bindings and env vars (`CLOUD_SDK_CFG_*`)'
+    }
+  },
+  {
+    name: 'Object Storage',
+    category: 'BTP Services',
+    java: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
+    },
+    js: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
+    },
+    python: {
+      status: YES,
+      docsLink: ``,
+      note: ''
+    }
+  },
+  {
+    name: 'Document Management Service',
+    category: 'BTP Services',
+    java: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
+    },
+    js: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
+    },
+    python: {
+      status: YES,
+      docsLink: ``,
+      note: ''
+    }
+  },
+  {
+    name: 'Output Management Service',
+    category: 'BTP Services',
+    java: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
+    },
+    js: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
+    },
+    python: {
+      status: YES,
+      docsLink: ``,
+      note: 'Send emails, create and send output requests via `sap_cloud_sdk.outputmanagement`'
+    }
+  },
+  {
+    name: '[SAP AI Core](https://help.sap.com/docs/sap-ai-core)',
+    category: 'AI',
+    java: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
+    },
+    js: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
+    },
+    python: {
+      status: YES,
+      docsLink: `[docs](${baseUrl}/python/overview)`,
+      note: 'Manage AI scenarios, deployments, and executions via `AICoreClient`'
+    }
+  },
+  {
+    name: 'Agent Gateway Service',
+    category: 'AI',
+    java: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
+    },
+    js: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
+    },
+    python: {
+      status: YES,
+      docsLink: `[docs](${baseUrl}/python/overview)`,
+      note: 'MCP tool discovery from SAP LoB systems; A2A agent routing; principal propagation'
+    }
+  },
+  {
+    name: 'Agent Memory Service',
+    category: 'AI',
+    java: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
+    },
+    js: {
+      status: NO,
+      docsLink: ``,
+      note: 'Out of scope'
+    },
+    python: {
+      status: YES,
+      docsLink: `[docs](${baseUrl}/python/overview)`,
+      note: 'Persistent conversation history and semantic memory search backed by SAP HANA Cloud'
     }
   }
 ];
