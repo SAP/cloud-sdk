@@ -1,0 +1,48 @@
+---
+id: agent-gateway
+title: Agent Gateway Service
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Agent Gateway Service
+description: Discover MCP tools and A2A agents from connected SAP LoB systems via the Agent Gateway Service
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - python
+  - agent gateway
+  - mcp
+  - a2a
+  - langchain
+---
+
+The Agent Gateway Service (AGW) is the central communication hub for SAP BTP agents.
+It supports two integration protocols: **MCP** for discovering and calling tools exposed by connected SAP LoB systems such as SAP S/4HANA and SAP SuccessFactors, and **A2A** (Agent-to-Agent) for discovering remote agents and delegating tasks to them.
+
+### LangChain Integration
+
+Convert MCP tools to LangChain `StructuredTool` objects for use with LangChain agents:
+
+```python
+from sap_cloud_sdk.agentgateway import create_client
+from sap_cloud_sdk.agentgateway.converters import mcp_tool_to_langchain
+
+agw_client = create_client(tenant_subdomain="my-tenant")
+tools = await agw_client.list_mcp_tools(user_token="user-jwt")
+
+langchain_tools = [
+    mcp_tool_to_langchain(
+        t,
+        agw_client.call_mcp_tool,
+        get_user_token=lambda: request.headers["Authorization"],
+    )
+    for t in tools
+]
+
+# Use with LangChain agent
+llm_with_tools = llm.bind_tools(langchain_tools)
+```
+
+---
+
+For the complete API reference and more examples, see the [Agent Gateway user guide](https://github.com/SAP/cloud-sdk-python/blob/main/src/sap_cloud_sdk/agentgateway/user-guide.md) in the `cloud-sdk-python` repository.

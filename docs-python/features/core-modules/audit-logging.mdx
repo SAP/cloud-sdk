@@ -1,0 +1,55 @@
+---
+id: audit-logging
+title: Audit Logging
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Audit Logging
+description: Emit structured audit log events to the SAP Audit Log Service from your Python application
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - python
+  - audit log
+  - compliance
+  - gdpr
+---
+
+The Audit Logging module provides a unified API for logging audit events that comply with the SAP Audit Log Service OpenAPI specification.
+It uses Python dataclasses for type-safe event construction and supports six event types: Security, Data Access, Data Modification, Data Deletion, Configuration Change, and Configuration Deletion.
+
+### Basic Setup
+
+Use `create_client(tenant="my-tenant-subdomain")` to get a client with automatic environment detection:
+
+```python
+from sap_cloud_sdk.core.auditlog import create_client, SecurityEvent
+
+client = create_client(tenant="my-tenant-subdomain")
+
+# Create and log a security event
+security_event = SecurityEvent(
+    data="User login attempt", success=True, user="john.doe", tenant=Tenant.PROVIDER
+)
+
+client.log(security_event)
+```
+
+### Custom Configuration
+
+```python
+from sap_cloud_sdk.core.auditlog import create_client, AuditLogConfig
+
+config = AuditLogConfig(
+    service_url="https://api.auditlog.cf.example.com/audit-log/oauth2/v2",
+    oauth_url="https://example.authentication.com/oauth/token",
+    client_id="your-client-id",
+    client_secret="your-client-secret",
+)
+
+client = create_client(config=config)
+```
+
+---
+
+For all event types, batch logging, and configuration details, see the [Audit Logging user guide](https://github.com/SAP/cloud-sdk-python/blob/main/src/sap_cloud_sdk/core/auditlog/user-guide.md) in the `cloud-sdk-python` repository.

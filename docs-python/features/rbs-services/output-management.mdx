@@ -1,0 +1,53 @@
+---
+id: output-management
+title: Output Management Service
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Output Management Service
+description: Create and send output requests via the SAP Output Management Service
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - python
+  - output management
+  - email
+  - print
+---
+
+The Output Management module provides a client for creating and sending output requests — including emails and print documents — via the [SAP Output Management Service](https://help.sap.com/docs/output-management).
+
+### Quick Start
+
+Here's the simplest way to send an email:
+
+```python
+from sap_cloud_sdk.outputmanagement import create_client
+
+# Create client using the factory function
+client = create_client(destination_name="ARIBA_OUTPUT_SERVICE")
+
+# Send email directly
+response = client.send_email(
+    notification_template_key="PO_APPROVAL_NOTIFICATION",
+    to=["finance@company.com"],
+    business_document={
+        "PurchaseOrder": {
+            "orderId": "PO-12345",
+            "vendor": "ACME Corp",
+            "total": 1500.00,
+        }
+    },
+)
+
+# Check the result
+if response.error:
+    print(f"Failed to send email: {response.error.message}")
+else:
+    print(f"Email sent successfully! Request ID: {response.outputRequestId}")
+)
+```
+
+---
+
+For the complete API reference and more examples, see the [Output Management user guide](https://github.com/SAP/cloud-sdk-python/blob/main/src/sap_cloud_sdk/outputmanagement/user-guide.md) in the `cloud-sdk-python` repository.

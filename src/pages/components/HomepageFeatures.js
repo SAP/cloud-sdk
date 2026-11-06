@@ -43,6 +43,21 @@ const FeatureList = [
         </a>
       </div>
     )
+  },
+  {
+    title: <>SAP Cloud SDK for Python</>,
+    link: 'docs/python/overview',
+    Svg: require('../../../static/img/logo-python.svg').default,
+    badge: <LicenseBadge />,
+    description: (
+      <div data-nosnippet>
+        The SAP Cloud SDK for Python helps you build cloud-native AI agents and
+        BTP integrations using Python, with built-in support for the Agent
+        Gateway, Agent Memory, and SAP BTP services.
+        <br />
+        <a href="docs/python/overview">Get started with the SDK for Python</a>
+      </div>
+    )
   }
 ];
 

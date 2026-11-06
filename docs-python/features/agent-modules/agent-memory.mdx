@@ -1,0 +1,41 @@
+---
+id: agent-memory
+title: Agent Memory Service
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Agent Memory Service
+description: Persist and retrieve conversation history and long-term semantic memories
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - python
+  - agent memory
+  - hana cloud
+  - conversation history
+---
+
+The Agent Memory Service provides a persistent, tenant-isolated store backed by SAP HANA Cloud.
+It exposes two APIs: the **Messages API** for short-term conversation history per session, and the **Memories API** for long-term semantic storage with similarity search across sessions.
+
+:::note Version requirement
+Agent Memory Service requires **`sap-cloud-sdk >= 0.36.0`**.
+:::
+
+### Basic Setup
+
+Use `create_client()` to get a client with automatic credential detection:
+
+```python
+from sap_cloud_sdk.agent_memory import create_client
+
+client = create_client()
+
+memories = client.list_memories(agent_id="my-agent", invoker_id="user-123")
+print(f"Found {len(memories)} memories")
+)
+```
+
+---
+
+For the complete API reference and more examples, see the [Agent Memory user guide](https://github.com/SAP/cloud-sdk-python/blob/main/src/sap_cloud_sdk/agent_memory/user-guide.md) in the `cloud-sdk-python` repository.

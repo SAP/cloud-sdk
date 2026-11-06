@@ -1,0 +1,34 @@
+---
+id: destination-service
+title: Destination Service
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Destination Service
+description: Connect to remote systems and resolve credentials using the SAP BTP Destination Service
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - python
+  - destination
+  - connectivity
+  - oauth
+---
+
+The Destination Service module provides an abstraction for connecting to remote systems defined in the SAP BTP Cockpit.
+It resolves credentials, handles OAuth flows, and supports both cloud and on-premise systems via the SAP Connectivity Service.
+
+### Fetching a Destination
+
+```python
+from sap_cloud_sdk.destination import DestinationService
+
+service = DestinationService()
+destination = service.get_destination("my-destination")
+```
+
+The SDK supports all standard destination authentication types: Basic, OAuth 2.0 Client Credentials, OAuth 2.0 Authorization Code, and Principal Propagation.
+
+---
+
+For the complete API reference and more examples, see the [Destination Service user guide](https://github.com/SAP/cloud-sdk-python/blob/main/src/sap_cloud_sdk/destination/user-guide.md) in the `cloud-sdk-python` repository.

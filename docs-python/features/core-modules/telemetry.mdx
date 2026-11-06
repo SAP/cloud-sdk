@@ -1,0 +1,41 @@
+---
+id: telemetry
+title: Telemetry & Observability
+hide_title: false
+hide_table_of_contents: false
+sidebar_label: Telemetry & Observability
+description: Auto-instrument your application with OpenTelemetry traces and metrics for SAP Cloud Logging
+keywords:
+  - sap
+  - cloud
+  - sdk
+  - python
+  - telemetry
+  - opentelemetry
+  - tracing
+  - observability
+---
+
+The Telemetry module provides observability utilities built on [OpenTelemetry](https://opentelemetry.io/).
+It auto-instruments SDK HTTP clients and common Python frameworks (httpx, requests, starlette, fastapi, django, flask, sqlalchemy, grpcio), exporting traces, metrics, and logs to any OTLP-compatible backend such as SAP Cloud Logging.
+
+### Auto-Instrumentation and Agent Spans
+
+Call `auto_instrument()` once **before** importing AI libraries, then wrap LLM calls with a parent span that carries your business context:
+
+```python
+from sap_cloud_sdk.core.telemetry import auto_instrument, invoke_agent_span
+
+auto_instrument()
+
+from litellm import completion  # imported after — now automatically traced
+
+with invoke_agent_span(
+    provider="openai", agent_name="SupportBot", conversation_id="conv-123"
+):
+    response = completion(model="gpt-4o", messages=[...])
+```
+
+---
+
+For span functions, extension context propagation, middleware, and configuration details, see the [Telemetry user guide](https://github.com/SAP/cloud-sdk-python/blob/main/src/sap_cloud_sdk/core/telemetry/user-guide.md) in the `cloud-sdk-python` repository.
