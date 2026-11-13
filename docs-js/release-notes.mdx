@@ -20,6 +20,18 @@ import LicenseBadge from '@site/src/sap/sdk-js/LicenseBadge';
 <!-- vale off -->
 <!-- This line is used for our release notes automation -->
 
+## 4.10.0 [Core Modules] - November 06, 2026
+
+### Fixed Issues
+
+- [connectivity] Fix subscriber destination lookup failing when the identity provider issues tokens with a schemeless `iss` claim, e.g. `tenant.accounts.ondemand.com` instead of `https://tenant.accounts.ondemand.com`. Such issuers are now prefixed with `https://` before being parsed, instead of causing a silent fallback to the provider account. ([697b17d](https://github.com/SAP/cloud-sdk-js/commit/697b17dfb2212e394732aaddbc8e1e922dfcf8eb))
+- [connectivity] Fix IAS tokens being classified as non-IAS tokens when the identity provider issues them with a schemeless `iss` claim, e.g. `tenant.accounts.ondemand.com` instead of `https://tenant.accounts.ondemand.com`. ([697b17d](https://github.com/SAP/cloud-sdk-js/commit/697b17dfb2212e394732aaddbc8e1e922dfcf8eb))
+- [openapi-generator] Escape `pathPattern` with `JSON.stringify` in generated code to prevent code injection via crafted OpenAPI path keys. ([04ea565](https://github.com/SAP/cloud-sdk-js/commit/04ea5651e80785f7750f0d3c78e95c418ab19ecf))
+
+### Improvements
+
+- [generator, generator-common, openapi-generator] Rename `generateESM` to `generateEsm`. ([caf9ad9](https://github.com/SAP/cloud-sdk-js/commit/caf9ad9016fb17a19918a7acee5112d1f882772b))
+
 ## 4.9.1 [Core Modules] - August 25, 2026
 
 ### Fixed Issues
@@ -164,11 +176,11 @@ import LicenseBadge from '@site/src/sap/sdk-js/LicenseBadge';
 
 ### New Features
 
-- [generator, generator-common] Introduce option `generateESM` in OData generator to generate ESM compatible code. (c73c7fa)
+- [generator, generator-common] Introduce option `generateEsm` in OData generator to generate ESM compatible code. (c73c7fa)
 
 ### Fixed Issues
 
-- [openapi] Fix missing `type: module` in generated `package.json` when `--generateESM` option is enabled. (e09754a)
+- [openapi] Fix missing `type: module` in generated `package.json` when `--generateEsm` option is enabled. (e09754a)
 - [openapi-generator] Improve the handling of arrays of enums (f17ca59)
 
 ## 4.1.2 [Core Modules] - September 18, 2025
