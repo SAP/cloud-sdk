@@ -51,7 +51,7 @@ Additionally, if the `Authorization` header contains a `JWT` from the [`AppRoute
 - Pull the _Tenant_ and _Principal_ information from it
 
 :::tip Integration with CAP
-In case you are using CAP (with the `cds-integration-cloud-sdk` dependency) the Tenant, Principal, and Headers will **instead** be derived from the [CAP Request Context](https://cap.cloud.sap/docs/java/request-contexts).
+In case you are using CAP (with the `cds-integration-cloud-sdk` dependency) the Tenant, Principal, and Headers will **instead** be derived from the [CAP Request Context](https://cap.cloud.sap/docs/java/event-handlers/request-contexts).
 That also means that the `ThreadContext` will not be used when accessing this information.
 :::
 
@@ -184,7 +184,7 @@ ThreadContextExecutors.submit(myTask);
 
 Modifying the `ThreadContext` as depicted below is currently supported only when using the default `Facade` (e.g. `DefaultTenantFacade`) implementations.
 This is an issue especially when using the CAP integration dependency `cds-integration-cloud-sdk`.
-To still manipulate the request context, please refer to [the CAP documentation](https://cap.cloud.sap/docs/java/request-contexts#defining-requestcontext).
+To still manipulate the request context, please refer to [the CAP documentation](https://cap.cloud.sap/docs/java/event-handlers/request-contexts#defining-requestcontext).
 
 :::
 
@@ -250,7 +250,7 @@ TenantAccessor.executeWithTenant(customTenant, () -> doStuff());
 
 The above does not apply for accessors like `TenantAccessor`, `PrincipalAccessor`, `RequestHeaderAccessor` when using the CAP framework (with the `cds-integration-cloud-sdk` dependency).
 When using CAP the Tenant, Principal, and Headers are derived from the `RequestContext`.
-Please refer to [this section](https://cap.cloud.sap/docs/java/request-contexts#defining-requestcontext) on how to override existing values in the CAP context.
+Please refer to [this section](https://cap.cloud.sap/docs/java/event-handlers/request-contexts#defining-requestcontext) on how to override existing values in the CAP context.
 
 :::
 
