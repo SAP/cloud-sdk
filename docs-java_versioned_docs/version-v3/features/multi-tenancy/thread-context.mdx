@@ -51,7 +51,7 @@ Additionally, if the `Authorization` header contains a `JWT` from the [`AppRoute
 - Pull the _Tenant_ and _Principal_ information from it
 
 :::tip Integration with CAP
-In case you are using CAP (with the `cds-integration-cloud-sdk` dependency) the Tenant,Principal information and Headers will **instead** be derived from the [CAP Request Context](https://cap.cloud.sap/docs/java/request-contexts).
+In case you are using CAP (with the `cds-integration-cloud-sdk` dependency) the Tenant,Principal information and Headers will **instead** be derived from the [CAP Request Context](https://cap.cloud.sap/docs/java/event-handlers/request-contexts).
 That also means that the `ThreadContext` will not be used when accessing this information.
 Please note that the `RequestScopedHttpClientCache` which is the default being used by the SAP Cloud SDK cannot work with this approach.
 :::
@@ -84,7 +84,7 @@ TenantAccessor.executeWithTenant(customTenant, () -> doStuff());
 :::caution CAP Integration
 The above does not apply for any accessors like `TenantAccessor`, `PrincipalAccessor`, `RequestHeaderAccessor` when using the CAP framework (with the `cds-integration-cloud-sdk` dependency).
 When using CAP the Tenant,Principal information and Headers are derived from the `RequestContext`.
-Please refer to [this section](https://cap.cloud.sap/docs/java/request-contexts#defining-requestcontext) on how to override existing values in the CAP context.
+Please refer to [this section](https://cap.cloud.sap/docs/java/event-handlers/request-contexts#defining-requestcontext) on how to override existing values in the CAP context.
 :::
 
 :::caution
